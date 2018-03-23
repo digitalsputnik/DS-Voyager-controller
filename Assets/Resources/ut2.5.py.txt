@@ -1,0 +1,391 @@
+#REVISION 2 Voyager
+
+#Andro 2018.02.09
+#old ut2 script, now the main UDP communication between the outside world
+#scrapped version of reinvented mesh mess
+
+#massive while loop, polls for udp and serial received with timeouts. Needs a massive cleanup
+
+# - missing defines for each packet identifying, hardcoded at the momement
+# - missing CRC checks
+
+# - possible cockup... Polling info in one packet, seemed like a good idea until telemetry polling with serial from LPC started causing delays. 
+# - maybe remove delay and add refresh telemetry packet, controlled delay
+
+# - need to unify rev2 and rev3 version, only change is locations and version nr.
+# - at the moment version numbers go rev 2 uneven numbers / rev3 even numbers
+
+VERSION=[0, 31] # 2 byte values
+CLIENT_PING_DELAY = 5 # for led status, how often tries to ping, inbetween sends previous state
+POLLING_DELAY = 30 # how often reads info from LPC when receives polling state.
+
+import time
+import serial
+import sys
+import socket
+import os
+
+toHex = lambda x: " ".join("{:02X}".format(c) for c in x)
+
+ser = serial.Serial(
+        port='/dev/ttyS1',
+        baudrate=750000,	  # 115200 in versions v0.00.1 - v0.02.0. 750000 from version v0.02.1 on.
+        parity=serial.PARITY_NONE,
+        stopbits=serial.STOPBITS_ONE,
+        bytesize=serial.EIGHTBITS,
+        rtscts=True,
+        timeout=0               # Rx timeout, debugging only, adds delay
+)
+
+ser.flushInput()
+ser.flushOutput()
+
+serNumberOfBytesRx = 0
+serReceivedData = []
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+PORT  = 30000
+HOST = ""                       #listen to all IPs
+sock.bind((HOST,PORT))
+sock.settimeout(0.1)			#socket timeout, tries to read serial inbetween udp timeouts.
+
+udp_data = bytearray(5)
+
+#color status
+#short
+rgbw0 = bytearray()
+rgbw0[0:16] = 0xd5, 0x0a, 0x10, 0x08, 0x02, 0x00, 0x25, 0x00, 0x25, 0x00, 0x00, 0x00, 0x00, 0xef, 0xfe, 0x00
+#long
+rgbw1 = bytearray()
+rgbw1[0:16] = 0xd5, 0x0a, 0x10, 0x08, 0x02, 0x00, 0x50, 0x00, 0x50, 0x00, 0x00, 0x00, 0x00, 0xef, 0xfe, 0x00
+
+# time delays how often some action
+client_start_time = time.time() - CLIENT_PING_DELAY
+start_time_polling = time.time() - POLLING_DELAY
+ping_response = 0
+#for timesync package, values above need reset
+
+#poll info or states for which need to be read only once
+last6mac = os.popen("ip addr show wlan1 | sed -n 2p | tr -d : | cut -d ' ' -f 6 | cut -c 7-").readline().strip()
+voyager_length = 0 #reads once from lpc, sets to 1 or 2, short or long
+lpc_version=bytearray(6)
+lpc_version[5:7] = 0xCC, 0xCC
+animation_version=bytearray(2)
+animation_version=os.popen("cat /media/animation/version").readline().strip().split('.')
+
+while True:
+	try:
+		try:
+			udp_data, addr = sock.recvfrom(4096)
+		except KeyboardInterrupt:
+			sock.close()
+			ser.close()
+			sys.exit()
+		except:
+			pass
+			#print ("no udp packets")
+		
+		# Checks flag bytes
+		if ((udp_data[0] == 0xD5) and (udp_data[1]== 0x0A) ) :
+			
+			#COLOR PACKET
+			if (udp_data[2] == 0x10):
+				ser.write(udp_data[:len(udp_data)])
+				print("Forwarding length = ", len(udp_data));
+				udp_data = bytearray(5)
+				
+				#print(list(ser.read(len(udp_data))))
+
+			#RESET PACKET
+			#if (udp_data[2] == 0x82 and udp_data[3] == 0x10):
+			
+			#TIME SYNC PACKET
+			if (udp_data[2] == 0x83 and udp_data[3] == 0x10):
+				print ("Timesync respond")
+				
+				#send current time
+				current_time = os.popen("date +%s%3N").readline().strip()
+				print (current_time)
+				sock.sendto(bytearray(current_time, "ascii"), addr)
+				udp_data = bytearray(5)
+				
+			
+			
+			#AP PACKET - start _M access point
+			if (udp_data[2] == 0x81 and udp_data[3] == 0x10):
+				print ("start AP _M")
+				
+				AP_start_reply = bytearray()
+				AP_start_reply[0:7] = 0xD5, 0x0A, 0x81, 0x20, 0xEF, 0xFE, 0x00
+				sock.sendto(AP_start_reply, addr)
+				udp_data = bytearray(5)
+				
+				#Stops client mode
+				os.system("nmcli c down `nmcli c | grep wlan0 | awk '{print $1}'`")
+
+				#Stop autoconnect
+				os.system("ps ax | grep autoconnect | awk -F ' ' '{print $1}' | xargs kill -9")
+
+				#Starts AP _M
+				os.system("sh /media/network_control.status/netchanger.sh 1 &")
+				time.sleep(17)
+			
+			#POLL PACKET FROM UDP DEVICE OUTSIDE
+			if (udp_data[2] == 0x80 and udp_data[3] == 0x10):
+
+				if (time.time() - start_time_polling > POLLING_DELAY ):
+					start_time_polling=time.time()
+					print ("POLL PACKET")
+						
+					poll_reply = bytearray(35)	#bytearray size
+					poll_reply[0:4] = 0xD5, 0x0A, 0x80, 0x30	#Start flag
+					poll_reply[32:34] = 0xEF, 0xFE	#End flag
+					poll_reply[34] = 0x00	#Checksum
+						
+					### IP
+					#sets client wlan0 by default
+					if os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'").readline().strip() != "":
+						IP_reply = os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'").readline().strip()
+					# if no wlan0 IP. sets AP ip
+					else:
+						IP_reply = os.popen("ip addr | egrep -i 'inet.+wlan1' | awk -F[\ /] '{print $6}'").readline().strip()
+					poll_reply[4:8] = socket.inet_aton(IP_reply)
+					
+					#if master with 172.20.1.1, overrides
+					if os.popen("ip addr | egrep -i 'inet.+wlan1' | awk -F[\ /] '{print $6}'").readline().strip() == "172.20.1.1":
+						IP_reply = os.popen("ip addr | egrep -i 'inet.+wlan1' | awk -F[\ /] '{print $6}'").readline().strip()
+
+					### SHORT OR LONG VOYAGER
+					if voyager_length == 0:
+						ser.write([0xd5, 0x0a, 0x50, 0x03, 0xef, 0xfe, 0x00])
+						time.sleep(0.05)
+						led_amount = ser.read(10)
+						if (len(led_amount) > 5):
+							if (led_amount[0] == 0xD5 and led_amount[1] == 0x0A and led_amount[2] == 0x50 and led_amount[3] == 0x03):
+								if (led_amount[4] > 60):	
+									poll_reply[8] = 2
+									voyager_length = 2
+								else:
+									poll_reply[8] = 1
+									voyager_length = 1
+					else:
+						poll_reply[8] = voyager_length
+					
+					### NUMBER OF LEDS - added to end of poll reply. poll_reply[26] . Just to keep old revision working with same poll packet start..
+							#reads from previous SHORT OR LONG VOYAGER 
+					if voyager_length != 0:
+						poll_reply[25] =  led_amount[4]					
+
+					### BATTERY LEVEL
+					ser.write([0xd5, 0x0a, 0x20, 0x04, 0xef, 0xfe, 0x00])
+					time.sleep(0.1)
+					battery_lvl = ser.read(10)
+					if (len(battery_lvl) > 5):
+						if (battery_lvl[0] == 0xD5 and battery_lvl[1] == 0x0A and battery_lvl[2] == 0x20 and battery_lvl[3] == 0x04):
+							poll_reply[9] = int(battery_lvl[4])
+					
+					### NAME - LAST 6 MAC CHARS
+					poll_reply[10:16] = bytearray(last6mac.encode('ascii'))
+					
+					
+					### TEMPERATURE	###
+					#BQ - In Kelvin
+					ser.write([0xd5, 0x0a, 0x20, 0x02, 0x20, 0x08, 0x00, 0xef, 0xfe, 0x00])
+					time.sleep(0.1)
+					sbs = ser.read(15)
+					if (len(sbs) > 5):
+						if (sbs[0] == 0xD5 and sbs[1] == 0x0A and sbs[2] == 0x20 and sbs[3] == 0x02 and sbs[4] == 0x21 and sbs[5] == 0x08):
+							kelvin = float(int.from_bytes(sbs[8:10], byteorder='little'))
+							celsius = kelvin/10 - 273.15
+							poll_reply[16:18] = int(str(celsius)[:2]), int(str(celsius)[3:4])
+
+					#CHIP
+					chip_temp = os.popen("sh /media/chip_temp.sh").readline().strip()
+					poll_reply[18] = int(chip_temp)
+					
+					### CHARGING
+					ser.write([0xd5, 0x0a, 0x20, 0x02, 0x20, 0x0A, 0x00, 0xef, 0xfe, 0x00])
+					time.sleep(0.1)
+					sbs = ser.read(15)
+					if (len(sbs) > 5):
+						if (sbs[0] == 0xD5 and sbs[1] == 0x0A and sbs[2] == 0x20 and sbs[3] == 0x02 and sbs[4] == 0x21 and sbs[5] == 0x0A):
+							poll_reply[19:21] = sbs[8:10]
+					
+					### VERSIONS ###
+					#LPC
+					if ( lpc_version[5] == 0xCC ) and ( lpc_version[6] == 0xCC ):
+						ser.write([0xd5, 0x0a, 0x30, 0x01, 0x20, 0xef, 0xfe, 0x00])
+						time.sleep(0.1)
+						lpc_version = ser.read(10)
+						if (len(lpc_version) > 5):
+							if (lpc_version[0] == 0xD5 and lpc_version[1] == 0x0A and lpc_version[2] == 0x30 and lpc_version[3] == 0x01 and lpc_version[4] == 0x21):
+								poll_reply[21:23] = lpc_version[5:7]
+					else:
+						poll_reply[21:23] = lpc_version[5:7]
+						
+					#CHIP
+					poll_reply[23:25] = VERSION
+					
+					#Animation
+					try:
+						poll_reply[26] = int(animation_version[0])
+						poll_reply[27] = int(animation_version[1])
+					except:
+						pass
+					
+					#SEND POLL PACKET RESPONSE
+					sock.sendto(poll_reply, addr)
+					print("POLL SENT")
+					print (list(poll_reply))
+					#print (len(poll_reply))
+					
+				else:
+					print ("send poll, with out rereading")
+					sock.sendto(poll_reply, addr)
+					
+				serReceivedData = []
+				serNumberOfBytesRx = 0
+				ser.flushInput()
+				ser.flushOutput()
+				udp_data = bytearray(5)
+		#else:
+		#	print('wrong flag')
+				
+		if(ser.in_waiting != 0):
+			serReceivedData = ser.read(7)
+			
+			#print ("serial received")
+			#print (list(serReceivedData))
+
+
+			### SIDE BUTTON ###
+			
+			if (serReceivedData[0] == 0xD5  and serReceivedData[1]== 0x0A and serReceivedData[2] == 0x50 and serReceivedData[3] == 0x04 and serReceivedData[4] == 0x01 and
+				os.popen("ip addr | egrep -i 'inet.+wlan1' | awk -F[\ /] '{print $6}'").readline().strip() != "172.20.1.1" ):
+				print (int(serReceivedData[5]))
+				if int(serReceivedData[5]) > 15:
+					print ("start |AP")
+					#Stops client mode
+					os.system("nmcli c down `nmcli c | grep wlan0 | awk '{print $1}'`")
+
+					#Stop autoconnect
+					os.system("ps ax | grep autoconnect | awk -F ' ' '{print $1}' | xargs kill -9")
+
+					#Starts AP _M
+					os.system("sh /media/network_control.status/netchanger.sh 1 &")
+					time.sleep(17)
+											
+			###TOP BATTERY BUTTON###
+			# Checks flag bytes
+			if ((serReceivedData[0] == 0xD5)  and (serReceivedData[1]== 0x0A) and (serReceivedData[2]== 0x50) and (serReceivedData[3]== 0x05)) :
+				### INSTANT PRESS ###
+				if (serReceivedData[2] == 0x50 and serReceivedData[3] == 0x05 and serReceivedData[4] == 0x01 ):
+	
+					print ("instant press")
+					
+					#print (list(rgbw0))
+					print (list(serReceivedData))
+
+					#Suspend ut2 script - stops receiving udp packets
+					#os.popen("ps ax | grep ut2 | awk -F ' ' '{print $1}' | xargs kill -SIGSTOP")
+					
+					# Checks if wlan1 has IP of 172.20.1.1, SSID ..._M and UP
+					if (os.popen("ip addr | egrep -i 'inet.+wlan1' | awk -F[\ /] '{print $6}'").readline().strip() == "172.20.1.1" and 
+						os.popen("grep ssid='\<voyager_......_M\>' /media/net/hostapd.conf").readline().strip() != '' and
+						os.popen("ip addr show dev wlan1 | awk 'NR==1{print $9}'").readline().strip() == 'UP' 
+						):
+						print ("AP ok")
+						rgbw0[9:12] = rgbw1[9:12] = 0x00, 0x00, 0xFF
+						print (list(rgbw0))
+						print (list(rgbw1))
+						ser.write(rgbw0[:len(rgbw0)])
+						time.sleep(0.05)
+						ser.write(rgbw1[:len(rgbw1)])
+							 
+					# checks if a client, Wlan0 IP, tries to ping host. pings again in 5s
+					elif (os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'").readline().strip() != ''):
+						if (time.time() - client_start_time > CLIENT_PING_DELAY ):
+							if (os.system("ping -c 1 -W 1 -I wlan0 $(ip route | awk 'NR==1{print $3}') > /dev/null") == 0 ):
+								print ("client, reset")
+								client_start_time=time.time()
+								ping_response = 1
+								rgbw0[9:12] = rgbw1[9:12] = 0x00, 0xFF, 0x00
+								ser.write(rgbw0[:len(rgbw0)])
+								time.sleep(0.05)
+								ser.write(rgbw1[:len(rgbw1)])
+							else:
+								print ("no ping response")
+								ping_response = 0
+								rgbw0[9:12] = rgbw1[9:12] = 0xFF, 0x70, 0x00
+								ser.write(rgbw0[:len(rgbw0)])
+								time.sleep(0.05)
+								ser.write(rgbw1[:len(rgbw1)])
+								
+						elif( ping_response == 1):
+							print ("client1")
+							rgbw0[9:12] = rgbw1[9:12] = 0x00, 0xFF, 0x00
+							ser.write(rgbw0[:len(rgbw0)])
+							time.sleep(0.05)
+							ser.write(rgbw1[:len(rgbw1)])
+					
+					# Not client or master client _M
+					else:
+						print ("None")
+						rgbw0[9:12] = rgbw1[9:12] = 0xFF, 0x70, 0x00
+						ser.write(rgbw0[:len(rgbw0)])
+						time.sleep(0.05)
+						ser.write(rgbw1[:len(rgbw1)])
+						
+			serReceivedData = []
+			serNumberOfBytesRx = 0
+			ser.flushInput()
+			ser.flushOutput()
+		#udp_data = bytearray(5)
+
+	except KeyboardInterrupt:
+		sock.close()
+		ser.close()
+		sys.exit()
+	except:
+		print ("send fail")
+
+			
+sock.close()
+ser.close()
+exit()
+
+
+
+#os.popen("ps ax | grep ut2 | awk -F ' ' '{print $1}' | xargs kill -SIGSTOP")
+
+#### SHORT PRESS FOR STATUS ###
+#if (serReceivedData[2] == 0x50 and serReceivedData[3] == 0x04 and serReceivedData[4] == 0x01):
+#	print ("short press")
+"""
+if int(serReceivedData[5]) > 20:
+		print ("start AP _M")
+		#Stops client mode
+		os.system("nmcli c down `nmcli c | grep wlan0 | awk '{print $1}'`")
+		
+		#Stop autoconnect
+		os.system("ps ax | grep autoconnect | awk -F ' ' '{print $1}' | xargs kill -9")
+		
+		#start AP with .1.1, ssid .._M
+		os.system('sh /media/ver1/netchanger.sh 1')
+		"""
+
+
+"""
+#POLL BATTERY INFO
+if (udp_data[2] == 0x60 and udp_data[3] == 0x10):
+	ser.write([0xd5, 0x0a, 0x20, 0x04, 0xef, 0xfe, 0x00])
+	time.sleep(0.01)
+	battery_lvl = ser.read(10)
+	if (len(battery_lvl) > 5):
+		if (battery_lvl[0] == 0xD5 and battery_lvl[1] == 0x0A and battery_lvl[2] == 0x20 and battery_lvl[3] == 0x04):
+			battery_reply = bytearray([0xD5, 0x0A, 0x60, 0x20, 0x00, 0xEF, 0xFE, 0x00])
+			battery_reply[4] = int(battery_lvl[4])
+			sock.sendto(battery_reply, (addr))
+			"""

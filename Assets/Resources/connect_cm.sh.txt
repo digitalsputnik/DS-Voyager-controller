@@ -1,0 +1,104 @@
+#!/bin/bash
+
+LOCATION=/mnt/data/
+TIMEOUT=20
+PASSWORD=dsputnik
+
+SSID_FILTER='\<DS026.........._M\>'
+SSID_FILTER=$SSID_FILTER'\|''\<voyager_......_M\>'
+
+#remove old before adding new confs
+ls /var/lib/connman/*| grep -v settings| xargs rm -rf
+
+#kill client connection attempt.. might be easier way to timeout.
+timeout_monitor() {
+	sleep "$TIMEOUT"
+	ps ax | grep connmanctl | awk -F ' ' '{print $1}' | xargs kill -9
+	kill "$1"
+	ls /var/lib/connman/*| grep -v settings| xargs rm -rf
+}
+timeout_monitor "$$" &
+Timeout_monitor_pid=$!
+
+#Makes searchable string from SSIDs read from ssidlist.txt, ignores empty lines
+number_of_APs=$(wc -l < $LOCATION'ssidlist.txt')
+while [ $number_of_APs -gt 0 ]
+do
+	read_ssid=$(awk NR==$number_of_APs'{print $1}' $LOCATION'ssidlist.txt')
+	if [ "$read_ssid" != "" ]; then
+		SSID_FILTER=$SSID_FILTER'\|'$read_ssid
+	fi
+	number_of_APs=$(($number_of_APs-1))
+done
+
+echo $SSID_FILTER
+
+#get ssid with highest RSSI, filtered with $SSID_FILTER
+ssid=$(iwlist wlan0 scan | grep "Quality\|ESSID" | awk '{ ORS = (NR%2 ? FS : RS) } 1' | awk '{print $3, $5}' | sort -n | grep -w $SSID_FILTER | awk -F'["]' 'NR==1{print $2}')
+
+echo $ssid
+
+if [ "$ssid" != "" ]; then
+
+	#check if SSID is from ssidlist.txt document and sets the password from there
+	password_temp=$(cat $LOCATION'ssidlist.txt' | grep -w $ssid | awk '{print $2}')
+	if [ "$password_temp" != "" ]; then
+		PASSWORD=$password_temp
+	fi
+
+	echo $PASSWORD
+
+	connmanctl scan wifi
+
+	#get hash from connmanctl, filters by given ssid and looking for start: "wifi_"
+	hash=$(connmanctl services | grep -w $ssid | grep -o '\bwifi_\w*')
+
+	#echo $ssid $hash
+
+
+	#New conf
+	cat << EOF > /var/lib/connman/$ssid-psk.config
+	[service_$hash]
+	Type = wifi
+	Name = $ssid
+	Passphrase = $PASSWORD
+EOF
+
+	sleep 0.3
+
+	sleep 1
+	connmanctl connect $hash > /dev/null
+	connmanctl config $hash --autoconnect off > /dev/null
+
+	counter=0
+
+	#As soon as get IP or loop 10 cycles
+
+	while [ $counter -lt 10 ]
+	do
+		if [ "$(ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}')" != "" ]; then
+			counter=10
+		fi
+		ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'
+		sleep 0.5
+		counter=$(($counter+1))
+		#echo $counter
+	done
+
+	if [ "$(ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}')" != "" ]; then
+		if ping -c 1 -I wlan0 $(ip route | awk 'NR==1{print $3}') > /dev/null; then
+			echo "ping ok"
+			ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'
+			echo "kill timer"
+			kill "$Timeout_monitor_pid"
+		else
+			echo "ping not ok"
+			ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'
+		fi
+	#else
+		#echo "no ip"
+	fi
+fi
+
+#echo "kill timer"
+#kill "$Timeout_monitor_pid"

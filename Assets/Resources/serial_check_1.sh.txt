@@ -1,0 +1,5 @@
+if [ -f /mnt/data/serial.txt ]; then
+	echo "serial_check_1 ok"
+else
+	echo "no serial.txt"
+fi

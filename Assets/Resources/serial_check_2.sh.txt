@@ -1,0 +1,7 @@
+ssid=$(cat /etc/net_orig/hostapd.conf | grep ssid=DS026)
+
+if [ "$ssid" = "" ]; then
+	echo "no serial, run update 1"
+else
+	echo "serial_check_2 ok"
+fi

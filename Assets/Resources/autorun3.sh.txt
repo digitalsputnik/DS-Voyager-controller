@@ -1,0 +1,16 @@
+echo "if you want some sort of thing to run automatically, edit me"
+
+cp /etc/net_orig/interfaces /mnt/data/net/interfaces
+cp /etc/net_orig/dnsmasq.conf /mnt/data/net/dnsmasq.conf 
+cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf
+
+/etc/init.d/S80dnsmasq restart
+
+rm /var/lib/misc/dnsmasq.leases
+
+iwconfig wlan1 power off
+iwconfig wlan0 power off
+
+python3 /mnt/data/ut2.6.py &
+python3 /mnt/data/animation/PythonReceiver.py &
+sh /mnt/data/autoconnect.sh &

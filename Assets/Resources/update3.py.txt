@@ -1,0 +1,91 @@
+#Main update script for CHIP system, animation and LPC. Andro 19.03.2018
+
+import time
+import os
+import sys
+
+reboot_needed = 0
+NEW_VERSION = 164
+
+
+#kill processes that use ttyS1
+os.popen("kill -9 $(ps ax | grep PythonReceiver.py | awk 'NR==1{print $1}') 2> /dev/null")
+os.popen("kill -9 $(ps ax | grep ut2.6.py | awk 'NR==1{print $1}') 2> /dev/null")
+
+
+###MOVING FILES. CHIP UPDATES###
+
+#check that serial.txt exists.
+if os.popen("sh /mnt/data/update_temp/serial_check_1.sh").readline().strip() != "serial_check_1 ok" :
+	print ("SERIAL FAIL")
+	os.system("setsid python3 /mnt/data/ut2.6.py &")
+	sys.exit()
+
+#check md5sum
+if "FAILED" in os.popen("md5sum  -c /mnt/data/update_temp/checklist.chk 2> /dev/null ").read().strip():
+	print ("MD5SUM FAIL")
+	os.system("setsid python3 /mnt/data/ut2.6.py &")
+	sys.exit()
+
+#move new files, check new location md5sum
+os.popen("mv /mnt/data/ssidlist.txt /mnt/data/ssidlist.txt.bak")
+os.popen("mv /mnt/data/update_temp/* /mnt/data/")
+time.sleep(0.1)
+os.popen("sed -i 's#update_temp/##g' /mnt/data/checklist.chk")
+os.popen("mv /mnt/data/ssidlist.txt.bak /mnt/data/ssidlist.txt")
+time.sleep(0.4)
+if "FAILED" in os.popen("md5sum  -c /mnt/data/checklist.chk 2> /dev/null ").read().strip():
+	print ("MD5SUM FAIL")
+	os.system("setsid python3 /mnt/data/ut2.6.py &")
+	sys.exit()
+
+#check if serial update applied
+if os.popen("sh /mnt/data/serial_check_2.sh").readline().strip() != "serial_check_2 ok":
+	if os.popen("sh /mnt/data/update1.sh").readline().strip() == "update successful":
+		reboot_needed = 1
+	else:
+		print("UPDATE1 FAIL, SERIAL NOT SET")
+		os.system("setsid python3 /mnt/data/ut2.6.py &")
+		sys.exit()
+
+###LPC###
+
+#Tries to flash second time if fails 1st.
+try:
+	lpc_version = os.popen("python3 /mnt/data/lpc_firmware_version.py").readline().strip()[-3:]
+	
+	#LPC MAIN FLASHING
+	if int(lpc_version) < NEW_VERSION:
+		
+		#version that supports disable shutdown
+		if int(lpc_version) >= 167:
+			os.system("python3 /mnt/data/aux_disable_shutdown_30_sec.py")
+			time.sleep(0.1)
+
+		os.system("sh /mnt/data/lpc_firmware_update_hw3.sh /mnt/data/voyager_lpc_release_user_update.bin > /dev/null 2> /dev/null")
+		time.sleep(0.2)
+		
+		lpc_version = os.popen("python3 /mnt/data/lpc_firmware_version.py").readline().strip()[-3:]
+		#print ("LPC VERSION:", int(lpc_version))
+		reboot_needed = 1
+except:
+	os.system("sh /mnt/data/lpc_firmware_update_hw3.sh /mnt/data/voyager_lpc_release_user_update.bin > /dev/null 2> /dev/null")
+	try:
+		lpc_version = os.popen("python3 /mnt/data/lpc_firmware_version.py").readline().strip()[-3:]
+		#print ("LPC VERSION:", int(lpc_version))
+		reboot_needed = 1
+	except:
+		print ("FAIL. LPC NEEDS REFLASHING")
+		os.system("setsid python3 /mnt/data/ut2.6.py &")
+		sys.exit()
+	
+
+if reboot_needed == 1:
+	print ("UPDATE SUCCESSFUL, REBOOT NEEDED")
+else:
+	print ("UPDATE SUCCESSFUL")
+
+
+### RELAUNCH processes ###
+os.system("setsid python3 /mnt/data/animation/PythonReceiver.py &")
+os.system("setsid python3 /mnt/data/ut2.6.py &")

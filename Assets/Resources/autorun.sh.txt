@@ -1,0 +1,4 @@
+/usr/bin/python3 /media/ut2.5.py &
+sh /media/network_control.status/autoconnect.sh &
+/usr/bin/python3 /media/animation/PythonReceiver.py &
+return 0

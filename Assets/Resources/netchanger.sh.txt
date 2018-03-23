@@ -1,0 +1,41 @@
+#Changes AP network configuration based on argument input
+
+ip link set arp off dev wlan1
+ip link set arp on dev wlan1
+
+ifconfig wlan1 0.0.0.0
+
+/etc/init.d/S80dnsmasq stop
+/etc/init.d/S99_hostapd stop
+
+sleep 1
+
+ifdown wlan1
+ifconfig wlan1 down
+
+rm /var/lib/misc/dnsmasq.leases
+touch /var/lib/misc/dnsmasq.leases
+
+sed -i "/address /c\ address 172.20."$1".1" /mnt/data/net/interfaces
+sed -i "/network /c\ network 172.20."$1".1" /mnt/data/net/interfaces
+sed -i "/netmask /c\ netmask 255.255.255.0" /mnt/data/net/interfaces
+sed -i "/broadcast /c\ broadcast 172.20."$1".255" /mnt/data/net/interfaces
+
+#DHCP server
+sed -i "/dhcp-range/c\dhcp-range=172.20."$1".100,172.20."$1".250,1h" /mnt/data/net/dnsmasq.conf
+
+#SSID name
+cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf
+sed -i '/^ssid=DS026/ s/$/_M/' /mnt/data/net/hostapd.conf
+
+sleep 15
+
+ifconfig wlan1 up
+ifup wlan1
+
+sleep 1
+
+/etc/init.d/S80dnsmasq start
+/etc/init.d/S99_hostapd start
+
+ifconfig wlan1 172.20.1.1 netmask 255.255.255.0

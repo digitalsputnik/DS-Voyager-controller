@@ -1,0 +1,363 @@
+﻿#V0.25
+
+#Use from here
+import AnimationPlayer
+import json
+import socket
+import os.path
+import serial
+import time
+import numpy as np
+
+import threading
+
+class ArtNetListener(threading.Thread):
+    def __init__(self, scene, ColorCalibrator):
+        self.ArtNetSocket =  socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.ArtNetSocket.bind(("", 6454))
+        self.Scene = scene
+        self.ColorCalibrator = ColorCalibrator
+        threading.Thread.__init__(self)
+    
+    def run(self):
+        lastTime = time.time()
+        rate = 1/25
+        while True:
+            ArtNetData, ArtNetControllerAddr = self.ArtNetSocket.recvfrom(1024)
+
+            if time.time() - lastTime <= rate:
+                continue
+
+            lastTime = time.time()
+
+            if (len(ArtNetData) > 0):
+                #NOTE: This is a strongly prototype implementation! Does not support layer structure
+                #Validate ArtNet packet
+                # make sure it is ArtNet
+                if ArtNetData[0:8] != b'Art-Net' + 0x00.to_bytes(1, 'big'):
+                    continue
+                # make sure right opcode
+                if ArtNetData[8:10] != 0x5000.to_bytes(2, 'little'):
+                    continue
+                # make sure right version
+                if ArtNetData[10:12] != int(14).to_bytes(2, 'big'):
+                    continue
+                # Check universe
+                if ArtNetData[14:16] != int(0).to_bytes(2, 'big'):
+                    continue
+
+                #Change stroke properties accordingly (loop through visible layer's strokes)
+                DMXOffset = 0
+                DMXData = ArtNetData[18:]
+                if len(self.Scene.Layers) <= 1:
+                    continue
+
+                CurrentLayer = self.Scene.Layers[1].Strokes
+                StrokeStep = 14 #3 color and 2 integer values
+                strokeIndex = 0
+                #Assign colors
+                #Looping strokes from top to bottom TODO: Check if stroke has been doubled?
+                for stroke in CurrentLayer:
+                    if stroke.StrokeID == "BottomBlackStroke":
+                        continue
+
+                    if len(DMXData) < DMXOffset + strokeIndex*StrokeStep + 14:
+                        break
+
+                    #Assessing colors with transformation 
+                    colorIndex = 0
+                    StrokeColors = stroke.Colors
+                    
+                    for ci in range(0, len(StrokeColors)):
+                    #for color in StrokeColors:
+                        DMXindex = DMXOffset + strokeIndex*StrokeStep + colorIndex*4
+                        ArtNetColor = np.frombuffer(DMXData[DMXindex:DMXindex+4], dtype = np.uint8)/255
+                        if any(ArtNetColor):
+                            RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(ArtNetColor)
+                            StrokeColors[ci] = RGBWColor.astype(np.uint8)
+                            #color = RGBWColor.astype(np.uint8)
+                        colorIndex = colorIndex + 1
+                    
+                    #Assessing properties
+                    DMXindex = DMXOffset + strokeIndex*StrokeStep + 3*4
+                    if stroke.Properties != None:
+                        if ("Speed" in stroke.Properties and DMXData[DMXindex] > 0):
+                            stroke.Properties["Speed"] = DMXData[DMXindex]
+                        if ("Width" in stroke.Properties and DMXData[DMXindex + 1] > 0):
+                            stroke.Properties["Width"] = DMXData[DMXindex + 1]
+                    strokeIndex = strokeIndex + 1
+
+                    stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
+
+class ColorCalibration:
+    def __init__(self, path = ""):
+        TemperatureCalibrationTable = np.genfromtxt(path + "TemperatureCalibration.csv",skip_header = 1, delimiter = ',')
+        HueCalibrationTable = np.genfromtxt(path + "HueCalibration.csv",skip_header = 1, delimiter = ',')
+        IntensityCalibrationTable = np.genfromtxt(path + "IntensityCalibration.csv", skip_header = 1, delimiter = ',')
+
+        #Transform data
+        self.TemperatureNodes = TemperatureCalibrationTable.transpose()[0]
+        self.TemperatureRGBW = TemperatureCalibrationTable.transpose()[1:]
+        self.HueNodes = HueCalibrationTable.transpose()[0]
+        self.HueRGBW = HueCalibrationTable.transpose()[1:]
+        self.IntensityNodes = IntensityCalibrationTable.transpose()[0]
+        self.IntensityValues = IntensityCalibrationTable.transpose()[1]
+        
+    def PreprocessITSHValue(self, rawITSH = np.zeros_like(4)):
+        '''
+        Transforms raw ITSH value to range 0.0 to 1.0
+        ITSH - 4-element numpy array
+        '''
+        ITSHout = np.zeros(4)
+        ITSHout[0] = rawITSH[0]/100.0
+        ITSHout[1] = (rawITSH[1] - 1500.0)/8500.0    #From 1 500-10 000 to 0-1
+        ITSHout[2] = rawITSH[2]/100.0 #or 120?
+        ITSHout[3] = rawITSH[3]/360.0
+        #Foolproofing if any of the values are out of range
+        minThreshold = np.zeros(4)
+        maxThreshold = np.ones(4)
+        ITSHout = np.minimum(np.maximum(ITSHout, minThreshold),maxThreshold)
+        print(ITSHout)
+        return ITSHout
+
+    def ITSHtoRGBW(self, ITSH = np.zeros(4)):
+        '''
+        Transforms ITSH value to RGBW
+        ITSH - 4-element numpy array
+        '''
+        ProcessedITSH = self.PreprocessITSHValue(ITSH)
+        RGBW = self.NormalizedITSHtoRGBW(ProcessedITSH)
+        return RGBW
+    
+    def NormalizedITSHtoRGBW(self, ITSH = np.zeros(4)):
+        '''
+        Transforms ITSH value to RGBW
+        ITSH - 4-element numpy array in range 0.0 to 1.0
+        '''
+        RGBW = np.zeros(4)
+        for i in range(0,4):
+            RGBW[i] = (np.interp(ITSH[1],self.TemperatureNodes,self.TemperatureRGBW[i])*(1.0 - ITSH[2]) + np.interp(ITSH[3],self.HueNodes,self.HueRGBW[i])*ITSH[2])*np.interp(ITSH[0],self.IntensityNodes,self.IntensityValues)
+        return RGBW
+
+def GetSavedStrokes(filename):
+    previousStrokes = ""
+    if os.path.isfile(filename):
+        file = open(filename, "r")
+        previousStrokes = file.read()
+        file.close()
+    return previousStrokes
+
+def GetLampSerial(StrokesFilename):
+    lampSerial = ""
+    if os.path.isfile(StrokesFilename):
+        file = open(StrokesFilename, "r")
+        lampSerial = file.readline().strip()
+        file.close()
+    return lampSerial
+
+#Lamp length
+ser = serial.Serial(
+        port='/dev/ttyS1',
+        baudrate=750000,	  # 115200 in versions v0.00.1 - v0.02.0. 750000 from version v0.02.1 on.
+        parity=serial.PARITY_NONE,
+        stopbits=serial.STOPBITS_ONE,
+        bytesize=serial.EIGHTBITS,
+        rtscts=True,
+        timeout=0               # Rx timeout, debugging only, adds delay
+)
+
+ser.flushInput()
+ser.flushOutput()
+
+LampPixelCount = 0
+
+while LampPixelCount == 0:
+    ser.write([0xd5, 0x0a, 0x50, 0x03, 0xef, 0xfe, 0x00])
+    time.sleep(0.01)
+    led_amount = ser.read(10)
+    if (len(led_amount) > 5):
+        if (led_amount[0] == 0xD5 and led_amount[1] == 0x0A and led_amount[2] == 0x50 and led_amount[3] == 0x03):
+            LampPixelCount = led_amount[4]
+
+print(LampPixelCount)
+
+#Networking
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+port = 30001
+host = "" #Listen to all IPs
+sock.bind((host, port))
+
+#Lamp information
+LampMac = GetLampSerial("/mnt/data/serial.txt")
+if LampMac == "":
+    LampMac = os.popen("ip addr show wlan1 | sed -n 2p | tr -d : | cut -d ' ' -f 6 | cut -c 7-").readline().strip()
+print(LampMac)
+
+#Saving data to lamp
+if os.path.isdir("/mnt/data/animation"):
+    AnimationPath = "/mnt/data/animation/"
+    StrokesFilename = "/mnt/data/animation/strokedata.dat"
+else:
+    AnimationPath = "/media/animation/"
+    StrokesFilename = "/media/animation/strokedata.dat"
+
+#JSON conversion - This object conversion is pointless
+#Not used currently
+class JsonToObject(object):
+    def __init__(self, JSON_Message):
+        self.__dict__ = json.loads(JSON_Message)
+
+LampScene = AnimationPlayer.Scene(frameDuration = 1/30.0, outputs = [AnimationPlayer.OutputToVoyager()], lampPixelCount = LampPixelCount) #, AnimationPlayer.OutputToController()])
+LampScene.start()
+
+ColorCalibrator = ColorCalibration(AnimationPath)
+#Listener = ArtNetListener(LampScene, ColorCalibrator)
+#Listener.start()
+
+bottomLayer = AnimationPlayer.Layer("BottomBlack", LampScene)
+
+bottomPixelDict = {}
+for x in range(0,LampPixelCount): #TODO: Get lamp length properly!
+    bottomPixelDict[x] = x
+bottomDict = {}
+bottomDict[LampMac] = bottomPixelDict
+
+bottomStroke = AnimationPlayer.Stroke(bottomLayer, "BottomBlackStroke",pixelDictionary = bottomDict, totalPixelCount = len(bottomDict), colors = [[0,0,0,0],[0,0,0,0]], LampMac = LampMac)
+
+previousStrokes = ""
+previousStrokes = GetSavedStrokes(StrokesFilename)
+
+RegisteredDevices = []
+
+#Buffering
+BufferSize = 60000
+
+#Detection timeout
+DetectionTime = 0
+DetectionTimeoutInSeconds = 5
+
+#Controller output timeout
+ControllerTimes = {}
+ControllerTimeoutInSeconds = 60
+
+#Detection control
+def CheckDetectionOff():
+    #Detection timeout
+    global DetectionTime
+    if DetectionTime > 0:
+        if time.time() - DetectionTime >= DetectionTimeoutInSeconds:
+            LampScene.SetSceneActive(True)
+            DetectionTime = 0
+
+while True:
+    UDPData = ""
+    DecodedMessage = ""
+    addr = ()
+
+    #Controller timeout
+    #for Controller in ControllerTimes:
+    #    if ControllerTimes[Controller] > 0:
+    #        if (time.time() - ControllerTimes[Controller] > ControllerTimeoutInSeconds):
+    #            LampScene.Outputs.remove(AnimationPlayer.OutputToController(Controller))
+    #            RegisteredDevices.remove(Controller)
+
+    if previousStrokes == "":
+        UDPData, addr = sock.recvfrom(BufferSize)
+
+    try:
+        if (len(UDPData) > 0 or previousStrokes != ""):
+        #Decode data
+            if previousStrokes != "":
+                DecodedMessage = previousStrokes
+                previousStrokes = ""
+            else:
+                DecodedMessage = UDPData.decode("utf-8")
+            #print(LampScene.Layers[0].Strokes)
+            #print(DecodedMessage)
+            #Deserialize json data
+            jsonDict = json.loads(DecodedMessage)
+            #Determine the type of the json message
+            if 'Layers' in jsonDict:
+                if 'TimeStamp' in jsonDict:
+                    if jsonDict['TimeStamp'] <= LampScene.TimeStamp:
+                        continue
+                    else:
+                        LampScene.TimeStamp = jsonDict['TimeStamp']
+
+                for controllerLayer in jsonDict['Layers']:
+                    Layer = next((layer for layer in LampScene.Layers if layer.LayerID == controllerLayer['LayerID']), False)
+                    if Layer:
+                        VisibleStrokeIDs = []
+                        #TODO: Sort strokes by creation timestamp!
+                        controllerLayer['Strokes'].sort(key = lambda s: s["CreationTimestamp"])
+                        for controllerStroke in controllerLayer['Strokes']:
+                            if controllerStroke['PixelQueueToControlledPixel'] == None:
+                                continue
+                            VisibleStrokeIDs.append(controllerStroke['StrokeID'])
+    
+                            if not Layer.ChangeStrokeByID(controllerStroke['StrokeID'], pixelDictionary = controllerStroke['PixelQueueToControlledPixel'], totalPixelCount = controllerStroke['TotalPixelCount'], colors = controllerStroke['Colors'],properties = controllerStroke['Properties'], animation = controllerStroke['Animation'], duration = controllerStroke['Duration'], timeStamp = controllerStroke['TimeStamp'], lampMac = LampMac):
+                                #print("Adding new stroke!")
+                                NewStroke = AnimationPlayer.Stroke(Layer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac)
+                        Layer.RemoveInvisibleStrokes(VisibleStrokeIDs)
+                    else:
+                        #Create layer and its strokes
+                        NewLayer = AnimationPlayer.Layer(controllerLayer['LayerID'], LampScene, layerActive = controllerLayer['LayerActive'])
+                        controllerLayer['Strokes'].sort(key = lambda s: s["CreationTimestamp"])
+                        for controllerStroke in controllerLayer['Strokes']:
+                            if LampMac in controllerStroke['PixelQueueToControlledPixel']:
+                                NewStroke = AnimationPlayer.Stroke(NewLayer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac)
+                #TODO: Delete layers and strokes which have not been sent?
+                #Save to file
+                file = open(StrokesFilename, "w")
+                file.write(DecodedMessage)
+                file.close()
+
+                #print(addr)
+
+                #Send structure to lamps
+                for output in LampScene.Outputs:
+                    if output is AnimationPlayer.OutputToController:
+                        if addr != output.Address:
+                            sock.sendto(UDPData, output.Address)
+    
+            elif 'DeleteLayerID' in jsonDict:
+                print("TODO: Delete layer with corresponding ID")
+            elif 'PollLayers' in jsonDict:
+                #Send layers back as JSON
+                #TODO: Better handling of no message
+                #print("Replying to poll layers!")
+                try:
+                    savedStrokes = GetSavedStrokes(StrokesFilename)
+                    #print(savedStrokes)
+                    if savedStrokes != "":
+                        addrL=list(addr)
+                        addrL[1] = 30001
+                        #print(tuple(addrL))
+                        EncodedMessage = savedStrokes.encode()
+                        sock.sendto(EncodedMessage, tuple(addrL))
+                except :
+                    pass
+            
+            elif 'DetectionMode' in jsonDict:
+                LampScene.SetSceneActive(not jsonDict['DetectionMode'])
+                if jsonDict['DetectionMode'] == True:
+                    DetectionTime = time.time()
+                    t = threading.Timer(DetectionTimeoutInSeconds, CheckDetectionOff)
+                    t.start()
+                else:
+                    DetectionTime = 0
+            elif 'RegisterDevice' in jsonDict:
+                lIP = list(addr)[0]
+                if jsonDict['RegisterDevice'] and not (lIP in RegisteredDevices):
+                    #print("Registering!")
+                    #print(RegisteredDevices)
+                    LampScene.Outputs.append(AnimationPlayer.OutputToController(addr))
+                    RegisteredDevices.append(lIP)
+                    ControllerTimes[lIP] = time.time()
+#                else:
+#                    LampScene.Outputs.remove(AnimationPlayer.OutputToController(addr))
+#                    RegisteredDevices.remove(lIP)
+    except :
+        pass
+    
+    

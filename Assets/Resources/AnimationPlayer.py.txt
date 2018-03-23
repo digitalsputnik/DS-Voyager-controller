@@ -1,0 +1,378 @@
+﻿#V0.25
+
+import threading
+import time
+from enum import Enum
+import abc
+import random
+import numpy as np
+
+#Voyager specific - outputs
+import serial
+import socket
+
+class PlayMode(Enum):
+    Pause = 0
+    Play = 1
+    Stop = 2
+
+class RepeatMode(Enum):
+    Hold = 0
+    Loop = 1
+    
+
+class Pixel:
+    '''Smallest controllable unit
+    QueueNumber - Pixel number in the stroke
+    PixelNumber - Pixel number on the lamp
+    PixeColor - Color (ITSH or RGBW) to be set to pixel
+    '''
+    def __init__(self, QueueNumber, PixelNumber, PixelColor = None):
+        self.QueueNumber = QueueNumber
+        self.PixelNumber = PixelNumber
+        self.PixelColor = np.array(PixelColor)
+
+#Hold only one scene class in lamp!
+#TODO: Should scene have an ID as well?
+class Scene(threading.Thread):
+    '''Scene is the broadest view, which consists of layers
+    Only one scene is stored within the lamp
+    layers - Layers in the scene
+    outputs - Outputs (lamp, controller) for colors
+    frameDuration - Frame duration in seconds (default is 1/60 s)
+    '''
+    def __init__(self, layers = [], outputs = [], frameDuration = 1.0/30.0, active = True, lampPixelCount = 0, timestamp = 0.0):
+        self.Layers = layers
+        self.CurrentSceneFrame = {}
+        self.Time = 0.0
+        self.Outputs = outputs
+        self.FrameDuration = frameDuration
+        self.SceneActive = active
+        self.LampPixelCount = lampPixelCount
+        self.TimeStamp = timestamp
+        threading.Thread.__init__(self)
+    
+    def SetSceneActive(self, active):
+        self.SceneActive = active
+
+    def SendOutputs(self):
+        for output in self.Outputs:
+            output.Send(self.CurrentSceneFrame, self.LampPixelCount)
+
+    def UpdateLayers(self):
+        for layer in self.Layers:
+            if layer.LayerActive:
+                layer.Update()
+                self.CurrentSceneFrame.update(layer.CurrentLayerFrame)
+
+    def Update(self):
+        if len(self.Layers) > 0:
+            self.UpdateLayers()
+        if len(self.Outputs) > 0:
+            self.SendOutputs()
+    
+    def ChangeLayerByID(self, layerID, scene = None, strokes = None, layerActive = None):
+        '''Changes layer properties by ID'''
+        for layer in self.Layers:
+            if layer.LayerID == layerID:
+                layer.ChangeLayer(scene, strokes, layerActive)
+
+    #TODO: Remove?
+    def ChangeStrokeByID(self, timeStamp = 0, pixelDictionary = {}, totalPixelCount = 0, colors = None, properties = None, animation = "", playMode = None, repeatMode = None, duration = 0.0, lampMac = ""):
+        '''Finds and changes stroke by its StrokeID'''
+        for layer in self.Layers:
+            if layer.ChangeStrokeByID(strokeID, timeStamp, pixelDictionary, totalPixelCount, colors, properties, animation, playMode, repeatMode, duration, lampMac):
+                break
+
+    def AddOrChangeLayer(self, layerID, scene = None, strokes = None, layerActive = None):
+        if any(layer.LayerID == newLayer.LayerID for layer in self.Layers):
+            #if exists, change
+            self.ChangeLayerByID(layerID, scene, strokes, layerActive)
+        else:
+            #Add layer
+            self.Layers.append(Layer(layerID, self, strokes, layerActive))
+
+    def DeleteLayerByID(self, LayerID):
+        '''Deletes layer by its ID'''
+        for layer in self.Layers:
+            if layer.LayerID == LayerID:
+                self.Layers.remove(layer)
+
+    def run(self):
+        #TODO: Better scheduling!
+        lastTimePoint = time.time()
+        while True:
+            currentTime = time.time()
+            timePassed = currentTime - lastTimePoint
+            isNewFrame = timePassed > self.FrameDuration
+            #if timePassed/self.FrameDuration >= 2.0:
+                #print(timePassed/self.FrameDuration)
+            if isNewFrame and self.SceneActive:
+                lastTimePoint = currentTime
+                self.Update()
+
+class Layer:
+    '''Layer consists of Strokes
+    LayerID - Unique layerID to identify layer
+    '''
+    def __init__(self, layerID = "", scene = None, strokes = [], layerActive = True):
+        self.LayerID = layerID
+        self.Scene = scene
+        self.Scene.Layers.append(self)
+        self.Strokes = strokes
+        self.Time = time.time()
+        self.LayerActive = layerActive
+        #TODO: Numpy
+        self.CurrentLayerFrame = {} 
+
+    def ChangeLayer(self, scene, strokes, layerActive):
+        self.Scene = scene or self.Scene
+        self.Strokes = strokes or self.Strokes
+        if layerActive != None:
+            self.LayerActive = layerActive
+
+    def AddStroke(self, stroke):
+        '''Adds stroke to layer'''
+        self.Strokes.append(stroke)
+
+    def ChangeStrokeByID(self, strokeID, timeStamp = 0, pixelDictionary = {}, totalPixelCount = 0, colors = None, properties = None, animation = "", playMode = None, repeatMode = None, duration = 0.0, lampMac = ""):
+        '''Finds and changes stroke by its StrokeID'''
+        for stroke in self.Strokes:
+            if stroke.StrokeID == strokeID:
+                stroke.ChangeStroke(timeStamp, pixelDictionary, totalPixelCount, colors, properties, animation, playMode, repeatMode, duration, lampMac)
+                return True
+
+    def RemoveInvisibleStrokes(self, VisibleStrokeIDs):
+        for stroke in self.Strokes:
+            if not stroke.StrokeID in VisibleStrokeIDs:
+                self.Strokes.remove(stroke)
+
+    def Update(self):
+        '''Layer update is called upon each frame by scene'''
+        #Update all strokes and get Current frame!
+        #Since all strokes are rendered in the order they have been created, 
+        for stroke in self.Strokes:
+            stroke.Update() #Render all strokes in frame
+            #Update current frame
+            #TODO: Numpy!
+            for pixel in stroke.ControlledPixels:
+                self.CurrentLayerFrame[pixel.PixelNumber] = pixel.PixelColor
+
+class Stroke:
+    def __init__(self, layer = None, strokeID = "", timeStamp = time.time(), pixelDictionary = {}, totalPixelCount = 0, colors = None, properties = None, animation = "", playMode = PlayMode.Play, repeatMode = RepeatMode.Loop, duration = 0.0, LampMac = ""):
+        '''Stroke consists of pixels, with the same shader
+        strokeID - Unique strokeID to identify stroke
+        timeStamp - UTC timestamp of stroke alteration to 
+        pixels - dictionary int int, where key is queue number and value is the pixel number,
+        colors - list of colors as list(int)
+        properties - dictionary string, object, where shader properties are defined
+        playmode - PlayMode.Play/Pause/Stop
+        repeatmode = RepeatMode.Loop/Hold
+        '''
+
+        #Identification
+        self.LampMac = LampMac
+        self.StrokeID = strokeID
+        self.Layer = layer
+        self.TimeStamp = timeStamp 
+        #Add stroke to corresponding layer
+        self.Layer.AddStroke(self)
+
+        #Playmodes
+        self.PlayMode = playMode
+        self.RepeatMode = repeatMode
+
+        #Time variables
+        self.StartTime = time.time()
+        self.DeltaTime = 0.0
+        self.LastTime = self.StartTime
+        self.Time = 0.0 #Time of animation
+        self.Duration = duration
+        self.UpdateStationary = True #NOTE: Temporary fix for gradient rendering
+
+        #Animation
+        self.Animation = animation
+
+        #Stroke properties
+        self.Properties = properties
+        self.Colors = np.array(colors)
+
+        #Pixels
+        self.TotalPixelCount = totalPixelCount #max(totalPixelCount, len(pixelDictionary.keys())) #NOTE: This is not the most foolproof method for determining the count!
+        self.PixelDictionary = pixelDictionary
+        self.ControlledPixels = []
+        self.SetPixels(pixelDictionary)
+
+    def SetTime(self, time = 0.0):
+        '''Sets stroke relative time'''
+        self.Time = time
+
+    def SetPixels(self, pixelDictionary = {}):
+        '''Adds pixels to stroke'''
+        if self.LampMac in pixelDictionary:
+            CurrentLampPixelDictionary = pixelDictionary[self.LampMac]
+            for pixelQueueNumber, pixelNumber in CurrentLampPixelDictionary.items():
+                self.ControlledPixels.append(Pixel(pixelQueueNumber, pixelNumber))
+
+    def ChangeStroke(self, timeStamp = 0, pixelDictionary = {}, totalPixelCount = 0, colors = None, properties = None, animation = "", playMode = None, repeatMode = None, duration = 0.0, lampMac = ""):
+        '''Changes stroke pixels, colors, properties or animation'''
+        if timeStamp > self.TimeStamp:
+            self.SetTime()
+            self.ControlledPixels = []
+            self.SetPixels(pixelDictionary or self.PixelDictionary)
+            self.TotalPixelCount = totalPixelCount or self.TotalPixelCount
+            self.Properties = properties or self.Properties
+            self.Colors = np.array(colors or self.Colors)
+            self.Duration = duration or self.Duration
+            self.Animation = animation or self.Animation
+            self.PlayMode = playMode or self.PlayMode
+            self.RepeatMode = repeatMode or self.RepeatMode
+            self.LampMac = lampMac or self.LampMac
+            self.UpdateStationary = True
+
+    def ChangeProperties(self, colors = None, properties = None):
+        if colors != None:
+            self.Colors = colors
+        if properties != None:
+            self.Properties = properties
+        self.UpdateStationary = True
+
+    def Update(self):
+        '''Update defines what happens on each frame'''
+        if(self.PlayMode == PlayMode.Stop):
+            return
+
+        currentTime = time.time()
+        if self.Duration > 0:
+            self.Time = (currentTime - self.StartTime) % self.Duration
+
+        self.DeltaTime = currentTime - self.LastTime
+        self.LastTime = currentTime
+        self.UpdatePixels()
+        if self.UpdateStationary:
+            self.UpdateStationary = False
+
+    def Play(self):
+        #From Stop
+        if self.PlayMode == PlayMode.Stop:
+            self.SetTime(0.0)
+
+        #From Pause
+        if self.PlayMode == PlayMode.Pause:
+            self.SetTime(self.Time)
+
+        self.PlayMode = PlayMode.Play
+
+    def Pause(self):
+        self.PlayMode = PlayMode.Pause
+
+    def Stop(self):
+        self.PlayMode = PlayMode.Stop
+
+    def UpdatePixels(self):
+        try:
+            flicker = random.randint(0,1)
+            for pixel in self.ControlledPixels:
+                    #TODO: Better implementation on animation
+                    if self.Animation == "Chaser":
+                        chaserQueueNumber = int(self.Time * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1)
+                        if int(pixel.QueueNumber) > chaserQueueNumber - self.Properties["Width"][0] and int(pixel.QueueNumber) <= chaserQueueNumber:
+                            pixel.PixelColor = self.Colors[0]
+                        else:
+                            pixel.PixelColor = self.Colors[1]
+                    elif self.Animation == "Fire":
+                        pixel.PixelColor = np.array(self.Colors[0])
+                        for i in range(0, len(self.Colors[0])):
+                            pixel.PixelColor[i] = random.randint(min(self.Colors[0][i],self.Colors[1][i]),max(self.Colors[0][i],self.Colors[1][i]))
+                    elif self.Animation == "Gradient":
+                        if self.TotalPixelCount > 0 and self.UpdateStationary:
+                            pixel.PixelColor = np.array(self.Colors[0]) #Initialization/ugly            
+                            percent = float(pixel.QueueNumber)/float(self.TotalPixelCount)
+                            invPercent = 1 - percent
+                            for i in range(0, len(self.Colors[0])):
+                                pixel.PixelColor[i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
+                    elif self.Animation == "Police":
+                        #Speed = BPM -> default = 60
+                        # 4s = 1.5s = 
+                        if int(pixel.QueueNumber) > self.TotalPixelCount/2:
+                            if (self.Time % (60/float(self.Properties["Speed"][0])) > 30/float(self.Properties["Speed"][0]) and flicker):
+                                pixel.PixelColor = self.Colors[1]
+                            else:
+                                pixel.PixelColor = self.Colors[2]
+                        else:
+                            if (self.Time % (60/float(self.Properties["Speed"][0])) <= 30/float(self.Properties["Speed"][0]) and flicker):
+                                pixel.PixelColor = self.Colors[0]
+                            else:
+                                pixel.PixelColor = self.Colors[2]
+                    else:
+                        if self.UpdateStationary:
+                            pixel.PixelColor = np.array(self.Colors[0]) #Initialization/ugly            
+                        
+        except Exception as e:
+            print(e)
+            time.sleep(5)
+        
+           
+#TODO: Move this to output file
+#Base class
+class OutputBaseClass:
+    def Send(self, frame):
+        pass
+
+class OutputPrint(OutputBaseClass):
+    def Send(self, frame):
+        print(frame)
+
+class OutputToVoyager(OutputBaseClass):
+    def __init__(self):
+        self.SerialPort = serial.Serial(
+            port='/dev/ttyS1',
+            baudrate=750000,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            bytesize=serial.EIGHTBITS,
+            timeout=1
+        )
+        self.SerialPort.flushInput()
+        self.SerialPort.flushOutput()
+
+    def Send(self, frame, lampPixelCount):
+        try:
+            start = np.array([0xD5, 0x0A, 0x10, 0x03, 0x00, 0x00, lampPixelCount, 0x00], dtype = np.uint8)
+            end = np.array([0xEF,0xFE,0x00], dtype = np.uint8)
+            pixelColors = np.zeros(lampPixelCount*4, dtype = np.uint8)
+            for pixelNumber, color in frame.items():
+                pixelColors[pixelNumber*4:pixelNumber*4+4] = color
+            serialMessage = np.concatenate((start, pixelColors, end),0)
+            self.SerialPort.write(serialMessage)
+        except:
+            #print(pixelColors)
+            pass
+        
+class OutputToFile(OutputBaseClass):
+    #TODO: Implement functionality
+    def Send(self, frame):
+        return super().Send(frame)
+
+class OutputToController(OutputBaseClass):
+    def __init__(self, address):
+        self.Socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.Socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR,1)
+        self.Socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
+        self.Socket.bind(("",31000))
+        self.Address = address
+
+    def Send(self, frame, lampPixelCount):
+        try:
+            start = np.array([0xD5, 0x0A, 0x50, 0x03, 0x00, 0x00, lampPixelCount, 0x00], dtype = np.uint8)
+            end = np.array([0xEF,0xFE,0x00], dtype = np.uint8)
+            pixelColors = np.zeros(lampPixelCount*4, dtype = np.uint8)
+            for pixelNumber, color in frame.items():
+                pixelColors[pixelNumber*4:pixelNumber*4+4] = color
+            serialMessage = np.concatenate((start, pixelColors, end),0)
+            destination = list(self.Address)
+            destination[1] = 31000
+            self.Socket.sendto(bytes(serialMessage), tuple(destination))
+        except:
+            #print(frame)
+            pass
