@@ -291,6 +291,42 @@ class Stroke:
                             invPercent = 1 - percent
                             for i in range(0, len(self.Colors[0])):
                                 pixel.PixelColor[i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
+                    elif self.Animation == "Chaser Grad1":
+                        chaserQueueNumber = int(self.Time * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1)
+                        if int(pixel.QueueNumber) > chaserQueueNumber - self.Properties["Width"][0] and int(pixel.QueueNumber) <= chaserQueueNumber:
+                            if self.Properties["Width"][0] > 0 and self.UpdateStationary:
+                                pixel.PixelColor = np.array(self.Colors[0]) #Initialization/ugly            
+                                percent = float(pixel.QueueNumber)/float(self.Properties["Width"][0])
+                                invPercent = 1 - percent
+                                for i in range(0, len(self.Colors[0])):
+                                    pixel.PixelColor[i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
+                        else:
+                            #Gradient calculation with totalpixels as length!
+                            if self.TotalPixelCount > 0 and self.UpdateStationary:
+                                pixel.PixelColor = np.array(self.Colors[0]) #Initialization/ugly            
+                                percent = float(pixel.QueueNumber)/float(self.TotalPixelCount)
+                                invPercent = 1 - percent
+                                for i in range(0, len(self.Colors[0])):
+                                    pixel.PixelColor[i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
+                    elif self.Animation == "Chaser Grad2":
+                        chaserQueueNumber = int(self.Time * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1)
+                        if int(pixel.QueueNumber) > chaserQueueNumber - self.Properties["Width"][0] and int(pixel.QueueNumber) <= chaserQueueNumber:
+                            #Peek background gradient!
+                            if self.TotalPixelCount > 0 and self.UpdateStationary:
+                                pixel.PixelColor = np.array(self.Colors[0]) #Initialization/ugly            
+                                percent = float(pixel.QueueNumber)/float(self.TotalPixelCount)
+                                invPercent = 1 - percent
+                                for i in range(0, len(self.Colors[0])):
+                                    pixel.PixelColor[i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
+                        else:
+                            #Background color!
+                            pixel.PixelColor = self.Colors[2]
+                    elif self.Animation == "Draw On":
+                        index = int(self.Time * float(self.Properties["Speed"][0]) % (self.TotalPixelCount + (self.Properties["Hold"][0]/1000)*self.Properties["Speed"][0]))
+                        if int(pixel.QueueNumber) <= index:
+                            pixel.PixelColor = self.Colors[0]
+                        else:
+                            pixel.PixelColor = self.Colors[1]
                     elif self.Animation == "Police":
                         #Speed = BPM -> default = 60
                         # 4s = 1.5s = 

@@ -15,7 +15,7 @@
 # - need to unify rev2 and rev3 version, only change is locations and version nr.
 # - at the moment version numbers go rev 2 uneven numbers / rev3 even numbers
 
-VERSION=[0, 36] # 2 byte values
+VERSION=[0, 38] # 2 byte values
 CLIENT_PING_DELAY = 5 # for led status, how often tries to ping, inbetween sends previous state
 POLLING_DELAY = 30 # how often reads info from LPC when receives polling state.
 
@@ -69,6 +69,10 @@ start_time_polling = time.time() - POLLING_DELAY
 ping_response = 0
 #for timesync package, values above need reset
 
+
+#Reading passive(1) or active(0) mode,export PE0 pin
+os.system("echo 128 > /sys/class/gpio/export")
+os.system("echo in > /sys/class/gpio/gpio128/direction")
 
 UDPResponse = {}
 
@@ -231,6 +235,9 @@ while True:
 					if mac_read_flag == 0:
 						UDPResponse["MAC_last6"] = os.popen("ip addr show wlan1 | sed -n 2p | tr -d : | cut -d ' ' -f 6 | cut -c 7-").readline().strip()
 						mac_read_flag = 1
+					
+					#Passive or Active mode
+					UDPResponse["passive_active_mode"] = os.popen("cat /sys/class/gpio/gpio128/value").readline().strip()
 					
 					#! Need to add master _M !#
 					#Serial name / SSID

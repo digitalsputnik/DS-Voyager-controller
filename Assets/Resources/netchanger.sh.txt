@@ -17,7 +17,7 @@ rm /var/lib/misc/dnsmasq.leases
 touch /var/lib/misc/dnsmasq.leases
 
 sed -i "/address /c\ address 172.20."$1".1" /mnt/data/net/interfaces
-sed -i "/network /c\ network 172.20."$1".1" /mnt/data/net/interfaces
+sed -i "/network /c\ network 172.20."$1".0" /mnt/data/net/interfaces
 sed -i "/netmask /c\ netmask 255.255.255.0" /mnt/data/net/interfaces
 sed -i "/broadcast /c\ broadcast 172.20."$1".255" /mnt/data/net/interfaces
 
@@ -27,6 +27,7 @@ sed -i "/dhcp-range/c\dhcp-range=172.20."$1".100,172.20."$1".250,1h" /mnt/data/n
 #SSID name
 cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf
 sed -i '/^ssid=DS026/ s/$/_M/' /mnt/data/net/hostapd.conf
+sed -i '/channel=3/c\channel=11' /mnt/data/net/hostapd.conf
 
 sleep 15
 

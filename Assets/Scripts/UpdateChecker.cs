@@ -77,6 +77,7 @@ public class UpdateChecker : MonoBehaviour {
         "ssidlist.txt",
         "update1.sh",
         "update3.py",
+        "update_main.py",
         "ut2.6.py",
         "voyager_lpc_release_user_update.bin"
     };
@@ -370,7 +371,7 @@ public class UpdateChecker : MonoBehaviour {
                     if (isRev3)
                     {
                         Debug.Log("Starting update on lamp.");
-                        var InstallationCommand = sshClient.CreateCommand("python3 /mnt/data/update_temp/update3.py");
+                        var InstallationCommand = sshClient.CreateCommand("python3 /mnt/data/update_temp/update_main.py");
                         var InstallationScriptResult = InstallationCommand.BeginExecute();
 
                         bool installationSuccess = false;

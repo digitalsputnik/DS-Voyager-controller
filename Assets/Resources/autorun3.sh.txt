@@ -12,5 +12,5 @@ iwconfig wlan1 power off
 iwconfig wlan0 power off
 
 python3 /mnt/data/ut2.6.py &
-python3 /mnt/data/animation/PythonReceiver.py &
+nice -11 python3 /mnt/data/animation/PythonReceiver.py &
 sh /mnt/data/autoconnect.sh &

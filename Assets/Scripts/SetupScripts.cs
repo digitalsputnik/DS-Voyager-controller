@@ -54,8 +54,8 @@ public class SetupScripts : MonoBehaviour {
     private bool CancelDetection = false;
     private int[] LampAnimationSoftwareVersion = new int[] { 0, 0 };
     private int[] LampUDPSoftwareVersion = new int[] { 0, 31 };
-    private int[] LampUDPSoftwareVersion3 = new int[] { 0, 36 };
-    private int[] LampLPCSoftwareVersion = new int[] {0, 164 };
+    private int[] LampUDPSoftwareVersion3 = new int[] { 0, 38 };
+    private int[] LampLPCSoftwareVersion = new int[] {0, 173 };
 
     public Dictionary<IPAddress, int> LampIPtoLengthDictionary { get; set; }
 

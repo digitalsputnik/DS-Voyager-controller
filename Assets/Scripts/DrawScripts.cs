@@ -144,6 +144,33 @@ public class DrawScripts : MonoBehaviour {
         newAnim5.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
         animations.Add(newAnim5);
 
+        //LightAnims newAnim6 = new LightAnims();
+        //newAnim6.AnimName = "Chaser Grad1";
+        //newAnim6.AnimProperties.Add(new Property("Color1", "color", itshColor, 0, 0));
+        //newAnim6.AnimProperties.Add(new Property("Color2", "color", itshColor, 0, 0));
+        //newAnim6.AnimProperties.Add(new Property("Color3", "color", itshBackGround, 0, 0));
+        //newAnim6.AnimProperties.Add(new Property("Color4", "color", itshBackGround, 0, 0));
+        //newAnim6.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
+        //newAnim6.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
+        //animations.Add(newAnim6);
+
+        //LightAnims newAnim7 = new LightAnims();
+        //newAnim7.AnimName = "Chaser Grad2";
+        //newAnim7.AnimProperties.Add(new Property("Color1", "color", itshColor, 0, 0));
+        //newAnim7.AnimProperties.Add(new Property("Color2", "color", itshColor2, 0, 0));
+        //newAnim7.AnimProperties.Add(new Property("Color3", "color", itshBackGround, 0, 0));
+        //newAnim7.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
+        //newAnim7.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
+        //animations.Add(newAnim7);
+
+        //LightAnims newAnim8 = new LightAnims();
+        //newAnim8.AnimName = "Draw On";
+        //newAnim8.AnimProperties.Add(new Property("Color1", "color", itshColor, 0, 0));
+        //newAnim8.AnimProperties.Add(new Property("Color2", "color", itshBackGround, 0, 0));
+        //newAnim8.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
+        //newAnim8.AnimProperties.Add(new Property("Hold", "int", 1000, 0, 10000));
+        //animations.Add(newAnim8);
+
         //Add animation names to Dropdown
         List<string> animNames = new List<string>();
 		for(int i=0; i < animations.Count; i++){

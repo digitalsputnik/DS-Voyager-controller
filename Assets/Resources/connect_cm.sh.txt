@@ -79,7 +79,7 @@ EOF
 		if [ "$(ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}')" != "" ]; then
 			counter=10
 		fi
-		ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'
+		#ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'
 		sleep 0.5
 		counter=$(($counter+1))
 		#echo $counter
@@ -87,13 +87,15 @@ EOF
 
 	if [ "$(ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}')" != "" ]; then
 		if ping -c 1 -I wlan0 $(ip route | awk 'NR==1{print $3}') > /dev/null; then
-			echo "ping ok"
-			ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'
-			echo "kill timer"
-			kill "$Timeout_monitor_pid"
+			:
+			#echo "ping ok"
+			#ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'
+			#echo "kill timer"
+			#kill "$Timeout_monitor_pid"
 		else
-			echo "ping not ok"
-			ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'
+			#echo "ping not ok"
+			#ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'
+			ls /var/lib/connman/*| grep -v settings| xargs rm -rf
 		fi
 	#else
 		#echo "no ip"
@@ -101,4 +103,4 @@ EOF
 fi
 
 #echo "kill timer"
-#kill "$Timeout_monitor_pid"
+kill "$Timeout_monitor_pid"

@@ -125,34 +125,39 @@ public class ColorWheel : MonoBehaviour {
 		//unhide menu
 		menuCanvas.SetActive (true);
 
-		GameObject cButton = GameObject.Find (activator); 
+		GameObject cButton = GameObject.Find (activator);
+        drawTool.setITSH(iVal, tVal, sVal, hVal);
+        cButton.GetComponent<Image>().color = drawTool.uiColor;
 
-		//set layer ITSH color
-		if (activator == "Color1") {
-			drawTool.setITSH (iVal, tVal, sVal, hVal);
+        ////set layer ITSH color
+        //if (activator == "Color1")
+        //{
+        //    drawTool.setITSH(iVal, tVal, sVal, hVal);
 
-			cButton.GetComponent<Image>().color = drawTool.uiColor;
-		} else if (activator == "Color2") {
-			//drawTool.anim.secI = iVal;
-			//drawTool.anim.secT = tVal;
-			//drawTool.anim.secS = sVal;
-			//drawTool.anim.secH = hVal;
-			//very around the corner RGB values for the button
-			int tempI = drawTool.iVal;
-			int tempT = drawTool.tVal;
-			int tempS = drawTool.sVal;
-			int tempH = drawTool.hVal;
-			drawTool.setITSH (iVal, tVal, sVal, hVal);
-			Color secondaryUiColor = drawTool.uiColor;
-			drawTool.setITSH (tempI, tempT, tempS, tempH);
+        //    cButton.GetComponent<Image>().color = drawTool.uiColor;
+        //}
+        //else if (activator == "Color2")
+        //{
+        //    //drawTool.anim.secI = iVal;
+        //    //drawTool.anim.secT = tVal;
+        //    //drawTool.anim.secS = sVal;
+        //    //drawTool.anim.secH = hVal;
+        //    //very around the corner RGB values for the button
+        //    int tempI = drawTool.iVal;
+        //    int tempT = drawTool.tVal;
+        //    int tempS = drawTool.sVal;
+        //    int tempH = drawTool.hVal;
+        //    drawTool.setITSH(iVal, tVal, sVal, hVal);
+        //    Color secondaryUiColor = drawTool.uiColor;
+        //    drawTool.setITSH(tempI, tempT, tempS, tempH);
 
-			//set color button
-			drawTool.auxColor.GetComponent<Renderer> ().materials[1].SetColor ("_Color", secondaryUiColor);
+        //    //set color button
+        //    drawTool.auxColor.GetComponent<Renderer>().materials[1].SetColor("_Color", secondaryUiColor);
 
-			cButton.GetComponent<Image>().color = secondaryUiColor;
-		}
+        //    cButton.GetComponent<Image>().color = secondaryUiColor;
+        //}
 
-		animSender.SendAnimationWithUpdate();
+        animSender.SendAnimationWithUpdate();
 
 		//Update pixels
 		//drawTool.updatePixels();
