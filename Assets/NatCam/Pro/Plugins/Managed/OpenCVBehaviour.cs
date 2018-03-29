@@ -45,6 +45,7 @@ namespace NatCamU.Pro {
         public override void OnStart ()
         {
             NatCam.Camera.ExposureBias = Mathf.Max(NatCam.Camera.MinExposureBias, -20);
+#if UNITY_IOS
             if (Application.platform == RuntimePlatform.IPhonePlayer)
             {
                 if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone8 || UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone8Plus || UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhoneX)
@@ -61,6 +62,7 @@ namespace NatCamU.Pro {
                 //Set the camera to be minimally exposed
                 NatCam.Camera.ExposureBias = Mathf.Max(NatCam.Camera.MinExposureBias, -20);
             }
+#endif
         }
 
         public override void OnFrame () {
@@ -106,7 +108,7 @@ namespace NatCamU.Pro {
             // Update the texture
             Utils.matToTexture2D(_matrix, texture, colors);
         }
-        #endregion
-    #endif
+#endregion
+#endif
+        }
     }
-}
