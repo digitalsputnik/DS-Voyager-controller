@@ -126,7 +126,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 1.2.12
+  bundleVersion: 1.2.13
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -164,8 +164,8 @@ PlayerSettings:
     iOS: com.digitalsputnik.voyagercontroller
     tvOS: com.DS.LightGrade
   buildNumber:
-    iOS: 1.2.12
-  AndroidBundleVersionCode: 12
+    iOS: 1.2.13
+  AndroidBundleVersionCode: 13
   AndroidMinSdkVersion: 21
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -254,47 +254,15 @@ PlayerSettings:
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   AndroidEnableTango: 0
-  androidEnableBanner: 1
+  androidEnableBanner: 0
   androidUseLowAccuracyLocation: 0
   m_AndroidBanners:
   - width: 320
     height: 180
-    banner: {fileID: 2800000, guid: bb3182e885a884f4b939753162588547, type: 3}
+    banner: {fileID: 0}
   androidGamepadSupportLevel: 0
   resolutionDialogBanner: {fileID: 0}
   m_BuildTargetIcons:
-  - m_BuildTarget: Android
-    m_Icons:
-    - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: bb3182e885a884f4b939753162588547, type: 3}
-      m_Width: 192
-      m_Height: 192
-      m_Kind: 0
-    - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: bb3182e885a884f4b939753162588547, type: 3}
-      m_Width: 144
-      m_Height: 144
-      m_Kind: 0
-    - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: bb3182e885a884f4b939753162588547, type: 3}
-      m_Width: 96
-      m_Height: 96
-      m_Kind: 0
-    - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: bb3182e885a884f4b939753162588547, type: 3}
-      m_Width: 72
-      m_Height: 72
-      m_Kind: 0
-    - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: bb3182e885a884f4b939753162588547, type: 3}
-      m_Width: 48
-      m_Height: 48
-      m_Kind: 0
-    - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: bb3182e885a884f4b939753162588547, type: 3}
-      m_Width: 36
-      m_Height: 36
-      m_Kind: 0
   - m_BuildTarget: iPhone
     m_Icons:
     - serializedVersion: 2
@@ -388,7 +356,7 @@ PlayerSettings:
       m_Height: 20
       m_Kind: 2
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: bb3182e885a884f4b939753162588547, type: 3}
+      m_Icon: {fileID: 2800000, guid: b92a45c427660924cb7b918bda776ca8, type: 3}
       m_Width: 1024
       m_Height: 1024
       m_Kind: 4
@@ -440,7 +408,7 @@ PlayerSettings:
   enableInternalProfiler: 0
   logObjCUncaughtExceptions: 1
   enableCrashReportAPI: 0
-  cameraUsageDescription: 
+  cameraUsageDescription: Used for Voyager lamp detection
   locationUsageDescription: 
   microphoneUsageDescription: 
   switchNetLibKey: 

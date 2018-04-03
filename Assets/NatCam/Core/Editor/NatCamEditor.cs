@@ -18,7 +18,7 @@ namespace NatCamU.Core.Utilities {
 
 		private const string
 		CameraUsageKey = @"NSCameraUsageDescription",
-		CameraUsageDescription = @"Allow this app to use the camera.", // Change this as necessary
+		CameraUsageDescription = @"Used to detect Voyager lamps.", // Change this as necessary
 		VersionNumber = "NATCAM_16";
 
 		[InitializeOnLoadMethod]
