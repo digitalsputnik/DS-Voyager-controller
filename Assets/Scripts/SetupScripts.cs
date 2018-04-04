@@ -82,7 +82,7 @@ public class SetupScripts : MonoBehaviour {
 
         SetDetectionMode(false);
 
-        GetAvailableLamps();
+        StartCoroutine("GetAvailableLamp");
 
         GameObject.Find("DetectedLampProperties").GetComponent<DetectedLampProperties>().LampIPtoLengthDictionary = LampIPtoLengthDictionary;
     }
@@ -109,7 +109,7 @@ public class SetupScripts : MonoBehaviour {
     {
         //Find available lamps in network
         //Destination
-        GetAvailableLamps();
+        //GetAvailableLamps();
 
         if (LampIPtoLengthDictionary.Count == 1 && LampIPtoLengthDictionary.Keys.FirstOrDefault().ToString() == "172.20.0.1")
         {
@@ -131,215 +131,222 @@ public class SetupScripts : MonoBehaviour {
         }
     }
 
-    private void GetAvailableLamps()
+    IEnumerator GetAvailableLamp()
     {
-        int Port = 30000;
-        IPEndPoint SendingEndpoint = new IPEndPoint(IPAddress.Broadcast, Port);
-        //Poll message
-        byte[] message = new byte[] { 0xD5, 0x0A, 0x80, 0x10 };
-        byte[] Authentication = new byte[] { 0xD5, 0x0A, 0x80, 0x30 };
+        while (true)
+        {
+            int Port = 30000;
+            IPEndPoint SendingEndpoint = new IPEndPoint(IPAddress.Broadcast, Port);
+            //Poll message
+            byte[] message = new byte[] { 0xD5, 0x0A, 0x80, 0x10 };
+            byte[] Authentication = new byte[] { 0xD5, 0x0A, 0x80, 0x30 };
 
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-        //Select wireless interface for use on PC
-        NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
-        var WirelessInterface = adapters.Where(x => x.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 && x.SupportsMulticast && x.OperationalStatus == OperationalStatus.Up && x.GetIPProperties().GetIPv4Properties() != null).FirstOrDefault();
-        var localIP = WirelessInterface.GetIPProperties().UnicastAddresses.Where(x => x.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).FirstOrDefault().Address.Address;
-        IPEndPoint localEndpoint = new IPEndPoint(localIP, 0);
-        //Send poll message
-        if (localEndpoint == null)
-        {
-            return;
-        }
-        UdpClient client = new UdpClient(localEndpoint);
+            //Select wireless interface for use on PC
+            NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+            var WirelessInterface = adapters.Where(x => x.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 && x.SupportsMulticast && x.OperationalStatus == OperationalStatus.Up && x.GetIPProperties().GetIPv4Properties() != null).FirstOrDefault();
+            var localIP = WirelessInterface.GetIPProperties().UnicastAddresses.Where(x => x.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).FirstOrDefault().Address.Address;
+            IPEndPoint localEndpoint = new IPEndPoint(localIP, 0);
+            //Send poll message
+            if (localEndpoint == null)
+            {
+                continue;
+            }
+            UdpClient client = new UdpClient(localEndpoint);
 #else
         UdpClient client = new UdpClient();
 #endif
 
-        client.EnableBroadcast = true;
-        //Send 5 poll messages
-        for (int i = 0; i < 15; i++)
-        {
-			//Debug.Log ("Sending poll message...");
-            client.Send(message, message.Length, SendingEndpoint);
-        }
-
-        Thread.Sleep(500);
-        //Receive messages from lights
-        IPEndPoint ReceivalEndpoint = new IPEndPoint(IPAddress.Any, 0);
-        Dictionary<IPAddress, int> newLampIPtoLengthDictionary = new Dictionary<IPAddress, int>();
-        List<string> UpdateLampWithIPs = new List<string>();
-        List<IPAddress> ErrorLamps = new List<IPAddress>();
-        byte[] IDbytes = new byte[4];
-
-        while (client.Available > 0)
-        {
-            var ReceivedMessageBytes = client.Receive(ref ReceivalEndpoint);
-
-            //Necessary information on lamps
-            IPAddress LightIP = new IPAddress(0);
-            int batteryLevel = 0;
-            int numPixels = 0;
-            string lampMacName = "";
-            int[] lampSoftwareVersion = new int[] { 0, 0 };
-            int[] lampAnimationVersion = new int[] { 0, 0 };
-            int[] lpcSoftwareVersion = new int[] { 0, 0 };
-            bool dontUseThisDevice = false;
-
-            //Verification!
-            Array.Copy(ReceivedMessageBytes, 0, IDbytes, 0, 4);
-
-            if (ByteArrayCompare(IDbytes, Authentication))
+            client.EnableBroadcast = true;
+            //Send 5 poll messages
+            for (int i = 0; i < 15; i++)
             {
-                //Old byte ut
-                //Parsing
-                byte[] IPbytes = new byte[4];
-                Array.Copy(ReceivedMessageBytes, 4, IPbytes, 0, 4);
-                LightIP = new IPAddress(IPbytes);
-                //lightLength = ReceivedMessageBytes[8] - 1;
-                batteryLevel = ReceivedMessageBytes[9];
-                numPixels = ReceivedMessageBytes[25];
-                byte[] macName = new byte[6];
-                Array.Copy(ReceivedMessageBytes, 10, macName, 0, 6);
-                lampMacName = System.Text.Encoding.UTF8.GetString(macName);
-                Array.Copy(ReceivedMessageBytes, 21, lpcSoftwareVersion, 0, 2);
-                Array.Copy(ReceivedMessageBytes, 23, lampSoftwareVersion, 0, 2);
-                Array.Copy(ReceivedMessageBytes, 26, lampAnimationVersion, 0, 2);
-
+                //Debug.Log ("Sending poll message...");
+                client.Send(message, message.Length, SendingEndpoint);
             }
-            else
+
+            yield return new WaitForSeconds(0.2f);
+
+            //Receive messages from lights
+            IPEndPoint ReceivalEndpoint = new IPEndPoint(IPAddress.Any, 0);
+            Dictionary<IPAddress, int> newLampIPtoLengthDictionary = new Dictionary<IPAddress, int>();
+            List<string> UpdateLampWithIPs = new List<string>();
+            List<IPAddress> ErrorLamps = new List<IPAddress>();
+            byte[] IDbytes = new byte[4];
+
+            while (client.Available > 0)
             {
-                try
+                var ReceivedMessageBytes = client.Receive(ref ReceivalEndpoint);
+
+                //Necessary information on lamps
+                IPAddress LightIP = new IPAddress(0);
+                int batteryLevel = 0;
+                int numPixels = 0;
+                string lampMacName = "";
+                int[] lampSoftwareVersion = new int[] { 0, 0 };
+                int[] lampAnimationVersion = new int[] { 0, 0 };
+                int[] lpcSoftwareVersion = new int[] { 0, 0 };
+                bool dontUseThisDevice = false;
+
+                //Verification!
+                Array.Copy(ReceivedMessageBytes, 0, IDbytes, 0, 4);
+
+                if (ByteArrayCompare(IDbytes, Authentication))
                 {
-                    UDPResponse response = JsonConvert.DeserializeObject<UDPResponse>(Encoding.UTF8.GetString(ReceivedMessageBytes));
-                    LightIP = new IPAddress(response.IP);
-                    numPixels = response.length;
-                    lampMacName = response.serial_name;
-                    batteryLevel = response.battery_level;
-                    lampSoftwareVersion = response.CHIP_version;
-                    lampAnimationVersion = response.animation_version;
-                    lpcSoftwareVersion = response.LPC_version;
+                    //Old byte ut
+                    //Parsing
+                    byte[] IPbytes = new byte[4];
+                    Array.Copy(ReceivedMessageBytes, 4, IPbytes, 0, 4);
+                    LightIP = new IPAddress(IPbytes);
+                    //lightLength = ReceivedMessageBytes[8] - 1;
+                    batteryLevel = ReceivedMessageBytes[9];
+                    numPixels = ReceivedMessageBytes[25];
+                    byte[] macName = new byte[6];
+                    Array.Copy(ReceivedMessageBytes, 10, macName, 0, 6);
+                    lampMacName = System.Text.Encoding.UTF8.GetString(macName);
+                    Array.Copy(ReceivedMessageBytes, 21, lpcSoftwareVersion, 0, 2);
+                    Array.Copy(ReceivedMessageBytes, 23, lampSoftwareVersion, 0, 2);
+                    Array.Copy(ReceivedMessageBytes, 26, lampAnimationVersion, 0, 2);
+
                 }
-                catch (Exception)
+                else
                 {
-                    dontUseThisDevice = true;
-                }
-            }
-
-            if (dontUseThisDevice)
-            {
-                continue;
-            }
-
-            if (!IPtoProps.ContainsKey(LightIP))
-            {
-                IPtoProps.Add(LightIP, new ExtraProperties {
-                    BatteryLevel = batteryLevel,
-                    LampMac = lampMacName
-                });
-            }
-
-			if (!LampIPtoLengthDictionary.ContainsKey(LightIP) )
-            {
-                LampIPtoLengthDictionary.Add(LightIP, numPixels);
-                newLampIPtoLengthDictionary.Add(LightIP, numPixels);
-            }
-
-
-
-            //Update checking
-            if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
-            {
-                try
-                {
-                    if (ReceivedMessageBytes.Length >= 27 && !ErrorLamps.Contains(LightIP))
+                    try
                     {
-                        var lampUDPSoftwareVersion = (numPixels != 42 && numPixels != 83) ? LampUDPSoftwareVersion : LampUDPSoftwareVersion3;
+                        UDPResponse response = JsonConvert.DeserializeObject<UDPResponse>(Encoding.UTF8.GetString(ReceivedMessageBytes));
+                        LightIP = new IPAddress(response.IP);
+                        numPixels = response.length;
+                        lampMacName = response.serial_name;
+                        batteryLevel = response.battery_level;
+                        lampSoftwareVersion = response.CHIP_version;
+                        lampAnimationVersion = response.animation_version;
+                        lpcSoftwareVersion = response.LPC_version;
+                    }
+                    catch (Exception)
+                    {
+                        dontUseThisDevice = true;
+                    }
+                }
 
-                        //Lamp software
-                        if (lampUDPSoftwareVersion[0] > lampSoftwareVersion[0] || (lampUDPSoftwareVersion[0] == lampSoftwareVersion[0] && lampUDPSoftwareVersion[1] > lampSoftwareVersion[1]))
+                if (dontUseThisDevice)
+                {
+                    continue;
+                }
+
+                if (!IPtoProps.ContainsKey(LightIP))
+                {
+                    IPtoProps.Add(LightIP, new ExtraProperties
+                    {
+                        BatteryLevel = batteryLevel,
+                        LampMac = lampMacName
+                    });
+                }
+
+                if (!LampIPtoLengthDictionary.ContainsKey(LightIP))
+                {
+                    LampIPtoLengthDictionary.Add(LightIP, numPixels);
+                    newLampIPtoLengthDictionary.Add(LightIP, numPixels);
+                }
+
+
+
+                //Update checking
+                if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
+                {
+                    try
+                    {
+                        if (ReceivedMessageBytes.Length >= 27 && !ErrorLamps.Contains(LightIP))
                         {
-                            if (lampSoftwareVersion[0] == 0 && lampSoftwareVersion[1] == 0)
+                            var lampUDPSoftwareVersion = (numPixels != 42 && numPixels != 83) ? LampUDPSoftwareVersion : LampUDPSoftwareVersion3;
+
+                            //Lamp software
+                            if (lampUDPSoftwareVersion[0] > lampSoftwareVersion[0] || (lampUDPSoftwareVersion[0] == lampSoftwareVersion[0] && lampUDPSoftwareVersion[1] > lampSoftwareVersion[1]))
                             {
-                                ErrorLamps.Add(LightIP);
+                                if (lampSoftwareVersion[0] == 0 && lampSoftwareVersion[1] == 0)
+                                {
+                                    ErrorLamps.Add(LightIP);
+                                }
+                                else
+                                {
+                                    if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
+                                        UpdateLampWithIPs.Add(LightIP.ToString());
+                                }
                             }
-                            else
+
+                            //Animation software
+                            if (LampAnimationSoftwareVersion[0] > lampAnimationVersion[0] || (LampAnimationSoftwareVersion[0] == lampAnimationVersion[0] && LampAnimationSoftwareVersion[1] > lampAnimationVersion[1]))
                             {
                                 if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
                                     UpdateLampWithIPs.Add(LightIP.ToString());
                             }
-                        }
 
-                        //Animation software
-                        if (LampAnimationSoftwareVersion[0] > lampAnimationVersion[0] || (LampAnimationSoftwareVersion[0] == lampAnimationVersion[0] && LampAnimationSoftwareVersion[1] > lampAnimationVersion[1]))
+                            //LPC software - check only for Rev3 - update disabled
+                            if (!(numPixels != 42 && numPixels != 83))
+                            {
+                                if (LampLPCSoftwareVersion[0] > lpcSoftwareVersion[0] || (LampLPCSoftwareVersion[0] == lpcSoftwareVersion[0] && LampLPCSoftwareVersion[1] > lpcSoftwareVersion[1]))
+                                {
+                                    if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
+                                        UpdateLampWithIPs.Add(LightIP.ToString());
+                                }
+                            }
+                        }
+                        else
                         {
                             if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
                                 UpdateLampWithIPs.Add(LightIP.ToString());
                         }
-
-                        //LPC software - check only for Rev3 - update disabled
-                        if (!(numPixels != 42 && numPixels != 83))
-                        {
-                            if (LampLPCSoftwareVersion[0] > lpcSoftwareVersion[0] || (LampLPCSoftwareVersion[0] == lpcSoftwareVersion[0] && LampLPCSoftwareVersion[1] > lpcSoftwareVersion[1]))
-                            {
-                                if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
-                                    UpdateLampWithIPs.Add(LightIP.ToString());
-                            }
-                        }
                     }
-                    else
+                    catch (Exception)
                     {
-                        if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
-                            UpdateLampWithIPs.Add(LightIP.ToString());
+                        //Do nothing
                     }
                 }
-                catch (Exception)
+
+
+
+                if (numPixels == 0 && !ErrorLamps.Contains(LightIP) && !UpdateLampWithIPs.Contains(LightIP.ToString()))
                 {
-                    //Do nothing
+                    ErrorLamps.Add(LightIP);
                 }
             }
-            
-            
 
-            if (numPixels == 0 && !ErrorLamps.Contains(LightIP) && !UpdateLampWithIPs.Contains(LightIP.ToString()))
+            //Remove error lamps from lists
+            foreach (var errorLamp in ErrorLamps)
             {
-                ErrorLamps.Add(LightIP);
+                if (LampIPtoLengthDictionary.ContainsKey(errorLamp))
+                    LampIPtoLengthDictionary.Remove(errorLamp);
+                if (newLampIPtoLengthDictionary.ContainsKey(errorLamp))
+                    newLampIPtoLengthDictionary.Remove(errorLamp);
+                if (UpdateLampWithIPs.Contains(errorLamp.ToString()))
+                    UpdateLampWithIPs.Remove(errorLamp.ToString());
             }
+
+
+            //client.Close();
+
+            //var UpdateCandidateLamps = LampIPtoLengthDictionary.Keys.Select(p => p.ToString()).ToList();
+            //var UpdateLamps = UpdateWindow.GetComponent<UpdateChecker>().GetUpdateableLamps(UpdateCandidateLamps);
+
+            if (UpdateLampWithIPs.Count > 0)
+            {
+                //IPtoProps.Clear();
+                //LampIPtoLengthDictionary.Clear();
+                //newLampIPtoLengthDictionary.Clear();
+                //CancelDetection = true;
+                //UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
+            }
+
+            if (newLampIPtoLengthDictionary.Count > 0)
+            {
+                AddAllLampsButton.gameObject.SetActive(true);
+            }
+
+            AddLampButtons(newLampIPtoLengthDictionary);
+
+            yield return null;
         }
-
-        //Remove error lamps from lists
-        foreach (var errorLamp in ErrorLamps)
-        {
-            if (LampIPtoLengthDictionary.ContainsKey(errorLamp))
-                LampIPtoLengthDictionary.Remove(errorLamp);
-            if (newLampIPtoLengthDictionary.ContainsKey(errorLamp))
-                newLampIPtoLengthDictionary.Remove(errorLamp);
-            if (UpdateLampWithIPs.Contains(errorLamp.ToString()))
-                UpdateLampWithIPs.Remove(errorLamp.ToString());
-        }
-
-
-        //client.Close();
-
-        //var UpdateCandidateLamps = LampIPtoLengthDictionary.Keys.Select(p => p.ToString()).ToList();
-        //var UpdateLamps = UpdateWindow.GetComponent<UpdateChecker>().GetUpdateableLamps(UpdateCandidateLamps);
-
-        if (UpdateLampWithIPs.Count > 0)
-        {
-            IPtoProps.Clear();
-            LampIPtoLengthDictionary.Clear();
-            newLampIPtoLengthDictionary.Clear();
-            CancelDetection = true;
-            UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
-        }
-
-        if (newLampIPtoLengthDictionary.Count > 0)
-        {
-            AddAllLampsButton.gameObject.SetActive(true);
-        }
-
-        AddLampButtons(newLampIPtoLengthDictionary);
     }
-
+    
     private void AddLampButtons(Dictionary<IPAddress, int> newLampIPtoLengthDictionary)
     {
         foreach (var item in newLampIPtoLengthDictionary)
@@ -420,7 +427,8 @@ public class SetupScripts : MonoBehaviour {
         //lampComm.LampIPtoLengthDictionary = LampIPtoLengthDictionary;
         //lampComm.permutationCounter = 0;
         //lampComm.SendPermutationsToNewLamps(LampIPtoLengthDictionary);
-        GetAvailableLamps();
+        
+        //GetAvailableLamps();
 
         if (!CancelDetection)
         {

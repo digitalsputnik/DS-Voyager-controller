@@ -15,6 +15,7 @@ public class AddLampButtonScript : MonoBehaviour {
     public string LampProps;
     public GameObject Lamp;
 	public GameObject ColorDataReceiver;
+    public GameObject AddAllLampsButton;
 	int numLamps = 0;
 
     private void Start()
@@ -31,9 +32,19 @@ public class AddLampButtonScript : MonoBehaviour {
 			start.action2 = true;
 			//start.tutorial.transform.Find ("HelpWindow").GetComponent<RectTransform> ().sizeDelta = new Vector2(550f, 340f);
 		}
+
+        //Check for other lamp buttons
+        int addButtonCount = this.transform.parent.childCount;
+
+        if (addButtonCount == 5)
+        {
+            AddAllLampsButton.SetActive(false);
+        }
+
         //Close window and destroy object
         GameObject.Find("LampsList").SetActive(false);
         Destroy(this.gameObject);
+
     }
 
     public void TaskOnClickOverride()

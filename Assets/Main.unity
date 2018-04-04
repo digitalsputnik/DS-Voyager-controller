@@ -49993,6 +49993,7 @@ MonoBehaviour:
   LampProps: Short Voyager - 172.20.0.1
   Lamp: {fileID: 1657679386}
   ColorDataReceiver: {fileID: 611738331}
+  AddAllLampsButton: {fileID: 0}
 --- !u!114 &1110708515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65965,6 +65966,7 @@ MonoBehaviour:
   LampProps: Long Voyager - 172.20.0.1
   Lamp: {fileID: 1096142445}
   ColorDataReceiver: {fileID: 611738331}
+  AddAllLampsButton: {fileID: 0}
 --- !u!114 &1461374608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67039,6 +67041,7 @@ MonoBehaviour:
   LampProps: 
   Lamp: {fileID: 0}
   ColorDataReceiver: {fileID: 611738331}
+  AddAllLampsButton: {fileID: 965159990}
 --- !u!1 &1476596035
 GameObject:
   m_ObjectHideFlags: 0
