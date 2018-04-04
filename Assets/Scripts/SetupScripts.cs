@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 //Networking
 using System.Net;
 using System.Net.Sockets;
+using System.Net.NetworkInformation;
 
 public class UDPResponse
 {
@@ -55,7 +56,7 @@ public class SetupScripts : MonoBehaviour {
     private int[] LampAnimationSoftwareVersion = new int[] { 0, 0 };
     private int[] LampUDPSoftwareVersion = new int[] { 0, 31 };
     private int[] LampUDPSoftwareVersion3 = new int[] { 0, 38 };
-    private int[] LampLPCSoftwareVersion = new int[] {0, 173 };
+    private int[] LampLPCSoftwareVersion = new int[] {0, 177 };
 
     public Dictionary<IPAddress, int> LampIPtoLengthDictionary { get; set; }
 
@@ -138,8 +139,22 @@ public class SetupScripts : MonoBehaviour {
         byte[] message = new byte[] { 0xD5, 0x0A, 0x80, 0x10 };
         byte[] Authentication = new byte[] { 0xD5, 0x0A, 0x80, 0x30 };
 
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+        //Select wireless interface for use on PC
+        NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+        var WirelessInterface = adapters.Where(x => x.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 && x.SupportsMulticast && x.OperationalStatus == OperationalStatus.Up && x.GetIPProperties().GetIPv4Properties() != null).FirstOrDefault();
+        var localIP = WirelessInterface.GetIPProperties().UnicastAddresses.Where(x => x.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).FirstOrDefault().Address.Address;
+        IPEndPoint localEndpoint = new IPEndPoint(localIP, 0);
         //Send poll message
+        if (localEndpoint == null)
+        {
+            return;
+        }
+        UdpClient client = new UdpClient(localEndpoint);
+#else
         UdpClient client = new UdpClient();
+#endif
+
         client.EnableBroadcast = true;
         //Send 5 poll messages
         for (int i = 0; i < 15; i++)

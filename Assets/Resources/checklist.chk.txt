@@ -10,4 +10,4 @@ ba466d983a29f03e9abcb816a2478de9  /mnt/data/update_temp/serial_check_2.sh
 6f6c24ef76c08be277e33570f3a511f2  /mnt/data/update_temp/update1.sh
 56d4414c711b32237e82f620916af1c5  /mnt/data/update_temp/update_main.py
 84d2a7601587fc818987a6b88ee72e91  /mnt/data/update_temp/ut2.6.py
-61c64a3de5fff021adc48d7a2b5b6b48  /mnt/data/update_temp/voyager_lpc_release_user_update.bin
+fd0ae25d08218aedb6c672fe724c8b66  /mnt/data/update_temp/voyager_lpc_release_user_update.bin

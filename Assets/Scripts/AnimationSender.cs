@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -345,6 +346,8 @@ public class AnimationSender : MonoBehaviour
     public UdpClient LampCommunicationClient;
     public UdpClient LampPollClient;
 
+    public IPEndPoint localEndpoint;
+
     List<string> StopLampCommunication = new List<string>();
 
     //Color calibration
@@ -363,6 +366,19 @@ public class AnimationSender : MonoBehaviour
         {
             LampPollClient = new UdpClient(30001);
         }
+
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+        //Get local wireless endpoint
+        SetLocalEndpoint();
+#endif
+    }
+
+    private void SetLocalEndpoint()
+    {
+        NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+        var WirelessInterface = adapters.Where(x => x.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 && x.SupportsMulticast && x.OperationalStatus == OperationalStatus.Up && x.GetIPProperties().GetIPv4Properties() != null).FirstOrDefault();
+        var localIP = WirelessInterface.GetIPProperties().UnicastAddresses.Where(x => x.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).FirstOrDefault().Address.Address;
+        localEndpoint = new IPEndPoint(localIP, 0);
     }
 
     // Use this for initialization
@@ -744,7 +760,16 @@ public class AnimationSender : MonoBehaviour
         var jsonString = JsonConvert.SerializeObject(messageObject);
         Debug.Log(jsonString);
         byte[] data = Encoding.ASCII.GetBytes(jsonString);
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+        if (localEndpoint == null)
+        {
+            SetLocalEndpoint();
+            return;
+        }
+        UdpClient client = new UdpClient(localEndpoint);
+#else
         UdpClient client = new UdpClient();
+#endif
         client.Send(data, data.Length, lampEndPoint);
     }
 

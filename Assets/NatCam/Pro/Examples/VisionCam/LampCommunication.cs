@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
@@ -41,6 +42,8 @@ public class LampCommunication: MonoBehaviour {
 
     Dictionary<IPAddress, ExtraProperties> IPtoProps = new Dictionary<IPAddress, ExtraProperties>();
 
+    IPEndPoint localEndpoint;
+
     // Use this for initialization
     void Start ()
     {
@@ -53,6 +56,11 @@ public class LampCommunication: MonoBehaviour {
         NewLampIPtoLengthDictionary = new Dictionary<IPAddress, int>(tempLampDict);
 
         //LampIPtoLengthDictionary = GetAllAvailableLamps();
+
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+        //Get local wireless endpoint
+        GetWirelessEndpoint();
+#endif
 
         //Destination
         UdpClient PollClient = new UdpClient();
@@ -103,6 +111,14 @@ public class LampCommunication: MonoBehaviour {
         //}
     }
 
+    private void GetWirelessEndpoint()
+    {
+        NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+        var WirelessInterface = adapters.Where(x => x.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 && x.SupportsMulticast && x.OperationalStatus == OperationalStatus.Up && x.GetIPProperties().GetIPv4Properties() != null).FirstOrDefault();
+        var localIP = WirelessInterface.GetIPProperties().UnicastAddresses.Where(x => x.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).FirstOrDefault().Address.Address;
+        localEndpoint = new IPEndPoint(localIP, 0);
+    }
+
     public void SetupPermutations()
     {
         //Calibration colors
@@ -132,6 +148,14 @@ public class LampCommunication: MonoBehaviour {
                     break;
                 //Start sending color permutation to lamp
                 var colorPattern = ColorPermutations[permutationCounter].ToArray();
+
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+                if (localEndpoint == null)
+                {
+                    GetWirelessEndpoint();
+                    return;
+                }
+#endif
 
                 UDPpacketDTO cDTO = GenerateColorPacket(newLamp.Key, newLamp.Value, colorPattern, CalibrationColors.Count());
 
@@ -181,7 +205,12 @@ public class LampCommunication: MonoBehaviour {
     private UDPpacketDTO GenerateColorPacket(IPAddress lampIP, int lampLength, byte[][] colorPattern, int colorCount)
     {
         //Send color code to lamp
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+        var client = new UdpClient(localEndpoint);
+#else
         var client = new UdpClient();
+#endif
+
         var remoteEndPoint = new IPEndPoint(lampIP, 30000);
 
         byte[] data = new byte[343];
