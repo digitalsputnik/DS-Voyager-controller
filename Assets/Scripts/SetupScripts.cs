@@ -329,11 +329,11 @@ public class SetupScripts : MonoBehaviour {
 
             if (UpdateLampWithIPs.Count > 0)
             {
-                //IPtoProps.Clear();
-                //LampIPtoLengthDictionary.Clear();
-                //newLampIPtoLengthDictionary.Clear();
-                //CancelDetection = true;
-                //UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
+                IPtoProps.Clear();
+                LampIPtoLengthDictionary.Clear();
+                newLampIPtoLengthDictionary.Clear();
+                CancelDetection = true;
+                UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
             }
 
             if (newLampIPtoLengthDictionary.Count > 0)
