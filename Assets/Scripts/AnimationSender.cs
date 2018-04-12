@@ -328,6 +328,7 @@ public class Scene
     public double TimeStamp { get; set; }
     public List<Layer> Layers { get; set; }
     public bool ArtNetMode { get; set; }
+    public bool sACNMode { get; set; }
     public void AddLayer(Layer layer)
     {
         if (Layers == null)
@@ -393,6 +394,7 @@ public class AnimationSender : MonoBehaviour
     {
         scene = new Scene();
         scene.ArtNetMode = false;
+        scene.sACNMode = false;
 
         //Generate 5 layers with GUIDs or fixed names
         //Only one layer for now to avoid confusion
@@ -641,11 +643,6 @@ public class AnimationSender : MonoBehaviour
     public void RegisterControllerToDevice(bool register, string IP)
     {
         SendJSONToLamp(new RegisterDeviceDTO() { RegisterDevice = register }, new IPEndPoint(IPAddress.Parse(IP), 30001));
-    }
-
-    public void SetArtNetMode(bool ArtNetActive)
-    {
-        scene.ArtNetMode = ArtNetActive;
     }
 
     public void SendAnimationWithUpdate()

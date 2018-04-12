@@ -86,7 +86,6 @@ public class DrawScripts : MonoBehaviour {
 	public Dropdown toolsDropdown;
 	public GameObject workSpace;
 	public GameObject drawMode;
-    public Button ArtNetButton;
 	Color buttonColor;
 //	public GameObject drawTools;
 //	public GameObject setupMode;
@@ -105,22 +104,7 @@ public class DrawScripts : MonoBehaviour {
 
         AnimationDropdown.onValueChanged.AddListener(ChangeAnimation);
 		toolsDropdown.onValueChanged.AddListener(ChangeTool);
-        ArtNetButton.onClick.AddListener(ToggleArtNet);
 	}
-
-    private void ToggleArtNet()
-    {
-        animSender.ActiveStroke.layer.scene.ArtNetMode = !animSender.ActiveStroke.layer.scene.ArtNetMode;
-        if (animSender.ActiveStroke.layer.scene.ArtNetMode)
-        {
-            ArtNetButton.GetComponentInChildren<Text>().text = "ArtNet: On";
-        }
-        else
-        {
-            ArtNetButton.GetComponentInChildren<Text>().text = "ArtNet: Off";
-        }
-        animSender.SendAnimationWithUpdate();
-    }
 
     public void setupAnimations() {
         //List<LightAnims> animations = new List<LightAnims>();

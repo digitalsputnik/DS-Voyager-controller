@@ -43,8 +43,8 @@ class ArtNetListener(threading.Thread):
 
                 if (len(ArtNetData) > 0):
                     #NOTE: This is a strongly prototype implementation! Does not support layer structure
-                    #Validate ArtNet packet
-                    # make sure it is ArtNet
+                    #Make sure it is ArtNet or sACN
+
                     if ArtNetData[0:8] != b'Art-Net' + 0x00.to_bytes(1, 'big'):
                         continue
                     # make sure right opcode
@@ -56,9 +56,9 @@ class ArtNetListener(threading.Thread):
                     # Check universe
                     if ArtNetData[14:16] != int(0).to_bytes(2, 'big'):
                         continue
+                    DMXData = ArtNetData[18:]
 
                     #Change stroke properties accordingly (loop through visible layer's strokes)
-                    DMXData = ArtNetData[18:]
                     if len(self.Scene.Layers) <= 1:
                         continue
 
@@ -85,13 +85,12 @@ class ArtNetListener(threading.Thread):
                         #for color in StrokeColors:
                             DMXindex = DMXOffset + colorIndex*4
                             ArtNetColor = np.frombuffer(DMXData[DMXindex:DMXindex+4], dtype = np.uint8)/255
-                            if any(ArtNetColor):
-                                FinalITSH = self.ColorCalibrator.PreprocessITSHValue(stroke.Properties["Color" + str(ci+1)])
-                                for i in range(0, len(ArtNetColor)):
-                                    FinalITSH[i] = ArtNetColor[i] or FinalITSH[i]
-                                RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(FinalITSH)
-                                StrokeColors[ci] = RGBWColor.astype(np.uint8)
-                                #color = RGBWColor.astype(np.uint8)
+                            FinalITSH = self.ColorCalibrator.PreprocessITSHValue(stroke.Properties["Color" + str(ci+1)])
+                            for i in range(0, len(ArtNetColor)):
+                                FinalITSH[i] = ArtNetColor[i] or FinalITSH[i]
+                            RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(FinalITSH)
+                            StrokeColors[ci] = RGBWColor.astype(np.uint8)
+                            #color = RGBWColor.astype(np.uint8)
                             colorIndex = colorIndex + 1
                     
                         #Assessing properties
@@ -105,6 +104,99 @@ class ArtNetListener(threading.Thread):
                         stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
             except :
                 pass
+
+class sACNListener(threading.Thread):
+    def __init__(self, scene, ColorCalibrator):
+        self.sACNSocket =  socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sACNSocket.bind(("", 5568))
+        self.Scene = scene
+        self.ColorCalibrator = ColorCalibrator
+        self.Active = False
+        threading.Thread.__init__(self)
+
+    def run(self):
+        lastTime = time.time()
+        rate = 1/25
+        DMXOffset = 0
+        while True:
+            if self.Active == False:
+                continue
+            
+            try:
+                sACNData, sACNControllerAddr = self.sACNSocket.recvfrom(1024)
+
+                if self.Active == False:
+                    continue
+
+                if time.time() - lastTime <= rate:
+                    continue
+
+                lastTime = time.time()
+
+                if (len(sACNData) > 0):
+                    #NOTE: This is a strongly prototype implementation! Does not support layer structure
+                    #Make sure it is sACN
+                    if sACNData[4:13] != b'ASC-E1.17':
+                        continue
+
+                    #Make sure it is data package
+                    if sACNData[18:22] != bytes([0,0,0,4]):
+                        continue
+
+                    # Check universe = 0
+                    #if sACNData[113:115] != int(0).to_bytes(2, 'big'):
+                    #    continue
+                    
+                    DMXData = sACNData[126:]
+
+                    #Change stroke properties accordingly (loop through visible layer's strokes)
+                    if len(self.Scene.Layers) <= 1:
+                        continue
+
+                    CurrentLayer = self.Scene.Layers[1].Strokes
+                    StrokeStep = 18 #3 color and 2 integer values
+                    strokeIndex = 0
+                    #Assign colors
+                    #Looping strokes from top to bottom TODO: Check if stroke has been doubled?
+                    for stroke in CurrentLayer:
+                        if stroke.StrokeID == "BottomBlackStroke":
+                            continue
+
+                        if "DMX offset" in stroke.Properties:
+                            DMXOffset = stroke.Properties["DMX offset"][0] - 1
+
+                        if len(DMXData) < DMXOffset + StrokeStep:
+                            break
+
+                        #Assessing colors with transformation 
+                        colorIndex = 0
+                        StrokeColors = stroke.Colors
+                    
+                        for ci in range(0, len(StrokeColors)):
+                        #for color in StrokeColors:
+                            DMXindex = DMXOffset + colorIndex*4
+                            ArtNetColor = np.frombuffer(DMXData[DMXindex:DMXindex+4], dtype = np.uint8)/255
+                            FinalITSH = self.ColorCalibrator.PreprocessITSHValue(stroke.Properties["Color" + str(ci+1)])
+                            for i in range(0, len(ArtNetColor)):
+                                FinalITSH[i] = ArtNetColor[i] or FinalITSH[i]
+                            RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(FinalITSH)
+                            StrokeColors[ci] = RGBWColor.astype(np.uint8)
+                            #color = RGBWColor.astype(np.uint8)
+                            colorIndex = colorIndex + 1
+                    
+                        #Assessing properties
+                        DMXindex = DMXOffset + len(StrokeColors)*4
+                        if stroke.Properties != None:
+                            if ("Speed" in stroke.Properties and DMXData[DMXindex] > 0):
+                                stroke.Properties["Speed"][0] = DMXData[DMXindex]
+                            if ("Width" in stroke.Properties and DMXData[DMXindex + 1] > 0):
+                                stroke.Properties["Width"][0] = DMXData[DMXindex + 1]
+                        strokeIndex = strokeIndex + 1
+                        stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
+            except :
+                pass
+
+    
 
 class ColorCalibration:
     def __init__(self, path = ""):
@@ -229,6 +321,8 @@ LampScene.start()
 ColorCalibrator = ColorCalibration(AnimationPath)
 ANetListener = ArtNetListener(LampScene, ColorCalibrator)
 ANetListener.start()
+ACNListener = sACNListener(LampScene, ColorCalibrator)
+ACNListener.start()
 
 bottomLayer = AnimationPlayer.Layer("BottomBlack", LampScene)
 
@@ -303,6 +397,9 @@ while True:
             
             if 'ArtNetMode' in jsonDict:
                 ANetListener.Active = jsonDict['ArtNetMode']
+
+            if 'sACNMode' in jsonDict:
+                ACNListener.Active = jsonDict['sACNMode']
 
             #Determine the type of the json message
             if 'Layers' in jsonDict:

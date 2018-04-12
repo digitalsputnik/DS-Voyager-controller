@@ -47,6 +47,7 @@ public class SetupScripts : MonoBehaviour {
     public AnimationSender animSender;
     public GameObject UpdateWindow;
 	public GameObject AboutWindow;
+    public Button ListenerToggleButton;
 
     Dictionary<IPAddress, ExtraProperties> IPtoProps = new Dictionary<IPAddress, ExtraProperties>();
 
@@ -73,6 +74,7 @@ public class SetupScripts : MonoBehaviour {
         }
         
         AddLampButton.onClick.AddListener(TaskOnAddClick);
+        ListenerToggleButton.onClick.AddListener(TogglePacketListener);
 
         LampIPtoLengthDictionary = GameObject.Find("DetectedLampProperties").GetComponent<DetectedLampProperties>().LampIPtoLengthDictionary;
 
@@ -85,6 +87,33 @@ public class SetupScripts : MonoBehaviour {
         StartCoroutine("GetAvailableLamp");
 
         GameObject.Find("DetectedLampProperties").GetComponent<DetectedLampProperties>().LampIPtoLengthDictionary = LampIPtoLengthDictionary;
+    }
+
+    private void TogglePacketListener()
+    {
+        if (!animSender.ActiveStroke.layer.scene.ArtNetMode && !animSender.ActiveStroke.layer.scene.sACNMode)
+        {
+            //If both are switched off, turn on ArtNet
+            animSender.ActiveStroke.layer.scene.ArtNetMode = true;
+            animSender.ActiveStroke.layer.scene.sACNMode = false;
+            ListenerToggleButton.GetComponentInChildren<Text>().text = "ArtNet: On";
+
+        }
+        else if (animSender.ActiveStroke.layer.scene.ArtNetMode)
+        {
+            //If ArtNet is on, turn on sACN
+            animSender.ActiveStroke.layer.scene.ArtNetMode = false;
+            animSender.ActiveStroke.layer.scene.sACNMode = true;
+            ListenerToggleButton.GetComponentInChildren<Text>().text = "sACN: On";
+        }
+        else
+        {
+            //Turn both off
+            animSender.ActiveStroke.layer.scene.ArtNetMode = false;
+            animSender.ActiveStroke.layer.scene.sACNMode = false;
+            ListenerToggleButton.GetComponentInChildren<Text>().text = "ArtNet/sACN: Off";
+        }
+        animSender.SendAnimationWithUpdate();
     }
 
     private void RemoveDetectedLampsFromPool(List<LampProperties> detectedLamps)
@@ -418,9 +447,9 @@ public class SetupScripts : MonoBehaviour {
 
     public void TaskOnExitClick()
     {
-#if UNITY_IOS
-        System.Diagnostics.Process.GetCurrentProcess().Kill();
-#endif
+//#if UNITY_IOS
+//        System.Diagnostics.Process.GetCurrentProcess().Kill();
+//#endif
         Application.Quit();
     }
 
