@@ -253,6 +253,9 @@ public class SetupScripts : MonoBehaviour {
                 //Update checking
                 if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
                 {
+                    ////Debug iOS!!
+                    //UpdateLampWithIPs.Add(LightIP.ToString());
+
                     try
                     {
                         if (ReceivedMessageBytes.Length >= 27 && !ErrorLamps.Contains(LightIP))
@@ -415,6 +418,9 @@ public class SetupScripts : MonoBehaviour {
 
     public void TaskOnExitClick()
     {
+#if UNITY_IOS
+        System.Diagnostics.Process.GetCurrentProcess().Kill();
+#endif
         Application.Quit();
     }
 

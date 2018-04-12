@@ -71,7 +71,7 @@ public class Anim
 	
 
 public class DrawScripts : MonoBehaviour {
-
+    public AnimationSender animSender;
     public Dropdown AnimationDropdown;
     public tempAnimcontroller anim;
 	public GameObject colorPanel;
@@ -86,6 +86,7 @@ public class DrawScripts : MonoBehaviour {
 	public Dropdown toolsDropdown;
 	public GameObject workSpace;
 	public GameObject drawMode;
+    public Button ArtNetButton;
 	Color buttonColor;
 //	public GameObject drawTools;
 //	public GameObject setupMode;
@@ -104,7 +105,22 @@ public class DrawScripts : MonoBehaviour {
 
         AnimationDropdown.onValueChanged.AddListener(ChangeAnimation);
 		toolsDropdown.onValueChanged.AddListener(ChangeTool);
+        ArtNetButton.onClick.AddListener(ToggleArtNet);
 	}
+
+    private void ToggleArtNet()
+    {
+        animSender.ActiveStroke.layer.scene.ArtNetMode = !animSender.ActiveStroke.layer.scene.ArtNetMode;
+        if (animSender.ActiveStroke.layer.scene.ArtNetMode)
+        {
+            ArtNetButton.GetComponentInChildren<Text>().text = "ArtNet: On";
+        }
+        else
+        {
+            ArtNetButton.GetComponentInChildren<Text>().text = "ArtNet: Off";
+        }
+        animSender.SendAnimationWithUpdate();
+    }
 
     public void setupAnimations() {
         //List<LightAnims> animations = new List<LightAnims>();
@@ -118,16 +134,19 @@ public class DrawScripts : MonoBehaviour {
         LightAnims newAnim1 = new LightAnims ();
 		newAnim1.AnimName = "Single Color";
 		newAnim1.AnimProperties.Add (new Property ("Color1", "color", itshColor, 0, 0));
-		animations.Add(newAnim1);
+        newAnim1.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        animations.Add(newAnim1);
 		LightAnims newAnim2 = new LightAnims ();
 		newAnim2.AnimName = "Gradient";
 		newAnim2.AnimProperties.Add (new Property ("Color1", "color", itshColor, 0, 0));
 		newAnim2.AnimProperties.Add (new Property ("Color2", "color", itshColor2, 0, 0));
-		animations.Add(newAnim2);
+        newAnim2.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        animations.Add(newAnim2);
 		LightAnims newAnim3 = new LightAnims ();
         newAnim3.AnimName = "Fire";
         newAnim3.AnimProperties.Add(new Property("Color1", "color", itshColor1, 0, 0));
         newAnim3.AnimProperties.Add(new Property("Color2", "color", itshColor3, 0, 0));
+        newAnim3.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim3);
         LightAnims newAnim4 = new LightAnims();
         newAnim4.AnimName = "Police";
@@ -135,6 +154,7 @@ public class DrawScripts : MonoBehaviour {
         newAnim4.AnimProperties.Add(new Property("Color2", "color", itshColor2, 0, 0));
         newAnim4.AnimProperties.Add(new Property("Color3", "color", itshBackGround, 0, 0));
         newAnim4.AnimProperties.Add(new Property("Speed", "int", 60, 0, 500));
+        newAnim4.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim4);
         LightAnims newAnim5 = new LightAnims();
         newAnim5.AnimName = "Chaser";
@@ -142,34 +162,39 @@ public class DrawScripts : MonoBehaviour {
         newAnim5.AnimProperties.Add(new Property("Color2", "color", itshBackGround, 0, 0));
         newAnim5.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
         newAnim5.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
+        newAnim5.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim5);
 
-        //LightAnims newAnim6 = new LightAnims();
-        //newAnim6.AnimName = "Chaser Grad1";
-        //newAnim6.AnimProperties.Add(new Property("Color1", "color", itshColor, 0, 0));
-        //newAnim6.AnimProperties.Add(new Property("Color2", "color", itshColor, 0, 0));
-        //newAnim6.AnimProperties.Add(new Property("Color3", "color", itshBackGround, 0, 0));
-        //newAnim6.AnimProperties.Add(new Property("Color4", "color", itshBackGround, 0, 0));
-        //newAnim6.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
-        //newAnim6.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
-        //animations.Add(newAnim6);
+        LightAnims newAnim6 = new LightAnims();
+        newAnim6.AnimName = "Chaser Grad1";
+        newAnim6.AnimProperties.Add(new Property("Color1", "color", itshColor, 0, 0));
+        newAnim6.AnimProperties.Add(new Property("Color2", "color", itshColor2, 0, 0));
+        newAnim6.AnimProperties.Add(new Property("Color3", "color", itshBackGround, 0, 0));
+        newAnim6.AnimProperties.Add(new Property("Color4", "color", itshBackGround, 0, 0));
+        newAnim6.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
+        newAnim6.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
+        newAnim6.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        animations.Add(newAnim6);
 
-        //LightAnims newAnim7 = new LightAnims();
-        //newAnim7.AnimName = "Chaser Grad2";
-        //newAnim7.AnimProperties.Add(new Property("Color1", "color", itshColor, 0, 0));
-        //newAnim7.AnimProperties.Add(new Property("Color2", "color", itshColor2, 0, 0));
-        //newAnim7.AnimProperties.Add(new Property("Color3", "color", itshBackGround, 0, 0));
-        //newAnim7.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
-        //newAnim7.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
-        //animations.Add(newAnim7);
+        LightAnims newAnim7 = new LightAnims();
+        newAnim7.AnimName = "Chaser Grad2";
+        newAnim7.AnimProperties.Add(new Property("Color1", "color", itshColor, 0, 0));
+        newAnim7.AnimProperties.Add(new Property("Color2", "color", itshColor2, 0, 0));
+        newAnim7.AnimProperties.Add(new Property("Color3", "color", itshBackGround, 0, 0));
+        newAnim7.AnimProperties.Add(new Property("Color4", "color", itshBackGround, 0, 0));
+        newAnim7.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
+        newAnim7.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
+        newAnim7.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        animations.Add(newAnim7);
 
-        //LightAnims newAnim8 = new LightAnims();
-        //newAnim8.AnimName = "Draw On";
-        //newAnim8.AnimProperties.Add(new Property("Color1", "color", itshColor, 0, 0));
-        //newAnim8.AnimProperties.Add(new Property("Color2", "color", itshBackGround, 0, 0));
-        //newAnim8.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
-        //newAnim8.AnimProperties.Add(new Property("Hold", "int", 1000, 0, 10000));
-        //animations.Add(newAnim8);
+        LightAnims newAnim8 = new LightAnims();
+        newAnim8.AnimName = "Draw On";
+        newAnim8.AnimProperties.Add(new Property("Color1", "color", itshColor, 0, 0));
+        newAnim8.AnimProperties.Add(new Property("Color2", "color", itshBackGround, 0, 0));
+        newAnim8.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
+        newAnim8.AnimProperties.Add(new Property("Hold", "int", 1000, 0, 10000));
+        newAnim8.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        animations.Add(newAnim8);
 
         //Add animation names to Dropdown
         List<string> animNames = new List<string>();
@@ -224,6 +249,8 @@ public class DrawScripts : MonoBehaviour {
 			}
 				
 		}
+
+        ChangeAnimation(0);
 	}
 
 	private void ChangeAnimation(int arg0)

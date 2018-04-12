@@ -318,6 +318,7 @@ public class UpdateChecker : MonoBehaviour {
                         string udpFile = isRev3 ? UDPfile3 : UDPfile;
 
                         //ut2
+                        sftpClient.ChangeDirectory(AutorunDestinationFolder);
                         UploadFileFromResources(udpFile, sftpClient);
                     }
 

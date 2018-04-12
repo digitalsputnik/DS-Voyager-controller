@@ -135,11 +135,11 @@ class Layer:
         '''Adds stroke to layer'''
         self.Strokes.append(stroke)
 
-    def ChangeStrokeByID(self, strokeID, timeStamp = 0, pixelDictionary = {}, totalPixelCount = 0, colors = None, properties = None, animation = "", playMode = None, repeatMode = None, duration = 0.0, lampMac = ""):
+    def ChangeStrokeByID(self, strokeID, timeStamp = 0, startTime = 0, pixelDictionary = {}, totalPixelCount = 0, colors = None, properties = None, animation = "", playMode = None, repeatMode = None, duration = 0.0, lampMac = ""):
         '''Finds and changes stroke by its StrokeID'''
         for stroke in self.Strokes:
             if stroke.StrokeID == strokeID:
-                stroke.ChangeStroke(timeStamp, pixelDictionary, totalPixelCount, colors, properties, animation, playMode, repeatMode, duration, lampMac)
+                stroke.ChangeStroke(timeStamp, startTime, pixelDictionary, totalPixelCount, colors, properties, animation, playMode, repeatMode, duration, lampMac)
                 return True
 
     def RemoveInvisibleStrokes(self, VisibleStrokeIDs):
@@ -159,7 +159,7 @@ class Layer:
                 self.CurrentLayerFrame[pixel.PixelNumber] = pixel.PixelColor
 
 class Stroke:
-    def __init__(self, layer = None, strokeID = "", timeStamp = time.time(), pixelDictionary = {}, totalPixelCount = 0, colors = None, properties = None, animation = "", playMode = PlayMode.Play, repeatMode = RepeatMode.Loop, duration = 0.0, LampMac = ""):
+    def __init__(self, layer = None, strokeID = "", timeStamp = time.time(), startTime = time.time(), pixelDictionary = {}, totalPixelCount = 0, colors = None, properties = None, animation = "", playMode = PlayMode.Play, repeatMode = RepeatMode.Loop, duration = 0.0, LampMac = ""):
         '''Stroke consists of pixels, with the same shader
         strokeID - Unique strokeID to identify stroke
         timeStamp - UTC timestamp of stroke alteration to 
@@ -183,10 +183,10 @@ class Stroke:
         self.RepeatMode = repeatMode
 
         #Time variables
-        self.StartTime = time.time()
+        self.StartTime = startTime
         self.DeltaTime = 0.0
-        self.LastTime = self.StartTime
-        self.Time = 0.0 #Time of animation
+        self.LastTime = time.time()
+        self.Time = time.time() - self.StartTime #Time of animation
         self.Duration = duration
         self.UpdateStationary = True #NOTE: Temporary fix for gradient rendering
 
@@ -196,6 +196,8 @@ class Stroke:
         #Stroke properties
         self.Properties = properties
         self.Colors = np.array(colors)
+        #Initialize a bitmap(time, pixels, color)
+        self.StrokeBitmap = np.zeros((2,self.Layer.Scene.LampPixelCount,4))
 
         #Pixels
         self.TotalPixelCount = totalPixelCount #max(totalPixelCount, len(pixelDictionary.keys())) #NOTE: This is not the most foolproof method for determining the count!
@@ -203,9 +205,10 @@ class Stroke:
         self.ControlledPixels = []
         self.SetPixels(pixelDictionary)
 
-    def SetTime(self, time = 0.0):
+    def SetTime(self, StartTime = 0.0):
         '''Sets stroke relative time'''
-        self.Time = time
+        self.StartTime = StartTime
+        self.Time = time.time() - self.StartTime
 
     def SetPixels(self, pixelDictionary = {}):
         '''Adds pixels to stroke'''
@@ -214,10 +217,10 @@ class Stroke:
             for pixelQueueNumber, pixelNumber in CurrentLampPixelDictionary.items():
                 self.ControlledPixels.append(Pixel(pixelQueueNumber, pixelNumber))
 
-    def ChangeStroke(self, timeStamp = 0, pixelDictionary = {}, totalPixelCount = 0, colors = None, properties = None, animation = "", playMode = None, repeatMode = None, duration = 0.0, lampMac = ""):
+    def ChangeStroke(self, timeStamp = 0, startTime = 0, pixelDictionary = {}, totalPixelCount = 0, colors = None, properties = None, animation = "", playMode = None, repeatMode = None, duration = 0.0, lampMac = ""):
         '''Changes stroke pixels, colors, properties or animation'''
         if timeStamp > self.TimeStamp:
-            self.SetTime()
+            self.SetTime(startTime or self.StartTime)
             self.ControlledPixels = []
             self.SetPixels(pixelDictionary or self.PixelDictionary)
             self.TotalPixelCount = totalPixelCount or self.TotalPixelCount
@@ -243,14 +246,11 @@ class Stroke:
             return
 
         currentTime = time.time()
-        if self.Duration > 0:
-            self.Time = (currentTime - self.StartTime) % self.Duration
+        self.Time = currentTime - self.StartTime
 
         self.DeltaTime = currentTime - self.LastTime
         self.LastTime = currentTime
         self.UpdatePixels()
-        if self.UpdateStationary:
-            self.UpdateStationary = False
 
     def Play(self):
         #From Stop
@@ -272,6 +272,35 @@ class Stroke:
     def UpdatePixels(self):
         try:
             flicker = random.randint(0,1)
+
+            #TODO: Safely change bitmap!
+            if self.UpdateStationary:
+                #Calculate bitmaps!
+                if self.Animation == "Chaser Grad1":
+                    self.StrokeBitmap = np.zeros((2,self.TotalPixelCount,4))
+                    #Chaser
+                    for p in range(0,self.Properties["Width"][0]):
+                        percent = float(p)/float(self.Properties["Width"][0])
+                        invPercent = 1 - percent
+                        for i in range(0, len(self.Colors[0])):
+                            self.StrokeBitmap[1][p][i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
+                    #Background
+                    for pixel in self.ControlledPixels:
+                        percent = float(pixel.QueueNumber)/float(self.TotalPixelCount)
+                        invPercent = 1 - percent
+                        for i in range(0, len(self.Colors[0])):
+                            self.StrokeBitmap[0][pixel.PixelNumber][i] = int(percent*self.Colors[2][i] + invPercent*self.Colors[3][i])
+
+                elif self.Animation == "Chaser Grad2":
+                    self.StrokeBitmap = np.zeros((2,self.TotalPixelCount,4))
+                    #Background
+                    for pixel in self.ControlledPixels:
+                        percent = float(pixel.QueueNumber)/float(self.TotalPixelCount)
+                        invPercent = 1 - percent
+                        for i in range(0, len(self.Colors[0])):
+                            self.StrokeBitmap[1][pixel.PixelNumber][i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
+                            self.StrokeBitmap[0][pixel.PixelNumber][i] = int(percent*self.Colors[2][i] + invPercent*self.Colors[3][i])
+
             for pixel in self.ControlledPixels:
                     #TODO: Better implementation on animation
                     if self.Animation == "Chaser":
@@ -280,10 +309,12 @@ class Stroke:
                             pixel.PixelColor = self.Colors[0]
                         else:
                             pixel.PixelColor = self.Colors[1]
+
                     elif self.Animation == "Fire":
                         pixel.PixelColor = np.array(self.Colors[0])
                         for i in range(0, len(self.Colors[0])):
                             pixel.PixelColor[i] = random.randint(min(self.Colors[0][i],self.Colors[1][i]),max(self.Colors[0][i],self.Colors[1][i]))
+
                     elif self.Animation == "Gradient":
                         if self.TotalPixelCount > 0 and self.UpdateStationary:
                             pixel.PixelColor = np.array(self.Colors[0]) #Initialization/ugly            
@@ -291,42 +322,35 @@ class Stroke:
                             invPercent = 1 - percent
                             for i in range(0, len(self.Colors[0])):
                                 pixel.PixelColor[i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
+
                     elif self.Animation == "Chaser Grad1":
                         chaserQueueNumber = int(self.Time * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1)
                         if int(pixel.QueueNumber) > chaserQueueNumber - self.Properties["Width"][0] and int(pixel.QueueNumber) <= chaserQueueNumber:
-                            if self.Properties["Width"][0] > 0 and self.UpdateStationary:
-                                pixel.PixelColor = np.array(self.Colors[0]) #Initialization/ugly            
-                                percent = float(pixel.QueueNumber)/float(self.Properties["Width"][0])
-                                invPercent = 1 - percent
-                                for i in range(0, len(self.Colors[0])):
-                                    pixel.PixelColor[i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
+                            if self.Properties["Width"][0] > 0:
+                                pixel.PixelColor = self.StrokeBitmap[1][chaserQueueNumber - int(pixel.QueueNumber)]
                         else:
                             #Gradient calculation with totalpixels as length!
-                            if self.TotalPixelCount > 0 and self.UpdateStationary:
-                                pixel.PixelColor = np.array(self.Colors[0]) #Initialization/ugly            
-                                percent = float(pixel.QueueNumber)/float(self.TotalPixelCount)
-                                invPercent = 1 - percent
-                                for i in range(0, len(self.Colors[0])):
-                                    pixel.PixelColor[i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
+                            if self.TotalPixelCount > 0:
+                                pixel.PixelColor = self.StrokeBitmap[0][pixel.PixelNumber]
+
                     elif self.Animation == "Chaser Grad2":
                         chaserQueueNumber = int(self.Time * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1)
                         if int(pixel.QueueNumber) > chaserQueueNumber - self.Properties["Width"][0] and int(pixel.QueueNumber) <= chaserQueueNumber:
                             #Peek background gradient!
-                            if self.TotalPixelCount > 0 and self.UpdateStationary:
-                                pixel.PixelColor = np.array(self.Colors[0]) #Initialization/ugly            
-                                percent = float(pixel.QueueNumber)/float(self.TotalPixelCount)
-                                invPercent = 1 - percent
-                                for i in range(0, len(self.Colors[0])):
-                                    pixel.PixelColor[i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
+                            if self.TotalPixelCount > 0:
+                                pixel.PixelColor = self.StrokeBitmap[1][pixel.PixelNumber]
                         else:
                             #Background color!
-                            pixel.PixelColor = self.Colors[2]
+                            if self.TotalPixelCount > 0:
+                                pixel.PixelColor = self.StrokeBitmap[0][pixel.PixelNumber]
+
                     elif self.Animation == "Draw On":
                         index = int(self.Time * float(self.Properties["Speed"][0]) % (self.TotalPixelCount + (self.Properties["Hold"][0]/1000)*self.Properties["Speed"][0]))
                         if int(pixel.QueueNumber) <= index:
                             pixel.PixelColor = self.Colors[0]
                         else:
                             pixel.PixelColor = self.Colors[1]
+
                     elif self.Animation == "Police":
                         #Speed = BPM -> default = 60
                         # 4s = 1.5s = 
@@ -340,10 +364,14 @@ class Stroke:
                                 pixel.PixelColor = self.Colors[0]
                             else:
                                 pixel.PixelColor = self.Colors[2]
+
                     else:
                         if self.UpdateStationary:
                             pixel.PixelColor = np.array(self.Colors[0]) #Initialization/ugly            
                         
+            if self.UpdateStationary:
+                self.UpdateStationary = False
+
         except Exception as e:
             print(e)
             time.sleep(5)
@@ -374,7 +402,7 @@ class OutputToVoyager(OutputBaseClass):
 
     def Send(self, frame, lampPixelCount):
         try:
-            start = np.array([0xD5, 0x0A, 0x10, 0x03, 0x00, 0x00, lampPixelCount, 0x00], dtype = np.uint8)
+            start = np.array([0xD5, 0x0A, 0x10, 0x03, 0x00, 0x00, 0x00, lampPixelCount-1], dtype = np.uint8)
             end = np.array([0xEF,0xFE,0x00], dtype = np.uint8)
             pixelColors = np.zeros(lampPixelCount*4, dtype = np.uint8)
             for pixelNumber, color in frame.items():

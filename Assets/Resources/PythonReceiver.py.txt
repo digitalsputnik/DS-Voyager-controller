@@ -8,8 +8,10 @@ import os.path
 import serial
 import time
 import numpy as np
-
 import threading
+
+#emergency!
+import uuid
 
 class ArtNetListener(threading.Thread):
     def __init__(self, scene, ColorCalibrator):
@@ -17,77 +19,92 @@ class ArtNetListener(threading.Thread):
         self.ArtNetSocket.bind(("", 6454))
         self.Scene = scene
         self.ColorCalibrator = ColorCalibrator
+        self.Active = False
         threading.Thread.__init__(self)
     
     def run(self):
         lastTime = time.time()
         rate = 1/25
+        DMXOffset = 0
         while True:
-            ArtNetData, ArtNetControllerAddr = self.ArtNetSocket.recvfrom(1024)
-
-            if time.time() - lastTime <= rate:
+            if self.Active == False:
                 continue
+            
+            try:
+                ArtNetData, ArtNetControllerAddr = self.ArtNetSocket.recvfrom(1024)
 
-            lastTime = time.time()
-
-            if (len(ArtNetData) > 0):
-                #NOTE: This is a strongly prototype implementation! Does not support layer structure
-                #Validate ArtNet packet
-                # make sure it is ArtNet
-                if ArtNetData[0:8] != b'Art-Net' + 0x00.to_bytes(1, 'big'):
-                    continue
-                # make sure right opcode
-                if ArtNetData[8:10] != 0x5000.to_bytes(2, 'little'):
-                    continue
-                # make sure right version
-                if ArtNetData[10:12] != int(14).to_bytes(2, 'big'):
-                    continue
-                # Check universe
-                if ArtNetData[14:16] != int(0).to_bytes(2, 'big'):
+                if self.Active == False:
                     continue
 
-                #Change stroke properties accordingly (loop through visible layer's strokes)
-                DMXOffset = 0
-                DMXData = ArtNetData[18:]
-                if len(self.Scene.Layers) <= 1:
+                if time.time() - lastTime <= rate:
                     continue
 
-                CurrentLayer = self.Scene.Layers[1].Strokes
-                StrokeStep = 14 #3 color and 2 integer values
-                strokeIndex = 0
-                #Assign colors
-                #Looping strokes from top to bottom TODO: Check if stroke has been doubled?
-                for stroke in CurrentLayer:
-                    if stroke.StrokeID == "BottomBlackStroke":
+                lastTime = time.time()
+
+                if (len(ArtNetData) > 0):
+                    #NOTE: This is a strongly prototype implementation! Does not support layer structure
+                    #Validate ArtNet packet
+                    # make sure it is ArtNet
+                    if ArtNetData[0:8] != b'Art-Net' + 0x00.to_bytes(1, 'big'):
+                        continue
+                    # make sure right opcode
+                    if ArtNetData[8:10] != 0x5000.to_bytes(2, 'little'):
+                        continue
+                    # make sure right version
+                    if ArtNetData[10:12] != int(14).to_bytes(2, 'big'):
+                        continue
+                    # Check universe
+                    if ArtNetData[14:16] != int(0).to_bytes(2, 'big'):
                         continue
 
-                    if len(DMXData) < DMXOffset + strokeIndex*StrokeStep + 14:
-                        break
+                    #Change stroke properties accordingly (loop through visible layer's strokes)
+                    DMXData = ArtNetData[18:]
+                    if len(self.Scene.Layers) <= 1:
+                        continue
 
-                    #Assessing colors with transformation 
-                    colorIndex = 0
-                    StrokeColors = stroke.Colors
-                    
-                    for ci in range(0, len(StrokeColors)):
-                    #for color in StrokeColors:
-                        DMXindex = DMXOffset + strokeIndex*StrokeStep + colorIndex*4
-                        ArtNetColor = np.frombuffer(DMXData[DMXindex:DMXindex+4], dtype = np.uint8)/255
-                        if any(ArtNetColor):
-                            RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(ArtNetColor)
-                            StrokeColors[ci] = RGBWColor.astype(np.uint8)
-                            #color = RGBWColor.astype(np.uint8)
-                        colorIndex = colorIndex + 1
-                    
-                    #Assessing properties
-                    DMXindex = DMXOffset + strokeIndex*StrokeStep + 3*4
-                    if stroke.Properties != None:
-                        if ("Speed" in stroke.Properties and DMXData[DMXindex] > 0):
-                            stroke.Properties["Speed"] = DMXData[DMXindex]
-                        if ("Width" in stroke.Properties and DMXData[DMXindex + 1] > 0):
-                            stroke.Properties["Width"] = DMXData[DMXindex + 1]
-                    strokeIndex = strokeIndex + 1
+                    CurrentLayer = self.Scene.Layers[1].Strokes
+                    StrokeStep = 18 #3 color and 2 integer values
+                    strokeIndex = 0
+                    #Assign colors
+                    #Looping strokes from top to bottom TODO: Check if stroke has been doubled?
+                    for stroke in CurrentLayer:
+                        if stroke.StrokeID == "BottomBlackStroke":
+                            continue
 
-                    stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
+                        if "DMX offset" in stroke.Properties:
+                            DMXOffset = stroke.Properties["DMX offset"][0] - 1
+
+                        if len(DMXData) < DMXOffset + StrokeStep:
+                            break
+
+                        #Assessing colors with transformation 
+                        colorIndex = 0
+                        StrokeColors = stroke.Colors
+                    
+                        for ci in range(0, len(StrokeColors)):
+                        #for color in StrokeColors:
+                            DMXindex = DMXOffset + colorIndex*4
+                            ArtNetColor = np.frombuffer(DMXData[DMXindex:DMXindex+4], dtype = np.uint8)/255
+                            if any(ArtNetColor):
+                                FinalITSH = self.ColorCalibrator.PreprocessITSHValue(stroke.Properties["Color" + str(ci+1)])
+                                for i in range(0, len(ArtNetColor)):
+                                    FinalITSH[i] = ArtNetColor[i] or FinalITSH[i]
+                                RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(FinalITSH)
+                                StrokeColors[ci] = RGBWColor.astype(np.uint8)
+                                #color = RGBWColor.astype(np.uint8)
+                            colorIndex = colorIndex + 1
+                    
+                        #Assessing properties
+                        DMXindex = DMXOffset + len(StrokeColors)*4
+                        if stroke.Properties != None:
+                            if ("Speed" in stroke.Properties and DMXData[DMXindex] > 0):
+                                stroke.Properties["Speed"][0] = DMXData[DMXindex]
+                            if ("Width" in stroke.Properties and DMXData[DMXindex + 1] > 0):
+                                stroke.Properties["Width"][0] = DMXData[DMXindex + 1]
+                        strokeIndex = strokeIndex + 1
+                        stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
+            except :
+                pass
 
 class ColorCalibration:
     def __init__(self, path = ""):
@@ -117,7 +134,6 @@ class ColorCalibration:
         minThreshold = np.zeros(4)
         maxThreshold = np.ones(4)
         ITSHout = np.minimum(np.maximum(ITSHout, minThreshold),maxThreshold)
-        print(ITSHout)
         return ITSHout
 
     def ITSHtoRGBW(self, ITSH = np.zeros(4)):
@@ -207,12 +223,12 @@ class JsonToObject(object):
     def __init__(self, JSON_Message):
         self.__dict__ = json.loads(JSON_Message)
 
-LampScene = AnimationPlayer.Scene(frameDuration = 1/30.0, outputs = [AnimationPlayer.OutputToVoyager()], lampPixelCount = LampPixelCount) #, AnimationPlayer.OutputToController()])
+LampScene = AnimationPlayer.Scene(frameDuration = 1/200.0, outputs = [AnimationPlayer.OutputToVoyager()], lampPixelCount = LampPixelCount) #, AnimationPlayer.OutputToController()])
 LampScene.start()
 
 ColorCalibrator = ColorCalibration(AnimationPath)
-#Listener = ArtNetListener(LampScene, ColorCalibrator)
-#Listener.start()
+ANetListener = ArtNetListener(LampScene, ColorCalibrator)
+ANetListener.start()
 
 bottomLayer = AnimationPlayer.Layer("BottomBlack", LampScene)
 
@@ -226,6 +242,14 @@ bottomStroke = AnimationPlayer.Stroke(bottomLayer, "BottomBlackStroke",pixelDict
 
 previousStrokes = ""
 previousStrokes = GetSavedStrokes(StrokesFilename)
+
+#Empty strokedata file handling! - Generate json with white!
+if previousStrokes == "":
+    whiteColorDict = {}
+    whiteColorDict['TimeStamp'] = 1.0
+    StrokeDict = {'Animation': 'Single Color', 'Colors': [[42, 76, 81, 85]], 'CreationTimestamp': 0.0, 'Duration': 2000.0, 'PixelQueueToControlledPixel': bottomDict, 'Properties': {'Color1': [50, 5600, 0, 0]}, 'StartTime': 0.0, 'StrokeID': str(uuid.uuid4()), 'TimeStamp': 1.0, 'TotalPixelCount': LampPixelCount}
+    whiteColorDict['Layers'] = [{'LayerActive': True, 'LayerID': 'Layer', 'Strokes': [StrokeDict]}]
+    previousStrokes = json.dumps(whiteColorDict)
 
 RegisteredDevices = []
 
@@ -276,6 +300,10 @@ while True:
             #print(DecodedMessage)
             #Deserialize json data
             jsonDict = json.loads(DecodedMessage)
+            
+            if 'ArtNetMode' in jsonDict:
+                ANetListener.Active = jsonDict['ArtNetMode']
+
             #Determine the type of the json message
             if 'Layers' in jsonDict:
                 if 'TimeStamp' in jsonDict:
@@ -295,9 +323,9 @@ while True:
                                 continue
                             VisibleStrokeIDs.append(controllerStroke['StrokeID'])
     
-                            if not Layer.ChangeStrokeByID(controllerStroke['StrokeID'], pixelDictionary = controllerStroke['PixelQueueToControlledPixel'], totalPixelCount = controllerStroke['TotalPixelCount'], colors = controllerStroke['Colors'],properties = controllerStroke['Properties'], animation = controllerStroke['Animation'], duration = controllerStroke['Duration'], timeStamp = controllerStroke['TimeStamp'], lampMac = LampMac):
+                            if not Layer.ChangeStrokeByID(controllerStroke['StrokeID'], startTime = controllerStroke['CreationTimestamp'], pixelDictionary = controllerStroke['PixelQueueToControlledPixel'], totalPixelCount = controllerStroke['TotalPixelCount'], colors = controllerStroke['Colors'],properties = controllerStroke['Properties'], animation = controllerStroke['Animation'], duration = controllerStroke['Duration'], timeStamp = controllerStroke['TimeStamp'], lampMac = LampMac):
                                 #print("Adding new stroke!")
-                                NewStroke = AnimationPlayer.Stroke(Layer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac)
+                                NewStroke = AnimationPlayer.Stroke(Layer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['CreationTimestamp'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac)
                         Layer.RemoveInvisibleStrokes(VisibleStrokeIDs)
                     else:
                         #Create layer and its strokes
@@ -305,7 +333,7 @@ while True:
                         controllerLayer['Strokes'].sort(key = lambda s: s["CreationTimestamp"])
                         for controllerStroke in controllerLayer['Strokes']:
                             if LampMac in controllerStroke['PixelQueueToControlledPixel']:
-                                NewStroke = AnimationPlayer.Stroke(NewLayer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac)
+                                NewStroke = AnimationPlayer.Stroke(NewLayer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['CreationTimestamp'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac)
                 #TODO: Delete layers and strokes which have not been sent?
                 #Save to file
                 file = open(StrokesFilename, "w")

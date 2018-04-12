@@ -41,6 +41,7 @@ public class Stroke
     public string StrokeID;
     public double CreationTimestamp;
     public double TimeStamp;
+    public double StartTime;
     public List<int[]> Colors;
     public string Animation;
     public Dictionary<string, int[]> Properties;
@@ -96,6 +97,11 @@ public class Stroke
     private double GetCurrentTimestampUTC()
     {
         return (double)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+    }
+
+    private double GetCurrentTimestampFix()
+    {
+        return (double)(new DateTime(2018,04,11,14,0,1) - new DateTime(1970, 1, 1)).TotalSeconds;
     }
 
     /// <summary>
@@ -321,6 +327,7 @@ public class Scene
 {
     public double TimeStamp { get; set; }
     public List<Layer> Layers { get; set; }
+    public bool ArtNetMode { get; set; }
     public void AddLayer(Layer layer)
     {
         if (Layers == null)
@@ -385,6 +392,7 @@ public class AnimationSender : MonoBehaviour
     void Start()
     {
         scene = new Scene();
+        scene.ArtNetMode = false;
 
         //Generate 5 layers with GUIDs or fixed names
         //Only one layer for now to avoid confusion
@@ -635,17 +643,9 @@ public class AnimationSender : MonoBehaviour
         SendJSONToLamp(new RegisterDeviceDTO() { RegisterDevice = register }, new IPEndPoint(IPAddress.Parse(IP), 30001));
     }
 
-    //TODO: Remove this and all references!
-    public void SetArtNetMode(bool ArtNetActive, string IP)
+    public void SetArtNetMode(bool ArtNetActive)
     {
-        if (ArtNetActive)
-        {
-            SendJSONToLamp(new ArtNetActivationDTO() { ArtNetActive = ArtNetActive }, new IPEndPoint(IPAddress.Parse(IP), 30001));
-        }
-        else
-        {
-            SendJSONToLamp(new ArtNetActivationDTO() { ArtNetActive = ArtNetActive }, new IPEndPoint(IPAddress.Parse(IP), 6454));
-        }
+        scene.ArtNetMode = ArtNetActive;
     }
 
     public void SendAnimationWithUpdate()
@@ -786,7 +786,7 @@ public class AnimationSender : MonoBehaviour
         while (true)
         {
             SendAnimationToLamps();
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
