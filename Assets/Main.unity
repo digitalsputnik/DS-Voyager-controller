@@ -17730,6 +17730,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 409035342}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &411981886 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1630514157314854, guid: dcf52a2990ef84041a1047dfe06de963,
+    type: 2}
+  m_PrefabInternal: {fileID: 1260248669}
+--- !u!114 &411981887 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114678182527620110, guid: dcf52a2990ef84041a1047dfe06de963,
+    type: 2}
+  m_PrefabInternal: {fileID: 1260248669}
+  m_Script: {fileID: 11500000, guid: 22ac66cbe6beb7948b860e2f7ef083fd, type: 3}
 --- !u!1 &412034969
 GameObject:
   m_ObjectHideFlags: 0
@@ -31877,6 +31888,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ITSH: {x: 0, y: 0, z: 0, w: 0}
   ID: 0
+--- !u!114 &726862088 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114892086742513274, guid: dcf52a2990ef84041a1047dfe06de963,
+    type: 2}
+  m_PrefabInternal: {fileID: 1260248669}
+  m_Script: {fileID: 853051423, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!1 &727535389
 GameObject:
   m_ObjectHideFlags: 0
@@ -55572,6 +55589,15 @@ Prefab:
       propertyPath: workSpace
       value: 
       objectReference: {fileID: 348730173}
+    - target: {fileID: 1630514157314854, guid: dcf52a2990ef84041a1047dfe06de963, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224568912065943120, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dcf52a2990ef84041a1047dfe06de963, type: 2}
   m_IsPrefabParent: 0
@@ -61820,10 +61846,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawMode: {fileID: 404138993}
-  drawTools: {fileID: 0}
+  drawTools: {fileID: 411981886}
   setupMode: {fileID: 1509357874}
   workSpace: {fileID: 348730173}
-  toolsDropDown: {fileID: 0}
+  toolsDropDown: {fileID: 726862088}
   DrawButton: {fileID: 263674864}
   SetupButton: {fileID: 1897666311}
 --- !u!1 &1400483273
@@ -64581,7 +64607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65739fd08edebe648b53cb65c7544df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawScripts: {fileID: 0}
+  drawScripts: {fileID: 411981887}
   draw: {fileID: 404138995}
   ActiveStroke:
     StrokeID: 
@@ -64591,6 +64617,7 @@ MonoBehaviour:
     Animation: 
     Duration: 0
     TotalPixelCount: 0
+  TimeOffset: 0
 --- !u!1 &1468988091
 GameObject:
   m_ObjectHideFlags: 0
