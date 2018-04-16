@@ -71,23 +71,15 @@ public class Anim
 	
 
 public class DrawScripts : MonoBehaviour {
-
+    public AnimationSender animSender;
     public Dropdown AnimationDropdown;
     public tempAnimcontroller anim;
 	public GameObject colorPanel;
 	public GameObject numberPanel;
-    public GameObject timePanel;
-    public GameObject timeTemplate;
-    public GameObject timePanelWindow;
-    public GameObject firstColor;
+	public GameObject firstColor;
 	public GameObject numberTemplate;
-    public Button startTimeButton;
-    public Button cancelButton;
-    public Button okButton;
-
-
-    //public GameObject colorButton;
-    //public GameObject auxColor;
+	//public GameObject colorButton;
+	//public GameObject auxColor;
     public GameObject animationMenu;
     public GameObject strokeMenu;
 
@@ -99,7 +91,6 @@ public class DrawScripts : MonoBehaviour {
 //	public GameObject setupMode;
 	List<GameObject> colors;
 	List<GameObject> numberValues;
-    
 
 	//List of animations
 	public List<LightAnims> animations = new List<LightAnims>();
@@ -113,10 +104,7 @@ public class DrawScripts : MonoBehaviour {
 
         AnimationDropdown.onValueChanged.AddListener(ChangeAnimation);
 		toolsDropdown.onValueChanged.AddListener(ChangeTool);
-        startTimeButton.onClick.AddListener(TaskSetStartTimeButtonClick);
-        cancelButton.onClick.AddListener(TaskCancelButtonClick);
-        okButton.onClick.AddListener(TaskOkButtonClick);
-    }
+	}
 
     public void setupAnimations() {
         //List<LightAnims> animations = new List<LightAnims>();
@@ -158,11 +146,7 @@ public class DrawScripts : MonoBehaviour {
         newAnim5.AnimProperties.Add(new Property("Color2", "color", itshBackGround, 0, 0));
         newAnim5.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
         newAnim5.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
-        newAnim5.AnimProperties.Add(new Property("StartTime", "time", 0, 0, 23));
-        newAnim5.AnimProperties.Add(new Property("StartTime", "time", 0, 0, 59));
-        newAnim5.AnimProperties.Add(new Property("StartTime", "time", 0, 0, 59));
-        newAnim5.AnimProperties.Add(new Property("StartTime", "time", 0, 0, 1000));
-
+        newAnim5.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim5);
 
         LightAnims newAnim6 = new LightAnims();
@@ -215,55 +199,42 @@ public class DrawScripts : MonoBehaviour {
 		int sVal = 0;
 		int hVal = 0;
 
-        //count properties by type
-        for (int i = 0; i < numProperties; i++)
-        {
-            if (animations[0].AnimProperties[i].type == "color")
-            {
-                var newColorButton = Instantiate(firstColor, colorPanel.transform);
-                newColorButton.name = "Color" + numColors.ToString();
-                newColorButton.tag = "color";
-                colorPanel.SetActive(true);
-                newColorButton.SetActive(true);
-                //Debug.Log ("Second value is: "+((int[])animations [0].AnimProperties [i].startValue)[0]);
-                iVal = ((int[])animations[0].AnimProperties[i].startValue)[0];
-                tVal = ((int[])animations[0].AnimProperties[i].startValue)[1];
-                sVal = ((int[])animations[0].AnimProperties[i].startValue)[2];
-                hVal = ((int[])animations[0].AnimProperties[i].startValue)[3];
-                buttonColor = Color.HSVToRGB(hVal / 360f, sVal / 100f, iVal / 100f);
-                newColorButton.GetComponent<Image>().color = buttonColor;
-                newColorButton.transform.Find("Text").gameObject.GetComponent<Text>().text = numColors.ToString();
-                newColorButton.GetComponent<ColorButtonScript>().iVal = iVal;
-                newColorButton.GetComponent<ColorButtonScript>().tVal = tVal;
-                newColorButton.GetComponent<ColorButtonScript>().sVal = sVal;
-                newColorButton.GetComponent<ColorButtonScript>().hVal = hVal;
+		//count properties by type
+		for (int i = 0; i < numProperties; i++) {
+			if (animations [0].AnimProperties [i].type == "color") {
+				var newColorButton = Instantiate (firstColor, colorPanel.transform);
+				newColorButton.name = "Color" + numColors.ToString();
+				newColorButton.tag = "color";
+				colorPanel.SetActive (true);
+				newColorButton.SetActive (true);
+				//Debug.Log ("Second value is: "+((int[])animations [0].AnimProperties [i].startValue)[0]);
+				iVal = ((int[])animations [0].AnimProperties [i].startValue)[0];
+				tVal = ((int[])animations [0].AnimProperties [i].startValue)[1];
+				sVal = ((int[])animations [0].AnimProperties [i].startValue)[2];
+				hVal = ((int[])animations [0].AnimProperties [i].startValue)[3];
+				buttonColor = Color.HSVToRGB (hVal / 360f, sVal/100f, iVal / 100f);
+				newColorButton.GetComponent<Image> ().color = buttonColor;
+				newColorButton.transform.Find("Text").gameObject.GetComponent<Text>().text = numColors.ToString ();
+				newColorButton.GetComponent<ColorButtonScript> ().iVal = iVal;
+				newColorButton.GetComponent<ColorButtonScript> ().tVal = tVal;
+				newColorButton.GetComponent<ColorButtonScript> ().sVal = sVal;
+				newColorButton.GetComponent<ColorButtonScript> ().hVal = hVal;
 
-                numColors++;
-            }
+				numColors++;
+			}
+			if (animations [0].AnimProperties [i].type == "int") {
+				var newNum = Instantiate (numberPanel, numberPanel.transform.parent);
+				newNum.name = "Number"+ numSpeeds.ToString();
+				newNum.tag = "int";
+				//newNum.transform.Find(
+				newNum.SetActive (true);
+				numberPanel.SetActive (true);
+				numSpeeds += 1;
+			}
+				
+		}
 
-            if (animations[0].AnimProperties[i].type == "int")
-            {
-                var newNum = Instantiate(numberTemplate, numberPanel.transform.parent);
-                newNum.name = "Number" + numSpeeds.ToString();
-                newNum.tag = "int";
-                numberPanel.SetActive(true);
-                newNum.SetActive(true);
-                numSpeeds += 1;
-
-                //newNum.transform.Find(
-
-            }
-
-            if (animations[0].AnimProperties[i].type == "time" && GameObject.FindGameObjectsWithTag("starttime").Length <= 0)
-            {
-                var newTime = Instantiate(timeTemplate, timePanel.transform);
-                newTime.name = "StartTime";
-                newTime.tag = "time";
-                timePanel.SetActive(true);
-                newTime.SetActive(true);
-            }
-        }
-      
+        ChangeAnimation(0);
 	}
 
 	private void ChangeAnimation(int arg0)
@@ -355,19 +326,8 @@ public class DrawScripts : MonoBehaviour {
 				numInput.text = animations [animNum].AnimProperties [i].startValue.ToString();
 				numberPanel.SetActive (true);
 			}
-
-            if (animations[animNum].AnimProperties[i].type == "time" && GameObject.FindGameObjectsWithTag("starttime").Length <= 0)
-            {
-                var newTime = Instantiate(timeTemplate, timePanel.transform);
-                newTime.name = animations[animNum].AnimProperties[i].name;
-                newTime.tag = "starttime";
-                newTime.GetComponent<Text>().text = newTime.name;
-                newTime.SetActive(true);
-                newTime.transform.Find("StartTimeButton").GetComponent<Button>().onClick.AddListener(TaskSetStartTimeButtonClick);
-                timePanel.SetActive(true);
-            }
-
-        }
+				
+		}
 
     }
 
@@ -599,79 +559,56 @@ public class DrawScripts : MonoBehaviour {
 
 	}
 
-    void TaskSetStartTimeButtonClick () {
-        Debug.Log("Start Time button clicked!");
-        timePanelWindow.SetActive(true);
 
-    }
 
-    void TaskOkButtonClick()
+
+
+/*    private void ChangeAnimation(int arg0)
     {
-        var startTime = GameObject.Find("StartTime");
-        startTime.transform.Find("Hours").GetComponent<Text>().text = timePanelWindow.transform.Find("HPanel").Find("numberInput").gameObject.GetComponent<InputField>().text;
-        startTime.transform.Find("Minutes").GetComponent<Text>().text = timePanelWindow.transform.Find("MPanel").Find("numberInput").gameObject.GetComponent<InputField>().text;
-        startTime.transform.Find("Seconds").GetComponent<Text>().text = timePanelWindow.transform.Find("SPanel").Find("numberInput").gameObject.GetComponent<InputField>().text;
-        startTime.transform.Find("Milliseconds").GetComponent<Text>().text = timePanelWindow.transform.Find("HPanel").Find("numberInput").gameObject.GetComponent<InputField>().text;
-
-        timePanelWindow.SetActive(false);
-
-    }
-
-    void TaskCancelButtonClick()
-    {
-        timePanelWindow.SetActive(false);
-
-    }
-
-
-
-
-    /*    private void ChangeAnimation(int arg0)
+        switch (AnimationDropdown.value)
         {
-            switch (AnimationDropdown.value)
-            {
-                case 1:
-                    anim.layer.specialPlaybackMode = specialMode.gradient;
-                    anim.layer.mode = playbackMode.loop;
-                    anim.layer.state = playbackState.play;
-                    anim.layer.timelineLength = 2000;
-                    auxColor.SetActive(true);
-                    animationMenu.SetActive(false);
-                    break;
-                case 2:
-                    anim.layer.specialPlaybackMode = specialMode.fire;
-                    anim.layer.mode = playbackMode.loop;
-                    anim.layer.timelineLength = 5000;
-                    auxColor.SetActive(true);
-                    animationMenu.SetActive(false);
-                    break;
-                case 3:
-                    anim.layer.specialPlaybackMode = specialMode.chaser;
-                    anim.layer.mode = playbackMode.loop;
-                    anim.layer.timelineLength = 2000;
-                    auxColor.SetActive(true);
-                    animationMenu.SetActive(false);
-                    break;
-                case 4:
-                    anim.layer.specialPlaybackMode = specialMode.police;
-                    anim.layer.mode = playbackMode.loop;
-                    anim.layer.timelineLength = 2000;
-                    auxColor.SetActive(true);
-                    animationMenu.SetActive(false);
-                    break;
-                default:
-                    anim.layer.specialPlaybackMode = specialMode.normal;
-                    anim.layer.mode = playbackMode.loop;
-                    anim.layer.state = playbackState.play;
-                    anim.layer.timelineLength = 1000;
-                    auxColor.SetActive(false);
-                    animationMenu.SetActive(false);
-                    break;
-            }
+            case 1:
+                anim.layer.specialPlaybackMode = specialMode.gradient;
+                anim.layer.mode = playbackMode.loop;
+                anim.layer.state = playbackState.play;
+                anim.layer.timelineLength = 2000;
+                auxColor.SetActive(true);
+                animationMenu.SetActive(false);
+                break;
+            case 2:
+                anim.layer.specialPlaybackMode = specialMode.fire;
+                anim.layer.mode = playbackMode.loop;
+                anim.layer.timelineLength = 5000;
+                auxColor.SetActive(true);
+                animationMenu.SetActive(false);
+                break;
+            case 3:
+                anim.layer.specialPlaybackMode = specialMode.chaser;
+                anim.layer.mode = playbackMode.loop;
+                anim.layer.timelineLength = 2000;
+                auxColor.SetActive(true);
+                animationMenu.SetActive(false);
+                break;
+            case 4:
+                anim.layer.specialPlaybackMode = specialMode.police;
+                anim.layer.mode = playbackMode.loop;
+                anim.layer.timelineLength = 2000;
+                auxColor.SetActive(true);
+                animationMenu.SetActive(false);
+                break;
+            default:
+                anim.layer.specialPlaybackMode = specialMode.normal;
+                anim.layer.mode = playbackMode.loop;
+                anim.layer.state = playbackState.play;
+                anim.layer.timelineLength = 1000;
+                auxColor.SetActive(false);
+                animationMenu.SetActive(false);
+                break;
         }
-    */
+    }
+*/
 
-    private void ChangeTool(int arg0)
+	private void ChangeTool(int arg0)
 	{
 		switch (toolsDropdown.value)
 		{
