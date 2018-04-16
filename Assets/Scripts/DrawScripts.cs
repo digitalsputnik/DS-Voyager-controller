@@ -39,10 +39,10 @@ public class Property
 	public string name;
 	public string type;
 	public object startValue;
-	public int minValue;
-	public int maxValue;
+	public object minValue;
+	public object maxValue;
 
-	public Property(string newName, string newType, object newStartValue, int newMinValue, int newMaxValue)
+	public Property(string newName, string newType, object newStartValue, object newMinValue, object newMaxValue)
 	{
 		name = newName;
 		type = newType;
@@ -158,10 +158,11 @@ public class DrawScripts : MonoBehaviour {
         newAnim5.AnimProperties.Add(new Property("Color2", "color", itshBackGround, 0, 0));
         newAnim5.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
         newAnim5.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
-        newAnim5.AnimProperties.Add(new Property("StartTime", "time", 0, 0, 23));
-        newAnim5.AnimProperties.Add(new Property("StartTime", "time", 0, 0, 59));
-        newAnim5.AnimProperties.Add(new Property("StartTime", "time", 0, 0, 59));
-        newAnim5.AnimProperties.Add(new Property("StartTime", "time", 0, 0, 1000));
+        int[] startValue = { 0, 0, 0, 0 };
+        int[] minValue = { 0, 0, 0, 0 };
+        int[] maxValue = { 23, 59, 59, 1000 };
+        newAnim5.AnimProperties.Add(new Property("StartTime", "time", startValue, minValue, 23));
+ 
 
         animations.Add(newAnim5);
 
@@ -349,8 +350,8 @@ public class DrawScripts : MonoBehaviour {
 				InputField numInput = numObject.GetComponent<InputField> ();
 				//numInput.onEndEdit.AddListener(delegate {CheckInput(numInput); });
 				numInput.onValueChanged.AddListener(delegate {CheckInput(numInput); });
-				numObject.GetComponent<MinMaxValues>().minValue = animations [animNum].AnimProperties [i].minValue;
-				numObject.GetComponent<MinMaxValues>().maxValue = animations [animNum].AnimProperties [i].maxValue;
+				numObject.GetComponent<MinMaxValues>().minValue = (int)animations [animNum].AnimProperties [i].minValue;
+				numObject.GetComponent<MinMaxValues>().maxValue = (int)animations [animNum].AnimProperties [i].maxValue;
 				numObject.GetComponent<MinMaxValues>().startValue = (int)animations [animNum].AnimProperties [i].startValue;
 				numInput.text = animations [animNum].AnimProperties [i].startValue.ToString();
 				numberPanel.SetActive (true);
@@ -363,6 +364,14 @@ public class DrawScripts : MonoBehaviour {
                 newTime.tag = "starttime";
                 newTime.GetComponent<Text>().text = newTime.name;
                 newTime.SetActive(true);
+                int[] startValues = ((int[])animations[animNum].AnimProperties[i].startValue);
+                int[] minValues = ((int[])animations[animNum].AnimProperties[i].minValue);
+                int[] maxValues = ((int[])animations[animNum].AnimProperties[i].maxValue);
+                newTime.transform.Find("Hours").GetComponent<Text>().text = startValues[0].ToString();
+                newTime.transform.Find("Minutes").GetComponent<Text>().text = startValues[1].ToString();
+                newTime.transform.Find("Seconds").GetComponent<Text>().text = startValues[2].ToString();
+                newTime.transform.Find("Milliseconds").GetComponent<Text>().text = startValues[3].ToString();
+
                 newTime.transform.Find("StartTimeButton").GetComponent<Button>().onClick.AddListener(TaskSetStartTimeButtonClick);
                 timePanel.SetActive(true);
             }
@@ -408,8 +417,17 @@ public class DrawScripts : MonoBehaviour {
 				numValue = new int[] { Convert.ToInt32(numInput.transform.Find("Text").gameObject.GetComponent<Text>().text) }; 
 
 				currentAnim.Properties.Add (animations [animNum].AnimProperties [i].name, numValue );
-			}  
-		}
+			}
+
+            GameObject startTimePanel = timePanel.transform.Find(animations[animNum].AnimProperties[i].name).gameObject;
+            int[] startTime = new int[4];
+            startTime[0] = Convert.ToInt32(startTimePanel.transform.Find("Hours").GetComponent<Text>().text);
+            startTime[1] = Convert.ToInt32(startTimePanel.transform.Find("Minutes").GetComponent<Text>().text);
+            startTime[2] = Convert.ToInt32(startTimePanel.transform.Find("Seconds").GetComponent<Text>().text);
+            startTime[3] = Convert.ToInt32(startTimePanel.transform.Find("Milliseconds").GetComponent<Text>().text);
+
+            currentAnim.Properties.Add(animations[animNum].AnimProperties[i].name, startTime);
+        }
 
 		return currentAnim;
 	}
@@ -504,13 +522,32 @@ public class DrawScripts : MonoBehaviour {
 					InputField numInput = numObject.GetComponent<InputField> ();
 					//numInput.onEndEdit.AddListener(delegate {CheckInput(numInput); });
 					numInput.onValueChanged.AddListener(delegate {CheckInput(numInput); });
-					numObject.GetComponent<MinMaxValues>().minValue = animations [animNum].AnimProperties [i].minValue;
-					numObject.GetComponent<MinMaxValues>().maxValue = animations [animNum].AnimProperties [i].maxValue;
+					numObject.GetComponent<MinMaxValues>().minValue = (int)animations [animNum].AnimProperties [i].minValue;
+					numObject.GetComponent<MinMaxValues>().maxValue = (int)animations [animNum].AnimProperties [i].maxValue;
 					numObject.GetComponent<MinMaxValues>().startValue = (int)animations [animNum].AnimProperties [i].startValue;
 					numInput.text = property.Value[0].ToString();
 					numberPanel.SetActive (true);
 				}
-				i++;
+                if (animations[animNum].AnimProperties[i].type == "time" )
+                {
+                    var newTime = Instantiate(timeTemplate, timePanel.transform);
+                    newTime.name = property.Key;
+                    newTime.tag = "starttime";
+                    newTime.GetComponent<Text>().text = newTime.name;
+                    newTime.SetActive(true);
+                    int[] startValues = ((int[])animations[animNum].AnimProperties[i].startValue);
+                    int[] minValues = ((int[])animations[animNum].AnimProperties[i].minValue);
+                    int[] maxValues = ((int[])animations[animNum].AnimProperties[i].maxValue);
+                    newTime.transform.Find("Hours").GetComponent<Text>().text = property.Value[0].ToString();
+                    newTime.transform.Find("Minutes").GetComponent<Text>().text = property.Value[1].ToString();
+                    newTime.transform.Find("Seconds").GetComponent<Text>().text = property.Value[2].ToString();
+                    newTime.transform.Find("Milliseconds").GetComponent<Text>().text = property.Value[3].ToString();
+
+                    newTime.transform.Find("StartTimeButton").GetComponent<Button>().onClick.AddListener(TaskSetStartTimeButtonClick);
+                    timePanel.SetActive(true);
+                }
+
+                i++;
 
 			}
 		} else {
