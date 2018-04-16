@@ -65,6 +65,7 @@ public class Stroke
         //Timestamps
         CreationTimestamp = GetCurrentTimestampUTC();
         Duration = 2000f;
+        StartTime = GetStartTimeFromProperties(properties);
 
         //Add layer reference!
         layer = ParentLayer;
@@ -78,6 +79,7 @@ public class Stroke
     {
         StrokeID = ID;
         TimeStamp = GetCurrentTimestampUTC();
+        StartTime = GetStartTimeFromProperties(properties);
 
         if (LampPixQueueToPixel == null)
         {
@@ -99,9 +101,22 @@ public class Stroke
         return (double)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
     }
 
-    private double GetCurrentTimestampFix()
+    private double GetStartTimeFromProperties(Dictionary<string, int[]> properties = null)
     {
-        return (double)(new DateTime(2018,04,11,14,0,1) - new DateTime(1970, 1, 1)).TotalSeconds;
+        var response = (double)(DateTime.Today - new DateTime(1970, 1, 1)).TotalSeconds;
+
+        if (properties != null)
+        {
+            if (properties.ContainsKey("StartTime"))
+            {
+                var startTime = properties["StartTime"];
+                var today = DateTime.Today;
+                var time = new TimeSpan(0,startTime[0], startTime[1], startTime[2], startTime[3]);
+                //TODO: Take time offset into account!
+                response = (double)((today + time) - new DateTime(1970, 1, 1)).TotalSeconds;
+            }
+        }
+        return response;
     }
 
     /// <summary>
@@ -355,6 +370,8 @@ public class AnimationSender : MonoBehaviour
     public UdpClient LampPollClient;
 
     public IPEndPoint localEndpoint;
+
+    public double TimeOffset;
 
     List<string> StopLampCommunication = new List<string>();
 

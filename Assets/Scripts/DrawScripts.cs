@@ -321,20 +321,20 @@ public class DrawScripts : MonoBehaviour {
 				newColorButton.GetComponent<ColorButtonScript> ().hVal = hVal;
 
                 //OLD VERSION
-                if (numColors == 1)
-                {
-                    anim.oldI = iVal;
-                    anim.oldT = sVal;
-                    anim.oldS = tVal;
-                    anim.oldH = hVal;
-                }
-                else
-                {
-                    anim.secI = iVal;
-                    anim.secT = sVal;
-                    anim.secS = tVal;
-                    anim.secH = hVal;
-                }
+                //if (numColors == 1)
+                //{
+                    //anim.oldI = iVal;
+                //    anim.oldT = sVal;
+                //    anim.oldS = tVal;
+                //    anim.oldH = hVal;
+                //}
+                //else
+                //{
+                //    anim.secI = iVal;
+                //    anim.secT = sVal;
+                //    anim.secS = tVal;
+                //    anim.secH = hVal;
+                //}
 
                 numColors++;
 			}

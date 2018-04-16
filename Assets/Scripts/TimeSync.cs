@@ -135,6 +135,7 @@ public class TimeSync : MonoBehaviour {
             {
                 for (int i = 0; i < numberOfTimes; i++)
                 {
+                    //TODO: Add a queue number to each request to foolproof for missing packets
                     var MasterSlaveDifference = SyncPacket();
                     var SlaveMasterDifference = DelayPacket();
 
@@ -147,6 +148,9 @@ public class TimeSync : MonoBehaviour {
                 Debug.Log("Offset delta " + (Offsets.Max() - Offsets.Min()));
                 Debug.Log("Delay delta " + (Delays.Max() - Delays.Min()));
                 TimeOffset = Offsets.Sum() / Offsets.Count + Delays.Sum() / Delays.Count;
+
+                //Sets the offset time for calculation
+                AnimationControl.TimeOffset = TimeOffset;
             }
 
             //TODO: Waiting time should be dependent on the quality of sync data (standard deviation) and if the sync has failed or not.
