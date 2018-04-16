@@ -17771,7 +17771,7 @@ MonoBehaviour:
   okButton: {fileID: 822054039}
   animationMenu: {fileID: 1352726975}
   strokeMenu: {fileID: 0}
-  toolsDropdown: {fileID: 0}
+  toolsDropdown: {fileID: 726862088}
   workSpace: {fileID: 348730173}
   drawMode: {fileID: 0}
 --- !u!1 &412034969
@@ -64664,7 +64664,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65739fd08edebe648b53cb65c7544df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawScripts: {fileID: 0}
+  drawScripts: {fileID: 411981887}
   draw: {fileID: 404138995}
   ActiveStroke:
     StrokeID: 

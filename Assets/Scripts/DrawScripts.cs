@@ -161,7 +161,7 @@ public class DrawScripts : MonoBehaviour {
         int[] startValue = { 0, 0, 0, 0 };
         int[] minValue = { 0, 0, 0, 0 };
         int[] maxValue = { 23, 59, 59, 1000 };
-        newAnim5.AnimProperties.Add(new Property("StartTime", "time", startValue, minValue, 23));
+        newAnim5.AnimProperties.Add(new Property("StartTime", "time", startValue, minValue, maxValue));
  
 
         animations.Add(newAnim5);
