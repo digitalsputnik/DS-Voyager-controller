@@ -55641,6 +55641,18 @@ Prefab:
       propertyPath: m_SizeDelta.y
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 1701541841224820, guid: dcf52a2990ef84041a1047dfe06de963, type: 2}
+      propertyPath: m_Name
+      value: TimePanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 1618419452835846, guid: dcf52a2990ef84041a1047dfe06de963, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1618419452835846, guid: dcf52a2990ef84041a1047dfe06de963, type: 2}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114678182527620110, guid: dcf52a2990ef84041a1047dfe06de963, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: dcf52a2990ef84041a1047dfe06de963, type: 2}
@@ -57077,6 +57089,30 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1973753103909848, guid: 896f50636e8a97e4a94df77a30bb8fd7, type: 2}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973753103909848, guid: 896f50636e8a97e4a94df77a30bb8fd7, type: 2}
+      propertyPath: m_Name
+      value: TimePanelWindow
+      objectReference: {fileID: 0}
+    - target: {fileID: 114131002110652558, guid: 896f50636e8a97e4a94df77a30bb8fd7,
+        type: 2}
+      propertyPath: m_Text
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114772180747268086, guid: 896f50636e8a97e4a94df77a30bb8fd7,
+        type: 2}
+      propertyPath: m_Text
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114424761289582736, guid: 896f50636e8a97e4a94df77a30bb8fd7,
+        type: 2}
+      propertyPath: m_Text
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114205101425054936, guid: 896f50636e8a97e4a94df77a30bb8fd7,
+        type: 2}
+      propertyPath: m_Text
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

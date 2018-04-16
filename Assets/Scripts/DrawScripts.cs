@@ -244,7 +244,7 @@ public class DrawScripts : MonoBehaviour {
 
             if (animations[0].AnimProperties[i].type == "int")
             {
-                var newNum = Instantiate(numberTemplate, numberPanel.transform.parent);
+                var newNum = Instantiate(numberTemplate, numberPanel.transform);
                 newNum.name = "Number" + numSpeeds.ToString();
                 newNum.tag = "int";
                 numberPanel.SetActive(true);
@@ -255,16 +255,19 @@ public class DrawScripts : MonoBehaviour {
 
             }
 
-            if (animations[0].AnimProperties[i].type == "time" && GameObject.FindGameObjectsWithTag("starttime").Length <= 0)
+            if (animations[0].AnimProperties[i].type == "time")
             {
+                Debug.Log("TimePanel created in SetupAnimations...");
+                timePanel.SetActive(true);
                 var newTime = Instantiate(timeTemplate, timePanel.transform);
                 newTime.name = "StartTime";
-                newTime.tag = "time";
-                timePanel.SetActive(true);
+                newTime.tag = "starttime";
                 newTime.SetActive(true);
+                timePanel.GetComponent<Text>().text = newTime.name;
             }
         }
-      
+
+     
 	}
 
 	private void ChangeAnimation(int arg0)
@@ -272,7 +275,7 @@ public class DrawScripts : MonoBehaviour {
 		//Debug.Log ("Inside ChangeAnimation....");
 		int animNum = AnimationDropdown.value;
 
-        //Debug.Log ("Selected animation number: "+animNum);
+        Debug.Log ("Selected animation number: "+animNum);
 		int numProperties = animations[animNum].AnimProperties.Count;
 		int numColors = 1;
 
@@ -296,6 +299,12 @@ public class DrawScripts : MonoBehaviour {
 			num.SetActive (false);
 			Destroy(num);
 		}
+
+        //hide start time
+        //var startTime = timePanel.transform.Find("StartTime").gameObject;
+        timePanel.SetActive(false);
+
+        
 
 
 		//hide animation menu
@@ -357,23 +366,35 @@ public class DrawScripts : MonoBehaviour {
 				numberPanel.SetActive (true);
 			}
 
-            if (animations[animNum].AnimProperties[i].type == "time" && GameObject.FindGameObjectsWithTag("starttime").Length <= 0)
+            if (animations[animNum].AnimProperties[i].type == "time")
             {
-                var newTime = Instantiate(timeTemplate, timePanel.transform);
-                newTime.name = animations[animNum].AnimProperties[i].name;
-                newTime.tag = "starttime";
-                newTime.GetComponent<Text>().text = newTime.name;
-                newTime.SetActive(true);
-                int[] startValues = ((int[])animations[animNum].AnimProperties[i].startValue);
-                int[] minValues = ((int[])animations[animNum].AnimProperties[i].minValue);
-                int[] maxValues = ((int[])animations[animNum].AnimProperties[i].maxValue);
-                newTime.transform.Find("Hours").GetComponent<Text>().text = startValues[0].ToString();
-                newTime.transform.Find("Minutes").GetComponent<Text>().text = startValues[1].ToString();
-                newTime.transform.Find("Seconds").GetComponent<Text>().text = startValues[2].ToString();
-                newTime.transform.Find("Milliseconds").GetComponent<Text>().text = startValues[3].ToString();
-
-                newTime.transform.Find("StartTimeButton").GetComponent<Button>().onClick.AddListener(TaskSetStartTimeButtonClick);
+                Debug.Log("Setting Start time...");
                 timePanel.SetActive(true);
+                var timePanels = timePanel.GetChildrenWithTag("starttime");
+                if (timePanels.Count > 0)
+                {
+                    Debug.Log("Making previous timePanel active...");
+                    timePanels[0].SetActive(true);
+                }
+                else
+                {
+                    Debug.Log("Creating new time...");
+                    var newTime = Instantiate(timeTemplate, timePanel.transform);
+                    newTime.name = animations[animNum].AnimProperties[i].name;
+                    newTime.tag = "starttime";
+                    newTime.GetComponent<Text>().text = newTime.name;
+                    newTime.SetActive(true);
+                    int[] startValues = ((int[])animations[animNum].AnimProperties[i].startValue);
+                    int[] minValues = ((int[])animations[animNum].AnimProperties[i].minValue);
+                    int[] maxValues = ((int[])animations[animNum].AnimProperties[i].maxValue);
+                    newTime.transform.Find("Hours").GetComponent<Text>().text = startValues[0].ToString();
+                    newTime.transform.Find("Minutes").GetComponent<Text>().text = startValues[1].ToString();
+                    newTime.transform.Find("Seconds").GetComponent<Text>().text = startValues[2].ToString();
+                    newTime.transform.Find("Milliseconds").GetComponent<Text>().text = startValues[3].ToString();
+
+                    newTime.transform.Find("StartTimeButton").GetComponent<Button>().onClick.AddListener(TaskSetStartTimeButtonClick);
+                }
+                
             }
 
         }
@@ -479,8 +500,12 @@ public class DrawScripts : MonoBehaviour {
 				Destroy(num);
 			}
 
-			//hide animation menu
-			animationMenu.SetActive (false);
+            //hide start time
+            var startTime = timePanel.transform.Find("StartTime").gameObject;
+            startTime.SetActive(false);
+
+            //hide animation menu
+            animationMenu.SetActive (false);
 
 			//set new values Q: would we get all the properties each time?
 			i = 0;
@@ -530,10 +555,11 @@ public class DrawScripts : MonoBehaviour {
 				}
                 if (animations[animNum].AnimProperties[i].type == "time" )
                 {
-                    var newTime = Instantiate(timeTemplate, timePanel.transform);
-                    newTime.name = property.Key;
-                    newTime.tag = "starttime";
-                    newTime.GetComponent<Text>().text = newTime.name;
+                    //var newTime = Instantiate(timeTemplate, timePanel.transform);
+                    //newTime.name = property.Key;
+                    //newTime.tag = "starttime";
+                    //newTime.GetComponent<Text>().text = newTime.name;
+                    var newTime = timePanel.transform.Find("StartTime").gameObject;
                     newTime.SetActive(true);
                     int[] startValues = ((int[])animations[animNum].AnimProperties[i].startValue);
                     int[] minValues = ((int[])animations[animNum].AnimProperties[i].minValue);
@@ -592,7 +618,30 @@ public class DrawScripts : MonoBehaviour {
 					numInput.GetComponent<InputField> ().text = numValue;
 
 				}
-				i++;
+
+                if (animations[animNum].AnimProperties[i].type == "time")
+                {
+                    //var newTime = Instantiate(timeTemplate, timePanel.transform);
+                    //newTime.name = property.Key;
+                    //newTime.tag = "starttime";
+                    //newTime.GetComponent<Text>().text = newTime.name;
+                    timePanel.SetActive(true);
+                    var newTime = timePanel.transform.Find("StartTime").gameObject;
+                    newTime.SetActive(true);
+                    int[] startValues = ((int[])animations[animNum].AnimProperties[i].startValue);
+                    int[] minValues = ((int[])animations[animNum].AnimProperties[i].minValue);
+                    int[] maxValues = ((int[])animations[animNum].AnimProperties[i].maxValue);
+                    newTime.transform.Find("Hours").GetComponent<Text>().text = property.Value[0].ToString();
+                    newTime.transform.Find("Minutes").GetComponent<Text>().text = property.Value[1].ToString();
+                    newTime.transform.Find("Seconds").GetComponent<Text>().text = property.Value[2].ToString();
+                    newTime.transform.Find("Milliseconds").GetComponent<Text>().text = property.Value[3].ToString();
+
+                    newTime.transform.Find("StartTimeButton").GetComponent<Button>().onClick.AddListener(TaskSetStartTimeButtonClick);
+                    
+                }
+
+
+                i++;
 			}
 				
 		}
@@ -638,17 +687,21 @@ public class DrawScripts : MonoBehaviour {
 
     void TaskSetStartTimeButtonClick () {
         Debug.Log("Start Time button clicked!");
+        var startTime = timePanel.transform.Find("StartTime");
         timePanelWindow.SetActive(true);
-
+        timePanelWindow.transform.Find("HPanel").Find("numberInput").gameObject.GetComponent<InputField>().text = startTime.transform.Find("Hours").GetComponent<Text>().text;
+        timePanelWindow.transform.Find("MPanel").Find("numberInput").gameObject.GetComponent<InputField>().text = startTime.transform.Find("Minutes").GetComponent<Text>().text;
+        timePanelWindow.transform.Find("SPanel").Find("numberInput").gameObject.GetComponent<InputField>().text = startTime.transform.Find("Seconds").GetComponent<Text>().text;
+        timePanelWindow.transform.Find("MSPanel").Find("numberInput").gameObject.GetComponent<InputField>().text = startTime.transform.Find("Milliseconds").GetComponent<Text>().text;
     }
 
     void TaskOkButtonClick()
     {
-        var startTime = GameObject.Find("StartTime");
+        var startTime = timePanel.transform.Find("StartTime");
         startTime.transform.Find("Hours").GetComponent<Text>().text = timePanelWindow.transform.Find("HPanel").Find("numberInput").gameObject.GetComponent<InputField>().text;
         startTime.transform.Find("Minutes").GetComponent<Text>().text = timePanelWindow.transform.Find("MPanel").Find("numberInput").gameObject.GetComponent<InputField>().text;
         startTime.transform.Find("Seconds").GetComponent<Text>().text = timePanelWindow.transform.Find("SPanel").Find("numberInput").gameObject.GetComponent<InputField>().text;
-        startTime.transform.Find("Milliseconds").GetComponent<Text>().text = timePanelWindow.transform.Find("HPanel").Find("numberInput").gameObject.GetComponent<InputField>().text;
+        startTime.transform.Find("Milliseconds").GetComponent<Text>().text = timePanelWindow.transform.Find("MSPanel").Find("numberInput").gameObject.GetComponent<InputField>().text;
 
         timePanelWindow.SetActive(false);
 
