@@ -227,6 +227,7 @@ public class UpdateChecker : MonoBehaviour {
     public IEnumerator LampsUpdate()
     {
         int lampNumber = 1;
+        bool rebootNeeded = false;
         yield return null;
         while (lampsToBeUpdated.Count > 0)
         {
@@ -384,6 +385,10 @@ public class UpdateChecker : MonoBehaviour {
                             {
                                 installationSuccess = true;
                             }
+                            if (output.Contains("REBOOT"))
+                            {
+                                rebootNeeded = true;
+                            }
                         }
 
                         if (!installationSuccess)
@@ -419,7 +424,7 @@ public class UpdateChecker : MonoBehaviour {
 
                     if (isRev3)
                     {
-                        testCommandStrings = new string[] { "ls -l /mnt/data/animation/AnimationPlayer.py | awk '{print $5}'", "ls -l /mnt/data/animation/PythonReceiver.py | awk '{print $5}'"};
+                        testCommandStrings = new string[] { "ls -l /mnt/data/animation/AnimationPlayer.py | awk '{print $5}'", "ls -l /mnt/data/animation/PythonReceiver.py | awk '{print $5}'", "ls -l /mnt/data/animation/HueCalibration.csv | awk '{print $5}'", "ls -l /mnt/data/animation/IntensityCalibration.csv | awk '{print $5}'", "ls -l /mnt/data/animation/TemperatureCalibration.csv | awk '{print $5}'" };
                     }
                     else
                     {
@@ -475,7 +480,11 @@ public class UpdateChecker : MonoBehaviour {
 
             if (lampsToBeUpdated.Count == 0)
             {
-                UpdateTextValue = "Update completed! Please reboot lamps!";
+                UpdateTextValue = "Update completed!";
+                if (!isRev3 || rebootNeeded)
+                {
+                    UpdateTextValue += " Please reboot lamps!";
+                }
                 OkCancelButtonText = "Ok";
             }
             yield return null;

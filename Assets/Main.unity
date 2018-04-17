@@ -655,6 +655,7 @@ MonoBehaviour:
   pulling: 0
   imageOne: {fileID: 0}
   imageTwo: {fileID: 0}
+  isPulled: 0
 --- !u!1 &8880955
 GameObject:
   m_ObjectHideFlags: 0
@@ -17381,7 +17382,7 @@ MonoBehaviour:
   setupButton: {fileID: 301362579}
   colorTool: {fileID: 59044312}
   setupTool: {fileID: 745929532}
-  BrushDropdown: {fileID: 0}
+  BrushDropdown: {fileID: 726862088}
   mouseCheck: 1
   iVal: 50
   tVal: 3200
@@ -17391,7 +17392,7 @@ MonoBehaviour:
   uiColor: {r: 1, g: 1, b: 1, a: 0}
   auxColor: {fileID: 369448961}
   animSender: {fileID: 1468842241}
-  drawScripts: {fileID: 0}
+  drawScripts: {fileID: 411981887}
   StrokeListMenu: {fileID: 1953412578}
   StrokeOptionTemplate: {fileID: 1766649697}
   ActiveStroke: {fileID: 1766649697}
@@ -17757,6 +17758,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22ac66cbe6beb7948b860e2f7ef083fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animSender: {fileID: 1468842241}
   AnimationDropdown: {fileID: 2030980418}
   anim: {fileID: 0}
   colorPanel: {fileID: 1403677607}
@@ -17773,7 +17775,7 @@ MonoBehaviour:
   strokeMenu: {fileID: 0}
   toolsDropdown: {fileID: 726862088}
   workSpace: {fileID: 348730173}
-  drawMode: {fileID: 0}
+  drawMode: {fileID: 404138993}
 --- !u!1 &412034969
 GameObject:
   m_ObjectHideFlags: 0
@@ -41226,6 +41228,7 @@ MonoBehaviour:
   pulling: 1
   imageOne: {fileID: 21300000, guid: f88b9a7fb4561f340a7d42b8f2cb8685, type: 3}
   imageTwo: {fileID: 21300000, guid: 4c390b2e1643e0c468f1c14be29a84ef, type: 3}
+  isPulled: 0
 --- !u!1 &914080383
 GameObject:
   m_ObjectHideFlags: 0
@@ -67027,6 +67030,7 @@ MonoBehaviour:
   UpdateWindow: {fileID: 335472127}
   AboutWindow: {fileID: 1373103117}
   ListenerToggleButton: {fileID: 595368141}
+  PullMenu: {fileID: 911884964}
 --- !u!114 &1509357877
 MonoBehaviour:
   m_ObjectHideFlags: 0

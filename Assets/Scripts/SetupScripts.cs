@@ -48,6 +48,7 @@ public class SetupScripts : MonoBehaviour {
     public GameObject UpdateWindow;
 	public GameObject AboutWindow;
     public Button ListenerToggleButton;
+    public MenuPullScript PullMenu;
 
     Dictionary<IPAddress, ExtraProperties> IPtoProps = new Dictionary<IPAddress, ExtraProperties>();
 
@@ -58,6 +59,7 @@ public class SetupScripts : MonoBehaviour {
     private int[] LampUDPSoftwareVersion = new int[] { 0, 31 };
     private int[] LampUDPSoftwareVersion3 = new int[] { 0, 38 };
     private int[] LampLPCSoftwareVersion = new int[] {0, 177 };
+    private bool isPollingActive = true;
 
     public Dictionary<IPAddress, int> LampIPtoLengthDictionary { get; set; }
 
@@ -87,6 +89,15 @@ public class SetupScripts : MonoBehaviour {
         StartCoroutine("GetAvailableLamp");
 
         GameObject.Find("DetectedLampProperties").GetComponent<DetectedLampProperties>().LampIPtoLengthDictionary = LampIPtoLengthDictionary;
+    }
+
+    private void Update()
+    {
+        if (!isPollingActive)
+        {
+            StartCoroutine("GetAvailableLamp");
+            isPollingActive = true;
+        }
     }
 
     private void TogglePacketListener()
@@ -366,14 +377,34 @@ public class SetupScripts : MonoBehaviour {
                 newLampIPtoLengthDictionary.Clear();
                 CancelDetection = true;
                 UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
+                isPollingActive = false;
             }
 
+            
             if (newLampIPtoLengthDictionary.Count > 0)
             {
                 AddAllLampsButton.gameObject.SetActive(true);
             }
 
             AddLampButtons(newLampIPtoLengthDictionary);
+
+            if (LampIPtoLengthDictionary.Count == 1 && !LampIPtoLengthDictionary.ContainsKey(IPAddress.Parse("172.20.1.1")))
+            {
+                //Add lamp!
+                AddAllLampsButton.GetComponent<AddAllLampsScript>().AddAllLamps();
+
+                //Go to draw mode
+                var menu = transform.parent.GetComponent<MenuMode>();
+                if (menu != null)
+                {
+                    menu.TaskOnDrawClicked();
+                    if (!PullMenu.isPulled)
+                    {
+                        PullMenu.MoveMenu();
+                        yield return null;
+                    }
+                }
+            }
 
             yield return null;
         }

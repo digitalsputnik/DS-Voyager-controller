@@ -26,8 +26,10 @@ class ArtNetListener(threading.Thread):
         lastTime = time.time()
         rate = 1/25
         DMXOffset = 0
+        lastDMXdata = []
         while True:
             if self.Active == False:
+                time.sleep(1)
                 continue
             
             try:
@@ -57,6 +59,11 @@ class ArtNetListener(threading.Thread):
                     if ArtNetData[14:16] != int(0).to_bytes(2, 'big'):
                         continue
                     DMXData = ArtNetData[18:]
+
+                    if np.array_equal(DMXData, lastDMXdata):
+                        continue
+                    else:
+                        lastDMXdata = DMXData
 
                     #Change stroke properties accordingly (loop through visible layer's strokes)
                     if len(self.Scene.Layers) <= 1:
@@ -118,8 +125,10 @@ class sACNListener(threading.Thread):
         lastTime = time.time()
         rate = 1/25
         DMXOffset = 0
+        lastDMXdata = []
         while True:
             if self.Active == False:
+                time.sleep(1)
                 continue
             
             try:
@@ -148,6 +157,12 @@ class sACNListener(threading.Thread):
                     #    continue
                     
                     DMXData = sACNData[126:]
+
+                    if np.array_equal(DMXData, lastDMXdata):
+                        continue
+                    else:
+                        lastDMXdata = DMXData
+    
 
                     #Change stroke properties accordingly (loop through visible layer's strokes)
                     if len(self.Scene.Layers) <= 1:
@@ -420,9 +435,9 @@ while True:
                                 continue
                             VisibleStrokeIDs.append(controllerStroke['StrokeID'])
     
-                            if not Layer.ChangeStrokeByID(controllerStroke['StrokeID'], startTime = controllerStroke['CreationTimestamp'], pixelDictionary = controllerStroke['PixelQueueToControlledPixel'], totalPixelCount = controllerStroke['TotalPixelCount'], colors = controllerStroke['Colors'],properties = controllerStroke['Properties'], animation = controllerStroke['Animation'], duration = controllerStroke['Duration'], timeStamp = controllerStroke['TimeStamp'], lampMac = LampMac):
+                            if not Layer.ChangeStrokeByID(controllerStroke['StrokeID'], startTime = controllerStroke['StartTime'], pixelDictionary = controllerStroke['PixelQueueToControlledPixel'], totalPixelCount = controllerStroke['TotalPixelCount'], colors = controllerStroke['Colors'],properties = controllerStroke['Properties'], animation = controllerStroke['Animation'], duration = controllerStroke['Duration'], timeStamp = controllerStroke['TimeStamp'], lampMac = LampMac):
                                 #print("Adding new stroke!")
-                                NewStroke = AnimationPlayer.Stroke(Layer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['CreationTimestamp'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac)
+                                NewStroke = AnimationPlayer.Stroke(Layer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['StartTime'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac)
                         Layer.RemoveInvisibleStrokes(VisibleStrokeIDs)
                     else:
                         #Create layer and its strokes
@@ -430,7 +445,7 @@ while True:
                         controllerLayer['Strokes'].sort(key = lambda s: s["CreationTimestamp"])
                         for controllerStroke in controllerLayer['Strokes']:
                             if LampMac in controllerStroke['PixelQueueToControlledPixel']:
-                                NewStroke = AnimationPlayer.Stroke(NewLayer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['CreationTimestamp'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac)
+                                NewStroke = AnimationPlayer.Stroke(NewLayer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['StartTime'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac)
                 #TODO: Delete layers and strokes which have not been sent?
                 #Save to file
                 file = open(StrokesFilename, "w")

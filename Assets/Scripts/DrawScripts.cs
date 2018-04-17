@@ -72,6 +72,7 @@ public class Anim
 
 public class DrawScripts : MonoBehaviour {
 
+    public AnimationSender animSender;
     public Dropdown AnimationDropdown;
     public tempAnimcontroller anim;
 	public GameObject colorPanel;
@@ -164,6 +165,7 @@ public class DrawScripts : MonoBehaviour {
         newAnim5.AnimProperties.Add(new Property("StartTime", "time", startValue, minValue, maxValue));
  
 
+        newAnim5.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim5);
 
         LightAnims newAnim6 = new LightAnims();
@@ -267,6 +269,7 @@ public class DrawScripts : MonoBehaviour {
             }
         }
 
+        ChangeAnimation(0);
      
 	}
 
