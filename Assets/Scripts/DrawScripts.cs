@@ -130,19 +130,19 @@ public class DrawScripts : MonoBehaviour {
         LightAnims newAnim1 = new LightAnims ();
 		newAnim1.AnimName = "Single Color";
 		newAnim1.AnimProperties.Add (new Property ("Color1", "color", itshColor, 0, 0));
-        newAnim1.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        newAnim1.AnimProperties.Add(new Property("DMX-offset", "int", 1, 1, 500));
         animations.Add(newAnim1);
 		LightAnims newAnim2 = new LightAnims ();
 		newAnim2.AnimName = "Gradient";
 		newAnim2.AnimProperties.Add (new Property ("Color1", "color", itshColor, 0, 0));
 		newAnim2.AnimProperties.Add (new Property ("Color2", "color", itshColor2, 0, 0));
-        newAnim2.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        newAnim2.AnimProperties.Add(new Property("DMX-offset", "int", 1, 1, 500));
         animations.Add(newAnim2);
 		LightAnims newAnim3 = new LightAnims ();
         newAnim3.AnimName = "Fire";
         newAnim3.AnimProperties.Add(new Property("Color1", "color", itshColor1, 0, 0));
         newAnim3.AnimProperties.Add(new Property("Color2", "color", itshColor3, 0, 0));
-        newAnim3.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        newAnim3.AnimProperties.Add(new Property("DMX-offset", "int", 1, 1, 500));
         animations.Add(newAnim3);
         LightAnims newAnim4 = new LightAnims();
         newAnim4.AnimName = "Police";
@@ -150,7 +150,7 @@ public class DrawScripts : MonoBehaviour {
         newAnim4.AnimProperties.Add(new Property("Color2", "color", itshColor2, 0, 0));
         newAnim4.AnimProperties.Add(new Property("Color3", "color", itshBackGround, 0, 0));
         newAnim4.AnimProperties.Add(new Property("Speed", "int", 60, 0, 500));
-        newAnim4.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        newAnim4.AnimProperties.Add(new Property("DMX-offset", "int", 1, 1, 500));
         animations.Add(newAnim4);
         LightAnims newAnim5 = new LightAnims();
         newAnim5.AnimName = "Chaser";
@@ -245,13 +245,16 @@ public class DrawScripts : MonoBehaviour {
             if (animations[0].AnimProperties[i].type == "int")
             {
                 var newNum = Instantiate(numberTemplate, numberPanel.transform);
-                newNum.name = "Number" + numSpeeds.ToString();
+                newNum.name = "DMX-offset"; //"Number" + numSpeeds.ToString();
                 newNum.tag = "int";
                 numberPanel.SetActive(true);
                 newNum.SetActive(true);
                 numSpeeds += 1;
 
-                //newNum.transform.Find(
+                
+                GameObject numInput = newNum.transform.Find("numberInput").gameObject;
+                numInput.GetComponent<InputField>().text = animations[0].AnimProperties[i].startValue.ToString();
+                
 
             }
 
@@ -440,14 +443,17 @@ public class DrawScripts : MonoBehaviour {
 				currentAnim.Properties.Add (animations [animNum].AnimProperties [i].name, numValue );
 			}
 
-            GameObject startTimePanel = timePanel.transform.Find(animations[animNum].AnimProperties[i].name).gameObject;
-            int[] startTime = new int[4];
-            startTime[0] = Convert.ToInt32(startTimePanel.transform.Find("Hours").GetComponent<Text>().text);
-            startTime[1] = Convert.ToInt32(startTimePanel.transform.Find("Minutes").GetComponent<Text>().text);
-            startTime[2] = Convert.ToInt32(startTimePanel.transform.Find("Seconds").GetComponent<Text>().text);
-            startTime[3] = Convert.ToInt32(startTimePanel.transform.Find("Milliseconds").GetComponent<Text>().text);
+            if (animations[animNum].AnimProperties[i].type == "time")
+            {
+                GameObject startTimePanel = timePanel.transform.Find(animations[animNum].AnimProperties[i].name).gameObject;
+                int[] startTime = new int[4];
+                startTime[0] = Convert.ToInt32(startTimePanel.transform.Find("Hours").GetComponent<Text>().text);
+                startTime[1] = Convert.ToInt32(startTimePanel.transform.Find("Minutes").GetComponent<Text>().text);
+                startTime[2] = Convert.ToInt32(startTimePanel.transform.Find("Seconds").GetComponent<Text>().text);
+                startTime[3] = Convert.ToInt32(startTimePanel.transform.Find("Milliseconds").GetComponent<Text>().text);
 
-            currentAnim.Properties.Add(animations[animNum].AnimProperties[i].name, startTime);
+                currentAnim.Properties.Add(animations[animNum].AnimProperties[i].name, startTime);
+            }
         }
 
 		return currentAnim;
@@ -789,7 +795,7 @@ public class DrawScripts : MonoBehaviour {
 					light.Find("Canvas").gameObject.SetActive(true);
 				}
 				break;
-			default:
+			default: //Paint Lamp
 				drawMode.SetActive(true);
 				lightCount = workSpace.transform.childCount;
 				for (int i = 0; i < lightCount; i++)

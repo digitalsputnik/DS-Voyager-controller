@@ -2878,8 +2878,8 @@ MonoBehaviour:
   SetupButton: {fileID: 301362579}
   drawTool: {fileID: 404138995}
   animSender: {fileID: 1468842241}
-  colorPanel: {fileID: 0}
-  ColorButton: {fileID: 0}
+  colorPanel: {fileID: 1403677607}
+  ColorButton: {fileID: 1255848505}
   SecondaryColorButton: {fileID: 0}
   clickable:
     cross: {fileID: 982263665}
@@ -17381,7 +17381,7 @@ MonoBehaviour:
   setupButton: {fileID: 301362579}
   colorTool: {fileID: 59044312}
   setupTool: {fileID: 745929532}
-  BrushDropdown: {fileID: 0}
+  BrushDropdown: {fileID: 726862088}
   mouseCheck: 1
   iVal: 50
   tVal: 3200
@@ -17758,7 +17758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AnimationDropdown: {fileID: 2030980418}
-  anim: {fileID: 0}
+  anim: {fileID: 1224962378}
   colorPanel: {fileID: 1403677607}
   numberPanel: {fileID: 409090550}
   timePanel: {fileID: 1740221641}
@@ -17773,7 +17773,7 @@ MonoBehaviour:
   strokeMenu: {fileID: 0}
   toolsDropdown: {fileID: 726862088}
   workSpace: {fileID: 348730173}
-  drawMode: {fileID: 0}
+  drawMode: {fileID: 404138993}
 --- !u!1 &412034969
 GameObject:
   m_ObjectHideFlags: 0
@@ -55283,6 +55283,12 @@ GameObject:
   m_PrefabParentObject: {fileID: 1423208345319600, guid: dcf52a2990ef84041a1047dfe06de963,
     type: 2}
   m_PrefabInternal: {fileID: 1260248669}
+--- !u!114 &1255848505 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114884306118445912, guid: dcf52a2990ef84041a1047dfe06de963,
+    type: 2}
+  m_PrefabInternal: {fileID: 1260248669}
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!1 &1256533002
 GameObject:
   m_ObjectHideFlags: 0
@@ -55653,6 +55659,21 @@ Prefab:
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
+    - target: {fileID: 114311916444910312, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: menuCanvas
+      value: 
+      objectReference: {fileID: 2014415372}
+    - target: {fileID: 114311916444910312, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: colorTool
+      value: 
+      objectReference: {fileID: 59044312}
+    - target: {fileID: 114311916444910312, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: anim
+      value: 
+      objectReference: {fileID: 1224962378}
     m_RemovedComponents:
     - {fileID: 114678182527620110, guid: dcf52a2990ef84041a1047dfe06de963, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: dcf52a2990ef84041a1047dfe06de963, type: 2}
