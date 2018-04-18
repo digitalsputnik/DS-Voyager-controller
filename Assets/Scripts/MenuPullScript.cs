@@ -24,31 +24,39 @@ public class MenuPullScript : MonoBehaviour, IPointerClickHandler {
     private Vector3 EndPosition;
     private float currentTime = 0.0f;
     private float normalizedTime = 0.0f;
-	private bool isPulled = false;
+	public bool isPulled = false;
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        MoveMenu();
+    }
+
+    public void MoveMenu()
+    {
         onMove = true;
         currentTime = 0.0f;
-		isPulled = !isPulled;
-		Sprite newSprite;
+        isPulled = !isPulled;
+        Sprite newSprite;
 
-		if(isPulled) {
-			newSprite = imageTwo; // <- This is the new sprite
-		}else {
-			newSprite = imageOne;
-		}
-		Image theImage = gameObject.GetComponent<Image>();
-		theImage.sprite = newSprite;
+        if (isPulled)
+        {
+            newSprite = imageTwo; // <- This is the new sprite
+        }
+        else
+        {
+            newSprite = imageOne;
+        }
+        Image theImage = gameObject.GetComponent<Image>();
+        theImage.sprite = newSprite;
 
-		Startup start = GameObject.Find ("Main Camera").GetComponent<Startup> ();
+        Startup start = GameObject.Find("Main Camera").GetComponent<Startup>();
 
-		if (start.tutorialMode){
-			start.action1 = true;
-			start.tutorial.transform.Find ("HelpWindow").GetComponent<RectTransform> ().sizeDelta = new Vector2(550f, 340f);
-			start.tutorial.transform.Find ("HelpWindow").GetComponent<RectTransform> ().localPosition = new Vector3(-50f, 0f, 0f);
-		}
-			
+        if (start.tutorialMode)
+        {
+            start.action1 = true;
+            start.tutorial.transform.Find("HelpWindow").GetComponent<RectTransform>().sizeDelta = new Vector2(550f, 340f);
+            start.tutorial.transform.Find("HelpWindow").GetComponent<RectTransform>().localPosition = new Vector3(-50f, 0f, 0f);
+        }
     }
 
 
