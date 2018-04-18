@@ -402,8 +402,15 @@ public class AnimationSender : MonoBehaviour
     {
         NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
         var WirelessInterface = adapters.Where(x => x.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 && x.SupportsMulticast && x.OperationalStatus == OperationalStatus.Up && x.GetIPProperties().GetIPv4Properties() != null).FirstOrDefault();
-        var localIP = WirelessInterface.GetIPProperties().UnicastAddresses.Where(x => x.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).FirstOrDefault().Address.Address;
-        localEndpoint = new IPEndPoint(localIP, 0);
+        if (WirelessInterface == null)
+        {
+            localEndpoint = null;
+        }
+        else
+        {
+            var localIP = WirelessInterface.GetIPProperties().UnicastAddresses.Where(x => x.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).FirstOrDefault().Address.Address;
+            localEndpoint = new IPEndPoint(localIP, 0);
+        }
     }
 
     // Use this for initialization
@@ -713,12 +720,15 @@ public class AnimationSender : MonoBehaviour
         //Get lamps to send the strokes to
         List <string> LampIPList = new List<string>();
 
-        foreach (var pixel in ActiveStroke.ControlledPixels)
+        foreach (var stroke in ActiveStroke.layer.Strokes)
         {
-            string LampIP = pixel.transform.parent.GetComponent<Ribbon>().IP;
-            if (!LampIPList.Contains(LampIP))
+            foreach (var pixel in stroke.ControlledPixels)
             {
-                LampIPList.Add(LampIP);
+                string LampIP = pixel.transform.parent.GetComponent<Ribbon>().IP;
+                if (!LampIPList.Contains(LampIP))
+                {
+                    LampIPList.Add(LampIP);
+                }
             }
         }
 

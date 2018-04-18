@@ -43652,6 +43652,7 @@ MonoBehaviour:
   Mac: 
   Port: 30000
   pipeLength: 1
+  colorIntensityOffset: 0.3
   ColorDataReceiver: {fileID: 611738331}
   UpdateFps: 30
 --- !u!1 &935151728
@@ -50305,6 +50306,7 @@ MonoBehaviour:
   Mac: 
   Port: 30000
   pipeLength: 1
+  colorIntensityOffset: 0.3
   ColorDataReceiver: {fileID: 611738331}
   UpdateFps: 30
 --- !u!114 &1096142448
@@ -54053,6 +54055,7 @@ MonoBehaviour:
   Mac: 
   Port: 30000
   pipeLength: 0
+  colorIntensityOffset: 0.3
   ColorDataReceiver: {fileID: 611738331}
   UpdateFps: 30
 --- !u!4 &1177545566
@@ -58058,6 +58061,21 @@ Prefab:
       propertyPath: anim
       value: 
       objectReference: {fileID: 1224962378}
+    - target: {fileID: 114633764896376974, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 404138995}
+    - target: {fileID: 114633764896376974, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnNewStrokeAddClick
+      objectReference: {fileID: 0}
+    - target: {fileID: 114633764896376974, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114678182527620110, guid: dcf52a2990ef84041a1047dfe06de963, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: dcf52a2990ef84041a1047dfe06de963, type: 2}
@@ -76948,6 +76966,7 @@ MonoBehaviour:
   Mac: 
   Port: 30000
   pipeLength: 0
+  colorIntensityOffset: 0.3
   ColorDataReceiver: {fileID: 611738331}
   UpdateFps: 30
 --- !u!114 &1657679389

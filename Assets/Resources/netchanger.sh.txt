@@ -13,6 +13,13 @@ sleep 1
 ifdown wlan1
 ifconfig wlan1 down
 
+ifdown wlan0 down
+#ifconfig wlan0 down
+#iplink set wlan0 down
+
+ps ax | grep connmand | awk -F ' ' '{print $1}' | xargs kill -9
+ps ax | grep wpa_supplicant | awk -F ' ' '{print $1}' | xargs kill -9
+
 rm /var/lib/misc/dnsmasq.leases
 touch /var/lib/misc/dnsmasq.leases
 
@@ -22,14 +29,18 @@ sed -i "/netmask /c\ netmask 255.255.255.0" /mnt/data/net/interfaces
 sed -i "/broadcast /c\ broadcast 172.20."$1".255" /mnt/data/net/interfaces
 
 #DHCP server
-sed -i "/dhcp-range/c\dhcp-range=172.20."$1".100,172.20."$1".250,1h" /mnt/data/net/dnsmasq.conf
+sed -i "/dhcp-range/c\dhcp-range=172.20."$1".100,172.20."$1".250,24h" /mnt/data/net/dnsmasq.conf
 
 #SSID name
 cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf
+sleep 0.2
 sed -i '/^ssid=DS026/ s/$/_M/' /mnt/data/net/hostapd.conf
-sed -i '/channel=3/c\channel=11' /mnt/data/net/hostapd.conf
+sed -i '/wpa=3/c\wpa=2' /mnt/data/net/hostapd.conf
+echo "wmm_enabled=0" >> /mnt/data/net/hostapd.conf
+echo "beacon_int=300" >> /mnt/data/net/hostapd.conf
+sed -i '/channel=/c\channel=11' /mnt/data/net/hostapd.conf
 
-sleep 15
+sleep 4
 
 ifconfig wlan1 up
 ifup wlan1
@@ -39,4 +50,4 @@ sleep 1
 /etc/init.d/S80dnsmasq start
 /etc/init.d/S99_hostapd start
 
-ifconfig wlan1 172.20.1.1 netmask 255.255.255.0
+ifconfig wlan1 172.20."$1".1 netmask 255.255.255.0

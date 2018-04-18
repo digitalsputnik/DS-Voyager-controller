@@ -1,16 +1,35 @@
 echo "if you want some sort of thing to run automatically, edit me"
 
-cp /etc/net_orig/interfaces /mnt/data/net/interfaces
-cp /etc/net_orig/dnsmasq.conf /mnt/data/net/dnsmasq.conf 
-cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf
+mac_final6chars="voyager_$(/sbin/ip addr show wlan1 | /bin/sed -n 2p | /usr/bin/tr -d : | /usr/bin/cut -d ' ' -f 6 | /usr/bin/cut -c 7-)"
+if [ "$mac_final6chars" == "voyager_" ]
+then
+	#no wifi interfaces, bad boot, waits for power cycle by LPC	
+	sleep 30
+else
+	#restore
+	cp /etc/net_orig/interfaces /mnt/data/net/interfaces
+	cp /etc/net_orig/dnsmasq.conf /mnt/data/net/dnsmasq.conf 
+	cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf
 
-/etc/init.d/S80dnsmasq restart
+	#changes to network config, avoids changing readonly backups of network
+	sed -i '/channel=3/c\channel=6' /mnt/data/net/hostapd.conf
+	sed -i '/wpa=3/c\wpa=2' /mnt/data/net/hostapd.conf
+	echo "wmm_enabled=0" >> /mnt/data/net/hostapd.conf
+	echo "beacon_int=300" >> /mnt/data/net/hostapd.conf
+	sed -i "/dhcp-range/c\dhcp-range=172.20.0.100,172.20.0.250,24h" /mnt/data/net/dnsmasq.conf
+	
+	#remove old leases
+	rm /var/lib/misc/dnsmasq.leases
+	touch /var/lib/misc/dnsmasq.leases
 
-rm /var/lib/misc/dnsmasq.leases
+	#dhcp restart after removing leases and restoring network from backups.
+	/etc/init.d/S80dnsmasq restart
 
-iwconfig wlan1 power off
-iwconfig wlan0 power off
+	#disable power saving
+	iwconfig wlan1 power off
+	iwconfig wlan0 power off
 
-python3 /mnt/data/ut2.6.py &
-nice -11 python3 /mnt/data/animation/PythonReceiver.py &
-sh /mnt/data/autoconnect.sh &
+	python3 /mnt/data/ut2.6.py &
+	nice -11 python3 /mnt/data/animation/PythonReceiver.py &
+	sh /mnt/data/autoconnect.sh &
+fi

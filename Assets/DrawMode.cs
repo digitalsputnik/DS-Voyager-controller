@@ -46,6 +46,7 @@ public class DrawMode : MonoBehaviour {
 	Pixel lastPixel;
 	int numCurrentPixel = 0;
 	int numLastPixel = 0;
+    float colorIntensityOffset = 0.3f;
 	GameObject currentLamp;
 	GameObject lastLamp;
 	Transform temp;
@@ -265,7 +266,12 @@ public class DrawMode : MonoBehaviour {
 
 		uiColor = Color.HSVToRGB (hVal / 360f, sVal/100f, iVal / 100f);
 
-		//set the color tool
+        uiColor.r = uiColor.r * (1 - colorIntensityOffset) + Mathf.Ceil(uiColor.r) * colorIntensityOffset;
+        uiColor.g = uiColor.g * (1 - colorIntensityOffset) + Mathf.Ceil(uiColor.g) * colorIntensityOffset;
+        uiColor.b = uiColor.b * (1 - colorIntensityOffset) + Mathf.Ceil(uiColor.b) * colorIntensityOffset;
+        uiColor.a = uiColor.a * (1 - colorIntensityOffset) + Mathf.Ceil(uiColor.a) * colorIntensityOffset;
+
+        //set the color tool
 
 		if(colorButton!=null) 
 			colorButton.GetComponent<Renderer> ().materials[1].SetColor ("_Color", uiColor);

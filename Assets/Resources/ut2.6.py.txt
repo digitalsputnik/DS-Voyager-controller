@@ -1,6 +1,6 @@
 #Revision 3 voyager
 
-#Andro 2018.02.09
+#Andro 2018.04.17
 #old ut2 script, now the main UDP communication between the outside world
 #scrapped version of reinvented mesh mess
 
@@ -11,11 +11,10 @@
 
 # - possible cockup... Polling info in one packet, seemed like a good idea until telemetry polling with serial from LPC started causing delays. 
 # - maybe remove delay and add refresh telemetry packet, controlled delay
+# - Need to rework polling, LPC send periodically info, instead of CHIP sending poll request on Tx line, ie breaking animation.
 
-# - need to unify rev2 and rev3 version, only change is locations and version nr.
-# - at the moment version numbers go rev 2 uneven numbers / rev3 even numbers
 
-VERSION=[0, 38] # 2 byte values
+VERSION=[0, 40] # 2 byte values
 CLIENT_PING_DELAY = 5 # for led status, how often tries to ping, inbetween sends previous state
 POLLING_DELAY = 30 # how often reads info from LPC when receives polling state.
 
@@ -63,12 +62,23 @@ rgbw0[0:16] = 0xd5, 0x0a, 0x10, 0x08, 0x02, 0x00, 0x28, 0x00, 0x28, 0x00, 0x00, 
 rgbw1 = bytearray()
 rgbw1[0:16] = 0xd5, 0x0a, 0x10, 0x08, 0x02, 0x00, 0x50, 0x00, 0x50, 0x00, 0x00, 0x00, 0x00, 0xef, 0xfe, 0x00
 
+#full length
+rgbw2 = bytearray()
+rgbw2[0:8] = 0xD5, 0x0A, 0x10, 0x03, 0x00, 0x00, 0x00, 0x53
+for x in range(0, 330, 4):
+ rgbw2[x+8:x+8+4] = 0x00, 0x00, 0x00, 0x00  #RGBW
+rgbw2[340:343] = 0xEF, 0xFE, 0x00
+
 # time delays how often some action
 client_start_time = time.time() - CLIENT_PING_DELAY
 start_time_polling = time.time() - POLLING_DELAY
 ping_response = 0
 #for timesync package, values above need reset
 
+#dirty fix for timesync, adds 4 years since epoch, cannot set time back since boot.. not sure whats blocking.. timesync
+#current_time = os.popen("date +%s%3N").readline().strip()
+#if int(current_time) < 1262304000:
+#	os.system("date -s 'Tue Jan  1 00:00:00 UTC 1974'")
 
 #Reading passive(1) or active(0) mode,export PE0 pin
 os.system("echo 128 > /sys/class/gpio/export")
@@ -115,12 +125,27 @@ while True:
 				print ("Timesync respond")
 				
 				#send current time
-				current_time = os.popen("date +%s%3N").readline().strip()
-				print (current_time)
-				sock.sendto(bytearray(current_time, "ascii"), addr)
+				time_start = bytearray()
+				time_start[0:4] = 0xD5, 0x0A, 0x83, 0x20
+				#current_time = os.popen("date +%s%3N").readline().strip()
+				current_time = str(time.time())
+				time_start[4:] = bytearray(current_time, "ascii")
+				print (time.time())
+				#print (list(time_start))
+				sock.sendto(time_start, addr)
 				udp_data = bytearray(5)
-				
 			
+			#DUMMY TIME SYNC PACKET - testing timedelays.
+			if (udp_data[2] == 0x84 and udp_data[3] == 0x10):
+				#send current time
+				time_start = bytearray()
+				time_start[0:4] = 0xD5, 0x0A, 0x84, 0x20
+				#current_time = os.popen("date +%s%3N").readline().strip()
+				current_time = str(time.time())
+				time_start[4:] = bytearray(current_time, "ascii")
+				#print (list(time_start))
+				sock.sendto(time_start, addr)
+				udp_data = bytearray(5)
 			
 			#AP PACKET - start _M access point
 			if (udp_data[2] == 0x81 and udp_data[3] == 0x10):
@@ -131,6 +156,19 @@ while True:
 				sock.sendto(AP_start_reply, addr)
 				udp_data = bytearray(5)
 				
+				print ("start |AP")
+				
+				#flash led when activating master _M
+				for x in range(0, 330, 4):
+					rgbw2[x+8:x+8+4] = 0x80, 0x80, 0x80, 0x80  #RGBW					
+				ser.write(rgbw2)
+				time.sleep(0.1)
+
+				for x in range(0, 330, 4):
+					rgbw2[x+8:x+8+4] = 0x00, 0x00, 0x00, 0x00  #RGBW					
+				ser.write(rgbw2)
+				
+				
 				#Stops client mode
 				os.system("ls /var/lib/connman/*| grep -v settings| xargs rm -rf")
 
@@ -139,7 +177,8 @@ while True:
 
 				#Starts AP _M
 				os.system("sh /mnt/data/netchanger.sh 1 &")
-				time.sleep(17)
+				
+				time.sleep(6)
 			
 			#POLL PACKET FROM UDP DEVICE OUTSIDE
 			if (udp_data[2] == 0x80 and udp_data[3] == 0x10):
@@ -237,7 +276,7 @@ while True:
 						mac_read_flag = 1
 					
 					#Passive or Active mode
-					UDPResponse["passive_active_mode"] = os.popen("cat /sys/class/gpio/gpio128/value").readline().strip()
+					UDPResponse["passive_active_mode"] = int(os.popen("cat /sys/class/gpio/gpio128/value").readline().strip())
 					
 					#! Need to add master _M !#
 					#Serial name / SSID
@@ -257,7 +296,7 @@ while True:
 					#print (len(poll_reply))
 					
 				else:
-					print ("send poll, with out rereading")
+					#print ("send poll, with out rereading")
 					sock.sendto(UDPResponseJSON.encode(), addr)
 					#sock.sendto(poll_reply, addr)
 					
@@ -283,6 +322,18 @@ while True:
 				print (int(serReceivedData[5]))
 				if int(serReceivedData[5]) > 15:
 					print ("start |AP")
+					
+					#flash led when activating master _M
+					for x in range(0, 330, 4):
+						rgbw2[x+8:x+8+4] = 0x80, 0x80, 0x80, 0x80  #RGBW					
+					ser.write(rgbw2)
+					time.sleep(0.1)
+
+					for x in range(0, 330, 4):
+						rgbw2[x+8:x+8+4] = 0x00, 0x00, 0x00, 0x00  #RGBW					
+					ser.write(rgbw2)
+					
+					
 					#Stops client mode
 					os.system("ls /var/lib/connman/*| grep -v settings| xargs rm -rf")
 
@@ -291,10 +342,8 @@ while True:
 
 					#Starts AP _M
 					os.system("sh /mnt/data/netchanger.sh 1 &")
-					
-					#add loop to display color while changing ap mode?
-					
-					time.sleep(17)
+										
+					time.sleep(6)
 											
 			###TOP BATTERY BUTTON###
 			# Checks flag bytes
@@ -368,7 +417,8 @@ while True:
 		ser.close()
 		sys.exit()
 	except:
-		print ("send fail")
+		pass
+		#print ("send fail")
 
 			
 sock.close()

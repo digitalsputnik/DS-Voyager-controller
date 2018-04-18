@@ -57,7 +57,7 @@ public class SetupScripts : MonoBehaviour {
     private bool CancelDetection = false;
     private int[] LampAnimationSoftwareVersion = new int[] { 0, 0 };
     private int[] LampUDPSoftwareVersion = new int[] { 0, 31 };
-    private int[] LampUDPSoftwareVersion3 = new int[] { 0, 38 };
+    private int[] LampUDPSoftwareVersion3 = new int[] { 0, 40 };
     private int[] LampLPCSoftwareVersion = new int[] {0, 177 };
     private bool isPollingActive = true;
 
@@ -185,6 +185,12 @@ public class SetupScripts : MonoBehaviour {
             //Select wireless interface for use on PC
             NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
             var WirelessInterface = adapters.Where(x => x.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 && x.SupportsMulticast && x.OperationalStatus == OperationalStatus.Up && x.GetIPProperties().GetIPv4Properties() != null).FirstOrDefault();
+            if (WirelessInterface == null)
+            {
+                yield return new WaitForSeconds(1.0f);
+                continue;
+            }
+
             var localIP = WirelessInterface.GetIPProperties().UnicastAddresses.Where(x => x.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).FirstOrDefault().Address.Address;
             IPEndPoint localEndpoint = new IPEndPoint(localIP, 0);
             //Send poll message

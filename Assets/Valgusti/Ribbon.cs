@@ -18,6 +18,7 @@ public class Ribbon : MonoBehaviour {
 	int pixelCount = 0;
 	int startPixel = 0;
 	int endPixel = 0;
+    public float colorIntensityOffset = 0.3f;
 
 	Pixel currentPixel;
 	Material geomMaterial;
@@ -131,11 +132,15 @@ public class Ribbon : MonoBehaviour {
 				Color pixelColor;
 				for (int i = 0; i < pixelCount; i++) {
 					// create unity color
+                    
 					pixelColor = new Color (Mathf.Max ((float)colorsArray [i, 0] / 255.0f, (float)colorsArray [i, 3] / 255.0f), Mathf.Max ((float)colorsArray [i, 1] / 255.0f, (float)colorsArray [i, 3] / 255.0f), Mathf.Max ((float)colorsArray [i, 2] / 255.0f, (float)colorsArray [i, 3] / 255.0f), 0f);
-					//Debug.Log ("Pixel color is: "+pixelColor);
-
-					//find child pixels and apply the color created above.
-					if (startPixel < endPixel) {
+                    //Debug.Log ("Pixel color is: "+pixelColor);
+                    pixelColor.r = pixelColor.r * (1 - colorIntensityOffset) + Mathf.Ceil(pixelColor.r) * colorIntensityOffset;
+                    pixelColor.g = pixelColor.g * (1 - colorIntensityOffset) + Mathf.Ceil(pixelColor.g) * colorIntensityOffset;
+                    pixelColor.b = pixelColor.b * (1 - colorIntensityOffset) + Mathf.Ceil(pixelColor.b) * colorIntensityOffset;
+                    pixelColor.a = pixelColor.a * (1 - colorIntensityOffset) + Mathf.Ceil(pixelColor.a) * colorIntensityOffset;
+                    //find child pixels and apply the color created above.
+                    if (startPixel < endPixel) {
 						try {
 							currentPixel = this.gameObject.transform.Find ("pixel" + (startPixel + i)).GetComponent<Pixel> ();
 						} catch (Exception) {

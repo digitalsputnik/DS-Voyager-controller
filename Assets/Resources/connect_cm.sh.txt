@@ -34,7 +34,7 @@ done
 echo $SSID_FILTER
 
 #get ssid with highest RSSI, filtered with $SSID_FILTER
-ssid=$(iwlist wlan0 scan | grep "Quality\|ESSID" | awk '{ ORS = (NR%2 ? FS : RS) } 1' | awk '{print $3, $5}' | sort -n | grep -w $SSID_FILTER | awk -F'["]' 'NR==1{print $2}')
+ssid=$(iwlist wlan1 scan | grep "Quality\|ESSID" | awk '{ ORS = (NR%2 ? FS : RS) } 1' | awk '{print $3, $5}' | sort -n | grep -w $SSID_FILTER | awk -F'["]' 'NR==1{print $2}')
 
 echo $ssid
 
@@ -55,7 +55,6 @@ if [ "$ssid" != "" ]; then
 
 	#echo $ssid $hash
 
-
 	#New conf
 	cat << EOF > /var/lib/connman/$ssid-psk.config
 	[service_$hash]
@@ -67,8 +66,8 @@ EOF
 	sleep 0.3
 
 	sleep 1
-	connmanctl connect $hash > /dev/null
 	connmanctl config $hash --autoconnect off > /dev/null
+	connmanctl connect $hash > /dev/null
 
 	counter=0
 
