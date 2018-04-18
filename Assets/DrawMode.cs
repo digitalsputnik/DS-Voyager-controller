@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class DrawMode : MonoBehaviour {
@@ -90,11 +91,16 @@ public class DrawMode : MonoBehaviour {
 				//clicking on lights
 				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 				RaycastHit hit;
-				if (Physics.Raycast (ray, out hit, 100) && hit.transform.tag == "lamp") {
-					currentLamp = hit.transform.parent.gameObject.transform.parent.gameObject;
-					lastLamp = currentLamp;
-					paintLamp = true;
-				}
+                if (Physics.Raycast(ray, out hit, 100) && hit.transform.tag == "lamp")
+                {
+                    if (!EventSystem.current.IsPointerOverGameObject())
+                    {
+                        currentLamp = hit.transform.parent.gameObject.transform.parent.gameObject;
+                        lastLamp = currentLamp;
+                        paintLamp = true;
+                    }
+                }
+				
 			}
 /*		} else {
 			if (Input.touchCount == 1 && TouchPhase.Began) {
