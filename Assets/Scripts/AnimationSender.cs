@@ -644,6 +644,9 @@ public class AnimationSender : MonoBehaviour
 
         //Turn on new selected stroke
         ActiveStroke.SelectionOn();
+
+        //Set animation values
+        drawScripts.SetAnimation(ActiveStroke.Animation, ActiveStroke.Properties);
     }
 
     /// <summary>
@@ -673,13 +676,21 @@ public class AnimationSender : MonoBehaviour
     {
         ActiveStroke.AddLatestTimestamp();
         scene.AddLatestTimeStamp();
-        SendAnimationToLamps();
+        SendAnimationToLamps(drawScripts.getAnimation());
     }
 
-    public void SendAnimationToLamps()
+    public void SendAnimationToLamps(Anim CurrentAnimation = null)
     {
         //Get current animation properties
-        var CurrentAnimation = drawScripts.GetAnimation();
+        if (CurrentAnimation == null)
+        {
+            CurrentAnimation = drawScripts.GetAnimation();
+        }
+
+        if (CurrentAnimation == null)
+        {
+            return;
+        }
 
         if (ActiveStroke.Animation == CurrentAnimation.AnimName)
         {

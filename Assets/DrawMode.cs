@@ -18,7 +18,6 @@ public class DrawMode : MonoBehaviour {
     //TODO: Detection tool?
 	[Header("Page state")]
 	private bool active;
-	public bool mouseCheck;
 
 	private bool paintLamp;
 
@@ -63,10 +62,6 @@ public class DrawMode : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//TODO: if the previous object hit was light then the current can be only light
-		if (!mouseCheck)
-			return;
-
 		//TODO temp for long press
 		if(Input.GetMouseButtonUp (0)) {
 
@@ -192,9 +187,6 @@ public class DrawMode : MonoBehaviour {
                     Pixel current = hit.transform.parent.gameObject.GetComponent<Pixel> ();
 
                     animSender.SelectActiveStrokeFromPixel(current);
-
-                    //Set animation values
-                    drawScripts.SetAnimation(animSender.ActiveStroke.Animation, animSender.ActiveStroke.Properties);
 				}
             }
 		}

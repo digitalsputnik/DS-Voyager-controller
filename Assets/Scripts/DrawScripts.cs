@@ -100,10 +100,13 @@ public class DrawScripts : MonoBehaviour {
 //	public GameObject setupMode;
 	List<GameObject> colors;
 	List<GameObject> numberValues;
-    
 
-	//List of animations
-	public List<LightAnims> animations = new List<LightAnims>();
+    float colorIntensityOffset = 0.3f;
+
+    Anim currentAnim;
+
+    //List of animations
+    public List<LightAnims> animations = new List<LightAnims>();
 
     // Use this for initialization
     void Start () {
@@ -131,19 +134,19 @@ public class DrawScripts : MonoBehaviour {
         LightAnims newAnim1 = new LightAnims ();
 		newAnim1.AnimName = "Single Color";
 		newAnim1.AnimProperties.Add (new Property ("Color1", "color", itshColor, 0, 0));
-        newAnim1.AnimProperties.Add(new Property("DMX-offset", "int", 1, 1, 500));
+        newAnim1.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim1);
 		LightAnims newAnim2 = new LightAnims ();
 		newAnim2.AnimName = "Gradient";
 		newAnim2.AnimProperties.Add (new Property ("Color1", "color", itshColor, 0, 0));
 		newAnim2.AnimProperties.Add (new Property ("Color2", "color", itshColor2, 0, 0));
-        newAnim2.AnimProperties.Add(new Property("DMX-offset", "int", 1, 1, 500));
+        newAnim2.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim2);
 		LightAnims newAnim3 = new LightAnims ();
         newAnim3.AnimName = "Fire";
         newAnim3.AnimProperties.Add(new Property("Color1", "color", itshColor1, 0, 0));
         newAnim3.AnimProperties.Add(new Property("Color2", "color", itshColor3, 0, 0));
-        newAnim3.AnimProperties.Add(new Property("DMX-offset", "int", 1, 1, 500));
+        newAnim3.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim3);
         LightAnims newAnim4 = new LightAnims();
         newAnim4.AnimName = "Police";
@@ -151,7 +154,7 @@ public class DrawScripts : MonoBehaviour {
         newAnim4.AnimProperties.Add(new Property("Color2", "color", itshColor2, 0, 0));
         newAnim4.AnimProperties.Add(new Property("Color3", "color", itshBackGround, 0, 0));
         newAnim4.AnimProperties.Add(new Property("Speed", "int", 60, 0, 500));
-        newAnim4.AnimProperties.Add(new Property("DMX-offset", "int", 1, 1, 500));
+        newAnim4.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim4);
         LightAnims newAnim5 = new LightAnims();
         newAnim5.AnimName = "Chaser";
@@ -162,9 +165,7 @@ public class DrawScripts : MonoBehaviour {
         int[] startValue = { 0, 0, 0, 0 };
         int[] minValue = { 0, 0, 0, 0 };
         int[] maxValue = { 23, 59, 59, 1000 };
-        newAnim5.AnimProperties.Add(new Property("StartTime", "time", startValue, minValue, maxValue));
- 
-
+        //newAnim5.AnimProperties.Add(new Property("StartTime", "time", startValue, minValue, maxValue));
         newAnim5.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim5);
 
@@ -194,7 +195,7 @@ public class DrawScripts : MonoBehaviour {
         newAnim8.AnimName = "Draw On";
         newAnim8.AnimProperties.Add(new Property("Color1", "color", itshColor, 0, 0));
         newAnim8.AnimProperties.Add(new Property("Color2", "color", itshBackGround, 0, 0));
-        newAnim8.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
+        newAnim8.AnimProperties.Add(new Property("Speed", "int", 30, 0, 200));
         newAnim8.AnimProperties.Add(new Property("Hold", "int", 1000, 0, 10000));
         newAnim8.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim8);
@@ -310,8 +311,6 @@ public class DrawScripts : MonoBehaviour {
         //var startTime = timePanel.transform.Find("StartTime").gameObject;
         timePanel.SetActive(false);
 
-        
-
 
 		//hide animation menu
 		//animationMenu.SetActive(false);
@@ -405,12 +404,27 @@ public class DrawScripts : MonoBehaviour {
 
         }
 
+        currentAnim = null;
+
     }
 
-	public Anim GetAnimation()
+    public Anim GetAnimation()
+    {
+        if (currentAnim == null)
+        {
+            return getAnimation();
+        }
+        else
+        {
+            return currentAnim;
+        }
+    }
+
+	public Anim getAnimation()
 	{
-		int[] numValue;
-		Anim currentAnim = new Anim ();
+        int[] numValue;
+
+        currentAnim = new Anim ();
 
 		//find selected animation index
 		int animNum = AnimationDropdown.value;
@@ -459,7 +473,7 @@ public class DrawScripts : MonoBehaviour {
             }
         }
 
-		return currentAnim;
+        return currentAnim;
 	}
 
 	public void SetAnimation(string animName, Dictionary<string, int[]> properties )
@@ -477,9 +491,12 @@ public class DrawScripts : MonoBehaviour {
 
 		string numValue;
 
-		//If new animation name is different than current, set animation name and create new UI elements
+        currentAnim = new Anim();
+        currentAnim.AnimName = animName;
 
-		if (AnimationDropdown.transform.Find ("Label").gameObject.GetComponent<Text> ().text != animName) {
+        //If new animation name is different than current, set animation name and create new UI elements
+
+        if (AnimationDropdown.transform.Find ("Label").gameObject.GetComponent<Text> ().text != animName) {
 
 			//Debug.Log ("DIFFERENT ANIMATION....");
 
@@ -510,14 +527,16 @@ public class DrawScripts : MonoBehaviour {
 			}
 
             //hide start time
-            var startTime = timePanel.transform.Find("StartTime").gameObject;
-            startTime.SetActive(false);
+            //NOTE: Commented out to avoid errors!
+            //var startTime = timePanel.transform.Find("StartTime").gameObject;
+            //startTime.SetActive(false);
 
             //hide animation menu
-            animationMenu.SetActive (false);
+            //NOTE: Commented out to avoid losing the dropdown!
+            //animationMenu.SetActive (false);
 
-			//set new values Q: would we get all the properties each time?
-			i = 0;
+            //set new values Q: would we get all the properties each time?
+            i = 0;
 			int numColors = 1;
 			foreach (KeyValuePair < string, int[] > property in properties)
 			{
@@ -545,7 +564,8 @@ public class DrawScripts : MonoBehaviour {
 					newColorButton.GetComponent<ColorButtonScript> ().sVal = sVal;
 					newColorButton.GetComponent<ColorButtonScript> ().hVal = hVal;
 					numColors++;
-				}
+                    
+                }
 				if (animations [animNum].AnimProperties [i].type == "int") {
 					var newNum = Instantiate (numberTemplate, numberPanel.transform);
 					newNum.name = property.Key;
@@ -561,7 +581,8 @@ public class DrawScripts : MonoBehaviour {
 					numObject.GetComponent<MinMaxValues>().startValue = (int)animations [animNum].AnimProperties [i].startValue;
 					numInput.text = property.Value[0].ToString();
 					numberPanel.SetActive (true);
-				}
+
+                }
                 if (animations[animNum].AnimProperties[i].type == "time" )
                 {
                     //var newTime = Instantiate(timeTemplate, timePanel.transform);
@@ -580,7 +601,10 @@ public class DrawScripts : MonoBehaviour {
 
                     newTime.transform.Find("StartTimeButton").GetComponent<Button>().onClick.AddListener(TaskSetStartTimeButtonClick);
                     timePanel.SetActive(true);
+
                 }
+                //Setting
+                //currentAnim.Properties.Add(animations[animNum].AnimProperties[i].name, property.Value);
 
                 i++;
 
@@ -609,8 +633,13 @@ public class DrawScripts : MonoBehaviour {
 
                     buttonColor = Color.HSVToRGB (hVal / 360.0f, sVal / 100.0f, iVal / 100.0f);
 
-					//find colorbutton gameObject and apply color to it
-					colorButton = colorPanel.transform.Find (property.Key.ToString ()).gameObject;
+                    buttonColor.r = buttonColor.r * (1 - colorIntensityOffset) + Mathf.Ceil(buttonColor.r) * colorIntensityOffset;
+                    buttonColor.g = buttonColor.g * (1 - colorIntensityOffset) + Mathf.Ceil(buttonColor.g) * colorIntensityOffset;
+                    buttonColor.b = buttonColor.b * (1 - colorIntensityOffset) + Mathf.Ceil(buttonColor.b) * colorIntensityOffset;
+                    buttonColor.a = buttonColor.a * (1 - colorIntensityOffset) + Mathf.Ceil(buttonColor.a) * colorIntensityOffset;
+
+                    //find colorbutton gameObject and apply color to it
+                    colorButton = colorPanel.transform.Find (property.Key.ToString ()).gameObject;
 					colorButton.GetComponent<ColorButtonScript> ().iVal = iVal;
 					colorButton.GetComponent<ColorButtonScript> ().tVal = tVal;
 					colorButton.GetComponent<ColorButtonScript> ().sVal = sVal;
@@ -649,6 +678,8 @@ public class DrawScripts : MonoBehaviour {
                     
                 }
 
+                //Setting
+                //currentAnim.Properties.Add(animations[animNum].AnimProperties[i].name, property.Value);
 
                 i++;
 			}
@@ -820,6 +851,5 @@ public class DrawScripts : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-		
-	}
+    }
 }

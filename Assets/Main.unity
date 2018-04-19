@@ -17940,7 +17940,6 @@ MonoBehaviour:
   colorTool: {fileID: 59044312}
   setupTool: {fileID: 745929532}
   BrushDropdown: {fileID: 726862088}
-  mouseCheck: 1
   iVal: 50
   tVal: 3200
   sVal: 0
@@ -38343,7 +38342,6 @@ MonoBehaviour:
   colorTool: {fileID: 0}
   setupTool: {fileID: 0}
   BrushDropdown: {fileID: 0}
-  mouseCheck: 0
   iVal: 50
   tVal: 3200
   sVal: 0
@@ -56142,7 +56140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1224962377
 Transform:
   m_ObjectHideFlags: 0

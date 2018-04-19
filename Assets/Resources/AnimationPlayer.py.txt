@@ -215,7 +215,7 @@ class Stroke:
         if self.LampMac in pixelDictionary:
             CurrentLampPixelDictionary = pixelDictionary[self.LampMac]
             for pixelQueueNumber, pixelNumber in CurrentLampPixelDictionary.items():
-                self.ControlledPixels.append(Pixel(pixelQueueNumber, pixelNumber))
+                self.ControlledPixels.append(Pixel(int(pixelQueueNumber), int(pixelNumber)))
 
     def ChangeStroke(self, timeStamp = 0, startTime = 0, pixelDictionary = {}, totalPixelCount = 0, colors = None, properties = None, animation = "", playMode = None, repeatMode = None, duration = 0.0, lampMac = ""):
         '''Changes stroke pixels, colors, properties or animation'''
@@ -277,7 +277,7 @@ class Stroke:
             if self.UpdateStationary:
                 #Calculate bitmaps!
                 if self.Animation == "Chaser Grad1":
-                    self.StrokeBitmap = np.zeros((2,self.TotalPixelCount,4))
+                    self.StrokeBitmap = np.zeros((2,max(self.TotalPixelCount,self.Properties["Width"][0]),4))
                     #Chaser
                     for p in range(0,self.Properties["Width"][0]):
                         percent = float(p)/float(self.Properties["Width"][0])
@@ -289,64 +289,69 @@ class Stroke:
                         percent = float(pixel.QueueNumber)/float(self.TotalPixelCount)
                         invPercent = 1 - percent
                         for i in range(0, len(self.Colors[0])):
-                            self.StrokeBitmap[0][pixel.PixelNumber][i] = int(percent*self.Colors[2][i] + invPercent*self.Colors[3][i])
-
+                            self.StrokeBitmap[0][pixel.QueueNumber][i] = int(percent*self.Colors[2][i] + invPercent*self.Colors[3][i])
                 elif self.Animation == "Chaser Grad2":
-                    self.StrokeBitmap = np.zeros((2,self.TotalPixelCount,4))
+                    self.StrokeBitmap = np.zeros((2,max(self.TotalPixelCount,self.Properties["Width"][0]),4))
                     #Background
                     for pixel in self.ControlledPixels:
                         percent = float(pixel.QueueNumber)/float(self.TotalPixelCount)
                         invPercent = 1 - percent
                         for i in range(0, len(self.Colors[0])):
-                            self.StrokeBitmap[1][pixel.PixelNumber][i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
-                            self.StrokeBitmap[0][pixel.PixelNumber][i] = int(percent*self.Colors[2][i] + invPercent*self.Colors[3][i])
+                            self.StrokeBitmap[1][pixel.QueueNumber][i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
+                            self.StrokeBitmap[0][pixel.QueueNumber][i] = int(percent*self.Colors[2][i] + invPercent*self.Colors[3][i])
+                elif self.Animation == "Fire":
+                    col = []
+                    for i in range(0, len(self.Colors[0])):
+                        col.append(np.random.randint(min(self.Colors[0][i],self.Colors[1][i]),max(self.Colors[0][i],self.Colors[1][i]) + 1,(200,self.TotalPixelCount, 1)))
+                    self.StrokeBitmap = np.concatenate((col), axis = 2)
+                elif self.Animation == "Gradient":
+                    self.StrokeBitmap = np.zeros((1,self.TotalPixelCount,4))
+                    for pixel in self.ControlledPixels:
+                        percent = float(pixel.QueueNumber)/float(self.TotalPixelCount)
+                        invPercent = 1 - percent
+                        for i in range(0, len(self.Colors[0])):
+                            self.StrokeBitmap[0][pixel.QueueNumber][i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
 
             for pixel in self.ControlledPixels:
                     #TODO: Better implementation on animation
                     if self.Animation == "Chaser":
                         chaserQueueNumber = int(self.Time * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1)
-                        if int(pixel.QueueNumber) > chaserQueueNumber - self.Properties["Width"][0] and int(pixel.QueueNumber) <= chaserQueueNumber:
+                        if pixel.QueueNumber > chaserQueueNumber - self.Properties["Width"][0] and pixel.QueueNumber <= chaserQueueNumber:
                             pixel.PixelColor = self.Colors[0]
                         else:
                             pixel.PixelColor = self.Colors[1]
 
                     elif self.Animation == "Fire":
-                        pixel.PixelColor = np.array(self.Colors[0])
-                        for i in range(0, len(self.Colors[0])):
-                            pixel.PixelColor[i] = random.randint(min(self.Colors[0][i],self.Colors[1][i]),max(self.Colors[0][i],self.Colors[1][i]))
+                        pixel.PixelColor = self.StrokeBitmap[int(self.Time * 200 % 200)][pixel.QueueNumber]
 
                     elif self.Animation == "Gradient":
-                        if self.TotalPixelCount > 0 and self.UpdateStationary:
-                            pixel.PixelColor = np.array(self.Colors[0]) #Initialization/ugly            
-                            percent = float(pixel.QueueNumber)/float(self.TotalPixelCount)
-                            invPercent = 1 - percent
-                            for i in range(0, len(self.Colors[0])):
-                                pixel.PixelColor[i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
+                        if self.TotalPixelCount > 0:
+                            pixel.PixelColor = self.StrokeBitmap[0][pixel.QueueNumber]
 
                     elif self.Animation == "Chaser Grad1":
                         chaserQueueNumber = int(self.Time * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1)
-                        if int(pixel.QueueNumber) > chaserQueueNumber - self.Properties["Width"][0] and int(pixel.QueueNumber) <= chaserQueueNumber:
+                        if pixel.QueueNumber > chaserQueueNumber - self.Properties["Width"][0] and pixel.QueueNumber <= chaserQueueNumber:
                             if self.Properties["Width"][0] > 0:
-                                pixel.PixelColor = self.StrokeBitmap[1][chaserQueueNumber - int(pixel.QueueNumber)]
+                                pixel.PixelColor = self.StrokeBitmap[1][chaserQueueNumber - pixel.QueueNumber]
                         else:
                             #Gradient calculation with totalpixels as length!
                             if self.TotalPixelCount > 0:
-                                pixel.PixelColor = self.StrokeBitmap[0][pixel.PixelNumber]
+                                pixel.PixelColor = self.StrokeBitmap[0][pixel.QueueNumber]
 
                     elif self.Animation == "Chaser Grad2":
                         chaserQueueNumber = int(self.Time * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1)
-                        if int(pixel.QueueNumber) > chaserQueueNumber - self.Properties["Width"][0] and int(pixel.QueueNumber) <= chaserQueueNumber:
+                        if pixel.QueueNumber > chaserQueueNumber - self.Properties["Width"][0] and pixel.QueueNumber <= chaserQueueNumber:
                             #Peek background gradient!
                             if self.TotalPixelCount > 0:
-                                pixel.PixelColor = self.StrokeBitmap[1][pixel.PixelNumber]
+                                pixel.PixelColor = self.StrokeBitmap[1][pixel.QueueNumber]
                         else:
                             #Background color!
                             if self.TotalPixelCount > 0:
-                                pixel.PixelColor = self.StrokeBitmap[0][pixel.PixelNumber]
+                                pixel.PixelColor = self.StrokeBitmap[0][pixel.QueueNumber]
 
                     elif self.Animation == "Draw On":
                         index = int(self.Time * float(self.Properties["Speed"][0]) % (self.TotalPixelCount + (self.Properties["Hold"][0]/1000)*self.Properties["Speed"][0]))
-                        if int(pixel.QueueNumber) <= index:
+                        if pixel.QueueNumber <= index:
                             pixel.PixelColor = self.Colors[0]
                         else:
                             pixel.PixelColor = self.Colors[1]
@@ -354,7 +359,7 @@ class Stroke:
                     elif self.Animation == "Police":
                         #Speed = BPM -> default = 60
                         # 4s = 1.5s = 
-                        if int(pixel.QueueNumber) > self.TotalPixelCount/2:
+                        if pixel.QueueNumber > self.TotalPixelCount/2:
                             if (self.Time % (60/float(self.Properties["Speed"][0])) > 30/float(self.Properties["Speed"][0]) and flicker):
                                 pixel.PixelColor = self.Colors[1]
                             else:
@@ -373,8 +378,7 @@ class Stroke:
                 self.UpdateStationary = False
 
         except Exception as e:
-            print(e)
-            time.sleep(5)
+            pass
         
            
 #TODO: Move this to output file
