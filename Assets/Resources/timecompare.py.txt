@@ -1,0 +1,57 @@
+import socket
+import sys
+import time
+import os
+
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+
+sock.settimeout(2)
+
+#HOST = os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $9}'").readline().strip()
+PORT = 30002
+sock.bind(("",PORT))
+
+rgbw2 = bytearray()
+rgbw2[0:8] = 0xD5, 0x0A, 0x83, 0x10, 0xFF, 0x00, 0x00, 0x00
+
+while True:
+	bad_delay = 0
+	counter = 0
+	while counter < 10:
+		#time.sleep (0.2)
+		final_receive_delay = time.time()
+		sock.sendto(rgbw2, ("172.20.1.1", 30000))
+		
+		#try: 
+		udp_data, addr = sock.recvfrom(20)
+		
+		while addr[0] != "172.20.1.1":
+			udp_data, addr = sock.recvfrom(20)
+		
+		#except:
+		#	sock.close()
+		#	sys.exit(1)
+		
+		final_receive_delay1 = time.time() - final_receive_delay
+		x = time.time()
+		t = (x-float(udp_data[4:].decode('utf-8')) + float(final_receive_delay1) - 0.008)
+
+		print (t)
+
+		if t > 0.010 or t < -0.010:
+			bad_delay += 1
+			print ("meh")
+		counter += 1
+
+	print (bad_delay)
+	if bad_delay > 8:
+		os.system("python3 /mnt/data/timesync-ask.py")
+	
+	time.sleep(60)
+	
+sock.close()
+	#print ("timesync!")
+#print (float(final_receive_delay1))

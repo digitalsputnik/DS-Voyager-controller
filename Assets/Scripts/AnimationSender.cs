@@ -676,21 +676,13 @@ public class AnimationSender : MonoBehaviour
     {
         ActiveStroke.AddLatestTimestamp();
         scene.AddLatestTimeStamp();
-        SendAnimationToLamps(drawScripts.getAnimation());
+        SendAnimationToLamps();
     }
 
-    public void SendAnimationToLamps(Anim CurrentAnimation = null)
+    public void SendAnimationToLamps()
     {
         //Get current animation properties
-        if (CurrentAnimation == null)
-        {
-            CurrentAnimation = drawScripts.GetAnimation();
-        }
-
-        if (CurrentAnimation == null)
-        {
-            return;
-        }
+        var CurrentAnimation = drawScripts.GetAnimation();
 
         if (ActiveStroke.Animation == CurrentAnimation.AnimName)
         {
@@ -705,7 +697,7 @@ public class AnimationSender : MonoBehaviour
         }
 
         ActiveStroke.Animation = CurrentAnimation.AnimName;
-        ActiveStroke.Properties = CurrentAnimation.Properties;
+        ActiveStroke.Properties = new Dictionary<string, int[]>(CurrentAnimation.Properties);
 
         //Get colors
         List<Vector4> ITSHColors = new List<Vector4>();

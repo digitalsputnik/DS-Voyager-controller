@@ -103,8 +103,6 @@ public class DrawScripts : MonoBehaviour {
 
     float colorIntensityOffset = 0.3f;
 
-    Anim currentAnim;
-
     //List of animations
     public List<LightAnims> animations = new List<LightAnims>();
 
@@ -403,29 +401,14 @@ public class DrawScripts : MonoBehaviour {
             }
 
         }
-
-        currentAnim = null;
-
     }
 
-    public Anim GetAnimation()
-    {
-        if (currentAnim == null)
-        {
-            return getAnimation();
-        }
-        else
-        {
-            return currentAnim;
-        }
-    }
-
-	public Anim getAnimation()
+	public Anim GetAnimation()
 	{
         int[] numValue;
 
-        currentAnim = new Anim ();
-
+        var currentAnim = new Anim();
+       
 		//find selected animation index
 		int animNum = AnimationDropdown.value;
 		//Debug.Log ("animNum is: " + animNum);
@@ -490,9 +473,6 @@ public class DrawScripts : MonoBehaviour {
 		int hVal = 0;
 
 		string numValue;
-
-        currentAnim = new Anim();
-        currentAnim.AnimName = animName;
 
         //If new animation name is different than current, set animation name and create new UI elements
 
@@ -603,8 +583,6 @@ public class DrawScripts : MonoBehaviour {
                     timePanel.SetActive(true);
 
                 }
-                //Setting
-                //currentAnim.Properties.Add(animations[animNum].AnimProperties[i].name, property.Value);
 
                 i++;
 
@@ -677,9 +655,6 @@ public class DrawScripts : MonoBehaviour {
                     newTime.transform.Find("StartTimeButton").GetComponent<Button>().onClick.AddListener(TaskSetStartTimeButtonClick);
                     
                 }
-
-                //Setting
-                //currentAnim.Properties.Add(animations[animNum].AnimProperties[i].name, property.Value);
 
                 i++;
 			}

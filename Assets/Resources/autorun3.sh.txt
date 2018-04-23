@@ -16,7 +16,7 @@ else
 	sed -i '/wpa=3/c\wpa=2' /mnt/data/net/hostapd.conf
 	echo "wmm_enabled=0" >> /mnt/data/net/hostapd.conf
 	echo "beacon_int=300" >> /mnt/data/net/hostapd.conf
-	sed -i "/dhcp-range/c\dhcp-range=172.20.0.100,172.20.0.250,24h" /mnt/data/net/dnsmasq.conf
+	sed -i "/dhcp-range/c\dhcp-range=172.20.0.100,172.20.0.250,168h" /mnt/data/net/dnsmasq.conf
 	
 	#remove old leases
 	rm /var/lib/misc/dnsmasq.leases

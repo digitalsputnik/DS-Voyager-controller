@@ -1,104 +1,33 @@
-#Andro 27.11.17 Autoconnect
-#Scan available APs, list by a SSID_KEYWORD, a text file and sorts connect to highest signal
-#Checks connection by pinging gateway, if no connections takes next AP in list
-#If can't connect to any scanned APs, starts again  scan-connect-check connection...
-#
-# -nmcli scanning is kinda broken, needs network-manager restart with every scan
+sh /mnt/data/connect_cm.sh
+sleep 7
 
-LOCATION=/media/network_control.status/
-SSID_KEY='\<voyager_......_M\>'
-SSID_KEY=$SSID_KEY'\|''\<DS026.........._M\>'
-PASSWORD="dsputnik"
-TIMEOUT_NO_WIFIS=20
-TIMEOUT_CHECK_CONNECTION=50
+while true
+do
+	if ping -c 1 -I wlan0 $(ip route | awk 'NR==1{print $3}') > /dev/null; then
 
-
-scan_wifis()
-{
- echo "--scan"
-
- service network-manager restart
- sleep 4
-
- #looks for ssid_key
- ssid_m=$(nmcli d wifi list | sed  's/*//g' | grep $SSID_KEY | awk '{print $6, $1}' | sort -n -r | awk '{print $2}' | awk 'ORS="\\|"')
-
- #just to remove '\|' from searchable string ending
- total=$(cat $LOCATION'ssidlist.txt' | wc -l)
- if [ $total -lt 1 ]; then
-  ssid_m=${ssid_m%??}
- fi
-
- #extract from text file, makes string greppable
- ssidscan=$(cat $LOCATION'ssidlist.txt' | awk "NR==1" | awk '{print $1}')
- while [ $total -gt 1 ]
- do
-  ssidscan=$ssidscan'\|'$(cat $LOCATION'ssidlist.txt' | awk "NR==$total" | awk '{print $1}')
-  total=$((total-1))
- done
- 
- #search for final SSID to connect to
- ssidscan=$ssid_m$ssidscan
- echo ssidscan $ssidscan
- SSID=$(nmcli d wifi list | sed 's/*//g' | grep $ssidscan | awk '{print $6, $1}' | sort -n -r | awk 'NR==1{print $2}')
-
- echo finalssid $SSID
-
- if echo "$SSID" | grep -q "$SSID_DEFAULT"
-  then
-   #default passowrd
-   PASSWORD=$PASSWORD
- else
-  #read password from text file
-  PASSWORD=$(cat $LOCATION'ssidlist.txt' | grep -w $SSID | awk '{print $2}')
- fi
- echo $password
- 
- 
- #sleeps if no wifis
- if [ ! "$SSID" ]; then
-  echo "no ssid to connect to, sleeping $TIMEOUT_NO_WIFIS"
-  sleep $TIMEOUT_NO_WIFIS
-  scan_wifis
-  connect
-  check_connection
- fi
- 
-}
-
-# removes old profles, makes new with scanned SSID
-connect()
-{
- echo "--connect"
- echo $SSID
- nmcli c down "$SSID"
- nmcli c delete "$SSID"
- nmcli c add con-name "$SSID" ifname wlan0 type wifi ssid "$SSID"
- nmcli con mod "$SSID" connection.autoconnect no
- nmcli c modify "$SSID" wifi-sec.key-mgmt wpa-psk
- nmcli c modify "$SSID" wifi-sec.psk "$PASSWORD"
- nmcli -w 10 c up "$SSID"
- sleep 1
-}
-
-
-check_connection()
-{
- echo "--check connection"
- if ping -c 2 $(ip route | awk 'NR==1{print $3}') > /dev/null; then
-  echo "ping ok"
-  echo "conn ok, waiting $TIMEOUT_CHECK_CONNECTION"
-  sleep $TIMEOUT_CHECK_CONNECTION
-  check_connection
- else
-  echo "ping to gateway failed"
-  scan_wifis
-  connect
-  check_connection
- fi
-}
-
-#starts here, loops between 3 functions.
-scan_wifis
-connect
-check_connection
+		ps=$(ps ax | grep timecompare.py | awk -F ' ' 'NR==1{print $4}')
+		ip=$(ip route | awk 'NR==1{print $3}')
+		
+		#temp solution for checking with 172.20.1.1 master.
+		if [ "$ip" == "172.20.1.1" ]; then
+			#check if running
+			if [ "$ps" != "/mnt/data/timecompare.py" ]; then
+				python3 /mnt/data/timecompare.py &
+			fi
+		fi
+			
+		sleep 10
+	else
+		sh /mnt/data/connect_cm.sh
+		sleep 20
+		#if [ "$(ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}')" != "" ]; then
+		#	python3 /mnt/data/timesync-ask.py >> /mnt/data/timesynclog &
+		#	sleep 15
+		#else
+		#	sleep 15
+		#	if [ "$(ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}')" != "" ]; then
+		#		python3 /mnt/data/timesync-ask.py >> /mnt/data/timesynclog &
+		#	fi
+		#fi
+	fi
+done

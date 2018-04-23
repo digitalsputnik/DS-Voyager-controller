@@ -79,7 +79,10 @@ public class UpdateChecker : MonoBehaviour {
         "update3.py",
         "update_main.py",
         "ut2.6.py",
-        "voyager_lpc_release_user_update.bin"
+        "voyager_lpc_release_user_update.bin",
+        "autoconnect.sh",
+        "timecompare.py",
+        "timesync-ask.py"
     };
 
     //utFile
@@ -373,7 +376,7 @@ public class UpdateChecker : MonoBehaviour {
                     if (isRev3)
                     {
                         Debug.Log("Starting update on lamp.");
-                        var InstallationCommand = sshClient.CreateCommand("python3 /mnt/data/update_temp/update_main.py");
+                        var InstallationCommand = sshClient.CreateCommand("python3 /mnt/data/update_temp/update3.py");
                         var InstallationScriptResult = InstallationCommand.BeginExecute();
 
                         bool installationSuccess = false;

@@ -1,0 +1,285 @@
+#!/usr/bin/env python
+
+#11.04.2018. Removed approximation of delay, using only the last packet delay received!
+
+# add to ignore own poll reply
+
+#Timesync v 0.02
+#1. broadcasts asking for time.
+#2. collects IPs and unicasts with same packet and measures delay.
+#3. chooses IP with the lowest delay, sends another packet and sets own time by that.
+#4. if delay is over 200(?), ignore..?
+
+def main():
+
+	import socket
+	import sys
+	import time
+	import os
+
+	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+	sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+
+	sock.settimeout(2)
+	HOST = os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $9}'").readline().strip()
+	PORT = 30000
+
+	sock.bind(("",PORT))
+
+	os.system("ps ax | grep ut2.6 | awk -F ' ' '{print $1}' | xargs kill -9")
+	time.sleep(0.1)
+	#os.system("ps ax | grep PythonReceiver | awk -F ' ' '{print $1}' | xargs kill -9")
+	#time.sleep(0.1)	
+	#os.system("ps ax | grep autoconnect | awk -F ' ' '{print $1}' | xargs kill -9")
+
+	
+	rgbw1 = bytearray()
+	rgbw1[0:8] = 0xD5, 0x0A, 0x84, 0x10, 0xFF, 0x00, 0x00, 0x00
+
+	rgbw2 = bytearray()
+	rgbw2[0:8] = 0xD5, 0x0A, 0x83, 0x10, 0xFF, 0x00, 0x00, 0x00
+	
+	#connected to voyager master, ignores the mess to come
+	master_counter = 0
+	while master_counter < 10:
+		try:
+			if os.popen("ip route | awk 'NR==1{print $3}'").readline().strip() == "172.20.1.1":
+				#os.system("ps ax | grep PythonReceiver | awk -F ' ' '{print $1}' | xargs kill -9")
+				#time.sleep(0.1)
+				
+				final_receive_delay = time.time()
+				sock.sendto(rgbw2, ("172.20.1.1", 30000))	
+				
+				try:
+					udp_data, addr = sock.recvfrom(4096)
+				except:
+					pass
+					
+				while addr[0] != "172.20.1.1" and master_counter < 10:
+					print (master_counter)
+					master_counter += 1
+					udp_data, addr = sock.recvfrom(4096)
+					
+				if (udp_data[0] == 0xD5 and udp_data[1] == 0x0A and udp_data[2] == 0x83 and udp_data[3] == 0x20):
+					final_receive_delay1 = time.time() - final_receive_delay
+					datestring = float(udp_data[4:].decode('utf-8')) + float(final_receive_delay1) + 0.021
+					os.system("date -s @" + str(datestring))
+					
+					time.sleep(0.2)			
+
+					print (float(final_receive_delay1))
+					print (float(udp_data[4:].decode('utf-8')))
+					print (datestring)
+				
+				else:
+					print (master_counter)
+					master_counter += 1
+					continue
+
+				#os.system("nice -11 python3 /mnt/data/animation/PythonReceiver.py &")
+				os.system("python3 /mnt/data/ut2.6.py &")
+				raise UnboundLocalError("exit")
+				
+		except UnboundLocalError:
+			sys.exit(1)
+		except KeyboardInterrupt:
+			sock.close()
+			sys.exit()					
+		except:
+			pass
+
+		else:
+			master_counter += 1
+		
+	#main loop tries 10 times, after 8 times sleeps a bit. If something wrong goes back to loop.
+	main_counter=0
+	while main_counter<10:
+		try:
+			if main_counter > 8:
+				time.sleep(1)
+			
+			address_number = 0
+			x = 0
+
+			addr = [0]*255
+			addr1 = [0]*255
+
+			timediff = [0]*255
+			timedifftotal = [0]*255
+
+			timedelay = [0]*255
+			timeset = [0]*255
+
+			count = 0
+			sock.sendto(rgbw1, (HOST, PORT))
+
+			#Find voyagers that respond to timesync packet
+			while count < 5:
+				try:
+					udp_data, addr[address_number] = sock.recvfrom(4096)
+					#print ("udp send")
+					#print (list(udp_data))
+					if  (udp_data[0] == 0xD5 and udp_data[1] == 0x0A and udp_data[2] == 0x84 and udp_data[3] == 0x20 and
+						(addr[address_number])[0] != os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'").readline().strip()):
+						print ("ok response, at", address_number, "from: ", addr[address_number])
+					else:
+						#print (addr[address_number])
+						address_number -= 1
+						print ("bad response")
+					address_number += 1
+					count += 1
+					print ("number of addresses to ask", address_number)
+					
+				except KeyboardInterrupt:
+					sock.close()
+					sys.exit()
+				except:
+					count = 99	
+			print ("END SEARCH")
+			if address_number < 1:
+				main_counter += 1
+				continue
+				#return "ERROR no one to timesync"
+				#print("No one to timesync")
+				#exit()
+
+			#send packet to IPs found and measure delays.
+			sock.settimeout(0.5)
+
+			send_count = 0
+			while send_count < 3:
+
+				for address_number_response in range(0,address_number):
+					try:
+					
+						#sets time record when was something sent, tries to receive a packet and measure timedelay
+						
+						timeset[address_number_response] = os.popen("date +%s%3N ").readline().strip()
+						sock.sendto(rgbw1, addr[address_number_response])
+						udp_data, addr1[address_number_response] = sock.recvfrom(4096)
+						while (addr[address_number_response] != addr1[address_number_response]):
+							udp_data, addr1[address_number_response] = sock.recvfrom(4096)
+						
+						if (addr[address_number_response] == addr1[address_number_response]):
+							if (udp_data[0] == 0xD5 and udp_data[1]== 0x0A and udp_data[2] == 0x84 and udp_data[3] == 0x20):
+								timedelay[address_number_response] = os.popen("date +%s%3N ").readline().strip()
+					except:
+						#resets and tries again.
+						timedelay[address_number_response] = os.popen("date +%s%3N ").readline().strip()
+						address_number_response -= 1
+						
+				#calculating time differences
+				for i in range(0,address_number):
+					#packet not from self
+					if ((addr[i])[0] != os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'").readline().strip()):
+						timediff[i] = (int(timedelay[i]) - int(timeset[i]))
+						timedifftotal[i] = timedifftotal[i] + timediff[i]			
+						print (i, addr[i], addr1[i], timediff[i], timedifftotal[i] // (send_count+1) , "time difference calculation")
+				send_count += 1
+				time.sleep(0.05)		
+				
+			final_delay = (sorted(timedifftotal[:address_number], key=int)[0]) // send_count
+			print ("aproximate delay from ip", final_delay)
+			print ("from address", addr1[timedifftotal.index(sorted(timedifftotal[:address_number], key=int)[0])])
+			
+			#if final_delay > 150:
+			#	if main_counter > 5:
+			#		#print ("ERROR timedelays too long, setting approximate")
+			#		final_delay = 58
+			#	else:
+			#		main_counter += 1
+			#		continue
+				#return "ERROR timedelays too long, setting approximate"
+				#sock.close()
+				#exit()"""
+				
+			#os.system("ps ax | grep PythonReceiver | awk -F ' ' '{print $1}' | xargs kill -9")
+			#time.sleep(0.1)
+				
+			#ask for new current time packet, measure delays just in case
+			new_addr = addr1[timedifftotal.index(sorted(timedifftotal[:address_number], key=int)[0])]
+			print (new_addr)
+						
+			final_receive_delay = time.time()
+			sock.sendto(rgbw2, new_addr)	
+			
+			try:
+				udp_data, new_addr = sock.recvfrom(4096)
+			except:
+				pass
+
+			if (udp_data[0] == 0xD5 and udp_data[1] == 0x0A and udp_data[2] == 0x83 and udp_data[3] == 0x20):
+				final_receive_delay1 = time.time() - final_receive_delay
+				datestring = float(udp_data[4:].decode('utf-8')) + float(final_receive_delay1) + 0.021
+				os.system("date -s @" + str(datestring))
+				
+				time.sleep(0.2)			
+				
+			if new_addr != addr1[address_number_response]:
+				main_counter += 1
+				continue
+			
+			sock.close()
+			
+			break
+
+		except KeyboardInterrupt:
+			sock.close()
+			sys.exit()
+		except:
+			print ("something wrong..")
+		
+	#os.system("ps ax | grep PythonReceiver | awk -F ' ' '{print $1}' | xargs kill -9")
+	#os.system("nice -11 python3 /mnt/data/animation/PythonReceiver.py &")
+	
+	os.system("python3 /mnt/data/ut2.6.py &")
+	
+	#os.system("sh /mnt/data/autoconnect.sh &")
+	
+	#os.system("/etc/init.d/S80dnsmasq restart")
+	
+	#if main_counter > 9:
+	#	os.system("python3 /mnt/data/timesync-ask.py")
+	
+if __name__ == "__main__":
+    x= main()
+    #print( x )
+
+
+	
+	
+	#while (new_addr != addr1[address_number_response]):
+	#	udp_data, addr1[address_number_response] = sock.recvfrom(4096)
+	#final_receive_delay = os.popen("date +%s%3N ").readline().strip()
+	
+#except:
+#	main_counter += 1
+#	continue
+	#return "ERROR no response"	
+	#sock.close()
+	#exit()
+
+#final delay from last time packet
+#final_receive_delay = int(os.popen("date +%s%3N ").readline().strip()) - int(final_receive_delay)
+#print (final_receive_delay)	
+#print (final_delay - final_receive_delay)	
+#if (final_delay - final_receive_delay) > 30:
+#	return "ERROR receive too long"
+#	sock.close()
+#	exit()
+	
+#analyze packet, set correct format and set local time. 
+#if (udp_data[0] == 0xD5 and udp_data[1] == 0x0A and udp_data[2] == 0x83 and udp_data[3] == 0x20):
+#final_receive_delay = int(os.popen("date +%s%3N ").readline().strip()) - int(final_receive_delay) + 11
+#print (final_receive_delay)
+#datestring = int(udp_data[4:].decode('utf-8')) + int((final_receive_delay+final_delay)/2) # + 126230400000# 4 years date packge is able to set time. Weird bug where it cannot set time into past since boot....
+#datestring = int(udp_data[4:].decode('utf-8')) + int((final_receive_delay))#+final_delay)/2) # + 126230400000# 4 years date packge is able to set time. Weird bug where it cannot set time into past since boot....
+
+#datestring = int(udp_data[4:].decode('utf-8')) + int(os.popen("date +%s%3N ").readline().strip()) - int(final_receive_delay) + 7 #+final_delay)/2) # + 126230400000# 4 years date packge is able to set time. Weird bug where it cannot set time into past since boot....
+
+#setdatestring = str(datestring)[:len(str(datestring))-3] + '.' + str(datestring)[len(str(datestring))-3:]
+
+#print (os.popen("date +%s%3N").readline().strip())
+#print (setdatestring, "delayed")
+			
