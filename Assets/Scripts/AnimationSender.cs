@@ -375,6 +375,9 @@ public class AnimationSender : MonoBehaviour
 
     List<string> StopLampCommunication = new List<string>();
 
+    private byte[] StrokeJSONData;
+    private List<string> LampIPList = new List<string>();
+
     //Color calibration
     int[] WhiteCalibrationTemperatureNodes;
     int[][] WhiteCalibrationTable;
@@ -436,6 +439,8 @@ public class AnimationSender : MonoBehaviour
         //var NewStroke5 = new Stroke(Guid.NewGuid().ToString(), layer5);
 
         drawScripts.setupAnimations();
+
+        StartCoroutine("SendAnimationWorker");
     }
 
     // Update is called once per frame
@@ -721,8 +726,6 @@ public class AnimationSender : MonoBehaviour
         ActiveStroke.Colors = RGBWColors;
 
         //Get lamps to send the strokes to
-        List <string> LampIPList = new List<string>();
-
         foreach (var stroke in ActiveStroke.layer.Strokes)
         {
             foreach (var pixel in stroke.ControlledPixels)
@@ -738,7 +741,7 @@ public class AnimationSender : MonoBehaviour
         foreach (var LampIP in LampIPList)
         {
             //Send stroke information to all lamps!
-            SendJSONToLamp(scene, new IPEndPoint(IPAddress.Parse(LampIP), 30001));
+            StrokeJSONData = SendJSONToLamp(scene, new IPEndPoint(IPAddress.Parse(LampIP), 30001));
         }
     }
 
@@ -778,15 +781,20 @@ public class AnimationSender : MonoBehaviour
         StartCoroutine("PollLayersFromLamp", LampIP);
         StartCoroutine("SetDetectionFalse", LampIP);
         StartCoroutine("RegisterDevice", LampIP);
-        StartCoroutine("SendAnimationWorker", LampIP);
         //StartCoroutine
     }
 
-    void SendJSONToLamp(object messageObject, IPEndPoint lampEndPoint)
+    byte[] SendJSONToLamp(object messageObject, IPEndPoint lampEndPoint)
     {
         var jsonString = JsonConvert.SerializeObject(messageObject);
         Debug.Log(jsonString);
         byte[] data = Encoding.ASCII.GetBytes(jsonString);
+        SendDataToLamp(data, lampEndPoint);
+        return data;
+    }
+
+    void SendDataToLamp(byte[] data, IPEndPoint lampEndPoint)
+    {
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
         if (localEndpoint == null)
         {
@@ -798,21 +806,20 @@ public class AnimationSender : MonoBehaviour
         UdpClient client = new UdpClient();
 #endif
         client.Send(data, data.Length, lampEndPoint);
+
     }
 
-    IEnumerator ActivateArtNet(string LampIP)
+    IEnumerator SendAnimationWorker()
     {
         while (true)
         {
-
-        }
-    }
-
-    IEnumerator SendAnimationWorker(string lampIP)
-    {
-        while (true)
-        {
-            SendAnimationToLamps();
+            if (StrokeJSONData != null && LampIPList.Count > 0)
+            {
+                foreach (var lampIP in LampIPList)
+                {
+                    SendDataToLamp(StrokeJSONData, new IPEndPoint(IPAddress.Parse(lampIP), 30001));
+                }
+            }
             yield return new WaitForSeconds(0.1f);
         }
     }
