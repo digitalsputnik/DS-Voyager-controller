@@ -14,6 +14,7 @@ public class HoldButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 	float lastTime = 0.1f;
 	float timeDelay = 0.4f;
 	bool isPressed;
+    public AnimationSender animSender;
 
 	// Use this for initialization
 	void Start () {
@@ -42,6 +43,7 @@ public class HoldButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 		if (int.TryParse(InputValue.text, out num)) {
 			InputValue.text = (num - increment).ToString ();
 		}
+        animSender.SendAnimationWithUpdate();
 	}
 
 	private void OnPlusClick()
@@ -49,7 +51,8 @@ public class HoldButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 		if (int.TryParse(InputValue.text, out num)) {
 			InputValue.text = (num + increment).ToString();
 		}
-	}
+        animSender.SendAnimationWithUpdate();
+    }
 		
 
 

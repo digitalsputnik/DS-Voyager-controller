@@ -677,17 +677,42 @@ public class AnimationSender : MonoBehaviour
         SendJSONToLamp(new RegisterDeviceDTO() { RegisterDevice = register }, new IPEndPoint(IPAddress.Parse(IP), 30001));
     }
 
-    public void SendAnimationWithUpdate()
+    public void SendAnimationWithProps()
+    {
+        SendAnimationWithUpdate();
+    }
+
+    public void SendAnimationWithUpdate(Anim currentAnimation = null)
     {
         ActiveStroke.AddLatestTimestamp();
         scene.AddLatestTimeStamp();
-        SendAnimationToLamps();
+        SendAnimationToLamps(currentAnimation);
     }
 
-    public void SendAnimationToLamps()
+    public void SendAnimationToLamps(Anim currentAnimation = null)
     {
+        LampIPList.Clear();
+
+        //Get lamps to send the strokes to
+        foreach (var stroke in ActiveStroke.layer.Strokes)
+        {
+            foreach (var pixel in stroke.ControlledPixels)
+            {
+                string LampIP = pixel.transform.parent.GetComponent<Ribbon>().IP;
+                if (!LampIPList.Contains(LampIP))
+                {
+                    LampIPList.Add(LampIP);
+                }
+            }
+        }
+
+        if (LampIPList.Count == 0)
+        {
+            return;
+        }
+
         //Get current animation properties
-        var CurrentAnimation = drawScripts.GetAnimation();
+        var CurrentAnimation = currentAnimation == null? drawScripts.GetAnimation(): currentAnimation;
 
         if (ActiveStroke.Animation == CurrentAnimation.AnimName)
         {
@@ -724,19 +749,6 @@ public class AnimationSender : MonoBehaviour
 
         //TODO: This and previous part should be removed and calibration should happen on device
         ActiveStroke.Colors = RGBWColors;
-
-        //Get lamps to send the strokes to
-        foreach (var stroke in ActiveStroke.layer.Strokes)
-        {
-            foreach (var pixel in stroke.ControlledPixels)
-            {
-                string LampIP = pixel.transform.parent.GetComponent<Ribbon>().IP;
-                if (!LampIPList.Contains(LampIP))
-                {
-                    LampIPList.Add(LampIP);
-                }
-            }
-        }
 
         foreach (var LampIP in LampIPList)
         {

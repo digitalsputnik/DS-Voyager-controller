@@ -6546,6 +6546,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputValue: {fileID: 995162566}
   increment: 1
+  animSender: {fileID: 0}
 --- !u!114 &166100502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48462,6 +48463,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputValue: {fileID: 995162566}
   increment: 1
+  animSender: {fileID: 0}
 --- !u!114 &1044920861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50530,7 +50532,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1098985453}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aadf9804c674d9b4fb69af8a876d60a0, type: 3}
   m_Name: 
@@ -57924,10 +57926,30 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1399975192}
     m_Modifications:
+    - target: {fileID: 114654414372088592, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114716220236199156, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114786827322238846, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 114786827322238846, guid: dcf52a2990ef84041a1047dfe06de963,
         type: 2}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114856464645511844, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224169984073892536, guid: dcf52a2990ef84041a1047dfe06de963,
         type: 2}
@@ -58115,6 +58137,116 @@ Prefab:
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 114856464645511844, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114856464645511844, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114856464645511844, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1468842241}
+    - target: {fileID: 114856464645511844, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SendAnimationWithUpdate
+      objectReference: {fileID: 0}
+    - target: {fileID: 114856464645511844, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114786827322238846, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114786827322238846, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114786827322238846, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1468842241}
+    - target: {fileID: 114786827322238846, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SendAnimationWithUpdate
+      objectReference: {fileID: 0}
+    - target: {fileID: 114786827322238846, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114654414372088592, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114654414372088592, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114654414372088592, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1468842241}
+    - target: {fileID: 114654414372088592, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SendAnimationWithProps
+      objectReference: {fileID: 0}
+    - target: {fileID: 114654414372088592, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114716220236199156, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114716220236199156, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114716220236199156, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1468842241}
+    - target: {fileID: 114716220236199156, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SendAnimationWithProps
+      objectReference: {fileID: 0}
+    - target: {fileID: 114716220236199156, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114799235363652290, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: animSender
+      value: 
+      objectReference: {fileID: 1468842241}
+    - target: {fileID: 114983363954016404, guid: dcf52a2990ef84041a1047dfe06de963,
+        type: 2}
+      propertyPath: animSender
+      value: 
+      objectReference: {fileID: 1468842241}
     m_RemovedComponents:
     - {fileID: 114678182527620110, guid: dcf52a2990ef84041a1047dfe06de963, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: dcf52a2990ef84041a1047dfe06de963, type: 2}
@@ -73152,6 +73284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputValue: {fileID: 1459364406}
   increment: 1
+  animSender: {fileID: 0}
 --- !u!114 &1570213294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78579,6 +78712,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputValue: {fileID: 1134507292}
   increment: 1
+  animSender: {fileID: 0}
 --- !u!114 &1705361649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83995,6 +84129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputValue: {fileID: 902809944}
   increment: 1
+  animSender: {fileID: 0}
 --- !u!114 &1814222939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85918,6 +86053,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputValue: {fileID: 902809944}
   increment: 1
+  animSender: {fileID: 0}
 --- !u!114 &1855879997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88847,6 +88983,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputValue: {fileID: 1134507292}
   increment: 1
+  animSender: {fileID: 0}
 --- !u!114 &1918424776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97288,6 +97425,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputValue: {fileID: 1459364406}
   increment: 1
+  animSender: {fileID: 0}
 --- !u!114 &2107075282
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -104,7 +104,7 @@ class Scene(threading.Thread):
         while True:
             currentTime = time.time()
             timePassed = currentTime - lastTimePoint
-            isNewFrame = timePassed > self.FrameDuration
+            isNewFrame = abs(timePassed) > self.FrameDuration
             #if timePassed/self.FrameDuration >= 2.0:
                 #print(timePassed/self.FrameDuration)
             if isNewFrame and self.SceneActive:

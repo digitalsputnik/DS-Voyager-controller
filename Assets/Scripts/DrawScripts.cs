@@ -102,6 +102,7 @@ public class DrawScripts : MonoBehaviour {
 	List<GameObject> numberValues;
 
     float colorIntensityOffset = 0.3f;
+    bool doAnimationUpdate = true;
 
     //List of animations
     public List<LightAnims> animations = new List<LightAnims>();
@@ -162,7 +163,7 @@ public class DrawScripts : MonoBehaviour {
         newAnim5.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
         int[] startValue = { 0, 0, 0, 0 };
         int[] minValue = { 0, 0, 0, 0 };
-        int[] maxValue = { 23, 59, 59, 1000 };
+        int[] maxValue = { 23, 59, 59, 999 };
         //newAnim5.AnimProperties.Add(new Property("StartTime", "time", startValue, minValue, maxValue));
         newAnim5.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim5);
@@ -362,7 +363,8 @@ public class DrawScripts : MonoBehaviour {
 				InputField numInput = numObject.GetComponent<InputField> ();
 				//numInput.onEndEdit.AddListener(delegate {CheckInput(numInput); });
 				numInput.onValueChanged.AddListener(delegate {CheckInput(numInput); });
-				numObject.GetComponent<MinMaxValues>().minValue = (int)animations [animNum].AnimProperties [i].minValue;
+                numInput.onEndEdit.AddListener(delegate { NumInputEditListener(numInput); });
+                numObject.GetComponent<MinMaxValues>().minValue = (int)animations [animNum].AnimProperties [i].minValue;
 				numObject.GetComponent<MinMaxValues>().maxValue = (int)animations [animNum].AnimProperties [i].maxValue;
 				numObject.GetComponent<MinMaxValues>().startValue = (int)animations [animNum].AnimProperties [i].startValue;
 				numInput.text = animations [animNum].AnimProperties [i].startValue.ToString();
@@ -399,11 +401,39 @@ public class DrawScripts : MonoBehaviour {
                 }
                 
             }
-
         }
+
+        if (doAnimationUpdate)
+        {
+            //Send new animation
+            Anim NewAnimProps = new Anim();
+            NewAnimProps.AnimName = animations[animNum].AnimName;
+            for (int i = 0; i < animations[animNum].AnimProperties.Count; i++)
+            {
+                if (animations[animNum].AnimProperties[i].type == "int")
+                {
+                    NewAnimProps.Properties.Add(animations[animNum].AnimProperties[i].name, new int[] { (int)animations[animNum].AnimProperties[i].startValue });
+                }
+                else
+                {
+                    NewAnimProps.Properties.Add(animations[animNum].AnimProperties[i].name, (int[])animations[animNum].AnimProperties[i].startValue);
+                }
+            }
+            animSender.SendAnimationWithUpdate(NewAnimProps);
+        }
+        else
+        {
+            doAnimationUpdate = true;
+        }
+        
     }
 
-	public Anim GetAnimation()
+    private void NumInputEditListener(InputField numInput)
+    {
+        animSender.SendAnimationWithUpdate();
+    }
+
+    public Anim GetAnimation()
 	{
         int[] numValue;
 
@@ -461,7 +491,7 @@ public class DrawScripts : MonoBehaviour {
 
 	public void SetAnimation(string animName, Dictionary<string, int[]> properties )
 	{
-		int animNum = 0;
+        int animNum = 0;
 		//Debug.Log ("Selected animation number: "+animNum);
 		//string animationName = animName;
 		int numProperties = properties.Count;
@@ -484,7 +514,8 @@ public class DrawScripts : MonoBehaviour {
 			int i=0;
 			foreach (Dropdown.OptionData option in AnimationDropdown.options) {
 				if (option.text == animName) {
-					AnimationDropdown.value = i;
+                    doAnimationUpdate = false;
+                    AnimationDropdown.value = i;
 					animNum = i;
 				}
 				i++;
@@ -556,10 +587,11 @@ public class DrawScripts : MonoBehaviour {
 					InputField numInput = numObject.GetComponent<InputField> ();
 					//numInput.onEndEdit.AddListener(delegate {CheckInput(numInput); });
 					numInput.onValueChanged.AddListener(delegate {CheckInput(numInput); });
-					numObject.GetComponent<MinMaxValues>().minValue = (int)animations [animNum].AnimProperties [i].minValue;
+                    numInput.onEndEdit.AddListener(delegate { NumInputEditListener(numInput); });
+                    numObject.GetComponent<MinMaxValues>().minValue = (int)animations [animNum].AnimProperties [i].minValue;
 					numObject.GetComponent<MinMaxValues>().maxValue = (int)animations [animNum].AnimProperties [i].maxValue;
 					numObject.GetComponent<MinMaxValues>().startValue = (int)animations [animNum].AnimProperties [i].startValue;
-					numInput.text = property.Value[0].ToString();
+                    numInput.text = property.Value[0].ToString();
 					numberPanel.SetActive (true);
 
                 }
@@ -661,7 +693,6 @@ public class DrawScripts : MonoBehaviour {
 				
 		}
 
-
 	}
 
 
@@ -679,7 +710,7 @@ public class DrawScripts : MonoBehaviour {
 	// Checks if there is anything entered into the input field.
 	void CheckInput(InputField input)
 	{
-		//Debug.Log ("Value Changed....");
+		Debug.Log ("Value Changed....");
 		int minValue = input.gameObject.GetComponent<MinMaxValues> ().minValue;
 		int maxValue = input.gameObject.GetComponent<MinMaxValues> ().maxValue;
 		int startValue = input.gameObject.GetComponent<MinMaxValues> ().startValue;
@@ -698,7 +729,7 @@ public class DrawScripts : MonoBehaviour {
 		}
 		input.text = newValue.ToString ();
 
-	}
+    }
 
     void TaskSetStartTimeButtonClick () {
         Debug.Log("Start Time button clicked!");
@@ -719,6 +750,8 @@ public class DrawScripts : MonoBehaviour {
         startTime.transform.Find("Milliseconds").GetComponent<Text>().text = timePanelWindow.transform.Find("MSPanel").Find("numberInput").gameObject.GetComponent<InputField>().text;
 
         timePanelWindow.SetActive(false);
+
+        animSender.SendAnimationWithUpdate();
 
     }
 

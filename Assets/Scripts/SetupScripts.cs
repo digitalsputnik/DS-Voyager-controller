@@ -200,7 +200,7 @@ public class SetupScripts : MonoBehaviour {
             }
             UdpClient client = new UdpClient(localEndpoint);
 #else
-        UdpClient client = new UdpClient();
+            UdpClient client = new UdpClient();
 #endif
 
             client.EnableBroadcast = true;

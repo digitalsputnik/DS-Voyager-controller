@@ -331,7 +331,7 @@ class JsonToObject(object):
         self.__dict__ = json.loads(JSON_Message)
 
 LampScene = AnimationPlayer.Scene(frameDuration = 1/200.0, outputs = [AnimationPlayer.OutputToVoyager()], lampPixelCount = LampPixelCount) #, AnimationPlayer.OutputToController()])
-LampScene.start()
+#LampScene.start()
 
 ColorCalibrator = ColorCalibration(AnimationPath)
 ANetListener = ArtNetListener(LampScene, ColorCalibrator)
@@ -494,10 +494,15 @@ while True:
                     LampScene.Outputs.append(AnimationPlayer.OutputToController(addr))
                     RegisteredDevices.append(lIP)
                     ControllerTimes[lIP] = time.time()
+
 #                else:
 #                    LampScene.Outputs.remove(AnimationPlayer.OutputToController(addr))
 #                    RegisteredDevices.remove(lIP)
-    except :
+            #Start scene if not active
+            if not LampScene.isAlive():
+                LampScene.start()
+
+    except:
         pass
     
     
