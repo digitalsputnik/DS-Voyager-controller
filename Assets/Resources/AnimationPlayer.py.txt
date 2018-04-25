@@ -214,14 +214,16 @@ class Stroke:
         '''Adds pixels to stroke'''
         if self.LampMac in pixelDictionary:
             CurrentLampPixelDictionary = pixelDictionary[self.LampMac]
+            controlledPixels = []
             for pixelQueueNumber, pixelNumber in CurrentLampPixelDictionary.items():
-                self.ControlledPixels.append(Pixel(int(pixelQueueNumber), int(pixelNumber)))
+                controlledPixels.append(Pixel(int(pixelQueueNumber), int(pixelNumber)))
+            self.ControlledPixels = controlledPixels
 
     def ChangeStroke(self, timeStamp = 0, startTime = 0, pixelDictionary = {}, totalPixelCount = 0, colors = None, properties = None, animation = "", playMode = None, repeatMode = None, duration = 0.0, lampMac = ""):
         '''Changes stroke pixels, colors, properties or animation'''
         if timeStamp > self.TimeStamp:
             self.SetTime(startTime or self.StartTime)
-            self.ControlledPixels = []
+            #self.ControlledPixels = []
             self.SetPixels(pixelDictionary or self.PixelDictionary)
             self.TotalPixelCount = totalPixelCount or self.TotalPixelCount
             self.Properties = properties or self.Properties
