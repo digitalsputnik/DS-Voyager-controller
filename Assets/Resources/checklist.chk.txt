@@ -1,4 +1,4 @@
-368b72d426465202bf460a1ef40f44ff  /mnt/data/update_temp/autoconnect.sh
+e46be1b073952d380ac6f164041fa384  /mnt/data/update_temp/autoconnect.sh
 ee4fd68ecd9a3d4097549222966ef672  /mnt/data/update_temp/autorun.sh
 e1bd42313e6a189d86ccc4964e236edf  /mnt/data/update_temp/aux_disable_shutdown_30_sec.py
 95118fba85c94896af113132e50616e5  /mnt/data/update_temp/connect_cm.sh
@@ -11,6 +11,6 @@ ba466d983a29f03e9abcb816a2478de9  /mnt/data/update_temp/serial_check_2.sh
 7e50ac774f6a55afffb809d629b46963  /mnt/data/update_temp/timecompare.py
 78921cbfbf4f26fa01f491626044c20b  /mnt/data/update_temp/timesync-ask.py
 6f6c24ef76c08be277e33570f3a511f2  /mnt/data/update_temp/update1.sh
-254e17f4c356f3ff205ff5d762fab27b  /mnt/data/update_temp/update3.py
-f745e855433b3c5551061467a92cdeec  /mnt/data/update_temp/ut2.6.py
+6fddd0200f7feee67558e0b296e7496b  /mnt/data/update_temp/update3.py
+8631f85c48a1e66d91f498964e77557b  /mnt/data/update_temp/ut2.6.py
 fd0ae25d08218aedb6c672fe724c8b66  /mnt/data/update_temp/voyager_lpc_release_user_update.bin

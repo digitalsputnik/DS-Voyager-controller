@@ -60,6 +60,7 @@ public class SetupScripts : MonoBehaviour {
     private int[] LampUDPSoftwareVersion3 = new int[] { 0, 42 };
     private int[] LampLPCSoftwareVersion = new int[] {0, 177 };
     private bool isPollingActive = true;
+    private bool addLampAutomatically = true;
 
     public Dictionary<IPAddress, int> LampIPtoLengthDictionary { get; set; }
 
@@ -86,18 +87,14 @@ public class SetupScripts : MonoBehaviour {
 
         SetDetectionMode(false);
 
-        StartCoroutine("GetAvailableLamp");
+        //StartCoroutine("GetAvailableLamp");
 
         GameObject.Find("DetectedLampProperties").GetComponent<DetectedLampProperties>().LampIPtoLengthDictionary = LampIPtoLengthDictionary;
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        if (!isPollingActive)
-        {
-            StartCoroutine("GetAvailableLamp");
-            isPollingActive = true;
-        }
+        StartCoroutine("GetAvailableLamp");
     }
 
     private void TogglePacketListener()
@@ -151,19 +148,19 @@ public class SetupScripts : MonoBehaviour {
         //Destination
         //GetAvailableLamps();
 
-        if (LampIPtoLengthDictionary.Count == 1 && LampIPtoLengthDictionary.Keys.FirstOrDefault().ToString() == "172.20.0.1")
-        {
-            //Add lamp!
-            AddAllLampsButton.GetComponent<AddAllLampsScript>().AddAllLamps();
+        //if (LampIPtoLengthDictionary.Count == 1 && LampIPtoLengthDictionary.Keys.FirstOrDefault().ToString() == "172.20.0.1")
+        //{
+        //    //Add lamp!
+        //    AddAllLampsButton.GetComponent<AddAllLampsScript>().AddAllLamps();
             
-            //Go to draw mode
-            var menu = transform.parent.GetComponent<MenuMode>();
-            if (menu != null)
-            {
-                menu.TaskOnDrawClicked();
-            }
-            return;
-        }
+        //    //Go to draw mode
+        //    var menu = transform.parent.GetComponent<MenuMode>();
+        //    if (menu != null)
+        //    {
+        //        menu.TaskOnDrawClicked();
+        //    }
+        //    return;
+        //}
 
         if (!UpdateWindow.activeSelf)
         {
@@ -394,8 +391,9 @@ public class SetupScripts : MonoBehaviour {
 
             AddLampButtons(newLampIPtoLengthDictionary);
 
-            if (LampIPtoLengthDictionary.Count == 1 && !LampIPtoLengthDictionary.ContainsKey(IPAddress.Parse("172.20.1.1")))
+            if (LampIPtoLengthDictionary.Count == 1 && !LampIPtoLengthDictionary.ContainsKey(IPAddress.Parse("172.20.1.1")) && addLampAutomatically)
             {
+                addLampAutomatically = false;
                 //Add lamp!
                 AddAllLampsButton.GetComponent<AddAllLampsScript>().AddAllLamps();
 
@@ -449,32 +447,7 @@ public class SetupScripts : MonoBehaviour {
                     LampName = "Long Voyager";
                     break;
             }
-
-            /*
-            if (item.Value == 1)
-            {
-                LampProperties.Lamp = LongLamp;
-                LampName = "Long Voyager";
-                LampProperties.LampLength = 1;
-            }
-            else if (item.Value == 0)
-            {
-                LampProperties.Lamp = ShortLamp;
-                LampName = "Short Voyager";
-                LampProperties.LampLength = 0;
-			}else if (item.Value == 42)
-			{
-				LampProperties.Lamp = ShortLamp;
-				LampName = "Short Voyager";
-				LampProperties.LampLength = 42;
-			}else if (item.Value == 83)
-			{
-				LampProperties.Lamp = LongLamp;
-				LampName = "Long Voyager";
-				LampProperties.LampLength = 83;
-			}
-            */
-
+            
 			string LampProps = LampName + " "+LampProperties.MacName+" " + LampProperties.BatteryLevel.ToString ()+"% charged"; //item.Key.ToString();
             LampProperties.LampProps = LampProps;
             AddLampButton.GetComponentInChildren<Text>().text = LampProps;

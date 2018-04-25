@@ -77,7 +77,6 @@ public class UpdateChecker : MonoBehaviour {
         "ssidlist.txt",
         "update1.sh",
         "update3.py",
-        "update_main.py",
         "ut2.6.py",
         "voyager_lpc_release_user_update.bin",
         "autoconnect.sh",

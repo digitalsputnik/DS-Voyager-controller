@@ -16,18 +16,9 @@ do
 			fi
 		fi
 			
-		sleep 10
+		sleep 20
 	else
 		sh /mnt/data/connect_cm.sh
 		sleep 20
-		#if [ "$(ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}')" != "" ]; then
-		#	python3 /mnt/data/timesync-ask.py >> /mnt/data/timesynclog &
-		#	sleep 15
-		#else
-		#	sleep 15
-		#	if [ "$(ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}')" != "" ]; then
-		#		python3 /mnt/data/timesync-ask.py >> /mnt/data/timesynclog &
-		#	fi
-		#fi
 	fi
 done

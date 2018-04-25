@@ -33,9 +33,8 @@ def active_mode():
 
 
 #kill processes that use ttyS1
-os.popen("kill -9 $(ps ax | grep PythonReceiver.py | awk 'NR==1{print $1}') 2> /dev/null")
-os.popen("kill -9 $(ps ax | grep ut2.6.py | awk 'NR==1{print $1}') 2> /dev/null")
-
+os.popen("kill -9 $(ps ax | grep PythonReceiver.py | grep -v grep |awk 'NR==1{print $1}') 2> /dev/null")
+os.popen("kill -9 $(ps ax | grep ut2.6.py | grep -v grep | awk 'NR==1{print $1}') 2> /dev/null")
 
 ###MOVING FILES. CHIP UPDATES###
 

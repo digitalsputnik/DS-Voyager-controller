@@ -178,7 +178,14 @@ while True:
 				#Starts AP _M
 				os.system("sh /mnt/data/netchanger.sh 1 &")
 				
-				time.sleep(6)
+				counter = 0
+				while counter < 24:
+					time.sleep(0.25)
+					rgbw0[9:12] = rgbw1[9:12] = 0x00, 0x00, 0xFF
+					ser.write(rgbw0[:len(rgbw0)])
+					time.sleep(0.05)
+					ser.write(rgbw1[:len(rgbw1)])
+					counter += 1
 			
 			#POLL PACKET FROM UDP DEVICE OUTSIDE
 			if (udp_data[2] == 0x80 and udp_data[3] == 0x10):
@@ -322,20 +329,12 @@ while True:
 				print (int(serReceivedData[5]))
 				if int(serReceivedData[5]) > 15:
 											
+					#flash led when activating master _M
 					for x in range(0, 330, 4):
-						rgbw2[x+8:x+8+4] = 0x00, 0x00, 0x00, 0x00  #RGBW
-					rgbw2[168:172] = 0x30, 0x30, 0xFF, 0x00
-					#rgbw2[172:176] = 0x00, 0x00, 0xFF, 0x00					
-					rgbw2[336:340] = 0x30, 0x30, 0xFF, 0x00
-					#rgbw2[330:334] = 0x00, 0x00, 0xFF, 0x00
+						rgbw2[x+8:x+8+4] = 0x80, 0x80, 0x80, 0x80  #RGBW					
 					ser.write(rgbw2)
 					time.sleep(0.1)
-					ser.write(rgbw2)
-					time.sleep(0.1)
-					ser.write(rgbw2)				
-					time.sleep(0.1)
-					
-					
+
 					for x in range(0, 330, 4):
 						rgbw2[x+8:x+8+4] = 0x00, 0x00, 0x00, 0x00  #RGBW					
 					ser.write(rgbw2)
