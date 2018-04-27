@@ -25,7 +25,7 @@ public class AddLampButtonScript : MonoBehaviour {
 
     public void TaskOnClick()
     {
-        CreateLamp();
+        CreateLamp(1);
 		Startup start = GameObject.Find ("Main Camera").GetComponent<Startup> ();
 
 		if (start.tutorialMode){
@@ -47,20 +47,45 @@ public class AddLampButtonScript : MonoBehaviour {
 
     }
 
-    public void TaskOnClickOverride()
+    public void TaskOnClickOverride(int lampNum)
     {
-        CreateLamp();
+        CreateLamp(lampNum);
         //Destroy object only
         Destroy(this.gameObject);
     }
 
-    public void CreateLamp()
+    public void CreateLamp(int lampNum)
     {
 		//Find how many lamps are already in the scene
 		numLamps = GameObject.FindGameObjectsWithTag ("light").Length;
-			
+
+        //Find how many lamps we need to add
+        var lampsToAdd = transform.parent.Find("AllLampsOptionButton").GetComponent<AddAllLampsScript>().ButtonCount-3;
+
+        //Find visible area
+        var visibleAreaStart = Camera.main.ScreenToWorldPoint(new Vector3(0f, 0f, 0f));
+        var visibleAreaEnd = Camera.main.ScreenToWorldPoint(new Vector3((float)Screen.width, (float)Screen.height, 0f));
+        int visibleAreaEndY = (int)visibleAreaEnd.y;
+
+        //Find Y distance between lamps so they are evenly spreaded
+        var yDistance = visibleAreaEndY / lampsToAdd;
+
+
+
+        float yPosition = 0f;
+        //var NewLampPosition = Lamp.transform.position;
+        if (lampNum % 2 == 0)
+        {
+            yPosition = Lamp.transform.position.y + lampNum * yDistance;
+        }
+        else
+        {
+            yPosition = Lamp.transform.position.y - lampNum * yDistance;
+        }
+
         //Instantsiate lamp with IP and length!
-        var NewLampPosition = Lamp.transform.position;
+        Vector3 NewLampPosition = new Vector3(Lamp.transform.position.x, yPosition, Lamp.transform.position.z); 
+
         var newLamp = Instantiate(Lamp, NewLampPosition, Quaternion.identity);
 		newLamp.name = "Lamp" + numLamps.ToString ();
         newLamp.GetComponent<Ribbon>().IP = LampIP;

@@ -6,15 +6,17 @@ using UnityEngine.UI;
 
 public class AddAllLampsScript : MonoBehaviour {
 
-	// Use this for initialization
+    public int ButtonCount;
+
+    // Use this for initialization
 	void Start () {
         this.gameObject.GetComponent<Button>().onClick.AddListener(AddAllLamps);
 	}
 
     public void AddAllLamps()
     {
-        int addButtonCount = this.transform.parent.childCount;
-        for (int childIndex = 0; childIndex < addButtonCount; childIndex++)
+        ButtonCount = this.transform.parent.childCount;
+        for (int childIndex = 0; childIndex < ButtonCount; childIndex++)
         {
             var Button = this.transform.parent.GetChild(childIndex);
             if (Button.name == "LampOptionButtonLong" || Button.name == "LampOptionButtonShort")
@@ -24,7 +26,7 @@ public class AddAllLampsScript : MonoBehaviour {
             {
                 var addScript = Button.GetComponent<AddLampButtonScript>();
                 if (addScript != null)
-                    addScript.TaskOnClickOverride();
+                    addScript.TaskOnClickOverride(childIndex-3);
             }
         }
         this.gameObject.SetActive(false);
