@@ -60,33 +60,76 @@ public class AddLampButtonScript : MonoBehaviour {
 		numLamps = GameObject.FindGameObjectsWithTag ("light").Length;
 
         //Find how many lamps we need to add
-        var lampsToAdd = transform.parent.Find("AllLampsOptionButton").GetComponent<AddAllLampsScript>().ButtonCount-3;
+        var lampsToAdd = transform.parent.Find("AllLampsOptionButton").GetComponent<AddAllLampsScript>().ButtonCount-4;
 
         //Find visible area
-        var visibleAreaStart = Camera.main.ScreenToWorldPoint(new Vector3(0f, 0f, 0f));
-        var visibleAreaEnd = Camera.main.ScreenToWorldPoint(new Vector3((float)Screen.width, (float)Screen.height, 0f));
-        int visibleAreaEndY = (int)visibleAreaEnd.y;
+        var viewportHeight = Camera.main.pixelHeight;
 
         //Find Y distance between lamps so they are evenly spreaded
-        var yDistance = visibleAreaEndY / lampsToAdd;
-
-
+        int yDistance = viewportHeight / lampsToAdd;
 
         float yPosition = 0f;
-        //var NewLampPosition = Lamp.transform.position;
-        if (lampNum % 2 == 0)
+        int middle = viewportHeight / 2;
+        if (lampsToAdd % 2 == 0)
         {
-            yPosition = Lamp.transform.position.y + lampNum * yDistance;
+
+            if (lampNum % 2 == 0)
+            {
+                lampNum = lampNum - 1;
+                yPosition = middle + (lampNum * (yDistance / 2));
+            }
+            else
+            {
+                yPosition = middle - (lampNum * (yDistance / 2));
+            }
         }
         else
         {
-            yPosition = Lamp.transform.position.y - lampNum * yDistance;
+            if (lampNum == 1)
+            {
+                yPosition = middle;
+            }
+            else
+            {
+
+                if (lampNum % 2 == 0)
+                {
+                    yPosition = middle + ((lampNum - 1) * yDistance);
+                }
+                else
+                {
+                    lampNum = lampNum - 1;
+                    yPosition = middle - ((lampNum - 1) * yDistance);
+                }
+            }
+
         }
 
-        //Instantsiate lamp with IP and length!
-        Vector3 NewLampPosition = new Vector3(Lamp.transform.position.x, yPosition, Lamp.transform.position.z); 
+  
+    
+        //var NewLampPosition = Lamp.transform.position;
+        /*if (lampNum % 2 == 0)
+        {
+            yPosition = (viewportHeight/2) + (lampNum * yDistance);
+        }
+        else
+        {
+            yPosition = (viewportHeight / 2) - (lampNum * yDistance);
+        }*/
 
-        var newLamp = Instantiate(Lamp, NewLampPosition, Quaternion.identity);
+
+        //Find default xPosition of lamp
+        var lampDefaultPosition = Camera.main.WorldToScreenPoint(Lamp.transform.position);
+
+        //Convert yPosition to world position
+        var lampWorldPosition = Camera.main.ScreenToWorldPoint(new Vector3(lampDefaultPosition.x, yPosition, lampDefaultPosition.z));
+
+
+
+        //Instantsiate lamp with IP and length!
+        //Vector3 NewLampPosition = new Vector3(Lamp.transform.position.x, lampWorldPosition.y, Lamp.transform.position.z); 
+
+        var newLamp = Instantiate(Lamp, lampWorldPosition, Quaternion.identity);
 		newLamp.name = "Lamp" + numLamps.ToString ();
         newLamp.GetComponent<Ribbon>().IP = LampIP;
         newLamp.GetComponent<Ribbon>().Mac = MacName;
