@@ -375,6 +375,7 @@ public class UpdateChecker : MonoBehaviour {
                     if (isRev3)
                     {
                         Debug.Log("Starting update on lamp.");
+                        sshClient.RunCommand("dos2unix /mnt/data/update_temp/*");
                         var InstallationCommand = sshClient.CreateCommand("python3 /mnt/data/update_temp/update3.py");
                         var InstallationScriptResult = InstallationCommand.BeginExecute();
 
@@ -423,6 +424,8 @@ public class UpdateChecker : MonoBehaviour {
                     //Animation
                     //TODO: Run version control command
                     string[] testCommandStrings = new string[] { }; // { "ls -l /media/animation/AnimationPlayer.py | awk '{print $5}'", "ls -l /media/animation/PythonReceiver.py | awk '{print $5}'", "ls -l /media/autorun.sh | awk '{print $5}'", "ls -l /media/ut2.5.py | awk '{print $5}'" };
+
+                    sshClient.RunCommand("dos2unix /mnt/data/animation/*");
 
                     if (isRev3)
                     {
