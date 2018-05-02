@@ -4,7 +4,7 @@ e1bd42313e6a189d86ccc4964e236edf  /mnt/data/update_temp/aux_disable_shutdown_30_
 95118fba85c94896af113132e50616e5  /mnt/data/update_temp/connect_cm.sh
 39cc02a44631eeeb4fb450d18c38c4be  /mnt/data/update_temp/lpc_firmware_exit_from_bootloader_hw3.py
 2ea7d5f90c206e7bf4dbb142647252d2  /mnt/data/update_temp/lpc_firmware_update_hw3.sh
-7416c09d0f9b2acf5568128225233cf0  /mnt/data/update_temp/lpc_firmware_version.py
+d06812ad9da498de5db84b5b5c474283  /mnt/data/update_temp/lpc_firmware_version.py
 62fc479bff0d6da2abe9bd2cbbb16244  /mnt/data/update_temp/netchanger.sh
 2f106f403ef20a9cb6bfcf98426a1f24  /mnt/data/update_temp/serial_check_1.sh
 ba466d983a29f03e9abcb816a2478de9  /mnt/data/update_temp/serial_check_2.sh
