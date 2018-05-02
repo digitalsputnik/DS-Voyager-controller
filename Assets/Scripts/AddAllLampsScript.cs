@@ -26,7 +26,7 @@ public class AddAllLampsScript : MonoBehaviour {
             {
                 var addScript = Button.GetComponent<AddLampButtonScript>();
                 if (addScript != null)
-                    addScript.TaskOnClickOverride(childIndex-3);
+                    addScript.TaskOnClickOverride(childIndex-3, ButtonCount - 4);
             }
         }
         this.gameObject.SetActive(false);
