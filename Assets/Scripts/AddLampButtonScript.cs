@@ -47,84 +47,31 @@ public class AddLampButtonScript : MonoBehaviour {
 
     }
 
-    public void TaskOnClickOverride(int lampNum)
+    public void TaskOnClickOverride(int lampNum, int lampsToAdd)
     {
-        CreateLamp(lampNum);
+        CreateLamp(lampNum, lampsToAdd);
         //Destroy object only
         Destroy(this.gameObject);
     }
 
-    public void CreateLamp(int lampNum)
+    public void CreateLamp(int lampNum = 1, int lampsToAdd = 1)
     {
 		//Find how many lamps are already in the scene
 		numLamps = GameObject.FindGameObjectsWithTag ("light").Length;
-
-        //Find how many lamps we need to add
-        var lampsToAdd = transform.parent.Find("AllLampsOptionButton").GetComponent<AddAllLampsScript>().ButtonCount-4;
 
         //Find visible area
         var viewportHeight = Camera.main.pixelHeight;
 
         //Find Y distance between lamps so they are evenly spreaded
-        int yDistance = viewportHeight / lampsToAdd;
+        int yDistance = viewportHeight / (lampsToAdd + 1);
 
-        float yPosition = 0f;
-        int middle = viewportHeight / 2;
-        if (lampsToAdd % 2 == 0)
-        {
-
-            if (lampNum % 2 == 0)
-            {
-                lampNum = lampNum - 1;
-                yPosition = middle + (lampNum * (yDistance / 2));
-            }
-            else
-            {
-                yPosition = middle - (lampNum * (yDistance / 2));
-            }
-        }
-        else
-        {
-            if (lampNum == 1)
-            {
-                yPosition = middle;
-            }
-            else
-            {
-
-                if (lampNum % 2 == 0)
-                {
-                    yPosition = middle + ((lampNum - 1) * yDistance);
-                }
-                else
-                {
-                    lampNum = lampNum - 1;
-                    yPosition = middle - ((lampNum - 1) * yDistance);
-                }
-            }
-
-        }
-
-  
-    
-        //var NewLampPosition = Lamp.transform.position;
-        /*if (lampNum % 2 == 0)
-        {
-            yPosition = (viewportHeight/2) + (lampNum * yDistance);
-        }
-        else
-        {
-            yPosition = (viewportHeight / 2) - (lampNum * yDistance);
-        }*/
-
+        float yPosition = viewportHeight * lampNum / (lampsToAdd + 1) + UnityEngine.Random.Range(-yDistance/2, yDistance/2);
 
         //Find default xPosition of lamp
         var lampDefaultPosition = Camera.main.WorldToScreenPoint(Lamp.transform.position);
 
         //Convert yPosition to world position
         var lampWorldPosition = Camera.main.ScreenToWorldPoint(new Vector3(lampDefaultPosition.x, yPosition, lampDefaultPosition.z));
-
-
 
         //Instantsiate lamp with IP and length!
         //Vector3 NewLampPosition = new Vector3(Lamp.transform.position.x, lampWorldPosition.y, Lamp.transform.position.z); 
