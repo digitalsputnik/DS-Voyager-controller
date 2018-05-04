@@ -60,6 +60,27 @@ public class MenuPullScript : MonoBehaviour, IPointerClickHandler {
     }
 
 
+    public void CloseMenu()
+    {
+        onMove = true;
+        currentTime = 0.0f;
+        isPulled = !isPulled;
+        pulling = PullDirection.Left;
+        Sprite newSprite;
+
+        if (isPulled)
+        {
+            newSprite = imageTwo; // <- This is the new sprite
+        }
+        else
+        {
+            newSprite = imageOne;
+        }
+        Image theImage = gameObject.GetComponent<Image>();
+        theImage.sprite = newSprite;
+
+    }
+
     // Use this for initialization
     void Start () {
         StartPosition = Menu.transform.position;

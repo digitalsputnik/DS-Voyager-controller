@@ -11,6 +11,7 @@ public class DragAndDrop1Handler : MonoBehaviour {
     public GameObject TrashCan;
     public static GameObject itemBeingDragged;
     public static GameObject itemBeingScaled;
+    public GameObject videoStreamBackground;
 
     //New
     Vector3 MouseDifference;
@@ -24,6 +25,10 @@ public class DragAndDrop1Handler : MonoBehaviour {
 
     private void OnMouseDown()
     {
+        if (videoStreamBackground.activeSelf)
+        {
+            videoStreamBackground.transform.parent.GetComponent<MoveObject>().dragged = true;
+        }
         itemBeingDragged = gameObject; //Drag and drop handle
         itemBeingScaled = transform.parent.gameObject; //Light
         //referenceObject = transform.parent.Find("DragAndDrop2").gameObject; //Other drag and drop handle
@@ -43,6 +48,7 @@ public class DragAndDrop1Handler : MonoBehaviour {
 
     private void OnMouseDrag()
     {
+        
         //Rotation
         var newDirection = GetMouseLampPosition() - MouseDifference - referenceObject.transform.position;
         var newRotation = Quaternion.FromToRotation(initialDirection, newDirection);
@@ -64,6 +70,12 @@ public class DragAndDrop1Handler : MonoBehaviour {
 
     private void OnMouseUp()
     {
+        if (videoStreamBackground.activeSelf)
+        {
+            videoStreamBackground.transform.parent.GetComponent<MoveObject>().dragged = false;
+            videoStreamBackground.transform.parent.GetComponent<MoveObject>().endDrag = true;
+        }
+
         itemBeingDragged = null;
         itemBeingScaled = null;
 

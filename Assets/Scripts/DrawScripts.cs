@@ -104,6 +104,17 @@ public class DrawScripts : MonoBehaviour {
     float colorIntensityOffset = 0.3f;
     bool doAnimationUpdate = true;
 
+    //VideoStream
+    public MenuPullScript PullScript;
+    public GameObject MenuBackGround;
+    public RawImage BackgroundRawImage;
+    public GameObject VideoStreamBackground;
+    public WebCamTexture webcamTexture = null;
+    private bool camAvailable = false;
+    public AspectRatioFitter fit;
+
+
+
     //List of animations
     public List<LightAnims> animations = new List<LightAnims>();
 
@@ -198,6 +209,12 @@ public class DrawScripts : MonoBehaviour {
         newAnim8.AnimProperties.Add(new Property("Hold", "int", 1000, 0, 10000));
         newAnim8.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim8);
+
+        LightAnims newAnim9 = new LightAnims();
+        newAnim9.AnimName = "Video Stream";
+        newAnim9.AnimProperties.Add(new Property("VideoStream", "stream", null, 0, 0));
+        animations.Add(newAnim9);
+
 
         //Add animation names to Dropdown
         List<string> animNames = new List<string>();
@@ -400,6 +417,46 @@ public class DrawScripts : MonoBehaviour {
                     newTime.transform.Find("StartTimeButton").GetComponent<Button>().onClick.AddListener(TaskSetStartTimeButtonClick);
                 }
                 
+            }
+
+            if (animations[animNum].AnimProperties[i].type == "stream")
+            {
+                PullScript = MenuBackGround.transform.Find("MenuPullImage").gameObject.GetComponent<MenuPullScript>();
+                PullScript.CloseMenu();
+                //PullScript.Start();
+                //BackgroundRawImage.gameObject.SetActive(true);
+                VideoStreamBackground.SetActive(true);
+
+
+                WebCamDevice[] devices = WebCamTexture.devices;
+
+                if (devices.Length == 0)
+                {
+                    Debug.Log("No Camera Detected!");
+                    camAvailable = false;
+                    return;
+                }
+
+                for (int j = 0; j < devices.Length; j++)
+                {
+                    if (devices[j].isFrontFacing)
+                    {
+                        webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
+
+                    }
+                }
+
+                if (webcamTexture == null)
+                {
+                    Debug.Log("Unable to find back camera");
+                    return;
+                }
+
+                webcamTexture.Play();
+                //BackgroundRawImage.material.mainTexture = webcamTexture;
+                VideoStreamBackground.GetComponent<Renderer>().material.mainTexture = webcamTexture;
+
+                camAvailable = true;
             }
         }
 
@@ -859,5 +916,20 @@ public class DrawScripts : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+        /*
+        if (!camAvailable)
+            return;
+
+        float ratio = (float)webcamTexture.width / (float)webcamTexture.height;
+        fit.aspectRatio = ratio;
+
+
+        float scaleY = webcamTexture.videoVerticallyMirrored ? -1f : 1f;
+        BackgroundRawImage.rectTransform.localScale = new Vector3(1f, scaleY, 1f);
+
+        int orient = -webcamTexture.videoRotationAngle;
+        BackgroundRawImage.rectTransform.localEulerAngles = new Vector3(0, 0, orient);
+        */
+
     }
 }

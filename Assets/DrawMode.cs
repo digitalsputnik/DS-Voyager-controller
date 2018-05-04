@@ -56,8 +56,9 @@ public class DrawMode : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		//run active script based on the input
-		this.SetActive(active);
+        //run active script based on the input
+        Debug.Log("DrawMode started........");
+        this.SetActive(active);
 	}
 	
 	// Update is called once per frame

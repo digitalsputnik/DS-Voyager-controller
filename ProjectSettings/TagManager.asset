@@ -13,6 +13,8 @@ TagManager:
   - color
   - int
   - light
+  - starttime
+  - set
   layers:
   - Default
   - TransparentFX

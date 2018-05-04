@@ -20,23 +20,85 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
 	Rect binRect;
 	Image binImage;
 
+    //For VideoStream
+    public GameObject drawTools;
+    public GameObject videoStreamBackground;
+
+
+    public Dictionary<int, Color> VideoPixels;
+    WebCamTexture webcamTexture = null;
+
+
+    void Start() {
+        Debug.Log("Starting.....................");
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         //if (!setupMode.activeSelf)
           //  return;
 
         TrashCan.SetActive(true);
-        //TODO: Check if setup mode is on!
-        //TODO: Check if pixel or handle is dragged and act accordingly.
-        //NOTE: For this case, 
         itemBeingDragged = gameObject;
         difference = transform.position - GetMouseLampPosition();
+        if (drawTools.GetComponent<DrawScripts>().webcamTexture != null)
+        {
+            //Debug.Log("Found WebCamTexture!!!");
+            webcamTexture = drawTools.GetComponent<DrawScripts>().webcamTexture;
+            VideoPixels = new Dictionary<int, Color>();
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         //if (!setupMode.activeSelf)
           //  return;
+
+        //Pick webCamTexture pixels
+        if (webcamTexture != null)
+        {
+            //Find total number of lamp pixels
+            var totalLampPixels = this.gameObject.GetComponent<Ribbon>().pipeLength;
+            //Get VideoPlayer Rect
+            var videoRect = videoStreamBackground.GetComponent<Renderer>().bounds;
+
+            //Make sure dictionary is reinitialized
+            VideoPixels.Clear();
+
+            for (int i = 0; i < totalLampPixels; i++)
+            {
+                string pixelName = "pixel" + i;
+                var lampPixelLED = transform.Find(pixelName).Find("LEDmodule");
+                var lampPixelCenter = lampPixelLED.GetComponent<Renderer>().bounds.center;
+                //Vector3 videoPixel = new Vector3(lampPixel.Find("LEDmodule").position.x, lampPixel.Find("LEDmodule").position.y, 0.7f );
+                //Debug.Log("Bounding box min max is: " + videoRect.min+", "+videoRect.max);
+                //Debug.Log("lampPixel position is: " + lampPixelCenter);
+                if (lampPixelCenter.x >= videoRect.min.x && lampPixelCenter.x <= videoRect.max.x)
+                {
+                    if (lampPixelCenter.y >= videoRect.min.y && lampPixelCenter.y <= videoRect.max.y)
+                    {
+                        //Debug.Log("Value is within bounds!");
+                        //var videoPixelColor = webcamTexture.GetPixel(Convert.ToInt32(lampPixelLED.position.x), Convert.ToInt32(lampPixelLED.position.y));
+                        VideoPixels.Add(i, webcamTexture.GetPixel(Convert.ToInt32(lampPixelLED.position.x), Convert.ToInt32(lampPixelLED.position.y)));
+                        //Debug.Log("Pixel: " + lampPixelLED.transform.parent.name + "  Color: " + videoPixelColor.ToString());
+                    }
+                    else
+                    {
+                        Debug.Log("ValueY out of bounds!!!");
+                    }
+                }
+                else
+                {
+                    Debug.Log("ValueX out of bounds!!!");
+                }
+
+            }
+        }
+        else
+        {
+            Debug.Log("Video not running!!!");
+        }
+
         transform.position = GetMouseLampPosition() + difference;
 
 		//fix by Tahir
