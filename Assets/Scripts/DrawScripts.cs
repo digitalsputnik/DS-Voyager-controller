@@ -107,11 +107,11 @@ public class DrawScripts : MonoBehaviour {
     //VideoStream
     public MenuPullScript PullScript;
     public GameObject MenuBackGround;
-    public RawImage BackgroundRawImage;
+    //public RawImage BackgroundRawImage;
     public GameObject VideoStreamBackground;
     public WebCamTexture webcamTexture = null;
     private bool camAvailable = false;
-    public AspectRatioFitter fit;
+    //public AspectRatioFitter fit;
 
 
 
@@ -421,6 +421,7 @@ public class DrawScripts : MonoBehaviour {
 
             if (animations[animNum].AnimProperties[i].type == "stream")
             {
+                //Debug.Log("Video Stream selected...");
                 PullScript = MenuBackGround.transform.Find("MenuPullImage").gameObject.GetComponent<MenuPullScript>();
                 PullScript.CloseMenu();
                 //PullScript.Start();
@@ -439,9 +440,10 @@ public class DrawScripts : MonoBehaviour {
 
                 for (int j = 0; j < devices.Length; j++)
                 {
-                    if (devices[j].isFrontFacing)
+                    if (!devices[j].isFrontFacing)
                     {
                         webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
+                        //Debug.Log("Webcam created!");
 
                     }
                 }

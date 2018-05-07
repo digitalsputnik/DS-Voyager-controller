@@ -8,10 +8,9 @@ using UnityEngine.EventSystems;
 public class DragAndDrop1Handler : MonoBehaviour {
 
     public GameObject referenceObject;
-    public GameObject TrashCan;
     public static GameObject itemBeingDragged;
     public static GameObject itemBeingScaled;
-    public GameObject videoStreamBackground;
+    //public GameObject videoStreamBackground;
 
     //New
     Vector3 MouseDifference;
@@ -25,10 +24,10 @@ public class DragAndDrop1Handler : MonoBehaviour {
 
     private void OnMouseDown()
     {
-        if (videoStreamBackground.activeSelf)
+       /* if (videoStreamBackground.activeSelf)
         {
             videoStreamBackground.transform.parent.GetComponent<MoveObject>().dragged = true;
-        }
+        }*/
         itemBeingDragged = gameObject; //Drag and drop handle
         itemBeingScaled = transform.parent.gameObject; //Light
         //referenceObject = transform.parent.Find("DragAndDrop2").gameObject; //Other drag and drop handle
@@ -70,26 +69,15 @@ public class DragAndDrop1Handler : MonoBehaviour {
 
     private void OnMouseUp()
     {
-        if (videoStreamBackground.activeSelf)
+       /* if (videoStreamBackground.activeSelf)
         {
             videoStreamBackground.transform.parent.GetComponent<MoveObject>().dragged = false;
             videoStreamBackground.transform.parent.GetComponent<MoveObject>().endDrag = true;
-        }
+        }*/
 
         itemBeingDragged = null;
         itemBeingScaled = null;
 
-        //TODO: Check if mouse is over trashcan!
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        Physics.Raycast(ray, out hit, 100);
-        if (hit.transform.name == "RemoveLamp")
-        {
-
-            Destroy(gameObject.transform.parent.gameObject);
-        }
-
-        TrashCan.SetActive(false);
     }
 
     private static Vector3 GetMouseLampPosition()

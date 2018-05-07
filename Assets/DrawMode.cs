@@ -57,7 +57,7 @@ public class DrawMode : MonoBehaviour {
     // Use this for initialization
     void Start () {
         //run active script based on the input
-        Debug.Log("DrawMode started........");
+        //Debug.Log("DrawMode started........");
         this.SetActive(active);
 	}
 	

@@ -92,8 +92,8 @@ public class MoveObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("Set position is: " + this.gameObject.transform.position);
-        Debug.Log("Set rotation is: " + this.gameObject.transform.rotation.eulerAngles);
+        //Debug.Log("Set position is: " + this.gameObject.transform.position);
+        //Debug.Log("Set rotation is: " + this.gameObject.transform.rotation.eulerAngles);
 
         if (dragged || endDrag)
         {

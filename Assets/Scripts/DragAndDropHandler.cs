@@ -29,10 +29,6 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
     WebCamTexture webcamTexture = null;
 
 
-    void Start() {
-        Debug.Log("Starting.....................");
-    }
-
     public void OnBeginDrag(PointerEventData eventData)
     {
         //if (!setupMode.activeSelf)
@@ -80,7 +76,7 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
                         //Debug.Log("Value is within bounds!");
                         //var videoPixelColor = webcamTexture.GetPixel(Convert.ToInt32(lampPixelLED.position.x), Convert.ToInt32(lampPixelLED.position.y));
                         VideoPixels.Add(i, webcamTexture.GetPixel(Convert.ToInt32(lampPixelLED.position.x), Convert.ToInt32(lampPixelLED.position.y)));
-                        //Debug.Log("Pixel: " + lampPixelLED.transform.parent.name + "  Color: " + videoPixelColor.ToString());
+                        //Debug.Log("Pixel: " + lampPixelLED.transform.parent.name + "  Color: " + VideoPixels[i].ToString());
                     }
                     else
                     {
@@ -96,7 +92,7 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
         }
         else
         {
-            Debug.Log("Video not running!!!");
+            //Debug.Log("Video not running!!!");
         }
 
         transform.position = GetMouseLampPosition() + difference;
