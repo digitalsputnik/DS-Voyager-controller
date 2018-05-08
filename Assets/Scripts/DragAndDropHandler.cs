@@ -23,9 +23,7 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
     //For VideoStream
     public GameObject drawTools;
     public GameObject videoStreamBackground;
-
-
-    public Dictionary<int, Color> VideoPixels;
+    public List<int> VideoPixels;
     WebCamTexture webcamTexture = null;
 
 
@@ -41,7 +39,6 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
         {
             //Debug.Log("Found WebCamTexture!!!");
             webcamTexture = drawTools.GetComponent<DrawScripts>().webcamTexture;
-            VideoPixels = new Dictionary<int, Color>();
         }
     }
 
@@ -58,15 +55,17 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
             //Get VideoPlayer Rect
             var videoRect = videoStreamBackground.GetComponent<Renderer>().bounds;
 
-            //Make sure dictionary is reinitialized
-            VideoPixels.Clear();
+            //Make sure list is reinitialized
+            VideoPixels = new List<int>();
 
             for (int i = 0; i < totalLampPixels; i++)
             {
+
+                //Find all pixels which should receive video
                 string pixelName = "pixel" + i;
                 var lampPixelLED = transform.Find(pixelName).Find("LEDmodule");
                 var lampPixelCenter = lampPixelLED.GetComponent<Renderer>().bounds.center;
-                //Vector3 videoPixel = new Vector3(lampPixel.Find("LEDmodule").position.x, lampPixel.Find("LEDmodule").position.y, 0.7f );
+
                 //Debug.Log("Bounding box min max is: " + videoRect.min+", "+videoRect.max);
                 //Debug.Log("lampPixel position is: " + lampPixelCenter);
                 if (lampPixelCenter.x >= videoRect.min.x && lampPixelCenter.x <= videoRect.max.x)
@@ -74,8 +73,7 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
                     if (lampPixelCenter.y >= videoRect.min.y && lampPixelCenter.y <= videoRect.max.y)
                     {
                         //Debug.Log("Value is within bounds!");
-                        //var videoPixelColor = webcamTexture.GetPixel(Convert.ToInt32(lampPixelLED.position.x), Convert.ToInt32(lampPixelLED.position.y));
-                        VideoPixels.Add(i, webcamTexture.GetPixel(Convert.ToInt32(lampPixelLED.position.x), Convert.ToInt32(lampPixelLED.position.y)));
+                        VideoPixels.Add(i);
                         //Debug.Log("Pixel: " + lampPixelLED.transform.parent.name + "  Color: " + VideoPixels[i].ToString());
                     }
                     else
@@ -87,8 +85,8 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
                 {
                     Debug.Log("ValueX out of bounds!!!");
                 }
-
             }
+
         }
         else
         {
@@ -113,6 +111,8 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
 		}
 
     }
+
+
 
     public void OnEndDrag(PointerEventData eventData)
     {

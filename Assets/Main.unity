@@ -43601,6 +43601,7 @@ GameObject:
   - component: {fileID: 934283041}
   - component: {fileID: 934283043}
   - component: {fileID: 934283042}
+  - component: {fileID: 934283044}
   m_Layer: 0
   m_Name: Voyager3 4ft
   m_TagString: light
@@ -43725,6 +43726,7 @@ MonoBehaviour:
   animSender: {fileID: 1468842241}
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
+  VideoPixels: 
 --- !u!114 &934283043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43743,6 +43745,19 @@ MonoBehaviour:
   colorIntensityOffset: 0.3
   ColorDataReceiver: {fileID: 611738331}
   UpdateFps: 30
+--- !u!114 &934283044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 934283040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 283cf44655a869342b19f375cfccfa49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drawTools: {fileID: 411981886}
+  videoStreamBackground: {fileID: 1051078286}
 --- !u!1 &935151728
 GameObject:
   m_ObjectHideFlags: 0
@@ -50403,6 +50418,7 @@ GameObject:
   - component: {fileID: 1096142446}
   - component: {fileID: 1096142447}
   - component: {fileID: 1096142448}
+  - component: {fileID: 1096142449}
   m_Layer: 0
   m_Name: Voyager 4ft
   m_TagString: light
@@ -50542,6 +50558,20 @@ MonoBehaviour:
   setupScripts: {fileID: 1509357876}
   menuCanvas: {fileID: 2014415372}
   animSender: {fileID: 1468842241}
+  drawTools: {fileID: 411981886}
+  videoStreamBackground: {fileID: 1051078286}
+  VideoPixels: 
+--- !u!114 &1096142449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1096142445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 283cf44655a869342b19f375cfccfa49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
 --- !u!1 &1096566111
@@ -54236,6 +54266,7 @@ GameObject:
   - component: {fileID: 1177545566}
   - component: {fileID: 1177545565}
   - component: {fileID: 1177545564}
+  - component: {fileID: 1177545567}
   m_Layer: 0
   m_Name: Voyager3 2ft
   m_TagString: light
@@ -54261,6 +54292,7 @@ MonoBehaviour:
   animSender: {fileID: 1468842241}
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
+  VideoPixels: 
 --- !u!114 &1177545565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54337,6 +54369,19 @@ Transform:
   m_Father: {fileID: 1400527965}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1177545567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1177545563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 283cf44655a869342b19f375cfccfa49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drawTools: {fileID: 411981886}
+  videoStreamBackground: {fileID: 1051078286}
 --- !u!1 &1178139268
 GameObject:
   m_ObjectHideFlags: 0
@@ -77280,6 +77325,7 @@ GameObject:
   - component: {fileID: 1657679387}
   - component: {fileID: 1657679388}
   - component: {fileID: 1657679389}
+  - component: {fileID: 1657679390}
   m_Layer: 0
   m_Name: Voyager 2ft
   m_TagString: light
@@ -77376,6 +77422,20 @@ MonoBehaviour:
   setupScripts: {fileID: 1509357876}
   menuCanvas: {fileID: 2014415372}
   animSender: {fileID: 1468842241}
+  drawTools: {fileID: 411981886}
+  videoStreamBackground: {fileID: 1051078286}
+  VideoPixels: 
+--- !u!114 &1657679390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1657679386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 283cf44655a869342b19f375cfccfa49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
 --- !u!1 &1658708164

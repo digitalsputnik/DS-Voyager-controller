@@ -92,7 +92,7 @@ public class DrawMode : MonoBehaviour {
                 {
                     if (!EventSystem.current.IsPointerOverGameObject())
                     {
-                        currentLamp = hit.transform.parent.gameObject.transform.parent.gameObject;
+                        currentLamp = hit.transform.parent.parent.gameObject;
                         lastLamp = currentLamp;
                         paintLamp = true;
                     }
@@ -130,7 +130,7 @@ public class DrawMode : MonoBehaviour {
                 } else if (BrushDropdown.value == 1) { //IF pixel brush!
 					//updateLight (hit.transform.gameObject);
 					//get current Lamp
-					currentLamp = hit.transform.parent.gameObject.transform.parent.gameObject;
+					currentLamp = hit.transform.parent.parent.gameObject;
 					int pixelsToWrite = 0;
 					Pixel current = hit.transform.parent.gameObject.GetComponent<Pixel> ();
 					//For smooth drawing -- DONT CHANGE NAMES OF PIXELS

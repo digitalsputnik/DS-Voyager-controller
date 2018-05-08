@@ -440,7 +440,7 @@ public class DrawScripts : MonoBehaviour {
 
                 for (int j = 0; j < devices.Length; j++)
                 {
-                    if (!devices[j].isFrontFacing)
+                    if (devices[j].isFrontFacing)
                     {
                         webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
                         //Debug.Log("Webcam created!");
