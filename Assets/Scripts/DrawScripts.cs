@@ -109,6 +109,7 @@ public class DrawScripts : MonoBehaviour {
     public GameObject MenuBackGround;
     //public RawImage BackgroundRawImage;
     public GameObject VideoStreamBackground;
+    public Texture2D videoTexture;
     public WebCamTexture webcamTexture = null;
     private bool camAvailable = false;
     //public AspectRatioFitter fit;
@@ -456,6 +457,10 @@ public class DrawScripts : MonoBehaviour {
 
                 webcamTexture.Play();
                 //BackgroundRawImage.material.mainTexture = webcamTexture;
+                //Texture BackgroundTexture = videoStreamBackground.GetComponent<Renderer>().material.mainTexture;
+                //videoTexture = new Texture2D(webcamTexture.requestedWidth, webcamTexture.requestedHeight, TextureFormat.ARGB32, false);
+                //videoTexture.SetPixels(webcamTexture.GetPixels());
+                
                 VideoStreamBackground.GetComponent<Renderer>().material.mainTexture = webcamTexture;
 
                 camAvailable = true;

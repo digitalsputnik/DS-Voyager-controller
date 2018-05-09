@@ -9,6 +9,9 @@ public class VideoStream : MonoBehaviour {
     //For VideoStream
     public GameObject drawTools;
     public GameObject videoStreamBackground;
+    public GameObject minXY;
+    public GameObject maxX;
+    public GameObject maxY;
     WebCamTexture webcamTexture = null;
     List<int> pixelsToDraw;
     Texture2D tex = null;
@@ -31,7 +34,7 @@ public class VideoStream : MonoBehaviour {
                 videoRunning = true;
             }
 
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(1);
 
         }
 
@@ -79,6 +82,37 @@ public class VideoStream : MonoBehaviour {
                     var lampPixelLED = transform.Find(pixelName).Find("LEDmodule");
                     var lampPixelCenter = lampPixelLED.GetComponent<Renderer>().bounds.center;
 
+                    //Find position of video stream pixel corresponding to lampPixelCenter
+                    var Xs = maxX.transform.position - minXY.transform.position;
+                    var Ys = maxY.transform.position - minXY.transform.position;
+
+                    var Vp = lampPixelCenter - minXY.transform.position;
+
+                    var Vx = Vector3.Project(Vp, Xs);
+                    var Vy = Vector3.Project(Vp, Ys);
+
+                    var pointX = 0.0f;
+                    var pointY = 0.0f;
+                    pointX = webcamTexture.width * (Vx.magnitude / Xs.magnitude);
+                    
+                    pointY = webcamTexture.height * (Vy.magnitude / Ys.magnitude);
+
+                    //Debug.Log("LampPixelCenter: " + lampPixelCenter);
+                    //Debug.Log("VideoPixel: " + pointX.ToString()+", "+ pointY.ToString());
+
+                    //Get the color
+                    Color pixelColor = Color.white; // default color
+                    pixelColor = webcamTexture.GetPixel((int)pointX, (int)pointY);
+
+
+                    
+
+                    //Apply color
+                    lampPixelLED.GetComponent<Renderer>().material.color = pixelColor;
+
+
+
+                    /*
                     RaycastHit hit;
                     float rayLength = 0.5f;
                     Ray ray = new Ray(lampPixelLED.position, Vector3.forward);
@@ -93,13 +127,42 @@ public class VideoStream : MonoBehaviour {
                         tex.SetPixels(pixels);
                         tex.Apply();
 
-                        pixelColor = tex.GetPixelBilinear(hit.textureCoord.x, hit.textureCoord.y);
+                        //Find the pixel color
+                        var Xs = maxX.transform.position - minXY.transform.position;
+                        var Ys = maxY.transform.position - minXY.transform.position;
+
+                        var Vp = lampPixelCenter - minXY.transform.position;
+
+                        var Vx = Vector3.Project(Vp, Xs);
+                        var Vy = Vector3.Project(Vp, Ys);
+
+                        var pointX = 0.0f;
+                        var pointY = 0.0f;
+                        if (Vx.magnitude >= 0 && Vx.magnitude >= 1 && Xs.magnitude >= 0 && Xs.magnitude <= 1)
+                        {
+                            pointX = webcamTexture.width * (Vx.magnitude / Xs.magnitude); 
+                        }
+
+                        if (Vy.magnitude >= 0 && Vy.magnitude >= 1 && Ys.magnitude >= 0 && Ys.magnitude <= 1)
+                        {
+                            pointY = webcamTexture.height * (Vy.magnitude / Ys.magnitude);
+                        }
+
+
+
+
+
+                        pixelColor = tex.GetPixelBilinear(pointX, pointY);
                         //Debug.Log("Pixel color is: "+ pixelColor.ToString());
+                        
                     }
+
+                    */
+
 
 
                     //var screenPoint = Camera.main.WorldToScreenPoint(pixelPosition);
-                    lampPixelLED.GetComponent<Renderer>().material.color = pixelColor;
+                    //lampPixelLED.GetComponent<Renderer>().material.color = pixelColor;
                     //Debug.Log("Pixel: " + pixelName);
 
                     //Debug.Log("World point: " + pixelPosition);
@@ -113,7 +176,7 @@ public class VideoStream : MonoBehaviour {
             {
                 Debug.Log("Video not running...");
             }
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(0.0f);
         }
 
     }
