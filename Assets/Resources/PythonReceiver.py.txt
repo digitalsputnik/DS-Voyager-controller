@@ -416,6 +416,9 @@ while True:
             if 'sACNMode' in jsonDict:
                 ACNListener.Active = jsonDict['sACNMode']
 
+            if 'VideoStream' in jsonDict:
+                LampScene.Layers[1].VideoStream = np.array(jsonDict['VideoStream'])
+
             #Determine the type of the json message
             if 'Layers' in jsonDict:
                 if 'TimeStamp' in jsonDict:

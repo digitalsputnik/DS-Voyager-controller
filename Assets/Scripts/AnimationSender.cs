@@ -378,6 +378,8 @@ public class AnimationSender : MonoBehaviour
     private byte[] StrokeJSONData;
     private List<string> LampIPList = new List<string>();
 
+    public Dictionary<string,Dictionary<int, int[]>> LampIPVideoStreamPixelToColor = new Dictionary<string, Dictionary<int, int[]>>();
+
     //Color calibration
     int[] WhiteCalibrationTemperatureNodes;
     int[][] WhiteCalibrationTable;
@@ -793,7 +795,7 @@ public class AnimationSender : MonoBehaviour
         StartCoroutine("PollLayersFromLamp", LampIP);
         StartCoroutine("SetDetectionFalse", LampIP);
         StartCoroutine("RegisterDevice", LampIP);
-        //StartCoroutine
+        StartCoroutine("SendVideoStream");
     }
 
     byte[] SendJSONToLamp(object messageObject, IPEndPoint lampEndPoint)
@@ -852,6 +854,32 @@ public class AnimationSender : MonoBehaviour
             //Register constantly!
             RegisterControllerToDevice(true, lampIP);
             yield return new WaitForSeconds(1.33f);
+        }
+    }
+
+    IEnumerator SendVideoStream()
+    {
+        //Dictionary<string, Dictionary<int, int[]>> jsonDict = new Dictionary<string, Dictionary<int, int[]>>();
+        Dictionary<string, int[][]> jsonDict = new Dictionary<string, int[][]>();
+        string videoString = "VideoStream";
+        jsonDict.Add(videoString, new int[1][]);
+        while (true)
+        {
+            if (StrokeJSONData != null && LampIPList.Count > 0)
+            {
+                if (ActiveStroke.layer.PixelToStrokeIDDictionary.Any(x => x.Value.FirstOrDefault().Animation == "Video Stream"))
+                {
+                    foreach (var lampIP in LampIPList)
+                    {
+                        //jsonDict[videoString] = LampIPVideoStreamPixelToColor[lampIP];
+                        jsonDict[videoString] = LampIPVideoStreamPixelToColor[lampIP].Values.ToArray();
+                        var messageJSON = JsonConvert.SerializeObject(jsonDict);
+                        var data = Encoding.ASCII.GetBytes(messageJSON);
+                        SendDataToLamp(data, new IPEndPoint(IPAddress.Parse(lampIP), 30001));
+                    }
+                }
+            }
+            yield return new WaitForSeconds(0.04f);
         }
     }
 

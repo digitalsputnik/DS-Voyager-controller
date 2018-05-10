@@ -123,7 +123,8 @@ class Layer:
         self.Time = time.time()
         self.LayerActive = layerActive
         #TODO: Numpy
-        self.CurrentLayerFrame = {} 
+        self.CurrentLayerFrame = {}
+        self.VideoStream = np.repeat([[0,0,0,0]],scene.LampPixelCount)
 
     def ChangeLayer(self, scene, strokes, layerActive):
         self.Scene = scene or self.Scene
@@ -371,6 +372,8 @@ class Stroke:
                                 pixel.PixelColor = self.Colors[0]
                             else:
                                 pixel.PixelColor = self.Colors[2]
+                    elif self.Animation == "Video Stream":
+                        pixel.PixelColor = self.Layer.VideoStream[pixel.PixelNumber]
 
                     else:
                         if self.UpdateStationary:

@@ -47,52 +47,6 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
         //if (!setupMode.activeSelf)
           //  return;
 
-        //Pick webCamTexture pixels
-        if (webcamTexture != null)
-        {
-            //Find total number of lamp pixels
-            var totalLampPixels = this.gameObject.GetComponent<Ribbon>().pipeLength;
-            //Get VideoPlayer Rect
-            var videoRect = videoStreamBackground.GetComponent<Renderer>().bounds;
-
-            //Make sure list is reinitialized
-            VideoPixels = new List<int>();
-
-            for (int i = 0; i < totalLampPixels; i++)
-            {
-
-                //Find all pixels which should receive video
-                string pixelName = "pixel" + i;
-                var lampPixelLED = transform.Find(pixelName).Find("LEDmodule");
-                var lampPixelCenter = lampPixelLED.GetComponent<Renderer>().bounds.center;
-
-                //Debug.Log("Bounding box min max is: " + videoRect.min+", "+videoRect.max);
-                //Debug.Log("lampPixel position is: " + lampPixelCenter);
-                if (lampPixelCenter.x >= videoRect.min.x && lampPixelCenter.x <= videoRect.max.x)
-                {
-                    if (lampPixelCenter.y >= videoRect.min.y && lampPixelCenter.y <= videoRect.max.y)
-                    {
-                        //Debug.Log("Value is within bounds!");
-                        VideoPixels.Add(i);
-                        //Debug.Log("Pixel: " + lampPixelLED.transform.parent.name + "  Color: " + VideoPixels[i].ToString());
-                    }
-                    else
-                    {
-                        Debug.Log("ValueY out of bounds!!!");
-                    }
-                }
-                else
-                {
-                    Debug.Log("ValueX out of bounds!!!");
-                }
-            }
-
-        }
-        else
-        {
-            //Debug.Log("Video not running!!!");
-        }
-
         transform.position = GetMouseLampPosition() + difference;
 
 		//fix by Tahir

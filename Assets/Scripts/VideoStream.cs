@@ -17,10 +17,30 @@ public class VideoStream : MonoBehaviour {
     Texture2D tex = null;
     bool videoRunning = false;
 
-
+    AnimationSender animSender;
+    string IP;
+    int[] blackColor = new int[] { 0, 0, 0, 0 };
+    
+    
     // Use this for initialization
     void Start () {
+        //NOTE: Quick hack because switching all the references is too much work at this point
+        animSender = GameObject.Find("AnimationControl").GetComponent<AnimationSender>();
+
         StartCoroutine(CheckForVideo());
+
+        //Initialization of video stream array
+        IP = this.gameObject.GetComponent<Ribbon>().IP;
+        if (!animSender.LampIPVideoStreamPixelToColor.ContainsKey(IP))
+        {
+            animSender.LampIPVideoStreamPixelToColor.Add(IP,new Dictionary<int, int[]>());
+        }
+
+        int PixelCount = this.gameObject.GetComponent<Ribbon>().pipeLength;
+        for (int p = 0; p < PixelCount; p++)
+        {
+            animSender.LampIPVideoStreamPixelToColor[IP].Add(p, blackColor);
+        }
     }
 
     IEnumerator CheckForVideo() {
@@ -51,22 +71,10 @@ public class VideoStream : MonoBehaviour {
             if (webcamTexture != null)
             {
                 //Find total number of lamp pixels
-                var totalLampPixels = this.gameObject.GetComponent<Ribbon>().pipeLength;
+                var numPixelsToDraw = this.gameObject.GetComponent<Ribbon>().pipeLength;
 
                 pixelsToDraw = this.gameObject.GetComponent<DragAndDropHandler>().VideoPixels;
-                var numPixelsToDraw = 0;
                 string pixelName;
-
-                //Get pixels to be drawn
-                if (pixelsToDraw.Count > 0)
-                {
-                    numPixelsToDraw = pixelsToDraw.Count;
-
-                }
-                else
-                {
-                    numPixelsToDraw = totalLampPixels;
-                }
 
                 //Start drawing pixels
                 for (int i = 0; i < numPixelsToDraw; i++)
@@ -79,6 +87,8 @@ public class VideoStream : MonoBehaviour {
                     {
                         pixelName = "pixel" + i;
                     }
+
+                    //TODO: Move calculation to OnDrag!
                     var lampPixelLED = transform.Find(pixelName).Find("LEDmodule");
                     var lampPixelCenter = lampPixelLED.GetComponent<Renderer>().bounds.center;
 
@@ -91,86 +101,35 @@ public class VideoStream : MonoBehaviour {
                     var Vx = Vector3.Project(Vp, Xs);
                     var Vy = Vector3.Project(Vp, Ys);
 
-                    var pointX = 0.0f;
-                    var pointY = 0.0f;
-                    pointX = webcamTexture.width * (Vx.magnitude / Xs.magnitude);
-                    
-                    pointY = webcamTexture.height * (Vy.magnitude / Ys.magnitude);
-
-                    //Debug.Log("LampPixelCenter: " + lampPixelCenter);
-                    //Debug.Log("VideoPixel: " + pointX.ToString()+", "+ pointY.ToString());
-
-                    //Get the color
-                    Color pixelColor = Color.white; // default color
-                    pixelColor = webcamTexture.GetPixel((int)pointX, (int)pointY);
-
-
-                    
-
-                    //Apply color
-                    lampPixelLED.GetComponent<Renderer>().material.color = pixelColor;
-
-
-
-                    /*
-                    RaycastHit hit;
-                    float rayLength = 0.5f;
-                    Ray ray = new Ray(lampPixelLED.position, Vector3.forward);
-                    Color pixelColor = Color.white; // default color when the raycast fails for some reason ;)
-                    if (Physics.Raycast(ray, out hit, rayLength))
+                    //Check if in limits
+                    if (Vx.normalized == Xs.normalized && Vy.normalized == Ys.normalized &&
+                        Vx.magnitude <= Xs.magnitude && Vy.magnitude <= Ys.magnitude)
                     {
-                        Debug.Log("Succesfully hit object: " + hit.transform.name);
-                        Texture BackgroundTexture = videoStreamBackground.GetComponent<Renderer>().material.mainTexture;
-                        tex = new Texture2D(BackgroundTexture.width, BackgroundTexture.height, TextureFormat.ARGB32, false);
-                        //tex = videoStreamBackground.GetComponent<Renderer>().material.mainTexture as Texture2D;
-                        Color[] pixels = webcamTexture.GetPixels();
-                        tex.SetPixels(pixels);
-                        tex.Apply();
-
-                        //Find the pixel color
-                        var Xs = maxX.transform.position - minXY.transform.position;
-                        var Ys = maxY.transform.position - minXY.transform.position;
-
-                        var Vp = lampPixelCenter - minXY.transform.position;
-
-                        var Vx = Vector3.Project(Vp, Xs);
-                        var Vy = Vector3.Project(Vp, Ys);
-
                         var pointX = 0.0f;
                         var pointY = 0.0f;
-                        if (Vx.magnitude >= 0 && Vx.magnitude >= 1 && Xs.magnitude >= 0 && Xs.magnitude <= 1)
-                        {
-                            pointX = webcamTexture.width * (Vx.magnitude / Xs.magnitude); 
-                        }
+                        pointX = webcamTexture.width * (Vx.magnitude / Xs.magnitude);
 
-                        if (Vy.magnitude >= 0 && Vy.magnitude >= 1 && Ys.magnitude >= 0 && Ys.magnitude <= 1)
-                        {
-                            pointY = webcamTexture.height * (Vy.magnitude / Ys.magnitude);
-                        }
+                        pointY = webcamTexture.height * (Vy.magnitude / Ys.magnitude);
 
+                        //Debug.Log("LampPixelCenter: " + lampPixelCenter);
+                        //Debug.Log("VideoPixel: " + pointX.ToString()+", "+ pointY.ToString());
 
+                        //Get the color
+                        Color pixelColor = Color.white; // default color
+                        pixelColor = webcamTexture.GetPixel((int)pointX, (int)pointY);
 
-
-
-                        pixelColor = tex.GetPixelBilinear(pointX, pointY);
-                        //Debug.Log("Pixel color is: "+ pixelColor.ToString());
-                        
+                        //Apply color
+                        //lampPixelLED.GetComponent<Renderer>().material.color = pixelColor;
+                        animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(pixelColor.r*255), (int)(pixelColor.g*255), (int)(pixelColor.b*255), 0 };
+                    }
+                    else
+                    {
+                        //lampPixelLED.GetComponent<Renderer>().material.color = Color.black;
+                        animSender.LampIPVideoStreamPixelToColor[IP][i] = blackColor;
                     }
 
-                    */
-
-
-
-                    //var screenPoint = Camera.main.WorldToScreenPoint(pixelPosition);
-                    //lampPixelLED.GetComponent<Renderer>().material.color = pixelColor;
-                    //Debug.Log("Pixel: " + pixelName);
-
-                    //Debug.Log("World point: " + pixelPosition);
-                    //Debug.Log("Screen point: " + screenPoint);
 
                 }
-                //yield return new WaitForSeconds(1);
-
             }
             else
             {
