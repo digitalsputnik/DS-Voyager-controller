@@ -375,8 +375,10 @@ public class UpdateChecker : MonoBehaviour {
                     if (isRev3)
                     {
                         Debug.Log("Starting update on lamp.");
-                        sshClient.RunCommand("dos2unix /mnt/data/update_temp/*.py *.sh");
-                        var InstallationCommand = sshClient.CreateCommand("python3 /mnt/data/update_temp/update3.py");
+
+                        string dos2unixCommand = "dos2unix " + Rev3InstallationDirectory + "/*.py " + Rev3InstallationDirectory + "/*.sh ";
+                        var TransformResult = sshClient.RunCommand(dos2unixCommand);
+                        var InstallationCommand = sshClient.CreateCommand("python3 " + Rev3InstallationDirectory + "/update3.py");
                         var InstallationScriptResult = InstallationCommand.BeginExecute();
 
                         bool installationSuccess = false;
