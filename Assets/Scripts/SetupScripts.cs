@@ -57,8 +57,8 @@ public class SetupScripts : MonoBehaviour {
     private bool CancelDetection = false;
     private int[] LampAnimationSoftwareVersion = new int[] { 0, 0 };
     private int[] LampUDPSoftwareVersion = new int[] { 0, 31 };
-    private int[] LampUDPSoftwareVersion3 = new int[] { 0, 42 };
-    private int[] LampLPCSoftwareVersion = new int[] {0, 177 };
+    private int[] LampUDPSoftwareVersion3 = new int[] { 0, 44 };
+    private int[] LampLPCSoftwareVersion = new int[] {0, 185 };
     private bool isPollingActive = true;
     private bool addLampAutomatically = true;
 

@@ -1,22 +1,17 @@
 #Revision 3 voyager
 
-#Andro 2018.04.17
+#Andro 2018.05.10
 #old ut2 script, now the main UDP communication between the outside world
 #scrapped version of reinvented mesh mess
 
-#massive while loop, polls for udp and serial received with timeouts. Needs a massive cleanup
+#massive while loop, polls for udp and serial received with timeouts. Needs a cleanup
+#activates periodic polling at the start, every POLLING_DELAY, reads again and starts sending new packet.
 
-# - missing defines for each packet identifying, hardcoded at the momement
-# - missing CRC checks
-
-# - possible cockup... Polling info in one packet, seemed like a good idea until telemetry polling with serial from LPC started causing delays. 
 # - maybe remove delay and add refresh telemetry packet, controlled delay
-# - Need to rework polling, LPC send periodically info, instead of CHIP sending poll request on Tx line, ie breaking animation.
 
-
-VERSION=[0, 42] # 2 byte values
+VERSION=[0, 44] # 2 byte values
 CLIENT_PING_DELAY = 5 # for led status, how often tries to ping, inbetween sends previous state
-POLLING_DELAY = 30 # how often reads info from LPC when receives polling state.
+POLLING_DELAY = 10 # how often reads info from LPC when receives polling state.
 
 import time
 import serial
@@ -24,6 +19,7 @@ import sys
 import socket
 import os
 import json
+import netifaces
 
 
 toHex = lambda x: " ".join("{:02X}".format(c) for c in x)
@@ -45,8 +41,8 @@ serNumberOfBytesRx = 0
 serReceivedData = []
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+#sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+#sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 PORT  = 30000
 HOST = ""                       #listen to all IPs
 sock.bind((HOST,PORT))
@@ -69,17 +65,17 @@ for x in range(0, 330, 4):
  rgbw2[x+8:x+8+4] = 0x00, 0x00, 0x00, 0x00  #RGBW
 rgbw2[340:343] = 0xEF, 0xFE, 0x00
 
+#dirty fix for timesync, adds 4 years since epoch, cannot set time back since boot.. not sure whats blocking.. timesync
+current_time = os.popen("date +%s%3N").readline().strip()
+if int(current_time) < 1262304000:
+	os.system("date -s 'Tue Jan  1 00:00:00 UTC 1974'")
+
 # time delays how often some action
 client_start_time = time.time() - CLIENT_PING_DELAY
 start_time_polling = time.time() - POLLING_DELAY
 ping_response = 0
 #for timesync package, values above need reset
-
-#dirty fix for timesync, adds 4 years since epoch, cannot set time back since boot.. not sure whats blocking.. timesync
-#current_time = os.popen("date +%s%3N").readline().strip()
-#if int(current_time) < 1262304000:
-#	os.system("date -s 'Tue Jan  1 00:00:00 UTC 1974'")
-
+	
 #Reading passive(1) or active(0) mode,export PE0 pin
 os.system("echo 128 > /sys/class/gpio/export")
 os.system("echo in > /sys/class/gpio/gpio128/direction")
@@ -93,6 +89,43 @@ chip_read_flag = 0
 animation_read_flag = 0
 serial_read_flag = 0
 mac_read_flag = 0
+
+#CRC
+crctab = bytearray([0x00,0x5e,0xbc,0xe2,0x61,0x3f,0xdd,0x83,0xc2,0x9c,0x7e,0x20,0xa3,0xfd,0x1f,0x41,0x9d,0xc3,0x21,0x7f,0xfc,0xa2,0x40,0x1e,0x5f,0x01,0xe3,0xbd,0x3e,0x60,0x82,0xdc,0x23,0x7d,0x9f,0xc1,0x42,0x1c,0xfe,0xa0,0xe1,0xbf,0x5d,0x03,0x80,0xde,0x3c,0x62,0xbe,0xe0,0x02,0x5c,0xdf,0x81,0x63,0x3d,0x7c,0x22,0xc0,0x9e,0x1d,0x43,0xa1,0xff,0x46,0x18,0xfa,0xa4,0x27,0x79,0x9b,0xc5,0x84,0xda,0x38,0x66,0xe5,0xbb,0x59,0x07,0xdb,0x85,0x67,0x39,0xba,0xe4,0x06,0x58,0x19,0x47,0xa5,0xfb,0x78,0x26,0xc4,0x9a,0x65,0x3b,0xd9,0x87,0x04,0x5a,0xb8,0xe6,0xa7,0xf9,0x1b,0x45,0xc6,0x98,0x7a,0x24,0xf8,0xa6,0x44,0x1a,0x99,0xc7,0x25,0x7b,0x3a,0x64,0x86,0xd8,0x5b,0x05,0xe7,0xb9,0x8c,0xd2,0x30,0x6e,0xed,0xb3,0x51,0x0f,0x4e,0x10,0xf2,0xac,0x2f,0x71,0x93,0xcd,0x11,0x4f,0xad,0xf3,0x70,0x2e,0xcc,0x92,0xd3,0x8d,0x6f,0x31,0xb2,0xec,0x0e,0x50,0xaf,0xf1,0x13,0x4d,0xce,0x90,0x72,0x2c,0x6d,0x33,0xd1,0x8f,0x0c,0x52,0xb0,0xee,0x32,0x6c,0x8e,0xd0,0x53,0x0d,0xef,0xb1,0xf0,0xae,0x4c,0x12,0x91,0xcf,0x2d,0x73,0xca,0x94,0x76,0x28,0xab,0xf5,0x17,0x49,0x08,0x56,0xb4,0xea,0x69,0x37,0xd5,0x8b,0x57,0x09,0xeb,0xb5,0x36,0x68,0x8a,0xd4,0x95,0xcb,0x29,0x77,0xf4,0xaa,0x48,0x16,0xe9,0xb7,0x55,0x0b,0x88,0xd6,0x34,0x6a,0x2b,0x75,0x97,0xc9,0x4a,0x14,0xf6,0xa8,0x74,0x2a,0xc8,0x96,0x15,0x4b,0xa9,0xf7,0xb6,0xe8,0x0a,0x54,0xd7,0x89,0x6b,0x35])
+def CalcCrc8(packet, length):
+	length = int(length) & 0xff
+	temp = 0xff	# seed value
+	for i in range(0, length):
+		temp = temp ^ crctab[temp ^ packet[i]]
+	return temp
+
+#send start polling signal to LPC
+periodic_update_length = 10
+periodic_update = bytearray()
+periodic_update = bytearray([0xD5, 0x0A, 0x50, 0x0A, 0x30, 0x01, 0x30, 0xEF, 0xFE, 0x00])
+periodic_update[9] = CalcCrc8(periodic_update, periodic_update_length-1)
+#print (list(periodic_update))
+
+time.sleep(0.1)
+periodic_update_ok = 0
+while periodic_update_ok == 0:
+	ser.write(periodic_update)
+	time.sleep(0.1)
+	periodic_update_answer = ser.read(20)
+	#print ("periodic", list(periodic_update_answer))
+
+	if len(periodic_update_answer) > 0:
+		#enabled
+		if periodic_update_answer[0] == 0xD5 and periodic_update_answer[1] == 0x0A and periodic_update_answer[2] == 0x50 and periodic_update_answer[3] == 0x0A and periodic_update_answer[4] == 0x01:
+			periodic_update_ok = 1
+		
+		#already enabled, poll packet
+		if periodic_update_answer[0] == 0xD5 and periodic_update_answer[1] == 0x0A and periodic_update_answer[2] == 0x50 and periodic_update_answer[3] == 0x0B:
+			periodic_update_ok = 1
+	
+	time.sleep(0.5)
+poll_info = 0
+new_read = 0
 
 while True:
 	try:
@@ -159,10 +192,10 @@ while True:
 				print ("start |AP")
 				
 				#flash led when activating master _M
-				for x in range(0, 330, 4):
-					rgbw2[x+8:x+8+4] = 0x80, 0x80, 0x80, 0x80  #RGBW					
-				ser.write(rgbw2)
-				time.sleep(0.1)
+				#for x in range(0, 330, 4):
+				#	rgbw2[x+8:x+8+4] = 0x80, 0x80, 0x80, 0x80  #RGBW					
+				#ser.write(rgbw2)
+				#time.sleep(0.1)
 
 				for x in range(0, 330, 4):
 					rgbw2[x+8:x+8+4] = 0x00, 0x00, 0x00, 0x00  #RGBW					
@@ -189,123 +222,95 @@ while True:
 			
 			#POLL PACKET FROM UDP DEVICE OUTSIDE
 			if (udp_data[2] == 0x80 and udp_data[3] == 0x10):
+			
+				#not an empty packet from LPC
+				if poll_info != 0:
+					#timedelay how often reads and calculates poll
+					if (time.time() - start_time_polling > POLLING_DELAY ):
+						start_time_polling=time.time()
 
-				if (time.time() - start_time_polling > POLLING_DELAY ):
-					start_time_polling=time.time()
-					print ("POLL PACKET")
-						
-						
-					### IP
-					#sets client wlan0 by default
-					if os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'").readline().strip() != "":
-						#IP_reply = os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'").readline().strip()
-						UDPResponse["IP"] = list(socket.inet_aton(os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'").readline().strip()))
-					# if no wlan0 IP. sets AP ip
-					else:
-						UDPResponse["IP"] = list(socket.inet_aton(os.popen("ip addr | egrep -i 'inet.+wlan1' | awk -F[\ /] '{print $6}'").readline().strip()))
-					
-					#if master with 172.20.1.1, overrides
-					if os.popen("ip addr | egrep -i 'inet.+wlan1' | awk -F[\ /] '{print $6}'").readline().strip() == "172.20.1.1":
-						UDPResponse["IP"] = list(socket.inet_aton(os.popen("ip addr | egrep -i 'inet.+wlan1' | awk -F[\ /] '{print $6}'").readline().strip()))
+						#crc check for lpc sent packet
+						poll_info_crc = CalcCrc8(poll_info, len(poll_info)-1)
+						if poll_info[16] == CalcCrc8(poll_info, len(poll_info)-1):
+							print ("poll crc ok")
 
-					### NUMBER OF LEDS
-					if length_read_flag == 0:
-						ser.write([0xd5, 0x0a, 0x50, 0x03, 0xef, 0xfe, 0x00])
-						time.sleep(0.05)
-						led_amount = ser.read(10)
-						if (len(led_amount) > 5):
-							if (led_amount[0] == 0xD5 and led_amount[1] == 0x0A and led_amount[2] == 0x50 and led_amount[3] == 0x03):
-								UDPResponse["length"] = led_amount[4]
-								length_read_flag = 1
-								
-					### BATTERY LEVEL
-					ser.write([0xd5, 0x0a, 0x20, 0x04, 0xef, 0xfe, 0x00])
-					time.sleep(0.1)
-					battery_lvl = ser.read(10)
-					if (len(battery_lvl) > 5):
-						if (battery_lvl[0] == 0xD5 and battery_lvl[1] == 0x0A and battery_lvl[2] == 0x20 and battery_lvl[3] == 0x04):
-							UDPResponse["battery_level"] = battery_lvl[4]
-					
-					
-					### TEMPERATURE	###
-					#BQ - In Kelvin
-					ser.write([0xd5, 0x0a, 0x20, 0x02, 0x20, 0x08, 0x00, 0xef, 0xfe, 0x00])
-					time.sleep(0.1)
-					sbs = ser.read(15)
-					if (len(sbs) > 5):
-						if (sbs[0] == 0xD5 and sbs[1] == 0x0A and sbs[2] == 0x20 and sbs[3] == 0x02 and sbs[4] == 0x21 and sbs[5] == 0x08):
-							kelvin = float(int.from_bytes(sbs[8:10], byteorder='little'))
+							### IP
+							#sets client wlan0 by default
+							if len(netifaces.ifaddresses('wlan0')) >= 3:
+								UDPResponse["IP"] = list(socket.inet_aton(netifaces.ifaddresses('wlan0')[2][0]['addr']))
+							else:
+								UDPResponse["IP"] = list(socket.inet_aton(netifaces.ifaddresses('wlan1')[2][0]['addr']))
+							
+							### NUMBER OF LEDS
+							UDPResponse["length"] = poll_info[12]
+							
+							### BATTERY LEVEL
+							UDPResponse["battery_level"] = poll_info[5]
+							
+							### BQ TEMPERATURE
+							kelvin = float(int.from_bytes(poll_info[6:8], byteorder='little'))
 							celsius = kelvin/10 - 273.15
 							UDPResponse["BQ_temp"] = int(str(celsius)[:2]), int(str(celsius)[3:4])
+							
+							### CHARGING
+							UDPResponse["charging_status"] = list(poll_info[8:10])
+							
+							### LPC VERSION
+							UDPResponse["LPC_version"] = list(poll_info[10:12])
+							
+							### Voyager Hardware version
+							UDPResponse["Hardware_version"] = poll_info[13]
+							
+							### AXP/CHIP TEMP
+							#chip_temp = os.popen("sh /mnt/data/chip_temp.sh").readline().strip()
+							#UDPResponse["CHIP_temp"] = int(chip_temp)
+							#print (chip_temp)
+							
+							### CHIP VERSION
+							if chip_read_flag == 0: 
+								UDPResponse["CHIP_version"] = VERSION
+								chip_read_flag = 1
+							
+							### ANIMATION VERSION 
+							if animation_read_flag == 0:
+								if os.path.isfile("/mnt/data/animation/version"):
+									animation_ver_read = os.popen("cat /mnt/data/animation/version").readline().strip().split('.')
+									animation_ver_read  = [int(i) for i in animation_ver_read ]
+									UDPResponse["animation_version"] = animation_ver_read
+									animation_read_flag = 1
+								else:
+									UDPResponse["animation_version"] = [0,0]
+									animation_read_flag = 1
+									
+							### LAST 6 MAC addr
+							if mac_read_flag == 0:
+								UDPResponse["MAC_last6"] = os.popen("ip addr show wlan1 | sed -n 2p | tr -d : | cut -d ' ' -f 6 | cut -c 7-").readline().strip()
+								mac_read_flag = 1
+							
+							### PASSIVE/ACTIVE MODE
+							#UDPResponse["passive_active_mode"] = int(os.popen("cat /sys/class/gpio/gpio128/value").readline().strip())						#f = open("/sys/class/gpio/gpio128/value","r")
+							f = open("/sys/class/gpio/gpio128/value", "r")
+							UDPResponse["passive_active_mode"] = int(f.read())
+							f.close()
 
-					#CHIP
-					chip_temp = os.popen("sh /mnt/data/chip_temp.sh").readline().strip()
-					UDPResponse["CHIP_temp"] = int(chip_temp)
-					
-					### CHARGING
-					ser.write([0xd5, 0x0a, 0x20, 0x02, 0x20, 0x0A, 0x00, 0xef, 0xfe, 0x00])
-					time.sleep(0.1)
-					sbs = ser.read(15)
-					if (len(sbs) > 5):
-						if (sbs[0] == 0xD5 and sbs[1] == 0x0A and sbs[2] == 0x20 and sbs[3] == 0x02 and sbs[4] == 0x21 and sbs[5] == 0x0A):
-							UDPResponse["charging_status"] = list(sbs[8:10])
-					
-					### VERSIONS ###
-					#LPC
-					if lpc_read_flag == 0:
-						ser.write([0xd5, 0x0a, 0x30, 0x01, 0x20, 0xef, 0xfe, 0x00])
-						time.sleep(0.1)
-						lpc_version = ser.read(10)
-						if (len(lpc_version) > 5):
-							if (lpc_version[0] == 0xD5 and lpc_version[1] == 0x0A and lpc_version[2] == 0x30 and lpc_version[3] == 0x01 and lpc_version[4] == 0x21):
-								UDPResponse["LPC_version"] = list(lpc_version[5:7])
-								lpc_read_flag = 1
-						
-					#CHIP
-					if chip_read_flag == 0: 
-						UDPResponse["CHIP_version"] = VERSION
-						chip_read_flag = 1
-						
-					#Animation 
-					if animation_read_flag == 0:
-						if os.path.isfile("/mnt/data/animation/version"):
-							animation_ver_read = os.popen("cat /mnt/data/animation/version").readline().strip().split('.')
-							animation_ver_read  = [int(i) for i in animation_ver_read ]
-							UDPResponse["animation_version"] = animation_ver_read
-							animation_read_flag = 1
-						else:
-							UDPResponse["animation_version"] = [0,0]
-							animation_read_flag = 1
-						
-					#6last mac
-					if mac_read_flag == 0:
-						UDPResponse["MAC_last6"] = os.popen("ip addr show wlan1 | sed -n 2p | tr -d : | cut -d ' ' -f 6 | cut -c 7-").readline().strip()
-						mac_read_flag = 1
-					
-					#Passive or Active mode
-					UDPResponse["passive_active_mode"] = int(os.popen("cat /sys/class/gpio/gpio128/value").readline().strip())
-					
-					#! Need to add master _M !#
-					#Serial name / SSID
-					if serial_read_flag == 0:
-						UDPResponse["serial_name"] = os.popen("cat /mnt/data/serial.txt").readline().strip()
-						serial_read_flag = 1
-						
-					#SEND POLL PACKET RESPONSE
-					#Generate JSON string
-					UDPResponseJSON = json.dumps(UDPResponse)
-					#Send generated JSON
-					sock.sendto(UDPResponseJSON.encode(), addr)
-					
-					#sock.sendto(poll_reply, addr)
-					#print("POLL SENT")
-					#print (list(poll_reply))
-					#print (len(poll_reply))
-					
-				else:
-					#print ("send poll, with out rereading")
-					sock.sendto(UDPResponseJSON.encode(), addr)
-					#sock.sendto(poll_reply, addr)
+							
+							
+							### SERIAL NAME
+							if serial_read_flag == 0:
+								UDPResponse["serial_name"] = os.popen("cat /mnt/data/serial.txt").readline().strip()
+								serial_read_flag = 1
+								
+							### END POLL PACKET RESPONSE
+							UDPResponseJSON = json.dumps(UDPResponse)
+							sock.sendto(UDPResponseJSON.encode(), addr)
+							print (UDPResponseJSON)
+							#print (addr)
+							
+							time.sleep(0.1)			
+					else:						
+						#print ("send poll, with out rereading")
+						#print (UDPResponseJSON)
+						sock.sendto(UDPResponseJSON.encode(), addr)#(addr[0], 30000))
 					
 				serReceivedData = []
 				serNumberOfBytesRx = 0
@@ -316,11 +321,15 @@ while True:
 		#	print('wrong flag')
 				
 		if(ser.in_waiting != 0):
-			serReceivedData = ser.read(7)
+			serReceivedData = ser.read(50)
 			
 			#print ("serial received")
 			#print (list(serReceivedData))
-
+			
+			if (serReceivedData[0] == 0xD5 and serReceivedData[1] == 0x0A and serReceivedData[2] == 0x50 and serReceivedData[3] == 0x0B):
+				#print ("poll received")
+				#print (udp_data)
+				poll_info = serReceivedData
 
 			### SIDE BUTTON ###
 			
@@ -330,10 +339,10 @@ while True:
 				if int(serReceivedData[5]) > 15:
 											
 					#flash led when activating master _M
-					for x in range(0, 330, 4):
-						rgbw2[x+8:x+8+4] = 0x80, 0x80, 0x80, 0x80  #RGBW					
-					ser.write(rgbw2)
-					time.sleep(0.1)
+					#for x in range(0, 330, 4):
+					#	rgbw2[x+8:x+8+4] = 0x80, 0x80, 0x80, 0x80  #RGBW					
+					#ser.write(rgbw2)
+					#time.sleep(0.1)
 
 					for x in range(0, 330, 4):
 						rgbw2[x+8:x+8+4] = 0x00, 0x00, 0x00, 0x00  #RGBW					

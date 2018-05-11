@@ -13,7 +13,7 @@ ls /var/lib/connman/*| grep -v settings| xargs rm -rf
 #kill client connection attempt.. might be easier way to timeout.
 timeout_monitor() {
 	sleep "$TIMEOUT"
-	ps ax | grep connmanctl | awk -F ' ' '{print $1}' | xargs kill -9
+	ps ax | grep connmanctl | grep -v grep | awk -F ' ' '{print $1}' | xargs kill -9
 	kill "$1"
 	ls /var/lib/connman/*| grep -v settings| xargs rm -rf
 }

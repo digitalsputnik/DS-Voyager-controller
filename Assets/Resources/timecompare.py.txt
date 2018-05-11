@@ -11,9 +11,8 @@ sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 sock.settimeout(2)
 
 #HOST = os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $9}'").readline().strip()
-PORT = 30002
-sock.bind(("",PORT))
-
+PORT = 30000
+#sock.bind(("",PORT))
 rgbw2 = bytearray()
 rgbw2[0:8] = 0xD5, 0x0A, 0x83, 0x10, 0xFF, 0x00, 0x00, 0x00
 
@@ -43,7 +42,7 @@ while True:
 
 		if t > 0.010 or t < -0.010:
 			bad_delay += 1
-			print ("meh")
+			#print ("meh")
 		counter += 1
 
 	print (bad_delay)

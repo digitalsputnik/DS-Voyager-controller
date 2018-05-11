@@ -376,7 +376,7 @@ public class UpdateChecker : MonoBehaviour {
                     {
                         Debug.Log("Starting update on lamp.");
 
-                        string dos2unixCommand = "dos2unix " + Rev3InstallationDirectory + "/*.py " + Rev3InstallationDirectory + "/*.sh ";
+                        string dos2unixCommand = "dos2unix " + Rev3InstallationDirectory + "/*.py " + Rev3InstallationDirectory + "/*.sh " + Rev3InstallationDirectory + "/*.chk ";
                         var TransformResult = sshClient.RunCommand(dos2unixCommand);
                         var InstallationCommand = sshClient.CreateCommand("python3 " + Rev3InstallationDirectory + "/update3.py");
                         var InstallationScriptResult = InstallationCommand.BeginExecute();
@@ -384,15 +384,18 @@ public class UpdateChecker : MonoBehaviour {
                         bool installationSuccess = false;
                         using (var reader = new StreamReader(InstallationCommand.OutputStream,Encoding.UTF8,true,1024))
                         {
-                            string output = reader.ReadLine();
-                            Debug.Log(output);
-                            if (output.Contains("UPDATE SUCCESSFUL"))
+                            string output = null;
+                            while ((output = reader.ReadLine()) != null)
                             {
-                                installationSuccess = true;
-                            }
-                            if (output.Contains("REBOOT"))
-                            {
-                                rebootNeeded = true;
+                                Debug.Log(output);
+                                if (output.Contains("UPDATE SUCCESSFUL"))
+                                {
+                                    installationSuccess = true;
+                                }
+                                if (output.Contains("REBOOT"))
+                                {
+                                    rebootNeeded = true;
+                                }
                             }
                         }
 

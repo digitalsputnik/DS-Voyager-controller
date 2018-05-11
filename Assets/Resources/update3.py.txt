@@ -11,7 +11,7 @@ import sys
 import serial
 
 reboot_needed = 0
-NEW_VERSION = 177
+NEW_VERSION = 185
 
 
 def active_mode():
