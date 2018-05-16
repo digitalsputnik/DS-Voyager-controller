@@ -372,6 +372,19 @@ public class UpdateChecker : MonoBehaviour {
                         sshClient.RunCommand("rm -r /media/numpy_install_temp");
                     }
 
+                    //DEBUG!
+                    //if (isRev3)
+                    //{
+                    //    //Kill animation
+                    //    sshClient.RunCommand("kill -9 $(ps ax | grep PythonReceiver.py | grep -v grep |awk 'NR==1{print $1}') 2> /dev/null");
+                    //    sshClient.RunCommand("kill -9 $(ps ax | grep ut2.6.py | grep -v grep | awk 'NR==1{print $1}') 2> /dev/null");
+                    //    //Rerun animation
+                    //    var commAnim = sshClient.CreateCommand("nice -11 setsid python3 /mnt/data/animation/PythonReceiver.py &");
+                    //    var commUt = sshClient.CreateCommand("setsid python3 /mnt/data/ut2.6.py &");
+                    //    commAnim.BeginExecute();
+                    //    commUt.BeginExecute();
+                    //}
+
                     if (isRev3)
                     {
                         Debug.Log("Starting update on lamp.");
@@ -382,11 +395,16 @@ public class UpdateChecker : MonoBehaviour {
                         var InstallationScriptResult = InstallationCommand.BeginExecute();
 
                         bool installationSuccess = false;
-                        using (var reader = new StreamReader(InstallationCommand.OutputStream,Encoding.UTF8,true,1024))
+                        using (var reader = new StreamReader(InstallationCommand.OutputStream, Encoding.UTF8, true, 1024))
                         {
                             string output = null;
-                            while ((output = reader.ReadLine()) != null)
+                            while ((output = reader.ReadLine()) != null || InstallationCommand.ExitStatus != 0)
                             {
+                                if (output == null)
+                                {
+                                    continue;
+                                }
+
                                 Debug.Log(output);
                                 if (output.Contains("UPDATE SUCCESSFUL"))
                                 {

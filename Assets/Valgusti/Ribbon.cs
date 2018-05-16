@@ -140,6 +140,7 @@ public class Ribbon : MonoBehaviour {
                     pixelColor.b = pixelColor.b * (1 - colorIntensityOffset) + Mathf.Ceil(pixelColor.b) * colorIntensityOffset;
                     pixelColor.a = pixelColor.a * (1 - colorIntensityOffset) + Mathf.Ceil(pixelColor.a) * colorIntensityOffset;
                     //find child pixels and apply the color created above.
+                    //TODO: Replace all find functions!!
                     if (startPixel < endPixel) {
 						try {
 							currentPixel = this.gameObject.transform.Find ("pixel" + (startPixel + i)).GetComponent<Pixel> ();

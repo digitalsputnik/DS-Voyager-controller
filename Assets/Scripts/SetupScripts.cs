@@ -296,7 +296,7 @@ public class SetupScripts : MonoBehaviour {
                 //Update checking
                 if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
                 {
-                    ////Debug iOS!!
+                    //Debug!!
                     //UpdateLampWithIPs.Add(LightIP.ToString());
 
                     try
@@ -375,12 +375,12 @@ public class SetupScripts : MonoBehaviour {
 
             if (UpdateLampWithIPs.Count > 0)
             {
-                IPtoProps.Clear();
-                LampIPtoLengthDictionary.Clear();
-                newLampIPtoLengthDictionary.Clear();
-                CancelDetection = true;
-                UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
-                isPollingActive = false;
+                //IPtoProps.Clear();
+                //LampIPtoLengthDictionary.Clear();
+                //newLampIPtoLengthDictionary.Clear();
+                //CancelDetection = true;
+                //UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
+                //isPollingActive = false;
             }
 
             
