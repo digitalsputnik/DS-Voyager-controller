@@ -120,7 +120,7 @@ public class VideoStream : MonoBehaviour {
 
                         //Apply color
                         //lampPixelLED.GetComponent<Renderer>().material.color = pixelColor;
-                        animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(pixelColor.r*255), (int)(pixelColor.g*255), (int)(pixelColor.b*255), 0 };
+                        animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(Mathf.Pow(pixelColor.r,1/2f) * 255f), (int)(Mathf.Pow(pixelColor.g, 1/2f) * 255f), (int)(Math.Pow(pixelColor.b, 1/2f) * 255f), 0 };
                     }
                     else
                     {
