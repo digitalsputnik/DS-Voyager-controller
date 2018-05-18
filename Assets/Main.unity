@@ -10510,7 +10510,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1564080066937760, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114866980554329970, guid: 415ae4df25531fe4dbde2b66e11d5b2e,
         type: 2}
@@ -44454,7 +44454,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
-  VideoStreamBackground2: {fileID: 1990596361}
+  VideoStreamBackground2: {fileID: 0}
   minXY: {fileID: 1324691508}
   maxX: {fileID: 1290639571}
   maxY: {fileID: 1018704733}
@@ -51389,7 +51389,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
-  VideoStreamBackground2: {fileID: 1990596361}
+  VideoStreamBackground2: {fileID: 0}
   minXY: {fileID: 1324691508}
   maxX: {fileID: 1290639571}
   maxY: {fileID: 1018704733}
@@ -55213,7 +55213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
-  VideoStreamBackground2: {fileID: 1990596361}
+  VideoStreamBackground2: {fileID: 0}
   minXY: {fileID: 1324691508}
   maxX: {fileID: 1290639571}
   maxY: {fileID: 1018704733}
@@ -78975,7 +78975,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
-  VideoStreamBackground2: {fileID: 1990596361}
+  VideoStreamBackground2: {fileID: 0}
   minXY: {fileID: 1324691508}
   maxX: {fileID: 1290639571}
   maxY: {fileID: 1018704733}
@@ -94092,11 +94092,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1988623091}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1990596361 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1564080066937760, guid: 415ae4df25531fe4dbde2b66e11d5b2e,
-    type: 2}
-  m_PrefabInternal: {fileID: 450715647}
 --- !u!4 &1990596362 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4257287357206984, guid: 415ae4df25531fe4dbde2b66e11d5b2e,
