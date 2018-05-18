@@ -372,25 +372,48 @@ public class UpdateChecker : MonoBehaviour {
                         sshClient.RunCommand("rm -r /media/numpy_install_temp");
                     }
 
+                    //DEBUG!
+                    //if (isRev3)
+                    //{
+                    //    //Kill animation
+                    //    sshClient.RunCommand("kill -9 $(ps ax | grep PythonReceiver.py | grep -v grep |awk 'NR==1{print $1}') 2> /dev/null");
+                    //    sshClient.RunCommand("kill -9 $(ps ax | grep ut2.6.py | grep -v grep | awk 'NR==1{print $1}') 2> /dev/null");
+                    //    //Rerun animation
+                    //    var commAnim = sshClient.CreateCommand("nice -11 setsid python3 /mnt/data/animation/PythonReceiver.py &");
+                    //    var commUt = sshClient.CreateCommand("setsid python3 /mnt/data/ut2.6.py &");
+                    //    commAnim.BeginExecute();
+                    //    commUt.BeginExecute();
+                    //}
+
                     if (isRev3)
                     {
                         Debug.Log("Starting update on lamp.");
-                        sshClient.RunCommand("dos2unix /mnt/data/update_temp/*.py *.sh");
-                        var InstallationCommand = sshClient.CreateCommand("python3 /mnt/data/update_temp/update3.py");
+
+                        string dos2unixCommand = "dos2unix " + Rev3InstallationDirectory + "/*.py " + Rev3InstallationDirectory + "/*.sh " + Rev3InstallationDirectory + "/*.chk ";
+                        var TransformResult = sshClient.RunCommand(dos2unixCommand);
+                        var InstallationCommand = sshClient.CreateCommand("python3 " + Rev3InstallationDirectory + "/update3.py");
                         var InstallationScriptResult = InstallationCommand.BeginExecute();
 
                         bool installationSuccess = false;
-                        using (var reader = new StreamReader(InstallationCommand.OutputStream,Encoding.UTF8,true,1024))
+                        using (var reader = new StreamReader(InstallationCommand.OutputStream, Encoding.UTF8, true, 1024))
                         {
-                            string output = reader.ReadLine();
-                            Debug.Log(output);
-                            if (output.Contains("UPDATE SUCCESSFUL"))
+                            string output = null;
+                            while ((output = reader.ReadLine()) != null || InstallationCommand.ExitStatus != 0)
                             {
-                                installationSuccess = true;
-                            }
-                            if (output.Contains("REBOOT"))
-                            {
-                                rebootNeeded = true;
+                                if (output == null)
+                                {
+                                    continue;
+                                }
+
+                                Debug.Log(output);
+                                if (output.Contains("UPDATE SUCCESSFUL"))
+                                {
+                                    installationSuccess = true;
+                                }
+                                if (output.Contains("REBOOT"))
+                                {
+                                    rebootNeeded = true;
+                                }
                             }
                         }
 

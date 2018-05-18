@@ -679,11 +679,6 @@ public class AnimationSender : MonoBehaviour
         SendJSONToLamp(new RegisterDeviceDTO() { RegisterDevice = register }, new IPEndPoint(IPAddress.Parse(IP), 30001));
     }
 
-    public void SendAnimationWithProps()
-    {
-        SendAnimationWithUpdate();
-    }
-
     public void SendAnimationWithUpdate(Anim currentAnimation = null)
     {
         ActiveStroke.AddLatestTimestamp();

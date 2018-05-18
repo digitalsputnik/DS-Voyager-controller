@@ -57,8 +57,8 @@ public class SetupScripts : MonoBehaviour {
     private bool CancelDetection = false;
     private int[] LampAnimationSoftwareVersion = new int[] { 0, 0 };
     private int[] LampUDPSoftwareVersion = new int[] { 0, 31 };
-    private int[] LampUDPSoftwareVersion3 = new int[] { 0, 42 };
-    private int[] LampLPCSoftwareVersion = new int[] {0, 177 };
+    private int[] LampUDPSoftwareVersion3 = new int[] { 0, 44 };
+    private int[] LampLPCSoftwareVersion = new int[] {0, 185 };
     private bool isPollingActive = true;
     private bool addLampAutomatically = true;
 
@@ -296,7 +296,7 @@ public class SetupScripts : MonoBehaviour {
                 //Update checking
                 if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
                 {
-                    ////Debug iOS!!
+                    //Debug!!
                     //UpdateLampWithIPs.Add(LightIP.ToString());
 
                     try
@@ -375,12 +375,12 @@ public class SetupScripts : MonoBehaviour {
 
             if (UpdateLampWithIPs.Count > 0)
             {
-                IPtoProps.Clear();
-                LampIPtoLengthDictionary.Clear();
-                newLampIPtoLengthDictionary.Clear();
-                CancelDetection = true;
-                UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
-                isPollingActive = false;
+                //IPtoProps.Clear();
+                //LampIPtoLengthDictionary.Clear();
+                //newLampIPtoLengthDictionary.Clear();
+                //CancelDetection = true;
+                //UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
+                //isPollingActive = false;
             }
 
             

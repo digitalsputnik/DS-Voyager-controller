@@ -102,14 +102,18 @@ class Scene(threading.Thread):
         #TODO: Better scheduling!
         lastTimePoint = time.time()
         while True:
-            currentTime = time.time()
-            timePassed = currentTime - lastTimePoint
-            isNewFrame = abs(timePassed) > self.FrameDuration
-            #if timePassed/self.FrameDuration >= 2.0:
-                #print(timePassed/self.FrameDuration)
-            if isNewFrame and self.SceneActive:
-                lastTimePoint = currentTime
-                self.Update()
+            try:
+                currentTime = time.time()
+                timePassed = currentTime - lastTimePoint
+                isNewFrame = abs(timePassed) > self.FrameDuration
+                #if timePassed/self.FrameDuration >= 2.0:
+                    #print(timePassed/self.FrameDuration)
+                if isNewFrame and self.SceneActive:
+                    lastTimePoint = currentTime
+                    self.Update()
+            except Exception as e:
+                pass
+            
 
 class Layer:
     '''Layer consists of Strokes
@@ -434,6 +438,7 @@ class OutputToController(OutputBaseClass):
         self.Socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
         self.Socket.bind(("",31000))
         self.Address = address
+        
 
     def Send(self, frame, lampPixelCount):
         try:

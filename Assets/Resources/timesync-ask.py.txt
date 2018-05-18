@@ -25,9 +25,9 @@ def main():
 	HOST = os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $9}'").readline().strip()
 	PORT = 30000
 
-	sock.bind(("",PORT))
+	#sock.bind(("",PORT))
 
-	os.system("ps ax | grep ut2.6 | awk -F ' ' '{print $1}' | xargs kill -9")
+	os.system("ps ax | grep ut2.6 | grep -v grep | awk -F ' ' '{print $1}' | xargs kill -9")
 	time.sleep(0.1)
 	#os.system("ps ax | grep PythonReceiver | awk -F ' ' '{print $1}' | xargs kill -9")
 	#time.sleep(0.1)	
@@ -57,7 +57,7 @@ def main():
 					pass
 					
 				while addr[0] != "172.20.1.1" and master_counter < 10:
-					print (master_counter)
+					#print (master_counter)
 					master_counter += 1
 					udp_data, addr = sock.recvfrom(4096)
 					
@@ -68,9 +68,9 @@ def main():
 					
 					time.sleep(0.2)			
 
-					print (float(final_receive_delay1))
-					print (float(udp_data[4:].decode('utf-8')))
-					print (datestring)
+					#print (float(final_receive_delay1))
+					#print (float(udp_data[4:].decode('utf-8')))
+					#print (datestring)
 				
 				else:
 					print (master_counter)
@@ -87,11 +87,16 @@ def main():
 			sock.close()
 			sys.exit()					
 		except:
-			pass
+			master_counter += 1
 
 		else:
 			master_counter += 1
-		
+	
+	os.system("ps ax | grep ut2.6 | grep -v grep | awk -F ' ' '{print $1}' | xargs kill -9")
+	time.sleep(0.1)
+	os.system("python3 /mnt/data/ut2.6.py &")
+			
+	"""	
 	#main loop tries 10 times, after 8 times sleeps a bit. If something wrong goes back to loop.
 	main_counter=0
 	while main_counter<10:
@@ -192,8 +197,8 @@ def main():
 			#		continue
 				#return "ERROR timedelays too long, setting approximate"
 				#sock.close()
-				#exit()"""
-				
+				#exit()
+			
 			#os.system("ps ax | grep PythonReceiver | awk -F ' ' '{print $1}' | xargs kill -9")
 			#time.sleep(0.1)
 				
@@ -241,7 +246,7 @@ def main():
 	
 	#if main_counter > 9:
 	#	os.system("python3 /mnt/data/timesync-ask.py")
-	
+	"""
 if __name__ == "__main__":
     x= main()
     #print( x )
