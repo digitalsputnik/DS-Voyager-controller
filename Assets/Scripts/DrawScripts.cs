@@ -548,7 +548,7 @@ public class DrawScripts : MonoBehaviour {
             var urlInput = videoSourcePanels[0].transform.Find("urlInput").gameObject;
             urlInput.SetActive(true);
             VideoStreamBackground.SetActive(true);
-            VideoStreamBackground.GetComponent<Renderer>().material.mainTexture = videoTexture;
+            //VideoStreamBackground.GetComponent<Renderer>().material.mainTexture = videoTexture;
             //urlInput.GetComponent<InputField>().onEndEdit.AddListener(delegate { PlayStream(urlInput.GetComponent<InputField>()); });
         }
     }

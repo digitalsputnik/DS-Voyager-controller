@@ -22,14 +22,14 @@ public class VideoStream : MonoBehaviour {
     UniversalMediaPlayer mediaPlayer;
     Color32[] colorArray = null;
     Color color = Color.white;
-    
+
     AnimationSender animSender;
     string IP;
     int[] blackColor = new int[] { 0, 0, 0, 0 };
-    
-    
+
+
     // Use this for initialization
-    void Start () {
+    void Start() {
         //NOTE: Quick hack because switching all the references is too much work at this point
         animSender = GameObject.Find("AnimationControl").GetComponent<AnimationSender>();
         mediaPlayer = GameObject.Find("UniversalMediaPlayer").GetComponent<UniversalMediaPlayer>();
@@ -40,7 +40,7 @@ public class VideoStream : MonoBehaviour {
         IP = this.gameObject.GetComponent<Ribbon>().IP;
         if (!animSender.LampIPVideoStreamPixelToColor.ContainsKey(IP))
         {
-            animSender.LampIPVideoStreamPixelToColor.Add(IP,new Dictionary<int, int[]>());
+            animSender.LampIPVideoStreamPixelToColor.Add(IP, new Dictionary<int, int[]>());
         }
 
         int PixelCount = this.gameObject.GetComponent<Ribbon>().pipeLength;
@@ -143,10 +143,23 @@ public class VideoStream : MonoBehaviour {
                             //Debug.Log("Frame Pixel data: "+ mediaPlayer.FramePixels.ToString());
                             if (tex == null)
                             {
-                                tex = new Texture2D(mediaPlayer.VideoWidth, mediaPlayer.VideoHeight, TextureFormat.ARGB32, false);
+                                tex = new Texture2D(mediaPlayer.VideoWidth, mediaPlayer.VideoHeight, TextureFormat.BGRA32, false);
                             }
-                            tex.LoadRawTextureData(mediaPlayer.FramePixels);
-                            tex.Apply();
+
+                            var texData = mediaPlayer.FramePixels;
+
+                            if (texData.Length > 0)
+                            {
+                                tex.LoadRawTextureData(texData);
+                                tex.Apply();
+                            }
+
+                            /*Debug.Log("Printing color values");
+                            for (int px = 0; px <= mediaPlayer.FramePixels.Length; px++)
+                            {
+                                Debug.Log();
+                            }*/
+
 
                             //VideoStreamBackground2.GetComponent<Renderer>().material.mainTexture = tex;
 
@@ -156,12 +169,13 @@ public class VideoStream : MonoBehaviour {
                             //Debug.Log("VideoWidth: " + mediaPlayer.VideoWidth.ToString() + " VideoHeight: " + mediaPlayer.VideoHeight.ToString());
                             //Debug.Log("PointX: "+pointX.ToString()+" PointY: "+ pointY.ToString());
 
-                            
-                            
+
+
                             //int pixelNum = (int)pointX * (int)pointY;
                             //Debug.Log("Pixel number is: " + pixelNum);
                             //Get the color
                             pixelColor = tex.GetPixel((int)pointX, (int)pointY);
+                            Debug.Log("Pixel color is: " + pixelColor.ToString());
                             //pixelColor = colorArray[pixelNum];
 
                         }
@@ -173,7 +187,7 @@ public class VideoStream : MonoBehaviour {
 
                         //Apply color
                         lampPixelLED.GetComponent<Renderer>().material.color = pixelColor;
-                        animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(Mathf.Pow(pixelColor.r,1/2f) * 255f), (int)(Mathf.Pow(pixelColor.g, 1/2f) * 255f), (int)(Math.Pow(pixelColor.b, 1/2f) * 255f), 0 };
+                        animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(Mathf.Pow(pixelColor.r, 1 / 2f) * 255f), (int)(Mathf.Pow(pixelColor.g, 1 / 2f) * 255f), (int)(Math.Pow(pixelColor.b, 1 / 2f) * 255f), 0 };
                     }
                     else
                     {
@@ -185,9 +199,9 @@ public class VideoStream : MonoBehaviour {
 
                 }
             }
-            else 
+            else
             {
-                Debug.Log("Video not playing...");
+                //Debug.Log("Video not playing...");
 
             }
             yield return new WaitForSeconds(0.0f);
@@ -195,7 +209,7 @@ public class VideoStream : MonoBehaviour {
 
     }
 
-
+ 
 
      // Update is called once per frame
     void Update()

@@ -10547,6 +10547,17 @@ Prefab:
       propertyPath: m_DynamicOccludee
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4257287357206984, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114155408858187018, guid: 415ae4df25531fe4dbde2b66e11d5b2e,
+        type: 2}
+      propertyPath: m_Text
+      value: '
+
+'
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
   m_IsPrefabParent: 0
@@ -44454,7 +44465,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
-  VideoStreamBackground2: {fileID: 0}
+  VideoStreamBackground2: {fileID: 1490111062}
   minXY: {fileID: 1324691508}
   maxX: {fileID: 1290639571}
   maxY: {fileID: 1018704733}
@@ -45410,6 +45421,10 @@ Prefab:
       propertyPath: _path
       value: http://clips.vorwaerts-gmbh.de/VfE_html5.mp4
       objectReference: {fileID: 0}
+    - target: {fileID: 11420564, guid: c404114afaafa3b4494665d1634c383c, type: 2}
+      propertyPath: _renderingObjects.Array.data[1]
+      value: 
+      objectReference: {fileID: 1490111062}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c404114afaafa3b4494665d1634c383c, type: 2}
   m_IsPrefabParent: 0
@@ -51389,7 +51404,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
-  VideoStreamBackground2: {fileID: 0}
+  VideoStreamBackground2: {fileID: 1490111062}
   minXY: {fileID: 1324691508}
   maxX: {fileID: 1290639571}
   maxY: {fileID: 1018704733}
@@ -55213,7 +55228,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
-  VideoStreamBackground2: {fileID: 0}
+  VideoStreamBackground2: {fileID: 1490111062}
   minXY: {fileID: 1324691508}
   maxX: {fileID: 1290639571}
   maxY: {fileID: 1018704733}
@@ -70825,6 +70840,11 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1488528884}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1490111062 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1564080066937760, guid: 415ae4df25531fe4dbde2b66e11d5b2e,
+    type: 2}
+  m_PrefabInternal: {fileID: 450715647}
 --- !u!1 &1490253367
 GameObject:
   m_ObjectHideFlags: 0
@@ -78975,7 +78995,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
-  VideoStreamBackground2: {fileID: 0}
+  VideoStreamBackground2: {fileID: 1490111062}
   minXY: {fileID: 1324691508}
   maxX: {fileID: 1290639571}
   maxY: {fileID: 1018704733}
