@@ -140,6 +140,7 @@ public class DrawScripts : MonoBehaviour {
         int[] itshColor2 = { 100, 5400, 120, 240 };
         int[] itshColor3 = { 100, 5400, 120, 60 };
         int[] itshBackGround = { 0, 5400, 0, 0 };
+        int[] streamColor = { 100, 5600, 120, 0 };
 
         //populate animations list
         LightAnims newAnim1 = new LightAnims ();
@@ -214,6 +215,8 @@ public class DrawScripts : MonoBehaviour {
         LightAnims newAnim9 = new LightAnims();
         newAnim9.AnimName = "Video Stream";
         newAnim9.AnimProperties.Add(new Property("VideoStream", "stream", null, 0, 0));
+        newAnim9.AnimProperties.Add(new Property("Color1", "color", streamColor, 0, 0));
+        newAnim9.AnimProperties.Add(new Property("Gammax10", "int", 22, 10, 30));
         animations.Add(newAnim9);
 
 

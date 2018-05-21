@@ -12,5 +12,5 @@ ba466d983a29f03e9abcb816a2478de9  /mnt/data/update_temp/serial_check_2.sh
 545dbb59fe5d51d811391f0a40af322c  /mnt/data/update_temp/timesync-ask.py
 6f6c24ef76c08be277e33570f3a511f2  /mnt/data/update_temp/update1.sh
 925f537fd323faf89143536dfcef7539  /mnt/data/update_temp/update3.py
-a3fd4e2b6fbe613e88addad0a951ac55  /mnt/data/update_temp/ut2.6.py
+f2586f03f3c3dc436c02b848a727990a  /mnt/data/update_temp/ut2.6.py
 77bf0df353e601542831486d018219a6  /mnt/data/update_temp/voyager_lpc_release_user_update.bin

@@ -118,9 +118,15 @@ public class VideoStream : MonoBehaviour {
                         Color pixelColor = Color.white; // default color
                         pixelColor = webcamTexture.GetPixel((int)pointX, (int)pointY);
 
+                        float I = 0;
+                        float S = 0;
+                        float H = 0;
+                        Color.RGBToHSV(pixelColor, out H, out S, out I);
+
                         //Apply color
                         //lampPixelLED.GetComponent<Renderer>().material.color = pixelColor;
-                        animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(Mathf.Pow(pixelColor.r,1/2f) * 255f), (int)(Mathf.Pow(pixelColor.g, 1/2f) * 255f), (int)(Math.Pow(pixelColor.b, 1/2f) * 255f), 0 };
+                        animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(I * 100), 0, (int)(S * 100), (int)H };
+                        //animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(pixelColor.r*255), (int)(pixelColor.g*255), (int)(pixelColor.b*255), 0 };
                     }
                     else
                     {

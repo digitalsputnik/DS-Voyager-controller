@@ -220,7 +220,7 @@ public class UpdateChecker : MonoBehaviour {
         }
         catch (Exception e)
         {
-            ErrorText.text = e.ToString();
+            //ErrorText.text = e.ToString();
         }
         
         return LampsToBeUpdated;
@@ -336,7 +336,7 @@ public class UpdateChecker : MonoBehaviour {
             catch (Exception e)
             {
                 Debug.Log(e.ToString());
-                ErrorText.text = e.ToString();
+                //ErrorText.text = e.ToString();
                 UpdateTextValue = "Update failed!";
                 RetryButtonText = "Retry";
                 OkCancelButtonText = "Cancel";
@@ -395,11 +395,13 @@ public class UpdateChecker : MonoBehaviour {
                         var InstallationScriptResult = InstallationCommand.BeginExecute();
 
                         bool installationSuccess = false;
+                        bool installationDone = false;
                         using (var reader = new StreamReader(InstallationCommand.OutputStream, Encoding.UTF8, true, 1024))
                         {
                             string output = null;
-                            while ((output = reader.ReadLine()) != null || InstallationCommand.ExitStatus != 0)
+                            while (!installationDone) //(output = reader.ReadLine()) != null || InstallationCommand.ExitStatus != 0)
                             {
+                                output = reader.ReadLine();
                                 if (output == null)
                                 {
                                     continue;
@@ -409,11 +411,19 @@ public class UpdateChecker : MonoBehaviour {
                                 if (output.Contains("UPDATE SUCCESSFUL"))
                                 {
                                     installationSuccess = true;
+                                    installationDone = true;
                                 }
                                 if (output.Contains("REBOOT"))
                                 {
                                     rebootNeeded = true;
+                                    installationDone = true;
                                 }
+
+                                if (output.Contains("FAIL"))
+                                {
+                                    installationDone = true;
+                                }
+
                             }
                         }
 
@@ -428,7 +438,7 @@ public class UpdateChecker : MonoBehaviour {
             catch (Exception e)
             {
                 Debug.Log(e.ToString());
-                ErrorText.text = e.ToString();
+                //ErrorText.text = e.ToString();
                 UpdateTextValue = "Update failed!";
                 RetryButtonText = "Retry";
                 OkCancelButtonText = "Cancel";
@@ -493,7 +503,7 @@ public class UpdateChecker : MonoBehaviour {
             catch (Exception e)
             {
                 Debug.Log(e.ToString());
-                ErrorText.text = e.ToString();
+                //ErrorText.text = e.ToString();
                 UpdateTextValue = "Update failed!";
                 RetryButtonText = "Retry";
                 OkCancelButtonText = "Cancel";
