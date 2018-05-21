@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UMP;
+
 
 public class VideoStream : MonoBehaviour {
 
@@ -9,6 +11,7 @@ public class VideoStream : MonoBehaviour {
     //For VideoStream
     public GameObject drawTools;
     public GameObject videoStreamBackground;
+    public GameObject VideoStreamBackground2;
     public GameObject minXY;
     public GameObject maxX;
     public GameObject maxY;
@@ -16,7 +19,10 @@ public class VideoStream : MonoBehaviour {
     List<int> pixelsToDraw;
     Texture2D tex = null;
     bool videoRunning = false;
-
+    UniversalMediaPlayer mediaPlayer;
+    Color32[] colorArray = null;
+    Color color = Color.white;
+    
     AnimationSender animSender;
     string IP;
     int[] blackColor = new int[] { 0, 0, 0, 0 };
@@ -26,6 +32,7 @@ public class VideoStream : MonoBehaviour {
     void Start () {
         //NOTE: Quick hack because switching all the references is too much work at this point
         animSender = GameObject.Find("AnimationControl").GetComponent<AnimationSender>();
+        mediaPlayer = GameObject.Find("UniversalMediaPlayer").GetComponent<UniversalMediaPlayer>();
 
         StartCoroutine(CheckForVideo());
 
@@ -46,11 +53,8 @@ public class VideoStream : MonoBehaviour {
     IEnumerator CheckForVideo() {
         while (!videoRunning)
         {
-            if (drawTools.GetComponent<DrawScripts>().webcamTexture != null)
+            if (drawTools.GetComponent<DrawScripts>().webcamTexture != null || mediaPlayer.IsPlaying)
             {
-                //Debug.Log("Found WebCamTexture!!!");
-                webcamTexture = drawTools.GetComponent<DrawScripts>().webcamTexture;
-                //VideoPixels = new Dictionary<int, Color>();
                 videoRunning = true;
             }
 
@@ -68,7 +72,7 @@ public class VideoStream : MonoBehaviour {
         {
 
             //Pick webCamTexture pixels
-            if (webcamTexture != null)
+            if (drawTools.GetComponent<DrawScripts>().webcamTexture != null || mediaPlayer.IsPlaying)
             {
                 //Find total number of lamp pixels
                 var numPixelsToDraw = this.gameObject.GetComponent<Ribbon>().pipeLength;
@@ -107,16 +111,60 @@ public class VideoStream : MonoBehaviour {
                     {
                         var pointX = 0.0f;
                         var pointY = 0.0f;
-                        pointX = webcamTexture.width * (Vx.magnitude / Xs.magnitude);
-
-                        pointY = webcamTexture.height * (Vy.magnitude / Ys.magnitude);
-
-                        //Debug.Log("LampPixelCenter: " + lampPixelCenter);
-                        //Debug.Log("VideoPixel: " + pointX.ToString()+", "+ pointY.ToString());
-
-                        //Get the color
                         Color pixelColor = Color.white; // default color
-                        pixelColor = webcamTexture.GetPixel((int)pointX, (int)pointY);
+
+                        if (drawTools.GetComponent<DrawScripts>().webcamTexture != null)
+                        {
+                            pointX = drawTools.GetComponent<DrawScripts>().webcamTexture.width * (Vx.magnitude / Xs.magnitude);
+                            pointY = drawTools.GetComponent<DrawScripts>().webcamTexture.height * (Vy.magnitude / Ys.magnitude);
+
+                            //Get the color
+                            pixelColor = drawTools.GetComponent<DrawScripts>().webcamTexture.GetPixel((int)pointX, (int)pointY);
+                        }
+                        else if (mediaPlayer.IsPlaying && mediaPlayer.FramePixels.Length > 0)
+                        {
+                            //var pixelArray = mediaPlayer.FramePixels;
+                            /*if (colorArray == null)
+                            {
+                                //Debug.Log("Pixel array size is: " + mediaPlayer.FramePixels.Length.ToString());
+                                colorArray = new Color32[pixelArray.Length / 4];
+                                //Debug.Log("Color Array size is: " + colorArray.Length.ToString());
+                            }
+                            else {
+                                //colorArray.Initialize();
+                            }
+
+                            for (var j = 0; j < pixelArray.Length; j += 4)
+                            {
+                                color = new Color32(pixelArray[i + 0], pixelArray[i + 1], pixelArray[i + 2], pixelArray[i + 3]);
+                                colorArray[j / 4] = color;
+                            }*/
+
+                            //Debug.Log("Frame Pixel data: "+ mediaPlayer.FramePixels.ToString());
+                            if (tex == null)
+                            {
+                                tex = new Texture2D(mediaPlayer.VideoWidth, mediaPlayer.VideoHeight, TextureFormat.ARGB32, false);
+                            }
+                            tex.LoadRawTextureData(mediaPlayer.FramePixels);
+                            tex.Apply();
+
+                            //VideoStreamBackground2.GetComponent<Renderer>().material.mainTexture = tex;
+
+
+                            pointX = mediaPlayer.VideoWidth * (Vx.magnitude / Xs.magnitude);
+                            pointY = mediaPlayer.VideoHeight * (Vy.magnitude / Ys.magnitude);
+                            //Debug.Log("VideoWidth: " + mediaPlayer.VideoWidth.ToString() + " VideoHeight: " + mediaPlayer.VideoHeight.ToString());
+                            //Debug.Log("PointX: "+pointX.ToString()+" PointY: "+ pointY.ToString());
+
+                            
+                            
+                            //int pixelNum = (int)pointX * (int)pointY;
+                            //Debug.Log("Pixel number is: " + pixelNum);
+                            //Get the color
+                            pixelColor = tex.GetPixel((int)pointX, (int)pointY);
+                            //pixelColor = colorArray[pixelNum];
+
+                        }
 
                         float I = 0;
                         float S = 0;
@@ -127,6 +175,7 @@ public class VideoStream : MonoBehaviour {
                         //lampPixelLED.GetComponent<Renderer>().material.color = pixelColor;
                         animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(I * 100), 0, (int)(S * 100), (int)H };
                         //animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(pixelColor.r*255), (int)(pixelColor.g*255), (int)(pixelColor.b*255), 0 };
+                        animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(Mathf.Pow(pixelColor.r,1/2f) * 255f), (int)(Mathf.Pow(pixelColor.g, 1/2f) * 255f), (int)(Math.Pow(pixelColor.b, 1/2f) * 255f), 0 };
                     }
                     else
                     {
@@ -135,11 +184,12 @@ public class VideoStream : MonoBehaviour {
                     }
 
 
+
                 }
             }
-            else
             {
-                Debug.Log("Video not running...");
+                Debug.Log("Video not playing...");
+
             }
             yield return new WaitForSeconds(0.0f);
         }

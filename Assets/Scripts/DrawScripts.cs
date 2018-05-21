@@ -113,6 +113,8 @@ public class DrawScripts : MonoBehaviour {
     public WebCamTexture webcamTexture = null;
     private bool camAvailable = false;
     //public AspectRatioFitter fit;
+    public GameObject VideoSourceTemplate;
+    public GameObject VideoSourcePanel;
 
 
 
@@ -214,9 +216,13 @@ public class DrawScripts : MonoBehaviour {
 
         LightAnims newAnim9 = new LightAnims();
         newAnim9.AnimName = "Video Stream";
-        newAnim9.AnimProperties.Add(new Property("VideoStream", "stream", null, 0, 0));
+        //newAnim9.AnimProperties.Add(new Property("VideoStream", "stream", null, 0, 0));
         newAnim9.AnimProperties.Add(new Property("Color1", "color", streamColor, 0, 0));
         newAnim9.AnimProperties.Add(new Property("Gammax10", "int", 22, 10, 30));
+//=======
+        newAnim9.AnimProperties.Add(new Property("VideoStream", "stream", 0, 0, 0));
+        //newAnim9.AnimProperties.Add(new Property("Color1", "color", streamColor, 0, 0));
+        //newAnim9.AnimProperties.Add(new Property("Gammax10", "int", 22, 10, 30));
         animations.Add(newAnim9);
 
 
@@ -425,50 +431,34 @@ public class DrawScripts : MonoBehaviour {
 
             if (animations[animNum].AnimProperties[i].type == "stream")
             {
-                //Debug.Log("Video Stream selected...");
-                PullScript = MenuBackGround.transform.Find("MenuPullImage").gameObject.GetComponent<MenuPullScript>();
-                PullScript.CloseMenu();
-                //PullScript.Start();
-                //BackgroundRawImage.gameObject.SetActive(true);
-                VideoStreamBackground.SetActive(true);
-
-
-                WebCamDevice[] devices = WebCamTexture.devices;
-
-                if (devices.Length == 0)
+                Debug.Log("Video Stream selected...");
+                //timePanel.SetActive(true);
+                var videoSourcePanels = VideoSourcePanel.GetChildrenWithTag("videosource");
+                if (videoSourcePanels.Count > 0)
                 {
-                    Debug.Log("No Camera Detected!");
-                    camAvailable = false;
-                    return;
+                    Debug.Log("Making previous videoSourcePanel active...");
+                    videoSourcePanels[0].SetActive(true);
+                }
+                else
+                {
+                    Debug.Log("Creating new videoSourcePanel...");
+                    var newVideoSourceSelector = Instantiate(VideoSourceTemplate, VideoSourcePanel.transform);
+                    newVideoSourceSelector.name = animations[animNum].AnimProperties[i].name;
+                    newVideoSourceSelector.tag = "videosource";
+                    //newVideoSourceSelector.GetComponent<Text>().text = newVideoSourceSelector.name;
+                    newVideoSourceSelector.SetActive(true);
+                    int startValue = (int)animations[animNum].AnimProperties[i].startValue;
+
+                    var sourceSelectorDropdown = newVideoSourceSelector.transform.Find("SourceDropdown").GetComponent<Dropdown>();
+                    sourceSelectorDropdown.onValueChanged.AddListener(delegate { ChangeSource(sourceSelectorDropdown.value); });
+                    sourceSelectorDropdown.value = startValue;
                 }
 
-                for (int j = 0; j < devices.Length; j++)
-                {
-                    if (devices[j].isFrontFacing)
-                    {
-                        webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
-                        //Debug.Log("Webcam created!");
-
-                    }
-                }
-
-                if (webcamTexture == null)
-                {
-                    Debug.Log("Unable to find back camera");
-                    return;
-                }
-
-                webcamTexture.Play();
-                //BackgroundRawImage.material.mainTexture = webcamTexture;
-                //Texture BackgroundTexture = videoStreamBackground.GetComponent<Renderer>().material.mainTexture;
-                //videoTexture = new Texture2D(webcamTexture.requestedWidth, webcamTexture.requestedHeight, TextureFormat.ARGB32, false);
-                //videoTexture.SetPixels(webcamTexture.GetPixels());
-                
-                VideoStreamBackground.GetComponent<Renderer>().material.mainTexture = webcamTexture;
-
-                camAvailable = true;
+                ChangeSource((int)animations[animNum].AnimProperties[i].startValue);
             }
+
         }
+
 
         if (doAnimationUpdate)
         {
@@ -477,7 +467,7 @@ public class DrawScripts : MonoBehaviour {
             NewAnimProps.AnimName = animations[animNum].AnimName;
             for (int i = 0; i < animations[animNum].AnimProperties.Count; i++)
             {
-                if (animations[animNum].AnimProperties[i].type == "int")
+                if (animations[animNum].AnimProperties[i].type == "int" || animations[animNum].AnimProperties[i].type == "stream")
                 {
                     NewAnimProps.Properties.Add(animations[animNum].AnimProperties[i].name, new int[] { (int)animations[animNum].AnimProperties[i].startValue });
                 }
@@ -492,8 +482,94 @@ public class DrawScripts : MonoBehaviour {
         {
             doAnimationUpdate = true;
         }
+
+
         
     }
+
+
+    void ChangeSource(int value)
+    {
+        if (webcamTexture != null)
+        {
+            webcamTexture.Stop();
+            webcamTexture = null;
+            VideoStreamBackground.SetActive(false);
+        }
+
+        if (value <= 1)
+        {
+
+            //Debug.Log("Video Stream selected...");
+            PullScript = MenuBackGround.transform.Find("MenuPullImage").gameObject.GetComponent<MenuPullScript>();
+            PullScript.CloseMenu();
+
+
+            WebCamDevice[] devices = WebCamTexture.devices;
+
+            if (devices.Length == 0)
+            {
+                Debug.Log("No Camera Detected!");
+                camAvailable = false;
+                return;
+            }
+
+            for (int j = 0; j < devices.Length; j++)
+            {
+                if (value == 0)
+                {
+                    if (devices[j].isFrontFacing)
+                    {
+                        webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
+                        //Debug.Log("Webcam created!");
+
+                    }
+                }
+                else if (value == 1)
+                {
+                    if (!devices[j].isFrontFacing)
+                    {
+                        webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
+                        //Debug.Log("Webcam created!");
+
+                    }
+                }
+            }
+            if (webcamTexture == null)
+            {
+                Debug.Log("Unable to find camera");
+                return;
+            }
+
+            webcamTexture.Play();
+            VideoStreamBackground.SetActive(true);
+            VideoStreamBackground.GetComponent<Renderer>().material.mainTexture = webcamTexture;
+
+            camAvailable = true;
+        }
+        else {
+            var videoSourcePanels = VideoSourcePanel.GetChildrenWithTag("videosource");
+            var urlInput = videoSourcePanels[0].transform.Find("urlInput").gameObject;
+            urlInput.SetActive(true);
+            VideoStreamBackground.SetActive(true);
+            VideoStreamBackground.GetComponent<Renderer>().material.mainTexture = videoTexture;
+            //urlInput.GetComponent<InputField>().onEndEdit.AddListener(delegate { PlayStream(urlInput.GetComponent<InputField>()); });
+        }
+    }
+
+
+    void PlayStream(InputField urlInput)
+    {
+
+        //TODO: Play the video from this URL
+        Debug.Log("Playing stream.....");
+
+
+    }
+
+
+
+
 
     private void NumInputEditListener(InputField numInput)
     {
@@ -555,6 +631,13 @@ public class DrawScripts : MonoBehaviour {
 
         return currentAnim;
 	}
+
+
+
+
+
+
+
 
 	public void SetAnimation(string animName, Dictionary<string, int[]> properties )
 	{
