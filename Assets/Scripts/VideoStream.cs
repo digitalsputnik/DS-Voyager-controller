@@ -186,8 +186,8 @@ public class VideoStream : MonoBehaviour {
                         Color.RGBToHSV(pixelColor, out H, out S, out I);
 
                         //Apply color
-                        lampPixelLED.GetComponent<Renderer>().material.color = pixelColor;
-                        animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(Mathf.Pow(pixelColor.r, 1 / 2f) * 255f), (int)(Mathf.Pow(pixelColor.g, 1 / 2f) * 255f), (int)(Math.Pow(pixelColor.b, 1 / 2f) * 255f), 0 };
+                        //lampPixelLED.GetComponent<Renderer>().material.color = pixelColor;
+                        animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(I * 100), 0, (int)(S * 100), (int)H };
                     }
                     else
                     {
