@@ -187,6 +187,7 @@ public class VideoStream : MonoBehaviour {
 
                 }
             }
+            else 
             {
                 Debug.Log("Video not playing...");
 
