@@ -109,14 +109,15 @@ periodic_update[9] = CalcCrc8(periodic_update, periodic_update_length-1)
 time.sleep(0.1)
 periodic_update_ok = 0
 while periodic_update_ok == 0:
+
 	ser.write(periodic_update)
 	time.sleep(0.1)
 	periodic_update_answer = ser.read(20)
 	#print ("periodic", list(periodic_update_answer))
 
-	if len(periodic_update_answer) > 0:
+	if len(periodic_update_answer) > 4:
 		#enabled
-		if periodic_update_answer[0] == 0xD5 and periodic_update_answer[1] == 0x0A and periodic_update_answer[2] == 0x50 and periodic_update_answer[3] == 0x0A and periodic_update_answer[4] == 0x01:
+		if periodic_update_answer[0] == 0xD5 and periodic_update_answer[1] == 0x0A and periodic_update_answer[2] == 0x50 and periodic_update_answer[3] == 0x0A and periodic_update_answer[4] == 0x31:
 			periodic_update_ok = 1
 		
 		#already enabled, poll packet
@@ -163,7 +164,7 @@ while True:
 				#current_time = os.popen("date +%s%3N").readline().strip()
 				current_time = str(time.time())
 				time_start[4:] = bytearray(current_time, "ascii")
-				print (time.time())
+				#print (time.time())
 				#print (list(time_start))
 				sock.sendto(time_start, addr)
 				udp_data = bytearray(5)
@@ -182,14 +183,14 @@ while True:
 			
 			#AP PACKET - start _M access point
 			if (udp_data[2] == 0x81 and udp_data[3] == 0x10):
-				print ("start AP _M")
+				#print ("start AP _M")
 				
 				AP_start_reply = bytearray()
 				AP_start_reply[0:7] = 0xD5, 0x0A, 0x81, 0x20, 0xEF, 0xFE, 0x00
 				sock.sendto(AP_start_reply, addr)
 				udp_data = bytearray(5)
 				
-				print ("start |AP")
+				#print ("start |AP")
 				
 				#flash led when activating master _M
 				#for x in range(0, 330, 4):
@@ -248,9 +249,13 @@ while True:
 							UDPResponse["battery_level"] = poll_info[5]
 							
 							### BQ TEMPERATURE
-							kelvin = float(int.from_bytes(poll_info[6:8], byteorder='little'))
-							celsius = kelvin/10 - 273.15
-							UDPResponse["BQ_temp"] = int(str(celsius)[:2]), int(str(celsius)[3:4])
+							try:
+								kelvin = float(int.from_bytes(poll_info[6:8], byteorder='big'))
+								celsius = kelvin/10 - 273.15
+								UDPResponse["BQ_temp"] = int(str(celsius)[:2]), int(str(celsius)[3:4])
+							except:
+								pass
+								#need to overlook this temp calculation..
 							
 							### CHARGING
 							UDPResponse["charging_status"] = list(poll_info[8:10])
@@ -335,7 +340,7 @@ while True:
 			
 			if (serReceivedData[0] == 0xD5  and serReceivedData[1]== 0x0A and serReceivedData[2] == 0x50 and serReceivedData[3] == 0x04 and serReceivedData[4] == 0x01 and
 				os.popen("ip addr | egrep -i 'inet.+wlan1' | awk -F[\ /] '{print $6}'").readline().strip() != "172.20.1.1" ):
-				print (int(serReceivedData[5]))
+				#print (int(serReceivedData[5]))
 				if int(serReceivedData[5]) > 15:
 											
 					#flash led when activating master _M
@@ -372,10 +377,10 @@ while True:
 				### INSTANT PRESS ###
 				if (serReceivedData[2] == 0x50 and serReceivedData[3] == 0x05 and serReceivedData[4] == 0x01 ):
 	
-					print ("instant press")
+					#print ("instant press")
 					
 					#print (list(rgbw0))
-					print (list(serReceivedData))
+					#print (list(serReceivedData))
 
 					#Suspend ut2 script - stops receiving udp packets
 					#os.popen("ps ax | grep ut2 | awk -F ' ' '{print $1}' | xargs kill -SIGSTOP")
@@ -385,10 +390,10 @@ while True:
 						os.popen("grep ssid='\<DS026.........._M\>' /etc/hostapd.conf").readline().strip() != '' and
 						os.popen("ip addr show dev wlan1 | awk 'NR==1{print $9}'").readline().strip() == 'UP' 
 						):
-						print ("AP ok")
+						#print ("AP ok")
 						rgbw0[9:12] = rgbw1[9:12] = 0x00, 0x00, 0xFF
-						print (list(rgbw0))
-						print (list(rgbw1))
+						#print (list(rgbw0))
+						#print (list(rgbw1))
 						ser.write(rgbw0[:len(rgbw0)])
 						time.sleep(0.05)
 						ser.write(rgbw1[:len(rgbw1)])
@@ -397,7 +402,7 @@ while True:
 					elif (os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'").readline().strip() != ''):
 						if (time.time() - client_start_time > CLIENT_PING_DELAY ):
 							if (os.system("ping -c 1 -W 1 -I wlan0 $(ip route | awk 'NR==1{print $3}') > /dev/null") == 0 ):
-								print ("client, reset")
+								#print ("client, reset")
 								client_start_time=time.time()
 								ping_response = 1
 								rgbw0[9:12] = rgbw1[9:12] = 0x00, 0xFF, 0x00
@@ -405,7 +410,7 @@ while True:
 								time.sleep(0.05)
 								ser.write(rgbw1[:len(rgbw1)])
 							else:
-								print ("no ping response")
+								#print ("no ping response")
 								ping_response = 0
 								rgbw0[9:12] = rgbw1[9:12] = 0xFF, 0x70, 0x00
 								ser.write(rgbw0[:len(rgbw0)])
@@ -413,7 +418,7 @@ while True:
 								ser.write(rgbw1[:len(rgbw1)])
 								
 						elif( ping_response == 1):
-							print ("client1")
+							#print ("client1")
 							rgbw0[9:12] = rgbw1[9:12] = 0x00, 0xFF, 0x00
 							ser.write(rgbw0[:len(rgbw0)])
 							time.sleep(0.05)
@@ -421,7 +426,7 @@ while True:
 					
 					# Not client or master client _M
 					else:
-						print ("None")
+						#print ("None")
 						rgbw0[9:12] = rgbw1[9:12] = 0xFF, 0x70, 0x00
 						ser.write(rgbw0[:len(rgbw0)])
 						time.sleep(0.05)

@@ -221,11 +221,43 @@ class ColorCalibration:
 
         #Transform data
         self.TemperatureNodes = TemperatureCalibrationTable.transpose()[0]
+        self.TemperatureNodesFull = TemperatureCalibrationTable.transpose()[0]*8500 + 1500
         self.TemperatureRGBW = TemperatureCalibrationTable.transpose()[1:]
         self.HueNodes = HueCalibrationTable.transpose()[0]
+        self.HueNodesFull = HueCalibrationTable.transpose()[0]*360
         self.HueRGBW = HueCalibrationTable.transpose()[1:]
         self.IntensityNodes = IntensityCalibrationTable.transpose()[0]
+        self.IntensityNodesFull = IntensityCalibrationTable.transpose()[0]*100
         self.IntensityValues = IntensityCalibrationTable.transpose()[1]
+        self.GammaCorrectionLookup = {}
+        self.GenerateGammaCorrectionLookup()
+        self.TemperatureRGBWlut = {}
+        self.HueRGBWlut = {}
+        self.Ilut = {}
+        self.Slut = {}
+        self.GenerateITSHLookupTables()
+        
+    def GenerateITSHLookupTables(self):
+        #Temperature
+        for T in range(1500,10001):
+            RGBW = np.zeros(4).astype(np.uint8)
+            for i in range(0,4):
+                RGBW[i] = np.interp(T,self.TemperatureNodesFull,self.TemperatureRGBW[i])
+            self.TemperatureRGBWlut[T] = RGBW
+
+        #Hue
+        for H in range(0,360):
+            RGBW = np.zeros(4).astype(np.uint8)
+            for i in range(0,4):
+                RGBW[i] = np.interp(H,self.HueNodes,self.HueRGBW[i])
+            self.HueRGBWlut[H] = RGBW
+
+        #Intensity and Saturation
+        for S in range(0,121):
+            self.Slut[S] = (np.arange(256)*(S/120)).astype(np.uint8)
+
+        for I in range(0,101):
+            self.Ilut[I] = (np.arange(256)*(I/100)).astype(np.uint8)
         
     def PreprocessITSHValue(self, rawITSH = np.zeros_like(4)):
         '''
@@ -243,6 +275,13 @@ class ColorCalibration:
         ITSHout = np.minimum(np.maximum(ITSHout, minThreshold),maxThreshold)
         return ITSHout
 
+    def ITSHtoRGBWFull(self, ITSH = np.zeros(4).astype(np.uint8)):
+        #RGBW = np.zeros(4).astype(np.uint8)
+        #for i in range(0,4):
+        #    RGBW[i] = (np.interp(ITSH[1],self.TemperatureNodesFull,self.TemperatureRGBW[i])*(1.0 - ITSH[2]/100) + np.interp(ITSH[3],self.HueNodesFull,self.HueRGBW[i])*ITSH[2])*np.interp(ITSH[0],self.IntensityNodesFull,self.IntensityValues)
+        RGBW = self.Ilut[ITSH[0]][(self.Slut[120-ITSH[2]][self.TemperatureRGBWlut[ITSH[1]]] + self.Slut[ITSH[2]][self.HueRGBWlut[ITSH[3]]])]
+        return RGBW
+    
     def ITSHtoRGBW(self, ITSH = np.zeros(4)):
         '''
         Transforms ITSH value to RGBW
@@ -261,6 +300,10 @@ class ColorCalibration:
         for i in range(0,4):
             RGBW[i] = (np.interp(ITSH[1],self.TemperatureNodes,self.TemperatureRGBW[i])*(1.0 - ITSH[2]) + np.interp(ITSH[3],self.HueNodes,self.HueRGBW[i])*ITSH[2])*np.interp(ITSH[0],self.IntensityNodes,self.IntensityValues)
         return RGBW
+
+    def GenerateGammaCorrectionLookup(self):
+        for g in range(10,41):
+            self.GammaCorrectionLookup[g] = (np.power(np.arange(256)/255, 10/g)*255).astype(np.uint8)
 
 def GetSavedStrokes(filename):
     previousStrokes = ""
@@ -330,10 +373,11 @@ class JsonToObject(object):
     def __init__(self, JSON_Message):
         self.__dict__ = json.loads(JSON_Message)
 
-LampScene = AnimationPlayer.Scene(frameDuration = 1/200.0, outputs = [AnimationPlayer.OutputToVoyager()], lampPixelCount = LampPixelCount) #, AnimationPlayer.OutputToController()])
+ColorCalibrator = ColorCalibration(AnimationPath)
+
+LampScene = AnimationPlayer.Scene(frameDuration = 1/200.0, outputs = [AnimationPlayer.OutputToVoyager()], lampPixelCount = LampPixelCount, colorCalibrator = ColorCalibrator) #, AnimationPlayer.OutputToController()])
 #LampScene.start()
 
-ColorCalibrator = ColorCalibration(AnimationPath)
 ANetListener = ArtNetListener(LampScene, ColorCalibrator)
 ANetListener.start()
 ACNListener = sACNListener(LampScene, ColorCalibrator)
@@ -505,7 +549,7 @@ while True:
             if not LampScene.isAlive():
                 LampScene.start()
 
-    except:
+    except Exception as e:
         pass
     
     

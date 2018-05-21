@@ -37,18 +37,27 @@ public class Ribbon : MonoBehaviour {
 	public GameObject ColorDataReceiver; 
 	GameObject lamp;
 
+    Pixel[] LampPixels;
+
 
 	void Start()
 	{
 		//Debug.Log ("Ribbon started....");
 
 		lamp = this.gameObject;
-		//lampEndPoint = new IPEndPoint (IPAddress.Parse(IP), 31000);
+        //lampEndPoint = new IPEndPoint (IPAddress.Parse(IP), 31000);
 
-		//colorsArray = new byte[83, 4];
+        //colorsArray = new byte[83, 4];
 
-		//SetupCalibrationTables();
-		//StartCoroutine("ApplyColors");
+        //SetupCalibrationTables();
+        //StartCoroutine("ApplyColors");
+
+        LampPixels = new Pixel[pipeLength];
+
+        for (int i = 0; i < pipeLength; i++)
+        {
+            LampPixels[i] = this.gameObject.transform.Find("pixel" + i.ToString()).GetComponent<Pixel>();
+        }
 
 	}
 
@@ -143,19 +152,22 @@ public class Ribbon : MonoBehaviour {
                     //TODO: Replace all find functions!!
                     if (startPixel < endPixel) {
 						try {
-							currentPixel = this.gameObject.transform.Find ("pixel" + (startPixel + i)).GetComponent<Pixel> ();
-						} catch (Exception) {
+                            //currentPixel = this.gameObject.transform.Find ("pixel" + (startPixel + i)).GetComponent<Pixel> ();
+                            currentPixel = LampPixels[startPixel + i];
+                        } catch (Exception) {
 							Debug.Log ("Error on loading colors!");
 							Debug.Log (startPixel);
 							Debug.Log (pixelCount);
 							Debug.Log (IP);
 						} finally {
-							currentPixel = this.gameObject.transform.Find ("pixel" + (startPixel + i)).GetComponent<Pixel> ();
-						}
+                            //currentPixel = this.gameObject.transform.Find ("pixel" + (startPixel + i)).GetComponent<Pixel> ();
+                            currentPixel = LampPixels[startPixel + i];
+                        }
 
 					} else {
-						currentPixel = this.gameObject.transform.Find ("pixel" + (startPixel - i)).GetComponent<Pixel> ();
-					}
+                        //currentPixel = this.gameObject.transform.Find ("pixel" + (startPixel - i)).GetComponent<Pixel> ();
+                        currentPixel = LampPixels[startPixel + i];
+                    }
 					geomMaterial = currentPixel.transform.Find ("LEDmodule").GetComponent<Renderer> ().material;
 					glowMaterial = currentPixel.transform.Find ("glow").GetComponent<Renderer> ().material;
 					geomMaterial.color = pixelColor;

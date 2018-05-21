@@ -334,7 +334,6 @@ public class Layer
             }
         }
     }
-
 }
 
 [Serializable]
@@ -711,7 +710,7 @@ public class AnimationSender : MonoBehaviour
         //Get current animation properties
         var CurrentAnimation = currentAnimation == null? drawScripts.GetAnimation(): currentAnimation;
 
-        if (ActiveStroke.Animation == CurrentAnimation.AnimName)
+        if (ActiveStroke.Animation == CurrentAnimation.AnimName && ActiveStroke.Animation != "Video Stream")
         {
             if (!ActiveStroke.Properties.All(x => CurrentAnimation.Properties[x.Key].SequenceEqual(x.Value)))
             {
@@ -796,7 +795,7 @@ public class AnimationSender : MonoBehaviour
     byte[] SendJSONToLamp(object messageObject, IPEndPoint lampEndPoint)
     {
         var jsonString = JsonConvert.SerializeObject(messageObject);
-        //Debug.Log(jsonString);
+        Debug.Log(jsonString);
         byte[] data = Encoding.ASCII.GetBytes(jsonString);
         SendDataToLamp(data, lampEndPoint);
         return data;

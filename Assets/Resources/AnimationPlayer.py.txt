@@ -41,7 +41,7 @@ class Scene(threading.Thread):
     outputs - Outputs (lamp, controller) for colors
     frameDuration - Frame duration in seconds (default is 1/60 s)
     '''
-    def __init__(self, layers = [], outputs = [], frameDuration = 1.0/30.0, active = True, lampPixelCount = 0, timestamp = 0.0):
+    def __init__(self, layers = [], outputs = [], frameDuration = 1.0/30.0, active = True, lampPixelCount = 0, timestamp = 0.0, colorCalibrator = None):
         self.Layers = layers
         self.CurrentSceneFrame = {}
         self.Time = 0.0
@@ -50,6 +50,7 @@ class Scene(threading.Thread):
         self.SceneActive = active
         self.LampPixelCount = lampPixelCount
         self.TimeStamp = timestamp
+        self.ColorCalibrator = colorCalibrator
         threading.Thread.__init__(self)
     
     def SetSceneActive(self, active):
@@ -128,7 +129,7 @@ class Layer:
         self.LayerActive = layerActive
         #TODO: Numpy
         self.CurrentLayerFrame = {}
-        self.VideoStream = np.repeat([[0,0,0,0]],scene.LampPixelCount)
+        self.VideoStream = np.repeat([[0,0,0,0]],scene.LampPixelCount,axis = 0)
 
     def ChangeLayer(self, scene, strokes, layerActive):
         self.Scene = scene or self.Scene
@@ -377,7 +378,18 @@ class Stroke:
                             else:
                                 pixel.PixelColor = self.Colors[2]
                     elif self.Animation == "Video Stream":
-                        pixel.PixelColor = self.Layer.VideoStream[pixel.PixelNumber]
+                        #ITSH conversion TODO: Move to separate file!
+                        VideoPixel = np.array(self.Layer.VideoStream[pixel.PixelNumber])
+                        VideoPixel[0] = VideoPixel[0] * self.Properties["Color1"][0]/100 #self.Layer.Scene.ColorCalibrator.Ilut[self.Properties["Color1"][0]][pixel.PixelColor[0]]
+                        VideoPixel[1] = self.Properties["Color1"][1]
+                        VideoPixel[2] = VideoPixel[2] * self.Properties["Color1"][2]/120 #self.Layer.Scene.ColorCalibrator.Slut[self.Properties["Color1"][2]][pixel.PixelColor[2]]
+                        VideoPixel[3] = VideoPixel[3] + self.Properties["Color1"][3] % 360
+
+                        #ITSH to RGBW
+                        VideoPixel = self.Layer.Scene.ColorCalibrator.ITSHtoRGBWFull(VideoPixel)
+
+                        #Gamma correction (lookup table)
+                        pixel.PixelColor = np.array(self.Layer.Scene.ColorCalibrator.GammaCorrectionLookup[self.Properties["Gammax10"][0]][VideoPixel])
 
                     else:
                         if self.UpdateStationary:
