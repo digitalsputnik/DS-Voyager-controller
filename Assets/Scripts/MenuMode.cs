@@ -45,19 +45,31 @@ public class MenuMode : MonoBehaviour {
 		if (!draw) {
 			toolsDropDown.value = 0;
 		}
-		drawMode.SetActive(!draw);
+
+        drawMode.SetActive(!draw);
 		drawTools.SetActive(!draw);
 		setupMode.SetActive(draw);
 
-		int lightCount = workSpace.transform.childCount;
-		for (int i = 0; i < lightCount; i++)
+        var lightsList = GameObject.FindGameObjectsWithTag("light");
+        foreach (var light in lightsList)
 		{
-			var light = workSpace.transform.GetChild(i);
-			light.Find("DragAndDrop1").gameObject.SetActive(draw);
-			light.Find("DragAndDrop2").gameObject.SetActive(draw);
-			light.Find("Canvas").gameObject.SetActive(draw);
+			light.transform.Find("DragAndDrop1").gameObject.SetActive(draw);
+			light.transform.Find("DragAndDrop2").gameObject.SetActive(draw);
+			light.transform.Find("Canvas").gameObject.SetActive(draw);
 		}
-	}
+
+
+        var videoStreamParent = GameObject.Find("VideoStreamParent");
+        if (videoStreamParent.transform.Find("VideoStreamBackground").gameObject.activeSelf)
+        {
+            var videoStreamBackground = videoStreamParent.transform.Find("VideoStreamBackground");
+            videoStreamBackground.transform.Find("Handle1Parent").Find("Handle1").gameObject.SetActive(draw);
+            videoStreamBackground.transform.Find("Handle2Parent").Find("Handle2").gameObject.SetActive(draw);
+        }
+
+
+
+    }
 
 
 	/*

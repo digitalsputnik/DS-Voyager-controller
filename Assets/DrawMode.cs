@@ -79,26 +79,41 @@ public class DrawMode : MonoBehaviour {
 		if (!Input.GetMouseButton (0))
 			return;
 
-		if (Input.touchCount == 2) {
-			return;
-		} else
+        if (Input.touchCount == 2)
+        {
+            return;
 
-//		if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.OSXPlayer) {
-			if (Input.GetMouseButtonDown (0)) {
-				//clicking on lights
-				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-				RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 100) && hit.transform.tag == "lamp")
-                {
-                    if (!EventSystem.current.IsPointerOverGameObject())
-                    {
-                        currentLamp = hit.transform.parent.parent.gameObject;
-                        lastLamp = currentLamp;
-                        paintLamp = true;
-                    }
-                }
+        }
+        else
+
+        //if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.OSXPlayer) {
+        if (Input.GetMouseButtonDown(0))
+        {
+
+            //clicking on lights
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100) && hit.transform.tag == "lamp")
+            {
+                //Debug.Log("OBJECT THAT WAS HIT IS: " + hit.transform.name + " ......................");
+                //Why was thgis done? Temporarily disabling the check as its intefering with video stream handling
+                //as Canvas applied to videoStreamBackground is an EventSystem gameobject.
+                //if (!EventSystem.current.IsPointerOverGameObject())
+                //{
+                    Debug.Log("Lamp pixel was hit.........................");
+                    currentLamp = hit.transform.parent.parent.gameObject;
+                    lastLamp = currentLamp;
+                    paintLamp = true;
+                //}
+            }
+            else
+            {
+                Debug.Log("OBJECT THAT WAS HIT IS: " + hit.transform.name + " ......................");
+            }
+        }
+ 
 				
-			}
+			
 /*		} else {
 			if (Input.touchCount == 1 && TouchPhase.Began) {
 				//clicking on lights

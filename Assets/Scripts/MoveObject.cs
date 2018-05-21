@@ -27,8 +27,8 @@ public class MoveObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
  
     public void OnBeginDrag(PointerEventData eventData)
     {
-        //if (!setupMode.activeSelf)
-        //  return;
+        if (!setupMode.activeSelf)
+          return;
 
         if (dragged)
             return;
@@ -42,7 +42,7 @@ public class MoveObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
 
 
-        TrashCan.SetActive(true);
+ 
         //TODO: Check if setup mode is on!
         //TODO: Check if pixel or handle is dragged and act accordingly.
         //NOTE: For this case, 
@@ -52,8 +52,8 @@ public class MoveObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnDrag(PointerEventData eventData)
     {
-        //if (!setupMode.activeSelf)
-        //  return;
+        if (!setupMode.activeSelf)
+          return;
 
         if (dragged)
         {
@@ -70,30 +70,15 @@ public class MoveObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         transform.position = GetMouseLampPosition() + difference;
 
-        //fix by Tahir
-        binImage = TrashCan.GetComponent<Image>();
-        binRect = new Rect(new Vector2(binImage.rectTransform.position.x, binImage.rectTransform.position.y - (binImage.rectTransform.sizeDelta.y * menuCanvas.GetComponent<RectTransform>().localScale.y) / 2), new Vector2((binImage.rectTransform.sizeDelta.x * menuCanvas.GetComponent<RectTransform>().localScale.x), (binImage.rectTransform.sizeDelta.y * menuCanvas.GetComponent<RectTransform>().localScale.y)));
-        //new Rect(new Vector2(TrashCan.transform.position.x,TrashCan.transform.position.y-(TrashCan.GetComponent<RectTransform>().sizeDelta.y/2)) , TrashCan.GetComponent<RectTransform>().rect.size);
-        //Debug.Log("Canvas scale is: "+ menuCanvas.GetComponent<RectTransform>().localScale);
-        //Debug.Log ("Rect position, size: "+binRect.position.ToString()+", "+binRect.size.ToString());
-        //Debug.Log ("Image position, size: "+binImage.transform.position.ToString()+", "+binImage.rectTransform.rect.width+","+binImage.rectTransform.rect.height);
-
-
-        if (binRect.Contains(Input.mousePosition))
-        {
-            binImage.color = Color.red;
-        }
-        else
-        {
-            binImage.color = Color.white;
-        }
-
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         //Debug.Log("Set position is: " + this.gameObject.transform.position);
         //Debug.Log("Set rotation is: " + this.gameObject.transform.rotation.eulerAngles);
+
+        if (!setupMode.activeSelf)
+            return;
 
         if (dragged || endDrag)
         {
@@ -113,15 +98,6 @@ public class MoveObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         itemBeingDragged = null;
         transform.position = GetMouseLampPosition() + difference;
 
-
-        if (binRect.Contains(Input.mousePosition))
-        {
-            binImage.color = Color.white;
-            Destroy(this.gameObject);
- 
-        }
-
-        TrashCan.SetActive(false);
     }
 
     private Vector3 GetMouseLampPosition()

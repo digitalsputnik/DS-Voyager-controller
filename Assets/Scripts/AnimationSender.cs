@@ -795,7 +795,7 @@ public class AnimationSender : MonoBehaviour
     byte[] SendJSONToLamp(object messageObject, IPEndPoint lampEndPoint)
     {
         var jsonString = JsonConvert.SerializeObject(messageObject);
-        Debug.Log(jsonString);
+        //Debug.Log(jsonString);
         byte[] data = Encoding.ASCII.GetBytes(jsonString);
         SendDataToLamp(data, lampEndPoint);
         return data;
