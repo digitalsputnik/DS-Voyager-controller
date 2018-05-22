@@ -344,6 +344,7 @@ public class DrawScripts : MonoBehaviour {
             videoSourcePanels[0].transform.Find("SourceDropdown").GetComponent<Dropdown>().value = 0;
             videoSourcePanels[0].transform.Find("urlInput").GetComponent<InputField>().text = "";
             videoSourcePanels[0].transform.Find("urlInput").gameObject.SetActive(false);
+            videoSourcePanels[0].SetActive(false);
         }
 
 
