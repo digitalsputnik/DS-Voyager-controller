@@ -330,7 +330,7 @@ class Stroke:
                             pixel.PixelColor = self.Colors[1]
 
                     elif self.Animation == "Fire":
-                        pixel.PixelColor = self.StrokeBitmap[int(self.Time * 200 % 200)][pixel.QueueNumber]
+                        pixel.PixelColor = self.StrokeBitmap[int(self.Time * float(self.Properties["Speed"][0]) % 200)][pixel.QueueNumber]
 
                     elif self.Animation == "Gradient":
                         if self.TotalPixelCount > 0:
@@ -444,16 +444,25 @@ class OutputToFile(OutputBaseClass):
         return super().Send(frame)
 
 class OutputToController(OutputBaseClass):
-    def __init__(self, address):
+    def __init__(self, address, fps = -1):
         self.Socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.Socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR,1)
         self.Socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
         self.Socket.bind(("",31000))
         self.Address = address
-        
+        self.TimePeriod = 1/fps
+        self.LastTime = time.time()
+        self.CurrentTime = time.time()
 
     def Send(self, frame, lampPixelCount):
         try:
+            if self.TimePeriod > 0:
+                self.CurrentTime = time.time()
+                timePassed = self.CurrentTime - self.LastTime
+                if not abs(timePassed) > self.TimePeriod:
+                    return
+                else:
+                    self.LastTime = time.time()
             start = np.array([0xD5, 0x0A, 0x50, 0x03, 0x00, 0x00, lampPixelCount, 0x00], dtype = np.uint8)
             end = np.array([0xEF,0xFE,0x00], dtype = np.uint8)
             pixelColors = np.zeros(lampPixelCount*4, dtype = np.uint8)

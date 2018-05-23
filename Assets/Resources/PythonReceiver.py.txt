@@ -249,7 +249,7 @@ class ColorCalibration:
         for H in range(0,360):
             RGBW = np.zeros(4).astype(np.uint8)
             for i in range(0,4):
-                RGBW[i] = np.interp(H,self.HueNodes,self.HueRGBW[i])
+                RGBW[i] = np.interp(H,self.HueNodesFull,self.HueRGBW[i])
             self.HueRGBWlut[H] = RGBW
 
         #Intensity and Saturation
@@ -538,7 +538,7 @@ while True:
                 if jsonDict['RegisterDevice'] and not (lIP in RegisteredDevices):
                     #print("Registering!")
                     #print(RegisteredDevices)
-                    LampScene.Outputs.append(AnimationPlayer.OutputToController(addr))
+                    LampScene.Outputs.append(AnimationPlayer.OutputToController(addr,10))
                     RegisteredDevices.append(lIP)
                     ControllerTimes[lIP] = time.time()
 

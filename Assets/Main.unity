@@ -20126,95 +20126,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ITSH: {x: 0, y: 0, z: 0, w: 0}
   ID: 0
---- !u!1001 &450715647
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4934158704010616, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4934158704010616, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4934158704010616, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4934158704010616, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4934158704010616, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4934158704010616, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4934158704010616, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4934158704010616, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
-      propertyPath: m_RootOrder
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 1423312750793102, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1564080066937760, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114866980554329970, guid: 415ae4df25531fe4dbde2b66e11d5b2e,
-        type: 2}
-      propertyPath: TrashCan
-      value: 
-      objectReference: {fileID: 319006449}
-    - target: {fileID: 114866980554329970, guid: 415ae4df25531fe4dbde2b66e11d5b2e,
-        type: 2}
-      propertyPath: setupMode
-      value: 
-      objectReference: {fileID: 1509357874}
-    - target: {fileID: 114866980554329970, guid: 415ae4df25531fe4dbde2b66e11d5b2e,
-        type: 2}
-      propertyPath: setupScripts
-      value: 
-      objectReference: {fileID: 1509357876}
-    - target: {fileID: 114866980554329970, guid: 415ae4df25531fe4dbde2b66e11d5b2e,
-        type: 2}
-      propertyPath: menuCanvas
-      value: 
-      objectReference: {fileID: 2014415372}
-    - target: {fileID: 114866980554329970, guid: 415ae4df25531fe4dbde2b66e11d5b2e,
-        type: 2}
-      propertyPath: animSender
-      value: 
-      objectReference: {fileID: 1468842241}
-    - target: {fileID: 23394723167335640, guid: 415ae4df25531fe4dbde2b66e11d5b2e,
-        type: 2}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-    - target: {fileID: 23394723167335640, guid: 415ae4df25531fe4dbde2b66e11d5b2e,
-        type: 2}
-      propertyPath: m_DynamicOccludee
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1423312750793102, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
-      propertyPath: m_Name
-      value: VideoStreamParent2
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 415ae4df25531fe4dbde2b66e11d5b2e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &450726905
 GameObject:
   m_ObjectHideFlags: 0
@@ -44465,7 +44376,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
-  VideoStreamBackground2: {fileID: 1490111062}
+  VideoStreamBackground2: {fileID: 0}
   minXY: {fileID: 1324691508}
   maxX: {fileID: 1290639571}
   maxY: {fileID: 1018704733}
@@ -45424,7 +45335,7 @@ Prefab:
     - target: {fileID: 11420564, guid: c404114afaafa3b4494665d1634c383c, type: 2}
       propertyPath: _renderingObjects.Array.data[1]
       value: 
-      objectReference: {fileID: 1490111062}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c404114afaafa3b4494665d1634c383c, type: 2}
   m_IsPrefabParent: 0
@@ -47937,34 +47848,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1001749449}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1005401740
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1005401741}
-  m_Layer: 0
-  m_Name: MinXY
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1005401741
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1005401740}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: -0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1990596362}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1005728150
 GameObject:
   m_ObjectHideFlags: 0
@@ -51404,7 +51287,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
-  VideoStreamBackground2: {fileID: 1490111062}
+  VideoStreamBackground2: {fileID: 0}
   minXY: {fileID: 1324691508}
   maxX: {fileID: 1290639571}
   maxY: {fileID: 1018704733}
@@ -55228,7 +55111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
-  VideoStreamBackground2: {fileID: 1490111062}
+  VideoStreamBackground2: {fileID: 0}
   minXY: {fileID: 1324691508}
   maxX: {fileID: 1290639571}
   maxY: {fileID: 1018704733}
@@ -59641,34 +59524,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1262369477}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1262467763
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1262467764}
-  m_Layer: 0
-  m_Name: MaxX
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1262467764
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1262467763}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5, y: -0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 0.99999994}
-  m_Children: []
-  m_Father: {fileID: 1990596362}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1264347486
 GameObject:
   m_ObjectHideFlags: 0
@@ -60608,34 +60463,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1287036824}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1289325672
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1289325673}
-  m_Layer: 0
-  m_Name: MaxY
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1289325673
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1289325672}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 0.99999994}
-  m_Children: []
-  m_Father: {fileID: 1990596362}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1290639571
 GameObject:
   m_ObjectHideFlags: 0
@@ -70840,11 +70667,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1488528884}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1490111062 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1564080066937760, guid: 415ae4df25531fe4dbde2b66e11d5b2e,
-    type: 2}
-  m_PrefabInternal: {fileID: 450715647}
 --- !u!1 &1490253367
 GameObject:
   m_ObjectHideFlags: 0
@@ -78909,7 +78731,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
-  VideoStreamBackground2: {fileID: 1490111062}
+  VideoStreamBackground2: {fileID: 0}
   minXY: {fileID: 1324691508}
   maxX: {fileID: 1290639571}
   maxY: {fileID: 1018704733}
@@ -94026,11 +93848,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1988623091}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &1990596362 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 4257287357206984, guid: 415ae4df25531fe4dbde2b66e11d5b2e,
-    type: 2}
-  m_PrefabInternal: {fileID: 450715647}
 --- !u!1 &1991237368
 GameObject:
   m_ObjectHideFlags: 0

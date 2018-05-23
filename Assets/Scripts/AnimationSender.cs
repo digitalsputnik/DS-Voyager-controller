@@ -442,6 +442,7 @@ public class AnimationSender : MonoBehaviour
         drawScripts.setupAnimations();
 
         StartCoroutine("SendAnimationWorker");
+        StartCoroutine("SendVideoStream");
     }
 
     // Update is called once per frame
@@ -789,7 +790,6 @@ public class AnimationSender : MonoBehaviour
         StartCoroutine("PollLayersFromLamp", LampIP);
         StartCoroutine("SetDetectionFalse", LampIP);
         StartCoroutine("RegisterDevice", LampIP);
-        StartCoroutine("SendVideoStream");
     }
 
     byte[] SendJSONToLamp(object messageObject, IPEndPoint lampEndPoint)

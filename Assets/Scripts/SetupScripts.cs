@@ -348,8 +348,6 @@ public class SetupScripts : MonoBehaviour {
                     }
                 }
 
-
-
                 if (numPixels == 0 && !ErrorLamps.Contains(LightIP) && !UpdateLampWithIPs.Contains(LightIP.ToString()))
                 {
                     ErrorLamps.Add(LightIP);
