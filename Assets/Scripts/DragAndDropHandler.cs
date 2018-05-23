@@ -25,6 +25,8 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
     public GameObject videoStreamBackground;
     public List<int> VideoPixels;
     WebCamTexture webcamTexture = null;
+    public float PointX = 0.0f;
+    public float PointY = 0.0f;
 
 
     public void OnBeginDrag(PointerEventData eventData)

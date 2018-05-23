@@ -62,7 +62,7 @@ public class VideoStream : MonoBehaviour {
 
         }
 
-        StartCoroutine(DrawVideoOnPixels());
+        //StartCoroutine(DrawVideoOnPixels());
     }
 
 
@@ -85,6 +85,7 @@ public class VideoStream : MonoBehaviour {
                 {
                     if (pixelsToDraw.Count > 0)
                     {
+                        Debug.Log("DragAndDropHandler returned pixels to draw........");
                         pixelName = "pixel" + pixelsToDraw[i];
                     }
                     else
@@ -123,22 +124,6 @@ public class VideoStream : MonoBehaviour {
                         }
                         else if (mediaPlayer.IsPlaying && mediaPlayer.FramePixels.Length > 0)
                         {
-                            //var pixelArray = mediaPlayer.FramePixels;
-                            /*if (colorArray == null)
-                            {
-                                //Debug.Log("Pixel array size is: " + mediaPlayer.FramePixels.Length.ToString());
-                                colorArray = new Color32[pixelArray.Length / 4];
-                                //Debug.Log("Color Array size is: " + colorArray.Length.ToString());
-                            }
-                            else {
-                                //colorArray.Initialize();
-                            }
-
-                            for (var j = 0; j < pixelArray.Length; j += 4)
-                            {
-                                color = new Color32(pixelArray[i + 0], pixelArray[i + 1], pixelArray[i + 2], pixelArray[i + 3]);
-                                colorArray[j / 4] = color;
-                            }*/
 
                             //Debug.Log("Frame Pixel data: "+ mediaPlayer.FramePixels.ToString());
                             if (tex == null)
@@ -154,29 +139,12 @@ public class VideoStream : MonoBehaviour {
                                 tex.Apply();
                             }
 
-                            /*Debug.Log("Printing color values");
-                            for (int px = 0; px <= mediaPlayer.FramePixels.Length; px++)
-                            {
-                                Debug.Log();
-                            }*/
-
-
-                            //VideoStreamBackground2.GetComponent<Renderer>().material.mainTexture = tex;
-
-
                             pointX = mediaPlayer.VideoWidth * (Vx.magnitude / Xs.magnitude);
                             pointY = mediaPlayer.VideoHeight * (Vy.magnitude / Ys.magnitude);
-                            //Debug.Log("VideoWidth: " + mediaPlayer.VideoWidth.ToString() + " VideoHeight: " + mediaPlayer.VideoHeight.ToString());
-                            //Debug.Log("PointX: "+pointX.ToString()+" PointY: "+ pointY.ToString());
-
-
-
-                            //int pixelNum = (int)pointX * (int)pointY;
-                            //Debug.Log("Pixel number is: " + pixelNum);
+ 
                             //Get the color
                             pixelColor = tex.GetPixel((int)pointX, (int)pointY);
                             //Debug.Log("Pixel color is: " + pixelColor.ToString());
-                            //pixelColor = colorArray[pixelNum];
 
                         }
 

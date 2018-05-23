@@ -44362,6 +44362,8 @@ MonoBehaviour:
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
   VideoPixels: 
+  PointX: 0
+  PointY: 0
 --- !u!114 &934283043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51291,6 +51293,8 @@ MonoBehaviour:
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
   VideoPixels: 
+  PointX: 0
+  PointY: 0
 --- !u!114 &1096142449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51516,7 +51520,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1098985453}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aadf9804c674d9b4fb69af8a876d60a0, type: 3}
   m_Name: 
@@ -55039,6 +55043,8 @@ MonoBehaviour:
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
   VideoPixels: 
+  PointX: 0
+  PointY: 0
 --- !u!114 &1177545565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78735,6 +78741,8 @@ MonoBehaviour:
   drawTools: {fileID: 411981886}
   videoStreamBackground: {fileID: 1051078286}
   VideoPixels: 
+  PointX: 0
+  PointY: 0
 --- !u!114 &1657679390
 MonoBehaviour:
   m_ObjectHideFlags: 0

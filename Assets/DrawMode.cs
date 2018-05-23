@@ -96,11 +96,11 @@ public class DrawMode : MonoBehaviour {
             if (Physics.Raycast(ray, out hit, 100) && hit.transform.tag == "lamp")
             {
                 //Debug.Log("OBJECT THAT WAS HIT IS: " + hit.transform.name + " ......................");
-                //Why was thgis done? Temporarily disabling the check as its intefering with video stream handling
+                //Why was this done? Temporarily disabling the check as its intefering with video stream handling
                 //as Canvas applied to videoStreamBackground is an EventSystem gameobject.
                 //if (!EventSystem.current.IsPointerOverGameObject())
                 //{
-                    Debug.Log("Lamp pixel was hit.........................");
+                    //Debug.Log("Lamp pixel was hit.........................");
                     currentLamp = hit.transform.parent.parent.gameObject;
                     lastLamp = currentLamp;
                     paintLamp = true;
@@ -108,7 +108,7 @@ public class DrawMode : MonoBehaviour {
             }
             else
             {
-                Debug.Log("OBJECT THAT WAS HIT IS: " + hit.transform.name + " ......................");
+                //Debug.Log("OBJECT THAT WAS HIT IS: " + hit.transform.name + " ......................");
             }
         }
  

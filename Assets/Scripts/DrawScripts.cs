@@ -441,17 +441,17 @@ public class DrawScripts : MonoBehaviour {
 
             if (animations[animNum].AnimProperties[i].type == "stream")
             {
-                Debug.Log("Video Stream selected...");
+                //Debug.Log("Video Stream selected...");
                 //timePanel.SetActive(true);
                 videoSourcePanels = VideoSourcePanel.GetChildrenWithTag("videosource");
                 if (videoSourcePanels.Count > 0)
                 {
-                    Debug.Log("Making previous videoSourcePanel active...");
+                    //Debug.Log("Making previous videoSourcePanel active...");
                     videoSourcePanels[0].SetActive(true);
                 }
                 else
                 {
-                    Debug.Log("Creating new videoSourcePanel...");
+                    //Debug.Log("Creating new videoSourcePanel...");
                     var newVideoSourceSelector = Instantiate(VideoSourceTemplate, VideoSourcePanel.transform);
                     newVideoSourceSelector.name = animations[animNum].AnimProperties[i].name;
                     newVideoSourceSelector.tag = "videosource";
