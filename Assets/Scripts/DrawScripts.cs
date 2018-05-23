@@ -334,11 +334,21 @@ public class DrawScripts : MonoBehaviour {
         //var startTime = timePanel.transform.Find("StartTime").gameObject;
         timePanel.SetActive(false);
 
+        //reset source, clear URL, clear and hide input field
+        var videoSourcePanels = VideoSourcePanel.GetChildrenWithTag("videosource");
+        if (videoSourcePanels.Count > 0)
+        {
+            videoSourcePanels[0].transform.Find("SourceDropdown").GetComponent<Dropdown>().value = 0;
+            videoSourcePanels[0].transform.Find("urlInput").GetComponent<InputField>().text = "";
+            videoSourcePanels[0].transform.Find("urlInput").gameObject.SetActive(false);
+            videoSourcePanels[0].SetActive(false);
+        }
 
-		//hide animation menu
-		//animationMenu.SetActive(false);
 
-		for (int i = 0; i < numProperties; i++) {
+        //hide animation menu
+        //animationMenu.SetActive(false);
+
+        for (int i = 0; i < numProperties; i++) {
 			if (animations [animNum].AnimProperties [i].type == "color") {
 				var newColorButton = Instantiate (firstColor, colorPanel.transform);
 				newColorButton.name = animations [animNum].AnimProperties [i].name;
@@ -430,7 +440,7 @@ public class DrawScripts : MonoBehaviour {
             {
                 Debug.Log("Video Stream selected...");
                 //timePanel.SetActive(true);
-                var videoSourcePanels = VideoSourcePanel.GetChildrenWithTag("videosource");
+                videoSourcePanels = VideoSourcePanel.GetChildrenWithTag("videosource");
                 if (videoSourcePanels.Count > 0)
                 {
                     Debug.Log("Making previous videoSourcePanel active...");

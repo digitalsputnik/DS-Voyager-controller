@@ -175,7 +175,7 @@ public class VideoStream : MonoBehaviour {
                             //Debug.Log("Pixel number is: " + pixelNum);
                             //Get the color
                             pixelColor = tex.GetPixel((int)pointX, (int)pointY);
-                            Debug.Log("Pixel color is: " + pixelColor.ToString());
+                            //Debug.Log("Pixel color is: " + pixelColor.ToString());
                             //pixelColor = colorArray[pixelNum];
 
                         }
