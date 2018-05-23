@@ -160,6 +160,7 @@ public class DrawScripts : MonoBehaviour {
         newAnim3.AnimName = "Fire";
         newAnim3.AnimProperties.Add(new Property("Color1", "color", itshColor1, 0, 0));
         newAnim3.AnimProperties.Add(new Property("Color2", "color", itshColor3, 0, 0));
+        newAnim3.AnimProperties.Add(new Property("Speed", "int", 100, 0, 200));
         newAnim3.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim3);
         LightAnims newAnim4 = new LightAnims();
@@ -216,13 +217,9 @@ public class DrawScripts : MonoBehaviour {
 
         LightAnims newAnim9 = new LightAnims();
         newAnim9.AnimName = "Video Stream";
-        //newAnim9.AnimProperties.Add(new Property("VideoStream", "stream", null, 0, 0));
         newAnim9.AnimProperties.Add(new Property("Color1", "color", streamColor, 0, 0));
         newAnim9.AnimProperties.Add(new Property("Gammax10", "int", 22, 10, 30));
-//=======
         newAnim9.AnimProperties.Add(new Property("VideoStream", "stream", 0, 0, 0));
-        //newAnim9.AnimProperties.Add(new Property("Color1", "color", streamColor, 0, 0));
-        //newAnim9.AnimProperties.Add(new Property("Gammax10", "int", 22, 10, 30));
         animations.Add(newAnim9);
 
 

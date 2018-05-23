@@ -155,7 +155,7 @@ public class VideoStream : MonoBehaviour {
 
                         //Apply color
                         //lampPixelLED.GetComponent<Renderer>().material.color = pixelColor;
-                        animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(I * 100), 0, (int)(S * 100), (int)H };
+                        animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(I * 100), 0, (int)(S * 120), (int)(H*360) };
                     }
                     else
                     {
