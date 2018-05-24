@@ -15,6 +15,10 @@ public class Ribbon : MonoBehaviour {
 	public int Port;
 	public int pipeLength;
 
+    public string status;
+    public string ssid;
+    public string password;
+
 	int pixelCount = 0;
 	int startPixel = 0;
 	int endPixel = 0;

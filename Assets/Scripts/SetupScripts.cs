@@ -47,8 +47,8 @@ public class SetupScripts : MonoBehaviour {
     public AnimationSender animSender;
     public GameObject UpdateWindow;
 	public GameObject AboutWindow;
-    public Button ListenerToggleButton;
-    public MenuPullScript PullMenu;
+     public MenuPullScript PullMenu;
+    public GameObject LampTools;
 
     Dictionary<IPAddress, ExtraProperties> IPtoProps = new Dictionary<IPAddress, ExtraProperties>();
 
@@ -77,7 +77,7 @@ public class SetupScripts : MonoBehaviour {
         }
         
         AddLampButton.onClick.AddListener(TaskOnAddClick);
-        ListenerToggleButton.onClick.AddListener(TogglePacketListener);
+        
 
         LampIPtoLengthDictionary = GameObject.Find("DetectedLampProperties").GetComponent<DetectedLampProperties>().LampIPtoLengthDictionary;
 
@@ -97,33 +97,7 @@ public class SetupScripts : MonoBehaviour {
         StartCoroutine("GetAvailableLamp");
     }
 
-    private void TogglePacketListener()
-    {
-        if (!animSender.ActiveStroke.layer.scene.ArtNetMode && !animSender.ActiveStroke.layer.scene.sACNMode)
-        {
-            //If both are switched off, turn on ArtNet
-            animSender.ActiveStroke.layer.scene.ArtNetMode = true;
-            animSender.ActiveStroke.layer.scene.sACNMode = false;
-            ListenerToggleButton.GetComponentInChildren<Text>().text = "ArtNet: On";
-
-        }
-        else if (animSender.ActiveStroke.layer.scene.ArtNetMode)
-        {
-            //If ArtNet is on, turn on sACN
-            animSender.ActiveStroke.layer.scene.ArtNetMode = false;
-            animSender.ActiveStroke.layer.scene.sACNMode = true;
-            ListenerToggleButton.GetComponentInChildren<Text>().text = "sACN: On";
-        }
-        else
-        {
-            //Turn both off
-            animSender.ActiveStroke.layer.scene.ArtNetMode = false;
-            animSender.ActiveStroke.layer.scene.sACNMode = false;
-            ListenerToggleButton.GetComponentInChildren<Text>().text = "ArtNet/sACN: Off";
-        }
-        animSender.SendAnimationWithUpdate();
-    }
-
+ 
     private void RemoveDetectedLampsFromPool(List<LampProperties> detectedLamps)
     {
         List<IPAddress> lampsToRemove = new List<IPAddress>();
@@ -144,25 +118,7 @@ public class SetupScripts : MonoBehaviour {
 
     void TaskOnAddClick()
     {
-        //Find available lamps in network
-        //Destination
-        //GetAvailableLamps();
-
-        //if (LampIPtoLengthDictionary.Count == 1 && LampIPtoLengthDictionary.Keys.FirstOrDefault().ToString() == "172.20.0.1")
-        //{
-        //    //Add lamp!
-        //    AddAllLampsButton.GetComponent<AddAllLampsScript>().AddAllLamps();
-            
-        //    //Go to draw mode
-        //    var menu = transform.parent.GetComponent<MenuMode>();
-        //    if (menu != null)
-        //    {
-        //        menu.TaskOnDrawClicked();
-        //    }
-        //    return;
-        //}
-
-        if (!UpdateWindow.activeSelf)
+         if (!UpdateWindow.activeSelf)
         {
             AvailableLampsDialog.SetActive(true);
         }
@@ -452,6 +408,32 @@ public class SetupScripts : MonoBehaviour {
             AddLampButton.SetActive(true);
         }
     }
+
+
+    public void OnLampSettingsButtonClick()
+    {
+        LampTools.SetActive(true);
+        var lightsList = GameObject.FindGameObjectsWithTag("light");
+        foreach (var light in lightsList)
+        {
+            light.transform.Find("DragAndDrop1").gameObject.SetActive(false);
+            light.transform.Find("DragAndDrop2").gameObject.SetActive(false);
+            //light.transform.Find("Canvas").gameObject.SetActive(false);
+        }
+
+        var videoStreamParent = GameObject.Find("VideoStreamParent");
+        if (videoStreamParent.transform.Find("VideoStreamBackground").gameObject.activeSelf)
+        {
+            var videoStreamBackground = videoStreamParent.transform.Find("VideoStreamBackground");
+            videoStreamBackground.transform.Find("Handle1Parent").Find("Handle1").gameObject.SetActive(false);
+            videoStreamBackground.transform.Find("Handle2Parent").Find("Handle2").gameObject.SetActive(false);
+        }
+        this.gameObject.SetActive(false);
+    }
+
+
+
+
 
     public void TaskOnExitClick()
     {
