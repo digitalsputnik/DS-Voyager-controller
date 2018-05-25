@@ -64,7 +64,24 @@ public class LampSettings : MonoBehaviour {
 
     public void OnBackButtonClick()
     {
+        var lightsList = GameObject.FindGameObjectsWithTag("light");
+        foreach (var light in lightsList)
+        {
+            light.transform.Find("DragAndDrop1").gameObject.SetActive(true);
+            light.transform.Find("DragAndDrop2").gameObject.SetActive(true);
+            //light.transform.Find("Canvas").gameObject.SetActive(false);
+        }
+
+        var videoStreamParent = GameObject.Find("VideoStreamParent");
+        if (videoStreamParent.transform.Find("VideoStreamBackground").gameObject.activeSelf)
+        {
+            var videoStreamBackground = videoStreamParent.transform.Find("VideoStreamBackground");
+            videoStreamBackground.transform.Find("Handle1Parent").Find("Handle1").gameObject.SetActive(true);
+            videoStreamBackground.transform.Find("Handle2Parent").Find("Handle2").gameObject.SetActive(true);
+        }
+
         SetupTools.SetActive(true);
+
         this.gameObject.SetActive(false);
     }
 

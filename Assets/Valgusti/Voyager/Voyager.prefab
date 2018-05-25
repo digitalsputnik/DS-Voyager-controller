@@ -52,6 +52,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IP: 
+  Mac: 
   Port: 0
   pipeLength: 0
+  status: 
+  ssid: 
+  password: 
+  colorIntensityOffset: 0.3
+  ColorDataReceiver: {fileID: 0}
   UpdateFps: 0
