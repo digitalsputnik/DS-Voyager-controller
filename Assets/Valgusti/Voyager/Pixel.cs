@@ -25,9 +25,9 @@ public class Pixel : MonoBehaviour {
 	public void updatePixel(Vector4 ITSHin, Color uiColorIn) {
 		myContoller.setPixel (ID, ITSHin);
 		ITSH = ITSHin;
-        //set color of the UI
-        //geomMaterial.color = uiColorIn;
-        //glowMaterial.SetColor("_Color", new Color(uiColorIn.r, uiColorIn.g, uiColorIn.b, 0.3f));
+        //set color of the UI Pixel
+        geomMaterial.color = uiColorIn;
+        glowMaterial.SetColor("_Color", new Color(uiColorIn.r, uiColorIn.g, uiColorIn.b, 0.3f));
     }
 
 	public void updateSelectionPixel(int val) {
