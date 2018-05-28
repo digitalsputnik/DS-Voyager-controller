@@ -35843,7 +35843,7 @@ GameObject:
   - component: {fileID: 726562811}
   m_Layer: 0
   m_Name: DS-BEAM
-  m_TagString: Untagged
+  m_TagString: light
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61112,7 +61112,7 @@ GameObject:
   - component: {fileID: 1223426313}
   m_Layer: 0
   m_Name: DS
-  m_TagString: Untagged
+  m_TagString: light
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
