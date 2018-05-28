@@ -895,8 +895,9 @@ public class AnimationSender : MonoBehaviour
         {
             if (StrokeJSONData != null && LampIPList.Count > 0)
             {
-                if (ActiveStroke.layer.PixelToStrokeIDDictionary.Any(x => x.Value.FirstOrDefault().Animation == "Video Stream"))
-                {
+				Debug.Log("sending video");
+                //if (ActiveStroke.layer.PixelToStrokeIDDictionary.Any(x => x.Value.FirstOrDefault().Animation == "Video Stream"))
+                //{
                     foreach (var lampIP in LampIPList)
                     {
                         //jsonDict[videoString] = LampIPVideoStreamPixelToColor[lampIP];
@@ -904,10 +905,13 @@ public class AnimationSender : MonoBehaviour
                         var messageJSON = JsonConvert.SerializeObject(jsonDict);
                         var data = Encoding.ASCII.GetBytes(messageJSON);
                         SendDataToLamp(data, new IPEndPoint(IPAddress.Parse(lampIP), 30001));
+					   //Debug.Log("sent");
+					//Debug.Log(messageJSON);
                     }
-                }
+                //}
             }
-            yield return new WaitForSeconds(0.04f);
+			yield return null;
+            //yield return new WaitForSeconds(0.04f);
         }
     }
 

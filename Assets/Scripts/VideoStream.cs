@@ -61,7 +61,7 @@ public class VideoStream : MonoBehaviour {
 
         }
 
-        //StartCoroutine(DrawVideoOnPixels());
+        StartCoroutine(DrawVideoOnPixels());
     }
 
 
@@ -143,7 +143,7 @@ public class VideoStream : MonoBehaviour {
  
                             //Get the color
                             pixelColor = tex.GetPixel((int)pointX, (int)pointY);
-                            //Debug.Log("Pixel color is: " + pixelColor.ToString());
+                            Debug.Log("Pixel color is: " + pixelColor.ToString());
 
                         }
 
