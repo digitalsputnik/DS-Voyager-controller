@@ -62,7 +62,7 @@ public class VideoStream : MonoBehaviour {
 
         }
 
-        //StartCoroutine(DrawVideoOnPixels());
+        StartCoroutine(DrawVideoOnPixels());
     }
 
 
