@@ -107,6 +107,7 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 		Physics.Raycast (ray, out hit, 100);
+ 
 		return new Vector3 (hit.point.x, hit.point.y, 1);
 
     }
