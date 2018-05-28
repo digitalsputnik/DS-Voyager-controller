@@ -60,9 +60,13 @@ public class DragAndDrop1Handler : MonoBehaviour {
         itemBeingScaled.transform.position = newLightPosition;
 
         //Scale
-        var scale = initialScale;
-        scale = initialScale / initialDirection.magnitude * newDirection.magnitude;
-        itemBeingScaled.transform.localScale = scale;
+        var newScale = initialScale;
+        var scaleX = initialScale.x / initialDirection.magnitude * newDirection.magnitude;
+        var scaleY = initialScale.y / initialDirection.magnitude * newDirection.magnitude;
+        var scaleZ = initialScale.z;
+        newScale = new Vector3(scaleX, scaleY, scaleZ);
+
+        itemBeingScaled.transform.localScale = newScale;
         this.transform.localScale = HandlerScale/newDirection.magnitude*initialDirection.magnitude;
         referenceObject.transform.localScale = HandlerScale / newDirection.magnitude * initialDirection.magnitude;
     }
