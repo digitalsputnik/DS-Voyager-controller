@@ -243,6 +243,9 @@ public class UpdateChecker : MonoBehaviour {
 
             bool NumpyNotInstalled = false;
             bool isRev3 = false;
+
+            Debug.Log("Before update");
+
             try
             {
                 //Check for latest version of Numpy
@@ -261,6 +264,8 @@ public class UpdateChecker : MonoBehaviour {
                     }
                     sshClient.Disconnect();
                 }
+
+                Debug.Log("Before copying!");
 
                 //Copy files to device
                 using (SftpClient sftpClient = new SftpClient(UpdateLampIP, LampUsername, LampPassword))
@@ -294,6 +299,7 @@ public class UpdateChecker : MonoBehaviour {
 
                     string animDestFolder = isRev3 ? AnimationDestinationFolder3 : AnimationDestinationFolder;
 
+                    Debug.Log("Connection established, starting Animation copying!");
                     //Animation
                     if (!sftpClient.Exists(animDestFolder))
                         sftpClient.CreateDirectory(animDestFolder);
@@ -304,6 +310,7 @@ public class UpdateChecker : MonoBehaviour {
                         UploadFileFromResources(filename, sftpClient);
                     }
 
+                    Debug.Log("Copying bundle!");
                     //Rev3 update!
                     if (isRev3)
                     {
@@ -331,6 +338,8 @@ public class UpdateChecker : MonoBehaviour {
 
                     sftpClient.ChangeDirectory(autorunDestFolder);
                     UploadFileFromResources(autorunFile, sftpClient, "autorun.sh");
+
+                    sftpClient.Disconnect();
                 }
             }
             catch (Exception e)

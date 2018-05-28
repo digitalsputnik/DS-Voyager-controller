@@ -11,7 +11,6 @@ public class VideoStream : MonoBehaviour {
     //For VideoStream
     public GameObject drawTools;
     public GameObject videoStreamBackground;
-    public GameObject VideoStreamBackground2;
     public GameObject minXY;
     public GameObject maxX;
     public GameObject maxY;

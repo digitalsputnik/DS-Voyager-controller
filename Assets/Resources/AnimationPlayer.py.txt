@@ -323,7 +323,8 @@ class Stroke:
             for pixel in self.ControlledPixels:
                     #TODO: Better implementation on animation
                     if self.Animation == "Chaser":
-                        chaserQueueNumber = int(self.Time * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1)
+                        #chaserQueueNumber = int(self.Time * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1)
+                        chaserQueueNumber = int((self.Time + (self.Properties["Time offset"][0]/1000)) * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1 + (self.Properties["Hold"][0]/1000)*self.Properties["Speed"][0])
                         if pixel.QueueNumber > chaserQueueNumber - self.Properties["Width"][0] and pixel.QueueNumber <= chaserQueueNumber:
                             pixel.PixelColor = self.Colors[0]
                         else:
@@ -337,7 +338,8 @@ class Stroke:
                             pixel.PixelColor = self.StrokeBitmap[0][pixel.QueueNumber]
 
                     elif self.Animation == "Chaser Grad1":
-                        chaserQueueNumber = int(self.Time * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1)
+                        #chaserQueueNumber = int(self.Time * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1)
+                        chaserQueueNumber = int((self.Time + (self.Properties["Time offset"][0]/1000)) * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1 + (self.Properties["Hold"][0]/1000)*self.Properties["Speed"][0])
                         if pixel.QueueNumber > chaserQueueNumber - self.Properties["Width"][0] and pixel.QueueNumber <= chaserQueueNumber:
                             if self.Properties["Width"][0] > 0:
                                 pixel.PixelColor = self.StrokeBitmap[1][chaserQueueNumber - pixel.QueueNumber]
@@ -347,7 +349,7 @@ class Stroke:
                                 pixel.PixelColor = self.StrokeBitmap[0][pixel.QueueNumber]
 
                     elif self.Animation == "Chaser Grad2":
-                        chaserQueueNumber = int(self.Time * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1)
+                        chaserQueueNumber = int((self.Time + (self.Properties["Time offset"][0]/1000)) * float(self.Properties["Speed"][0])) % (self.TotalPixelCount + self.Properties["Width"][0] - 1 + (self.Properties["Hold"][0]/1000)*self.Properties["Speed"][0])
                         if pixel.QueueNumber > chaserQueueNumber - self.Properties["Width"][0] and pixel.QueueNumber <= chaserQueueNumber:
                             #Peek background gradient!
                             if self.TotalPixelCount > 0:

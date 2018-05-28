@@ -21,6 +21,7 @@ public class LoadSaveScripts : MonoBehaviour {
     public SetupScripts setupScripts;
     public GameObject ColorDataReceiver;
     public GameObject AnimationSender;
+    public GameObject VideoStream;
 
     void Start () {
         //Add listeners to buttons
@@ -33,8 +34,10 @@ public class LoadSaveScripts : MonoBehaviour {
     /// </summary>
     private void LoadButtonClick()
     {
+        Debug.Log("Load clicked!");
         if (File.Exists(Application.persistentDataPath + "/workspace.dat"))
         {
+            Debug.Log("File exists!");
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + "/workspace.dat", FileMode.Open);
             WorkspaceData data = (WorkspaceData)bf.Deserialize(file);
@@ -45,7 +48,13 @@ public class LoadSaveScripts : MonoBehaviour {
             {
                 GameObject.Destroy(Workspace.transform.GetChild(i).gameObject);
             }
-            
+
+            //VideoStreamPosition
+            VideoStream.transform.position = data.VideoStreamPosition.Position;
+            Debug.Log(data.VideoStreamPosition.Position);
+            VideoStream.transform.rotation = data.VideoStreamPosition.Rotation;
+            VideoStream.transform.localScale = data.VideoStreamPosition.Scale;
+
             //Add lamps to workspace from data received
             LoadLampsToWorkspace(data);
 
@@ -68,11 +77,23 @@ public class LoadSaveScripts : MonoBehaviour {
             LampData lampData = GetLampData(lamp);
             LampsData.Add(lampData);
         }
-        WorkspaceData data = new WorkspaceData(LampsData);
+        VideoStreamData vsdata = GetVideoStreamData(VideoStream);
+
+        WorkspaceData data = new WorkspaceData(LampsData, vsdata);
 
         //Data saving
         bf.Serialize(file, data);
         file.Close();
+    }
+
+    public VideoStreamData GetVideoStreamData(GameObject videoStream)
+    {
+        VideoStreamData vsData = new VideoStreamData();
+        vsData.Position = videoStream.transform.position;
+        Debug.Log(vsData.Position);
+        vsData.Rotation = videoStream.transform.rotation;
+        vsData.Scale = videoStream.transform.localScale;
+        return vsData;
     }
 
     public LampData GetLampData(GameObject lampObject)
@@ -99,7 +120,6 @@ public class LoadSaveScripts : MonoBehaviour {
 
     public void LoadLampsToWorkspace(WorkspaceData wsData)
     {
-        //TODO: Destroy current workspace lamps
         foreach (LampData lamp in wsData.Lamps)
         {
             //TODO: Create general dictionary of lamps! This is hard-code!
@@ -167,12 +187,21 @@ public class LoadSaveScripts : MonoBehaviour {
     public class WorkspaceData
     {
         public List<LampData> Lamps { get; set; }
-
+        public VideoStreamData VideoStreamPosition { get; set; }
         //Constructor
-        public WorkspaceData(List<LampData> LampsData)
+        public WorkspaceData(List<LampData> LampsData, VideoStreamData vsData)
         {
             Lamps = LampsData;
+            VideoStreamPosition = vsData;
         }
+    }
+
+    [Serializable]
+    public class VideoStreamData
+    {
+        public SerializableVector3 Position { get; set; }
+        public SerializableQuaternion Rotation { get; set; }
+        public SerializableVector3 Scale { get; set; }
     }
 
     [Serializable]
@@ -187,14 +216,6 @@ public class LoadSaveScripts : MonoBehaviour {
         public int LampLength { get; set; }
         public string LampLabel { get; set; }
         public Dictionary<int, SerializableVector4> PixelColors {get; set;}
-    }
-
-    //TODO: Add functionality into this class
-    //TODO: Separate this from saving.
-    [Serializable]
-    public class Animation
-    {
-
     }
 
     [Serializable]

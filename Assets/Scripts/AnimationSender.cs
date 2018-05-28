@@ -374,8 +374,9 @@ public class AnimationSender : MonoBehaviour
 
     List<string> StopLampCommunication = new List<string>();
 
-    private byte[] StrokeJSONData;
+    private Dictionary<string, byte[]> StrokeJSONData = new Dictionary<string, byte[]>();
     private List<string> LampIPList = new List<string>();
+    private Dictionary<string, string> LampIPtoMacDictionary = new Dictionary<string, string>();
 
     public Dictionary<string,Dictionary<int, int[]>> LampIPVideoStreamPixelToColor = new Dictionary<string, Dictionary<int, int[]>>();
 
@@ -551,6 +552,7 @@ public class AnimationSender : MonoBehaviour
         }
 
         var MergedStroke = OriginalStroke;
+        
         if (ImportStroke.TimeStamp > OriginalStroke.TimeStamp)
         {
             MergedStroke = ImportStroke;
@@ -566,6 +568,12 @@ public class AnimationSender : MonoBehaviour
             MergedStroke = OriginalStroke;
         }
 
+        //Merge partial strokes!!
+        MergedStroke.PixelQueueToControlledPixel = OriginalStroke.PixelQueueToControlledPixel.Concat(ImportStroke.PixelQueueToControlledPixel).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.FirstOrDefault().Value);
+        foreach (var item in MergedStroke.PixelQueueToControlledPixel.Keys)
+        {
+            Debug.Log(item);
+        }
         SelectPixelsFromDictionary(MergedStroke);
 
         return MergedStroke;
@@ -699,6 +707,10 @@ public class AnimationSender : MonoBehaviour
                 if (!LampIPList.Contains(LampIP))
                 {
                     LampIPList.Add(LampIP);
+                    if (!LampIPtoMacDictionary.ContainsKey(LampIP))
+                    {
+                        LampIPtoMacDictionary.Add(LampIP, pixel.transform.parent.GetComponent<Ribbon>().Mac);
+                    }
                 }
             }
         }
@@ -749,8 +761,30 @@ public class AnimationSender : MonoBehaviour
 
         foreach (var LampIP in LampIPList)
         {
+            //Partition strokes for each lamp!
+            //Create copy of scene
+            var partitionedScene = JsonConvert.DeserializeObject<Scene>(JsonConvert.SerializeObject(scene));
+            for (int l = 0; l < scene.Layers.Count; l++)
+            {
+                for (int s = 0; s < scene.Layers[l].Strokes.Count; s++)
+                {
+                    var initialDictionary = partitionedScene.Layers[l].Strokes[s].PixelQueueToControlledPixel.Where(d => d.Key == LampIPtoMacDictionary[LampIP]).ToDictionary(d => d.Key, d => d.Value);
+                    partitionedScene.Layers[l].Strokes[s].PixelQueueToControlledPixel = initialDictionary;
+                }
+            }
             //Send stroke information to all lamps!
-            StrokeJSONData = SendJSONToLamp(scene, new IPEndPoint(IPAddress.Parse(LampIP), 30001));
+            //StrokeJSONData = SendJSONToLamp(scene, new IPEndPoint(IPAddress.Parse(LampIP), 30001));
+
+            //New version to relieve the udp message length!
+            if (StrokeJSONData.ContainsKey(LampIP))
+            {
+                StrokeJSONData[LampIP] = SendJSONToLamp(partitionedScene, new IPEndPoint(IPAddress.Parse(LampIP), 30001));
+            }
+            else
+            {
+                StrokeJSONData.Add(LampIP, SendJSONToLamp(partitionedScene, new IPEndPoint(IPAddress.Parse(LampIP), 30001)));
+            }
+            
         }
     }
 
@@ -795,7 +829,7 @@ public class AnimationSender : MonoBehaviour
     byte[] SendJSONToLamp(object messageObject, IPEndPoint lampEndPoint)
     {
         var jsonString = JsonConvert.SerializeObject(messageObject);
-        //Debug.Log(jsonString);
+        Debug.Log(jsonString);
         byte[] data = Encoding.ASCII.GetBytes(jsonString);
         SendDataToLamp(data, lampEndPoint);
         return data;
@@ -825,7 +859,7 @@ public class AnimationSender : MonoBehaviour
             {
                 foreach (var lampIP in LampIPList)
                 {
-                    SendDataToLamp(StrokeJSONData, new IPEndPoint(IPAddress.Parse(lampIP), 30001));
+                    SendDataToLamp(StrokeJSONData[lampIP], new IPEndPoint(IPAddress.Parse(lampIP), 30001));
                 }
             }
             yield return new WaitForSeconds(0.1f);

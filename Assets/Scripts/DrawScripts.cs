@@ -177,9 +177,11 @@ public class DrawScripts : MonoBehaviour {
         newAnim5.AnimProperties.Add(new Property("Color2", "color", itshBackGround, 0, 0));
         newAnim5.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
         newAnim5.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
-        int[] startValue = { 0, 0, 0, 0 };
-        int[] minValue = { 0, 0, 0, 0 };
-        int[] maxValue = { 23, 59, 59, 999 };
+        newAnim5.AnimProperties.Add(new Property("Time offset", "int", 0, 0, 20000));
+        newAnim5.AnimProperties.Add(new Property("Hold", "int", 0, 0, 20000));
+        //int[] startValue = { 0, 0, 0, 0 };
+        //int[] minValue = { 0, 0, 0, 0 };
+        //int[] maxValue = { 23, 59, 59, 999 };
         //newAnim5.AnimProperties.Add(new Property("StartTime", "time", startValue, minValue, maxValue));
         newAnim5.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim5);
@@ -192,6 +194,8 @@ public class DrawScripts : MonoBehaviour {
         newAnim6.AnimProperties.Add(new Property("Color4", "color", itshBackGround, 0, 0));
         newAnim6.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
         newAnim6.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
+        newAnim6.AnimProperties.Add(new Property("Time offset", "int", 0, 0, 20000));
+        newAnim6.AnimProperties.Add(new Property("Hold", "int", 0, 0, 20000));
         newAnim6.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim6);
 
@@ -203,6 +207,8 @@ public class DrawScripts : MonoBehaviour {
         newAnim7.AnimProperties.Add(new Property("Color4", "color", itshBackGround, 0, 0));
         newAnim7.AnimProperties.Add(new Property("Speed", "int", 30, 0, 100));
         newAnim7.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
+        newAnim7.AnimProperties.Add(new Property("Time offset", "int", 0, 0, 20000));
+        newAnim7.AnimProperties.Add(new Property("Hold", "int", 0, 0, 20000));
         newAnim7.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim7);
 
@@ -211,16 +217,16 @@ public class DrawScripts : MonoBehaviour {
         newAnim8.AnimProperties.Add(new Property("Color1", "color", itshColor, 0, 0));
         newAnim8.AnimProperties.Add(new Property("Color2", "color", itshBackGround, 0, 0));
         newAnim8.AnimProperties.Add(new Property("Speed", "int", 30, 0, 200));
-        newAnim8.AnimProperties.Add(new Property("Hold", "int", 1000, 0, 10000));
+        newAnim8.AnimProperties.Add(new Property("Hold", "int", 1000, 0, 20000));
         newAnim8.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim8);
 
-        LightAnims newAnim9 = new LightAnims();
-        newAnim9.AnimName = "Video Stream";
-        newAnim9.AnimProperties.Add(new Property("Color1", "color", streamColor, 0, 0));
-        newAnim9.AnimProperties.Add(new Property("Gammax10", "int", 22, 10, 30));
-        newAnim9.AnimProperties.Add(new Property("VideoStream", "stream", 0, 0, 0));
-        animations.Add(newAnim9);
+        //LightAnims newAnim9 = new LightAnims();
+        //newAnim9.AnimName = "Video Stream";
+        //newAnim9.AnimProperties.Add(new Property("Color1", "color", streamColor, 0, 0));
+        //newAnim9.AnimProperties.Add(new Property("Gammax10", "int", 22, 10, 30));
+        //newAnim9.AnimProperties.Add(new Property("VideoStream", "stream", 0, 0, 0));
+        //animations.Add(newAnim9);
 
 
         //Add animation names to Dropdown
