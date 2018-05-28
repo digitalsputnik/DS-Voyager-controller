@@ -4,19 +4,19 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 14
-  productGUID: 33c764ecb4715478cbe6b4cc2d64382b
+  productGUID: 90c7ec261cf77a4429f8019f9d93f462
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   defaultScreenOrientation: 4
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: Digital Sputnik
-  productName: DS Voyager controller
+  companyName: DefaultCompany
+  productName: DS-Voyager-controller
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
-  m_ShowUnitySplashScreen: 0
+  m_ShowUnitySplashScreen: 1
   m_ShowUnitySplashLogo: 1
   m_SplashScreenOverlayOpacity: 1
   m_SplashScreenAnimation: 1
@@ -55,8 +55,8 @@ PlayerSettings:
   iosAppInBackgroundBehavior: 0
   displayResolutionDialog: 1
   iosAllowHTTPDownload: 1
-  allowedAutorotateToPortrait: 0
-  allowedAutorotateToPortraitUpsideDown: 0
+  allowedAutorotateToPortrait: 1
+  allowedAutorotateToPortraitUpsideDown: 1
   allowedAutorotateToLandscapeRight: 1
   allowedAutorotateToLandscapeLeft: 1
   useOSAutorotation: 1
@@ -88,7 +88,7 @@ PlayerSettings:
   xboxEnableKinect: 0
   xboxEnableKinectAutoTracking: 0
   xboxEnableFitness: 0
-  visibleInBackground: 0
+  visibleInBackground: 1
   allowFullscreenSwitch: 1
   graphicsJobMode: 0
   macFullscreenMode: 2
@@ -126,7 +126,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 1.2.21
+  bundleVersion: 1.0
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -153,28 +153,21 @@ PlayerSettings:
   protectGraphicsMemory: 0
   useHDRDisplay: 0
   m_ColorGamuts: 00000000
-  targetPixelDensity: 30
+  targetPixelDensity: 0
   resolutionScalingMode: 0
-  androidSupportedAspectRatio: 2
+  androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
-  applicationIdentifier:
-    Android: com.digitalsputnik.voyagercontroller
-    Standalone: com.digitalsputnik.voyagercontroller
-    Tizen: com.DS.LightGrade
-    iOS: com.digitalsputnik.voyagercontroller
-    tvOS: com.DS.LightGrade
-  buildNumber:
-    Standalone: 20
-    iOS: 1.2.21
-  AndroidBundleVersionCode: 21
-  AndroidMinSdkVersion: 21
+  applicationIdentifier: {}
+  buildNumber: {}
+  AndroidBundleVersionCode: 1
+  AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 
-  stripEngineCode: 0
+  stripEngineCode: 1
   iPhoneStrippingLevel: 0
   iPhoneScriptCallOptimization: 0
-  ForceInternetPermission: 1
+  ForceInternetPermission: 0
   ForceSDCardPermission: 0
   CreateWallpaper: 0
   APKExpansionFiles: 0
@@ -182,12 +175,12 @@ PlayerSettings:
   StripUnusedMeshComponents: 0
   VertexChannelCompressionMask:
     serializedVersion: 2
-    m_Bits: 4294901998
+    m_Bits: 238
   iPhoneSdkVersion: 988
-  iOSTargetOSVersionString: 9.0
+  iOSTargetOSVersionString: 
   tvOSSdkVersion: 0
   tvOSRequireExtendedGameController: 0
-  tvOSTargetOSVersionString: 9.0
+  tvOSTargetOSVersionString: 
   uIPrerenderedIcon: 0
   uIRequiresPersistentWiFi: 0
   uIRequiresFullScreen: 1
@@ -211,7 +204,6 @@ PlayerSettings:
   tvOSSmallIconLayers: []
   tvOSSmallIconLayers2x: []
   tvOSLargeIconLayers: []
-  tvOSLargeIconLayers2x: []
   tvOSTopShelfImageLayers: []
   tvOSTopShelfImageLayers2x: []
   tvOSTopShelfImageWideLayers: []
@@ -239,10 +231,10 @@ PlayerSettings:
   iOSURLSchemes: []
   iOSBackgroundModes: 0
   iOSMetalForceHardShadows: 0
-  metalEditorSupport: 0
+  metalEditorSupport: 1
   metalAPIValidation: 1
-  iOSRenderExtraFrameOnPause: 1
-  appleDeveloperTeamID: 52MB43Y5GZ
+  iOSRenderExtraFrameOnPause: 0
+  appleDeveloperTeamID: 
   iOSManualSigningProvisioningProfileID: 
   tvOSManualSigningProvisioningProfileID: 
   appleEnableAutomaticSigning: 0
@@ -255,7 +247,7 @@ PlayerSettings:
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   AndroidEnableTango: 0
-  androidEnableBanner: 0
+  androidEnableBanner: 1
   androidUseLowAccuracyLocation: 0
   m_AndroidBanners:
   - width: 320
@@ -263,177 +255,7 @@ PlayerSettings:
     banner: {fileID: 0}
   androidGamepadSupportLevel: 0
   resolutionDialogBanner: {fileID: 0}
-  m_BuildTargetIcons:
-  - m_BuildTarget: iPhone
-    m_Icons:
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 180
-      m_Height: 180
-      m_Kind: 0
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 167
-      m_Height: 167
-      m_Kind: 0
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 152
-      m_Height: 152
-      m_Kind: 0
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 144
-      m_Height: 144
-      m_Kind: 0
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 120
-      m_Height: 120
-      m_Kind: 0
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 114
-      m_Height: 114
-      m_Kind: 0
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 76
-      m_Height: 76
-      m_Kind: 0
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 72
-      m_Height: 72
-      m_Kind: 0
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 57
-      m_Height: 57
-      m_Kind: 0
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 120
-      m_Height: 120
-      m_Kind: 3
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 80
-      m_Height: 80
-      m_Kind: 3
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 40
-      m_Height: 40
-      m_Kind: 3
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 87
-      m_Height: 87
-      m_Kind: 1
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 58
-      m_Height: 58
-      m_Kind: 1
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 29
-      m_Height: 29
-      m_Kind: 1
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 60
-      m_Height: 60
-      m_Kind: 2
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 40
-      m_Height: 40
-      m_Kind: 2
-    - serializedVersion: 2
-      m_Icon: {fileID: 0}
-      m_Width: 20
-      m_Height: 20
-      m_Kind: 2
-    - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: b92a45c427660924cb7b918bda776ca8, type: 3}
-      m_Width: 1024
-      m_Height: 1024
-      m_Kind: 4
-  - m_BuildTarget: 
-    m_Icons:
-    - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 6f816a38e3234dc49b3e98e52fdf5743, type: 3}
-      m_Width: 128
-      m_Height: 128
-      m_Kind: 0
-<<<<<<< HEAD
-  m_BuildTargetPlatformIcons:
-  - m_BuildTarget: Android
-    m_Icons:
-    - m_Textures: []
-      m_Width: 432
-      m_Height: 432
-      m_Kind: 2
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 324
-      m_Height: 324
-      m_Kind: 2
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 216
-      m_Height: 216
-      m_Kind: 2
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 162
-      m_Height: 162
-      m_Kind: 2
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 108
-      m_Height: 108
-      m_Kind: 2
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 81
-      m_Height: 81
-      m_Kind: 2
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 192
-      m_Height: 192
-      m_Kind: 1
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 144
-      m_Height: 144
-      m_Kind: 1
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 96
-      m_Height: 96
-      m_Kind: 1
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 72
-      m_Height: 72
-      m_Kind: 1
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 48
-      m_Height: 48
-      m_Kind: 1
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 36
-      m_Height: 36
-      m_Kind: 1
-      m_SubKind: 
-=======
->>>>>>> 00701fb7842e3061d626b7d43f1846d7aae0ceab
+  m_BuildTargetIcons: []
   m_BuildTargetBatching: []
   m_BuildTargetGraphicsAPIs: []
   m_BuildTargetVRSettings: []
@@ -445,13 +267,7 @@ PlayerSettings:
     Android: 1
     iPhone: 1
     tvOS: 1
-  m_BuildTargetGroupLightmapEncodingQuality:
-  - m_BuildTarget: Standalone
-    m_EncodingQuality: 1
-  - m_BuildTarget: XboxOne
-    m_EncodingQuality: 1
-  - m_BuildTarget: PS4
-    m_EncodingQuality: 1
+  m_BuildTargetGroupLightmapEncodingQuality: []
   wiiUTitleID: 0005000011000000
   wiiUGroupID: 00010000
   wiiUCommonSaveSize: 4096
@@ -475,7 +291,7 @@ PlayerSettings:
   enableInternalProfiler: 0
   logObjCUncaughtExceptions: 1
   enableCrashReportAPI: 0
-  cameraUsageDescription: Used for Voyager lamp detection
+  cameraUsageDescription: 
   locationUsageDescription: 
   microphoneUsageDescription: 
   switchNetLibKey: 
@@ -484,7 +300,7 @@ PlayerSettings:
   switchSocketConcurrencyLimit: 14
   switchScreenResolutionBehavior: 2
   switchUseCPUProfiler: 0
-  switchApplicationID: 0x0005000C10000001
+  switchApplicationID: 0x01004b9000490000
   switchNSODependencies: 
   switchTitleNames_0: 
   switchTitleNames_1: 
@@ -550,7 +366,7 @@ PlayerSettings:
   switchAccessibleURLs: 
   switchLegalInformation: 
   switchMainThreadStackSize: 1048576
-  switchPresenceGroupId: 0x0005000C10000001
+  switchPresenceGroupId: 
   switchLogoHandling: 0
   switchReleaseVersion: 0
   switchDisplayVersion: 1.0.0
@@ -562,8 +378,8 @@ PlayerSettings:
   switchUserAccountSaveDataSize: 0
   switchUserAccountSaveDataJournalSize: 0
   switchApplicationAttribute: 0
-  switchCardSpecSize: 4
-  switchCardSpecClock: 25
+  switchCardSpecSize: -1
+  switchCardSpecClock: -1
   switchRatingsMask: 0
   switchRatingsInt_0: 0
   switchRatingsInt_1: 0
@@ -577,7 +393,7 @@ PlayerSettings:
   switchRatingsInt_9: 0
   switchRatingsInt_10: 0
   switchRatingsInt_11: 0
-  switchLocalCommunicationIds_0: 0x0005000C10000001
+  switchLocalCommunicationIds_0: 
   switchLocalCommunicationIds_1: 
   switchLocalCommunicationIds_2: 
   switchLocalCommunicationIds_3: 
@@ -605,7 +421,7 @@ PlayerSettings:
   ps4NPAgeRating: 12
   ps4NPTitleSecret: 
   ps4NPTrophyPackPath: 
-  ps4ParentalLevel: 1
+  ps4ParentalLevel: 11
   ps4ContentID: ED1633-NPXX51362_00-0000000000000000
   ps4Category: 0
   ps4MasterVersion: 01.00
@@ -615,7 +431,7 @@ PlayerSettings:
   ps4VideoOutPixelFormat: 0
   ps4VideoOutInitialWidth: 1920
   ps4VideoOutBaseModeInitialWidth: 1920
-  ps4VideoOutReprojectionRate: 120
+  ps4VideoOutReprojectionRate: 60
   ps4PronunciationXMLPath: 
   ps4PronunciationSIGPath: 
   ps4BackgroundImagePath: 
@@ -640,7 +456,7 @@ PlayerSettings:
   ps4DownloadDataSize: 0
   ps4GarlicHeapSize: 2048
   ps4ProGarlicHeapSize: 2560
-  ps4Passcode: 5PN2qmWqBlQ9wQj99nsQzldVI5ZuGXbE
+  ps4Passcode: TmvHeuSEBMSPh2Q6dQAjy4KjsfSXF4YP
   ps4pnSessions: 1
   ps4pnPresence: 1
   ps4pnFriends: 1
@@ -651,7 +467,7 @@ PlayerSettings:
   ps4ReprojectionSupport: 0
   ps4UseAudio3dBackend: 0
   ps4SocialScreenEnabled: 0
-  ps4ScriptOptimizationLevel: 3
+  ps4ScriptOptimizationLevel: 0
   ps4Audio3dVirtualSpeakerCount: 14
   ps4attribCpuUsage: 0
   ps4PatchPkgPath: 
@@ -686,7 +502,7 @@ PlayerSettings:
   psp2LiveAreaTrialPath: 
   psp2PatchChangeInfoPath: 
   psp2PatchOriginalPackage: 
-  psp2PackagePassword: WRK5RhRXdCdG5nG5azdNMK66MuCV6GXi
+  psp2PackagePassword: 8arF3SLLny30KKziHtRbOE2u8qvJP3B6
   psp2KeystoneFile: 
   psp2MemoryExpansionMode: 0
   psp2DRMType: 0
@@ -732,12 +548,7 @@ PlayerSettings:
   webGLUseEmbeddedResources: 0
   webGLUseWasm: 0
   webGLCompressionFormat: 1
-  scriptingDefineSymbols:
-    1: NATCAM_16;NATCAM_CORE;NATCAM_PRO
-    4: NATCAM_16;INATCAM_C;NATCAM_CORE;NATCAM_PRO
-    7: NATCAM_16;NATCAM_CORE;NATCAM_PRO
-    13: NATCAM_16;NATCAM_CORE;NATCAM_PRO
-    14: NATCAM_16;NATCAM_CORE;NATCAM_PRO
+  scriptingDefineSymbols: {}
   platformArchitecture: {}
   scriptingBackend: {}
   incrementalIl2cppBuild: {}
@@ -746,14 +557,14 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Click order test
+  metroPackageName: DS-Voyager-controller
   metroPackageVersion: 
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: Click order test
+  metroApplicationDescription: DS-Voyager-controller
   wsaImages: {}
   metroTileShortName: 
   metroCommandLineArgsFile: 
@@ -818,17 +629,12 @@ PlayerSettings:
     daydream:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
-  cloudServicesEnabled:
-    Build: 1
-    Collab: 1
-    ErrorHub: 0
-    Hub: 0
-    UNet: 1
-  facebookSdkVersion: 7.9.1
+  cloudServicesEnabled: {}
+  facebookSdkVersion: 
   apiCompatibilityLevel: 2
-  cloudProjectId: e869ad5a-2053-4622-89e2-6de79ea08e65
-  projectName: DS Voyager controller
-  organizationId: digital-sputnik-lighting
+  cloudProjectId: 
+  projectName: 
+  organizationId: 
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
