@@ -44,6 +44,8 @@ public class SetupScripts : MonoBehaviour {
     public GameObject ShortLamp;
     public GameObject LongLamp3;
     public GameObject ShortLamp3;
+    public GameObject DS3Lamp;
+    public GameObject DSBeam;
     public AnimationSender animSender;
     public GameObject UpdateWindow;
 	public GameObject AboutWindow;
@@ -213,6 +215,8 @@ public class SetupScripts : MonoBehaviour {
                     try
                     {
                         UDPResponse response = JsonConvert.DeserializeObject<UDPResponse>(Encoding.UTF8.GetString(ReceivedMessageBytes));
+                        Debug.Log("Got lamp");
+                        Debug.Log(Encoding.UTF8.GetString(ReceivedMessageBytes));
                         LightIP = new IPAddress(response.IP);
                         numPixels = response.length;
                         lampMacName = response.serial_name;
@@ -329,12 +333,12 @@ public class SetupScripts : MonoBehaviour {
 
             if (UpdateLampWithIPs.Count > 0)
             {
-                IPtoProps.Clear();
-                LampIPtoLengthDictionary.Clear();
-                newLampIPtoLengthDictionary.Clear();
-                CancelDetection = true;
-                UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
-                isPollingActive = false;
+                //IPtoProps.Clear();
+                //LampIPtoLengthDictionary.Clear();
+                //newLampIPtoLengthDictionary.Clear();
+                //CancelDetection = true;
+                //UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
+                //isPollingActive = false;
             }
 
             
@@ -399,6 +403,14 @@ public class SetupScripts : MonoBehaviour {
                 case 83:
                     LampProperties.Lamp = LongLamp3;
                     LampName = "Long Voyager";
+                    break;
+                case 3:
+                    LampProperties.Lamp = DS3Lamp;
+                    LampName = "DS3 x 3";
+                    break;
+                case 18:
+                    LampProperties.Lamp = DSBeam;
+                    LampName = "DSBeam";
                     break;
             }
             

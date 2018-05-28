@@ -67,7 +67,7 @@ namespace NatCamU.Pro {
 
         public override void OnFrame () {
             // Get the preview matrix and call OnMatrix
-            if (NatCam.PreviewMatrix(ref _matrix)) OnMatrix();
+            //if (NatCam.PreviewMatrix(ref _matrix)) OnMatrix();
         }
 
         /// <summary>
