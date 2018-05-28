@@ -221,12 +221,12 @@ public class DrawScripts : MonoBehaviour {
         newAnim8.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim8);
 
-        //LightAnims newAnim9 = new LightAnims();
-        //newAnim9.AnimName = "Video Stream";
-        //newAnim9.AnimProperties.Add(new Property("Color1", "color", streamColor, 0, 0));
-        //newAnim9.AnimProperties.Add(new Property("Gammax10", "int", 22, 10, 30));
-        //newAnim9.AnimProperties.Add(new Property("VideoStream", "stream", 0, 0, 0));
-        //animations.Add(newAnim9);
+        LightAnims newAnim9 = new LightAnims();
+        newAnim9.AnimName = "Video Stream";
+        newAnim9.AnimProperties.Add(new Property("Color1", "color", streamColor, 0, 0));
+        newAnim9.AnimProperties.Add(new Property("Gammax10", "int", 22, 10, 30));
+        newAnim9.AnimProperties.Add(new Property("VideoStream", "stream", 0, 0, 0));
+        animations.Add(newAnim9);
 
 
         //Add animation names to Dropdown
