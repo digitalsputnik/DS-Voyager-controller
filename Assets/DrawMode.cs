@@ -101,6 +101,7 @@ public class DrawMode : MonoBehaviour {
                 //if (!EventSystem.current.IsPointerOverGameObject())
                 //{
                     //Debug.Log("Lamp pixel was hit.........................");
+                    //hit.transform.gameObject.GetComponent<Renderer>().material.color = Color.white; 
                     currentLamp = hit.transform.parent.parent.gameObject;
                     lastLamp = currentLamp;
                     paintLamp = true;

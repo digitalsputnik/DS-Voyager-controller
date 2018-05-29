@@ -254,7 +254,7 @@ public class SetupScripts : MonoBehaviour {
 
 
                 //Update checking
-                if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
+                if (!UpdateLampWithIPs.Contains(LightIP.ToString()) && numPixels != 3 && numPixels != 18)
                 {
                     //Debug!!
                     //UpdateLampWithIPs.Add(LightIP.ToString());
@@ -333,12 +333,12 @@ public class SetupScripts : MonoBehaviour {
 
             if (UpdateLampWithIPs.Count > 0)
             {
-                //IPtoProps.Clear();
-                //LampIPtoLengthDictionary.Clear();
-                //newLampIPtoLengthDictionary.Clear();
-                //CancelDetection = true;
-                //UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
-                //isPollingActive = false;
+                IPtoProps.Clear();
+                LampIPtoLengthDictionary.Clear();
+                newLampIPtoLengthDictionary.Clear();
+                CancelDetection = true;
+                UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
+                isPollingActive = false;
             }
 
             

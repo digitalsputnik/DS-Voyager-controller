@@ -29,6 +29,7 @@ public class VideoStream : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        Debug.Log("VideoStream script started.......");
         //NOTE: Quick hack because switching all the references is too much work at this point
         animSender = GameObject.Find("AnimationControl").GetComponent<AnimationSender>();
         mediaPlayer = GameObject.Find("UniversalMediaPlayer").GetComponent<UniversalMediaPlayer>();
@@ -76,21 +77,21 @@ public class VideoStream : MonoBehaviour {
                 //Find total number of lamp pixels
                 var numPixelsToDraw = this.gameObject.GetComponent<Ribbon>().pipeLength;
 
-                pixelsToDraw = this.gameObject.GetComponent<DragAndDropHandler>().VideoPixels;
+                //pixelsToDraw = this.gameObject.GetComponent<DragAndDropHandler>().VideoPixels;
                 string pixelName;
 
                 //Start drawing pixels
                 for (int i = 0; i < numPixelsToDraw; i++)
                 {
-                    if (pixelsToDraw.Count > 0)
-                    {
-                        Debug.Log("DragAndDropHandler returned pixels to draw........");
-                        pixelName = "pixel" + pixelsToDraw[i];
-                    }
-                    else
-                    {
+                    //if (pixelsToDraw.Count > 0)
+                    //{
+                    //    Debug.Log("DragAndDropHandler returned pixels to draw........");
+                    //    pixelName = "pixel" + pixelsToDraw[i];
+                    //}
+                    //else
+                    //{
                         pixelName = "pixel" + i;
-                    }
+                    //}
 
                     //TODO: Move calculation to OnDrag!
                     var lampPixelLED = transform.Find(pixelName).Find("LEDmodule");
