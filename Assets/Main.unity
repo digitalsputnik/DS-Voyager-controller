@@ -36528,12 +36528,28 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 16}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: [{fileID: 201866765}, {fileID: 1023671945}, {fileID: 542564402}, {fileID: 1354101150},
-    {fileID: 861041671}, {fileID: 1712387128}, {fileID: 60659294}, {fileID: 725597173},
-    {fileID: 1487590359}, {fileID: 284956218}, {fileID: 462808753}, {fileID: 1168175428},
-    {fileID: 690873128}, {fileID: 1164558699}, {fileID: 688848036}, {fileID: 1779486264},
-    {fileID: 348066531}, {fileID: 1666317132}, {fileID: 73331314}, {fileID: 2037799313},
-    {fileID: 220501953}]
+  m_Children:
+  - {fileID: 201866765}
+  - {fileID: 1023671945}
+  - {fileID: 542564402}
+  - {fileID: 1354101150}
+  - {fileID: 861041671}
+  - {fileID: 1712387128}
+  - {fileID: 60659294}
+  - {fileID: 725597173}
+  - {fileID: 1487590359}
+  - {fileID: 284956218}
+  - {fileID: 462808753}
+  - {fileID: 1168175428}
+  - {fileID: 690873128}
+  - {fileID: 1164558699}
+  - {fileID: 688848036}
+  - {fileID: 1779486264}
+  - {fileID: 348066531}
+  - {fileID: 1666317132}
+  - {fileID: 73331314}
+  - {fileID: 2037799313}
+  - {fileID: 220501953}
   m_Father: {fileID: 1400527965}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -78354,6 +78370,8 @@ MonoBehaviour:
   ShortLamp: {fileID: 1657679386}
   LongLamp3: {fileID: 934283040}
   ShortLamp3: {fileID: 1177545563}
+  DS3Lamp: {fileID: 992454837}
+  DSBeam: {fileID: 726562809}
   animSender: {fileID: 1468842241}
   UpdateWindow: {fileID: 335472127}
   AboutWindow: {fileID: 1373103117}
