@@ -28,9 +28,8 @@ public class LampSettings : MonoBehaviour {
     void Start () {
 
         ListenerToggleButton.onClick.AddListener(TogglePacketListener);
-        SaveButton.onClick.AddListener(SaveLampStatus);
-        //MasterToggle.onValueChanged.AddListener(GetLampStatus);
-        ClientToggle.onValueChanged.AddListener(GetClientProperties);
+        //SaveButton.onClick.AddListener(SaveLampStatus);
+        //ClientToggle.onValueChanged.AddListener(GetClientProperties);
 
         selectedLamps = new List<GameObject>();
     }
@@ -135,7 +134,7 @@ public class LampSettings : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
+        //Lamp selection
         if (Input.GetMouseButtonUp(0))
         {
             currentLamp = null;
@@ -161,37 +160,51 @@ public class LampSettings : MonoBehaviour {
             {
                 
                 currentLamp = hit.transform.parent.parent.gameObject;
-                Debug.Log("Selected lamp = " + currentLamp.name);
+                //Debug.Log("Selected lamp = " + currentLamp.name);
                 if (selectedLamps.Contains(currentLamp))
                 {
                     selectedLamps.Remove(currentLamp);
-                    currentLamp.transform.Find("Canvas").Find("Text").GetComponent<Text>().color = Color.white;
+                    if (currentLamp.GetComponent<Ribbon>().pipeLength == 3)
+                    {
+                        currentLamp.transform.Find("pixel0").Find("Canvas").Find("Text").GetComponent<Text>().color = Color.white;
+                    }
+                    else
+                    {
+                        currentLamp.transform.Find("Canvas").Find("Text").GetComponent<Text>().color = Color.white;
+                    }
                     if (selectedLamps.Count == 0)
                     {
                         ListenerToggleButton.gameObject.SetActive(false);
-                        MasterToggle.gameObject.SetActive(false);
+                        /*MasterToggle.gameObject.SetActive(false);
                         ClientToggle.gameObject.SetActive(false);
                         SSID.SetActive(false);
                         Password.SetActive(false);
                         SaveButton.gameObject.SetActive(false);
-                        LampStatusPanel.transform.Find("HeadingText").gameObject.SetActive(false);
+                        LampStatusPanel.transform.Find("HeadingText").gameObject.SetActive(false); */
                         LampStatusPanel.transform.Find("MessageText").gameObject.SetActive(true);
                     }
                 }
                 else
                 {
                     selectedLamps.Add(currentLamp);
-                    currentLamp.transform.Find("Canvas").Find("Text").GetComponent<Text>().color = Color.red;
+                    if (currentLamp.GetComponent<Ribbon>().pipeLength == 3)
+                    {
+                        currentLamp.transform.Find("pixel0").Find("Canvas").Find("Text").GetComponent<Text>().color = Color.red;
+                    }
+                    else
+                    {
+                        currentLamp.transform.Find("Canvas").Find("Text").GetComponent<Text>().color = Color.red;
+                    }
                     if (LampStatusPanel.transform.Find("MessageText").gameObject.activeSelf)
                     {
                         //Remove Message Text
                         LampStatusPanel.transform.Find("MessageText").gameObject.SetActive(false);
                         //Enable Lamp properties
                         ListenerToggleButton.gameObject.SetActive(true);
-                        LampStatusPanel.transform.Find("HeadingText").gameObject.SetActive(true);
+                        /*LampStatusPanel.transform.Find("HeadingText").gameObject.SetActive(true);
                         MasterToggle.gameObject.SetActive(true);
                         ClientToggle.gameObject.SetActive(true);
-                        SaveButton.gameObject.SetActive(true);
+                        SaveButton.gameObject.SetActive(true);*/
                     }
                 }
                  
