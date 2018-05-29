@@ -572,7 +572,7 @@ public class AnimationSender : MonoBehaviour
         MergedStroke.PixelQueueToControlledPixel = OriginalStroke.PixelQueueToControlledPixel.Concat(ImportStroke.PixelQueueToControlledPixel).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.FirstOrDefault().Value);
         foreach (var item in MergedStroke.PixelQueueToControlledPixel.Keys)
         {
-            Debug.Log(item);
+            //Debug.Log(item);
         }
         SelectPixelsFromDictionary(MergedStroke);
 
@@ -829,7 +829,7 @@ public class AnimationSender : MonoBehaviour
     byte[] SendJSONToLamp(object messageObject, IPEndPoint lampEndPoint)
     {
         var jsonString = JsonConvert.SerializeObject(messageObject);
-        Debug.Log(jsonString);
+        //Debug.Log(jsonString);
         byte[] data = Encoding.ASCII.GetBytes(jsonString);
         SendDataToLamp(data, lampEndPoint);
         return data;
@@ -895,7 +895,7 @@ public class AnimationSender : MonoBehaviour
         {
             if (StrokeJSONData != null && LampIPList.Count > 0)
             {
-				Debug.Log("sending video");
+				//Debug.Log("sending video");
                 //if (ActiveStroke.layer.PixelToStrokeIDDictionary.Any(x => x.Value.FirstOrDefault().Animation == "Video Stream"))
                 //{
                     foreach (var lampIP in LampIPList)

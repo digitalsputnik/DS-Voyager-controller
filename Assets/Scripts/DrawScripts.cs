@@ -982,9 +982,34 @@ public class DrawScripts : MonoBehaviour {
 				for (int i = 0; i < lightCount; i++)
 				{
 					var light = workSpace.transform.GetChild(i);
-					light.Find("DragAndDrop1").gameObject.SetActive(false);
-					light.Find("DragAndDrop2").gameObject.SetActive(false);
-					light.Find("Canvas").gameObject.SetActive(false);
+                    var pipeLength = light.GetComponent<Ribbon>().pipeLength;
+                    if (pipeLength == 3)
+                    {
+                        var pix0 = light.Find("pixel0");
+                        pix0.Find("DragAndDrop1").gameObject.SetActive(false);
+                        pix0.Find("DragAndDrop2").gameObject.SetActive(false);
+                        pix0.Find("DragAndDrop2").gameObject.SetActive(false);
+                        pix0.Find("Canvas").gameObject.SetActive(false);
+
+                        var pix1 = light.Find("pixel1");
+                        pix1.Find("DragAndDrop1").gameObject.SetActive(false);
+                        pix1.Find("DragAndDrop2").gameObject.SetActive(false);
+                        pix1.Find("DragAndDrop2").gameObject.SetActive(false);
+                        pix1.Find("Canvas").gameObject.SetActive(false);
+
+                        var pix2 = light.Find("pixel2");
+                        pix2.Find("DragAndDrop1").gameObject.SetActive(false);
+                        pix2.Find("DragAndDrop2").gameObject.SetActive(false);
+                        pix2.Find("DragAndDrop2").gameObject.SetActive(false);
+                        pix2.Find("Canvas").gameObject.SetActive(false);
+
+                    }
+                    else
+                    {
+                        light.Find("DragAndDrop1").gameObject.SetActive(false);
+                        light.Find("DragAndDrop2").gameObject.SetActive(false);
+                        light.Find("Canvas").gameObject.SetActive(false);
+                    }
 				}
 
 				break;
@@ -994,22 +1019,72 @@ public class DrawScripts : MonoBehaviour {
 				lightCount = workSpace.transform.childCount;
 				for (int i = 0; i < lightCount; i++)
 				{
-					var light = workSpace.transform.GetChild(i);
-					light.Find("DragAndDrop1").gameObject.SetActive(true);
-					light.Find("DragAndDrop2").gameObject.SetActive(true);
-					light.Find("Canvas").gameObject.SetActive(true);
-				}
+                    var light = workSpace.transform.GetChild(i);
+                    var pipeLength = light.GetComponent<Ribbon>().pipeLength;
+                    if (pipeLength == 3)
+                    {
+                        var pix0 = light.Find("pixel0");
+                        pix0.Find("DragAndDrop1").gameObject.SetActive(true);
+                        pix0.Find("DragAndDrop2").gameObject.SetActive(true);
+                        pix0.Find("DragAndDrop2").gameObject.SetActive(true);
+                        pix0.Find("Canvas").gameObject.SetActive(true);
+
+                        var pix1 = light.Find("pixel1");
+                        pix1.Find("DragAndDrop1").gameObject.SetActive(true);
+                        pix1.Find("DragAndDrop2").gameObject.SetActive(true);
+                        pix1.Find("DragAndDrop2").gameObject.SetActive(true);
+                        pix1.Find("Canvas").gameObject.SetActive(true);
+
+                        var pix2 = light.Find("pixel2");
+                        pix2.Find("DragAndDrop1").gameObject.SetActive(true);
+                        pix2.Find("DragAndDrop2").gameObject.SetActive(true);
+                        pix2.Find("DragAndDrop2").gameObject.SetActive(true);
+                        pix2.Find("Canvas").gameObject.SetActive(true);
+
+                    }
+                    else
+                    {
+                        light.Find("DragAndDrop1").gameObject.SetActive(true);
+                        light.Find("DragAndDrop2").gameObject.SetActive(true);
+                        light.Find("Canvas").gameObject.SetActive(true);
+                    }
+                }
 				break;
 			default: //Paint Lamp
 				drawMode.SetActive(true);
 				lightCount = workSpace.transform.childCount;
 				for (int i = 0; i < lightCount; i++)
 				{
-					var light = workSpace.transform.GetChild(i);
-					light.Find("DragAndDrop1").gameObject.SetActive(false);
-					light.Find("DragAndDrop2").gameObject.SetActive(false);
-					light.Find("Canvas").gameObject.SetActive(false);
-				}			
+                    var light = workSpace.transform.GetChild(i);
+                    var pipeLength = light.GetComponent<Ribbon>().pipeLength;
+                    if (pipeLength == 3)
+                    {
+                        var pix0 = light.Find("pixel0");
+                        pix0.Find("DragAndDrop1").gameObject.SetActive(false);
+                        pix0.Find("DragAndDrop2").gameObject.SetActive(false);
+                        pix0.Find("DragAndDrop2").gameObject.SetActive(false);
+                        pix0.Find("Canvas").gameObject.SetActive(false);
+
+                        var pix1 = light.Find("pixel1");
+                        pix1.Find("DragAndDrop1").gameObject.SetActive(false);
+                        pix1.Find("DragAndDrop2").gameObject.SetActive(false);
+                        pix1.Find("DragAndDrop2").gameObject.SetActive(false);
+                        pix1.Find("Canvas").gameObject.SetActive(false);
+
+                        var pix2 = light.Find("pixel2");
+                        pix2.Find("DragAndDrop1").gameObject.SetActive(false);
+                        pix2.Find("DragAndDrop2").gameObject.SetActive(false);
+                        pix2.Find("DragAndDrop2").gameObject.SetActive(false);
+                        pix2.Find("Canvas").gameObject.SetActive(false);
+
+                    }
+                    else
+                    {
+                        light.Find("DragAndDrop1").gameObject.SetActive(false);
+                        light.Find("DragAndDrop2").gameObject.SetActive(false);
+                        light.Find("Canvas").gameObject.SetActive(false);
+                    }
+                }			
 				break;
 		}
 	}
