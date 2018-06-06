@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,51 +6,52 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class SuperpixelSEEDS
-//javadoc: SuperpixelSEEDS
+    // C++: class SuperpixelSEEDS
+    //javadoc: SuperpixelSEEDS
+
     public class SuperpixelSEEDS : Algorithm
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        ximgproc_SuperpixelSEEDS_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+ximgproc_SuperpixelSEEDS_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal SuperpixelSEEDS (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal SuperpixelSEEDS (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new SuperpixelSEEDS __fromPtr__ (IntPtr addr) { return new SuperpixelSEEDS (addr); }
 
         //
         // C++:  int getNumberOfSuperpixels()
         //
 
         //javadoc: SuperpixelSEEDS::getNumberOfSuperpixels()
-        public  int getNumberOfSuperpixels ()
+        public int getNumberOfSuperpixels ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ximgproc_SuperpixelSEEDS_getNumberOfSuperpixels_10 (nativeObj);
+        int retVal = ximgproc_SuperpixelSEEDS_getNumberOfSuperpixels_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -62,35 +60,33 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SuperpixelSEEDS::getLabelContourMask(image, thick_line)
-        public  void getLabelContourMask (Mat image, bool thick_line)
+        public void getLabelContourMask (Mat image, bool thick_line)
         {
             ThrowIfDisposed ();
-            if (image != null)
-                image.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (image != null) image.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_SuperpixelSEEDS_getLabelContourMask_10 (nativeObj, image.nativeObj, thick_line);
+        ximgproc_SuperpixelSEEDS_getLabelContourMask_10(nativeObj, image.nativeObj, thick_line);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
         //javadoc: SuperpixelSEEDS::getLabelContourMask(image)
-        public  void getLabelContourMask (Mat image)
+        public void getLabelContourMask (Mat image)
         {
             ThrowIfDisposed ();
-            if (image != null)
-                image.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (image != null) image.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_SuperpixelSEEDS_getLabelContourMask_11 (nativeObj, image.nativeObj);
+        ximgproc_SuperpixelSEEDS_getLabelContourMask_11(nativeObj, image.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -99,19 +95,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SuperpixelSEEDS::getLabels(labels_out)
-        public  void getLabels (Mat labels_out)
+        public void getLabels (Mat labels_out)
         {
             ThrowIfDisposed ();
-            if (labels_out != null)
-                labels_out.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (labels_out != null) labels_out.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_SuperpixelSEEDS_getLabels_10 (nativeObj, labels_out.nativeObj);
+        ximgproc_SuperpixelSEEDS_getLabels_10(nativeObj, labels_out.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -120,70 +115,66 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SuperpixelSEEDS::iterate(img, num_iterations)
-        public  void iterate (Mat img, int num_iterations)
+        public void iterate (Mat img, int num_iterations)
         {
             ThrowIfDisposed ();
-            if (img != null)
-                img.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (img != null) img.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_SuperpixelSEEDS_iterate_10 (nativeObj, img.nativeObj, num_iterations);
+        ximgproc_SuperpixelSEEDS_iterate_10(nativeObj, img.nativeObj, num_iterations);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
         //javadoc: SuperpixelSEEDS::iterate(img)
-        public  void iterate (Mat img)
+        public void iterate (Mat img)
         {
             ThrowIfDisposed ();
-            if (img != null)
-                img.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (img != null) img.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_SuperpixelSEEDS_iterate_11 (nativeObj, img.nativeObj);
+        ximgproc_SuperpixelSEEDS_iterate_11(nativeObj, img.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  int getNumberOfSuperpixels()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ximgproc_SuperpixelSEEDS_getNumberOfSuperpixels_10 (IntPtr nativeObj);
 
         // C++:  void getLabelContourMask(Mat& image, bool thick_line = false)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_SuperpixelSEEDS_getLabelContourMask_10 (IntPtr nativeObj, IntPtr image_nativeObj, bool thick_line);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_SuperpixelSEEDS_getLabelContourMask_11 (IntPtr nativeObj, IntPtr image_nativeObj);
 
         // C++:  void getLabels(Mat& labels_out)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_SuperpixelSEEDS_getLabels_10 (IntPtr nativeObj, IntPtr labels_out_nativeObj);
 
         // C++:  void iterate(Mat img, int num_iterations = 4)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_SuperpixelSEEDS_iterate_10 (IntPtr nativeObj, IntPtr img_nativeObj, int num_iterations);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_SuperpixelSEEDS_iterate_11 (IntPtr nativeObj, IntPtr img_nativeObj);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_SuperpixelSEEDS_delete (IntPtr nativeObj);
 
     }

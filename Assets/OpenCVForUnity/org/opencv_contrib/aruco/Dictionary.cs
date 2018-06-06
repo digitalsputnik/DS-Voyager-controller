@@ -1,39 +1,79 @@
 
-//
 
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace OpenCVForUnity
 {
-// C++: class Dictionary
-//javadoc: Dictionary
+    // C++: class Dictionary
+    //javadoc: Dictionary
+
     public class Dictionary : DisposableOpenCVObject
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        aruco_Dictionary_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+aruco_Dictionary_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal Dictionary (IntPtr addr) : base(addr)
+        protected internal Dictionary (IntPtr addr) : base (addr) { }
+
+
+        public IntPtr getNativeObjAddr () { return nativeObj; }
+
+        // internal usage only
+        public static Dictionary __fromPtr__ (IntPtr addr) { return new Dictionary (addr); }
+
+        //
+        // C++: static Mat getBitsFromByteList(Mat byteList, int markerSize)
+        //
+
+        //javadoc: Dictionary::getBitsFromByteList(byteList, markerSize)
+        public static Mat getBitsFromByteList (Mat byteList, int markerSize)
         {
+            if (byteList != null) byteList.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        
+        Mat retVal = new Mat(aruco_Dictionary_getBitsFromByteList_10(byteList.nativeObj, markerSize));
+        
+        return retVal;
+#else
+            return null;
+#endif
+        }
+
+
+        //
+        // C++: static Mat getByteListFromBits(Mat bits)
+        //
+
+        //javadoc: Dictionary::getByteListFromBits(bits)
+        public static Mat getByteListFromBits (Mat bits)
+        {
+            if (bits != null) bits.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        
+        Mat retVal = new Mat(aruco_Dictionary_getByteListFromBits_10(bits.nativeObj));
+        
+        return retVal;
+#else
+            return null;
+#endif
         }
 
 
@@ -44,16 +84,15 @@ namespace OpenCVForUnity
         //javadoc: Dictionary::create(nMarkers, markerSize, baseDictionary)
         public static Dictionary create_from (int nMarkers, int markerSize, Dictionary baseDictionary)
         {
-            if (baseDictionary != null)
-                baseDictionary.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (baseDictionary != null) baseDictionary.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Dictionary retVal = new Dictionary (aruco_Dictionary_create_1from_10 (nMarkers, markerSize, baseDictionary.nativeObj));
+        Dictionary retVal = Dictionary.__fromPtr__(aruco_Dictionary_create_1from_10(nMarkers, markerSize, baseDictionary.getNativeObjAddr()));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -64,14 +103,14 @@ namespace OpenCVForUnity
         //javadoc: Dictionary::create(nMarkers, markerSize)
         public static Dictionary create (int nMarkers, int markerSize)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Dictionary retVal = new Dictionary (aruco_Dictionary_create_10 (nMarkers, markerSize));
+        Dictionary retVal = Dictionary.__fromPtr__(aruco_Dictionary_create_10(nMarkers, markerSize));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -82,14 +121,14 @@ namespace OpenCVForUnity
         //javadoc: Dictionary::get(dict)
         public static Dictionary get (int dict)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Dictionary retVal = new Dictionary (aruco_Dictionary_get_10 (dict));
+        Dictionary retVal = Dictionary.__fromPtr__(aruco_Dictionary_get_10(dict));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -98,35 +137,33 @@ namespace OpenCVForUnity
         //
 
         //javadoc: Dictionary::drawMarker(id, sidePixels, _img, borderBits)
-        public  void drawMarker (int id, int sidePixels, Mat _img, int borderBits)
+        public void drawMarker (int id, int sidePixels, Mat _img, int borderBits)
         {
             ThrowIfDisposed ();
-            if (_img != null)
-                _img.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (_img != null) _img.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_Dictionary_drawMarker_10 (nativeObj, id, sidePixels, _img.nativeObj, borderBits);
+        aruco_Dictionary_drawMarker_10(nativeObj, id, sidePixels, _img.nativeObj, borderBits);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
         //javadoc: Dictionary::drawMarker(id, sidePixels, _img)
-        public  void drawMarker (int id, int sidePixels, Mat _img)
+        public void drawMarker (int id, int sidePixels, Mat _img)
         {
             ThrowIfDisposed ();
-            if (_img != null)
-                _img.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (_img != null) _img.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_Dictionary_drawMarker_11 (nativeObj, id, sidePixels, _img.nativeObj);
+        aruco_Dictionary_drawMarker_11(nativeObj, id, sidePixels, _img.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -135,17 +172,37 @@ namespace OpenCVForUnity
         //
 
         //javadoc: Dictionary::get_bytesList()
-        public  Mat get_bytesList ()
+        public Mat get_bytesList ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (aruco_Dictionary_get_1bytesList_10 (nativeObj));
+        Mat retVal = new Mat(aruco_Dictionary_get_1bytesList_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
+        }
+
+
+        //
+        // C++: void Dictionary::bytesList
+        //
+
+        //javadoc: Dictionary::set_bytesList(bytesList)
+        public void set_bytesList (Mat bytesList)
+        {
+            ThrowIfDisposed ();
+            if (bytesList != null) bytesList.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        
+        aruco_Dictionary_set_1bytesList_10(nativeObj, bytesList.nativeObj);
+        
+        return;
+#else
+            return;
+#endif
         }
 
 
@@ -154,17 +211,36 @@ namespace OpenCVForUnity
         //
 
         //javadoc: Dictionary::get_markerSize()
-        public  int get_markerSize ()
+        public int get_markerSize ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = aruco_Dictionary_get_1markerSize_10 (nativeObj);
+        int retVal = aruco_Dictionary_get_1markerSize_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
+        }
+
+
+        //
+        // C++: void Dictionary::markerSize
+        //
+
+        //javadoc: Dictionary::set_markerSize(markerSize)
+        public void set_markerSize (int markerSize)
+        {
+            ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        
+        aruco_Dictionary_set_1markerSize_10(nativeObj, markerSize);
+        
+        return;
+#else
+            return;
+#endif
         }
 
 
@@ -173,61 +249,99 @@ namespace OpenCVForUnity
         //
 
         //javadoc: Dictionary::get_maxCorrectionBits()
-        public  int get_maxCorrectionBits ()
+        public int get_maxCorrectionBits ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = aruco_Dictionary_get_1maxCorrectionBits_10 (nativeObj);
+        int retVal = aruco_Dictionary_get_1maxCorrectionBits_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+        //
+        // C++: void Dictionary::maxCorrectionBits
+        //
+
+        //javadoc: Dictionary::set_maxCorrectionBits(maxCorrectionBits)
+        public void set_maxCorrectionBits (int maxCorrectionBits)
+        {
+            ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        
+        aruco_Dictionary_set_1maxCorrectionBits_10(nativeObj, maxCorrectionBits);
+        
+        return;
+#else
+            return;
+#endif
+        }
+
+
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
+
+        // C++: static Mat getBitsFromByteList(Mat byteList, int markerSize)
+        [DllImport (LIBNAME)]
+        private static extern IntPtr aruco_Dictionary_getBitsFromByteList_10 (IntPtr byteList_nativeObj, int markerSize);
+
+        // C++: static Mat getByteListFromBits(Mat bits)
+        [DllImport (LIBNAME)]
+        private static extern IntPtr aruco_Dictionary_getByteListFromBits_10 (IntPtr bits_nativeObj);
 
         // C++: static Ptr_Dictionary create(int nMarkers, int markerSize, Ptr_Dictionary baseDictionary)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr aruco_Dictionary_create_1from_10 (int nMarkers, int markerSize, IntPtr baseDictionary_nativeObj);
 
         // C++: static Ptr_Dictionary create(int nMarkers, int markerSize)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr aruco_Dictionary_create_10 (int nMarkers, int markerSize);
 
         // C++: static Ptr_Dictionary get(int dict)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr aruco_Dictionary_get_10 (int dict);
 
         // C++:  void drawMarker(int id, int sidePixels, Mat& _img, int borderBits = 1)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_Dictionary_drawMarker_10 (IntPtr nativeObj, int id, int sidePixels, IntPtr _img_nativeObj, int borderBits);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_Dictionary_drawMarker_11 (IntPtr nativeObj, int id, int sidePixels, IntPtr _img_nativeObj);
 
         // C++: Mat Dictionary::bytesList
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr aruco_Dictionary_get_1bytesList_10 (IntPtr nativeObj);
 
+        // C++: void Dictionary::bytesList
+        [DllImport (LIBNAME)]
+        private static extern void aruco_Dictionary_set_1bytesList_10 (IntPtr nativeObj, IntPtr bytesList_nativeObj);
+
         // C++: int Dictionary::markerSize
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int aruco_Dictionary_get_1markerSize_10 (IntPtr nativeObj);
 
+        // C++: void Dictionary::markerSize
+        [DllImport (LIBNAME)]
+        private static extern void aruco_Dictionary_set_1markerSize_10 (IntPtr nativeObj, int markerSize);
+
         // C++: int Dictionary::maxCorrectionBits
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int aruco_Dictionary_get_1maxCorrectionBits_10 (IntPtr nativeObj);
 
+        // C++: void Dictionary::maxCorrectionBits
+        [DllImport (LIBNAME)]
+        private static extern void aruco_Dictionary_set_1maxCorrectionBits_10 (IntPtr nativeObj, int maxCorrectionBits);
+
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_Dictionary_delete (IntPtr nativeObj);
 
     }

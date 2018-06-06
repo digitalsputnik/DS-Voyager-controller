@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class KAZE
-//javadoc: KAZE
+    // C++: class KAZE
+    //javadoc: KAZE
+
     public class KAZE : Feature2D
     {
 
@@ -33,8 +31,15 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal KAZE (IntPtr addr) : base(addr)
+        protected internal KAZE (IntPtr addr)
+            : base (addr)
         {
+        }
+
+        // internal usage only
+        public static new KAZE __fromPtr__ (IntPtr addr)
+        {
+            return new KAZE (addr);
         }
 
         public const int DIFF_PM_G1 = 0;
@@ -48,27 +53,46 @@ namespace OpenCVForUnity
         //javadoc: KAZE::create(extended, upright, threshold, nOctaves, nOctaveLayers, diffusivity)
         public static KAZE create (bool extended, bool upright, float threshold, int nOctaves, int nOctaveLayers, int diffusivity)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            KAZE retVal = new KAZE (features2d_KAZE_create_10 (extended, upright, threshold, nOctaves, nOctaveLayers, diffusivity));
+            KAZE retVal = KAZE.__fromPtr__ (features2d_KAZE_create_10 (extended, upright, threshold, nOctaves, nOctaveLayers, diffusivity));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: KAZE::create()
         public static KAZE create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            KAZE retVal = new KAZE (features2d_KAZE_create_11 ());
+            KAZE retVal = KAZE.__fromPtr__ (features2d_KAZE_create_11 ());
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
+        }
+
+
+        //
+        // C++:  String getDefaultName()
+        //
+
+        //javadoc: KAZE::getDefaultName()
+        public override string getDefaultName ()
+        {
+            ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        
+            string retVal = Marshal.PtrToStringAnsi (features2d_KAZE_getDefaultName_10 (nativeObj));
+        
+            return retVal;
+#else
+            return null;
+#endif
         }
 
 
@@ -77,17 +101,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KAZE::getExtended()
-        public  bool getExtended ()
+        public bool getExtended ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = features2d_KAZE_getExtended_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -96,17 +120,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KAZE::getUpright()
-        public  bool getUpright ()
+        public bool getUpright ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = features2d_KAZE_getUpright_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -115,17 +139,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KAZE::getThreshold()
-        public  double getThreshold ()
+        public double getThreshold ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             double retVal = features2d_KAZE_getThreshold_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -134,17 +158,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KAZE::getDiffusivity()
-        public  int getDiffusivity ()
+        public int getDiffusivity ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = features2d_KAZE_getDiffusivity_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -153,17 +177,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KAZE::getNOctaveLayers()
-        public  int getNOctaveLayers ()
+        public int getNOctaveLayers ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = features2d_KAZE_getNOctaveLayers_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -172,17 +196,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KAZE::getNOctaves()
-        public  int getNOctaves ()
+        public int getNOctaves ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = features2d_KAZE_getNOctaves_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -191,17 +215,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KAZE::setDiffusivity(diff)
-        public  void setDiffusivity (int diff)
+        public void setDiffusivity (int diff)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_KAZE_setDiffusivity_10 (nativeObj, diff);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -210,17 +234,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KAZE::setExtended(extended)
-        public  void setExtended (bool extended)
+        public void setExtended (bool extended)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_KAZE_setExtended_10 (nativeObj, extended);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -229,17 +253,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KAZE::setNOctaveLayers(octaveLayers)
-        public  void setNOctaveLayers (int octaveLayers)
+        public void setNOctaveLayers (int octaveLayers)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_KAZE_setNOctaveLayers_10 (nativeObj, octaveLayers);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -248,17 +272,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KAZE::setNOctaves(octaves)
-        public  void setNOctaves (int octaves)
+        public void setNOctaves (int octaves)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_KAZE_setNOctaves_10 (nativeObj, octaves);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -267,17 +291,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KAZE::setThreshold(threshold)
-        public  void setThreshold (double threshold)
+        public void setThreshold (double threshold)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_KAZE_setThreshold_10 (nativeObj, threshold);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -286,85 +310,90 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KAZE::setUpright(upright)
-        public  void setUpright (bool upright)
+        public void setUpright (bool upright)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_KAZE_setUpright_10 (nativeObj, upright);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++: static Ptr_KAZE create(bool extended = false, bool upright = false, float threshold = 0.001f, int nOctaves = 4, int nOctaveLayers = 4, int diffusivity = KAZE::DIFF_PM_G2)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_KAZE_create_10 (bool extended, bool upright, float threshold, int nOctaves, int nOctaveLayers, int diffusivity);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_KAZE_create_11 ();
 
+        // C++:  String getDefaultName()
+        [DllImport (LIBNAME)]
+        private static extern IntPtr features2d_KAZE_getDefaultName_10 (IntPtr nativeObj);
+
         // C++:  bool getExtended()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool features2d_KAZE_getExtended_10 (IntPtr nativeObj);
 
         // C++:  bool getUpright()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool features2d_KAZE_getUpright_10 (IntPtr nativeObj);
 
         // C++:  double getThreshold()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double features2d_KAZE_getThreshold_10 (IntPtr nativeObj);
 
         // C++:  int getDiffusivity()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_KAZE_getDiffusivity_10 (IntPtr nativeObj);
 
         // C++:  int getNOctaveLayers()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_KAZE_getNOctaveLayers_10 (IntPtr nativeObj);
 
         // C++:  int getNOctaves()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_KAZE_getNOctaves_10 (IntPtr nativeObj);
 
         // C++:  void setDiffusivity(int diff)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_KAZE_setDiffusivity_10 (IntPtr nativeObj, int diff);
 
         // C++:  void setExtended(bool extended)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_KAZE_setExtended_10 (IntPtr nativeObj, bool extended);
 
         // C++:  void setNOctaveLayers(int octaveLayers)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_KAZE_setNOctaveLayers_10 (IntPtr nativeObj, int octaveLayers);
 
         // C++:  void setNOctaves(int octaves)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_KAZE_setNOctaves_10 (IntPtr nativeObj, int octaves);
 
         // C++:  void setThreshold(double threshold)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_KAZE_setThreshold_10 (IntPtr nativeObj, double threshold);
 
         // C++:  void setUpright(bool upright)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_KAZE_setUpright_10 (IntPtr nativeObj, bool upright);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_KAZE_delete (IntPtr nativeObj);
 
     }

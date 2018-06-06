@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class StatModel
-//javadoc: StatModel
+    // C++: class StatModel
+    //javadoc: StatModel
+
     public class StatModel : Algorithm
     {
 
@@ -33,8 +31,15 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal StatModel (IntPtr addr) : base(addr)
+        protected internal StatModel (IntPtr addr)
+            : base (addr)
         {
+        }
+
+        // internal usage only
+        public static new StatModel __fromPtr__ (IntPtr addr)
+        {
+            return new StatModel (addr);
         }
 
         public const int UPDATE_MODEL = 1;
@@ -46,17 +51,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StatModel::empty()
-        public  bool empty ()
+        public override bool empty ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = ml_StatModel_empty_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -65,17 +70,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StatModel::isClassifier()
-        public  bool isClassifier ()
+        public bool isClassifier ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = ml_StatModel_isClassifier_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -84,17 +89,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StatModel::isTrained()
-        public  bool isTrained ()
+        public bool isTrained ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = ml_StatModel_isTrained_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -103,21 +108,21 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StatModel::train(samples, layout, responses)
-        public  bool train (Mat samples, int layout, Mat responses)
+        public bool train (Mat samples, int layout, Mat responses)
         {
             ThrowIfDisposed ();
             if (samples != null)
                 samples.ThrowIfDisposed ();
             if (responses != null)
                 responses.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = ml_StatModel_train_10 (nativeObj, samples.nativeObj, layout, responses.nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -126,35 +131,35 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StatModel::train(trainData, flags)
-        public  bool train (TrainData trainData, int flags)
+        public bool train (TrainData trainData, int flags)
         {
             ThrowIfDisposed ();
             if (trainData != null)
                 trainData.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = ml_StatModel_train_11 (nativeObj, trainData.nativeObj, flags);
+            bool retVal = ml_StatModel_train_11 (nativeObj, trainData.getNativeObjAddr (), flags);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
         //javadoc: StatModel::train(trainData)
-        public  bool train (TrainData trainData)
+        public bool train (TrainData trainData)
         {
             ThrowIfDisposed ();
             if (trainData != null)
                 trainData.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = ml_StatModel_train_12 (nativeObj, trainData.nativeObj);
+            bool retVal = ml_StatModel_train_12 (nativeObj, trainData.getNativeObjAddr ());
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -163,21 +168,21 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StatModel::calcError(data, test, resp)
-        public  float calcError (TrainData data, bool test, Mat resp)
+        public float calcError (TrainData data, bool test, Mat resp)
         {
             ThrowIfDisposed ();
             if (data != null)
                 data.ThrowIfDisposed ();
             if (resp != null)
                 resp.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            float retVal = ml_StatModel_calcError_10 (nativeObj, data.nativeObj, test, resp.nativeObj);
+            float retVal = ml_StatModel_calcError_10 (nativeObj, data.getNativeObjAddr (), test, resp.nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -193,14 +198,14 @@ namespace OpenCVForUnity
                 samples.ThrowIfDisposed ();
             if (results != null)
                 results.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             float retVal = ml_StatModel_predict_10 (nativeObj, samples.nativeObj, results.nativeObj, flags);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
         //javadoc: StatModel::predict(samples)
@@ -209,14 +214,14 @@ namespace OpenCVForUnity
             ThrowIfDisposed ();
             if (samples != null)
                 samples.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             float retVal = ml_StatModel_predict_11 (nativeObj, samples.nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -225,68 +230,71 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StatModel::getVarCount()
-        public  int getVarCount ()
+        public int getVarCount ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = ml_StatModel_getVarCount_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+
+
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  bool empty()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_StatModel_empty_10 (IntPtr nativeObj);
 
         // C++:  bool isClassifier()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_StatModel_isClassifier_10 (IntPtr nativeObj);
 
         // C++:  bool isTrained()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_StatModel_isTrained_10 (IntPtr nativeObj);
 
         // C++:  bool train(Mat samples, int layout, Mat responses)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_StatModel_train_10 (IntPtr nativeObj, IntPtr samples_nativeObj, int layout, IntPtr responses_nativeObj);
 
         // C++:  bool train(Ptr_TrainData trainData, int flags = 0)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_StatModel_train_11 (IntPtr nativeObj, IntPtr trainData_nativeObj, int flags);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_StatModel_train_12 (IntPtr nativeObj, IntPtr trainData_nativeObj);
 
         // C++:  float calcError(Ptr_TrainData data, bool test, Mat& resp)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float ml_StatModel_calcError_10 (IntPtr nativeObj, IntPtr data_nativeObj, bool test, IntPtr resp_nativeObj);
 
         // C++:  float predict(Mat samples, Mat& results = Mat(), int flags = 0)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float ml_StatModel_predict_10 (IntPtr nativeObj, IntPtr samples_nativeObj, IntPtr results_nativeObj, int flags);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float ml_StatModel_predict_11 (IntPtr nativeObj, IntPtr samples_nativeObj);
 
         // C++:  int getVarCount()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_StatModel_getVarCount_10 (IntPtr nativeObj);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_StatModel_delete (IntPtr nativeObj);
 
     }

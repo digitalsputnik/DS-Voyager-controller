@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,34 +6,35 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class DualTVL1OpticalFlow
-//javadoc: DualTVL1OpticalFlow
+    // C++: class DualTVL1OpticalFlow
+    //javadoc: DualTVL1OpticalFlow
+
     public class DualTVL1OpticalFlow : DenseOpticalFlow
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        video_DualTVL1OpticalFlow_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+video_DualTVL1OpticalFlow_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal DualTVL1OpticalFlow (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal DualTVL1OpticalFlow (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new DualTVL1OpticalFlow __fromPtr__ (IntPtr addr) { return new DualTVL1OpticalFlow (addr); }
 
         //
         // C++: static Ptr_DualTVL1OpticalFlow create(double tau = 0.25, double lambda = 0.15, double theta = 0.3, int nscales = 5, int warps = 5, double epsilon = 0.01, int innnerIterations = 30, int outerIterations = 10, double scaleStep = 0.8, double gamma = 0.0, int medianFiltering = 5, bool useInitialFlow = false)
@@ -45,27 +43,27 @@ namespace OpenCVForUnity
         //javadoc: DualTVL1OpticalFlow::create(tau, lambda, theta, nscales, warps, epsilon, innnerIterations, outerIterations, scaleStep, gamma, medianFiltering, useInitialFlow)
         public static DualTVL1OpticalFlow create (double tau, double lambda, double theta, int nscales, int warps, double epsilon, int innnerIterations, int outerIterations, double scaleStep, double gamma, int medianFiltering, bool useInitialFlow)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            DualTVL1OpticalFlow retVal = new DualTVL1OpticalFlow (video_DualTVL1OpticalFlow_create_10 (tau, lambda, theta, nscales, warps, epsilon, innnerIterations, outerIterations, scaleStep, gamma, medianFiltering, useInitialFlow));
+        DualTVL1OpticalFlow retVal = DualTVL1OpticalFlow.__fromPtr__(video_DualTVL1OpticalFlow_create_10(tau, lambda, theta, nscales, warps, epsilon, innnerIterations, outerIterations, scaleStep, gamma, medianFiltering, useInitialFlow));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: DualTVL1OpticalFlow::create()
         public static DualTVL1OpticalFlow create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            DualTVL1OpticalFlow retVal = new DualTVL1OpticalFlow (video_DualTVL1OpticalFlow_create_11 ());
+        DualTVL1OpticalFlow retVal = DualTVL1OpticalFlow.__fromPtr__(video_DualTVL1OpticalFlow_create_11());
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -74,17 +72,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::getUseInitialFlow()
-        public  bool getUseInitialFlow ()
+        public bool getUseInitialFlow ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = video_DualTVL1OpticalFlow_getUseInitialFlow_10 (nativeObj);
+        bool retVal = video_DualTVL1OpticalFlow_getUseInitialFlow_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -93,17 +91,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::getEpsilon()
-        public  double getEpsilon ()
+        public double getEpsilon ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = video_DualTVL1OpticalFlow_getEpsilon_10 (nativeObj);
+        double retVal = video_DualTVL1OpticalFlow_getEpsilon_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -112,17 +110,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::getGamma()
-        public  double getGamma ()
+        public double getGamma ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = video_DualTVL1OpticalFlow_getGamma_10 (nativeObj);
+        double retVal = video_DualTVL1OpticalFlow_getGamma_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -131,17 +129,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::getLambda()
-        public  double getLambda ()
+        public double getLambda ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = video_DualTVL1OpticalFlow_getLambda_10 (nativeObj);
+        double retVal = video_DualTVL1OpticalFlow_getLambda_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -150,17 +148,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::getScaleStep()
-        public  double getScaleStep ()
+        public double getScaleStep ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = video_DualTVL1OpticalFlow_getScaleStep_10 (nativeObj);
+        double retVal = video_DualTVL1OpticalFlow_getScaleStep_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -169,17 +167,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::getTau()
-        public  double getTau ()
+        public double getTau ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = video_DualTVL1OpticalFlow_getTau_10 (nativeObj);
+        double retVal = video_DualTVL1OpticalFlow_getTau_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -188,17 +186,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::getTheta()
-        public  double getTheta ()
+        public double getTheta ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = video_DualTVL1OpticalFlow_getTheta_10 (nativeObj);
+        double retVal = video_DualTVL1OpticalFlow_getTheta_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -207,17 +205,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::getInnerIterations()
-        public  int getInnerIterations ()
+        public int getInnerIterations ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = video_DualTVL1OpticalFlow_getInnerIterations_10 (nativeObj);
+        int retVal = video_DualTVL1OpticalFlow_getInnerIterations_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -226,17 +224,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::getMedianFiltering()
-        public  int getMedianFiltering ()
+        public int getMedianFiltering ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = video_DualTVL1OpticalFlow_getMedianFiltering_10 (nativeObj);
+        int retVal = video_DualTVL1OpticalFlow_getMedianFiltering_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -245,17 +243,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::getOuterIterations()
-        public  int getOuterIterations ()
+        public int getOuterIterations ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = video_DualTVL1OpticalFlow_getOuterIterations_10 (nativeObj);
+        int retVal = video_DualTVL1OpticalFlow_getOuterIterations_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -264,17 +262,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::getScalesNumber()
-        public  int getScalesNumber ()
+        public int getScalesNumber ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = video_DualTVL1OpticalFlow_getScalesNumber_10 (nativeObj);
+        int retVal = video_DualTVL1OpticalFlow_getScalesNumber_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -283,17 +281,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::getWarpingsNumber()
-        public  int getWarpingsNumber ()
+        public int getWarpingsNumber ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = video_DualTVL1OpticalFlow_getWarpingsNumber_10 (nativeObj);
+        int retVal = video_DualTVL1OpticalFlow_getWarpingsNumber_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -302,17 +300,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::setEpsilon(val)
-        public  void setEpsilon (double val)
+        public void setEpsilon (double val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_DualTVL1OpticalFlow_setEpsilon_10 (nativeObj, val);
+        video_DualTVL1OpticalFlow_setEpsilon_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -321,17 +319,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::setGamma(val)
-        public  void setGamma (double val)
+        public void setGamma (double val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_DualTVL1OpticalFlow_setGamma_10 (nativeObj, val);
+        video_DualTVL1OpticalFlow_setGamma_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -340,17 +338,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::setInnerIterations(val)
-        public  void setInnerIterations (int val)
+        public void setInnerIterations (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_DualTVL1OpticalFlow_setInnerIterations_10 (nativeObj, val);
+        video_DualTVL1OpticalFlow_setInnerIterations_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -359,17 +357,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::setLambda(val)
-        public  void setLambda (double val)
+        public void setLambda (double val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_DualTVL1OpticalFlow_setLambda_10 (nativeObj, val);
+        video_DualTVL1OpticalFlow_setLambda_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -378,17 +376,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::setMedianFiltering(val)
-        public  void setMedianFiltering (int val)
+        public void setMedianFiltering (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_DualTVL1OpticalFlow_setMedianFiltering_10 (nativeObj, val);
+        video_DualTVL1OpticalFlow_setMedianFiltering_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -397,17 +395,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::setOuterIterations(val)
-        public  void setOuterIterations (int val)
+        public void setOuterIterations (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_DualTVL1OpticalFlow_setOuterIterations_10 (nativeObj, val);
+        video_DualTVL1OpticalFlow_setOuterIterations_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -416,17 +414,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::setScaleStep(val)
-        public  void setScaleStep (double val)
+        public void setScaleStep (double val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_DualTVL1OpticalFlow_setScaleStep_10 (nativeObj, val);
+        video_DualTVL1OpticalFlow_setScaleStep_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -435,17 +433,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::setScalesNumber(val)
-        public  void setScalesNumber (int val)
+        public void setScalesNumber (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_DualTVL1OpticalFlow_setScalesNumber_10 (nativeObj, val);
+        video_DualTVL1OpticalFlow_setScalesNumber_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -454,17 +452,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::setTau(val)
-        public  void setTau (double val)
+        public void setTau (double val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_DualTVL1OpticalFlow_setTau_10 (nativeObj, val);
+        video_DualTVL1OpticalFlow_setTau_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -473,17 +471,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::setTheta(val)
-        public  void setTheta (double val)
+        public void setTheta (double val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_DualTVL1OpticalFlow_setTheta_10 (nativeObj, val);
+        video_DualTVL1OpticalFlow_setTheta_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -492,17 +490,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::setUseInitialFlow(val)
-        public  void setUseInitialFlow (bool val)
+        public void setUseInitialFlow (bool val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_DualTVL1OpticalFlow_setUseInitialFlow_10 (nativeObj, val);
+        video_DualTVL1OpticalFlow_setUseInitialFlow_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -511,133 +509,132 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DualTVL1OpticalFlow::setWarpingsNumber(val)
-        public  void setWarpingsNumber (int val)
+        public void setWarpingsNumber (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_DualTVL1OpticalFlow_setWarpingsNumber_10 (nativeObj, val);
+        video_DualTVL1OpticalFlow_setWarpingsNumber_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++: static Ptr_DualTVL1OpticalFlow create(double tau = 0.25, double lambda = 0.15, double theta = 0.3, int nscales = 5, int warps = 5, double epsilon = 0.01, int innnerIterations = 30, int outerIterations = 10, double scaleStep = 0.8, double gamma = 0.0, int medianFiltering = 5, bool useInitialFlow = false)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_DualTVL1OpticalFlow_create_10 (double tau, double lambda, double theta, int nscales, int warps, double epsilon, int innnerIterations, int outerIterations, double scaleStep, double gamma, int medianFiltering, bool useInitialFlow);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_DualTVL1OpticalFlow_create_11 ();
 
         // C++:  bool getUseInitialFlow()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool video_DualTVL1OpticalFlow_getUseInitialFlow_10 (IntPtr nativeObj);
 
         // C++:  double getEpsilon()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double video_DualTVL1OpticalFlow_getEpsilon_10 (IntPtr nativeObj);
 
         // C++:  double getGamma()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double video_DualTVL1OpticalFlow_getGamma_10 (IntPtr nativeObj);
 
         // C++:  double getLambda()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double video_DualTVL1OpticalFlow_getLambda_10 (IntPtr nativeObj);
 
         // C++:  double getScaleStep()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double video_DualTVL1OpticalFlow_getScaleStep_10 (IntPtr nativeObj);
 
         // C++:  double getTau()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double video_DualTVL1OpticalFlow_getTau_10 (IntPtr nativeObj);
 
         // C++:  double getTheta()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double video_DualTVL1OpticalFlow_getTheta_10 (IntPtr nativeObj);
 
         // C++:  int getInnerIterations()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int video_DualTVL1OpticalFlow_getInnerIterations_10 (IntPtr nativeObj);
 
         // C++:  int getMedianFiltering()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int video_DualTVL1OpticalFlow_getMedianFiltering_10 (IntPtr nativeObj);
 
         // C++:  int getOuterIterations()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int video_DualTVL1OpticalFlow_getOuterIterations_10 (IntPtr nativeObj);
 
         // C++:  int getScalesNumber()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int video_DualTVL1OpticalFlow_getScalesNumber_10 (IntPtr nativeObj);
 
         // C++:  int getWarpingsNumber()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int video_DualTVL1OpticalFlow_getWarpingsNumber_10 (IntPtr nativeObj);
 
         // C++:  void setEpsilon(double val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_DualTVL1OpticalFlow_setEpsilon_10 (IntPtr nativeObj, double val);
 
         // C++:  void setGamma(double val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_DualTVL1OpticalFlow_setGamma_10 (IntPtr nativeObj, double val);
 
         // C++:  void setInnerIterations(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_DualTVL1OpticalFlow_setInnerIterations_10 (IntPtr nativeObj, int val);
 
         // C++:  void setLambda(double val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_DualTVL1OpticalFlow_setLambda_10 (IntPtr nativeObj, double val);
 
         // C++:  void setMedianFiltering(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_DualTVL1OpticalFlow_setMedianFiltering_10 (IntPtr nativeObj, int val);
 
         // C++:  void setOuterIterations(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_DualTVL1OpticalFlow_setOuterIterations_10 (IntPtr nativeObj, int val);
 
         // C++:  void setScaleStep(double val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_DualTVL1OpticalFlow_setScaleStep_10 (IntPtr nativeObj, double val);
 
         // C++:  void setScalesNumber(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_DualTVL1OpticalFlow_setScalesNumber_10 (IntPtr nativeObj, int val);
 
         // C++:  void setTau(double val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_DualTVL1OpticalFlow_setTau_10 (IntPtr nativeObj, double val);
 
         // C++:  void setTheta(double val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_DualTVL1OpticalFlow_setTheta_10 (IntPtr nativeObj, double val);
 
         // C++:  void setUseInitialFlow(bool val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_DualTVL1OpticalFlow_setUseInitialFlow_10 (IntPtr nativeObj, bool val);
 
         // C++:  void setWarpingsNumber(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_DualTVL1OpticalFlow_setWarpingsNumber_10 (IntPtr nativeObj, int val);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_DualTVL1OpticalFlow_delete (IntPtr nativeObj);
 
     }

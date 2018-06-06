@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.IO;
+using AOT;
 
 namespace OpenCVForUnity
 {
@@ -16,190 +17,193 @@ namespace OpenCVForUnity
         */
         public static string getVersion ()
         {
-            return "2.2.0";
+            return "2.2.8";
         }
 
         /**
-        * Copies the OpenCV Mat data to the pixel data IntPtr.
+        * Copies an OpenCV Mat data to a pixel data IntPtr.
         * <p>
         * <br>This function copies the OpenCV Mat data to the pixel data IntPtr.
-        * <br>The pixel data has to be of the same byte size as the input Mat data ([total() * elemSize()] byte).
+        * <br>The pixel data has to be of the same byte size as the Mat data ([total() * elemSize()] byte).
         * <br>Because this function doesn't check bounds, is faster than Mat.get().
         *
-        * @param mat the input Mat object
-        * @param intPtr the pixel data has to be of the same byte size as the input Mat data ([total() * elemSize()] byte)
+        * @param mat a Mat object
+        * @param intPtr the pixel data has to be of the same byte size as the Mat data ([total() * elemSize()] byte)
         */
         public static void copyFromMat (Mat mat, IntPtr intPtr)
         {
             if (mat != null)
                 mat.ThrowIfDisposed ();
-            
+
             if (mat == null)
                 throw new ArgumentNullException ("mat == null");
             if (intPtr == IntPtr.Zero)
                 throw new ArgumentNullException ("intPtr == IntPtr.Zero");
-            
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             OpenCVForUnity_MatDataToByteArray (mat.nativeObj, intPtr);
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         /**
-        * Copies the pixel data IntPtr to the OpenCV Mat data.
+        * Copies a pixel data IntPtr to an OpenCV Mat data.
         * <p>
         * <br>This function copy the pixel data IntPtr to the OpenCV Mat data.
-        * <br>The output Mat object has to be of the same byte size as the pixel data ([total() * elemSize()] byte).
+        * <br>The Mat object has to be of the same byte size as the pixel data ([total() * elemSize()] byte).
         * <br>Because this function doesn't check bounds, is faster than Mat.put().
         * 
-        * @param intPtr the pixel data IntPtr
-        * @param mat the output Mat object has to be of the same byte size as the pixel data ([total() * elemSize()] byte)
+        * @param intPtr a pixel data IntPtr
+        * @param mat the Mat object has to be of the same byte size as the pixel data ([total() * elemSize()] byte)
         */
         public static void copyToMat (IntPtr intPtr, Mat mat)
         {
             if (mat != null)
                 mat.ThrowIfDisposed ();
-            
+
             if (intPtr == IntPtr.Zero)
                 throw new ArgumentNullException ("intPtr == IntPtr.Zero");
             if (mat == null)
                 throw new ArgumentNullException ("mat == null");
-            
-            
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+
+
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             OpenCVForUnity_ByteArrayToMatData (intPtr, mat.nativeObj);
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         /**
-        * Copies the OpenCV Mat data to the pixel data Array.
+        * Copies an OpenCV Mat data to a pixel data Array.
         * <p>
         * <br>This function copies the OpenCV Mat data to the pixel data Array.
-        * <br>The pixel data Array has to be of the same byte size as the input Mat data ([total() * elemSize()] byte).
+        * <br>The pixel data Array has to be of the same byte size as the Mat data ([total() * elemSize()] byte).
         * <br>Because this function doesn't check bounds, is faster than Mat.get().
         *
-        * @param mat the input Mat object
-        * @param array the pixel data Array has to be of the same byte size as the input Mat data ([total() * elemSize()] byte)
+        * @param mat a Mat object
+        * @param array the pixel data Array has to be of the same byte size as the Mat data ([total() * elemSize()] byte)
         */
         public static void copyFromMat<T> (Mat mat, IList<T> array)
         {
             if (mat != null)
                 mat.ThrowIfDisposed ();
-            
+
             if (mat == null)
                 throw new ArgumentNullException ("mat == null");
             if (array == null)
                 throw new ArgumentNullException ("array == null");
-            
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             GCHandle arrayHandle = GCHandle.Alloc (array, GCHandleType.Pinned);
 
             OpenCVForUnity_MatDataToByteArray (mat.nativeObj, arrayHandle.AddrOfPinnedObject ());
 
             arrayHandle.Free ();
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         /**
-        * Copies the pixel data Array to the OpenCV Mat data.
+        * Copies a pixel data Array to an OpenCV Mat data.
         * <p>
         * <br>This function copies the pixel data Array to the OpenCV Mat data.
-        * <br>The output Mat object has to be of the same byte size as the pixel data Array ([total() * elemSize()] byte).
+        * <br>The Mat object has to be of the same byte size as the pixel data Array ([total() * elemSize()] byte).
         * <br>Because this function doesn't check bounds, is faster than Mat.put().
         * 
-        * @param array the pixel data Array
-        * @param mat the output Mat object has to be of the same byte size as the pixel data Array ([total() * elemSize()] byte)
+        * @param array a pixel data Array
+        * @param mat the Mat object has to be of the same byte size as the pixel data Array ([total() * elemSize()] byte)
         */
         public static void copyToMat<T> (IList<T> array, Mat mat)
         {
             if (mat != null)
                 mat.ThrowIfDisposed ();
-            
+
             if (array == null)
                 throw new ArgumentNullException ("array == null");
             if (mat == null)
                 throw new ArgumentNullException ("mat == null");
-            
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             GCHandle arrayHandle = GCHandle.Alloc (array, GCHandleType.Pinned);
             
             OpenCVForUnity_ByteArrayToMatData (arrayHandle.AddrOfPinnedObject (), mat.nativeObj);
 
             arrayHandle.Free ();
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         /**
-        * Copies the Texture pixel data to the pixel data IntPtr using low-level native plugin interface.
+        * Copies a Texture pixel data to a pixel data IntPtr using low-level native plugin interface.
         * <p>
         * <br>This function copies the Texture pixel data to the pixel data IntPtr.
-        * <br>The pixel data has to be of the same byte size as the input Texture pixel data ([width * height * bytePerPixel] byte).
+        * <br>The pixel data has to be of the same byte size as the Texture pixel data ([width * height * bytePerPixel] byte).
         * <br>This function doesn't check bounds.
         * <br>This function not implemented yet on OpenGLCore, Direct3D12.
         *
-        * @param texture the input texture
-        * @param intPtr the pixel data has to be of the same byte size as the input Texture pixel data ([width * height * bytePerPixel] byte)
+        * @param texture a Texture object
+        * @param intPtr the pixel data has to be of the same byte size as the Texture pixel data ([width * height * bytePerPixel] byte)
         * @param bytesPerPixel the bytes per pixel
         */
+        [Obsolete ("Please use Utils.textureToTexture2D() and Texture2D.GetRawTextureData() method instead.")]
         public static void copyFromTexture (Texture texture, IntPtr intPtr, int bytesPerPixel)
         {
             if (texture == null)
                 throw new ArgumentNullException ("texture == null");
             if (intPtr == IntPtr.Zero)
                 throw new ArgumentNullException ("intPtr == IntPtr.Zero");
-            
-            #if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
+
+#if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
             OpenCVForUnity_TextureDataToByteArray (texture.GetNativeTexturePtr (), texture.width, texture.height, intPtr, bytesPerPixel);
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         /**
-        * Copies the pixel data IntPtr to the Texture pixel data using low-level native plugin interface.
+        * Copies a pixel data IntPtr to a Texture pixel data using low-level native plugin interface.
         * <p>
         * <br>This function copies the pixel data IntPtr to the Texture pixel data.
-        * <br>The output Texture pixel data has to be of the same byte size as the pixel data ([width * height * bytePerPixel] byte).
+        * <br>The Texture pixel data has to be of the same byte size as the pixel data ([width * height * bytePerPixel] byte).
         * <br>This function doesn't check bounds.
         * <br>This function not implemented yet on OpenGLCore, Direct3D12.
         * 
-        * @param intPtr the pixel data IntPtr
-        * @param mat the output Texture pixel data has to be of the same byte size as the Pixel data ([width * height * bytePerPixel] byte)
+        * @param intPtr a pixel data IntPtr
+        * @param mat the Texture pixel data has to be of the same byte size as the Pixel data ([width * height * bytePerPixel] byte)
         * @param bytesPerPixel the bytes per pixel
         */
+        [Obsolete ("Please use Texture2D.LoadRawTextureData() and Graphics.CopyTexture() method instead.")]
         public static void copyToTexture (IntPtr intPtr, Texture texture, int bytesPerPixel)
         {
             if (intPtr == IntPtr.Zero)
                 throw new ArgumentNullException ("intPtr == IntPtr.Zero");
             if (texture == null)
                 throw new ArgumentNullException ("texture == null");
-            
-            #if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
+
+#if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
             OpenCVForUnity_ByteArrayToTextureData (intPtr, texture.GetNativeTexturePtr (), texture.width, texture.height, bytesPerPixel);
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         /**
-        * Copies the Texture pixel data to the pixel data Array using low-level native plugin interface.
+        * Copies a Texture pixel data to a pixel data Array using low-level native plugin interface.
         * <p>
         * <br>This function copies the Texture pixel data to the pixel data Array.
-        * <br>The pixel data Array has to be of the same byte size as the input Texture pixel data ([width * height * bytePerPixel] byte).
+        * <br>The pixel data Array has to be of the same byte size as the Texture pixel data ([width * height * bytePerPixel] byte).
         * <br>This function doesn't check bounds.
         * <br>This function not implemented yet on OpenGLCore, Direct3D12.
         *
-        * @param texture the input texture
-        * @param array the pixel data Array has to be of the same byte size as the input Texture pixel data ([width * height * bytePerPixel] byte)
+        * @param texture a Texture object
+        * @param array the pixel data Array has to be of the same byte size as the Texture pixel data ([width * height * bytePerPixel] byte)
         * @param bytesPerPixel the bytes per pixel
         */
+        [Obsolete ("Please use Utils.textureToTexture2D() and Texture2D.GetRawTextureData() method instead.")]
         public static void copyFromTexture<T> (Texture texture, IList<T> array, int bytesPerPixel)
         {
             if (texture == null)
@@ -207,57 +211,58 @@ namespace OpenCVForUnity
             if (array == null)
                 throw new ArgumentNullException ("array == null");
 
-            #if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
+#if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
             GCHandle arrayHandle = GCHandle.Alloc (array, GCHandleType.Pinned);
 
             OpenCVForUnity_TextureDataToByteArray (texture.GetNativeTexturePtr (), texture.width, texture.height, arrayHandle.AddrOfPinnedObject (), bytesPerPixel);
             
             arrayHandle.Free ();
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         /**
-        * Copies the pixel data Array to the Texture pixel data using low-level native plugin interface.
+        * Copies a pixel data Array to a Texture pixel data using low-level native plugin interface.
         * <p>
         * <br>This function copies the pixel data Array to the Texture pixel data.
-        * <br>The output Texture pixel data has to be of the same byte size as the pixel data Array ([width * height * bytePerPixel] byte).
+        * <br>The Texture pixel data has to be of the same byte size as the pixel data Array ([width * height * bytePerPixel] byte).
         * <br>This function doesn't check bounds.
         * <br>This function not implemented yet on OpenGLCore, Direct3D12.
         * 
-        * @param array the pixel data Array
-        * @param mat the output Texture pixel data has to be of the same byte size as the pixel data Array ([width * height * bytePerPixel] byte)
+        * @param array a pixel data Array
+        * @param mat the Texture pixel data has to be of the same byte size as the pixel data Array ([width * height * bytePerPixel] byte)
         * @param bytesPerPixel the bytes per pixel
         */
+        [Obsolete ("Please use Texture2D.LoadRawTextureData() and Graphics.CopyTexture() method instead.")]
         public static void copyToTexture<T> (IList<T> array, Texture texture, int bytesPerPixel)
         {
             if (array == null)
                 throw new ArgumentNullException ("array == null");
             if (texture == null)
                 throw new ArgumentNullException ("texture == null");
-            
-            #if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
+
+#if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
             GCHandle arrayHandle = GCHandle.Alloc (array, GCHandleType.Pinned);
 
             OpenCVForUnity_ByteArrayToTextureData (arrayHandle.AddrOfPinnedObject (), texture.GetNativeTexturePtr (), texture.width, texture.height, bytesPerPixel);
             
             arrayHandle.Free ();
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         /**
         * Converts OpenCV Mat to Unity Texture2D.
         * <p>
         * <br>This function converts the OpenCV Mat to the Unity Texture2D image.
-        * <br>The input Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
-        * <br>The output Texture2D object has to be of the TextureFormat 'RGBA32' or 'ARGB32'.(SetPixels32() must function.)
-        * <br>The output Texture2D object has to be of the same size as the input Mat'(width * height).
+        * <br>The Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
+        * <br>The Texture2D object has to be of the TextureFormat 'RGBA32' or 'ARGB32'.(SetPixels32() must function.)
+        * <br>The Texture2D object has to be of the same size as the Mat'(width * height).
         *
-        * @param mat the input Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY)
-        * @param texture2D the output Texture2D object has to be of the TextureFormat 'RGBA32' or 'ARGB32'.(SetPixels32() must function.) The output Texture2D object has to be of the same size as the input Mat (width * height).
+        * @param mat the Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY)
+        * @param texture2D the Texture2D object has to be of the TextureFormat 'RGBA32' or 'ARGB32'.(SetPixels32() must function.) The Texture2D object has to be of the same size as the Mat (width * height).
         */
         public static void matToTexture2D (Mat mat, Texture2D texture2D)
         {
@@ -268,12 +273,12 @@ namespace OpenCVForUnity
         * Converts OpenCV Mat to Unity Texture2D.
         * <p>
         * <br>This function converts the OpenCV Mat to the Unity Texture2D image.
-        * <br>The input Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
-        * <br>The output Texture2D object has to be of the TextureFormat 'RGBA32' or 'ARGB32'.(SetPixels32() must function.)
-        * <br>The output Texture2D object has to be of the same size as the input Mat'(width * height).
+        * <br>The Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
+        * <br>The Texture2D object has to be of the TextureFormat 'RGBA32' or 'ARGB32'.(SetPixels32() must function.)
+        * <br>The Texture2D object has to be of the same size as the Mat'(width * height).
         *
-        * @param mat the input Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY)
-        * @param texture2D the output Texture2D object has to be of the TextureFormat 'RGBA32' or 'ARGB32'.(SetPixels32() must function) The output Texture2D object has to be of the same size as the input Mat (width * height).
+        * @param mat the Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY)
+        * @param texture2D the Texture2D object has to be of the TextureFormat 'RGBA32' or 'ARGB32'.(SetPixels32() must function) The Texture2D object has to be of the same size as the Mat (width * height).
         * @param bufferColors the optional array to receive pixel data. 
         * You can optionally pass in an array of Color32s to use in colors to avoid allocating new memory each frame.
         * The array needs to be initialized to a length matching width * height of the texture.(<a href="http://docs.unity3d.com/ScriptReference/WebCamTexture.GetPixels32.html">http://docs.unity3d.com/ScriptReference/WebCamTexture.GetPixels32.html</a>)
@@ -284,83 +289,83 @@ namespace OpenCVForUnity
                 mat.ThrowIfDisposed ();
 
             if (mat == null)
-                throw new ArgumentNullException ("mat");
+                throw new ArgumentNullException ("mat == null");
             if (texture2D == null)
-                throw new ArgumentNullException ("texture2D");
+                throw new ArgumentNullException ("texture2D == null");
 
             if (mat.cols () != texture2D.width || mat.rows () != texture2D.height)
-                throw new ArgumentException ("The output Texture2D object has to be of the same size");
+                throw new ArgumentException ("The Texture2D object has to be of the same size");
 
 
 
-//                      Core.flip (mat, mat, 0);
-//
-//                      byte[] data = new byte[mat.cols () * mat.rows () * mat.channels ()];
-//                      mat.get (0, 0, data);
-//
-//                      Core.flip (mat, mat, 0);
-//
-//                      if (texture2D.format == TextureFormat.ARGB32 || texture2D.format == TextureFormat.BGRA32 || texture2D.format == TextureFormat.RGBA32) {
-//
-//                              Color32[] colors = new Color32[mat.cols () * mat.rows ()];
-//                              
-//                                      
-//
-//                              if (mat.type () == CvType.CV_8UC1) {
-//                                      for (int i = 0; i < colors.Length; i++) {
-//                                              colors [i] = new Color32 (data [i], data [i], data [i], 255);
-//                                      }
-//                              } else if (mat.type () == CvType.CV_8UC3) {
-//                                      for (int i = 0; i < colors.Length; i++) {
-//                                              colors [i] = new Color32 (data [(i * 3) + 0], data [(i * 3) + 1], data [(i * 3) + 2], 255);
-//                                      }
-//                              } else if (mat.type () == CvType.CV_8UC4) {
-//                                      for (int i = 0; i < colors.Length; i++) {
-//                                              colors [i] = new Color32 (data [(i * 4) + 0], data [(i * 4) + 1], data [(i * 4) + 2], data [(i * 4) + 3]);
-//                                      }
-//                              }
-//                                      
-//                              
-//                              texture2D.SetPixels32 (colors);
-//                              
-//                      } else {
-//                              Color[] colors = new Color[mat.cols () * mat.rows ()];
-//                              
-//                              if (mat.type () == CvType.CV_8UC1) {
-//                                      for (int i = 0; i < colors.Length; i++) {
-//                                              colors [i] = new Color ((float)data [i] / 255.0f, data [i] / 255.0f, data [i] / 255.0f);
-//                                      }
-//                              } else if (mat.type () == CvType.CV_8UC3) {
-//                                      for (int i = 0; i < colors.Length; i++) {
-//                                              colors [i] = new Color ((float)data [(i * 3) + 0] / 255.0f, (float)data [(i * 3) + 1] / 255.0f, (float)data [(i * 3) + 2] / 255.0f);
-//                                      }
-//                              } else if (mat.type () == CvType.CV_8UC4) {
-//                                      for (int i = 0; i < colors.Length; i++) {
-//                                              colors [i] = new Color ((float)data [(i * 4) + 0] / 255.0f, (float)data [(i * 4) + 1] / 255.0f, (float)data [(i * 4) + 2] / 255.0f);
-//                                      }
-//                              }
-//                  
-//                              
-//                              texture2D.SetPixels (colors);
-//
-//                      }
-//
-//                      texture2D.Apply ();
+            //                      Core.flip (mat, mat, 0);
+            //
+            //                      byte[] data = new byte[mat.cols () * mat.rows () * mat.channels ()];
+            //                      mat.get (0, 0, data);
+            //
+            //                      Core.flip (mat, mat, 0);
+            //
+            //                      if (texture2D.format == TextureFormat.ARGB32 || texture2D.format == TextureFormat.BGRA32 || texture2D.format == TextureFormat.RGBA32) {
+            //
+            //                              Color32[] colors = new Color32[mat.cols () * mat.rows ()];
+            //                              
+            //                                      
+            //
+            //                              if (mat.type () == CvType.CV_8UC1) {
+            //                                      for (int i = 0; i < colors.Length; i++) {
+            //                                              colors [i] = new Color32 (data [i], data [i], data [i], 255);
+            //                                      }
+            //                              } else if (mat.type () == CvType.CV_8UC3) {
+            //                                      for (int i = 0; i < colors.Length; i++) {
+            //                                              colors [i] = new Color32 (data [(i * 3) + 0], data [(i * 3) + 1], data [(i * 3) + 2], 255);
+            //                                      }
+            //                              } else if (mat.type () == CvType.CV_8UC4) {
+            //                                      for (int i = 0; i < colors.Length; i++) {
+            //                                              colors [i] = new Color32 (data [(i * 4) + 0], data [(i * 4) + 1], data [(i * 4) + 2], data [(i * 4) + 3]);
+            //                                      }
+            //                              }
+            //                                      
+            //                              
+            //                              texture2D.SetPixels32 (colors);
+            //                              
+            //                      } else {
+            //                              Color[] colors = new Color[mat.cols () * mat.rows ()];
+            //                              
+            //                              if (mat.type () == CvType.CV_8UC1) {
+            //                                      for (int i = 0; i < colors.Length; i++) {
+            //                                              colors [i] = new Color ((float)data [i] / 255.0f, data [i] / 255.0f, data [i] / 255.0f);
+            //                                      }
+            //                              } else if (mat.type () == CvType.CV_8UC3) {
+            //                                      for (int i = 0; i < colors.Length; i++) {
+            //                                              colors [i] = new Color ((float)data [(i * 3) + 0] / 255.0f, (float)data [(i * 3) + 1] / 255.0f, (float)data [(i * 3) + 2] / 255.0f);
+            //                                      }
+            //                              } else if (mat.type () == CvType.CV_8UC4) {
+            //                                      for (int i = 0; i < colors.Length; i++) {
+            //                                              colors [i] = new Color ((float)data [(i * 4) + 0] / 255.0f, (float)data [(i * 4) + 1] / 255.0f, (float)data [(i * 4) + 2] / 255.0f);
+            //                                      }
+            //                              }
+            //                  
+            //                              
+            //                              texture2D.SetPixels (colors);
+            //
+            //                      }
+            //
+            //                      texture2D.Apply ();
 
-//                      #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-//          if(mat.type () == CvType.CV_8UC4){
-//              OpenCVForUnity_LowLevelMatToTexture (mat.nativeObj, texture2D.GetNativeTexturePtr(), texture2D.width, texture2D.height);
-//
-//          return;
-//          }
-//          
-//                      #endif
+            //                      #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            //          if(mat.type () == CvType.CV_8UC4){
+            //              OpenCVForUnity_LowLevelMatToTexture (mat.nativeObj, texture2D.GetNativeTexturePtr(), texture2D.width, texture2D.height);
+            //
+            //          return;
+            //          }
+            //          
+            //                      #endif
 
 
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
 
-            #if UNITY_5 && !UNITY_5_0 && !UNITY_5_1 && !UNITY_5_2
+#if UNITY_5_3_OR_NEWER
             int type = mat.type ();
 
             if (mat.isContinuous () && (texture2D.format == TextureFormat.RGBA32 && type == CvType.CV_8UC4) || (texture2D.format == TextureFormat.RGB24 && type == CvType.CV_8UC3) || (texture2D.format == TextureFormat.Alpha8 && type == CvType.CV_8UC1)) {
@@ -372,7 +377,7 @@ namespace OpenCVForUnity
 
                 return;
             }
-            #endif
+#endif
 
             GCHandle colorsHandle;
 
@@ -397,9 +402,9 @@ namespace OpenCVForUnity
             
             colorsHandle.Free ();
 
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         /**
@@ -409,54 +414,58 @@ namespace OpenCVForUnity
         * <br>Passed Mat data should be of required size to fill the whole texture according to its width, height, data format and mipmapCount. 
         * <br>This function doesn't check bounds.
         *
-        * @param mat the input Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY)
-        * @param texture2D the output Texture2D object has to be of the TextureFormat 'RGBA32' or 'ARGB32'.(SetPixels32() must function) The output Texture2D object has to be of the same size as the input Mat (width * height).
+        * @param mat
+        * @param texture2D The Texture2D object has to be of the same size as the Mat (width * height).
+        * @param flip if true, the mat is fliped before converting.
+        * @param flipCode a flag to specify how to flip the array; 0 means flipping around the x-axis and positive value (for example, 1) means flipping around y-axis. Negative value (for example, -1) means flipping around both axes.
+        * @param flipAfter if true, the mat is fliped after converting.
         */
-        public static void fastMatToTexture2D (Mat mat, Texture2D texture2D)
+        public static void fastMatToTexture2D (Mat mat, Texture2D texture2D, bool flip = true, int flipCode = 0, bool flipAfter = false)
         {
             if (mat != null)
                 mat.ThrowIfDisposed ();
 
             if (mat == null)
-                throw new ArgumentNullException ("mat");
+                throw new ArgumentNullException ("mat == null");
             if (texture2D == null)
-                throw new ArgumentNullException ("texture2D");
+                throw new ArgumentNullException ("texture2D == null");
 
-            if (mat.cols () != texture2D.width || mat.rows () != texture2D.height)
-                throw new ArgumentException ("The output Texture2D object has to be of the same size");
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-
-            #if UNITY_5 && !UNITY_5_0 && !UNITY_5_1 && !UNITY_5_2
+#if UNITY_5_3_OR_NEWER
             if (!mat.isContinuous ()) {
                 throw new ArgumentException ("mat.isContinuous() must be true.");
             }
 
-            Core.flip (mat, mat, 0);
+            if (flip) {
+                Core.flip (mat, mat, flipCode);
+            }
             texture2D.LoadRawTextureData ((IntPtr)mat.dataAddr (), (int)mat.total () * (int)mat.elemSize ());
             texture2D.Apply ();
-            Core.flip (mat, mat, 0);
+            if (flipAfter) {
+                Core.flip (mat, mat, flipCode);
+            }
 
             return;
-            #else
+#else
             return;
-            #endif
+#endif
 
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         /**
         * Converts Unity Texture2D to OpenCV Mat.
         * <p>
         * <br>This function converts the Unity Texture2D image to the OpenCV Mat.
-        * <br>The output Mat object has to be of the same size as the input Texture2D'(width * height).
-        * <br>The output Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
+        * <br>The Mat object has to be of the same size as the Texture2D'(width * height).
+        * <br>The Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
         * 
-        * @param texture2D the input Texture2D object has to be of the TextureFormat 'RGBA32' or 'ARGB32'.(SetPixels32() must function)
-        * @param mat the output Mat object has to be of the same size as the input Texture2D'(width * height).
-        * The output Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
+        * @param texture2D the Texture2D object has to be of the TextureFormat 'RGBA32' or 'ARGB32'.(SetPixels32() must function)
+        * @param mat the Mat object has to be of the same size as the Texture2D'(width * height).
+        * The Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
         */
         public static void texture2DToMat (Texture2D texture2D, Mat mat)
         {
@@ -469,50 +478,50 @@ namespace OpenCVForUnity
                 throw new ArgumentNullException ("mat == null");
 
             if (mat.cols () != texture2D.width || mat.rows () != texture2D.height)
-                throw new ArgumentException ("The output Mat object has to be of the same size");
+                throw new ArgumentException ("The Mat object has to be of the same size");
 
-//                      byte[] data = new byte[mat.cols () * mat.rows () * mat.channels ()];
-//
-//                      Color32[] colors = texture2D.GetPixels32 ();
-//
-//                      if (mat.type () == CvType.CV_8UC1) {
-//                              for (int i = 0; i < colors.Length; i++) {
-//                                      data [i] = colors [i].b;
-//                              }
-//                              mat.put (0, 0, data);
-//                              Core.flip (mat, mat, 0);
-//                      } else if (mat.type () == CvType.CV_8UC3) {
-//                              for (int i = 0; i < colors.Length; i++) {
-//                                      data [(i * 3) + 0] = colors [i].b;
-//                                      data [(i * 3) + 1] = colors [i].g;
-//                                      data [(i * 3) + 2] = colors [i].r;
-//                              }
-//                              mat.put (0, 0, data);
-//                              Core.flip (mat, mat, 0);
-//                      } else if (mat.type () == CvType.CV_8UC4) {
-//                              for (int i = 0; i < colors.Length; i++) {
-//                                      data [(i * 4) + 0] = colors [i].b;
-//                                      data [(i * 4) + 1] = colors [i].g;
-//                                      data [(i * 4) + 2] = colors [i].r;
-//                                      data [(i * 4) + 3] = colors [i].a;
-//                              }
-//                              mat.put (0, 0, data);
-//                              Core.flip (mat, mat, 0);
-//                      }
+            //                      byte[] data = new byte[mat.cols () * mat.rows () * mat.channels ()];
+            //
+            //                      Color32[] colors = texture2D.GetPixels32 ();
+            //
+            //                      if (mat.type () == CvType.CV_8UC1) {
+            //                              for (int i = 0; i < colors.Length; i++) {
+            //                                      data [i] = colors [i].b;
+            //                              }
+            //                              mat.put (0, 0, data);
+            //                              Core.flip (mat, mat, 0);
+            //                      } else if (mat.type () == CvType.CV_8UC3) {
+            //                              for (int i = 0; i < colors.Length; i++) {
+            //                                      data [(i * 3) + 0] = colors [i].b;
+            //                                      data [(i * 3) + 1] = colors [i].g;
+            //                                      data [(i * 3) + 2] = colors [i].r;
+            //                              }
+            //                              mat.put (0, 0, data);
+            //                              Core.flip (mat, mat, 0);
+            //                      } else if (mat.type () == CvType.CV_8UC4) {
+            //                              for (int i = 0; i < colors.Length; i++) {
+            //                                      data [(i * 4) + 0] = colors [i].b;
+            //                                      data [(i * 4) + 1] = colors [i].g;
+            //                                      data [(i * 4) + 2] = colors [i].r;
+            //                                      data [(i * 4) + 3] = colors [i].a;
+            //                              }
+            //                              mat.put (0, 0, data);
+            //                              Core.flip (mat, mat, 0);
+            //                      }
 
 
-//                      #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-//          if(mat.type () == CvType.CV_8UC4){
-//              OpenCVForUnity_LowLevelTextureToMat (texture2D.GetNativeTexturePtr(), texture2D.width, texture2D.height, mat.nativeObj);
-//              
-//              return;
-//          }
-//          
-//                      #endif
+            //                      #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            //          if(mat.type () == CvType.CV_8UC4){
+            //              OpenCVForUnity_LowLevelTextureToMat (texture2D.GetNativeTexturePtr(), texture2D.width, texture2D.height, mat.nativeObj);
+            //              
+            //              return;
+            //          }
+            //          
+            //                      #endif
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
 
-            #if UNITY_5 && !UNITY_5_0 
+#if (UNITY_5 && !UNITY_5_0) || UNITY_5_3_OR_NEWER 
             int type = mat.type ();
 
             if ((texture2D.format == TextureFormat.RGBA32 && type == CvType.CV_8UC4) || (texture2D.format == TextureFormat.RGB24 && type == CvType.CV_8UC3) || (texture2D.format == TextureFormat.Alpha8 && type == CvType.CV_8UC1)) {
@@ -521,7 +530,7 @@ namespace OpenCVForUnity
 
                 return;
             }
-            #endif
+#endif
 
             
             Color32[] colors = texture2D.GetPixels32 ();
@@ -532,9 +541,9 @@ namespace OpenCVForUnity
             
             colorsHandle.Free ();
             
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         /**
@@ -544,11 +553,12 @@ namespace OpenCVForUnity
         * <br>Mat data size must be the same as the texture data size.
         * <br>This function doesn't check bounds.
         * 
-        * @param texture2D the input Texture2D object has to be of the TextureFormat 'RGBA32' or 'ARGB32'.(SetPixels32() must function)
-        * @param mat the output Mat object has to be of the same size as the input Texture2D'(width * height).
-        * The output Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
+        * @param texture2D
+        * @param mat the Mat object has to be of the same size as the Texture2D'(width * height).
+        * @param flip if true, the mat is fliped after converting.
+        * @param flipCode a flag to specify how to flip the array; 0 means flipping around the x-axis and positive value (for example, 1) means flipping around y-axis. Negative value (for example, -1) means flipping around both axes.
         */
-        public static void fastTexture2DToMat (Texture2D texture2D, Mat mat)
+        public static void fastTexture2DToMat (Texture2D texture2D, Mat mat, bool flip = true, int flipCode = 0)
         {
             if (mat != null)
                 mat.ThrowIfDisposed ();
@@ -558,37 +568,36 @@ namespace OpenCVForUnity
             if (mat == null)
                 throw new ArgumentNullException ("mat == null");
 
-            if (mat.cols () != texture2D.width || mat.rows () != texture2D.height)
-                throw new ArgumentException ("The output Mat object has to be of the same size");
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-
-            #if UNITY_5 && !UNITY_5_0 
+#if (UNITY_5 && !UNITY_5_0) || UNITY_5_3_OR_NEWER
 
             mat.put (0, 0, texture2D.GetRawTextureData ());
-            Core.flip (mat, mat, 0);
+            if (flip) {
+                Core.flip (mat, mat, flipCode);
+            }
 
             return;
 
-            #else
+#else
             return;
-            #endif
+#endif
 
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         /**
         * Converts Unity WebCamTexture to OpenCV Mat.
         * <p>
         * <br>This function converts the Unity WebCamTexture image to the OpenCV Mat.
-        * <br>The output Mat object has to be of the same size as the input WebCamTexture'(width * height).
-        * <br>The output Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
+        * <br>The Mat object has to be of the same size as the WebCamTexture'(width * height).
+        * <br>The Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
         * 
-        * @param webcamTexture the input WebCamTexture object
-        * @param mat the output Mat object has to be of the same size as the input WebCamTexture'(width * height).
-        * The output Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
+        * @param webcamTexture a WebCamTexture object
+        * @param mat the Mat object has to be of the same size as the WebCamTexture'(width * height).
+        * The Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
         */
         public static void webCamTextureToMat (WebCamTexture webCamTexture, Mat mat)
         {
@@ -599,12 +608,12 @@ namespace OpenCVForUnity
         * Converts Unity WebCamTexture to OpenCV Mat.
         * <p>
         * <br>This function converts the Unity WebCamTexture image to the OpenCV Mat.
-        * <br>The output Mat object has to be of the same size as the input WebCamTexture'(width * height).
-        * <br>The output Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
+        * <br>The Mat object has to be of the same size as the WebCamTexture'(width * height).
+        * <br>The Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
         * 
-        * @param webcamTexture the input WebCamTexture object
-        * @param mat the output Mat object has to be of the same size as the input WebCamTexture'(width * height).
-        * The output Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
+        * @param webcamTexture a WebCamTexture object
+        * @param mat the Mat object has to be of the same size as the WebCamTexture'(width * height).
+        * The Mat object has to be of the types 'CV_8UC4' (RGBA) , 'CV_8UC3' (RGB) or 'CV_8UC1' (GRAY).
         * @param bufferColors the optional array to receive pixel data.
         * You can optionally pass in an array of Color32s to use in colors to avoid allocating new memory each frame.
         * The array needs to be initialized to a length matching width * height of the texture.(http://docs.unity3d.com/ScriptReference/WebCamTexture.GetPixels32.html)
@@ -613,54 +622,54 @@ namespace OpenCVForUnity
         {
             if (mat != null)
                 mat.ThrowIfDisposed ();
-            
+
             if (webCamTexture == null)
                 throw new ArgumentNullException ("webCamTexture == null");
             if (mat == null)
                 throw new ArgumentNullException ("mat == null");
-            
+
             if (mat.cols () != webCamTexture.width || mat.rows () != webCamTexture.height)
-                throw new ArgumentException ("The output Mat object has to be of the same size");
-            
-//                                              byte[] data = new byte[mat.cols () * mat.rows () * mat.channels ()];
-//                      
-//                                              Color32[] colors = webCamTexture.GetPixels32 ();
-//                      
-//                                              if (mat.type () == CvType.CV_8UC1) {
-//                                                      for (int i = 0; i < colors.Length; i++) {
-//                                                              data [i] = colors [i].b;
-//                                                      }
-//                                                      mat.put (0, 0, data);
-//                                                      Core.flip (mat, mat, 0);
-//                                              } else if (mat.type () == CvType.CV_8UC3) {
-//                                                      for (int i = 0; i < colors.Length; i++) {
-//                                                              data [(i * 3) + 0] = colors [i].r;
-//                                                              data [(i * 3) + 1] = colors [i].g;
-//                                                              data [(i * 3) + 2] = colors [i].b;
-//                                                      }
-//                                                      mat.put (0, 0, data);
-//                                                      Core.flip (mat, mat, 0);
-//                                              } else if (mat.type () == CvType.CV_8UC4) {
-//                                                      for (int i = 0; i < colors.Length; i++) {
-//                                                              data [(i * 4) + 0] = colors [i].r;
-//                                                              data [(i * 4) + 1] = colors [i].g;
-//                                                              data [(i * 4) + 2] = colors [i].b;
-//                                                              data [(i * 4) + 3] = colors [i].a;
-//                                                      }
-//                                                      mat.put (0, 0, data);
-//                                                      Core.flip (mat, mat, 0);
-//                                              }
+                throw new ArgumentException ("The Mat object has to be of the same size");
 
-//                      #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-//          if(mat.type () == CvType.CV_8UC4){
-//              OpenCVForUnity_LowLevelTextureToMat (webCamTexture.GetNativeTexturePtr(), webCamTexture.width, webCamTexture.height, mat.nativeObj);
-//              
-//              return;
-//          }
-//          
-//                      #endif
+            //                                              byte[] data = new byte[mat.cols () * mat.rows () * mat.channels ()];
+            //                      
+            //                                              Color32[] colors = webCamTexture.GetPixels32 ();
+            //                      
+            //                                              if (mat.type () == CvType.CV_8UC1) {
+            //                                                      for (int i = 0; i < colors.Length; i++) {
+            //                                                              data [i] = colors [i].b;
+            //                                                      }
+            //                                                      mat.put (0, 0, data);
+            //                                                      Core.flip (mat, mat, 0);
+            //                                              } else if (mat.type () == CvType.CV_8UC3) {
+            //                                                      for (int i = 0; i < colors.Length; i++) {
+            //                                                              data [(i * 3) + 0] = colors [i].r;
+            //                                                              data [(i * 3) + 1] = colors [i].g;
+            //                                                              data [(i * 3) + 2] = colors [i].b;
+            //                                                      }
+            //                                                      mat.put (0, 0, data);
+            //                                                      Core.flip (mat, mat, 0);
+            //                                              } else if (mat.type () == CvType.CV_8UC4) {
+            //                                                      for (int i = 0; i < colors.Length; i++) {
+            //                                                              data [(i * 4) + 0] = colors [i].r;
+            //                                                              data [(i * 4) + 1] = colors [i].g;
+            //                                                              data [(i * 4) + 2] = colors [i].b;
+            //                                                              data [(i * 4) + 3] = colors [i].a;
+            //                                                      }
+            //                                                      mat.put (0, 0, data);
+            //                                                      Core.flip (mat, mat, 0);
+            //                                              }
 
-            #if (UNITY_IOS && !UNITY_EDITOR && (UNITY_4_6_3 || UNITY_5_0_0 || UNITY_5_0_1))
+            //                      #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            //          if(mat.type () == CvType.CV_8UC4){
+            //              OpenCVForUnity_LowLevelTextureToMat (webCamTexture.GetNativeTexturePtr(), webCamTexture.width, webCamTexture.height, mat.nativeObj);
+            //              
+            //              return;
+            //          }
+            //          
+            //                      #endif
+
+#if (UNITY_IOS && !UNITY_EDITOR && (UNITY_4_6_3 || UNITY_5_0_0 || UNITY_5_0_1))
                         if (mat.type () == CvType.CV_8UC4) {
                                 OpenCVForUnity_LowLevelTextureToMat (webCamTexture.GetNativeTexturePtr (), webCamTexture.width, webCamTexture.height, mat.nativeObj);
                                 if (Utils.getLowLevelGraphicsDeviceType() == 16 && Utils.getLowLevelTextureFormat (webCamTexture) == 80) {
@@ -669,10 +678,10 @@ namespace OpenCVForUnity
                                 Core.flip (mat, mat, 0);
                                 return;
                         }
-            #endif
+#endif
 
-            
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             GCHandle colorsHandle;
             if (bufferColors == null) {
 
@@ -689,11 +698,11 @@ namespace OpenCVForUnity
             
             colorsHandle.Free ();
             
-            #else
+#else
             return;
-            #endif
+#endif
         }
-       
+
         /**
         * Converts Texture to Texture2D.
         * <p>
@@ -701,19 +710,19 @@ namespace OpenCVForUnity
         * <br>The texture and texture2D need to be the same size.
         * <br>The texture2D's TextureFormat needs to be RGBA32(Unity5.5+), ARGB32, RGB24, RGBAFloat or RGBAHalf.
         * 
-        * @param texture the input texture object
-        * @param texture2D the output texture2D object
+        * @param texture a texture object
+        * @param texture2D a texture2D object
         */
         public static void textureToTexture2D (Texture texture, Texture2D texture2D)
         {
             if (texture == null)
-                throw new ArgumentNullException ("texture");
+                throw new ArgumentNullException ("texture == null");
             if (texture2D == null)
-                throw new ArgumentNullException ("texture2D");
-            
+                throw new ArgumentNullException ("texture2D == null");
+
             if (texture.width != texture2D.width || texture.height != texture2D.height)
                 throw new ArgumentException ("texture and texture2D need to be the same size.");
-            
+
             RenderTexture prevRT = RenderTexture.active;
 
             if (texture is RenderTexture) {
@@ -738,70 +747,72 @@ namespace OpenCVForUnity
         * Converts OpenCV Mat to Unity Texture using low-level native plugin interface.
         * <p>
         * <br>This function converts the OpenCV Mat to the Unity Texture image using low-level native plugin interface.
-        * <br>The input Mat object has to be of the types 'CV_8UC4' (RGBA).
-        * <br>The output Texture object has to be of the TextureFormat 'RGBA32' or 'ARGB32'.
-        * <br>The output Texture object has to be of the same size as the input Mat'(width * height).
+        * <br>The Mat object has to be of the types 'CV_8UC4' (RGBA).
+        * <br>The Texture object has to be of the TextureFormat 'RGBA32' or 'ARGB32'.
+        * <br>The Texture object has to be of the same size as the Mat'(width * height).
         * <br>This function not implemented yet on OpenGLCore, Direct3D12.
         *
-        * @param mat the input Mat object has to be of the types 'CV_8UC4' (RGBA)
-        * @param texture the output Texture object has to be of the TextureFormat 'RGBA32' or 'ARGB32'. The output Texture object has to be of the same size as the input Mat (width * height).
+        * @param mat the Mat object has to be of the types 'CV_8UC4' (RGBA)
+        * @param texture the Texture object has to be of the TextureFormat 'RGBA32' or 'ARGB32'. The Texture object has to be of the same size as the Mat (width * height).
         */
+        [Obsolete ("Please use Texture2D.LoadRawTextureData() and Graphics.CopyTexture() method instead.")]
         public static void matToTexture (Mat mat, Texture texture)
         {
             if (mat != null)
                 mat.ThrowIfDisposed ();
-            
+
             if (mat == null)
-                throw new ArgumentNullException ("mat");
+                throw new ArgumentNullException ("mat == null");
             if (texture == null)
-                throw new ArgumentNullException ("texture2D");
-            
+                throw new ArgumentNullException ("texture2D == null");
+
             if (mat.cols () != texture.width || mat.rows () != texture.height)
-                throw new ArgumentException ("The output Texture object has to be of the same size");
-            
-            #if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
+                throw new ArgumentException ("The Texture object has to be of the same size");
+
+#if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
             
             OpenCVForUnity_LowLevelMatToTexture (mat.nativeObj, texture.GetNativeTexturePtr (), texture.width, texture.height);
             
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         /**
         * Converts Unity Texture to OpenCV Mat using low-level native plugin interface.
         * <p>
         * <br>This function converts the Unity Texture image to the OpenCV Mat using low-level native plugin interface.
-        * <br>The output Mat object has to be of the same size as the input Texture'(width * height).
-        * <br>The output Mat object has to be of the types 'CV_8UC4' (RGBA).
+        * <br>The Mat object has to be of the same size as the Texture'(width * height).
+        * <br>The Mat object has to be of the types 'CV_8UC4' (RGBA).
         * <br>This function not implemented yet on OpenGLCore, Direct3D12.
         * <br>When using Windows 10 and Direct3D11, Utils.textureToMat() seems to have limitations on the size of the texture. 2^n x 2^n (32x32, 32x64, 128x128, ...) is OK. But, other size is NG. 
         * 
-        * @param texture the input Texture object
-        * @param mat the output Mat object has to be of the same size as the input Texture'(width * height).
-        * The output Mat object has to be of the types 'CV_8UC4' (RGBA).
+        * @param texture a Texture object
+        * @param mat the Mat object has to be of the same size as the Texture'(width * height).
+        * The Mat object has to be of the types 'CV_8UC4' (RGBA).
         */
+        [Obsolete ("Please use Utils.textureToTexture2D() and Texture2D.GetRawTextureData() method instead.")]
         public static void textureToMat (Texture texture, Mat mat)
         {
             if (mat != null)
                 mat.ThrowIfDisposed ();
-            
+
             if (texture == null)
                 throw new ArgumentNullException ("texture2D == null");
             if (mat == null)
                 throw new ArgumentNullException ("mat == null");
-            
+
             if (mat.cols () != texture.width || mat.rows () != texture.height)
-                throw new ArgumentException ("The output Mat object has to be of the same size");
-            
-            
-            #if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
+                throw new ArgumentException ("The Mat object has to be of the same size");
+
+
+#if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
             
             OpenCVForUnity_LowLevelTextureToMat (texture.GetNativeTexturePtr (), texture.width, texture.height, mat.nativeObj);
             
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         /**
@@ -826,17 +837,18 @@ namespace OpenCVForUnity
         *
         * @return the graphics API type
         */
+        [Obsolete ("This method is deprecated.")]
         public static int getLowLevelGraphicsDeviceType ()
         {
-            #if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
+#if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
             return OpenCVForUnity_GetLowLevelGraphicsDeviceType ();
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
         /**
-        * Returns the low level texture format. (using low-level native plugin interface)
+        * Returns the low level texture format of a Texture. (using low-level native plugin interface)
         * <p>
         * <br>This function not implemented yet on OpenGLCore, Direct3D12.
         * <br>Direct3D 9 D3DFORMAT (Win)
@@ -845,19 +857,20 @@ namespace OpenCVForUnity
         * <br>OpenGLES always return -1 (Android iOS)
         * <br>Metal MTLPixelFormat (iOS)
         * 
-        * @param texture the Texture object
+        * @param texture a Texture object
         * @return the low level texture format
         */
+        [Obsolete ("This method is deprecated.")]
         public static int getLowLevelTextureFormat (Texture texture)
         {
             if (texture == null)
                 throw new ArgumentNullException ("texture == null");
 
-            #if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
+#if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
             return OpenCVForUnity_GetLowLevelTextureFormat (texture.GetNativeTexturePtr ());
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
         /**
@@ -867,29 +880,30 @@ namespace OpenCVForUnity
         *
         * @return true, if it is new low level native plugin interface false otherwise.
         */
+        [Obsolete ("This method is deprecated.")]
         public static bool isNewLowLevelNativePluginInterface ()
         {
-            #if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
+#if (UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER) && !(UNITY_WEBGL && !UNITY_EDITOR)
             return OpenCVForUnity_IsNewLowLevelNativePluginInterface ();
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
         /**
-        * Gets the readable path of the file in the "StreamingAssets" folder.
+        * Gets the readable path of a file in the "StreamingAssets" folder.
         * <p>
-        * <br>Set the relative file path from the starting point of the "StreamingAssets" folder. e.g. "foobar.txt" or "hogehoge/foobar.txt".
+        * <br>Set a relative file path from the starting point of the "StreamingAssets" folder. e.g. "foobar.txt" or "hogehoge/foobar.txt".
         * <br>[Android]The target file that exists in the "StreamingAssets" folder is copied into the folder of the Application.persistentDataPath. If refresh flag is false, when the file has already been copied, the file is not copied. If refresh flag is true, the file is always copyied. 
         * <br>[WebGL]If the target file has not yet been copied to WebGL's virtual filesystem, you need to use getFilePathAsync() at first.
         * 
-        * @param filepath the relative file path starting from "StreamingAssets" folder
+        * @param filepath a relative file path starting from "StreamingAssets" folder
         * @param refresh [Android]If refresh flag is false, when the file has already been copied, the file is not copied. If refresh flag is true, the file is always copyied.
         * @return returns the file path in case of success and returns empty in case of error.
         */
         public static string getFilePath (string filepath, bool refresh = false)
         {
-            #if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_ANDROID && !UNITY_EDITOR
             filepath = filepath.TrimStart (chTrims);
 
             string srcPath = Path.Combine(Application.streamingAssetsPath, filepath);
@@ -916,7 +930,7 @@ namespace OpenCVForUnity
             }
 
             return destPath;
-            #elif UNITY_WEBGL && !UNITY_EDITOR
+#elif UNITY_WEBGL && !UNITY_EDITOR
             filepath = filepath.TrimStart (chTrims);
 
             string destPath = Path.Combine(Path.AltDirectorySeparatorChar.ToString(), "opencvforunity");
@@ -927,7 +941,7 @@ namespace OpenCVForUnity
             }else{
                 return String.Empty;
             }
-            #else
+#else
             filepath = filepath.TrimStart (chTrims);
 
             string destPath = Path.Combine (Application.streamingAssetsPath, filepath);
@@ -937,32 +951,32 @@ namespace OpenCVForUnity
             } else {
                 return String.Empty;
             }
-            #endif
+#endif
         }
 
         /**
-        * Gets the readable path of the file in the "StreamingAssets" folder by using coroutines.
+        * Gets the readable path of a file in the "StreamingAssets" folder by using coroutines.
         * <p>
-        * <br>Set the relative file path from the starting point of the "StreamingAssets" folder.  e.g. "foobar.txt" or "hogehoge/foobar.txt".
+        * <br>Set a relative file path from the starting point of the "StreamingAssets" folder.  e.g. "foobar.txt" or "hogehoge/foobar.txt".
         * <br>[Android]The target file that exists in the "StreamingAssets" folder is copied into the folder of the Application.persistentDataPath. If refresh flag is false, when the file has already been copied, the file is not copied. If refresh flag is true, the file is always copyied. 
         * <br>[WebGL]The target file in the "StreamingAssets" folder is copied to the WebGL's virtual filesystem. If refresh flag is false, when the file has already been copied, the file is not copied. If refresh flag is true, the file is always copyied. 
         * 
-        * @param filepath the relative file path starting from "StreamingAssets" folder
-        * @param completed the callback function that is called when process is completed. Returns the file path in case of success and returns empty in case of error.
-        * @param progress the callback function that is called when process is progress. Returns the file path and a value of 0 to 1.
+        * @param filepath a relative file path starting from "StreamingAssets" folder
+        * @param completed a callback function that is called when process is completed. Returns the file path in case of success and returns empty in case of error.
+        * @param progress a callback function that is called when process is progress. Returns the file path and a value of 0 to 1.
         * @param refresh [Android][WebGL]If refresh flag is false, when the file has already been copied, the file is not copied. If refresh flag is true, the file is always copyied.
         */
         public static IEnumerator getFilePathAsync (string filepath, Action<string> completed, Action<string, float> progress = null, bool refresh = false)
         {
-            #if (UNITY_ANDROID || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_ANDROID || UNITY_WEBGL) && !UNITY_EDITOR
             filepath = filepath.TrimStart (chTrims);
 
             string srcPath = Path.Combine(Application.streamingAssetsPath, filepath);
-            #if UNITY_ANDROID
+#if UNITY_ANDROID
             string destPath = Path.Combine(Application.persistentDataPath, "opencvforunity");
-            #else
+#else
             string destPath = Path.Combine(Path.AltDirectorySeparatorChar.ToString(), "opencvforunity");
-            #endif
+#endif
             destPath = Path.Combine(destPath, filepath);
 
             if (!refresh && File.Exists(destPath)){
@@ -974,7 +988,7 @@ namespace OpenCVForUnity
                 if (completed != null)
                     completed (destPath);
             } else {
-            #if UNITY_WEBGL && UNITY_5_4_OR_NEWER
+#if UNITY_WEBGL && UNITY_5_4_OR_NEWER
                 using (UnityEngine.Networking.UnityWebRequest request = UnityEngine.Networking.UnityWebRequest.Get (srcPath)) {
                     request.Send ();
                     while (!request.isDone) {
@@ -984,11 +998,11 @@ namespace OpenCVForUnity
                         yield return null;
                     }
 
-            #if UNITY_2017 && UNITY_2017_1_OR_NEWER
+#if UNITY_2017_1_OR_NEWER
                     if (request.isHttpError || request.isNetworkError) {
-            #else
+#else
                     if (request.isError) {
-            #endif
+#endif
                         Debug.LogWarning (request.error);
                         if (completed != null)
                             completed (String.Empty);
@@ -1001,7 +1015,7 @@ namespace OpenCVForUnity
 
                     File.WriteAllBytes (destPath, request.downloadHandler.data);
                 }
-            #else
+#else
                 using (WWW request = new WWW (srcPath)) {
 
                     while (!request.isDone) {
@@ -1024,11 +1038,11 @@ namespace OpenCVForUnity
 
                     File.WriteAllBytes(destPath, request.bytes);
                 }
-            #endif
+#endif
 
                     if (completed != null) completed (destPath);
             }
-            #else
+#else
             filepath = filepath.TrimStart (chTrims);
 
             string destPath = Path.Combine (Application.streamingAssetsPath, filepath);
@@ -1048,7 +1062,7 @@ namespace OpenCVForUnity
                 if (completed != null)
                     completed (String.Empty);
             }
-            #endif
+#endif
 
             yield break;
         }
@@ -1064,11 +1078,16 @@ namespace OpenCVForUnity
             #endif
         };
 
+        /// <summary>
+        /// if true, CvException is thrown instead of calling Debug.LogError (msg).
+        /// </summary>
+        private static bool throwOpenCVException = false;
+
         /**
         * Sets the debug mode.
         * <p>
-        * <br>if true, The error log of the Native side OpenCV will be displayed on the Unity Editor Console.
-        * <br>This method is supported in WIN, MAC and LINUX.
+        * <br>if debugMode is true, The error log of the Native side OpenCV will be displayed on the Unity Editor Console.However, if throwException is true, CvException is thrown instead of calling Debug.LogError (msg).
+        * <br>This method is supported on WIN, MAC and LINUX.
         * <br>Please use as follows.
         * <br>Utils.setDebugMode(true);
         * <br>aaa
@@ -1077,10 +1096,11 @@ namespace OpenCVForUnity
         * <br>Utils.setDebugMode(false);
         * 
         * @param debugMode if true, The error log of the Native side OpenCV will be displayed on the Unity Editor Console
+        * @param throwException if true, CvException is thrown instead of calling Debug.LogError (msg).
         */
-        public static void setDebugMode (bool debugMode)
+        public static void setDebugMode (bool debugMode, bool throwException = false)
         {
-            #if (UNITY_PRO_LICENSE || UNITY_5 || UNITY_5_3_OR_NEWER) && (UNITY_STANDALONE || UNITY_EDITOR)
+#if (UNITY_PRO_LICENSE || UNITY_5 || UNITY_5_3_OR_NEWER) && (UNITY_STANDALONE || UNITY_EDITOR)
             OpenCVForUnity_SetDebugMode (debugMode);
 
             if (debugMode) {
@@ -1089,7 +1109,10 @@ namespace OpenCVForUnity
             } else {
                 OpenCVForUnity_SetDebugLogFunc (null);
             }
-            #endif
+            
+            throwOpenCVException = throwException;
+           
+#endif
         }
 
         internal static int URShift (int number, int bits)
@@ -1123,7 +1146,15 @@ namespace OpenCVForUnity
         
         private delegate void DebugLogDelegate (string str);
 
-        private static DebugLogDelegate debugLogFunc = msg => Debug.LogError (msg);
+        [MonoPInvokeCallback (typeof(DebugLogDelegate))]
+        private static void debugLogFunc (string str)
+        {
+            if (throwOpenCVException) {
+                throw new CvException (str);
+            } else {
+                Debug.LogError (str);
+            }
+        }
 
         [DllImport ("opencvforunity")]
         private static extern void OpenCVForUnity_SetDebugMode (bool flag);
@@ -1150,7 +1181,38 @@ namespace OpenCVForUnity
         private static extern void OpenCVForUnity_ByteArrayToMatData (IntPtr byteArray, IntPtr Mat);
 
 
-        #if !UNITY_WEBGL
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#if !UNITY_WEBGL
         [DllImport("__Internal")]
         private static extern void OpenCVForUnity_TextureDataToByteArray (IntPtr texPtr, int texWidth, int texHeight, IntPtr byteArray, int bytesPerPixel);
         
@@ -1171,10 +1233,41 @@ namespace OpenCVForUnity
 
         [DllImport("__Internal")]
         private static extern bool OpenCVForUnity_IsNewLowLevelNativePluginInterface ();
-        #endif
+#endif
+        
+
+        
 
 
-        #else
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#else
 
         [DllImport ("opencvforunity")]
         private static extern void OpenCVForUnity_MatToTexture (IntPtr mat, IntPtr textureColors);
@@ -1208,7 +1301,7 @@ namespace OpenCVForUnity
 
         [DllImport ("opencvforunity")]
         private static extern bool OpenCVForUnity_IsNewLowLevelNativePluginInterface ();
-        
+
         #endif
     }
 }

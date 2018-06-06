@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class MotionSaliencyBinWangApr2014
-//javadoc: MotionSaliencyBinWangApr2014
+    // C++: class MotionSaliencyBinWangApr2014
+    //javadoc: MotionSaliencyBinWangApr2014
+
     public class MotionSaliencyBinWangApr2014 : MotionSaliency
     {
 
@@ -33,10 +31,16 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal MotionSaliencyBinWangApr2014 (IntPtr addr) : base(addr)
+        protected internal MotionSaliencyBinWangApr2014 (IntPtr addr)
+            : base (addr)
         {
         }
 
+        // internal usage only
+        public static new MotionSaliencyBinWangApr2014 __fromPtr__ (IntPtr addr)
+        {
+            return new MotionSaliencyBinWangApr2014 (addr);
+        }
 
         //
         // C++: static Ptr_MotionSaliencyBinWangApr2014 create()
@@ -45,14 +49,14 @@ namespace OpenCVForUnity
         //javadoc: MotionSaliencyBinWangApr2014::create()
         public static MotionSaliencyBinWangApr2014 create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            MotionSaliencyBinWangApr2014 retVal = new MotionSaliencyBinWangApr2014 (saliency_MotionSaliencyBinWangApr2014_create_10 ());
+            MotionSaliencyBinWangApr2014 retVal = MotionSaliencyBinWangApr2014.__fromPtr__ (saliency_MotionSaliencyBinWangApr2014_create_10 ());
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -68,14 +72,14 @@ namespace OpenCVForUnity
                 image.ThrowIfDisposed ();
             if (saliencyMap != null)
                 saliencyMap.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = saliency_MotionSaliencyBinWangApr2014_computeSaliency_10 (nativeObj, image.nativeObj, saliencyMap.nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -84,17 +88,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: MotionSaliencyBinWangApr2014::init()
-        public  bool init ()
+        public bool init ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = saliency_MotionSaliencyBinWangApr2014_init_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -103,17 +107,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: MotionSaliencyBinWangApr2014::getImageHeight()
-        public  int getImageHeight ()
+        public int getImageHeight ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = saliency_MotionSaliencyBinWangApr2014_getImageHeight_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -122,17 +126,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: MotionSaliencyBinWangApr2014::getImageWidth()
-        public  int getImageWidth ()
+        public int getImageWidth ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = saliency_MotionSaliencyBinWangApr2014_getImageWidth_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -141,17 +145,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: MotionSaliencyBinWangApr2014::setImageHeight(val)
-        public  void setImageHeight (int val)
+        public void setImageHeight (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             saliency_MotionSaliencyBinWangApr2014_setImageHeight_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -160,17 +164,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: MotionSaliencyBinWangApr2014::setImageWidth(val)
-        public  void setImageWidth (int val)
+        public void setImageWidth (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             saliency_MotionSaliencyBinWangApr2014_setImageWidth_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -179,62 +183,63 @@ namespace OpenCVForUnity
         //
 
         //javadoc: MotionSaliencyBinWangApr2014::setImagesize(W, H)
-        public  void setImagesize (int W, int H)
+        public void setImagesize (int W, int H)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             saliency_MotionSaliencyBinWangApr2014_setImagesize_10 (nativeObj, W, H);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++: static Ptr_MotionSaliencyBinWangApr2014 create()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr saliency_MotionSaliencyBinWangApr2014_create_10 ();
 
         // C++:  bool computeSaliency(Mat image, Mat& saliencyMap)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool saliency_MotionSaliencyBinWangApr2014_computeSaliency_10 (IntPtr nativeObj, IntPtr image_nativeObj, IntPtr saliencyMap_nativeObj);
 
         // C++:  bool init()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool saliency_MotionSaliencyBinWangApr2014_init_10 (IntPtr nativeObj);
 
         // C++:  int getImageHeight()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int saliency_MotionSaliencyBinWangApr2014_getImageHeight_10 (IntPtr nativeObj);
 
         // C++:  int getImageWidth()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int saliency_MotionSaliencyBinWangApr2014_getImageWidth_10 (IntPtr nativeObj);
 
         // C++:  void setImageHeight(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void saliency_MotionSaliencyBinWangApr2014_setImageHeight_10 (IntPtr nativeObj, int val);
 
         // C++:  void setImageWidth(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void saliency_MotionSaliencyBinWangApr2014_setImageWidth_10 (IntPtr nativeObj, int val);
 
         // C++:  void setImagesize(int W, int H)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void saliency_MotionSaliencyBinWangApr2014_setImagesize_10 (IntPtr nativeObj, int W, int H);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void saliency_MotionSaliencyBinWangApr2014_delete (IntPtr nativeObj);
 
     }

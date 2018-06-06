@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,51 +6,52 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class LearningBasedWB
-//javadoc: LearningBasedWB
+    // C++: class LearningBasedWB
+    //javadoc: LearningBasedWB
+
     public class LearningBasedWB : WhiteBalancer
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        xphoto_LearningBasedWB_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+xphoto_LearningBasedWB_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal LearningBasedWB (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal LearningBasedWB (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new LearningBasedWB __fromPtr__ (IntPtr addr) { return new LearningBasedWB (addr); }
 
         //
         // C++:  float getSaturationThreshold()
         //
 
         //javadoc: LearningBasedWB::getSaturationThreshold()
-        public  float getSaturationThreshold ()
+        public float getSaturationThreshold ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            float retVal = xphoto_LearningBasedWB_getSaturationThreshold_10 (nativeObj);
+        float retVal = xphoto_LearningBasedWB_getSaturationThreshold_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -62,17 +60,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LearningBasedWB::getHistBinNum()
-        public  int getHistBinNum ()
+        public int getHistBinNum ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = xphoto_LearningBasedWB_getHistBinNum_10 (nativeObj);
+        int retVal = xphoto_LearningBasedWB_getHistBinNum_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -81,17 +79,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LearningBasedWB::getRangeMaxVal()
-        public  int getRangeMaxVal ()
+        public int getRangeMaxVal ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = xphoto_LearningBasedWB_getRangeMaxVal_10 (nativeObj);
+        int retVal = xphoto_LearningBasedWB_getRangeMaxVal_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -100,21 +98,19 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LearningBasedWB::extractSimpleFeatures(src, dst)
-        public  void extractSimpleFeatures (Mat src, Mat dst)
+        public void extractSimpleFeatures (Mat src, Mat dst)
         {
             ThrowIfDisposed ();
-            if (src != null)
-                src.ThrowIfDisposed ();
-            if (dst != null)
-                dst.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (src != null) src.ThrowIfDisposed ();
+            if (dst != null) dst.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            xphoto_LearningBasedWB_extractSimpleFeatures_10 (nativeObj, src.nativeObj, dst.nativeObj);
+        xphoto_LearningBasedWB_extractSimpleFeatures_10(nativeObj, src.nativeObj, dst.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -123,17 +119,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LearningBasedWB::setHistBinNum(val)
-        public  void setHistBinNum (int val)
+        public void setHistBinNum (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            xphoto_LearningBasedWB_setHistBinNum_10 (nativeObj, val);
+        xphoto_LearningBasedWB_setHistBinNum_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -142,17 +138,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LearningBasedWB::setRangeMaxVal(val)
-        public  void setRangeMaxVal (int val)
+        public void setRangeMaxVal (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            xphoto_LearningBasedWB_setRangeMaxVal_10 (nativeObj, val);
+        xphoto_LearningBasedWB_setRangeMaxVal_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -161,58 +157,58 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LearningBasedWB::setSaturationThreshold(val)
-        public  void setSaturationThreshold (float val)
+        public void setSaturationThreshold (float val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            xphoto_LearningBasedWB_setSaturationThreshold_10 (nativeObj, val);
+        xphoto_LearningBasedWB_setSaturationThreshold_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  float getSaturationThreshold()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float xphoto_LearningBasedWB_getSaturationThreshold_10 (IntPtr nativeObj);
 
         // C++:  int getHistBinNum()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int xphoto_LearningBasedWB_getHistBinNum_10 (IntPtr nativeObj);
 
         // C++:  int getRangeMaxVal()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int xphoto_LearningBasedWB_getRangeMaxVal_10 (IntPtr nativeObj);
 
         // C++:  void extractSimpleFeatures(Mat src, Mat& dst)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void xphoto_LearningBasedWB_extractSimpleFeatures_10 (IntPtr nativeObj, IntPtr src_nativeObj, IntPtr dst_nativeObj);
 
         // C++:  void setHistBinNum(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void xphoto_LearningBasedWB_setHistBinNum_10 (IntPtr nativeObj, int val);
 
         // C++:  void setRangeMaxVal(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void xphoto_LearningBasedWB_setRangeMaxVal_10 (IntPtr nativeObj, int val);
 
         // C++:  void setSaturationThreshold(float val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void xphoto_LearningBasedWB_setSaturationThreshold_10 (IntPtr nativeObj, float val);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void xphoto_LearningBasedWB_delete (IntPtr nativeObj);
 
     }

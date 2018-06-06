@@ -1,58 +1,60 @@
 
-//
 
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace OpenCVForUnity
 {
-// C++: class TrainData
-//javadoc: TrainData
+    // C++: class TrainData
+    //javadoc: TrainData
+
     public class TrainData : DisposableOpenCVObject
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        ml_TrainData_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+ml_TrainData_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal TrainData (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal TrainData (IntPtr addr) : base (addr) { }
 
+
+        public IntPtr getNativeObjAddr () { return nativeObj; }
+
+        // internal usage only
+        public static TrainData __fromPtr__ (IntPtr addr) { return new TrainData (addr); }
 
         //
         // C++:  Mat getCatMap()
         //
 
         //javadoc: TrainData::getCatMap()
-        public  Mat getCatMap ()
+        public Mat getCatMap ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getCatMap_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getCatMap_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -61,17 +63,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getCatOfs()
-        public  Mat getCatOfs ()
+        public Mat getCatOfs ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getCatOfs_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getCatOfs_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -80,17 +82,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getClassLabels()
-        public  Mat getClassLabels ()
+        public Mat getClassLabels ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getClassLabels_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getClassLabels_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -99,17 +101,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getDefaultSubstValues()
-        public  Mat getDefaultSubstValues ()
+        public Mat getDefaultSubstValues ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getDefaultSubstValues_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getDefaultSubstValues_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -118,17 +120,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getMissing()
-        public  Mat getMissing ()
+        public Mat getMissing ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getMissing_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getMissing_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -137,17 +139,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getNormCatResponses()
-        public  Mat getNormCatResponses ()
+        public Mat getNormCatResponses ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getNormCatResponses_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getNormCatResponses_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -156,17 +158,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getResponses()
-        public  Mat getResponses ()
+        public Mat getResponses ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getResponses_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getResponses_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -175,17 +177,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getSampleWeights()
-        public  Mat getSampleWeights ()
+        public Mat getSampleWeights ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getSampleWeights_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getSampleWeights_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -194,17 +196,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getSamples()
-        public  Mat getSamples ()
+        public Mat getSamples ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getSamples_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getSamples_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -215,18 +217,16 @@ namespace OpenCVForUnity
         //javadoc: TrainData::getSubVector(vec, idx)
         public static Mat getSubVector (Mat vec, Mat idx)
         {
-            if (vec != null)
-                vec.ThrowIfDisposed ();
-            if (idx != null)
-                idx.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (vec != null) vec.ThrowIfDisposed ();
+            if (idx != null) idx.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getSubVector_10 (vec.nativeObj, idx.nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getSubVector_10(vec.nativeObj, idx.nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -235,17 +235,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getTestNormCatResponses()
-        public  Mat getTestNormCatResponses ()
+        public Mat getTestNormCatResponses ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getTestNormCatResponses_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getTestNormCatResponses_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -254,17 +254,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getTestResponses()
-        public  Mat getTestResponses ()
+        public Mat getTestResponses ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getTestResponses_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getTestResponses_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -273,17 +273,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getTestSampleIdx()
-        public  Mat getTestSampleIdx ()
+        public Mat getTestSampleIdx ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getTestSampleIdx_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getTestSampleIdx_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -292,17 +292,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getTestSampleWeights()
-        public  Mat getTestSampleWeights ()
+        public Mat getTestSampleWeights ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getTestSampleWeights_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getTestSampleWeights_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -311,17 +311,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getTestSamples()
-        public  Mat getTestSamples ()
+        public Mat getTestSamples ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getTestSamples_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getTestSamples_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -330,17 +330,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getTrainNormCatResponses()
-        public  Mat getTrainNormCatResponses ()
+        public Mat getTrainNormCatResponses ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getTrainNormCatResponses_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getTrainNormCatResponses_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -349,17 +349,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getTrainResponses()
-        public  Mat getTrainResponses ()
+        public Mat getTrainResponses ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getTrainResponses_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getTrainResponses_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -368,17 +368,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getTrainSampleIdx()
-        public  Mat getTrainSampleIdx ()
+        public Mat getTrainSampleIdx ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getTrainSampleIdx_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getTrainSampleIdx_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -387,17 +387,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getTrainSampleWeights()
-        public  Mat getTrainSampleWeights ()
+        public Mat getTrainSampleWeights ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getTrainSampleWeights_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getTrainSampleWeights_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -406,31 +406,31 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getTrainSamples(layout, compressSamples, compressVars)
-        public  Mat getTrainSamples (int layout, bool compressSamples, bool compressVars)
+        public Mat getTrainSamples (int layout, bool compressSamples, bool compressVars)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getTrainSamples_10 (nativeObj, layout, compressSamples, compressVars));
+        Mat retVal = new Mat(ml_TrainData_getTrainSamples_10(nativeObj, layout, compressSamples, compressVars));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: TrainData::getTrainSamples()
-        public  Mat getTrainSamples ()
+        public Mat getTrainSamples ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getTrainSamples_11 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getTrainSamples_11(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -439,17 +439,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getVarIdx()
-        public  Mat getVarIdx ()
+        public Mat getVarIdx ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getVarIdx_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getVarIdx_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -458,17 +458,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getVarSymbolFlags()
-        public  Mat getVarSymbolFlags ()
+        public Mat getVarSymbolFlags ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getVarSymbolFlags_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getVarSymbolFlags_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -477,17 +477,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getVarType()
-        public  Mat getVarType ()
+        public Mat getVarType ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_TrainData_getVarType_10 (nativeObj));
+        Mat retVal = new Mat(ml_TrainData_getVarType_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -498,43 +498,35 @@ namespace OpenCVForUnity
         //javadoc: TrainData::create(samples, layout, responses, varIdx, sampleIdx, sampleWeights, varType)
         public static TrainData create (Mat samples, int layout, Mat responses, Mat varIdx, Mat sampleIdx, Mat sampleWeights, Mat varType)
         {
-            if (samples != null)
-                samples.ThrowIfDisposed ();
-            if (responses != null)
-                responses.ThrowIfDisposed ();
-            if (varIdx != null)
-                varIdx.ThrowIfDisposed ();
-            if (sampleIdx != null)
-                sampleIdx.ThrowIfDisposed ();
-            if (sampleWeights != null)
-                sampleWeights.ThrowIfDisposed ();
-            if (varType != null)
-                varType.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (samples != null) samples.ThrowIfDisposed ();
+            if (responses != null) responses.ThrowIfDisposed ();
+            if (varIdx != null) varIdx.ThrowIfDisposed ();
+            if (sampleIdx != null) sampleIdx.ThrowIfDisposed ();
+            if (sampleWeights != null) sampleWeights.ThrowIfDisposed ();
+            if (varType != null) varType.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            TrainData retVal = new TrainData (ml_TrainData_create_10 (samples.nativeObj, layout, responses.nativeObj, varIdx.nativeObj, sampleIdx.nativeObj, sampleWeights.nativeObj, varType.nativeObj));
+        TrainData retVal = TrainData.__fromPtr__(ml_TrainData_create_10(samples.nativeObj, layout, responses.nativeObj, varIdx.nativeObj, sampleIdx.nativeObj, sampleWeights.nativeObj, varType.nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: TrainData::create(samples, layout, responses)
         public static TrainData create (Mat samples, int layout, Mat responses)
         {
-            if (samples != null)
-                samples.ThrowIfDisposed ();
-            if (responses != null)
-                responses.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (samples != null) samples.ThrowIfDisposed ();
+            if (responses != null) responses.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            TrainData retVal = new TrainData (ml_TrainData_create_11 (samples.nativeObj, layout, responses.nativeObj));
+        TrainData retVal = TrainData.__fromPtr__(ml_TrainData_create_11(samples.nativeObj, layout, responses.nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -543,17 +535,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getCatCount(vi)
-        public  int getCatCount (int vi)
+        public int getCatCount (int vi)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ml_TrainData_getCatCount_10 (nativeObj, vi);
+        int retVal = ml_TrainData_getCatCount_10(nativeObj, vi);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -562,17 +554,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getLayout()
-        public  int getLayout ()
+        public int getLayout ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ml_TrainData_getLayout_10 (nativeObj);
+        int retVal = ml_TrainData_getLayout_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -581,17 +573,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getNAllVars()
-        public  int getNAllVars ()
+        public int getNAllVars ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ml_TrainData_getNAllVars_10 (nativeObj);
+        int retVal = ml_TrainData_getNAllVars_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -600,17 +592,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getNSamples()
-        public  int getNSamples ()
+        public int getNSamples ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ml_TrainData_getNSamples_10 (nativeObj);
+        int retVal = ml_TrainData_getNSamples_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -619,17 +611,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getNTestSamples()
-        public  int getNTestSamples ()
+        public int getNTestSamples ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ml_TrainData_getNTestSamples_10 (nativeObj);
+        int retVal = ml_TrainData_getNTestSamples_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -638,17 +630,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getNTrainSamples()
-        public  int getNTrainSamples ()
+        public int getNTrainSamples ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ml_TrainData_getNTrainSamples_10 (nativeObj);
+        int retVal = ml_TrainData_getNTrainSamples_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -657,17 +649,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getNVars()
-        public  int getNVars ()
+        public int getNVars ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ml_TrainData_getNVars_10 (nativeObj);
+        int retVal = ml_TrainData_getNVars_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -676,17 +668,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getResponseType()
-        public  int getResponseType ()
+        public int getResponseType ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ml_TrainData_getResponseType_10 (nativeObj);
+        int retVal = ml_TrainData_getResponseType_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -694,7 +686,19 @@ namespace OpenCVForUnity
         // C++:  void getNames(vector_String names)
         //
 
-        // Unknown type 'vector_String' (I), skipping the function
+        //javadoc: TrainData::getNames(names)
+        public void getNames (List<string> names)
+        {
+            ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        Mat names_mat = Converters.vector_String_to_Mat(names);
+        ml_TrainData_getNames_10(nativeObj, names_mat.nativeObj);
+        
+        return;
+#else
+            return;
+#endif
+        }
 
 
         //
@@ -702,19 +706,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getSample(varIdx, sidx, buf)
-        public  void getSample (Mat varIdx, int sidx, float buf)
+        public void getSample (Mat varIdx, int sidx, float buf)
         {
             ThrowIfDisposed ();
-            if (varIdx != null)
-                varIdx.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (varIdx != null) varIdx.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_TrainData_getSample_10 (nativeObj, varIdx.nativeObj, sidx, buf);
+        ml_TrainData_getSample_10(nativeObj, varIdx.nativeObj, sidx, buf);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -723,19 +726,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::getValues(vi, sidx, values)
-        public  void getValues (int vi, Mat sidx, float values)
+        public void getValues (int vi, Mat sidx, float values)
         {
             ThrowIfDisposed ();
-            if (sidx != null)
-                sidx.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (sidx != null) sidx.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_TrainData_getValues_10 (nativeObj, vi, sidx.nativeObj, values);
+        ml_TrainData_getValues_10(nativeObj, vi, sidx.nativeObj, values);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -744,31 +746,31 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::setTrainTestSplit(count, shuffle)
-        public  void setTrainTestSplit (int count, bool shuffle)
+        public void setTrainTestSplit (int count, bool shuffle)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_TrainData_setTrainTestSplit_10 (nativeObj, count, shuffle);
+        ml_TrainData_setTrainTestSplit_10(nativeObj, count, shuffle);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
         //javadoc: TrainData::setTrainTestSplit(count)
-        public  void setTrainTestSplit (int count)
+        public void setTrainTestSplit (int count)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_TrainData_setTrainTestSplit_11 (nativeObj, count);
+        ml_TrainData_setTrainTestSplit_11(nativeObj, count);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -777,31 +779,31 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::setTrainTestSplitRatio(ratio, shuffle)
-        public  void setTrainTestSplitRatio (double ratio, bool shuffle)
+        public void setTrainTestSplitRatio (double ratio, bool shuffle)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_TrainData_setTrainTestSplitRatio_10 (nativeObj, ratio, shuffle);
+        ml_TrainData_setTrainTestSplitRatio_10(nativeObj, ratio, shuffle);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
         //javadoc: TrainData::setTrainTestSplitRatio(ratio)
-        public  void setTrainTestSplitRatio (double ratio)
+        public void setTrainTestSplitRatio (double ratio)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_TrainData_setTrainTestSplitRatio_11 (nativeObj, ratio);
+        ml_TrainData_setTrainTestSplitRatio_11(nativeObj, ratio);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -810,190 +812,190 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TrainData::shuffleTrainTest()
-        public  void shuffleTrainTest ()
+        public void shuffleTrainTest ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_TrainData_shuffleTrainTest_10 (nativeObj);
+        ml_TrainData_shuffleTrainTest_10(nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  Mat getCatMap()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getCatMap_10 (IntPtr nativeObj);
 
         // C++:  Mat getCatOfs()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getCatOfs_10 (IntPtr nativeObj);
 
         // C++:  Mat getClassLabels()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getClassLabels_10 (IntPtr nativeObj);
 
         // C++:  Mat getDefaultSubstValues()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getDefaultSubstValues_10 (IntPtr nativeObj);
 
         // C++:  Mat getMissing()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getMissing_10 (IntPtr nativeObj);
 
         // C++:  Mat getNormCatResponses()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getNormCatResponses_10 (IntPtr nativeObj);
 
         // C++:  Mat getResponses()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getResponses_10 (IntPtr nativeObj);
 
         // C++:  Mat getSampleWeights()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getSampleWeights_10 (IntPtr nativeObj);
 
         // C++:  Mat getSamples()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getSamples_10 (IntPtr nativeObj);
 
         // C++: static Mat getSubVector(Mat vec, Mat idx)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getSubVector_10 (IntPtr vec_nativeObj, IntPtr idx_nativeObj);
 
         // C++:  Mat getTestNormCatResponses()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getTestNormCatResponses_10 (IntPtr nativeObj);
 
         // C++:  Mat getTestResponses()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getTestResponses_10 (IntPtr nativeObj);
 
         // C++:  Mat getTestSampleIdx()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getTestSampleIdx_10 (IntPtr nativeObj);
 
         // C++:  Mat getTestSampleWeights()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getTestSampleWeights_10 (IntPtr nativeObj);
 
         // C++:  Mat getTestSamples()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getTestSamples_10 (IntPtr nativeObj);
 
         // C++:  Mat getTrainNormCatResponses()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getTrainNormCatResponses_10 (IntPtr nativeObj);
 
         // C++:  Mat getTrainResponses()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getTrainResponses_10 (IntPtr nativeObj);
 
         // C++:  Mat getTrainSampleIdx()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getTrainSampleIdx_10 (IntPtr nativeObj);
 
         // C++:  Mat getTrainSampleWeights()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getTrainSampleWeights_10 (IntPtr nativeObj);
 
         // C++:  Mat getTrainSamples(int layout = ROW_SAMPLE, bool compressSamples = true, bool compressVars = true)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getTrainSamples_10 (IntPtr nativeObj, int layout, bool compressSamples, bool compressVars);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getTrainSamples_11 (IntPtr nativeObj);
 
         // C++:  Mat getVarIdx()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getVarIdx_10 (IntPtr nativeObj);
 
         // C++:  Mat getVarSymbolFlags()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getVarSymbolFlags_10 (IntPtr nativeObj);
 
         // C++:  Mat getVarType()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_getVarType_10 (IntPtr nativeObj);
 
         // C++: static Ptr_TrainData create(Mat samples, int layout, Mat responses, Mat varIdx = Mat(), Mat sampleIdx = Mat(), Mat sampleWeights = Mat(), Mat varType = Mat())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_create_10 (IntPtr samples_nativeObj, int layout, IntPtr responses_nativeObj, IntPtr varIdx_nativeObj, IntPtr sampleIdx_nativeObj, IntPtr sampleWeights_nativeObj, IntPtr varType_nativeObj);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_TrainData_create_11 (IntPtr samples_nativeObj, int layout, IntPtr responses_nativeObj);
 
         // C++:  int getCatCount(int vi)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_TrainData_getCatCount_10 (IntPtr nativeObj, int vi);
 
         // C++:  int getLayout()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_TrainData_getLayout_10 (IntPtr nativeObj);
 
         // C++:  int getNAllVars()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_TrainData_getNAllVars_10 (IntPtr nativeObj);
 
         // C++:  int getNSamples()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_TrainData_getNSamples_10 (IntPtr nativeObj);
 
         // C++:  int getNTestSamples()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_TrainData_getNTestSamples_10 (IntPtr nativeObj);
 
         // C++:  int getNTrainSamples()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_TrainData_getNTrainSamples_10 (IntPtr nativeObj);
 
         // C++:  int getNVars()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_TrainData_getNVars_10 (IntPtr nativeObj);
 
         // C++:  int getResponseType()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_TrainData_getResponseType_10 (IntPtr nativeObj);
 
+        // C++:  void getNames(vector_String names)
+        [DllImport (LIBNAME)]
+        private static extern void ml_TrainData_getNames_10 (IntPtr nativeObj, IntPtr names_mat_nativeObj);
+
         // C++:  void getSample(Mat varIdx, int sidx, float* buf)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_TrainData_getSample_10 (IntPtr nativeObj, IntPtr varIdx_nativeObj, int sidx, float buf);
 
         // C++:  void getValues(int vi, Mat sidx, float* values)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_TrainData_getValues_10 (IntPtr nativeObj, int vi, IntPtr sidx_nativeObj, float values);
 
         // C++:  void setTrainTestSplit(int count, bool shuffle = true)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_TrainData_setTrainTestSplit_10 (IntPtr nativeObj, int count, bool shuffle);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_TrainData_setTrainTestSplit_11 (IntPtr nativeObj, int count);
 
         // C++:  void setTrainTestSplitRatio(double ratio, bool shuffle = true)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_TrainData_setTrainTestSplitRatio_10 (IntPtr nativeObj, double ratio, bool shuffle);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_TrainData_setTrainTestSplitRatio_11 (IntPtr nativeObj, double ratio);
 
         // C++:  void shuffleTrainTest()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_TrainData_shuffleTrainTest_10 (IntPtr nativeObj);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_TrainData_delete (IntPtr nativeObj);
 
     }

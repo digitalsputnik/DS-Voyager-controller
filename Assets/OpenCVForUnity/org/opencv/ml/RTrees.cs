@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class RTrees
-//javadoc: RTrees
+    // C++: class RTrees
+    //javadoc: RTrees
+
     public class RTrees : DTrees
     {
 
@@ -33,27 +31,33 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal RTrees (IntPtr addr) : base(addr)
+        protected internal RTrees (IntPtr addr)
+            : base (addr)
         {
         }
 
+        // internal usage only
+        public static new RTrees __fromPtr__ (IntPtr addr)
+        {
+            return new RTrees (addr);
+        }
 
         //
         // C++:  Mat getVarImportance()
         //
 
         //javadoc: RTrees::getVarImportance()
-        public  Mat getVarImportance ()
+        public Mat getVarImportance ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             Mat retVal = new Mat (ml_RTrees_getVarImportance_10 (nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -62,18 +66,16 @@ namespace OpenCVForUnity
         //
 
         //javadoc: RTrees::create()
-#pragma warning disable 0108
-        public static RTrees create ()
+        public static new RTrees create ()
         {
-#pragma warning restore 0067
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            RTrees retVal = new RTrees (ml_RTrees_create_10 ());
+            RTrees retVal = RTrees.__fromPtr__ (ml_RTrees_create_10 ());
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -82,29 +84,29 @@ namespace OpenCVForUnity
         //
 
         //javadoc: RTrees::load(filepath, nodeName)
-        public static RTrees load (string filepath, string nodeName)
+        public static new RTrees load (string filepath, string nodeName)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            RTrees retVal = new RTrees (ml_RTrees_load_10 (filepath, nodeName));
+            RTrees retVal = RTrees.__fromPtr__ (ml_RTrees_load_10 (filepath, nodeName));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: RTrees::load(filepath)
-        public static RTrees load (string filepath)
+        public static new RTrees load (string filepath)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            RTrees retVal = new RTrees (ml_RTrees_load_11 (filepath));
+            RTrees retVal = RTrees.__fromPtr__ (ml_RTrees_load_11 (filepath));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -113,19 +115,19 @@ namespace OpenCVForUnity
         //
 
         //javadoc: RTrees::getTermCriteria()
-        public  TermCriteria getTermCriteria ()
+        public TermCriteria getTermCriteria ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             double[] tmpArray = new double[3];
             ml_RTrees_getTermCriteria_10 (nativeObj, tmpArray);
             TermCriteria retVal = new TermCriteria (tmpArray);
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -134,17 +136,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: RTrees::getCalculateVarImportance()
-        public  bool getCalculateVarImportance ()
+        public bool getCalculateVarImportance ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = ml_RTrees_getCalculateVarImportance_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -153,17 +155,40 @@ namespace OpenCVForUnity
         //
 
         //javadoc: RTrees::getActiveVarCount()
-        public  int getActiveVarCount ()
+        public int getActiveVarCount ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = ml_RTrees_getActiveVarCount_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
+        }
+
+
+        //
+        // C++:  void getVotes(Mat samples, Mat& results, int flags)
+        //
+
+        //javadoc: RTrees::getVotes(samples, results, flags)
+        public void getVotes (Mat samples, Mat results, int flags)
+        {
+            ThrowIfDisposed ();
+            if (samples != null)
+                samples.ThrowIfDisposed ();
+            if (results != null)
+                results.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        
+            ml_RTrees_getVotes_10 (nativeObj, samples.nativeObj, results.nativeObj, flags);
+        
+            return;
+#else
+            return;
+#endif
         }
 
 
@@ -172,17 +197,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: RTrees::setActiveVarCount(val)
-        public  void setActiveVarCount (int val)
+        public void setActiveVarCount (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_RTrees_setActiveVarCount_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -191,17 +216,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: RTrees::setCalculateVarImportance(val)
-        public  void setCalculateVarImportance (bool val)
+        public void setCalculateVarImportance (bool val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_RTrees_setCalculateVarImportance_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -210,69 +235,76 @@ namespace OpenCVForUnity
         //
 
         //javadoc: RTrees::setTermCriteria(val)
-        public  void setTermCriteria (TermCriteria val)
+        public void setTermCriteria (TermCriteria val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_RTrees_setTermCriteria_10 (nativeObj, val.type, val.maxCount, val.epsilon);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+
+
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  Mat getVarImportance()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_RTrees_getVarImportance_10 (IntPtr nativeObj);
 
         // C++: static Ptr_RTrees create()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_RTrees_create_10 ();
 
         // C++: static Ptr_RTrees load(String filepath, String nodeName = String())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_RTrees_load_10 (string filepath, string nodeName);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_RTrees_load_11 (string filepath);
 
         // C++:  TermCriteria getTermCriteria()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_RTrees_getTermCriteria_10 (IntPtr nativeObj, double[] retVal);
 
         // C++:  bool getCalculateVarImportance()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_RTrees_getCalculateVarImportance_10 (IntPtr nativeObj);
 
         // C++:  int getActiveVarCount()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_RTrees_getActiveVarCount_10 (IntPtr nativeObj);
 
+        // C++:  void getVotes(Mat samples, Mat& results, int flags)
+        [DllImport (LIBNAME)]
+        private static extern void ml_RTrees_getVotes_10 (IntPtr nativeObj, IntPtr samples_nativeObj, IntPtr results_nativeObj, int flags);
+
         // C++:  void setActiveVarCount(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_RTrees_setActiveVarCount_10 (IntPtr nativeObj, int val);
 
         // C++:  void setCalculateVarImportance(bool val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_RTrees_setCalculateVarImportance_10 (IntPtr nativeObj, bool val);
 
         // C++:  void setTermCriteria(TermCriteria val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_RTrees_setTermCriteria_10 (IntPtr nativeObj, int val_type, int val_maxCount, double val_epsilon);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_RTrees_delete (IntPtr nativeObj);
 
     }

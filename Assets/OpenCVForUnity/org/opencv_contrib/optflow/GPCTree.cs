@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,45 +6,46 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class GPCTree
-//javadoc: GPCTree
+    // C++: class GPCTree
+    //javadoc: GPCTree
+
     public class GPCTree : Algorithm
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        optflow_GPCTree_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+optflow_GPCTree_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal GPCTree (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal GPCTree (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new GPCTree __fromPtr__ (IntPtr addr) { return new GPCTree (addr); }
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void optflow_GPCTree_delete (IntPtr nativeObj);
 
     }

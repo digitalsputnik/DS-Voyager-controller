@@ -52,7 +52,7 @@ public class SetupScripts : MonoBehaviour {
      public MenuPullScript PullMenu;
     public GameObject LampTools;
 
-    Dictionary<IPAddress, ExtraProperties> IPtoProps = new Dictionary<IPAddress, ExtraProperties>();
+    public Dictionary<IPAddress, ExtraProperties> IPtoProps = new Dictionary<IPAddress, ExtraProperties>();
 
     //int batteryLevel;
     //string lampMacName;
@@ -244,6 +244,14 @@ public class SetupScripts : MonoBehaviour {
                         LampMac = lampMacName
                     });
                 }
+				else
+				{
+					IPtoProps[LightIP] = new ExtraProperties
+					{
+						BatteryLevel = batteryLevel,
+						LampMac = lampMacName
+					};
+				}
 
                 if (!LampIPtoLengthDictionary.ContainsKey(LightIP))
                 {
@@ -333,12 +341,12 @@ public class SetupScripts : MonoBehaviour {
 
             if (UpdateLampWithIPs.Count > 0)
             {
-                IPtoProps.Clear();
-                LampIPtoLengthDictionary.Clear();
-                newLampIPtoLengthDictionary.Clear();
-                CancelDetection = true;
-                UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
-                isPollingActive = false;
+                //IPtoProps.Clear();
+                //LampIPtoLengthDictionary.Clear();
+                //newLampIPtoLengthDictionary.Clear();
+                //CancelDetection = true;
+                //UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
+                //isPollingActive = false;
             }
 
             
@@ -464,7 +472,7 @@ public class SetupScripts : MonoBehaviour {
         //lampComm.LampIPtoLengthDictionary = LampIPtoLengthDictionary;
         //lampComm.permutationCounter = 0;
         //lampComm.SendPermutationsToNewLamps(LampIPtoLengthDictionary);
-        
+
         //GetAvailableLamps();
 
         if (!CancelDetection)

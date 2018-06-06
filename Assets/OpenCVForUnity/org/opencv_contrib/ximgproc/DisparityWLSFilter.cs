@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,51 +6,52 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class DisparityWLSFilter
-//javadoc: DisparityWLSFilter
+    // C++: class DisparityWLSFilter
+    //javadoc: DisparityWLSFilter
+
     public class DisparityWLSFilter : DisparityFilter
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        ximgproc_DisparityWLSFilter_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+ximgproc_DisparityWLSFilter_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal DisparityWLSFilter (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal DisparityWLSFilter (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new DisparityWLSFilter __fromPtr__ (IntPtr addr) { return new DisparityWLSFilter (addr); }
 
         //
         // C++:  Mat getConfidenceMap()
         //
 
         //javadoc: DisparityWLSFilter::getConfidenceMap()
-        public  Mat getConfidenceMap ()
+        public Mat getConfidenceMap ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ximgproc_DisparityWLSFilter_getConfidenceMap_10 (nativeObj));
+        Mat retVal = new Mat(ximgproc_DisparityWLSFilter_getConfidenceMap_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -62,19 +60,19 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DisparityWLSFilter::getROI()
-        public  Rect getROI ()
+        public Rect getROI ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double[] tmpArray = new double[4];
-            ximgproc_DisparityWLSFilter_getROI_10 (nativeObj, tmpArray);
-            Rect retVal = new Rect (tmpArray);
+        double[] tmpArray = new double[4];
+ximgproc_DisparityWLSFilter_getROI_10(nativeObj, tmpArray);
+Rect retVal = new Rect (tmpArray);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -83,17 +81,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DisparityWLSFilter::getLambda()
-        public  double getLambda ()
+        public double getLambda ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = ximgproc_DisparityWLSFilter_getLambda_10 (nativeObj);
+        double retVal = ximgproc_DisparityWLSFilter_getLambda_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -102,17 +100,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DisparityWLSFilter::getSigmaColor()
-        public  double getSigmaColor ()
+        public double getSigmaColor ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = ximgproc_DisparityWLSFilter_getSigmaColor_10 (nativeObj);
+        double retVal = ximgproc_DisparityWLSFilter_getSigmaColor_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -121,17 +119,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DisparityWLSFilter::getDepthDiscontinuityRadius()
-        public  int getDepthDiscontinuityRadius ()
+        public int getDepthDiscontinuityRadius ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ximgproc_DisparityWLSFilter_getDepthDiscontinuityRadius_10 (nativeObj);
+        int retVal = ximgproc_DisparityWLSFilter_getDepthDiscontinuityRadius_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -140,17 +138,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DisparityWLSFilter::getLRCthresh()
-        public  int getLRCthresh ()
+        public int getLRCthresh ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ximgproc_DisparityWLSFilter_getLRCthresh_10 (nativeObj);
+        int retVal = ximgproc_DisparityWLSFilter_getLRCthresh_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -159,17 +157,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DisparityWLSFilter::setDepthDiscontinuityRadius(_disc_radius)
-        public  void setDepthDiscontinuityRadius (int _disc_radius)
+        public void setDepthDiscontinuityRadius (int _disc_radius)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_DisparityWLSFilter_setDepthDiscontinuityRadius_10 (nativeObj, _disc_radius);
+        ximgproc_DisparityWLSFilter_setDepthDiscontinuityRadius_10(nativeObj, _disc_radius);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -178,17 +176,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DisparityWLSFilter::setLRCthresh(_LRC_thresh)
-        public  void setLRCthresh (int _LRC_thresh)
+        public void setLRCthresh (int _LRC_thresh)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_DisparityWLSFilter_setLRCthresh_10 (nativeObj, _LRC_thresh);
+        ximgproc_DisparityWLSFilter_setLRCthresh_10(nativeObj, _LRC_thresh);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -197,17 +195,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DisparityWLSFilter::setLambda(_lambda)
-        public  void setLambda (double _lambda)
+        public void setLambda (double _lambda)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_DisparityWLSFilter_setLambda_10 (nativeObj, _lambda);
+        ximgproc_DisparityWLSFilter_setLambda_10(nativeObj, _lambda);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -216,70 +214,70 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DisparityWLSFilter::setSigmaColor(_sigma_color)
-        public  void setSigmaColor (double _sigma_color)
+        public void setSigmaColor (double _sigma_color)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_DisparityWLSFilter_setSigmaColor_10 (nativeObj, _sigma_color);
+        ximgproc_DisparityWLSFilter_setSigmaColor_10(nativeObj, _sigma_color);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  Mat getConfidenceMap()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ximgproc_DisparityWLSFilter_getConfidenceMap_10 (IntPtr nativeObj);
 
         // C++:  Rect getROI()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_DisparityWLSFilter_getROI_10 (IntPtr nativeObj, double[] retVal);
 
         // C++:  double getLambda()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double ximgproc_DisparityWLSFilter_getLambda_10 (IntPtr nativeObj);
 
         // C++:  double getSigmaColor()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double ximgproc_DisparityWLSFilter_getSigmaColor_10 (IntPtr nativeObj);
 
         // C++:  int getDepthDiscontinuityRadius()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ximgproc_DisparityWLSFilter_getDepthDiscontinuityRadius_10 (IntPtr nativeObj);
 
         // C++:  int getLRCthresh()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ximgproc_DisparityWLSFilter_getLRCthresh_10 (IntPtr nativeObj);
 
         // C++:  void setDepthDiscontinuityRadius(int _disc_radius)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_DisparityWLSFilter_setDepthDiscontinuityRadius_10 (IntPtr nativeObj, int _disc_radius);
 
         // C++:  void setLRCthresh(int _LRC_thresh)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_DisparityWLSFilter_setLRCthresh_10 (IntPtr nativeObj, int _LRC_thresh);
 
         // C++:  void setLambda(double _lambda)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_DisparityWLSFilter_setLambda_10 (IntPtr nativeObj, double _lambda);
 
         // C++:  void setSigmaColor(double _sigma_color)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_DisparityWLSFilter_setSigmaColor_10 (IntPtr nativeObj, double _sigma_color);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_DisparityWLSFilter_delete (IntPtr nativeObj);
 
     }

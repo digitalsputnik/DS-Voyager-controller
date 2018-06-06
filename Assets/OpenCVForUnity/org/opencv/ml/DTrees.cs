@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,33 +6,35 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class DTrees
-//javadoc: DTrees
+    // C++: class DTrees
+    //javadoc: DTrees
+
     public class DTrees : StatModel
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        ml_DTrees_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+ml_DTrees_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal DTrees (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal DTrees (IntPtr addr) : base (addr) { }
+
+        // internal usage only
+        public static new DTrees __fromPtr__ (IntPtr addr) { return new DTrees (addr); }
 
         public const int PREDICT_AUTO = 0;
         public const int PREDICT_SUM = (1 << 8);
@@ -46,17 +45,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::getPriors()
-        public  Mat getPriors ()
+        public Mat getPriors ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_DTrees_getPriors_10 (nativeObj));
+        Mat retVal = new Mat(ml_DTrees_getPriors_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -67,14 +66,14 @@ namespace OpenCVForUnity
         //javadoc: DTrees::create()
         public static DTrees create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            DTrees retVal = new DTrees (ml_DTrees_create_10 ());
+        DTrees retVal = DTrees.__fromPtr__(ml_DTrees_create_10());
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -85,27 +84,27 @@ namespace OpenCVForUnity
         //javadoc: DTrees::load(filepath, nodeName)
         public static DTrees load (string filepath, string nodeName)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            DTrees retVal = new DTrees (ml_DTrees_load_10 (filepath, nodeName));
+        DTrees retVal = DTrees.__fromPtr__(ml_DTrees_load_10(filepath, nodeName));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: DTrees::load(filepath)
         public static DTrees load (string filepath)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            DTrees retVal = new DTrees (ml_DTrees_load_11 (filepath));
+        DTrees retVal = DTrees.__fromPtr__(ml_DTrees_load_11(filepath));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -114,17 +113,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::getTruncatePrunedTree()
-        public  bool getTruncatePrunedTree ()
+        public bool getTruncatePrunedTree ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = ml_DTrees_getTruncatePrunedTree_10 (nativeObj);
+        bool retVal = ml_DTrees_getTruncatePrunedTree_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -133,17 +132,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::getUse1SERule()
-        public  bool getUse1SERule ()
+        public bool getUse1SERule ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = ml_DTrees_getUse1SERule_10 (nativeObj);
+        bool retVal = ml_DTrees_getUse1SERule_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -152,17 +151,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::getUseSurrogates()
-        public  bool getUseSurrogates ()
+        public bool getUseSurrogates ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = ml_DTrees_getUseSurrogates_10 (nativeObj);
+        bool retVal = ml_DTrees_getUseSurrogates_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -171,17 +170,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::getRegressionAccuracy()
-        public  float getRegressionAccuracy ()
+        public float getRegressionAccuracy ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            float retVal = ml_DTrees_getRegressionAccuracy_10 (nativeObj);
+        float retVal = ml_DTrees_getRegressionAccuracy_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -190,17 +189,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::getCVFolds()
-        public  int getCVFolds ()
+        public int getCVFolds ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ml_DTrees_getCVFolds_10 (nativeObj);
+        int retVal = ml_DTrees_getCVFolds_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -209,17 +208,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::getMaxCategories()
-        public  int getMaxCategories ()
+        public int getMaxCategories ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ml_DTrees_getMaxCategories_10 (nativeObj);
+        int retVal = ml_DTrees_getMaxCategories_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -228,17 +227,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::getMaxDepth()
-        public  int getMaxDepth ()
+        public int getMaxDepth ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ml_DTrees_getMaxDepth_10 (nativeObj);
+        int retVal = ml_DTrees_getMaxDepth_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -247,17 +246,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::getMinSampleCount()
-        public  int getMinSampleCount ()
+        public int getMinSampleCount ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ml_DTrees_getMinSampleCount_10 (nativeObj);
+        int retVal = ml_DTrees_getMinSampleCount_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -266,17 +265,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::setCVFolds(val)
-        public  void setCVFolds (int val)
+        public void setCVFolds (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_DTrees_setCVFolds_10 (nativeObj, val);
+        ml_DTrees_setCVFolds_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -285,17 +284,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::setMaxCategories(val)
-        public  void setMaxCategories (int val)
+        public void setMaxCategories (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_DTrees_setMaxCategories_10 (nativeObj, val);
+        ml_DTrees_setMaxCategories_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -304,17 +303,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::setMaxDepth(val)
-        public  void setMaxDepth (int val)
+        public void setMaxDepth (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_DTrees_setMaxDepth_10 (nativeObj, val);
+        ml_DTrees_setMaxDepth_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -323,17 +322,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::setMinSampleCount(val)
-        public  void setMinSampleCount (int val)
+        public void setMinSampleCount (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_DTrees_setMinSampleCount_10 (nativeObj, val);
+        ml_DTrees_setMinSampleCount_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -342,19 +341,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::setPriors(val)
-        public  void setPriors (Mat val)
+        public void setPriors (Mat val)
         {
             ThrowIfDisposed ();
-            if (val != null)
-                val.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (val != null) val.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_DTrees_setPriors_10 (nativeObj, val.nativeObj);
+        ml_DTrees_setPriors_10(nativeObj, val.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -363,17 +361,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::setRegressionAccuracy(val)
-        public  void setRegressionAccuracy (float val)
+        public void setRegressionAccuracy (float val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_DTrees_setRegressionAccuracy_10 (nativeObj, val);
+        ml_DTrees_setRegressionAccuracy_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -382,17 +380,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::setTruncatePrunedTree(val)
-        public  void setTruncatePrunedTree (bool val)
+        public void setTruncatePrunedTree (bool val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_DTrees_setTruncatePrunedTree_10 (nativeObj, val);
+        ml_DTrees_setTruncatePrunedTree_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -401,17 +399,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::setUse1SERule(val)
-        public  void setUse1SERule (bool val)
+        public void setUse1SERule (bool val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_DTrees_setUse1SERule_10 (nativeObj, val);
+        ml_DTrees_setUse1SERule_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -420,113 +418,112 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DTrees::setUseSurrogates(val)
-        public  void setUseSurrogates (bool val)
+        public void setUseSurrogates (bool val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_DTrees_setUseSurrogates_10 (nativeObj, val);
+        ml_DTrees_setUseSurrogates_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  Mat getPriors()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_DTrees_getPriors_10 (IntPtr nativeObj);
 
         // C++: static Ptr_DTrees create()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_DTrees_create_10 ();
 
         // C++: static Ptr_DTrees load(String filepath, String nodeName = String())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_DTrees_load_10 (string filepath, string nodeName);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_DTrees_load_11 (string filepath);
 
         // C++:  bool getTruncatePrunedTree()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_DTrees_getTruncatePrunedTree_10 (IntPtr nativeObj);
 
         // C++:  bool getUse1SERule()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_DTrees_getUse1SERule_10 (IntPtr nativeObj);
 
         // C++:  bool getUseSurrogates()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_DTrees_getUseSurrogates_10 (IntPtr nativeObj);
 
         // C++:  float getRegressionAccuracy()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float ml_DTrees_getRegressionAccuracy_10 (IntPtr nativeObj);
 
         // C++:  int getCVFolds()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_DTrees_getCVFolds_10 (IntPtr nativeObj);
 
         // C++:  int getMaxCategories()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_DTrees_getMaxCategories_10 (IntPtr nativeObj);
 
         // C++:  int getMaxDepth()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_DTrees_getMaxDepth_10 (IntPtr nativeObj);
 
         // C++:  int getMinSampleCount()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_DTrees_getMinSampleCount_10 (IntPtr nativeObj);
 
         // C++:  void setCVFolds(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_DTrees_setCVFolds_10 (IntPtr nativeObj, int val);
 
         // C++:  void setMaxCategories(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_DTrees_setMaxCategories_10 (IntPtr nativeObj, int val);
 
         // C++:  void setMaxDepth(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_DTrees_setMaxDepth_10 (IntPtr nativeObj, int val);
 
         // C++:  void setMinSampleCount(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_DTrees_setMinSampleCount_10 (IntPtr nativeObj, int val);
 
         // C++:  void setPriors(Mat val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_DTrees_setPriors_10 (IntPtr nativeObj, IntPtr val_nativeObj);
 
         // C++:  void setRegressionAccuracy(float val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_DTrees_setRegressionAccuracy_10 (IntPtr nativeObj, float val);
 
         // C++:  void setTruncatePrunedTree(bool val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_DTrees_setTruncatePrunedTree_10 (IntPtr nativeObj, bool val);
 
         // C++:  void setUse1SERule(bool val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_DTrees_setUse1SERule_10 (IntPtr nativeObj, bool val);
 
         // C++:  void setUseSurrogates(bool val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_DTrees_setUseSurrogates_10 (IntPtr nativeObj, bool val);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_DTrees_delete (IntPtr nativeObj);
 
     }

@@ -1,57 +1,59 @@
 
-//
 
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace OpenCVForUnity
 {
-// C++: class CascadeClassifier
-//javadoc: CascadeClassifier
+    // C++: class CascadeClassifier
+    //javadoc: CascadeClassifier
+
     public class CascadeClassifier : DisposableOpenCVObject
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        objdetect_CascadeClassifier_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+objdetect_CascadeClassifier_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal CascadeClassifier (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal CascadeClassifier (IntPtr addr) : base (addr) { }
 
+
+        public IntPtr getNativeObjAddr () { return nativeObj; }
+
+        // internal usage only
+        public static CascadeClassifier __fromPtr__ (IntPtr addr) { return new CascadeClassifier (addr); }
 
         //
         // C++:   CascadeClassifier(String filename)
         //
 
         //javadoc: CascadeClassifier::CascadeClassifier(filename)
-        public   CascadeClassifier (string filename)
+        public CascadeClassifier (string filename)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            nativeObj = objdetect_CascadeClassifier_CascadeClassifier_10 (filename);
+        nativeObj = objdetect_CascadeClassifier_CascadeClassifier_10(filename);
         
-            return;
-            #else
+        return;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -60,16 +62,16 @@ namespace OpenCVForUnity
         //
 
         //javadoc: CascadeClassifier::CascadeClassifier()
-        public   CascadeClassifier ()
+        public CascadeClassifier ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            nativeObj = objdetect_CascadeClassifier_CascadeClassifier_11 ();
+        nativeObj = objdetect_CascadeClassifier_CascadeClassifier_11();
         
-            return;
-            #else
+        return;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -78,19 +80,19 @@ namespace OpenCVForUnity
         //
 
         //javadoc: CascadeClassifier::getOriginalWindowSize()
-        public  Size getOriginalWindowSize ()
+        public Size getOriginalWindowSize ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double[] tmpArray = new double[2];
-            objdetect_CascadeClassifier_getOriginalWindowSize_10 (nativeObj, tmpArray);
-            Size retVal = new Size (tmpArray);
+        double[] tmpArray = new double[2];
+objdetect_CascadeClassifier_getOriginalWindowSize_10(nativeObj, tmpArray);
+Size retVal = new Size (tmpArray);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -101,14 +103,14 @@ namespace OpenCVForUnity
         //javadoc: CascadeClassifier::convert(oldcascade, newcascade)
         public static bool convert (string oldcascade, string newcascade)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = objdetect_CascadeClassifier_convert_10 (oldcascade, newcascade);
+        bool retVal = objdetect_CascadeClassifier_convert_10(oldcascade, newcascade);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -117,17 +119,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: CascadeClassifier::empty()
-        public  bool empty ()
+        public bool empty ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = objdetect_CascadeClassifier_empty_10 (nativeObj);
+        bool retVal = objdetect_CascadeClassifier_empty_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -136,17 +138,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: CascadeClassifier::isOldFormatCascade()
-        public  bool isOldFormatCascade ()
+        public bool isOldFormatCascade ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = objdetect_CascadeClassifier_isOldFormatCascade_10 (nativeObj);
+        bool retVal = objdetect_CascadeClassifier_isOldFormatCascade_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -155,17 +157,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: CascadeClassifier::load(filename)
-        public  bool load (string filename)
+        public bool load (string filename)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = objdetect_CascadeClassifier_load_10 (nativeObj, filename);
+        bool retVal = objdetect_CascadeClassifier_load_10(nativeObj, filename);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -181,17 +183,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: CascadeClassifier::getFeatureType()
-        public  int getFeatureType ()
+        public int getFeatureType ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = objdetect_CascadeClassifier_getFeatureType_10 (nativeObj);
+        int retVal = objdetect_CascadeClassifier_getFeatureType_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -200,39 +202,35 @@ namespace OpenCVForUnity
         //
 
         //javadoc: CascadeClassifier::detectMultiScale(image, objects, scaleFactor, minNeighbors, flags, minSize, maxSize)
-        public  void detectMultiScale (Mat image, MatOfRect objects, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize)
+        public void detectMultiScale (Mat image, MatOfRect objects, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize)
         {
             ThrowIfDisposed ();
-            if (image != null)
-                image.ThrowIfDisposed ();
-            if (objects != null)
-                objects.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            Mat objects_mat = objects;
-            objdetect_CascadeClassifier_detectMultiScale_10 (nativeObj, image.nativeObj, objects_mat.nativeObj, scaleFactor, minNeighbors, flags, minSize.width, minSize.height, maxSize.width, maxSize.height);
+            if (image != null) image.ThrowIfDisposed ();
+            if (objects != null) objects.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        Mat objects_mat = objects;
+        objdetect_CascadeClassifier_detectMultiScale_10(nativeObj, image.nativeObj, objects_mat.nativeObj, scaleFactor, minNeighbors, flags, minSize.width, minSize.height, maxSize.width, maxSize.height);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
         //javadoc: CascadeClassifier::detectMultiScale(image, objects)
-        public  void detectMultiScale (Mat image, MatOfRect objects)
+        public void detectMultiScale (Mat image, MatOfRect objects)
         {
             ThrowIfDisposed ();
-            if (image != null)
-                image.ThrowIfDisposed ();
-            if (objects != null)
-                objects.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            Mat objects_mat = objects;
-            objdetect_CascadeClassifier_detectMultiScale_11 (nativeObj, image.nativeObj, objects_mat.nativeObj);
+            if (image != null) image.ThrowIfDisposed ();
+            if (objects != null) objects.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        Mat objects_mat = objects;
+        objdetect_CascadeClassifier_detectMultiScale_11(nativeObj, image.nativeObj, objects_mat.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -241,45 +239,39 @@ namespace OpenCVForUnity
         //
 
         //javadoc: CascadeClassifier::detectMultiScale(image, objects, numDetections, scaleFactor, minNeighbors, flags, minSize, maxSize)
-        public  void detectMultiScale2 (Mat image, MatOfRect objects, MatOfInt numDetections, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize)
+        public void detectMultiScale2 (Mat image, MatOfRect objects, MatOfInt numDetections, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize)
         {
             ThrowIfDisposed ();
-            if (image != null)
-                image.ThrowIfDisposed ();
-            if (objects != null)
-                objects.ThrowIfDisposed ();
-            if (numDetections != null)
-                numDetections.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            Mat objects_mat = objects;
-            Mat numDetections_mat = numDetections;
-            objdetect_CascadeClassifier_detectMultiScale2_10 (nativeObj, image.nativeObj, objects_mat.nativeObj, numDetections_mat.nativeObj, scaleFactor, minNeighbors, flags, minSize.width, minSize.height, maxSize.width, maxSize.height);
+            if (image != null) image.ThrowIfDisposed ();
+            if (objects != null) objects.ThrowIfDisposed ();
+            if (numDetections != null) numDetections.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        Mat objects_mat = objects;
+        Mat numDetections_mat = numDetections;
+        objdetect_CascadeClassifier_detectMultiScale2_10(nativeObj, image.nativeObj, objects_mat.nativeObj, numDetections_mat.nativeObj, scaleFactor, minNeighbors, flags, minSize.width, minSize.height, maxSize.width, maxSize.height);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
         //javadoc: CascadeClassifier::detectMultiScale(image, objects, numDetections)
-        public  void detectMultiScale2 (Mat image, MatOfRect objects, MatOfInt numDetections)
+        public void detectMultiScale2 (Mat image, MatOfRect objects, MatOfInt numDetections)
         {
             ThrowIfDisposed ();
-            if (image != null)
-                image.ThrowIfDisposed ();
-            if (objects != null)
-                objects.ThrowIfDisposed ();
-            if (numDetections != null)
-                numDetections.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            Mat objects_mat = objects;
-            Mat numDetections_mat = numDetections;
-            objdetect_CascadeClassifier_detectMultiScale2_11 (nativeObj, image.nativeObj, objects_mat.nativeObj, numDetections_mat.nativeObj);
+            if (image != null) image.ThrowIfDisposed ();
+            if (objects != null) objects.ThrowIfDisposed ();
+            if (numDetections != null) numDetections.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        Mat objects_mat = objects;
+        Mat numDetections_mat = numDetections;
+        objdetect_CascadeClassifier_detectMultiScale2_11(nativeObj, image.nativeObj, objects_mat.nativeObj, numDetections_mat.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -288,117 +280,106 @@ namespace OpenCVForUnity
         //
 
         //javadoc: CascadeClassifier::detectMultiScale(image, objects, rejectLevels, levelWeights, scaleFactor, minNeighbors, flags, minSize, maxSize, outputRejectLevels)
-        public  void detectMultiScale3 (Mat image, MatOfRect objects, MatOfInt rejectLevels, MatOfDouble levelWeights, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize, bool outputRejectLevels)
+        public void detectMultiScale3 (Mat image, MatOfRect objects, MatOfInt rejectLevels, MatOfDouble levelWeights, double scaleFactor, int minNeighbors, int flags, Size minSize, Size maxSize, bool outputRejectLevels)
         {
             ThrowIfDisposed ();
-            if (image != null)
-                image.ThrowIfDisposed ();
-            if (objects != null)
-                objects.ThrowIfDisposed ();
-            if (rejectLevels != null)
-                rejectLevels.ThrowIfDisposed ();
-            if (levelWeights != null)
-                levelWeights.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            Mat objects_mat = objects;
-            Mat rejectLevels_mat = rejectLevels;
-            Mat levelWeights_mat = levelWeights;
-            objdetect_CascadeClassifier_detectMultiScale3_10 (nativeObj, image.nativeObj, objects_mat.nativeObj, rejectLevels_mat.nativeObj, levelWeights_mat.nativeObj, scaleFactor, minNeighbors, flags, minSize.width, minSize.height, maxSize.width, maxSize.height, outputRejectLevels);
+            if (image != null) image.ThrowIfDisposed ();
+            if (objects != null) objects.ThrowIfDisposed ();
+            if (rejectLevels != null) rejectLevels.ThrowIfDisposed ();
+            if (levelWeights != null) levelWeights.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        Mat objects_mat = objects;
+        Mat rejectLevels_mat = rejectLevels;
+        Mat levelWeights_mat = levelWeights;
+        objdetect_CascadeClassifier_detectMultiScale3_10(nativeObj, image.nativeObj, objects_mat.nativeObj, rejectLevels_mat.nativeObj, levelWeights_mat.nativeObj, scaleFactor, minNeighbors, flags, minSize.width, minSize.height, maxSize.width, maxSize.height, outputRejectLevels);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
         //javadoc: CascadeClassifier::detectMultiScale(image, objects, rejectLevels, levelWeights)
-        public  void detectMultiScale3 (Mat image, MatOfRect objects, MatOfInt rejectLevels, MatOfDouble levelWeights)
+        public void detectMultiScale3 (Mat image, MatOfRect objects, MatOfInt rejectLevels, MatOfDouble levelWeights)
         {
             ThrowIfDisposed ();
-            if (image != null)
-                image.ThrowIfDisposed ();
-            if (objects != null)
-                objects.ThrowIfDisposed ();
-            if (rejectLevels != null)
-                rejectLevels.ThrowIfDisposed ();
-            if (levelWeights != null)
-                levelWeights.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            Mat objects_mat = objects;
-            Mat rejectLevels_mat = rejectLevels;
-            Mat levelWeights_mat = levelWeights;
-            objdetect_CascadeClassifier_detectMultiScale3_11 (nativeObj, image.nativeObj, objects_mat.nativeObj, rejectLevels_mat.nativeObj, levelWeights_mat.nativeObj);
+            if (image != null) image.ThrowIfDisposed ();
+            if (objects != null) objects.ThrowIfDisposed ();
+            if (rejectLevels != null) rejectLevels.ThrowIfDisposed ();
+            if (levelWeights != null) levelWeights.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        Mat objects_mat = objects;
+        Mat rejectLevels_mat = rejectLevels;
+        Mat levelWeights_mat = levelWeights;
+        objdetect_CascadeClassifier_detectMultiScale3_11(nativeObj, image.nativeObj, objects_mat.nativeObj, rejectLevels_mat.nativeObj, levelWeights_mat.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:   CascadeClassifier(String filename)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr objdetect_CascadeClassifier_CascadeClassifier_10 (string filename);
 
         // C++:   CascadeClassifier()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr objdetect_CascadeClassifier_CascadeClassifier_11 ();
 
         // C++:  Size getOriginalWindowSize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void objdetect_CascadeClassifier_getOriginalWindowSize_10 (IntPtr nativeObj, double[] retVal);
 
         // C++: static bool convert(String oldcascade, String newcascade)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool objdetect_CascadeClassifier_convert_10 (string oldcascade, string newcascade);
 
         // C++:  bool empty()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool objdetect_CascadeClassifier_empty_10 (IntPtr nativeObj);
 
         // C++:  bool isOldFormatCascade()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool objdetect_CascadeClassifier_isOldFormatCascade_10 (IntPtr nativeObj);
 
         // C++:  bool load(String filename)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool objdetect_CascadeClassifier_load_10 (IntPtr nativeObj, string filename);
 
         // C++:  int getFeatureType()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int objdetect_CascadeClassifier_getFeatureType_10 (IntPtr nativeObj);
 
         // C++:  void detectMultiScale(Mat image, vector_Rect& objects, double scaleFactor = 1.1, int minNeighbors = 3, int flags = 0, Size minSize = Size(), Size maxSize = Size())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void objdetect_CascadeClassifier_detectMultiScale_10 (IntPtr nativeObj, IntPtr image_nativeObj, IntPtr objects_mat_nativeObj, double scaleFactor, int minNeighbors, int flags, double minSize_width, double minSize_height, double maxSize_width, double maxSize_height);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void objdetect_CascadeClassifier_detectMultiScale_11 (IntPtr nativeObj, IntPtr image_nativeObj, IntPtr objects_mat_nativeObj);
 
         // C++:  void detectMultiScale(Mat image, vector_Rect& objects, vector_int& numDetections, double scaleFactor = 1.1, int minNeighbors = 3, int flags = 0, Size minSize = Size(), Size maxSize = Size())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void objdetect_CascadeClassifier_detectMultiScale2_10 (IntPtr nativeObj, IntPtr image_nativeObj, IntPtr objects_mat_nativeObj, IntPtr numDetections_mat_nativeObj, double scaleFactor, int minNeighbors, int flags, double minSize_width, double minSize_height, double maxSize_width, double maxSize_height);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void objdetect_CascadeClassifier_detectMultiScale2_11 (IntPtr nativeObj, IntPtr image_nativeObj, IntPtr objects_mat_nativeObj, IntPtr numDetections_mat_nativeObj);
 
         // C++:  void detectMultiScale(Mat image, vector_Rect& objects, vector_int& rejectLevels, vector_double& levelWeights, double scaleFactor = 1.1, int minNeighbors = 3, int flags = 0, Size minSize = Size(), Size maxSize = Size(), bool outputRejectLevels = false)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void objdetect_CascadeClassifier_detectMultiScale3_10 (IntPtr nativeObj, IntPtr image_nativeObj, IntPtr objects_mat_nativeObj, IntPtr rejectLevels_mat_nativeObj, IntPtr levelWeights_mat_nativeObj, double scaleFactor, int minNeighbors, int flags, double minSize_width, double minSize_height, double maxSize_width, double maxSize_height, bool outputRejectLevels);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void objdetect_CascadeClassifier_detectMultiScale3_11 (IntPtr nativeObj, IntPtr image_nativeObj, IntPtr objects_mat_nativeObj, IntPtr rejectLevels_mat_nativeObj, IntPtr levelWeights_mat_nativeObj);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void objdetect_CascadeClassifier_delete (IntPtr nativeObj);
 
     }

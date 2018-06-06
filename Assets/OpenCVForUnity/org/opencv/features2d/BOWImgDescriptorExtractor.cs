@@ -1,41 +1,43 @@
 
-//
 
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace OpenCVForUnity
 {
-// C++: class BOWImgDescriptorExtractor
-//javadoc: BOWImgDescriptorExtractor
+    // C++: class BOWImgDescriptorExtractor
+    //javadoc: BOWImgDescriptorExtractor
+
     public class BOWImgDescriptorExtractor : DisposableOpenCVObject
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        features2d_BOWImgDescriptorExtractor_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+features2d_BOWImgDescriptorExtractor_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal BOWImgDescriptorExtractor (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal BOWImgDescriptorExtractor (IntPtr addr) : base (addr) { }
 
+
+        public IntPtr getNativeObjAddr () { return nativeObj; }
+
+        // internal usage only
+        public static BOWImgDescriptorExtractor __fromPtr__ (IntPtr addr) { return new BOWImgDescriptorExtractor (addr); }
 
         //
         // C++:   BOWImgDescriptorExtractor(Ptr_DescriptorExtractor dextractor, Ptr_DescriptorMatcher dmatcher)
@@ -49,17 +51,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BOWImgDescriptorExtractor::getVocabulary()
-        public  Mat getVocabulary ()
+        public Mat getVocabulary ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (features2d_BOWImgDescriptorExtractor_getVocabulary_10 (nativeObj));
+        Mat retVal = new Mat(features2d_BOWImgDescriptorExtractor_getVocabulary_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -68,17 +70,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BOWImgDescriptorExtractor::descriptorSize()
-        public  int descriptorSize ()
+        public int descriptorSize ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = features2d_BOWImgDescriptorExtractor_descriptorSize_10 (nativeObj);
+        int retVal = features2d_BOWImgDescriptorExtractor_descriptorSize_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -87,17 +89,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BOWImgDescriptorExtractor::descriptorType()
-        public  int descriptorType ()
+        public int descriptorType ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = features2d_BOWImgDescriptorExtractor_descriptorType_10 (nativeObj);
+        int retVal = features2d_BOWImgDescriptorExtractor_descriptorType_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -106,23 +108,20 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BOWImgDescriptorExtractor::compute2(image, keypoints, imgDescriptor)
-        public  void compute (Mat image, MatOfKeyPoint keypoints, Mat imgDescriptor)
+        public void compute (Mat image, MatOfKeyPoint keypoints, Mat imgDescriptor)
         {
             ThrowIfDisposed ();
-            if (image != null)
-                image.ThrowIfDisposed ();
-            if (keypoints != null)
-                keypoints.ThrowIfDisposed ();
-            if (imgDescriptor != null)
-                imgDescriptor.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            Mat keypoints_mat = keypoints;
-            features2d_BOWImgDescriptorExtractor_compute_10 (nativeObj, image.nativeObj, keypoints_mat.nativeObj, imgDescriptor.nativeObj);
+            if (image != null) image.ThrowIfDisposed ();
+            if (keypoints != null) keypoints.ThrowIfDisposed ();
+            if (imgDescriptor != null) imgDescriptor.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        Mat keypoints_mat = keypoints;
+        features2d_BOWImgDescriptorExtractor_compute_10(nativeObj, image.nativeObj, keypoints_mat.nativeObj, imgDescriptor.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -131,52 +130,51 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BOWImgDescriptorExtractor::setVocabulary(vocabulary)
-        public  void setVocabulary (Mat vocabulary)
+        public void setVocabulary (Mat vocabulary)
         {
             ThrowIfDisposed ();
-            if (vocabulary != null)
-                vocabulary.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (vocabulary != null) vocabulary.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            features2d_BOWImgDescriptorExtractor_setVocabulary_10 (nativeObj, vocabulary.nativeObj);
+        features2d_BOWImgDescriptorExtractor_setVocabulary_10(nativeObj, vocabulary.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  Mat getVocabulary()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_BOWImgDescriptorExtractor_getVocabulary_10 (IntPtr nativeObj);
 
         // C++:  int descriptorSize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_BOWImgDescriptorExtractor_descriptorSize_10 (IntPtr nativeObj);
 
         // C++:  int descriptorType()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_BOWImgDescriptorExtractor_descriptorType_10 (IntPtr nativeObj);
 
         // C++:  void compute2(Mat image, vector_KeyPoint keypoints, Mat& imgDescriptor)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_BOWImgDescriptorExtractor_compute_10 (IntPtr nativeObj, IntPtr image_nativeObj, IntPtr keypoints_mat_nativeObj, IntPtr imgDescriptor_nativeObj);
 
         // C++:  void setVocabulary(Mat vocabulary)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_BOWImgDescriptorExtractor_setVocabulary_10 (IntPtr nativeObj, IntPtr vocabulary_nativeObj);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_BOWImgDescriptorExtractor_delete (IntPtr nativeObj);
 
     }

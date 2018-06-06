@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UMP;
 
 
 public class VideoStream : MonoBehaviour {
@@ -18,13 +17,15 @@ public class VideoStream : MonoBehaviour {
     List<int> pixelsToDraw;
     Texture2D tex = null;
     bool videoRunning = false;
-    UniversalMediaPlayer mediaPlayer;
     Color32[] colorArray = null;
     Color color = Color.white;
+
+    List<Color> previousColors = new List<Color>();
 
     AnimationSender animSender;
     string IP;
     int[] blackColor = new int[] { 0, 0, 0, 0 };
+    Color BlackColor = new Color(0, 0, 0, 0);
 
 
     // Use this for initialization
@@ -32,7 +33,6 @@ public class VideoStream : MonoBehaviour {
         Debug.Log("VideoStream script started.......");
         //NOTE: Quick hack because switching all the references is too much work at this point
         animSender = GameObject.Find("AnimationControl").GetComponent<AnimationSender>();
-        mediaPlayer = GameObject.Find("UniversalMediaPlayer").GetComponent<UniversalMediaPlayer>();
 
         StartCoroutine(CheckForVideo());
 
@@ -47,13 +47,14 @@ public class VideoStream : MonoBehaviour {
         for (int p = 0; p < PixelCount; p++)
         {
             animSender.LampIPVideoStreamPixelToColor[IP].Add(p, blackColor);
+            previousColors.Add(BlackColor);
         }
     }
 
     IEnumerator CheckForVideo() {
         while (!videoRunning)
         {
-            if (drawTools.GetComponent<DrawScripts>().webcamTexture != null || mediaPlayer.IsPlaying)
+            if (drawTools.GetComponent<DrawScripts>().webcamTexture != null)
             {
                 videoRunning = true;
             }
@@ -72,7 +73,7 @@ public class VideoStream : MonoBehaviour {
         {
 
             //Pick webCamTexture pixels
-            if (drawTools.GetComponent<DrawScripts>().webcamTexture != null || mediaPlayer.IsPlaying)
+            if (drawTools.GetComponent<DrawScripts>().webcamTexture != null)
             {
                 //Find total number of lamp pixels
                 var numPixelsToDraw = this.gameObject.GetComponent<Ribbon>().pipeLength;
@@ -122,40 +123,59 @@ public class VideoStream : MonoBehaviour {
                             //Get the color
                             pixelColor = drawTools.GetComponent<DrawScripts>().webcamTexture.GetPixel((int)pointX, (int)pointY);
                         }
-                        else if (mediaPlayer.IsPlaying && mediaPlayer.FramePixels.Length > 0)
-                        {
+                        //else if (mediaPlayer.IsPlaying && mediaPlayer.FramePixels.Length > 0)
+                        //{
 
-                            //Debug.Log("Frame Pixel data: "+ mediaPlayer.FramePixels.ToString());
-                            if (tex == null)
-                            {
-                                tex = new Texture2D(mediaPlayer.VideoWidth, mediaPlayer.VideoHeight, TextureFormat.BGRA32, false);
-                            }
+                        //    //Debug.Log("Frame Pixel data: "+ mediaPlayer.FramePixels.ToString());
+                        //    if (tex == null)
+                        //    {
+                        //        tex = new Texture2D(mediaPlayer.VideoWidth, mediaPlayer.VideoHeight, TextureFormat.BGRA32, false);
+                        //    }
 
-                            var texData = mediaPlayer.FramePixels;
+                        //    var texData = mediaPlayer.FramePixels;
 
-                            if (texData.Length > 0)
-                            {
-                                tex.LoadRawTextureData(texData);
-                                tex.Apply();
-                            }
+                        //    if (texData.Length > 0)
+                        //    {
+                        //        tex.LoadRawTextureData(texData);
+                        //        tex.Apply();
+                        //    }
 
-                            pointX = mediaPlayer.VideoWidth * (Vx.magnitude / Xs.magnitude);
-                            pointY = mediaPlayer.VideoHeight * (Vy.magnitude / Ys.magnitude);
+                        //    pointX = mediaPlayer.VideoWidth * (Vx.magnitude / Xs.magnitude);
+                        //    pointY = mediaPlayer.VideoHeight * (Vy.magnitude / Ys.magnitude);
  
-                            //Get the color
-                            pixelColor = tex.GetPixel((int)pointX, (int)pointY);
-                            Debug.Log("Pixel color is: " + pixelColor.ToString());
+                        //    //Get the color
+                        //    pixelColor = tex.GetPixel((int)pointX, (int)pointY);
+                        //    Debug.Log("Pixel color is: " + pixelColor.ToString());
 
-                        }
+                        //}
 
+                        //if ((pixelColor - previousColors[i]).maxColorComponent < 0.02)
+                        //{
+                        //    previousColors[i] = pixelColor;
+                        //    continue;
+                        //}
+
+                        previousColors[i] = pixelColor;
                         float I = 0;
                         float S = 0;
                         float H = 0;
                         Color.RGBToHSV(pixelColor, out H, out S, out I);
 
+                        var c = animSender.LastVideoStreamColor;
+                        //ITSH with color correction
+                        Vector4 itsh = new Vector4(I*c.x, c.y, S*c.z, (H + c.w) % 1f);
+
                         //Apply color
                         //lampPixelLED.GetComponent<Renderer>().material.color = pixelColor;
-                        animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(I * 100), 0, (int)(S * 120), (int)(H*360) };
+                        if (this.gameObject.GetComponent<Ribbon>().pipeLength < 30)
+                        {
+                            animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[] { (int)(itsh.x * 100), (int)(itsh.y * 8500 + 1500), (int)(itsh.z * 120), (int)(itsh.w * 360) };
+                        }
+                        else
+                        {
+                            animSender.LampIPVideoStreamPixelToColor[IP][i] = this.gameObject.GetComponent<Ribbon>().ITSHtoRGBW(itsh);//new int[] { (int)(I * 100), 0, (int)(S * 120), (int)(H*360) };
+                        }
+
                     }
                     else
                     {

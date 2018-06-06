@@ -1,34 +1,88 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace OpenCVForUnity
 {
+    // C++: class Videoio
+    //javadoc: Videoio
+
     public class Videoio
     {
 
+        public const int CV_CAP_ANY = 0;
+        public const int CV_CAP_MIL = 100;
+        public const int CV_CAP_VFW = 200;
+        public const int CV_CAP_V4L = 200;
+        public const int CV_CAP_V4L2 = 200;
+        public const int CV_CAP_FIREWARE = 300;
+        public const int CV_CAP_FIREWIRE = 300;
+        public const int CV_CAP_IEEE1394 = 300;
+        public const int CV_CAP_DC1394 = 300;
+        public const int CV_CAP_CMU1394 = 300;
+        public const int CV_CAP_STEREO = 400;
+        public const int CV_CAP_TYZX = 400;
+        public const int CV_TYZX_LEFT = 400;
+        public const int CV_TYZX_RIGHT = 401;
+        public const int CV_TYZX_COLOR = 402;
+        public const int CV_TYZX_Z = 403;
+        public const int CV_CAP_QT = 500;
+        public const int CV_CAP_UNICAP = 600;
+        public const int CV_CAP_DSHOW = 700;
         public const int CV_CAP_MSMF = 1400;
+        public const int CV_CAP_PVAPI = 800;
+        public const int CV_CAP_OPENNI = 900;
+        public const int CV_CAP_OPENNI_ASUS = 910;
         public const int CV_CAP_ANDROID = 1000;
         public const int CV_CAP_ANDROID_BACK = CV_CAP_ANDROID + 99;
         public const int CV_CAP_ANDROID_FRONT = CV_CAP_ANDROID + 98;
         public const int CV_CAP_XIAPI = 1100;
         public const int CV_CAP_AVFOUNDATION = 1200;
         public const int CV_CAP_GIGANETIX = 1300;
+        public const int CV_CAP_INTELPERC = 1500;
+        public const int CV_CAP_OPENNI2 = 1600;
         public const int CV_CAP_GPHOTO2 = 1700;
         public const int CV_CAP_GSTREAMER = 1800;
         public const int CV_CAP_FFMPEG = 1900;
         public const int CV_CAP_IMAGES = 2000;
         public const int CV_CAP_ARAVIS = 2100;
+        public const int CV_CAP_PROP_DC1394_OFF = -4;
+        public const int CV_CAP_PROP_DC1394_MODE_MANUAL = -3;
+        public const int CV_CAP_PROP_DC1394_MODE_AUTO = -2;
+        public const int CV_CAP_PROP_DC1394_MODE_ONE_PUSH_AUTO = -1;
+        public const int CV_CAP_PROP_POS_MSEC = 0;
+        public const int CV_CAP_PROP_POS_FRAMES = 1;
+        public const int CV_CAP_PROP_POS_AVI_RATIO = 2;
         public const int CV_CAP_PROP_FRAME_WIDTH = 3;
         public const int CV_CAP_PROP_FRAME_HEIGHT = 4;
+        public const int CV_CAP_PROP_FPS = 5;
+        public const int CV_CAP_PROP_FOURCC = 6;
+        public const int CV_CAP_PROP_FRAME_COUNT = 7;
+        public const int CV_CAP_PROP_FORMAT = 8;
+        public const int CV_CAP_PROP_MODE = 9;
+        public const int CV_CAP_PROP_BRIGHTNESS = 10;
+        public const int CV_CAP_PROP_CONTRAST = 11;
+        public const int CV_CAP_PROP_SATURATION = 12;
+        public const int CV_CAP_PROP_HUE = 13;
+        public const int CV_CAP_PROP_GAIN = 14;
+        public const int CV_CAP_PROP_EXPOSURE = 15;
+        public const int CV_CAP_PROP_CONVERT_RGB = 16;
+        public const int CV_CAP_PROP_WHITE_BALANCE_BLUE_U = 17;
+        public const int CV_CAP_PROP_RECTIFICATION = 18;
+        public const int CV_CAP_PROP_MONOCHROME = 19;
+        public const int CV_CAP_PROP_SHARPNESS = 20;
+        public const int CV_CAP_PROP_AUTO_EXPOSURE = 21;
+        public const int CV_CAP_PROP_GAMMA = 22;
+        public const int CV_CAP_PROP_TEMPERATURE = 23;
+        public const int CV_CAP_PROP_TRIGGER = 24;
+        public const int CV_CAP_PROP_TRIGGER_DELAY = 25;
+        public const int CV_CAP_PROP_WHITE_BALANCE_RED_V = 26;
         public const int CV_CAP_PROP_ZOOM = 27;
         public const int CV_CAP_PROP_FOCUS = 28;
         public const int CV_CAP_PROP_GUID = 29;
         public const int CV_CAP_PROP_ISO_SPEED = 30;
+        public const int CV_CAP_PROP_MAX_DC1394 = 31;
         public const int CV_CAP_PROP_BACKLIGHT = 32;
         public const int CV_CAP_PROP_PAN = 33;
         public const int CV_CAP_PROP_TILT = 34;
@@ -40,9 +94,35 @@ namespace OpenCVForUnity
         public const int CV_CAP_PROP_SAR_NUM = 40;
         public const int CV_CAP_PROP_SAR_DEN = 41;
         public const int CV_CAP_PROP_AUTOGRAB = 1024;
+        public const int CV_CAP_PROP_SUPPORTED_PREVIEW_SIZES_STRING = 1025;
         public const int CV_CAP_PROP_PREVIEW_FORMAT = 1026;
+        public const int CV_CAP_OPENNI_DEPTH_GENERATOR = 1 << 31;
+        public const int CV_CAP_OPENNI_IMAGE_GENERATOR = 1 << 30;
+        public const int CV_CAP_OPENNI_IR_GENERATOR = 1 << 29;
+        public const int CV_CAP_OPENNI_GENERATORS_MASK = CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_OPENNI_IMAGE_GENERATOR + CV_CAP_OPENNI_IR_GENERATOR;
+        public const int CV_CAP_PROP_OPENNI_OUTPUT_MODE = 100;
+        public const int CV_CAP_PROP_OPENNI_FRAME_MAX_DEPTH = 101;
+        public const int CV_CAP_PROP_OPENNI_BASELINE = 102;
+        public const int CV_CAP_PROP_OPENNI_FOCAL_LENGTH = 103;
+        public const int CV_CAP_PROP_OPENNI_REGISTRATION = 104;
+        public const int CV_CAP_PROP_OPENNI_REGISTRATION_ON = CV_CAP_PROP_OPENNI_REGISTRATION;
+        public const int CV_CAP_PROP_OPENNI_APPROX_FRAME_SYNC = 105;
+        public const int CV_CAP_PROP_OPENNI_MAX_BUFFER_SIZE = 106;
+        public const int CV_CAP_PROP_OPENNI_CIRCLE_BUFFER = 107;
+        public const int CV_CAP_PROP_OPENNI_MAX_TIME_DURATION = 108;
+        public const int CV_CAP_PROP_OPENNI_GENERATOR_PRESENT = 109;
         public const int CV_CAP_PROP_OPENNI2_SYNC = 110;
         public const int CV_CAP_PROP_OPENNI2_MIRROR = 111;
+        public const int CV_CAP_OPENNI_IMAGE_GENERATOR_PRESENT = CV_CAP_OPENNI_IMAGE_GENERATOR + CV_CAP_PROP_OPENNI_GENERATOR_PRESENT;
+        public const int CV_CAP_OPENNI_IMAGE_GENERATOR_OUTPUT_MODE = CV_CAP_OPENNI_IMAGE_GENERATOR + CV_CAP_PROP_OPENNI_OUTPUT_MODE;
+        public const int CV_CAP_OPENNI_DEPTH_GENERATOR_PRESENT = CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_PROP_OPENNI_GENERATOR_PRESENT;
+        public const int CV_CAP_OPENNI_DEPTH_GENERATOR_BASELINE = CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_PROP_OPENNI_BASELINE;
+        public const int CV_CAP_OPENNI_DEPTH_GENERATOR_FOCAL_LENGTH = CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_PROP_OPENNI_FOCAL_LENGTH;
+        public const int CV_CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION = CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_PROP_OPENNI_REGISTRATION;
+        public const int CV_CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION_ON = CV_CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION;
+        public const int CV_CAP_OPENNI_IR_GENERATOR_PRESENT = CV_CAP_OPENNI_IR_GENERATOR + CV_CAP_PROP_OPENNI_GENERATOR_PRESENT;
+        public const int CV_CAP_GSTREAMER_QUEUE_LENGTH = 200;
+        public const int CV_CAP_PROP_PVAPI_MULTICASTIP = 300;
         public const int CV_CAP_PROP_PVAPI_FRAMESTARTTRIGGERMODE = 301;
         public const int CV_CAP_PROP_PVAPI_DECIMATIONHORIZONTAL = 302;
         public const int CV_CAP_PROP_PVAPI_DECIMATIONVERTICAL = 303;
@@ -227,10 +307,30 @@ namespace OpenCVForUnity
         public const int CV_CAP_PROP_INTELPERC_DEPTH_CONFIDENCE_THRESHOLD = 11005;
         public const int CV_CAP_PROP_INTELPERC_DEPTH_FOCAL_LENGTH_HORZ = 11006;
         public const int CV_CAP_PROP_INTELPERC_DEPTH_FOCAL_LENGTH_VERT = 11007;
+        public const int CV_CAP_INTELPERC_DEPTH_GENERATOR = 1 << 29;
+        public const int CV_CAP_INTELPERC_IMAGE_GENERATOR = 1 << 28;
+        public const int CV_CAP_INTELPERC_GENERATORS_MASK = CV_CAP_INTELPERC_DEPTH_GENERATOR + CV_CAP_INTELPERC_IMAGE_GENERATOR;
         public const int CV_CAP_MODE_BGR = 0;
         public const int CV_CAP_MODE_RGB = 1;
         public const int CV_CAP_MODE_GRAY = 2;
         public const int CV_CAP_MODE_YUYV = 3;
+        public const int CV_CAP_OPENNI_DEPTH_MAP = 0;
+        public const int CV_CAP_OPENNI_POINT_CLOUD_MAP = 1;
+        public const int CV_CAP_OPENNI_DISPARITY_MAP = 2;
+        public const int CV_CAP_OPENNI_DISPARITY_MAP_32F = 3;
+        public const int CV_CAP_OPENNI_VALID_DEPTH_MASK = 4;
+        public const int CV_CAP_OPENNI_BGR_IMAGE = 5;
+        public const int CV_CAP_OPENNI_GRAY_IMAGE = 6;
+        public const int CV_CAP_OPENNI_IR_IMAGE = 7;
+        public const int CV_CAP_OPENNI_VGA_30HZ = 0;
+        public const int CV_CAP_OPENNI_SXGA_15HZ = 1;
+        public const int CV_CAP_OPENNI_SXGA_30HZ = 2;
+        public const int CV_CAP_OPENNI_QVGA_30HZ = 3;
+        public const int CV_CAP_OPENNI_QVGA_60HZ = 4;
+        public const int CV_CAP_INTELPERC_DEPTH_MAP = 0;
+        public const int CV_CAP_INTELPERC_UVDEPTH_MAP = 1;
+        public const int CV_CAP_INTELPERC_IR_MAP = 2;
+        public const int CV_CAP_INTELPERC_IMAGE = 3;
         public const int CV_CAP_PROP_GPHOTO2_PREVIEW = 17001;
         public const int CV_CAP_PROP_GPHOTO2_WIDGET_ENUMERATE = 17002;
         public const int CV_CAP_PROP_GPHOTO2_RELOAD_CONFIG = 17003;
@@ -239,6 +339,7 @@ namespace OpenCVForUnity
         public const int CV_CAP_PROP_GPHOTO2_FLUSH_MSGS = 17006;
         public const int CV_CAP_PROP_SPEED = 17007;
         public const int CV_CAP_PROP_APERTURE = 17008;
+        public const int CV_CAP_PROP_EXPOSUREPROGRAM = 17009;
         public const int CV_CAP_PROP_VIEWFINDER = 17010;
         public const int CAP_ANY = 0;
         public const int CAP_VFW = 200;
@@ -269,6 +370,8 @@ namespace OpenCVForUnity
         public const int CAP_FFMPEG = 1900;
         public const int CAP_IMAGES = 2000;
         public const int CAP_ARAVIS = 2100;
+        public const int CAP_OPENCV_MJPEG = 2200;
+        public const int CAP_INTEL_MFX = 2300;
         public const int CAP_PROP_POS_MSEC = 0;
         public const int CAP_PROP_POS_FRAMES = 1;
         public const int CAP_PROP_POS_AVI_RATIO = 2;
@@ -308,6 +411,8 @@ namespace OpenCVForUnity
         public const int CAP_PROP_SETTINGS = 37;
         public const int CAP_PROP_BUFFERSIZE = 38;
         public const int CAP_PROP_AUTOFOCUS = 39;
+        public const int CAP_PROP_SAR_NUM = 40;
+        public const int CAP_PROP_SAR_DEN = 41;
         public const int CAP_MODE_BGR = 0;
         public const int CAP_MODE_RGB = 1;
         public const int CAP_MODE_GRAY = 2;

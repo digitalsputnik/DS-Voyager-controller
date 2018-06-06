@@ -1,13 +1,13 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace OpenCVForUnity
 {
+    // C++: class Objdetect
+    //javadoc: Objdetect
+
     public class Objdetect
     {
 
@@ -22,53 +22,48 @@ namespace OpenCVForUnity
         //javadoc: groupRectangles(rectList, weights, groupThreshold, eps)
         public static void groupRectangles (MatOfRect rectList, MatOfInt weights, int groupThreshold, double eps)
         {
-            if (rectList != null)
-                rectList.ThrowIfDisposed ();
-            if (weights != null)
-                weights.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            Mat rectList_mat = rectList;
-            Mat weights_mat = weights;
-            objdetect_Objdetect_groupRectangles_10 (rectList_mat.nativeObj, weights_mat.nativeObj, groupThreshold, eps);
+            if (rectList != null) rectList.ThrowIfDisposed ();
+            if (weights != null) weights.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        Mat rectList_mat = rectList;
+        Mat weights_mat = weights;
+        objdetect_Objdetect_groupRectangles_10(rectList_mat.nativeObj, weights_mat.nativeObj, groupThreshold, eps);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
         //javadoc: groupRectangles(rectList, weights, groupThreshold)
         public static void groupRectangles (MatOfRect rectList, MatOfInt weights, int groupThreshold)
         {
-            if (rectList != null)
-                rectList.ThrowIfDisposed ();
-            if (weights != null)
-                weights.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            Mat rectList_mat = rectList;
-            Mat weights_mat = weights;
-            objdetect_Objdetect_groupRectangles_11 (rectList_mat.nativeObj, weights_mat.nativeObj, groupThreshold);
+            if (rectList != null) rectList.ThrowIfDisposed ();
+            if (weights != null) weights.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        Mat rectList_mat = rectList;
+        Mat weights_mat = weights;
+        objdetect_Objdetect_groupRectangles_11(rectList_mat.nativeObj, weights_mat.nativeObj, groupThreshold);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  void groupRectangles(vector_Rect& rectList, vector_int& weights, int groupThreshold, double eps = 0.2)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void objdetect_Objdetect_groupRectangles_10 (IntPtr rectList_mat_nativeObj, IntPtr weights_mat_nativeObj, int groupThreshold, double eps);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void objdetect_Objdetect_groupRectangles_11 (IntPtr rectList_mat_nativeObj, IntPtr weights_mat_nativeObj, int groupThreshold);
 
     }

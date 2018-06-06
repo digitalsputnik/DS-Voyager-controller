@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,51 +6,52 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class HistogramCostExtractor
-//javadoc: HistogramCostExtractor
+    // C++: class HistogramCostExtractor
+    //javadoc: HistogramCostExtractor
+
     public class HistogramCostExtractor : Algorithm
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        shape_HistogramCostExtractor_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+shape_HistogramCostExtractor_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal HistogramCostExtractor (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal HistogramCostExtractor (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new HistogramCostExtractor __fromPtr__ (IntPtr addr) { return new HistogramCostExtractor (addr); }
 
         //
         // C++:  float getDefaultCost()
         //
 
         //javadoc: HistogramCostExtractor::getDefaultCost()
-        public  float getDefaultCost ()
+        public float getDefaultCost ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            float retVal = shape_HistogramCostExtractor_getDefaultCost_10 (nativeObj);
+        float retVal = shape_HistogramCostExtractor_getDefaultCost_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -62,17 +60,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: HistogramCostExtractor::getNDummies()
-        public  int getNDummies ()
+        public int getNDummies ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = shape_HistogramCostExtractor_getNDummies_10 (nativeObj);
+        int retVal = shape_HistogramCostExtractor_getNDummies_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -81,23 +79,20 @@ namespace OpenCVForUnity
         //
 
         //javadoc: HistogramCostExtractor::buildCostMatrix(descriptors1, descriptors2, costMatrix)
-        public  void buildCostMatrix (Mat descriptors1, Mat descriptors2, Mat costMatrix)
+        public void buildCostMatrix (Mat descriptors1, Mat descriptors2, Mat costMatrix)
         {
             ThrowIfDisposed ();
-            if (descriptors1 != null)
-                descriptors1.ThrowIfDisposed ();
-            if (descriptors2 != null)
-                descriptors2.ThrowIfDisposed ();
-            if (costMatrix != null)
-                costMatrix.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (descriptors1 != null) descriptors1.ThrowIfDisposed ();
+            if (descriptors2 != null) descriptors2.ThrowIfDisposed ();
+            if (costMatrix != null) costMatrix.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            shape_HistogramCostExtractor_buildCostMatrix_10 (nativeObj, descriptors1.nativeObj, descriptors2.nativeObj, costMatrix.nativeObj);
+        shape_HistogramCostExtractor_buildCostMatrix_10(nativeObj, descriptors1.nativeObj, descriptors2.nativeObj, costMatrix.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -106,17 +101,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: HistogramCostExtractor::setDefaultCost(defaultCost)
-        public  void setDefaultCost (float defaultCost)
+        public void setDefaultCost (float defaultCost)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            shape_HistogramCostExtractor_setDefaultCost_10 (nativeObj, defaultCost);
+        shape_HistogramCostExtractor_setDefaultCost_10(nativeObj, defaultCost);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -125,50 +120,50 @@ namespace OpenCVForUnity
         //
 
         //javadoc: HistogramCostExtractor::setNDummies(nDummies)
-        public  void setNDummies (int nDummies)
+        public void setNDummies (int nDummies)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            shape_HistogramCostExtractor_setNDummies_10 (nativeObj, nDummies);
+        shape_HistogramCostExtractor_setNDummies_10(nativeObj, nDummies);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  float getDefaultCost()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float shape_HistogramCostExtractor_getDefaultCost_10 (IntPtr nativeObj);
 
         // C++:  int getNDummies()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int shape_HistogramCostExtractor_getNDummies_10 (IntPtr nativeObj);
 
         // C++:  void buildCostMatrix(Mat descriptors1, Mat descriptors2, Mat& costMatrix)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void shape_HistogramCostExtractor_buildCostMatrix_10 (IntPtr nativeObj, IntPtr descriptors1_nativeObj, IntPtr descriptors2_nativeObj, IntPtr costMatrix_nativeObj);
 
         // C++:  void setDefaultCost(float defaultCost)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void shape_HistogramCostExtractor_setDefaultCost_10 (IntPtr nativeObj, float defaultCost);
 
         // C++:  void setNDummies(int nDummies)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void shape_HistogramCostExtractor_setNDummies_10 (IntPtr nativeObj, int nDummies);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void shape_HistogramCostExtractor_delete (IntPtr nativeObj);
 
     }

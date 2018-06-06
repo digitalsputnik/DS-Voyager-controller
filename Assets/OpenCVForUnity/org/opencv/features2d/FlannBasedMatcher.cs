@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,48 +6,49 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class FlannBasedMatcher
-//javadoc: FlannBasedMatcher
+    // C++: class FlannBasedMatcher
+    //javadoc: FlannBasedMatcher
+
     public class FlannBasedMatcher : DescriptorMatcher
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        features2d_FlannBasedMatcher_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+features2d_FlannBasedMatcher_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal FlannBasedMatcher (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal FlannBasedMatcher (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new FlannBasedMatcher __fromPtr__ (IntPtr addr) { return new FlannBasedMatcher (addr); }
 
         //
         // C++:   FlannBasedMatcher(Ptr_flann_IndexParams indexParams = makePtr<flann::KDTreeIndexParams>(), Ptr_flann_SearchParams searchParams = makePtr<flann::SearchParams>())
         //
 
         //javadoc: FlannBasedMatcher::FlannBasedMatcher()
-        public  FlannBasedMatcher () :
-        #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        public FlannBasedMatcher () :
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
         base( features2d_FlannBasedMatcher_FlannBasedMatcher_10() )
         
-        #else
-        base(IntPtr.Zero)
-        #endif
+#else
+            base (IntPtr.Zero)
+#endif
         {
 
             return;
@@ -65,35 +63,35 @@ namespace OpenCVForUnity
         //javadoc: FlannBasedMatcher::create()
         public static FlannBasedMatcher create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            FlannBasedMatcher retVal = new FlannBasedMatcher (features2d_FlannBasedMatcher_create_10 ());
+        FlannBasedMatcher retVal = FlannBasedMatcher.__fromPtr__(features2d_FlannBasedMatcher_create_10());
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:   FlannBasedMatcher(Ptr_flann_IndexParams indexParams = makePtr<flann::KDTreeIndexParams>(), Ptr_flann_SearchParams searchParams = makePtr<flann::SearchParams>())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_FlannBasedMatcher_FlannBasedMatcher_10 ();
 
         // C++: static Ptr_FlannBasedMatcher create()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_FlannBasedMatcher_create_10 ();
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_FlannBasedMatcher_delete (IntPtr nativeObj);
 
     }

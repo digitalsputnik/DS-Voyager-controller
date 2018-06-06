@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,33 +6,35 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class StereoBM
-//javadoc: StereoBM
+    // C++: class StereoBM
+    //javadoc: StereoBM
+
     public class StereoBM : StereoMatcher
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        calib3d_StereoBM_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+calib3d_StereoBM_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal StereoBM (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal StereoBM (IntPtr addr) : base (addr) { }
+
+        // internal usage only
+        public static new StereoBM __fromPtr__ (IntPtr addr) { return new StereoBM (addr); }
 
         public const int PREFILTER_NORMALIZED_RESPONSE = 0;
         public const int PREFILTER_XSOBEL = 1;
@@ -46,27 +45,27 @@ namespace OpenCVForUnity
         //javadoc: StereoBM::create(numDisparities, blockSize)
         public static StereoBM create (int numDisparities, int blockSize)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            StereoBM retVal = new StereoBM (calib3d_StereoBM_create_10 (numDisparities, blockSize));
+        StereoBM retVal = StereoBM.__fromPtr__(calib3d_StereoBM_create_10(numDisparities, blockSize));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: StereoBM::create()
         public static StereoBM create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            StereoBM retVal = new StereoBM (calib3d_StereoBM_create_11 ());
+        StereoBM retVal = StereoBM.__fromPtr__(calib3d_StereoBM_create_11());
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -75,19 +74,19 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::getROI1()
-        public  Rect getROI1 ()
+        public Rect getROI1 ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double[] tmpArray = new double[4];
-            calib3d_StereoBM_getROI1_10 (nativeObj, tmpArray);
-            Rect retVal = new Rect (tmpArray);
+        double[] tmpArray = new double[4];
+calib3d_StereoBM_getROI1_10(nativeObj, tmpArray);
+Rect retVal = new Rect (tmpArray);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -96,19 +95,19 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::getROI2()
-        public  Rect getROI2 ()
+        public Rect getROI2 ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double[] tmpArray = new double[4];
-            calib3d_StereoBM_getROI2_10 (nativeObj, tmpArray);
-            Rect retVal = new Rect (tmpArray);
+        double[] tmpArray = new double[4];
+calib3d_StereoBM_getROI2_10(nativeObj, tmpArray);
+Rect retVal = new Rect (tmpArray);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -117,17 +116,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::getPreFilterCap()
-        public  int getPreFilterCap ()
+        public int getPreFilterCap ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = calib3d_StereoBM_getPreFilterCap_10 (nativeObj);
+        int retVal = calib3d_StereoBM_getPreFilterCap_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -136,17 +135,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::getPreFilterSize()
-        public  int getPreFilterSize ()
+        public int getPreFilterSize ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = calib3d_StereoBM_getPreFilterSize_10 (nativeObj);
+        int retVal = calib3d_StereoBM_getPreFilterSize_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -155,17 +154,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::getPreFilterType()
-        public  int getPreFilterType ()
+        public int getPreFilterType ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = calib3d_StereoBM_getPreFilterType_10 (nativeObj);
+        int retVal = calib3d_StereoBM_getPreFilterType_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -174,17 +173,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::getSmallerBlockSize()
-        public  int getSmallerBlockSize ()
+        public int getSmallerBlockSize ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = calib3d_StereoBM_getSmallerBlockSize_10 (nativeObj);
+        int retVal = calib3d_StereoBM_getSmallerBlockSize_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -193,17 +192,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::getTextureThreshold()
-        public  int getTextureThreshold ()
+        public int getTextureThreshold ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = calib3d_StereoBM_getTextureThreshold_10 (nativeObj);
+        int retVal = calib3d_StereoBM_getTextureThreshold_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -212,17 +211,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::getUniquenessRatio()
-        public  int getUniquenessRatio ()
+        public int getUniquenessRatio ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = calib3d_StereoBM_getUniquenessRatio_10 (nativeObj);
+        int retVal = calib3d_StereoBM_getUniquenessRatio_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -231,17 +230,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::setPreFilterCap(preFilterCap)
-        public  void setPreFilterCap (int preFilterCap)
+        public void setPreFilterCap (int preFilterCap)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            calib3d_StereoBM_setPreFilterCap_10 (nativeObj, preFilterCap);
+        calib3d_StereoBM_setPreFilterCap_10(nativeObj, preFilterCap);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -250,17 +249,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::setPreFilterSize(preFilterSize)
-        public  void setPreFilterSize (int preFilterSize)
+        public void setPreFilterSize (int preFilterSize)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            calib3d_StereoBM_setPreFilterSize_10 (nativeObj, preFilterSize);
+        calib3d_StereoBM_setPreFilterSize_10(nativeObj, preFilterSize);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -269,17 +268,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::setPreFilterType(preFilterType)
-        public  void setPreFilterType (int preFilterType)
+        public void setPreFilterType (int preFilterType)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            calib3d_StereoBM_setPreFilterType_10 (nativeObj, preFilterType);
+        calib3d_StereoBM_setPreFilterType_10(nativeObj, preFilterType);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -288,17 +287,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::setROI1(roi1)
-        public  void setROI1 (Rect roi1)
+        public void setROI1 (Rect roi1)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            calib3d_StereoBM_setROI1_10 (nativeObj, roi1.x, roi1.y, roi1.width, roi1.height);
+        calib3d_StereoBM_setROI1_10(nativeObj, roi1.x, roi1.y, roi1.width, roi1.height);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -307,17 +306,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::setROI2(roi2)
-        public  void setROI2 (Rect roi2)
+        public void setROI2 (Rect roi2)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            calib3d_StereoBM_setROI2_10 (nativeObj, roi2.x, roi2.y, roi2.width, roi2.height);
+        calib3d_StereoBM_setROI2_10(nativeObj, roi2.x, roi2.y, roi2.width, roi2.height);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -326,17 +325,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::setSmallerBlockSize(blockSize)
-        public  void setSmallerBlockSize (int blockSize)
+        public void setSmallerBlockSize (int blockSize)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            calib3d_StereoBM_setSmallerBlockSize_10 (nativeObj, blockSize);
+        calib3d_StereoBM_setSmallerBlockSize_10(nativeObj, blockSize);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -345,17 +344,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::setTextureThreshold(textureThreshold)
-        public  void setTextureThreshold (int textureThreshold)
+        public void setTextureThreshold (int textureThreshold)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            calib3d_StereoBM_setTextureThreshold_10 (nativeObj, textureThreshold);
+        calib3d_StereoBM_setTextureThreshold_10(nativeObj, textureThreshold);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -364,101 +363,100 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StereoBM::setUniquenessRatio(uniquenessRatio)
-        public  void setUniquenessRatio (int uniquenessRatio)
+        public void setUniquenessRatio (int uniquenessRatio)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            calib3d_StereoBM_setUniquenessRatio_10 (nativeObj, uniquenessRatio);
+        calib3d_StereoBM_setUniquenessRatio_10(nativeObj, uniquenessRatio);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++: static Ptr_StereoBM create(int numDisparities = 0, int blockSize = 21)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr calib3d_StereoBM_create_10 (int numDisparities, int blockSize);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr calib3d_StereoBM_create_11 ();
 
         // C++:  Rect getROI1()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void calib3d_StereoBM_getROI1_10 (IntPtr nativeObj, double[] retVal);
 
         // C++:  Rect getROI2()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void calib3d_StereoBM_getROI2_10 (IntPtr nativeObj, double[] retVal);
 
         // C++:  int getPreFilterCap()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int calib3d_StereoBM_getPreFilterCap_10 (IntPtr nativeObj);
 
         // C++:  int getPreFilterSize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int calib3d_StereoBM_getPreFilterSize_10 (IntPtr nativeObj);
 
         // C++:  int getPreFilterType()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int calib3d_StereoBM_getPreFilterType_10 (IntPtr nativeObj);
 
         // C++:  int getSmallerBlockSize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int calib3d_StereoBM_getSmallerBlockSize_10 (IntPtr nativeObj);
 
         // C++:  int getTextureThreshold()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int calib3d_StereoBM_getTextureThreshold_10 (IntPtr nativeObj);
 
         // C++:  int getUniquenessRatio()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int calib3d_StereoBM_getUniquenessRatio_10 (IntPtr nativeObj);
 
         // C++:  void setPreFilterCap(int preFilterCap)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void calib3d_StereoBM_setPreFilterCap_10 (IntPtr nativeObj, int preFilterCap);
 
         // C++:  void setPreFilterSize(int preFilterSize)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void calib3d_StereoBM_setPreFilterSize_10 (IntPtr nativeObj, int preFilterSize);
 
         // C++:  void setPreFilterType(int preFilterType)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void calib3d_StereoBM_setPreFilterType_10 (IntPtr nativeObj, int preFilterType);
 
         // C++:  void setROI1(Rect roi1)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void calib3d_StereoBM_setROI1_10 (IntPtr nativeObj, int roi1_x, int roi1_y, int roi1_width, int roi1_height);
 
         // C++:  void setROI2(Rect roi2)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void calib3d_StereoBM_setROI2_10 (IntPtr nativeObj, int roi2_x, int roi2_y, int roi2_width, int roi2_height);
 
         // C++:  void setSmallerBlockSize(int blockSize)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void calib3d_StereoBM_setSmallerBlockSize_10 (IntPtr nativeObj, int blockSize);
 
         // C++:  void setTextureThreshold(int textureThreshold)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void calib3d_StereoBM_setTextureThreshold_10 (IntPtr nativeObj, int textureThreshold);
 
         // C++:  void setUniquenessRatio(int uniquenessRatio)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void calib3d_StereoBM_setUniquenessRatio_10 (IntPtr nativeObj, int uniquenessRatio);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void calib3d_StereoBM_delete (IntPtr nativeObj);
 
     }

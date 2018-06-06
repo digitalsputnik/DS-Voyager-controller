@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class StaticSaliencySpectralResidual
-//javadoc: StaticSaliencySpectralResidual
+    // C++: class StaticSaliencySpectralResidual
+    //javadoc: StaticSaliencySpectralResidual
+
     public class StaticSaliencySpectralResidual : StaticSaliency
     {
 
@@ -33,10 +31,16 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal StaticSaliencySpectralResidual (IntPtr addr) : base(addr)
+        protected internal StaticSaliencySpectralResidual (IntPtr addr)
+            : base (addr)
         {
         }
 
+        // internal usage only
+        public static new StaticSaliencySpectralResidual __fromPtr__ (IntPtr addr)
+        {
+            return new StaticSaliencySpectralResidual (addr);
+        }
 
         //
         // C++: static Ptr_StaticSaliencySpectralResidual create()
@@ -45,14 +49,14 @@ namespace OpenCVForUnity
         //javadoc: StaticSaliencySpectralResidual::create()
         public static StaticSaliencySpectralResidual create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            StaticSaliencySpectralResidual retVal = new StaticSaliencySpectralResidual (saliency_StaticSaliencySpectralResidual_create_10 ());
+            StaticSaliencySpectralResidual retVal = StaticSaliencySpectralResidual.__fromPtr__ (saliency_StaticSaliencySpectralResidual_create_10 ());
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -68,14 +72,14 @@ namespace OpenCVForUnity
                 image.ThrowIfDisposed ();
             if (saliencyMap != null)
                 saliencyMap.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = saliency_StaticSaliencySpectralResidual_computeSaliency_10 (nativeObj, image.nativeObj, saliencyMap.nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -84,17 +88,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StaticSaliencySpectralResidual::getImageHeight()
-        public  int getImageHeight ()
+        public int getImageHeight ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = saliency_StaticSaliencySpectralResidual_getImageHeight_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -103,17 +107,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StaticSaliencySpectralResidual::getImageWidth()
-        public  int getImageWidth ()
+        public int getImageWidth ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = saliency_StaticSaliencySpectralResidual_getImageWidth_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -129,17 +133,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StaticSaliencySpectralResidual::setImageHeight(val)
-        public  void setImageHeight (int val)
+        public void setImageHeight (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             saliency_StaticSaliencySpectralResidual_setImageHeight_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -148,54 +152,55 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StaticSaliencySpectralResidual::setImageWidth(val)
-        public  void setImageWidth (int val)
+        public void setImageWidth (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             saliency_StaticSaliencySpectralResidual_setImageWidth_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++: static Ptr_StaticSaliencySpectralResidual create()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr saliency_StaticSaliencySpectralResidual_create_10 ();
 
         // C++:  bool computeSaliency(Mat image, Mat& saliencyMap)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool saliency_StaticSaliencySpectralResidual_computeSaliency_10 (IntPtr nativeObj, IntPtr image_nativeObj, IntPtr saliencyMap_nativeObj);
 
         // C++:  int getImageHeight()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int saliency_StaticSaliencySpectralResidual_getImageHeight_10 (IntPtr nativeObj);
 
         // C++:  int getImageWidth()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int saliency_StaticSaliencySpectralResidual_getImageWidth_10 (IntPtr nativeObj);
 
         // C++:  void setImageHeight(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void saliency_StaticSaliencySpectralResidual_setImageHeight_10 (IntPtr nativeObj, int val);
 
         // C++:  void setImageWidth(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void saliency_StaticSaliencySpectralResidual_setImageWidth_10 (IntPtr nativeObj, int val);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void saliency_StaticSaliencySpectralResidual_delete (IntPtr nativeObj);
 
     }

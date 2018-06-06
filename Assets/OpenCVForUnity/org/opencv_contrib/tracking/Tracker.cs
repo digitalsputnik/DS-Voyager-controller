@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,71 +6,53 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class Tracker
-//javadoc: Tracker
+    // C++: class Tracker
+    //javadoc: Tracker
+
     public class Tracker : Algorithm
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        tracking_Tracker_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+tracking_Tracker_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal Tracker (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal Tracker (IntPtr addr) : base (addr) { }
 
-
-        //
-        // C++: static Ptr_Tracker create(String trackerType)
-        //
-
-        //javadoc: Tracker::create(trackerType)
-        public static Tracker create (string trackerType)
-        {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-        
-            Tracker retVal = new Tracker (tracking_Tracker_create_10 (trackerType));
-        
-            return retVal;
-            #else
-            return null;
-            #endif
-        }
-
+        // internal usage only
+        public static new Tracker __fromPtr__ (IntPtr addr) { return new Tracker (addr); }
 
         //
         // C++:  bool init(Mat image, Rect2d boundingBox)
         //
 
         //javadoc: Tracker::init(image, boundingBox)
-        public  bool init (Mat image, Rect2d boundingBox)
+        public bool init (Mat image, Rect2d boundingBox)
         {
             ThrowIfDisposed ();
-            if (image != null)
-                image.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (image != null) image.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = tracking_Tracker_init_10 (nativeObj, image.nativeObj, boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
+        bool retVal = tracking_Tracker_init_10(nativeObj, image.nativeObj, boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -82,49 +61,39 @@ namespace OpenCVForUnity
         //
 
         //javadoc: Tracker::update(image, boundingBox)
-        public  bool update (Mat image, Rect2d boundingBox)
+        public bool update (Mat image, Rect2d boundingBox)
         {
             ThrowIfDisposed ();
-            if (image != null)
-                image.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            double[] boundingBox_out = new double[4];
-            bool retVal = tracking_Tracker_update_10 (nativeObj, image.nativeObj, boundingBox_out);
-            if (boundingBox != null) {
-                boundingBox.x = boundingBox_out [0];
-                boundingBox.y = boundingBox_out [1];
-                boundingBox.width = boundingBox_out [2];
-                boundingBox.height = boundingBox_out [3];
-            } 
-            return retVal;
-            #else
+            if (image != null) image.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        double[] boundingBox_out = new double[4];
+        bool retVal = tracking_Tracker_update_10(nativeObj, image.nativeObj, boundingBox_out);
+        if(boundingBox!=null){ boundingBox.x = boundingBox_out[0]; boundingBox.y = boundingBox_out[1]; boundingBox.width = boundingBox_out[2]; boundingBox.height = boundingBox_out[3]; } 
+        return retVal;
+#else
             return false;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
-
-        // C++: static Ptr_Tracker create(String trackerType)
-        [DllImport(LIBNAME)]
-        private static extern IntPtr tracking_Tracker_create_10 (string trackerType);
 
         // C++:  bool init(Mat image, Rect2d boundingBox)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool tracking_Tracker_init_10 (IntPtr nativeObj, IntPtr image_nativeObj, double boundingBox_x, double boundingBox_y, double boundingBox_width, double boundingBox_height);
 
         // C++:  bool update(Mat image, Rect2d& boundingBox)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool tracking_Tracker_update_10 (IntPtr nativeObj, IntPtr image_nativeObj, double[] boundingBox_out);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void tracking_Tracker_delete (IntPtr nativeObj);
 
     }

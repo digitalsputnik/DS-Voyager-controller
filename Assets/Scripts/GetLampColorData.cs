@@ -58,7 +58,7 @@ public class GetLampColorData : MonoBehaviour {
 		{
 			if (receivingUDPClient.Available > 0) 
 			{
-                Debug.Log("Available data: "+receivingUDPClient.Available);
+                //Debug.Log("Available data: "+receivingUDPClient.Available);
 
 				ReceivedMessageBytes = receivingUDPClient.Receive(ref lampEndPoint);
 
@@ -68,19 +68,19 @@ public class GetLampColorData : MonoBehaviour {
 					continue;
 				}
 
-				Debug.Log ("Recevied data from lamp IP: "+lampEndPoint.Address.ToString());
+				//Debug.Log ("Recevied data from lamp IP: "+lampEndPoint.Address.ToString());
 
 				//Debug.Log ("Received Data = "+ReceivedMessageBytes.GetLength(0));
 				if (!colorData.ContainsKey (lampEndPoint.Address.ToString ())) {
 					colorData.Add (lampEndPoint.Address.ToString (), ReceivedMessageBytes);
-					Debug.Log ("Added KEY to color dictionary");
+					//Debug.Log ("Added KEY to color dictionary");
 				} else {
 					colorData [lampEndPoint.Address.ToString ()] = ReceivedMessageBytes;
-					Debug.Log ("Added DATA to color dictionary");
+					//Debug.Log ("Added DATA to color dictionary");
 				}
 
 			} else {
-                Debug.Log("No data!");
+                //Debug.Log("No data!");
 				for (int i = 0; i < IP.Count; i++) {
 					receivingUDPClient.Send (new byte[] { 0 }, 1, new IPEndPoint(IPAddress.Parse(IP[i]), 31000));
 				}

@@ -1,15 +1,14 @@
 
-//
 
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace OpenCVForUnity
 {
-// C++: class BOWTrainer
-//javadoc: BOWTrainer
+    // C++: class BOWTrainer
+    //javadoc: BOWTrainer
+
     public class BOWTrainer : DisposableOpenCVObject
     {
 
@@ -32,10 +31,22 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal BOWTrainer (IntPtr addr) : base(addr)
+        protected internal BOWTrainer (IntPtr addr)
+            : base (addr)
         {
         }
 
+
+        public IntPtr getNativeObjAddr ()
+        {
+            return nativeObj;
+        }
+
+        // internal usage only
+        public static BOWTrainer __fromPtr__ (IntPtr addr)
+        {
+            return new BOWTrainer (addr);
+        }
 
         //
         // C++:  Mat cluster(Mat descriptors)
@@ -47,14 +58,14 @@ namespace OpenCVForUnity
             ThrowIfDisposed ();
             if (descriptors != null)
                 descriptors.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             Mat retVal = new Mat (features2d_BOWTrainer_cluster_10 (nativeObj, descriptors.nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -66,14 +77,14 @@ namespace OpenCVForUnity
         public virtual Mat cluster ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             Mat retVal = new Mat (features2d_BOWTrainer_cluster_11 (nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -82,17 +93,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BOWTrainer::descriptorsCount()
-        public  int descriptorsCount ()
+        public int descriptorsCount ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = features2d_BOWTrainer_descriptorsCount_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -101,17 +112,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BOWTrainer::getDescriptors()
-        public  List<Mat> getDescriptors ()
+        public List<Mat> getDescriptors ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             List<Mat> retVal = new List<Mat> ();
             Mat retValMat = new Mat (features2d_BOWTrainer_getDescriptors_10 (nativeObj));
             Converters.Mat_to_vector_Mat (retValMat, retVal);
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -120,19 +131,19 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BOWTrainer::add(descriptors)
-        public  void add (Mat descriptors)
+        public void add (Mat descriptors)
         {
             ThrowIfDisposed ();
             if (descriptors != null)
                 descriptors.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_BOWTrainer_add_10 (nativeObj, descriptors.nativeObj);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -141,54 +152,56 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BOWTrainer::clear()
-        public  void clear ()
+        public void clear ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_BOWTrainer_clear_10 (nativeObj);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  Mat cluster(Mat descriptors)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_BOWTrainer_cluster_10 (IntPtr nativeObj, IntPtr descriptors_nativeObj);
 
         // C++:  Mat cluster()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_BOWTrainer_cluster_11 (IntPtr nativeObj);
 
         // C++:  int descriptorsCount()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_BOWTrainer_descriptorsCount_10 (IntPtr nativeObj);
 
         // C++:  vector_Mat getDescriptors()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_BOWTrainer_getDescriptors_10 (IntPtr nativeObj);
 
         // C++:  void add(Mat descriptors)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_BOWTrainer_add_10 (IntPtr nativeObj, IntPtr descriptors_nativeObj);
 
         // C++:  void clear()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_BOWTrainer_clear_10 (IntPtr nativeObj);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_BOWTrainer_delete (IntPtr nativeObj);
 
     }

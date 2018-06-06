@@ -5,6 +5,7 @@
 [Bb]uilds/
 Assets/AssetStoreTools*
 Assets/OpenCVForUnity/Plugins*
+Assets/OpenCVForUnity/Extra*
 Assets/UniversalMediaPlayer/Plugins*
 
 # Visual Studio 2015 cache directory

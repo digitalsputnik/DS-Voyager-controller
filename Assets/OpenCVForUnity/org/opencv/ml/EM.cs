@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class EM
-//javadoc: EM
+    // C++: class EM
+    //javadoc: EM
+
     public class EM : StatModel
     {
 
@@ -33,8 +31,15 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal EM (IntPtr addr) : base(addr)
+        protected internal EM (IntPtr addr)
+            : base (addr)
         {
+        }
+
+        // internal usage only
+        public static new EM __fromPtr__ (IntPtr addr)
+        {
+            return new EM (addr);
         }
 
         public const int COV_MAT_SPHERICAL = 0;
@@ -51,17 +56,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: EM::getMeans()
-        public  Mat getMeans ()
+        public Mat getMeans ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             Mat retVal = new Mat (ml_EM_getMeans_10 (nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -70,17 +75,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: EM::getWeights()
-        public  Mat getWeights ()
+        public Mat getWeights ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             Mat retVal = new Mat (ml_EM_getWeights_10 (nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -91,14 +96,14 @@ namespace OpenCVForUnity
         //javadoc: EM::create()
         public static EM create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            EM retVal = new EM (ml_EM_create_10 ());
+            EM retVal = EM.__fromPtr__ (ml_EM_create_10 ());
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -109,27 +114,27 @@ namespace OpenCVForUnity
         //javadoc: EM::load(filepath, nodeName)
         public static EM load (string filepath, string nodeName)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            EM retVal = new EM (ml_EM_load_10 (filepath, nodeName));
+            EM retVal = EM.__fromPtr__ (ml_EM_load_10 (filepath, nodeName));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: EM::load(filepath)
         public static EM load (string filepath)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            EM retVal = new EM (ml_EM_load_11 (filepath));
+            EM retVal = EM.__fromPtr__ (ml_EM_load_11 (filepath));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -138,19 +143,19 @@ namespace OpenCVForUnity
         //
 
         //javadoc: EM::getTermCriteria()
-        public  TermCriteria getTermCriteria ()
+        public TermCriteria getTermCriteria ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             double[] tmpArray = new double[3];
             ml_EM_getTermCriteria_10 (nativeObj, tmpArray);
             TermCriteria retVal = new TermCriteria (tmpArray);
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -159,22 +164,22 @@ namespace OpenCVForUnity
         //
 
         //javadoc: EM::predict2(sample, probs)
-        public  double[] predict2 (Mat sample, Mat probs)
+        public double[] predict2 (Mat sample, Mat probs)
         {
             ThrowIfDisposed ();
             if (sample != null)
                 sample.ThrowIfDisposed ();
             if (probs != null)
                 probs.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             double[] retVal = new double[2];
             ml_EM_predict2_10 (nativeObj, sample.nativeObj, probs.nativeObj, retVal);
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -183,7 +188,7 @@ namespace OpenCVForUnity
         //
 
         //javadoc: EM::trainE(samples, means0, covs0, weights0, logLikelihoods, labels, probs)
-        public  bool trainE (Mat samples, Mat means0, Mat covs0, Mat weights0, Mat logLikelihoods, Mat labels, Mat probs)
+        public bool trainE (Mat samples, Mat means0, Mat covs0, Mat weights0, Mat logLikelihoods, Mat labels, Mat probs)
         {
             ThrowIfDisposed ();
             if (samples != null)
@@ -200,32 +205,32 @@ namespace OpenCVForUnity
                 labels.ThrowIfDisposed ();
             if (probs != null)
                 probs.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = ml_EM_trainE_10 (nativeObj, samples.nativeObj, means0.nativeObj, covs0.nativeObj, weights0.nativeObj, logLikelihoods.nativeObj, labels.nativeObj, probs.nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
         //javadoc: EM::trainE(samples, means0)
-        public  bool trainE (Mat samples, Mat means0)
+        public bool trainE (Mat samples, Mat means0)
         {
             ThrowIfDisposed ();
             if (samples != null)
                 samples.ThrowIfDisposed ();
             if (means0 != null)
                 means0.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = ml_EM_trainE_11 (nativeObj, samples.nativeObj, means0.nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -234,7 +239,7 @@ namespace OpenCVForUnity
         //
 
         //javadoc: EM::trainEM(samples, logLikelihoods, labels, probs)
-        public  bool trainEM (Mat samples, Mat logLikelihoods, Mat labels, Mat probs)
+        public bool trainEM (Mat samples, Mat logLikelihoods, Mat labels, Mat probs)
         {
             ThrowIfDisposed ();
             if (samples != null)
@@ -245,30 +250,30 @@ namespace OpenCVForUnity
                 labels.ThrowIfDisposed ();
             if (probs != null)
                 probs.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = ml_EM_trainEM_10 (nativeObj, samples.nativeObj, logLikelihoods.nativeObj, labels.nativeObj, probs.nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
         //javadoc: EM::trainEM(samples)
-        public  bool trainEM (Mat samples)
+        public bool trainEM (Mat samples)
         {
             ThrowIfDisposed ();
             if (samples != null)
                 samples.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = ml_EM_trainEM_11 (nativeObj, samples.nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -277,7 +282,7 @@ namespace OpenCVForUnity
         //
 
         //javadoc: EM::trainM(samples, probs0, logLikelihoods, labels, probs)
-        public  bool trainM (Mat samples, Mat probs0, Mat logLikelihoods, Mat labels, Mat probs)
+        public bool trainM (Mat samples, Mat probs0, Mat logLikelihoods, Mat labels, Mat probs)
         {
             ThrowIfDisposed ();
             if (samples != null)
@@ -290,32 +295,32 @@ namespace OpenCVForUnity
                 labels.ThrowIfDisposed ();
             if (probs != null)
                 probs.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = ml_EM_trainM_10 (nativeObj, samples.nativeObj, probs0.nativeObj, logLikelihoods.nativeObj, labels.nativeObj, probs.nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
         //javadoc: EM::trainM(samples, probs0)
-        public  bool trainM (Mat samples, Mat probs0)
+        public bool trainM (Mat samples, Mat probs0)
         {
             ThrowIfDisposed ();
             if (samples != null)
                 samples.ThrowIfDisposed ();
             if (probs0 != null)
                 probs0.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = ml_EM_trainM_11 (nativeObj, samples.nativeObj, probs0.nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -331,14 +336,14 @@ namespace OpenCVForUnity
                 samples.ThrowIfDisposed ();
             if (results != null)
                 results.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             float retVal = ml_EM_predict_10 (nativeObj, samples.nativeObj, results.nativeObj, flags);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
         //javadoc: EM::predict(samples)
@@ -347,14 +352,14 @@ namespace OpenCVForUnity
             ThrowIfDisposed ();
             if (samples != null)
                 samples.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             float retVal = ml_EM_predict_11 (nativeObj, samples.nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -363,17 +368,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: EM::getClustersNumber()
-        public  int getClustersNumber ()
+        public int getClustersNumber ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = ml_EM_getClustersNumber_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -382,17 +387,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: EM::getCovarianceMatrixType()
-        public  int getCovarianceMatrixType ()
+        public int getCovarianceMatrixType ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = ml_EM_getCovarianceMatrixType_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -401,18 +406,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: EM::getCovs(covs)
-        public  void getCovs (List<Mat> covs)
+        public void getCovs (List<Mat> covs)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat covs_mat = new Mat ();
             ml_EM_getCovs_10 (nativeObj, covs_mat.nativeObj);
             Converters.Mat_to_vector_Mat (covs_mat, covs);
             covs_mat.release ();
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -421,17 +426,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: EM::setClustersNumber(val)
-        public  void setClustersNumber (int val)
+        public void setClustersNumber (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_EM_setClustersNumber_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -440,17 +445,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: EM::setCovarianceMatrixType(val)
-        public  void setCovarianceMatrixType (int val)
+        public void setCovarianceMatrixType (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_EM_setCovarianceMatrixType_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -459,109 +464,112 @@ namespace OpenCVForUnity
         //
 
         //javadoc: EM::setTermCriteria(val)
-        public  void setTermCriteria (TermCriteria val)
+        public void setTermCriteria (TermCriteria val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_EM_setTermCriteria_10 (nativeObj, val.type, val.maxCount, val.epsilon);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+
+
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  Mat getMeans()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_EM_getMeans_10 (IntPtr nativeObj);
 
         // C++:  Mat getWeights()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_EM_getWeights_10 (IntPtr nativeObj);
 
         // C++: static Ptr_EM create()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_EM_create_10 ();
 
         // C++: static Ptr_EM load(String filepath, String nodeName = String())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_EM_load_10 (string filepath, string nodeName);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_EM_load_11 (string filepath);
 
         // C++:  TermCriteria getTermCriteria()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_EM_getTermCriteria_10 (IntPtr nativeObj, double[] retVal);
 
         // C++:  Vec2d predict2(Mat sample, Mat& probs)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_EM_predict2_10 (IntPtr nativeObj, IntPtr sample_nativeObj, IntPtr probs_nativeObj, double[] retVal);
 
         // C++:  bool trainE(Mat samples, Mat means0, Mat covs0 = Mat(), Mat weights0 = Mat(), Mat& logLikelihoods = Mat(), Mat& labels = Mat(), Mat& probs = Mat())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_EM_trainE_10 (IntPtr nativeObj, IntPtr samples_nativeObj, IntPtr means0_nativeObj, IntPtr covs0_nativeObj, IntPtr weights0_nativeObj, IntPtr logLikelihoods_nativeObj, IntPtr labels_nativeObj, IntPtr probs_nativeObj);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_EM_trainE_11 (IntPtr nativeObj, IntPtr samples_nativeObj, IntPtr means0_nativeObj);
 
         // C++:  bool trainEM(Mat samples, Mat& logLikelihoods = Mat(), Mat& labels = Mat(), Mat& probs = Mat())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_EM_trainEM_10 (IntPtr nativeObj, IntPtr samples_nativeObj, IntPtr logLikelihoods_nativeObj, IntPtr labels_nativeObj, IntPtr probs_nativeObj);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_EM_trainEM_11 (IntPtr nativeObj, IntPtr samples_nativeObj);
 
         // C++:  bool trainM(Mat samples, Mat probs0, Mat& logLikelihoods = Mat(), Mat& labels = Mat(), Mat& probs = Mat())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_EM_trainM_10 (IntPtr nativeObj, IntPtr samples_nativeObj, IntPtr probs0_nativeObj, IntPtr logLikelihoods_nativeObj, IntPtr labels_nativeObj, IntPtr probs_nativeObj);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool ml_EM_trainM_11 (IntPtr nativeObj, IntPtr samples_nativeObj, IntPtr probs0_nativeObj);
 
         // C++:  float predict(Mat samples, Mat& results = Mat(), int flags = 0)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float ml_EM_predict_10 (IntPtr nativeObj, IntPtr samples_nativeObj, IntPtr results_nativeObj, int flags);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float ml_EM_predict_11 (IntPtr nativeObj, IntPtr samples_nativeObj);
 
         // C++:  int getClustersNumber()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_EM_getClustersNumber_10 (IntPtr nativeObj);
 
         // C++:  int getCovarianceMatrixType()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_EM_getCovarianceMatrixType_10 (IntPtr nativeObj);
 
         // C++:  void getCovs(vector_Mat& covs)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_EM_getCovs_10 (IntPtr nativeObj, IntPtr covs_mat_nativeObj);
 
         // C++:  void setClustersNumber(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_EM_setClustersNumber_10 (IntPtr nativeObj, int val);
 
         // C++:  void setCovarianceMatrixType(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_EM_setCovarianceMatrixType_10 (IntPtr nativeObj, int val);
 
         // C++:  void setTermCriteria(TermCriteria val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_EM_setTermCriteria_10 (IntPtr nativeObj, int val_type, int val_maxCount, double val_epsilon);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_EM_delete (IntPtr nativeObj);
 
     }

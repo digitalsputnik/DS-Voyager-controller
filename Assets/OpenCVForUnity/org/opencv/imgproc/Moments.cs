@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace OpenCVForUnity
 {
 
-//javadoc:Moments
+    //javadoc:Moments
     [System.Serializable]
     public class Moments
     {
@@ -60,7 +60,8 @@ namespace OpenCVForUnity
             this.completeState ();
         }
 
-        public Moments () : this (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        public Moments ()
+            : this (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         {
 
         }
@@ -72,19 +73,22 @@ namespace OpenCVForUnity
 
         public void set (double[] vals)
         {
-            if (vals != null) {
-                m00 = vals.Length > 0 ? vals [0] : 0;
-                m10 = vals.Length > 1 ? vals [1] : 0;
-                m01 = vals.Length > 2 ? vals [2] : 0;
-                m20 = vals.Length > 3 ? vals [3] : 0;
-                m11 = vals.Length > 4 ? vals [4] : 0;
-                m02 = vals.Length > 5 ? vals [5] : 0;
-                m30 = vals.Length > 6 ? vals [6] : 0;
-                m21 = vals.Length > 7 ? vals [7] : 0;
-                m12 = vals.Length > 8 ? vals [8] : 0;
-                m03 = vals.Length > 9 ? vals [9] : 0;
+            if (vals != null)
+            {
+                m00 = vals.Length > 0 ? vals[0] : 0;
+                m10 = vals.Length > 1 ? vals[1] : 0;
+                m01 = vals.Length > 2 ? vals[2] : 0;
+                m20 = vals.Length > 3 ? vals[3] : 0;
+                m11 = vals.Length > 4 ? vals[4] : 0;
+                m02 = vals.Length > 5 ? vals[5] : 0;
+                m30 = vals.Length > 6 ? vals[6] : 0;
+                m21 = vals.Length > 7 ? vals[7] : 0;
+                m12 = vals.Length > 8 ? vals[8] : 0;
+                m03 = vals.Length > 9 ? vals[9] : 0;
                 this.completeState ();
-            } else {
+            }
+            else
+            {
                 m00 = 0;
                 m10 = 0;
                 m01 = 0;
@@ -157,7 +161,8 @@ namespace OpenCVForUnity
             double mu20, mu11, mu02;
             double inv_m00 = 0.0;
 
-            if (System.Math.Abs (this.m00) > 0.00000001) {
+            if (System.Math.Abs (this.m00) > 0.00000001)
+            {
                 inv_m00 = 1.0 / this.m00;
                 cx = this.m10 * inv_m00;
                 cy = this.m01 * inv_m00;

@@ -1,13 +1,13 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace OpenCVForUnity
 {
+    // C++: class Structured_light
+    //javadoc: Structured_light
+
     public class Structured_light
     {
 

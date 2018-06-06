@@ -116,7 +116,8 @@ public class DrawScripts : MonoBehaviour {
     public GameObject VideoSourceTemplate;
     public GameObject VideoSourcePanel;
 
-
+    WebCamDevice[] devices = new WebCamDevice[] { };
+    List<Dropdown.OptionData> deviceOptions = new List<Dropdown.OptionData>();
 
     //List of animations
     public List<LightAnims> animations = new List<LightAnims>();
@@ -133,6 +134,31 @@ public class DrawScripts : MonoBehaviour {
         startTimeButton.onClick.AddListener(TaskSetStartTimeButtonClick);
         cancelButton.onClick.AddListener(TaskCancelButtonClick);
         okButton.onClick.AddListener(TaskOkButtonClick);
+
+        StartCoroutine("GetWebCamDevices");
+    }
+
+    public IEnumerator GetWebCamDevices()
+    {
+        while (true)
+        {
+            WebCamDevice[] devicesRet = WebCamTexture.devices;
+            Debug.Log("list");
+            if (devicesRet.Length != devices.Length)
+            {
+                devices = devicesRet;
+                deviceOptions.Clear();
+                //Populate list!
+                foreach (var device in devices)
+                {
+                    deviceOptions.Add(new Dropdown.OptionData(device.name));
+                }
+                //deviceOptions.Add(new Dropdown.OptionData("URL"));
+            }else if(deviceOptions.Count == 0){
+                //deviceOptions.Add(new Dropdown.OptionData("URL"));
+            }
+            yield return new WaitForSeconds(1f);
+        }
     }
 
     public void setupAnimations() {
@@ -463,13 +489,12 @@ public class DrawScripts : MonoBehaviour {
                     int startValue = (int)animations[animNum].AnimProperties[i].startValue;
 
                     var sourceSelectorDropdown = newVideoSourceSelector.transform.Find("SourceDropdown").GetComponent<Dropdown>();
+                    sourceSelectorDropdown.options = deviceOptions;
                     sourceSelectorDropdown.onValueChanged.AddListener(delegate { ChangeSource(sourceSelectorDropdown.value); });
                     sourceSelectorDropdown.value = startValue;
                 }
-
                 ChangeSource((int)animations[animNum].AnimProperties[i].startValue);
             }
-
         }
 
 
@@ -510,15 +535,13 @@ public class DrawScripts : MonoBehaviour {
             VideoStreamBackground.SetActive(false);
         }
 
-        if (value <= 1)
+        WebCamDevice[] devices = WebCamTexture.devices;
+        if (value < devices.Length)
         {
 
             //Debug.Log("Video Stream selected...");
-            PullScript = MenuBackGround.transform.Find("MenuPullImage").gameObject.GetComponent<MenuPullScript>();
-            PullScript.CloseMenu();
-
-
-            WebCamDevice[] devices = WebCamTexture.devices;
+            //PullScript = MenuBackGround.transform.Find("MenuPullImage").gameObject.GetComponent<MenuPullScript>();
+            //PullScript.CloseMenu();
 
             if (devices.Length == 0)
             {
@@ -527,27 +550,29 @@ public class DrawScripts : MonoBehaviour {
                 return;
             }
 
-            for (int j = 0; j < devices.Length; j++)
-            {
-                if (value == 0)
-                {
-                    if (devices[j].isFrontFacing)
-                    {
-                        webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
-                        //Debug.Log("Webcam created!");
+            webcamTexture = new WebCamTexture(devices[value].name, Screen.width, Screen.height);
 
-                    }
-                }
-                else if (value == 1)
-                {
-                    if (!devices[j].isFrontFacing)
-                    {
-                        webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
-                        //Debug.Log("Webcam created!");
+            //for (int j = 0; j < devices.Length; j++)
+            //{
+            //    if (value == 0)
+            //    {
+            //        if (devices[j].isFrontFacing)
+            //        {
+            //            webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
+            //            //Debug.Log("Webcam created!");
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //    else if (value == 1)
+            //    {
+            //        if (!devices[j].isFrontFacing)
+            //        {
+            //            webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
+            //            //Debug.Log("Webcam created!");
+
+            //        }
+            //    }
+            //}
             if (webcamTexture == null)
             {
                 Debug.Log("Unable to find camera");

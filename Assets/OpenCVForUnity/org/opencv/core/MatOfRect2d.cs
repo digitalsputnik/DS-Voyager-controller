@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace OpenCVForUnity
@@ -10,14 +10,16 @@ namespace OpenCVForUnity
         private const int _depth = CvType.CV_64F;
         private const int _channels = 4;
 
-        public MatOfRect2d () : base()
+        public MatOfRect2d ()
+            : base ()
         {
-        
+
         }
 
-        protected MatOfRect2d (IntPtr addr) : base(addr)
+        protected MatOfRect2d (IntPtr addr)
+            : base (addr)
         {
-        
+
             if (!empty () && checkVector (_channels, _depth) < 0)
                 throw new CvException ("Incompatible Mat");
             //FIXME: do we need release() here?
@@ -28,17 +30,19 @@ namespace OpenCVForUnity
             return new MatOfRect2d (addr);
         }
 
-        public MatOfRect2d (Mat m) : base(m, Range.all())
+        public MatOfRect2d (Mat m)
+            : base (m, Range.all ())
         {
-        
+
             if (!empty () && checkVector (_channels, _depth) < 0)
                 throw new CvException ("Incompatible Mat");
             //FIXME: do we need release() here?
         }
 
-        public MatOfRect2d (params Rect2d[] a) : base()
+        public MatOfRect2d (params Rect2d[] a)
+            : base ()
         {
-        
+
             fromArray (a);
         }
 
@@ -55,12 +59,13 @@ namespace OpenCVForUnity
             int num = a.Length;
             alloc (num);
             double[] buff = new double[num * _channels];
-            for (int i=0; i<num; i++) {
-                Rect2d r = a [i];
-                buff [_channels * i + 0] = (double)r.x;
-                buff [_channels * i + 1] = (double)r.y;
-                buff [_channels * i + 2] = (double)r.width;
-                buff [_channels * i + 3] = (double)r.height;
+            for (int i = 0; i < num; i++)
+            {
+                Rect2d r = a[i];
+                buff[_channels * i + 0] = (double)r.x;
+                buff[_channels * i + 1] = (double)r.y;
+                buff[_channels * i + 2] = (double)r.width;
+                buff[_channels * i + 3] = (double)r.height;
             }
             put (0, 0, buff); //TODO: check ret val!
         }
@@ -73,14 +78,14 @@ namespace OpenCVForUnity
                 return a;
             double[] buff = new double[num * _channels];
             get (0, 0, buff); //TODO: check ret val!
-            for (int i=0; i<num; i++)
-                a [i] = new Rect2d (buff [i * _channels], buff [i * _channels + 1], buff [i * _channels + 2], buff [i * _channels + 3]);
+            for (int i = 0; i < num; i++)
+                a[i] = new Rect2d (buff[i * _channels], buff[i * _channels + 1], buff[i * _channels + 2], buff[i * _channels + 3]);
             return a;
         }
 
         public void fromList (List<Rect2d> lr)
         {
-//            Rect2d[] ap = lr.ToArray (new Rect2d[0]);
+            //            Rect2d[] ap = lr.ToArray (new Rect2d[0]);
             Rect2d[] ap = lr.ToArray ();
             fromArray (ap);
         }

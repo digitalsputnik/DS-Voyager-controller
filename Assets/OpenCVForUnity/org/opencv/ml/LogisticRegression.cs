@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class LogisticRegression
-//javadoc: LogisticRegression
+    // C++: class LogisticRegression
+    //javadoc: LogisticRegression
+
     public class LogisticRegression : StatModel
     {
 
@@ -33,8 +31,15 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal LogisticRegression (IntPtr addr) : base(addr)
+        protected internal LogisticRegression (IntPtr addr)
+            : base (addr)
         {
+        }
+
+        // internal usage only
+        public static new LogisticRegression __fromPtr__ (IntPtr addr)
+        {
+            return new LogisticRegression (addr);
         }
 
         public const int REG_DISABLE = -1;
@@ -47,17 +52,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LogisticRegression::get_learnt_thetas()
-        public  Mat get_learnt_thetas ()
+        public Mat get_learnt_thetas ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             Mat retVal = new Mat (ml_LogisticRegression_get_1learnt_1thetas_10 (nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -68,14 +73,14 @@ namespace OpenCVForUnity
         //javadoc: LogisticRegression::create()
         public static LogisticRegression create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            LogisticRegression retVal = new LogisticRegression (ml_LogisticRegression_create_10 ());
+            LogisticRegression retVal = LogisticRegression.__fromPtr__ (ml_LogisticRegression_create_10 ());
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -86,27 +91,27 @@ namespace OpenCVForUnity
         //javadoc: LogisticRegression::load(filepath, nodeName)
         public static LogisticRegression load (string filepath, string nodeName)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            LogisticRegression retVal = new LogisticRegression (ml_LogisticRegression_load_10 (filepath, nodeName));
+            LogisticRegression retVal = LogisticRegression.__fromPtr__ (ml_LogisticRegression_load_10 (filepath, nodeName));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: LogisticRegression::load(filepath)
         public static LogisticRegression load (string filepath)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            LogisticRegression retVal = new LogisticRegression (ml_LogisticRegression_load_11 (filepath));
+            LogisticRegression retVal = LogisticRegression.__fromPtr__ (ml_LogisticRegression_load_11 (filepath));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -115,19 +120,19 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LogisticRegression::getTermCriteria()
-        public  TermCriteria getTermCriteria ()
+        public TermCriteria getTermCriteria ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             double[] tmpArray = new double[3];
             ml_LogisticRegression_getTermCriteria_10 (nativeObj, tmpArray);
             TermCriteria retVal = new TermCriteria (tmpArray);
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -136,17 +141,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LogisticRegression::getLearningRate()
-        public  double getLearningRate ()
+        public double getLearningRate ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             double retVal = ml_LogisticRegression_getLearningRate_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -162,14 +167,14 @@ namespace OpenCVForUnity
                 samples.ThrowIfDisposed ();
             if (results != null)
                 results.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             float retVal = ml_LogisticRegression_predict_10 (nativeObj, samples.nativeObj, results.nativeObj, flags);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
         //javadoc: LogisticRegression::predict(samples)
@@ -178,14 +183,14 @@ namespace OpenCVForUnity
             ThrowIfDisposed ();
             if (samples != null)
                 samples.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             float retVal = ml_LogisticRegression_predict_11 (nativeObj, samples.nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -194,17 +199,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LogisticRegression::getIterations()
-        public  int getIterations ()
+        public int getIterations ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = ml_LogisticRegression_getIterations_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -213,17 +218,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LogisticRegression::getMiniBatchSize()
-        public  int getMiniBatchSize ()
+        public int getMiniBatchSize ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = ml_LogisticRegression_getMiniBatchSize_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -232,17 +237,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LogisticRegression::getRegularization()
-        public  int getRegularization ()
+        public int getRegularization ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = ml_LogisticRegression_getRegularization_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -251,17 +256,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LogisticRegression::getTrainMethod()
-        public  int getTrainMethod ()
+        public int getTrainMethod ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = ml_LogisticRegression_getTrainMethod_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -270,17 +275,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LogisticRegression::setIterations(val)
-        public  void setIterations (int val)
+        public void setIterations (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_LogisticRegression_setIterations_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -289,17 +294,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LogisticRegression::setLearningRate(val)
-        public  void setLearningRate (double val)
+        public void setLearningRate (double val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_LogisticRegression_setLearningRate_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -308,17 +313,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LogisticRegression::setMiniBatchSize(val)
-        public  void setMiniBatchSize (int val)
+        public void setMiniBatchSize (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_LogisticRegression_setMiniBatchSize_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -327,17 +332,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LogisticRegression::setRegularization(val)
-        public  void setRegularization (int val)
+        public void setRegularization (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_LogisticRegression_setRegularization_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -346,17 +351,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LogisticRegression::setTermCriteria(val)
-        public  void setTermCriteria (TermCriteria val)
+        public void setTermCriteria (TermCriteria val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_LogisticRegression_setTermCriteria_10 (nativeObj, val.type, val.maxCount, val.epsilon);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -365,100 +370,102 @@ namespace OpenCVForUnity
         //
 
         //javadoc: LogisticRegression::setTrainMethod(val)
-        public  void setTrainMethod (int val)
+        public void setTrainMethod (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_LogisticRegression_setTrainMethod_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  Mat get_learnt_thetas()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_LogisticRegression_get_1learnt_1thetas_10 (IntPtr nativeObj);
 
         // C++: static Ptr_LogisticRegression create()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_LogisticRegression_create_10 ();
 
         // C++: static Ptr_LogisticRegression load(String filepath, String nodeName = String())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_LogisticRegression_load_10 (string filepath, string nodeName);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_LogisticRegression_load_11 (string filepath);
 
         // C++:  TermCriteria getTermCriteria()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_LogisticRegression_getTermCriteria_10 (IntPtr nativeObj, double[] retVal);
 
         // C++:  double getLearningRate()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double ml_LogisticRegression_getLearningRate_10 (IntPtr nativeObj);
 
         // C++:  float predict(Mat samples, Mat& results = Mat(), int flags = 0)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float ml_LogisticRegression_predict_10 (IntPtr nativeObj, IntPtr samples_nativeObj, IntPtr results_nativeObj, int flags);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float ml_LogisticRegression_predict_11 (IntPtr nativeObj, IntPtr samples_nativeObj);
 
         // C++:  int getIterations()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_LogisticRegression_getIterations_10 (IntPtr nativeObj);
 
         // C++:  int getMiniBatchSize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_LogisticRegression_getMiniBatchSize_10 (IntPtr nativeObj);
 
         // C++:  int getRegularization()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_LogisticRegression_getRegularization_10 (IntPtr nativeObj);
 
         // C++:  int getTrainMethod()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_LogisticRegression_getTrainMethod_10 (IntPtr nativeObj);
 
         // C++:  void setIterations(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_LogisticRegression_setIterations_10 (IntPtr nativeObj, int val);
 
         // C++:  void setLearningRate(double val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_LogisticRegression_setLearningRate_10 (IntPtr nativeObj, double val);
 
         // C++:  void setMiniBatchSize(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_LogisticRegression_setMiniBatchSize_10 (IntPtr nativeObj, int val);
 
         // C++:  void setRegularization(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_LogisticRegression_setRegularization_10 (IntPtr nativeObj, int val);
 
         // C++:  void setTermCriteria(TermCriteria val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_LogisticRegression_setTermCriteria_10 (IntPtr nativeObj, int val_type, int val_maxCount, double val_epsilon);
 
         // C++:  void setTrainMethod(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_LogisticRegression_setTrainMethod_10 (IntPtr nativeObj, int val);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_LogisticRegression_delete (IntPtr nativeObj);
 
     }

@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,48 +6,49 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class BFMatcher
-//javadoc: BFMatcher
+    // C++: class BFMatcher
+    //javadoc: BFMatcher
+
     public class BFMatcher : DescriptorMatcher
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        features2d_BFMatcher_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+features2d_BFMatcher_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal BFMatcher (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal BFMatcher (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new BFMatcher __fromPtr__ (IntPtr addr) { return new BFMatcher (addr); }
 
         //
         // C++:   BFMatcher(int normType = NORM_L2, bool crossCheck = false)
         //
 
         //javadoc: BFMatcher::BFMatcher(normType, crossCheck)
-        public  BFMatcher (int normType, bool crossCheck) :
-        #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        public BFMatcher (int normType, bool crossCheck) :
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
         base( features2d_BFMatcher_BFMatcher_10(normType, crossCheck) )
         
-        #else
-        base(IntPtr.Zero)
-        #endif
+#else
+            base (IntPtr.Zero)
+#endif
         {
 
             return;
@@ -58,14 +56,14 @@ namespace OpenCVForUnity
         }
 
         //javadoc: BFMatcher::BFMatcher()
-        public  BFMatcher () :
-        #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        public BFMatcher () :
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
         base( features2d_BFMatcher_BFMatcher_11() )
         
-        #else
-        base(IntPtr.Zero)
-        #endif
+#else
+            base (IntPtr.Zero)
+#endif
         {
 
             return;
@@ -80,54 +78,52 @@ namespace OpenCVForUnity
         //javadoc: BFMatcher::create(normType, crossCheck)
         public static BFMatcher create (int normType, bool crossCheck)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            BFMatcher retVal = new BFMatcher (features2d_BFMatcher_create_10 (normType, crossCheck));
+        BFMatcher retVal = BFMatcher.__fromPtr__(features2d_BFMatcher_create_10(normType, crossCheck));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: BFMatcher::create()
         public static BFMatcher create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            BFMatcher retVal = new BFMatcher (features2d_BFMatcher_create_11 ());
+        BFMatcher retVal = BFMatcher.__fromPtr__(features2d_BFMatcher_create_11());
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:   BFMatcher(int normType = NORM_L2, bool crossCheck = false)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_BFMatcher_BFMatcher_10 (int normType, bool crossCheck);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_BFMatcher_BFMatcher_11 ();
 
         // C++: static Ptr_BFMatcher create(int normType = NORM_L2, bool crossCheck = false)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_BFMatcher_create_10 (int normType, bool crossCheck);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_BFMatcher_create_11 ();
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_BFMatcher_delete (IntPtr nativeObj);
 
     }

@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,51 +6,52 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class TonemapDrago
-//javadoc: TonemapDrago
+    // C++: class TonemapDrago
+    //javadoc: TonemapDrago
+
     public class TonemapDrago : Tonemap
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        photo_TonemapDrago_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+photo_TonemapDrago_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal TonemapDrago (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal TonemapDrago (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new TonemapDrago __fromPtr__ (IntPtr addr) { return new TonemapDrago (addr); }
 
         //
         // C++:  float getBias()
         //
 
         //javadoc: TonemapDrago::getBias()
-        public  float getBias ()
+        public float getBias ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            float retVal = photo_TonemapDrago_getBias_10 (nativeObj);
+        float retVal = photo_TonemapDrago_getBias_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -62,17 +60,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TonemapDrago::getSaturation()
-        public  float getSaturation ()
+        public float getSaturation ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            float retVal = photo_TonemapDrago_getSaturation_10 (nativeObj);
+        float retVal = photo_TonemapDrago_getSaturation_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -81,17 +79,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TonemapDrago::setBias(bias)
-        public  void setBias (float bias)
+        public void setBias (float bias)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            photo_TonemapDrago_setBias_10 (nativeObj, bias);
+        photo_TonemapDrago_setBias_10(nativeObj, bias);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -100,46 +98,46 @@ namespace OpenCVForUnity
         //
 
         //javadoc: TonemapDrago::setSaturation(saturation)
-        public  void setSaturation (float saturation)
+        public void setSaturation (float saturation)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            photo_TonemapDrago_setSaturation_10 (nativeObj, saturation);
+        photo_TonemapDrago_setSaturation_10(nativeObj, saturation);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  float getBias()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float photo_TonemapDrago_getBias_10 (IntPtr nativeObj);
 
         // C++:  float getSaturation()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float photo_TonemapDrago_getSaturation_10 (IntPtr nativeObj);
 
         // C++:  void setBias(float bias)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void photo_TonemapDrago_setBias_10 (IntPtr nativeObj, float bias);
 
         // C++:  void setSaturation(float saturation)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void photo_TonemapDrago_setSaturation_10 (IntPtr nativeObj, float saturation);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void photo_TonemapDrago_delete (IntPtr nativeObj);
 
     }

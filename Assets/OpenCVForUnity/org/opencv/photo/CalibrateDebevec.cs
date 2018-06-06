@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,51 +6,52 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class CalibrateDebevec
-//javadoc: CalibrateDebevec
+    // C++: class CalibrateDebevec
+    //javadoc: CalibrateDebevec
+
     public class CalibrateDebevec : CalibrateCRF
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        photo_CalibrateDebevec_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+photo_CalibrateDebevec_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal CalibrateDebevec (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal CalibrateDebevec (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new CalibrateDebevec __fromPtr__ (IntPtr addr) { return new CalibrateDebevec (addr); }
 
         //
         // C++:  bool getRandom()
         //
 
         //javadoc: CalibrateDebevec::getRandom()
-        public  bool getRandom ()
+        public bool getRandom ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = photo_CalibrateDebevec_getRandom_10 (nativeObj);
+        bool retVal = photo_CalibrateDebevec_getRandom_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -62,17 +60,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: CalibrateDebevec::getLambda()
-        public  float getLambda ()
+        public float getLambda ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            float retVal = photo_CalibrateDebevec_getLambda_10 (nativeObj);
+        float retVal = photo_CalibrateDebevec_getLambda_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -81,17 +79,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: CalibrateDebevec::getSamples()
-        public  int getSamples ()
+        public int getSamples ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = photo_CalibrateDebevec_getSamples_10 (nativeObj);
+        int retVal = photo_CalibrateDebevec_getSamples_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -100,17 +98,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: CalibrateDebevec::setLambda(lambda)
-        public  void setLambda (float lambda)
+        public void setLambda (float lambda)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            photo_CalibrateDebevec_setLambda_10 (nativeObj, lambda);
+        photo_CalibrateDebevec_setLambda_10(nativeObj, lambda);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -119,17 +117,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: CalibrateDebevec::setRandom(random)
-        public  void setRandom (bool random)
+        public void setRandom (bool random)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            photo_CalibrateDebevec_setRandom_10 (nativeObj, random);
+        photo_CalibrateDebevec_setRandom_10(nativeObj, random);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -138,54 +136,54 @@ namespace OpenCVForUnity
         //
 
         //javadoc: CalibrateDebevec::setSamples(samples)
-        public  void setSamples (int samples)
+        public void setSamples (int samples)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            photo_CalibrateDebevec_setSamples_10 (nativeObj, samples);
+        photo_CalibrateDebevec_setSamples_10(nativeObj, samples);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  bool getRandom()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool photo_CalibrateDebevec_getRandom_10 (IntPtr nativeObj);
 
         // C++:  float getLambda()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float photo_CalibrateDebevec_getLambda_10 (IntPtr nativeObj);
 
         // C++:  int getSamples()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int photo_CalibrateDebevec_getSamples_10 (IntPtr nativeObj);
 
         // C++:  void setLambda(float lambda)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void photo_CalibrateDebevec_setLambda_10 (IntPtr nativeObj, float lambda);
 
         // C++:  void setRandom(bool random)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void photo_CalibrateDebevec_setRandom_10 (IntPtr nativeObj, bool random);
 
         // C++:  void setSamples(int samples)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void photo_CalibrateDebevec_setSamples_10 (IntPtr nativeObj, int samples);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void photo_CalibrateDebevec_delete (IntPtr nativeObj);
 
     }

@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,34 +6,35 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class FarnebackOpticalFlow
-//javadoc: FarnebackOpticalFlow
+    // C++: class FarnebackOpticalFlow
+    //javadoc: FarnebackOpticalFlow
+
     public class FarnebackOpticalFlow : DenseOpticalFlow
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        video_FarnebackOpticalFlow_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+video_FarnebackOpticalFlow_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal FarnebackOpticalFlow (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal FarnebackOpticalFlow (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new FarnebackOpticalFlow __fromPtr__ (IntPtr addr) { return new FarnebackOpticalFlow (addr); }
 
         //
         // C++: static Ptr_FarnebackOpticalFlow create(int numLevels = 5, double pyrScale = 0.5, bool fastPyramids = false, int winSize = 13, int numIters = 10, int polyN = 5, double polySigma = 1.1, int flags = 0)
@@ -45,27 +43,27 @@ namespace OpenCVForUnity
         //javadoc: FarnebackOpticalFlow::create(numLevels, pyrScale, fastPyramids, winSize, numIters, polyN, polySigma, flags)
         public static FarnebackOpticalFlow create (int numLevels, double pyrScale, bool fastPyramids, int winSize, int numIters, int polyN, double polySigma, int flags)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            FarnebackOpticalFlow retVal = new FarnebackOpticalFlow (video_FarnebackOpticalFlow_create_10 (numLevels, pyrScale, fastPyramids, winSize, numIters, polyN, polySigma, flags));
+        FarnebackOpticalFlow retVal = FarnebackOpticalFlow.__fromPtr__(video_FarnebackOpticalFlow_create_10(numLevels, pyrScale, fastPyramids, winSize, numIters, polyN, polySigma, flags));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: FarnebackOpticalFlow::create()
         public static FarnebackOpticalFlow create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            FarnebackOpticalFlow retVal = new FarnebackOpticalFlow (video_FarnebackOpticalFlow_create_11 ());
+        FarnebackOpticalFlow retVal = FarnebackOpticalFlow.__fromPtr__(video_FarnebackOpticalFlow_create_11());
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -74,17 +72,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::getFastPyramids()
-        public  bool getFastPyramids ()
+        public bool getFastPyramids ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = video_FarnebackOpticalFlow_getFastPyramids_10 (nativeObj);
+        bool retVal = video_FarnebackOpticalFlow_getFastPyramids_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -93,17 +91,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::getPolySigma()
-        public  double getPolySigma ()
+        public double getPolySigma ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = video_FarnebackOpticalFlow_getPolySigma_10 (nativeObj);
+        double retVal = video_FarnebackOpticalFlow_getPolySigma_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -112,17 +110,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::getPyrScale()
-        public  double getPyrScale ()
+        public double getPyrScale ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = video_FarnebackOpticalFlow_getPyrScale_10 (nativeObj);
+        double retVal = video_FarnebackOpticalFlow_getPyrScale_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -131,17 +129,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::getFlags()
-        public  int getFlags ()
+        public int getFlags ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = video_FarnebackOpticalFlow_getFlags_10 (nativeObj);
+        int retVal = video_FarnebackOpticalFlow_getFlags_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -150,17 +148,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::getNumIters()
-        public  int getNumIters ()
+        public int getNumIters ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = video_FarnebackOpticalFlow_getNumIters_10 (nativeObj);
+        int retVal = video_FarnebackOpticalFlow_getNumIters_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -169,17 +167,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::getNumLevels()
-        public  int getNumLevels ()
+        public int getNumLevels ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = video_FarnebackOpticalFlow_getNumLevels_10 (nativeObj);
+        int retVal = video_FarnebackOpticalFlow_getNumLevels_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -188,17 +186,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::getPolyN()
-        public  int getPolyN ()
+        public int getPolyN ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = video_FarnebackOpticalFlow_getPolyN_10 (nativeObj);
+        int retVal = video_FarnebackOpticalFlow_getPolyN_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -207,17 +205,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::getWinSize()
-        public  int getWinSize ()
+        public int getWinSize ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = video_FarnebackOpticalFlow_getWinSize_10 (nativeObj);
+        int retVal = video_FarnebackOpticalFlow_getWinSize_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -226,17 +224,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::setFastPyramids(fastPyramids)
-        public  void setFastPyramids (bool fastPyramids)
+        public void setFastPyramids (bool fastPyramids)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_FarnebackOpticalFlow_setFastPyramids_10 (nativeObj, fastPyramids);
+        video_FarnebackOpticalFlow_setFastPyramids_10(nativeObj, fastPyramids);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -245,17 +243,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::setFlags(flags)
-        public  void setFlags (int flags)
+        public void setFlags (int flags)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_FarnebackOpticalFlow_setFlags_10 (nativeObj, flags);
+        video_FarnebackOpticalFlow_setFlags_10(nativeObj, flags);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -264,17 +262,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::setNumIters(numIters)
-        public  void setNumIters (int numIters)
+        public void setNumIters (int numIters)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_FarnebackOpticalFlow_setNumIters_10 (nativeObj, numIters);
+        video_FarnebackOpticalFlow_setNumIters_10(nativeObj, numIters);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -283,17 +281,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::setNumLevels(numLevels)
-        public  void setNumLevels (int numLevels)
+        public void setNumLevels (int numLevels)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_FarnebackOpticalFlow_setNumLevels_10 (nativeObj, numLevels);
+        video_FarnebackOpticalFlow_setNumLevels_10(nativeObj, numLevels);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -302,17 +300,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::setPolyN(polyN)
-        public  void setPolyN (int polyN)
+        public void setPolyN (int polyN)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_FarnebackOpticalFlow_setPolyN_10 (nativeObj, polyN);
+        video_FarnebackOpticalFlow_setPolyN_10(nativeObj, polyN);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -321,17 +319,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::setPolySigma(polySigma)
-        public  void setPolySigma (double polySigma)
+        public void setPolySigma (double polySigma)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_FarnebackOpticalFlow_setPolySigma_10 (nativeObj, polySigma);
+        video_FarnebackOpticalFlow_setPolySigma_10(nativeObj, polySigma);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -340,17 +338,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::setPyrScale(pyrScale)
-        public  void setPyrScale (double pyrScale)
+        public void setPyrScale (double pyrScale)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_FarnebackOpticalFlow_setPyrScale_10 (nativeObj, pyrScale);
+        video_FarnebackOpticalFlow_setPyrScale_10(nativeObj, pyrScale);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -359,101 +357,100 @@ namespace OpenCVForUnity
         //
 
         //javadoc: FarnebackOpticalFlow::setWinSize(winSize)
-        public  void setWinSize (int winSize)
+        public void setWinSize (int winSize)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_FarnebackOpticalFlow_setWinSize_10 (nativeObj, winSize);
+        video_FarnebackOpticalFlow_setWinSize_10(nativeObj, winSize);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++: static Ptr_FarnebackOpticalFlow create(int numLevels = 5, double pyrScale = 0.5, bool fastPyramids = false, int winSize = 13, int numIters = 10, int polyN = 5, double polySigma = 1.1, int flags = 0)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_FarnebackOpticalFlow_create_10 (int numLevels, double pyrScale, bool fastPyramids, int winSize, int numIters, int polyN, double polySigma, int flags);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_FarnebackOpticalFlow_create_11 ();
 
         // C++:  bool getFastPyramids()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool video_FarnebackOpticalFlow_getFastPyramids_10 (IntPtr nativeObj);
 
         // C++:  double getPolySigma()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double video_FarnebackOpticalFlow_getPolySigma_10 (IntPtr nativeObj);
 
         // C++:  double getPyrScale()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double video_FarnebackOpticalFlow_getPyrScale_10 (IntPtr nativeObj);
 
         // C++:  int getFlags()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int video_FarnebackOpticalFlow_getFlags_10 (IntPtr nativeObj);
 
         // C++:  int getNumIters()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int video_FarnebackOpticalFlow_getNumIters_10 (IntPtr nativeObj);
 
         // C++:  int getNumLevels()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int video_FarnebackOpticalFlow_getNumLevels_10 (IntPtr nativeObj);
 
         // C++:  int getPolyN()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int video_FarnebackOpticalFlow_getPolyN_10 (IntPtr nativeObj);
 
         // C++:  int getWinSize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int video_FarnebackOpticalFlow_getWinSize_10 (IntPtr nativeObj);
 
         // C++:  void setFastPyramids(bool fastPyramids)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_FarnebackOpticalFlow_setFastPyramids_10 (IntPtr nativeObj, bool fastPyramids);
 
         // C++:  void setFlags(int flags)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_FarnebackOpticalFlow_setFlags_10 (IntPtr nativeObj, int flags);
 
         // C++:  void setNumIters(int numIters)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_FarnebackOpticalFlow_setNumIters_10 (IntPtr nativeObj, int numIters);
 
         // C++:  void setNumLevels(int numLevels)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_FarnebackOpticalFlow_setNumLevels_10 (IntPtr nativeObj, int numLevels);
 
         // C++:  void setPolyN(int polyN)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_FarnebackOpticalFlow_setPolyN_10 (IntPtr nativeObj, int polyN);
 
         // C++:  void setPolySigma(double polySigma)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_FarnebackOpticalFlow_setPolySigma_10 (IntPtr nativeObj, double polySigma);
 
         // C++:  void setPyrScale(double pyrScale)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_FarnebackOpticalFlow_setPyrScale_10 (IntPtr nativeObj, double pyrScale);
 
         // C++:  void setWinSize(int winSize)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_FarnebackOpticalFlow_setWinSize_10 (IntPtr nativeObj, int winSize);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_FarnebackOpticalFlow_delete (IntPtr nativeObj);
 
     }

@@ -8,14 +8,14 @@ namespace OpenCVForUnity
     {
 
         public bool IsDisposed { get; protected set; }
-        
+
         public bool IsEnabledDispose { get; set; }
-                
+
         protected DisposableObject ()
-            : this(true)
+            : this (true)
         {
         }
-            
+
         protected DisposableObject (bool isEnabledDispose)
         {
             IsEnabledDispose = isEnabledDispose;
@@ -30,9 +30,11 @@ namespace OpenCVForUnity
 
         protected virtual void Dispose (bool disposing)
         {
-            if (!IsDisposed) {             
-                        
-                if (disposing) {
+            if (!IsDisposed)
+            {
+
+                if (disposing)
+                {
                 }
 
                 IsDisposed = true;
@@ -46,9 +48,9 @@ namespace OpenCVForUnity
 
         public void ThrowIfDisposed ()
         {
-            if (IsDisposed) 
+            if (IsDisposed)
                 throw new ObjectDisposedException (GetType ().FullName);
         }
-      
+
     }
 }
