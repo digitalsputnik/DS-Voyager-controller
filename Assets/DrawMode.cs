@@ -49,8 +49,7 @@ public class DrawMode : MonoBehaviour {
 	GameObject currentLamp;
 	GameObject lastLamp;
 	Transform temp;
-
-    //private RaycastHit lastHit;
+	//private RaycastHit lastHit;
 
     public static int StrokeIndex = 1;
 
@@ -63,7 +62,18 @@ public class DrawMode : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+    
+        // Check if mouse or touch is over UI.
+		if (Input.GetMouseButton(0))
+            if (EventSystem.current.IsPointerOverGameObject())
+				return;
+
+		if (Input.touchCount > 0)
+			if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+				return;
+
 		//TODO temp for long press
+
 		if(Input.GetMouseButtonUp (0)) {
 
 			numCurrentPixel = 0;
@@ -134,8 +144,6 @@ public class DrawMode : MonoBehaviour {
 			RaycastHit hit;
 			Physics.Raycast (ray, out hit, 100);
 			if (Physics.Raycast (ray, out hit, 100) && hit.transform.tag == "lamp") {
-
-				Debug.Log("_____________________________Pixel HIT!");
 
 				if (BrushDropdown.value == 0) { //If lamp brush!
 					var lamp = hit.transform.parent.parent;
