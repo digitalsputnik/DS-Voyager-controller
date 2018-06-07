@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,51 +6,52 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class GrayworldWB
-//javadoc: GrayworldWB
+    // C++: class GrayworldWB
+    //javadoc: GrayworldWB
+
     public class GrayworldWB : WhiteBalancer
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        xphoto_GrayworldWB_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+xphoto_GrayworldWB_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal GrayworldWB (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal GrayworldWB (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new GrayworldWB __fromPtr__ (IntPtr addr) { return new GrayworldWB (addr); }
 
         //
         // C++:  float getSaturationThreshold()
         //
 
         //javadoc: GrayworldWB::getSaturationThreshold()
-        public  float getSaturationThreshold ()
+        public float getSaturationThreshold ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            float retVal = xphoto_GrayworldWB_getSaturationThreshold_10 (nativeObj);
+        float retVal = xphoto_GrayworldWB_getSaturationThreshold_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -62,38 +60,38 @@ namespace OpenCVForUnity
         //
 
         //javadoc: GrayworldWB::setSaturationThreshold(val)
-        public  void setSaturationThreshold (float val)
+        public void setSaturationThreshold (float val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            xphoto_GrayworldWB_setSaturationThreshold_10 (nativeObj, val);
+        xphoto_GrayworldWB_setSaturationThreshold_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  float getSaturationThreshold()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float xphoto_GrayworldWB_getSaturationThreshold_10 (IntPtr nativeObj);
 
         // C++:  void setSaturationThreshold(float val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void xphoto_GrayworldWB_setSaturationThreshold_10 (IntPtr nativeObj, float val);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void xphoto_GrayworldWB_delete (IntPtr nativeObj);
 
     }

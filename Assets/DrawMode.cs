@@ -87,7 +87,7 @@ public class DrawMode : MonoBehaviour {
         else
 
         //if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.OSXPlayer) {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
 
             //clicking on lights
@@ -103,7 +103,8 @@ public class DrawMode : MonoBehaviour {
                     //Debug.Log("Lamp pixel was hit.........................");
                     //hit.transform.gameObject.GetComponent<Renderer>().material.color = Color.white; 
                     currentLamp = hit.transform.parent.parent.gameObject;
-                    lastLamp = currentLamp;
+                    //lastLamp = currentLamp;
+
                     paintLamp = true;
                 //}
             }
@@ -134,6 +135,8 @@ public class DrawMode : MonoBehaviour {
 			Physics.Raycast (ray, out hit, 100);
 			if (Physics.Raycast (ray, out hit, 100) && hit.transform.tag == "lamp") {
 
+				Debug.Log("_____________________________Pixel HIT!");
+
 				if (BrushDropdown.value == 0) { //If lamp brush!
 					var lamp = hit.transform.parent.parent;
 					for (int i = 0; i < lamp.childCount; i++) {
@@ -160,9 +163,9 @@ public class DrawMode : MonoBehaviour {
 					//Debug.Log ("Last Pixel number is: "+numLastPixel);
 
 					//if different lamp, start counting again
-					if (currentLamp.name != lastLamp.name){
-						numLastPixel = 0;
-					}
+					if(lastLamp != null)
+					    if (currentLamp.name != lastLamp.name)
+						    numLastPixel = 0;
 
 					//find number of pixels to write
 					if (numLastPixel > 0 && numLastPixel != numCurrentPixel && numCurrentPixel > numLastPixel) {

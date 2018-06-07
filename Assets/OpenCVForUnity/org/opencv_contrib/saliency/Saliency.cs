@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class Saliency
-//javadoc: Saliency
+    // C++: class Saliency
+    //javadoc: Saliency
+
     public class Saliency : Algorithm
     {
 
@@ -33,29 +31,16 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal Saliency (IntPtr addr) : base(addr)
+        protected internal Saliency (IntPtr addr)
+            : base (addr)
         {
         }
 
-
-        //
-        // C++:  String getClassName()
-        //
-
-        //javadoc: Saliency::getClassName()
-        public  string getClassName ()
+        // internal usage only
+        public static new Saliency __fromPtr__ (IntPtr addr)
         {
-            ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-        
-            string retVal = Marshal.PtrToStringAnsi (saliency_Saliency_getClassName_10 (nativeObj));
-        
-            return retVal;
-            #else
-            return null;
-            #endif
+            return new Saliency (addr);
         }
-
 
         //
         // C++:  bool computeSaliency(Mat image, Mat& saliencyMap)
@@ -69,35 +54,32 @@ namespace OpenCVForUnity
                 image.ThrowIfDisposed ();
             if (saliencyMap != null)
                 saliencyMap.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = saliency_Saliency_computeSaliency_10 (nativeObj, image.nativeObj, saliencyMap.nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
-
-        // C++:  String getClassName()
-        [DllImport(LIBNAME)]
-        private static extern IntPtr saliency_Saliency_getClassName_10 (IntPtr nativeObj);
 
         // C++:  bool computeSaliency(Mat image, Mat& saliencyMap)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool saliency_Saliency_computeSaliency_10 (IntPtr nativeObj, IntPtr image_nativeObj, IntPtr saliencyMap_nativeObj);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void saliency_Saliency_delete (IntPtr nativeObj);
 
     }

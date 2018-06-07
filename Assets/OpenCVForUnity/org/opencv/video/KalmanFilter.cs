@@ -1,70 +1,72 @@
 
-//
 
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace OpenCVForUnity
 {
-// C++: class KalmanFilter
-//javadoc: KalmanFilter
+    // C++: class KalmanFilter
+    //javadoc: KalmanFilter
+
     public class KalmanFilter : DisposableOpenCVObject
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        video_KalmanFilter_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+video_KalmanFilter_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal KalmanFilter (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal KalmanFilter (IntPtr addr) : base (addr) { }
 
+
+        public IntPtr getNativeObjAddr () { return nativeObj; }
+
+        // internal usage only
+        public static KalmanFilter __fromPtr__ (IntPtr addr) { return new KalmanFilter (addr); }
 
         //
         // C++:   KalmanFilter(int dynamParams, int measureParams, int controlParams = 0, int type = CV_32F)
         //
 
         //javadoc: KalmanFilter::KalmanFilter(dynamParams, measureParams, controlParams, type)
-        public   KalmanFilter (int dynamParams, int measureParams, int controlParams, int type)
+        public KalmanFilter (int dynamParams, int measureParams, int controlParams, int type)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            nativeObj = video_KalmanFilter_KalmanFilter_10 (dynamParams, measureParams, controlParams, type);
+        nativeObj = video_KalmanFilter_KalmanFilter_10(dynamParams, measureParams, controlParams, type);
         
-            return;
-            #else
+        return;
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: KalmanFilter::KalmanFilter(dynamParams, measureParams)
-        public   KalmanFilter (int dynamParams, int measureParams)
+        public KalmanFilter (int dynamParams, int measureParams)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            nativeObj = video_KalmanFilter_KalmanFilter_11 (dynamParams, measureParams);
+        nativeObj = video_KalmanFilter_KalmanFilter_11(dynamParams, measureParams);
         
-            return;
-            #else
+        return;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -73,16 +75,16 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::KalmanFilter()
-        public   KalmanFilter ()
+        public KalmanFilter ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            nativeObj = video_KalmanFilter_KalmanFilter_12 ();
+        nativeObj = video_KalmanFilter_KalmanFilter_12();
         
-            return;
-            #else
+        return;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -91,19 +93,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::correct(measurement)
-        public  Mat correct (Mat measurement)
+        public Mat correct (Mat measurement)
         {
             ThrowIfDisposed ();
-            if (measurement != null)
-                measurement.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (measurement != null) measurement.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (video_KalmanFilter_correct_10 (nativeObj, measurement.nativeObj));
+        Mat retVal = new Mat(video_KalmanFilter_correct_10(nativeObj, measurement.nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -112,33 +113,32 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::predict(control)
-        public  Mat predict (Mat control)
+        public Mat predict (Mat control)
         {
             ThrowIfDisposed ();
-            if (control != null)
-                control.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (control != null) control.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (video_KalmanFilter_predict_10 (nativeObj, control.nativeObj));
+        Mat retVal = new Mat(video_KalmanFilter_predict_10(nativeObj, control.nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: KalmanFilter::predict()
-        public  Mat predict ()
+        public Mat predict ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (video_KalmanFilter_predict_11 (nativeObj));
+        Mat retVal = new Mat(video_KalmanFilter_predict_11(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -147,17 +147,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::get_statePre()
-        public  Mat get_statePre ()
+        public Mat get_statePre ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (video_KalmanFilter_get_1statePre_10 (nativeObj));
+        Mat retVal = new Mat(video_KalmanFilter_get_1statePre_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -166,19 +166,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::set_statePre(statePre)
-        public  void set_statePre (Mat statePre)
+        public void set_statePre (Mat statePre)
         {
             ThrowIfDisposed ();
-            if (statePre != null)
-                statePre.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (statePre != null) statePre.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_KalmanFilter_set_1statePre_10 (nativeObj, statePre.nativeObj);
+        video_KalmanFilter_set_1statePre_10(nativeObj, statePre.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -187,17 +186,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::get_statePost()
-        public  Mat get_statePost ()
+        public Mat get_statePost ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (video_KalmanFilter_get_1statePost_10 (nativeObj));
+        Mat retVal = new Mat(video_KalmanFilter_get_1statePost_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -206,19 +205,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::set_statePost(statePost)
-        public  void set_statePost (Mat statePost)
+        public void set_statePost (Mat statePost)
         {
             ThrowIfDisposed ();
-            if (statePost != null)
-                statePost.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (statePost != null) statePost.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_KalmanFilter_set_1statePost_10 (nativeObj, statePost.nativeObj);
+        video_KalmanFilter_set_1statePost_10(nativeObj, statePost.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -227,17 +225,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::get_transitionMatrix()
-        public  Mat get_transitionMatrix ()
+        public Mat get_transitionMatrix ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (video_KalmanFilter_get_1transitionMatrix_10 (nativeObj));
+        Mat retVal = new Mat(video_KalmanFilter_get_1transitionMatrix_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -246,19 +244,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::set_transitionMatrix(transitionMatrix)
-        public  void set_transitionMatrix (Mat transitionMatrix)
+        public void set_transitionMatrix (Mat transitionMatrix)
         {
             ThrowIfDisposed ();
-            if (transitionMatrix != null)
-                transitionMatrix.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (transitionMatrix != null) transitionMatrix.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_KalmanFilter_set_1transitionMatrix_10 (nativeObj, transitionMatrix.nativeObj);
+        video_KalmanFilter_set_1transitionMatrix_10(nativeObj, transitionMatrix.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -267,17 +264,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::get_controlMatrix()
-        public  Mat get_controlMatrix ()
+        public Mat get_controlMatrix ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (video_KalmanFilter_get_1controlMatrix_10 (nativeObj));
+        Mat retVal = new Mat(video_KalmanFilter_get_1controlMatrix_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -286,19 +283,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::set_controlMatrix(controlMatrix)
-        public  void set_controlMatrix (Mat controlMatrix)
+        public void set_controlMatrix (Mat controlMatrix)
         {
             ThrowIfDisposed ();
-            if (controlMatrix != null)
-                controlMatrix.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (controlMatrix != null) controlMatrix.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_KalmanFilter_set_1controlMatrix_10 (nativeObj, controlMatrix.nativeObj);
+        video_KalmanFilter_set_1controlMatrix_10(nativeObj, controlMatrix.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -307,17 +303,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::get_measurementMatrix()
-        public  Mat get_measurementMatrix ()
+        public Mat get_measurementMatrix ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (video_KalmanFilter_get_1measurementMatrix_10 (nativeObj));
+        Mat retVal = new Mat(video_KalmanFilter_get_1measurementMatrix_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -326,19 +322,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::set_measurementMatrix(measurementMatrix)
-        public  void set_measurementMatrix (Mat measurementMatrix)
+        public void set_measurementMatrix (Mat measurementMatrix)
         {
             ThrowIfDisposed ();
-            if (measurementMatrix != null)
-                measurementMatrix.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (measurementMatrix != null) measurementMatrix.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_KalmanFilter_set_1measurementMatrix_10 (nativeObj, measurementMatrix.nativeObj);
+        video_KalmanFilter_set_1measurementMatrix_10(nativeObj, measurementMatrix.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -347,17 +342,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::get_processNoiseCov()
-        public  Mat get_processNoiseCov ()
+        public Mat get_processNoiseCov ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (video_KalmanFilter_get_1processNoiseCov_10 (nativeObj));
+        Mat retVal = new Mat(video_KalmanFilter_get_1processNoiseCov_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -366,19 +361,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::set_processNoiseCov(processNoiseCov)
-        public  void set_processNoiseCov (Mat processNoiseCov)
+        public void set_processNoiseCov (Mat processNoiseCov)
         {
             ThrowIfDisposed ();
-            if (processNoiseCov != null)
-                processNoiseCov.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (processNoiseCov != null) processNoiseCov.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_KalmanFilter_set_1processNoiseCov_10 (nativeObj, processNoiseCov.nativeObj);
+        video_KalmanFilter_set_1processNoiseCov_10(nativeObj, processNoiseCov.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -387,17 +381,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::get_measurementNoiseCov()
-        public  Mat get_measurementNoiseCov ()
+        public Mat get_measurementNoiseCov ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (video_KalmanFilter_get_1measurementNoiseCov_10 (nativeObj));
+        Mat retVal = new Mat(video_KalmanFilter_get_1measurementNoiseCov_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -406,19 +400,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::set_measurementNoiseCov(measurementNoiseCov)
-        public  void set_measurementNoiseCov (Mat measurementNoiseCov)
+        public void set_measurementNoiseCov (Mat measurementNoiseCov)
         {
             ThrowIfDisposed ();
-            if (measurementNoiseCov != null)
-                measurementNoiseCov.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (measurementNoiseCov != null) measurementNoiseCov.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_KalmanFilter_set_1measurementNoiseCov_10 (nativeObj, measurementNoiseCov.nativeObj);
+        video_KalmanFilter_set_1measurementNoiseCov_10(nativeObj, measurementNoiseCov.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -427,17 +420,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::get_errorCovPre()
-        public  Mat get_errorCovPre ()
+        public Mat get_errorCovPre ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (video_KalmanFilter_get_1errorCovPre_10 (nativeObj));
+        Mat retVal = new Mat(video_KalmanFilter_get_1errorCovPre_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -446,19 +439,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::set_errorCovPre(errorCovPre)
-        public  void set_errorCovPre (Mat errorCovPre)
+        public void set_errorCovPre (Mat errorCovPre)
         {
             ThrowIfDisposed ();
-            if (errorCovPre != null)
-                errorCovPre.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (errorCovPre != null) errorCovPre.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_KalmanFilter_set_1errorCovPre_10 (nativeObj, errorCovPre.nativeObj);
+        video_KalmanFilter_set_1errorCovPre_10(nativeObj, errorCovPre.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -467,17 +459,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::get_gain()
-        public  Mat get_gain ()
+        public Mat get_gain ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (video_KalmanFilter_get_1gain_10 (nativeObj));
+        Mat retVal = new Mat(video_KalmanFilter_get_1gain_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -486,19 +478,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::set_gain(gain)
-        public  void set_gain (Mat gain)
+        public void set_gain (Mat gain)
         {
             ThrowIfDisposed ();
-            if (gain != null)
-                gain.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (gain != null) gain.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_KalmanFilter_set_1gain_10 (nativeObj, gain.nativeObj);
+        video_KalmanFilter_set_1gain_10(nativeObj, gain.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -507,17 +498,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::get_errorCovPost()
-        public  Mat get_errorCovPost ()
+        public Mat get_errorCovPost ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (video_KalmanFilter_get_1errorCovPost_10 (nativeObj));
+        Mat retVal = new Mat(video_KalmanFilter_get_1errorCovPost_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -526,134 +517,131 @@ namespace OpenCVForUnity
         //
 
         //javadoc: KalmanFilter::set_errorCovPost(errorCovPost)
-        public  void set_errorCovPost (Mat errorCovPost)
+        public void set_errorCovPost (Mat errorCovPost)
         {
             ThrowIfDisposed ();
-            if (errorCovPost != null)
-                errorCovPost.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (errorCovPost != null) errorCovPost.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            video_KalmanFilter_set_1errorCovPost_10 (nativeObj, errorCovPost.nativeObj);
+        video_KalmanFilter_set_1errorCovPost_10(nativeObj, errorCovPost.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:   KalmanFilter(int dynamParams, int measureParams, int controlParams = 0, int type = CV_32F)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_KalmanFilter_10 (int dynamParams, int measureParams, int controlParams, int type);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_KalmanFilter_11 (int dynamParams, int measureParams);
 
         // C++:   KalmanFilter()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_KalmanFilter_12 ();
 
         // C++:  Mat correct(Mat measurement)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_correct_10 (IntPtr nativeObj, IntPtr measurement_nativeObj);
 
         // C++:  Mat predict(Mat control = Mat())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_predict_10 (IntPtr nativeObj, IntPtr control_nativeObj);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_predict_11 (IntPtr nativeObj);
 
         // C++: Mat KalmanFilter::statePre
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_get_1statePre_10 (IntPtr nativeObj);
 
         // C++: void KalmanFilter::statePre
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_KalmanFilter_set_1statePre_10 (IntPtr nativeObj, IntPtr statePre_nativeObj);
 
         // C++: Mat KalmanFilter::statePost
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_get_1statePost_10 (IntPtr nativeObj);
 
         // C++: void KalmanFilter::statePost
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_KalmanFilter_set_1statePost_10 (IntPtr nativeObj, IntPtr statePost_nativeObj);
 
         // C++: Mat KalmanFilter::transitionMatrix
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_get_1transitionMatrix_10 (IntPtr nativeObj);
 
         // C++: void KalmanFilter::transitionMatrix
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_KalmanFilter_set_1transitionMatrix_10 (IntPtr nativeObj, IntPtr transitionMatrix_nativeObj);
 
         // C++: Mat KalmanFilter::controlMatrix
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_get_1controlMatrix_10 (IntPtr nativeObj);
 
         // C++: void KalmanFilter::controlMatrix
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_KalmanFilter_set_1controlMatrix_10 (IntPtr nativeObj, IntPtr controlMatrix_nativeObj);
 
         // C++: Mat KalmanFilter::measurementMatrix
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_get_1measurementMatrix_10 (IntPtr nativeObj);
 
         // C++: void KalmanFilter::measurementMatrix
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_KalmanFilter_set_1measurementMatrix_10 (IntPtr nativeObj, IntPtr measurementMatrix_nativeObj);
 
         // C++: Mat KalmanFilter::processNoiseCov
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_get_1processNoiseCov_10 (IntPtr nativeObj);
 
         // C++: void KalmanFilter::processNoiseCov
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_KalmanFilter_set_1processNoiseCov_10 (IntPtr nativeObj, IntPtr processNoiseCov_nativeObj);
 
         // C++: Mat KalmanFilter::measurementNoiseCov
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_get_1measurementNoiseCov_10 (IntPtr nativeObj);
 
         // C++: void KalmanFilter::measurementNoiseCov
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_KalmanFilter_set_1measurementNoiseCov_10 (IntPtr nativeObj, IntPtr measurementNoiseCov_nativeObj);
 
         // C++: Mat KalmanFilter::errorCovPre
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_get_1errorCovPre_10 (IntPtr nativeObj);
 
         // C++: void KalmanFilter::errorCovPre
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_KalmanFilter_set_1errorCovPre_10 (IntPtr nativeObj, IntPtr errorCovPre_nativeObj);
 
         // C++: Mat KalmanFilter::gain
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_get_1gain_10 (IntPtr nativeObj);
 
         // C++: void KalmanFilter::gain
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_KalmanFilter_set_1gain_10 (IntPtr nativeObj, IntPtr gain_nativeObj);
 
         // C++: Mat KalmanFilter::errorCovPost
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr video_KalmanFilter_get_1errorCovPost_10 (IntPtr nativeObj);
 
         // C++: void KalmanFilter::errorCovPost
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_KalmanFilter_set_1errorCovPost_10 (IntPtr nativeObj, IntPtr errorCovPost_nativeObj);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_KalmanFilter_delete (IntPtr nativeObj);
 
     }

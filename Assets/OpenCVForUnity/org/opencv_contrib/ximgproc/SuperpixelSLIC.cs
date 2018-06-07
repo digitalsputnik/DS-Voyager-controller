@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,51 +6,52 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class SuperpixelSLIC
-//javadoc: SuperpixelSLIC
+    // C++: class SuperpixelSLIC
+    //javadoc: SuperpixelSLIC
+
     public class SuperpixelSLIC : Algorithm
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        ximgproc_SuperpixelSLIC_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+ximgproc_SuperpixelSLIC_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal SuperpixelSLIC (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal SuperpixelSLIC (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new SuperpixelSLIC __fromPtr__ (IntPtr addr) { return new SuperpixelSLIC (addr); }
 
         //
         // C++:  int getNumberOfSuperpixels()
         //
 
         //javadoc: SuperpixelSLIC::getNumberOfSuperpixels()
-        public  int getNumberOfSuperpixels ()
+        public int getNumberOfSuperpixels ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ximgproc_SuperpixelSLIC_getNumberOfSuperpixels_10 (nativeObj);
+        int retVal = ximgproc_SuperpixelSLIC_getNumberOfSuperpixels_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -62,31 +60,31 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SuperpixelSLIC::enforceLabelConnectivity(min_element_size)
-        public  void enforceLabelConnectivity (int min_element_size)
+        public void enforceLabelConnectivity (int min_element_size)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_SuperpixelSLIC_enforceLabelConnectivity_10 (nativeObj, min_element_size);
+        ximgproc_SuperpixelSLIC_enforceLabelConnectivity_10(nativeObj, min_element_size);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
         //javadoc: SuperpixelSLIC::enforceLabelConnectivity()
-        public  void enforceLabelConnectivity ()
+        public void enforceLabelConnectivity ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_SuperpixelSLIC_enforceLabelConnectivity_11 (nativeObj);
+        ximgproc_SuperpixelSLIC_enforceLabelConnectivity_11(nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -95,35 +93,33 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SuperpixelSLIC::getLabelContourMask(image, thick_line)
-        public  void getLabelContourMask (Mat image, bool thick_line)
+        public void getLabelContourMask (Mat image, bool thick_line)
         {
             ThrowIfDisposed ();
-            if (image != null)
-                image.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (image != null) image.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_SuperpixelSLIC_getLabelContourMask_10 (nativeObj, image.nativeObj, thick_line);
+        ximgproc_SuperpixelSLIC_getLabelContourMask_10(nativeObj, image.nativeObj, thick_line);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
         //javadoc: SuperpixelSLIC::getLabelContourMask(image)
-        public  void getLabelContourMask (Mat image)
+        public void getLabelContourMask (Mat image)
         {
             ThrowIfDisposed ();
-            if (image != null)
-                image.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (image != null) image.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_SuperpixelSLIC_getLabelContourMask_11 (nativeObj, image.nativeObj);
+        ximgproc_SuperpixelSLIC_getLabelContourMask_11(nativeObj, image.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -132,19 +128,18 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SuperpixelSLIC::getLabels(labels_out)
-        public  void getLabels (Mat labels_out)
+        public void getLabels (Mat labels_out)
         {
             ThrowIfDisposed ();
-            if (labels_out != null)
-                labels_out.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            if (labels_out != null) labels_out.ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_SuperpixelSLIC_getLabels_10 (nativeObj, labels_out.nativeObj);
+        ximgproc_SuperpixelSLIC_getLabels_10(nativeObj, labels_out.nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -153,73 +148,70 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SuperpixelSLIC::iterate(num_iterations)
-        public  void iterate (int num_iterations)
+        public void iterate (int num_iterations)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_SuperpixelSLIC_iterate_10 (nativeObj, num_iterations);
+        ximgproc_SuperpixelSLIC_iterate_10(nativeObj, num_iterations);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
         //javadoc: SuperpixelSLIC::iterate()
-        public  void iterate ()
+        public void iterate ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ximgproc_SuperpixelSLIC_iterate_11 (nativeObj);
+        ximgproc_SuperpixelSLIC_iterate_11(nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  int getNumberOfSuperpixels()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ximgproc_SuperpixelSLIC_getNumberOfSuperpixels_10 (IntPtr nativeObj);
 
         // C++:  void enforceLabelConnectivity(int min_element_size = 25)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_SuperpixelSLIC_enforceLabelConnectivity_10 (IntPtr nativeObj, int min_element_size);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_SuperpixelSLIC_enforceLabelConnectivity_11 (IntPtr nativeObj);
 
         // C++:  void getLabelContourMask(Mat& image, bool thick_line = true)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_SuperpixelSLIC_getLabelContourMask_10 (IntPtr nativeObj, IntPtr image_nativeObj, bool thick_line);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_SuperpixelSLIC_getLabelContourMask_11 (IntPtr nativeObj, IntPtr image_nativeObj);
 
         // C++:  void getLabels(Mat& labels_out)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_SuperpixelSLIC_getLabels_10 (IntPtr nativeObj, IntPtr labels_out_nativeObj);
 
         // C++:  void iterate(int num_iterations = 10)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_SuperpixelSLIC_iterate_10 (IntPtr nativeObj, int num_iterations);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_SuperpixelSLIC_iterate_11 (IntPtr nativeObj);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ximgproc_SuperpixelSLIC_delete (IntPtr nativeObj);
 
     }

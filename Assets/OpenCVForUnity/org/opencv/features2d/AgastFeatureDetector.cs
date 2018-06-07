@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class AgastFeatureDetector
-//javadoc: AgastFeatureDetector
+    // C++: class AgastFeatureDetector
+    //javadoc: AgastFeatureDetector
+
     public class AgastFeatureDetector : Feature2D
     {
 
@@ -33,8 +31,15 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal AgastFeatureDetector (IntPtr addr) : base(addr)
+        protected internal AgastFeatureDetector (IntPtr addr)
+            : base (addr)
         {
+        }
+
+        // internal usage only
+        public static new AgastFeatureDetector __fromPtr__ (IntPtr addr)
+        {
+            return new AgastFeatureDetector (addr);
         }
 
         public const int AGAST_5_8 = 0;
@@ -50,27 +55,46 @@ namespace OpenCVForUnity
         //javadoc: AgastFeatureDetector::create(threshold, nonmaxSuppression, type)
         public static AgastFeatureDetector create (int threshold, bool nonmaxSuppression, int type)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            AgastFeatureDetector retVal = new AgastFeatureDetector (features2d_AgastFeatureDetector_create_10 (threshold, nonmaxSuppression, type));
+            AgastFeatureDetector retVal = AgastFeatureDetector.__fromPtr__ (features2d_AgastFeatureDetector_create_10 (threshold, nonmaxSuppression, type));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: AgastFeatureDetector::create()
         public static AgastFeatureDetector create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            AgastFeatureDetector retVal = new AgastFeatureDetector (features2d_AgastFeatureDetector_create_11 ());
+            AgastFeatureDetector retVal = AgastFeatureDetector.__fromPtr__ (features2d_AgastFeatureDetector_create_11 ());
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
+        }
+
+
+        //
+        // C++:  String getDefaultName()
+        //
+
+        //javadoc: AgastFeatureDetector::getDefaultName()
+        public override string getDefaultName ()
+        {
+            ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        
+            string retVal = Marshal.PtrToStringAnsi (features2d_AgastFeatureDetector_getDefaultName_10 (nativeObj));
+        
+            return retVal;
+#else
+            return null;
+#endif
         }
 
 
@@ -79,17 +103,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: AgastFeatureDetector::getNonmaxSuppression()
-        public  bool getNonmaxSuppression ()
+        public bool getNonmaxSuppression ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = features2d_AgastFeatureDetector_getNonmaxSuppression_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -98,17 +122,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: AgastFeatureDetector::getThreshold()
-        public  int getThreshold ()
+        public int getThreshold ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = features2d_AgastFeatureDetector_getThreshold_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -117,17 +141,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: AgastFeatureDetector::getType()
-        public  int getType ()
+        public int getType ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = features2d_AgastFeatureDetector_getType_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -136,17 +160,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: AgastFeatureDetector::setNonmaxSuppression(f)
-        public  void setNonmaxSuppression (bool f)
+        public void setNonmaxSuppression (bool f)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_AgastFeatureDetector_setNonmaxSuppression_10 (nativeObj, f);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -155,17 +179,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: AgastFeatureDetector::setThreshold(threshold)
-        public  void setThreshold (int threshold)
+        public void setThreshold (int threshold)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_AgastFeatureDetector_setThreshold_10 (nativeObj, threshold);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -174,61 +198,66 @@ namespace OpenCVForUnity
         //
 
         //javadoc: AgastFeatureDetector::setType(type)
-        public  void setType (int type)
+        public void setType (int type)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_AgastFeatureDetector_setType_10 (nativeObj, type);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++: static Ptr_AgastFeatureDetector create(int threshold = 10, bool nonmaxSuppression = true, int type = AgastFeatureDetector::OAST_9_16)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_AgastFeatureDetector_create_10 (int threshold, bool nonmaxSuppression, int type);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_AgastFeatureDetector_create_11 ();
 
+        // C++:  String getDefaultName()
+        [DllImport (LIBNAME)]
+        private static extern IntPtr features2d_AgastFeatureDetector_getDefaultName_10 (IntPtr nativeObj);
+
         // C++:  bool getNonmaxSuppression()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool features2d_AgastFeatureDetector_getNonmaxSuppression_10 (IntPtr nativeObj);
 
         // C++:  int getThreshold()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_AgastFeatureDetector_getThreshold_10 (IntPtr nativeObj);
 
         // C++:  int getType()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_AgastFeatureDetector_getType_10 (IntPtr nativeObj);
 
         // C++:  void setNonmaxSuppression(bool f)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_AgastFeatureDetector_setNonmaxSuppression_10 (IntPtr nativeObj, bool f);
 
         // C++:  void setThreshold(int threshold)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_AgastFeatureDetector_setThreshold_10 (IntPtr nativeObj, int threshold);
 
         // C++:  void setType(int type)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_AgastFeatureDetector_setType_10 (IntPtr nativeObj, int type);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_AgastFeatureDetector_delete (IntPtr nativeObj);
 
     }

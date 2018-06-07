@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class ORB
-//javadoc: ORB
+    // C++: class ORB
+    //javadoc: ORB
+
     public class ORB : Feature2D
     {
 
@@ -33,8 +31,15 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal ORB (IntPtr addr) : base(addr)
+        protected internal ORB (IntPtr addr)
+            : base (addr)
         {
+        }
+
+        // internal usage only
+        public static new ORB __fromPtr__ (IntPtr addr)
+        {
+            return new ORB (addr);
         }
 
         public const int kBytes = 32;
@@ -47,27 +52,46 @@ namespace OpenCVForUnity
         //javadoc: ORB::create(nfeatures, scaleFactor, nlevels, edgeThreshold, firstLevel, WTA_K, scoreType, patchSize, fastThreshold)
         public static ORB create (int nfeatures, float scaleFactor, int nlevels, int edgeThreshold, int firstLevel, int WTA_K, int scoreType, int patchSize, int fastThreshold)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ORB retVal = new ORB (features2d_ORB_create_10 (nfeatures, scaleFactor, nlevels, edgeThreshold, firstLevel, WTA_K, scoreType, patchSize, fastThreshold));
+            ORB retVal = ORB.__fromPtr__ (features2d_ORB_create_10 (nfeatures, scaleFactor, nlevels, edgeThreshold, firstLevel, WTA_K, scoreType, patchSize, fastThreshold));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: ORB::create()
         public static ORB create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ORB retVal = new ORB (features2d_ORB_create_11 ());
+            ORB retVal = ORB.__fromPtr__ (features2d_ORB_create_11 ());
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
+        }
+
+
+        //
+        // C++:  String getDefaultName()
+        //
+
+        //javadoc: ORB::getDefaultName()
+        public override string getDefaultName ()
+        {
+            ThrowIfDisposed ();
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        
+            string retVal = Marshal.PtrToStringAnsi (features2d_ORB_getDefaultName_10 (nativeObj));
+        
+            return retVal;
+#else
+            return null;
+#endif
         }
 
 
@@ -76,17 +100,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::getScaleFactor()
-        public  double getScaleFactor ()
+        public double getScaleFactor ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             double retVal = features2d_ORB_getScaleFactor_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -95,17 +119,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::getEdgeThreshold()
-        public  int getEdgeThreshold ()
+        public int getEdgeThreshold ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = features2d_ORB_getEdgeThreshold_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -114,17 +138,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::getFastThreshold()
-        public  int getFastThreshold ()
+        public int getFastThreshold ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = features2d_ORB_getFastThreshold_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -133,17 +157,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::getFirstLevel()
-        public  int getFirstLevel ()
+        public int getFirstLevel ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = features2d_ORB_getFirstLevel_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -152,17 +176,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::getMaxFeatures()
-        public  int getMaxFeatures ()
+        public int getMaxFeatures ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = features2d_ORB_getMaxFeatures_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -171,17 +195,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::getNLevels()
-        public  int getNLevels ()
+        public int getNLevels ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = features2d_ORB_getNLevels_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -190,17 +214,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::getPatchSize()
-        public  int getPatchSize ()
+        public int getPatchSize ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = features2d_ORB_getPatchSize_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -209,17 +233,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::getScoreType()
-        public  int getScoreType ()
+        public int getScoreType ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = features2d_ORB_getScoreType_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -228,17 +252,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::getWTA_K()
-        public  int getWTA_K ()
+        public int getWTA_K ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = features2d_ORB_getWTA_1K_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -247,17 +271,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::setEdgeThreshold(edgeThreshold)
-        public  void setEdgeThreshold (int edgeThreshold)
+        public void setEdgeThreshold (int edgeThreshold)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_ORB_setEdgeThreshold_10 (nativeObj, edgeThreshold);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -266,17 +290,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::setFastThreshold(fastThreshold)
-        public  void setFastThreshold (int fastThreshold)
+        public void setFastThreshold (int fastThreshold)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_ORB_setFastThreshold_10 (nativeObj, fastThreshold);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -285,17 +309,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::setFirstLevel(firstLevel)
-        public  void setFirstLevel (int firstLevel)
+        public void setFirstLevel (int firstLevel)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_ORB_setFirstLevel_10 (nativeObj, firstLevel);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -304,17 +328,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::setMaxFeatures(maxFeatures)
-        public  void setMaxFeatures (int maxFeatures)
+        public void setMaxFeatures (int maxFeatures)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_ORB_setMaxFeatures_10 (nativeObj, maxFeatures);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -323,17 +347,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::setNLevels(nlevels)
-        public  void setNLevels (int nlevels)
+        public void setNLevels (int nlevels)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_ORB_setNLevels_10 (nativeObj, nlevels);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -342,17 +366,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::setPatchSize(patchSize)
-        public  void setPatchSize (int patchSize)
+        public void setPatchSize (int patchSize)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_ORB_setPatchSize_10 (nativeObj, patchSize);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -361,17 +385,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::setScaleFactor(scaleFactor)
-        public  void setScaleFactor (double scaleFactor)
+        public void setScaleFactor (double scaleFactor)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_ORB_setScaleFactor_10 (nativeObj, scaleFactor);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -380,17 +404,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::setScoreType(scoreType)
-        public  void setScoreType (int scoreType)
+        public void setScoreType (int scoreType)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_ORB_setScoreType_10 (nativeObj, scoreType);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -399,109 +423,114 @@ namespace OpenCVForUnity
         //
 
         //javadoc: ORB::setWTA_K(wta_k)
-        public  void setWTA_K (int wta_k)
+        public void setWTA_K (int wta_k)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             features2d_ORB_setWTA_1K_10 (nativeObj, wta_k);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++: static Ptr_ORB create(int nfeatures = 500, float scaleFactor = 1.2f, int nlevels = 8, int edgeThreshold = 31, int firstLevel = 0, int WTA_K = 2, int scoreType = ORB::HARRIS_SCORE, int patchSize = 31, int fastThreshold = 20)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_ORB_create_10 (int nfeatures, float scaleFactor, int nlevels, int edgeThreshold, int firstLevel, int WTA_K, int scoreType, int patchSize, int fastThreshold);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_ORB_create_11 ();
 
+        // C++:  String getDefaultName()
+        [DllImport (LIBNAME)]
+        private static extern IntPtr features2d_ORB_getDefaultName_10 (IntPtr nativeObj);
+
         // C++:  double getScaleFactor()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double features2d_ORB_getScaleFactor_10 (IntPtr nativeObj);
 
         // C++:  int getEdgeThreshold()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_ORB_getEdgeThreshold_10 (IntPtr nativeObj);
 
         // C++:  int getFastThreshold()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_ORB_getFastThreshold_10 (IntPtr nativeObj);
 
         // C++:  int getFirstLevel()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_ORB_getFirstLevel_10 (IntPtr nativeObj);
 
         // C++:  int getMaxFeatures()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_ORB_getMaxFeatures_10 (IntPtr nativeObj);
 
         // C++:  int getNLevels()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_ORB_getNLevels_10 (IntPtr nativeObj);
 
         // C++:  int getPatchSize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_ORB_getPatchSize_10 (IntPtr nativeObj);
 
         // C++:  int getScoreType()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_ORB_getScoreType_10 (IntPtr nativeObj);
 
         // C++:  int getWTA_K()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int features2d_ORB_getWTA_1K_10 (IntPtr nativeObj);
 
         // C++:  void setEdgeThreshold(int edgeThreshold)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_ORB_setEdgeThreshold_10 (IntPtr nativeObj, int edgeThreshold);
 
         // C++:  void setFastThreshold(int fastThreshold)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_ORB_setFastThreshold_10 (IntPtr nativeObj, int fastThreshold);
 
         // C++:  void setFirstLevel(int firstLevel)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_ORB_setFirstLevel_10 (IntPtr nativeObj, int firstLevel);
 
         // C++:  void setMaxFeatures(int maxFeatures)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_ORB_setMaxFeatures_10 (IntPtr nativeObj, int maxFeatures);
 
         // C++:  void setNLevels(int nlevels)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_ORB_setNLevels_10 (IntPtr nativeObj, int nlevels);
 
         // C++:  void setPatchSize(int patchSize)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_ORB_setPatchSize_10 (IntPtr nativeObj, int patchSize);
 
         // C++:  void setScaleFactor(double scaleFactor)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_ORB_setScaleFactor_10 (IntPtr nativeObj, double scaleFactor);
 
         // C++:  void setScoreType(int scoreType)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_ORB_setScoreType_10 (IntPtr nativeObj, int scoreType);
 
         // C++:  void setWTA_K(int wta_k)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_ORB_setWTA_1K_10 (IntPtr nativeObj, int wta_k);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_ORB_delete (IntPtr nativeObj);
 
     }

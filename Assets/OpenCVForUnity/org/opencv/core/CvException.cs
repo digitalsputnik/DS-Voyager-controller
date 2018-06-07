@@ -12,7 +12,7 @@ namespace OpenCVForUnity
         /// 
         /// </summary>
         public CvException ()
-            : base()
+            : base ()
         {
         }
         /// <summary>
@@ -20,7 +20,7 @@ namespace OpenCVForUnity
         /// </summary>
         /// <param name="message"></param>
         public CvException (string message)
-            : base(message)
+            : base (message)
         {
         }
         /// <summary>
@@ -29,7 +29,7 @@ namespace OpenCVForUnity
         /// <param name="messageFormat"></param>
         /// <param name="args"></param>
         public CvException (string messageFormat, params object[] args)
-            : base(string.Format(messageFormat, args))
+            : base (string.Format (messageFormat, args))
         {
         }
         /// <summary>
@@ -38,7 +38,7 @@ namespace OpenCVForUnity
         /// <param name="message"></param>
         /// <param name="innerException"></param>
         public CvException (string message, Exception innerException)
-            : base(message, innerException)
+            : base (message, innerException)
         {
         }
     }

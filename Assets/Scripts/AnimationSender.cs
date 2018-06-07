@@ -380,6 +380,8 @@ public class AnimationSender : MonoBehaviour
 
     public Dictionary<string,Dictionary<int, int[]>> LampIPVideoStreamPixelToColor = new Dictionary<string, Dictionary<int, int[]>>();
 
+    public Vector4 LastVideoStreamColor = new Vector4(1f,0.56f,1f,0f); //Normal picture with 5600K
+    
     //Color calibration
     int[] WhiteCalibrationTemperatureNodes;
     int[][] WhiteCalibrationTable;
@@ -738,6 +740,12 @@ public class AnimationSender : MonoBehaviour
         ActiveStroke.Animation = CurrentAnimation.AnimName;
         ActiveStroke.Properties = new Dictionary<string, int[]>(CurrentAnimation.Properties);
 
+        if (ActiveStroke.Animation == "Video Stream")
+        {
+            var VideoColor = Array.ConvertAll(ActiveStroke.Properties["Color1"], c => (float)c);
+            LastVideoStreamColor = new Vector4(VideoColor[0] / 100f, VideoColor[1] / 10000f, VideoColor[2] / 120f, VideoColor[3] / 360f);
+        }
+
         //Get colors
         List<Vector4> ITSHColors = new List<Vector4>();
 
@@ -891,24 +899,30 @@ public class AnimationSender : MonoBehaviour
         Dictionary<string, int[][]> jsonDict = new Dictionary<string, int[][]>();
         string videoString = "VideoStream";
         jsonDict.Add(videoString, new int[1][]);
+        string lastVideoJSON = "";
         while (true)
         {
             if (StrokeJSONData != null && LampIPList.Count > 0)
             {
-				//Debug.Log("sending video");
-                //if (ActiveStroke.layer.PixelToStrokeIDDictionary.Any(x => x.Value.FirstOrDefault().Animation == "Video Stream"))
-                //{
+                //Debug.Log("sending video");
+                if (ActiveStroke.layer.PixelToStrokeIDDictionary.Any(x => x.Value.FirstOrDefault().Animation == "Video Stream"))
+                {
                     foreach (var lampIP in LampIPList)
                     {
                         //jsonDict[videoString] = LampIPVideoStreamPixelToColor[lampIP];
                         jsonDict[videoString] = LampIPVideoStreamPixelToColor[lampIP].Values.ToArray();
                         var messageJSON = JsonConvert.SerializeObject(jsonDict);
-                        var data = Encoding.ASCII.GetBytes(messageJSON);
-                        SendDataToLamp(data, new IPEndPoint(IPAddress.Parse(lampIP), 30001));
+                        //Stops sending if no video available
+                        if (messageJSON != lastVideoJSON)
+                        {
+                            lastVideoJSON = messageJSON;
+                            var data = Encoding.ASCII.GetBytes(messageJSON);
+                            SendDataToLamp(data, new IPEndPoint(IPAddress.Parse(lampIP), 30001));
+                        }
 					   //Debug.Log("sent");
 					//Debug.Log(messageJSON);
                     }
-                //}
+                }
             }
 			yield return null;
             //yield return new WaitForSeconds(0.04f);

@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class StaticSaliencyFineGrained
-//javadoc: StaticSaliencyFineGrained
+    // C++: class StaticSaliencyFineGrained
+    //javadoc: StaticSaliencyFineGrained
+
     public class StaticSaliencyFineGrained : StaticSaliency
     {
 
@@ -33,10 +31,16 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal StaticSaliencyFineGrained (IntPtr addr) : base(addr)
+        protected internal StaticSaliencyFineGrained (IntPtr addr)
+            : base (addr)
         {
         }
 
+        // internal usage only
+        public static new StaticSaliencyFineGrained __fromPtr__ (IntPtr addr)
+        {
+            return new StaticSaliencyFineGrained (addr);
+        }
 
         //
         // C++: static Ptr_StaticSaliencyFineGrained create()
@@ -45,14 +49,14 @@ namespace OpenCVForUnity
         //javadoc: StaticSaliencyFineGrained::create()
         public static StaticSaliencyFineGrained create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            StaticSaliencyFineGrained retVal = new StaticSaliencyFineGrained (saliency_StaticSaliencyFineGrained_create_10 ());
+            StaticSaliencyFineGrained retVal = StaticSaliencyFineGrained.__fromPtr__ (saliency_StaticSaliencyFineGrained_create_10 ());
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -68,35 +72,36 @@ namespace OpenCVForUnity
                 image.ThrowIfDisposed ();
             if (saliencyMap != null)
                 saliencyMap.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             bool retVal = saliency_StaticSaliencyFineGrained_computeSaliency_10 (nativeObj, image.nativeObj, saliencyMap.nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++: static Ptr_StaticSaliencyFineGrained create()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr saliency_StaticSaliencyFineGrained_create_10 ();
 
         // C++:  bool computeSaliency(Mat image, Mat& saliencyMap)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool saliency_StaticSaliencyFineGrained_computeSaliency_10 (IntPtr nativeObj, IntPtr image_nativeObj, IntPtr saliencyMap_nativeObj);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void saliency_StaticSaliencyFineGrained_delete (IntPtr nativeObj);
 
     }

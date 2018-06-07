@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class BackgroundSubtractor
-//javadoc: BackgroundSubtractor
+    // C++: class BackgroundSubtractor
+    //javadoc: BackgroundSubtractor
+
     public class BackgroundSubtractor : Algorithm
     {
 
@@ -33,10 +31,16 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal BackgroundSubtractor (IntPtr addr) : base(addr)
+        protected internal BackgroundSubtractor (IntPtr addr)
+            : base (addr)
         {
         }
 
+        // internal usage only
+        public static new BackgroundSubtractor __fromPtr__ (IntPtr addr)
+        {
+            return new BackgroundSubtractor (addr);
+        }
 
         //
         // C++:  void apply(Mat image, Mat& fgmask, double learningRate = -1)
@@ -50,14 +54,14 @@ namespace OpenCVForUnity
                 image.ThrowIfDisposed ();
             if (fgmask != null)
                 fgmask.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             video_BackgroundSubtractor_apply_10 (nativeObj, image.nativeObj, fgmask.nativeObj, learningRate);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
         //javadoc: BackgroundSubtractor::apply(image, fgmask)
@@ -68,14 +72,14 @@ namespace OpenCVForUnity
                 image.ThrowIfDisposed ();
             if (fgmask != null)
                 fgmask.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             video_BackgroundSubtractor_apply_11 (nativeObj, image.nativeObj, fgmask.nativeObj);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -84,43 +88,46 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractor::getBackgroundImage(backgroundImage)
-        public  void getBackgroundImage (Mat backgroundImage)
+        public virtual void getBackgroundImage (Mat backgroundImage)
         {
             ThrowIfDisposed ();
             if (backgroundImage != null)
                 backgroundImage.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             video_BackgroundSubtractor_getBackgroundImage_10 (nativeObj, backgroundImage.nativeObj);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+
+
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  void apply(Mat image, Mat& fgmask, double learningRate = -1)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_BackgroundSubtractor_apply_10 (IntPtr nativeObj, IntPtr image_nativeObj, IntPtr fgmask_nativeObj, double learningRate);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_BackgroundSubtractor_apply_11 (IntPtr nativeObj, IntPtr image_nativeObj, IntPtr fgmask_nativeObj);
 
         // C++:  void getBackgroundImage(Mat& backgroundImage)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_BackgroundSubtractor_getBackgroundImage_10 (IntPtr nativeObj, IntPtr backgroundImage_nativeObj);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void video_BackgroundSubtractor_delete (IntPtr nativeObj);
 
     }

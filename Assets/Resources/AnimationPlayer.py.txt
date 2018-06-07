@@ -381,17 +381,18 @@ class Stroke:
                                 pixel.PixelColor = self.Colors[2]
                     elif self.Animation == "Video Stream":
                         #ITSH conversion TODO: Move to separate file!
-                        VideoPixel = np.array(self.Layer.VideoStream[pixel.PixelNumber])
-                        VideoPixel[0] = VideoPixel[0] * self.Properties["Color1"][0]/100 #self.Layer.Scene.ColorCalibrator.Ilut[self.Properties["Color1"][0]][pixel.PixelColor[0]]
-                        VideoPixel[1] = self.Properties["Color1"][1]
-                        VideoPixel[2] = VideoPixel[2] * self.Properties["Color1"][2]/120 #self.Layer.Scene.ColorCalibrator.Slut[self.Properties["Color1"][2]][pixel.PixelColor[2]]
-                        VideoPixel[3] = VideoPixel[3] + self.Properties["Color1"][3] % 360
+                        #VideoPixel = np.array(self.Layer.VideoStream[pixel.PixelNumber])
+                        pixel.PixelColor = np.array(self.Layer.VideoStream[pixel.PixelNumber])
+                        #VideoPixel[0] = VideoPixel[0] * self.Properties["Color1"][0]/100 #self.Layer.Scene.ColorCalibrator.Ilut[self.Properties["Color1"][0]][pixel.PixelColor[0]]
+                        #VideoPixel[1] = self.Properties["Color1"][1]
+                        #VideoPixel[2] = VideoPixel[2] * self.Properties["Color1"][2]/120 #self.Layer.Scene.ColorCalibrator.Slut[self.Properties["Color1"][2]][pixel.PixelColor[2]]
+                        #VideoPixel[3] = VideoPixel[3] + self.Properties["Color1"][3] % 360
 
-                        #ITSH to RGBW
-                        VideoPixel = self.Layer.Scene.ColorCalibrator.ITSHtoRGBWFull(VideoPixel)
+                        ##ITSH to RGBW
+                        #VideoPixel = self.Layer.Scene.ColorCalibrator.ITSHtoRGBWFull(VideoPixel)
 
                         #Gamma correction (lookup table)
-                        pixel.PixelColor = np.array(self.Layer.Scene.ColorCalibrator.GammaCorrectionLookup[self.Properties["Gammax10"][0]][VideoPixel])
+                        #pixel.PixelColor = np.array(self.Layer.Scene.ColorCalibrator.GammaCorrectionLookup[self.Properties["Gammax10"][0]][VideoPixel])
 
                     else:
                         if self.UpdateStationary:
@@ -444,6 +445,27 @@ class OutputToFile(OutputBaseClass):
     #TODO: Implement functionality
     def Send(self, frame):
         return super().Send(frame)
+
+class OutputToDS(OutputBaseClass):
+    def __init__(self):
+        self.SerialPort = serial.Serial(
+            port='/dev/ttyUSB0',
+            baudrate=250000,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_TWO,
+            bytesize=serial.EIGHTBITS,
+            timeout=1
+        )
+    
+    def Send(self, frame, lampPixelCount):
+        self.SerialPort.send_break(0.0002)
+        time.sleep(0.0001)
+        pixelColors = np.zeros(513, dtype = np.uint8)
+        for pixelNumber, color in frame.items():
+            index = pixelNumber*5 + 1 
+            pixelColors[index:index+4] = color
+            pixelColors[index+4] = 50
+        self.SerialPort.write(pixelColors)
 
 class OutputToController(OutputBaseClass):
     def __init__(self, address, fps = -1):

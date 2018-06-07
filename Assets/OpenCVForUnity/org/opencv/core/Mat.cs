@@ -9,427 +9,427 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class Mat
-/**
- * <p>OpenCV C++ n-dimensional dense array class</p>
- *
- * <p>class CV_EXPORTS Mat <code></p>
- *
- * <p>// C++ code:</p>
- *
- *
- * <p>public:</p>
- *
- * <p>//... a lot of methods......</p>
- *
- * <p>/ *! includes several bit-fields:</p>
- *
- * <p>- the magic signature</p>
- *
- * <p>- continuity flag</p>
- *
- * <p>- depth</p>
- *
- * <p>- number of channels</p>
- * <ul>
- *   <li> /
- * </ul>
- *
- * <p>int flags;</p>
- *
- * <p>//! the array dimensionality, >= 2</p>
- *
- * <p>int dims;</p>
- *
- * <p>//! the number of rows and columns or (-1, -1) when the array has more than 2
- * dimensions</p>
- *
- * <p>int rows, cols;</p>
- *
- * <p>//! pointer to the data</p>
- *
- * <p>uchar* data;</p>
- *
- * <p>//! pointer to the reference counter;</p>
- *
- * <p>// when array points to user-allocated data, the pointer is NULL</p>
- *
- * <p>int* refcount;</p>
- *
- * <p>// other members...</p>
- *
- * <p>};</p>
- *
- * <p>The class <code>Mat</code> represents an n-dimensional dense numerical
- * single-channel or multi-channel array. It can be used to store real or
- * complex-valued vectors and matrices, grayscale or color images, voxel
- * volumes, vector fields, point clouds, tensors, histograms (though, very
- * high-dimensional histograms may be better stored in a <code>SparseMat</code>).
- * The data layout of the array </code></p>
- *
- * <p><em>M</em> is defined by the array <code>M.step[]</code>, so that the address
- * of element <em>(i_0,...,i_(M.dims-1))</em>, where <em>0 <= i_k&ltM.size[k]</em>,
- * is computed as:</p>
- *
- * <p><em>addr(M_(i_0,...,i_(M.dims-1))) = M.data + M.step[0]*i_0 + M.step[1]*i_1
- * +... + M.step[M.dims-1]*i_(M.dims-1)</em></p>
- *
- * <p>In case of a 2-dimensional array, the above formula is reduced to:</p>
- *
- * <p><em>addr(M_(i,j)) = M.data + M.step[0]*i + M.step[1]*j</em></p>
- *
- * <p>Note that <code>M.step[i] >= M.step[i+1]</code> (in fact, <code>M.step[i] >=
- * M.step[i+1]*M.size[i+1]</code>). This means that 2-dimensional matrices are
- * stored row-by-row, 3-dimensional matrices are stored plane-by-plane, and so
- * on. <code>M.step[M.dims-1]</code> is minimal and always equal to the element
- * size <code>M.elemSize()</code>.</p>
- *
- * <p>So, the data layout in <code>Mat</code> is fully compatible with
- * <code>CvMat</code>, <code>IplImage</code>, and <code>CvMatND</code> types
- * from OpenCV 1.x. It is also compatible with the majority of dense array types
- * from the standard toolkits and SDKs, such as Numpy (ndarray), Win32
- * (independent device bitmaps), and others, that is, with any array that uses
- * *steps* (or *strides*) to compute the position of a pixel. Due to this
- * compatibility, it is possible to make a <code>Mat</code> header for
- * user-allocated data and process it in-place using OpenCV functions.</p>
- *
- * <p>There are many different ways to create a <code>Mat</code> object. The most
- * popular options are listed below:</p>
- * <ul>
- *   <li> Use the <code>create(nrows, ncols, type)</code> method or the similar
- * <code>Mat(nrows, ncols, type[, fillValue])</code> constructor. A new array of
- * the specified size and type is allocated. <code>type</code> has the same
- * meaning as in the <code>cvCreateMat</code> method.
- * </ul>
- * <p>For example, <code>CV_8UC1</code> means a 8-bit single-channel array,
- * <code>CV_32FC2</code> means a 2-channel (complex) floating-point array, and
- * so on.</p>
- *
- * <p><code></p>
- *
- * <p>// C++ code:</p>
- *
- * <p>// make a 7x7 complex matrix filled with 1+3j.</p>
- *
- * <p>Mat M(7,7,CV_32FC2,Scalar(1,3));</p>
- *
- * <p>// and now turn M to a 100x60 15-channel 8-bit matrix.</p>
- *
- * <p>// The old content will be deallocated</p>
- *
- * <p>M.create(100,60,CV_8UC(15));</p>
- *
- * <p></code></p>
- *
- * <p>As noted in the introduction to this chapter, <code>create()</code> allocates
- * only a new array when the shape or type of the current array are different
- * from the specified ones.</p>
- * <ul>
- *   <li> Create a multi-dimensional array:
- * </ul>
- *
- * <p><code></p>
- *
- * <p>// C++ code:</p>
- *
- * <p>// create a 100x100x100 8-bit array</p>
- *
- * <p>int sz[] = {100, 100, 100};</p>
- *
- * <p>Mat bigCube(3, sz, CV_8U, Scalar.all(0));</p>
- *
- * <p></code></p>
- *
- * <p>It passes the number of dimensions =1 to the <code>Mat</code> constructor but
- * the created array will be 2-dimensional with the number of columns set to 1.
- * So, <code>Mat.dims</code> is always >= 2 (can also be 0 when the array is
- * empty).</p>
- * <ul>
- *   <li> Use a copy constructor or assignment operator where there can be an
- * array or expression on the right side (see below). As noted in the
- * introduction, the array assignment is an O(1) operation because it only
- * copies the header and increases the reference counter. The <code>Mat.clone()</code>
- * method can be used to get a full (deep) copy of the array when you need it.
- *   <li> Construct a header for a part of another array. It can be a single
- * row, single column, several rows, several columns, rectangular region in the
- * array (called a *minor* in algebra) or a diagonal. Such operations are also
- * O(1) because the new header references the same data. You can actually modify
- * a part of the array using this feature, for example:
- * </ul>
- *
- * <p><code></p>
- *
- * <p>// C++ code:</p>
- *
- * <p>// add the 5-th row, multiplied by 3 to the 3rd row</p>
- *
- * <p>M.row(3) = M.row(3) + M.row(5)*3;</p>
- *
- * <p>// now copy the 7-th column to the 1-st column</p>
- *
- * <p>// M.col(1) = M.col(7); // this will not work</p>
- *
- * <p>Mat M1 = M.col(1);</p>
- *
- * <p>M.col(7).copyTo(M1);</p>
- *
- * <p>// create a new 320x240 image</p>
- *
- * <p>Mat img(Size(320,240),CV_8UC3);</p>
- *
- * <p>// select a ROI</p>
- *
- * <p>Mat roi(img, Rect(10,10,100,100));</p>
- *
- * <p>// fill the ROI with (0,255,0) (which is green in RGB space);</p>
- *
- * <p>// the original 320x240 image will be modified</p>
- *
- * <p>roi = Scalar(0,255,0);</p>
- *
- * <p></code></p>
- *
- * <p>Due to the additional <code>datastart</code> and <code>dataend</code>
- * members, it is possible to compute a relative sub-array position in the main
- * *container* array using <code>locateROI()</code>:</p>
- *
- * <p><code></p>
- *
- * <p>// C++ code:</p>
- *
- * <p>Mat A = Mat.eye(10, 10, CV_32S);</p>
- *
- * <p>// extracts A columns, 1 (inclusive) to 3 (exclusive).</p>
- *
- * <p>Mat B = A(Range.all(), Range(1, 3));</p>
- *
- * <p>// extracts B rows, 5 (inclusive) to 9 (exclusive).</p>
- *
- * <p>// that is, C ~ A(Range(5, 9), Range(1, 3))</p>
- *
- * <p>Mat C = B(Range(5, 9), Range.all());</p>
- *
- * <p>Size size; Point ofs;</p>
- *
- * <p>C.locateROI(size, ofs);</p>
- *
- * <p>// size will be (width=10,height=10) and the ofs will be (x=1, y=5)</p>
- *
- * <p></code></p>
- *
- * <p>As in case of whole matrices, if you need a deep copy, use the
- * <code>clone()</code> method of the extracted sub-matrices.</p>
- * <ul>
- *   <li> Make a header for user-allocated data. It can be useful to do the
- * following:
- *   <li> Process "foreign" data using OpenCV (for example, when you implement a
- * DirectShow* filter or a processing module for <code>gstreamer</code>, and so
- * on). For example:
- * </ul>
- *
- * <p><code></p>
- *
- * <p>// C++ code:</p>
- *
- * <p>void process_video_frame(const unsigned char* pixels,</p>
- *
- * <p>int width, int height, int step)</p>
- *
- *
- * <p>Mat img(height, width, CV_8UC3, pixels, step);</p>
- *
- * <p>GaussianBlur(img, img, Size(7,7), 1.5, 1.5);</p>
- *
- *
- * <p></code></p>
- * <ul>
- *   <li> Quickly initialize small matrices and/or get a super-fast element
- * access.
- * </ul>
- *
- * <p><code></p>
- *
- * <p>// C++ code:</p>
- *
- * <p>double m[3][3] = {{a, b, c}, {d, e, f}, {g, h, i}};</p>
- *
- * <p>Mat M = Mat(3, 3, CV_64F, m).inv();</p>
- *
- * <p></code></p>
- *
- * <p>Partial yet very common cases of this *user-allocated data* case are
- * conversions from <code>CvMat</code> and <code>IplImage</code> to
- * <code>Mat</code>. For this purpose, there are special constructors taking
- * pointers to <code>CvMat</code> or <code>IplImage</code> and the optional flag
- * indicating whether to copy the data or not.</p>
- *
- * <p>Backward conversion from <code>Mat</code> to <code>CvMat</code> or
- * <code>IplImage</code> is provided via cast operators <code>Mat.operator
- * CvMat() const</code> and <code>Mat.operator IplImage()</code>. The operators
- * do NOT copy the data.</p>
- *
- * <p><code></p>
- *
- * <p>// C++ code:</p>
- *
- * <p>IplImage* img = cvLoadImage("greatwave.jpg", 1);</p>
- *
- * <p>Mat mtx(img); // convert IplImage* -> Mat</p>
- *
- * <p>CvMat oldmat = mtx; // convert Mat -> CvMat</p>
- *
- * <p>CV_Assert(oldmat.cols == img->width && oldmat.rows == img->height &&</p>
- *
- * <p>oldmat.data.ptr == (uchar*)img->imageData && oldmat.step == img->widthStep);</p>
- *
- * <p></code></p>
- * <ul>
- *   <li> Use MATLAB-style array initializers, <code>zeros(), ones(),
- * eye()</code>, for example:
- * </ul>
- *
- * <p><code></p>
- *
- * <p>// C++ code:</p>
- *
- * <p>// create a double-precision identity martix and add it to M.</p>
- *
- * <p>M += Mat.eye(M.rows, M.cols, CV_64F);</p>
- *
- * <p></code></p>
- * <ul>
- *   <li> Use a comma-separated initializer:
- * </ul>
- *
- * <p><code></p>
- *
- * <p>// C++ code:</p>
- *
- * <p>// create a 3x3 double-precision identity matrix</p>
- *
- * <p>Mat M = (Mat_<double>(3,3) << 1, 0, 0, 0, 1, 0, 0, 0, 1);</p>
- *
- * <p></code></p>
- *
- * <p>With this approach, you first call a constructor of the "Mat_" class with the
- * proper parameters, and then you just put <code><<</code> operator followed by
- * comma-separated values that can be constants, variables, expressions, and so
- * on. Also, note the extra parentheses required to avoid compilation errors.</p>
- *
- * <p>Once the array is created, it is automatically managed via a
- * reference-counting mechanism. If the array header is built on top of
- * user-allocated data, you should handle the data by yourself.
- * The array data is deallocated when no one points to it. If you want to
- * release the data pointed by a array header before the array destructor is
- * called, use <code>Mat.release()</code>.</p>
- *
- * <p>The next important thing to learn about the array class is element access.
- * This manual already described how to compute an address of each array
- * element. Normally, you are not required to use the formula directly in the
- * code. If you know the array element type (which can be retrieved using the
- * method <code>Mat.type()</code>), you can access the element<em>M_(ij)</em>
- * of a 2-dimensional array as: <code></p>
- *
- * <p>// C++ code:</p>
- *
- * <p>M.at<double>(i,j) += 1.f;</p>
- *
- * <p>assuming that M is a double-precision floating-point array. There are several
- * variants of the method <code>at</code> for a different number of dimensions.
- * </code></p>
- *
- * <p>If you need to process a whole row of a 2D array, the most efficient way is
- * to get the pointer to the row first, and then just use the plain C operator
- * <code>[]</code> : <code></p>
- *
- * <p>// C++ code:</p>
- *
- * <p>// compute sum of positive matrix elements</p>
- *
- * <p>// (assuming that M isa double-precision matrix)</p>
- *
- * <p>double sum=0;</p>
- *
- * <p>for(int i = 0; i < M.rows; i++)</p>
- *
- *
- * <p>const double* Mi = M.ptr<double>(i);</p>
- *
- * <p>for(int j = 0; j < M.cols; j++)</p>
- *
- * <p>sum += std.max(Mi[j], 0.);</p>
- *
- *
- * <p>Some operations, like the one above, do not actually depend on the array
- * shape. They just process elements of an array one by one (or elements from
- * multiple arrays that have the same coordinates, for example, array addition).
- * Such operations are called *element-wise*. It makes sense to check whether
- * all the input/output arrays are continuous, namely, have no gaps at the end
- * of each row. If yes, process them as a long single row:</p>
- *
- * <p>// compute the sum of positive matrix elements, optimized variant</p>
- *
- * <p>double sum=0;</p>
- *
- * <p>int cols = M.cols, rows = M.rows;</p>
- *
- * <p>if(M.isContinuous())</p>
- *
- *
- * <p>cols *= rows;</p>
- *
- * <p>rows = 1;</p>
- *
- *
- * <p>for(int i = 0; i < rows; i++)</p>
- *
- *
- * <p>const double* Mi = M.ptr<double>(i);</p>
- *
- * <p>for(int j = 0; j < cols; j++)</p>
- *
- * <p>sum += std.max(Mi[j], 0.);</p>
- *
- *
- * <p>In case of the continuous matrix, the outer loop body is executed just once.
- * So, the overhead is smaller, which is especially noticeable in case of small
- * matrices.
- * </code></p>
- *
- * <p>Finally, there are STL-style iterators that are smart enough to skip gaps
- * between successive rows: <code></p>
- *
- * <p>// C++ code:</p>
- *
- * <p>// compute sum of positive matrix elements, iterator-based variant</p>
- *
- * <p>double sum=0;</p>
- *
- * <p>MatConstIterator_<double> it = M.begin<double>(), it_end = M.end<double>();</p>
- *
- * <p>for(; it != it_end; ++it)</p>
- *
- * <p>sum += std.max(*it, 0.);</p>
- *
- * <p>The matrix iterators are random-access iterators, so they can be passed to
- * any STL algorithm, including <code>std.sort()</code>.
- * </code></p>
- *
- * <p>Note:</p>
- * <ul>
- *   <li> An example demonstrating the serial out capabilities of cv.Mat can be
- * found at opencv_source_code/samples/cpp/cout_mat.cpp
- * </ul>
- *
- * @see <a href="http://docs.opencv.org/modules/core/doc/basic_structures.html#mat">org.opencv.core.Mat</a>
- */
-    public class Mat: DisposableOpenCVObject
+    // C++: class Mat
+    /**
+     * <p>OpenCV C++ n-dimensional dense array class</p>
+     *
+     * <p>class CV_EXPORTS Mat <code></p>
+     *
+     * <p>// C++ code:</p>
+     *
+     *
+     * <p>public:</p>
+     *
+     * <p>//... a lot of methods......</p>
+     *
+     * <p>/ *! includes several bit-fields:</p>
+     *
+     * <p>- the magic signature</p>
+     *
+     * <p>- continuity flag</p>
+     *
+     * <p>- depth</p>
+     *
+     * <p>- number of channels</p>
+     * <ul>
+     *   <li> /
+     * </ul>
+     *
+     * <p>int flags;</p>
+     *
+     * <p>//! the array dimensionality, >= 2</p>
+     *
+     * <p>int dims;</p>
+     *
+     * <p>//! the number of rows and columns or (-1, -1) when the array has more than 2
+     * dimensions</p>
+     *
+     * <p>int rows, cols;</p>
+     *
+     * <p>//! pointer to the data</p>
+     *
+     * <p>uchar* data;</p>
+     *
+     * <p>//! pointer to the reference counter;</p>
+     *
+     * <p>// when array points to user-allocated data, the pointer is NULL</p>
+     *
+     * <p>int* refcount;</p>
+     *
+     * <p>// other members...</p>
+     *
+     * <p>};</p>
+     *
+     * <p>The class <code>Mat</code> represents an n-dimensional dense numerical
+     * single-channel or multi-channel array. It can be used to store real or
+     * complex-valued vectors and matrices, grayscale or color images, voxel
+     * volumes, vector fields, point clouds, tensors, histograms (though, very
+     * high-dimensional histograms may be better stored in a <code>SparseMat</code>).
+     * The data layout of the array </code></p>
+     *
+     * <p><em>M</em> is defined by the array <code>M.step[]</code>, so that the address
+     * of element <em>(i_0,...,i_(M.dims-1))</em>, where <em>0 <= i_k&ltM.size[k]</em>,
+     * is computed as:</p>
+     *
+     * <p><em>addr(M_(i_0,...,i_(M.dims-1))) = M.data + M.step[0]*i_0 + M.step[1]*i_1
+     * +... + M.step[M.dims-1]*i_(M.dims-1)</em></p>
+     *
+     * <p>In case of a 2-dimensional array, the above formula is reduced to:</p>
+     *
+     * <p><em>addr(M_(i,j)) = M.data + M.step[0]*i + M.step[1]*j</em></p>
+     *
+     * <p>Note that <code>M.step[i] >= M.step[i+1]</code> (in fact, <code>M.step[i] >=
+     * M.step[i+1]*M.size[i+1]</code>). This means that 2-dimensional matrices are
+     * stored row-by-row, 3-dimensional matrices are stored plane-by-plane, and so
+     * on. <code>M.step[M.dims-1]</code> is minimal and always equal to the element
+     * size <code>M.elemSize()</code>.</p>
+     *
+     * <p>So, the data layout in <code>Mat</code> is fully compatible with
+     * <code>CvMat</code>, <code>IplImage</code>, and <code>CvMatND</code> types
+     * from OpenCV 1.x. It is also compatible with the majority of dense array types
+     * from the standard toolkits and SDKs, such as Numpy (ndarray), Win32
+     * (independent device bitmaps), and others, that is, with any array that uses
+     * *steps* (or *strides*) to compute the position of a pixel. Due to this
+     * compatibility, it is possible to make a <code>Mat</code> header for
+     * user-allocated data and process it in-place using OpenCV functions.</p>
+     *
+     * <p>There are many different ways to create a <code>Mat</code> object. The most
+     * popular options are listed below:</p>
+     * <ul>
+     *   <li> Use the <code>create(nrows, ncols, type)</code> method or the similar
+     * <code>Mat(nrows, ncols, type[, fillValue])</code> constructor. A new array of
+     * the specified size and type is allocated. <code>type</code> has the same
+     * meaning as in the <code>cvCreateMat</code> method.
+     * </ul>
+     * <p>For example, <code>CV_8UC1</code> means a 8-bit single-channel array,
+     * <code>CV_32FC2</code> means a 2-channel (complex) floating-point array, and
+     * so on.</p>
+     *
+     * <p><code></p>
+     *
+     * <p>// C++ code:</p>
+     *
+     * <p>// make a 7x7 complex matrix filled with 1+3j.</p>
+     *
+     * <p>Mat M(7,7,CV_32FC2,Scalar(1,3));</p>
+     *
+     * <p>// and now turn M to a 100x60 15-channel 8-bit matrix.</p>
+     *
+     * <p>// The old content will be deallocated</p>
+     *
+     * <p>M.create(100,60,CV_8UC(15));</p>
+     *
+     * <p></code></p>
+     *
+     * <p>As noted in the introduction to this chapter, <code>create()</code> allocates
+     * only a new array when the shape or type of the current array are different
+     * from the specified ones.</p>
+     * <ul>
+     *   <li> Create a multi-dimensional array:
+     * </ul>
+     *
+     * <p><code></p>
+     *
+     * <p>// C++ code:</p>
+     *
+     * <p>// create a 100x100x100 8-bit array</p>
+     *
+     * <p>int sz[] = {100, 100, 100};</p>
+     *
+     * <p>Mat bigCube(3, sz, CV_8U, Scalar.all(0));</p>
+     *
+     * <p></code></p>
+     *
+     * <p>It passes the number of dimensions =1 to the <code>Mat</code> constructor but
+     * the created array will be 2-dimensional with the number of columns set to 1.
+     * So, <code>Mat.dims</code> is always >= 2 (can also be 0 when the array is
+     * empty).</p>
+     * <ul>
+     *   <li> Use a copy constructor or assignment operator where there can be an
+     * array or expression on the right side (see below). As noted in the
+     * introduction, the array assignment is an O(1) operation because it only
+     * copies the header and increases the reference counter. The <code>Mat.clone()</code>
+     * method can be used to get a full (deep) copy of the array when you need it.
+     *   <li> Construct a header for a part of another array. It can be a single
+     * row, single column, several rows, several columns, rectangular region in the
+     * array (called a *minor* in algebra) or a diagonal. Such operations are also
+     * O(1) because the new header references the same data. You can actually modify
+     * a part of the array using this feature, for example:
+     * </ul>
+     *
+     * <p><code></p>
+     *
+     * <p>// C++ code:</p>
+     *
+     * <p>// add the 5-th row, multiplied by 3 to the 3rd row</p>
+     *
+     * <p>M.row(3) = M.row(3) + M.row(5)*3;</p>
+     *
+     * <p>// now copy the 7-th column to the 1-st column</p>
+     *
+     * <p>// M.col(1) = M.col(7); // this will not work</p>
+     *
+     * <p>Mat M1 = M.col(1);</p>
+     *
+     * <p>M.col(7).copyTo(M1);</p>
+     *
+     * <p>// create a new 320x240 image</p>
+     *
+     * <p>Mat img(Size(320,240),CV_8UC3);</p>
+     *
+     * <p>// select a ROI</p>
+     *
+     * <p>Mat roi(img, Rect(10,10,100,100));</p>
+     *
+     * <p>// fill the ROI with (0,255,0) (which is green in RGB space);</p>
+     *
+     * <p>// the original 320x240 image will be modified</p>
+     *
+     * <p>roi = Scalar(0,255,0);</p>
+     *
+     * <p></code></p>
+     *
+     * <p>Due to the additional <code>datastart</code> and <code>dataend</code>
+     * members, it is possible to compute a relative sub-array position in the main
+     * *container* array using <code>locateROI()</code>:</p>
+     *
+     * <p><code></p>
+     *
+     * <p>// C++ code:</p>
+     *
+     * <p>Mat A = Mat.eye(10, 10, CV_32S);</p>
+     *
+     * <p>// extracts A columns, 1 (inclusive) to 3 (exclusive).</p>
+     *
+     * <p>Mat B = A(Range.all(), Range(1, 3));</p>
+     *
+     * <p>// extracts B rows, 5 (inclusive) to 9 (exclusive).</p>
+     *
+     * <p>// that is, C ~ A(Range(5, 9), Range(1, 3))</p>
+     *
+     * <p>Mat C = B(Range(5, 9), Range.all());</p>
+     *
+     * <p>Size size; Point ofs;</p>
+     *
+     * <p>C.locateROI(size, ofs);</p>
+     *
+     * <p>// size will be (width=10,height=10) and the ofs will be (x=1, y=5)</p>
+     *
+     * <p></code></p>
+     *
+     * <p>As in case of whole matrices, if you need a deep copy, use the
+     * <code>clone()</code> method of the extracted sub-matrices.</p>
+     * <ul>
+     *   <li> Make a header for user-allocated data. It can be useful to do the
+     * following:
+     *   <li> Process "foreign" data using OpenCV (for example, when you implement a
+     * DirectShow* filter or a processing module for <code>gstreamer</code>, and so
+     * on). For example:
+     * </ul>
+     *
+     * <p><code></p>
+     *
+     * <p>// C++ code:</p>
+     *
+     * <p>void process_video_frame(const unsigned char* pixels,</p>
+     *
+     * <p>int width, int height, int step)</p>
+     *
+     *
+     * <p>Mat img(height, width, CV_8UC3, pixels, step);</p>
+     *
+     * <p>GaussianBlur(img, img, Size(7,7), 1.5, 1.5);</p>
+     *
+     *
+     * <p></code></p>
+     * <ul>
+     *   <li> Quickly initialize small matrices and/or get a super-fast element
+     * access.
+     * </ul>
+     *
+     * <p><code></p>
+     *
+     * <p>// C++ code:</p>
+     *
+     * <p>double m[3][3] = {{a, b, c}, {d, e, f}, {g, h, i}};</p>
+     *
+     * <p>Mat M = Mat(3, 3, CV_64F, m).inv();</p>
+     *
+     * <p></code></p>
+     *
+     * <p>Partial yet very common cases of this *user-allocated data* case are
+     * conversions from <code>CvMat</code> and <code>IplImage</code> to
+     * <code>Mat</code>. For this purpose, there are special constructors taking
+     * pointers to <code>CvMat</code> or <code>IplImage</code> and the optional flag
+     * indicating whether to copy the data or not.</p>
+     *
+     * <p>Backward conversion from <code>Mat</code> to <code>CvMat</code> or
+     * <code>IplImage</code> is provided via cast operators <code>Mat.operator
+     * CvMat() const</code> and <code>Mat.operator IplImage()</code>. The operators
+     * do NOT copy the data.</p>
+     *
+     * <p><code></p>
+     *
+     * <p>// C++ code:</p>
+     *
+     * <p>IplImage* img = cvLoadImage("greatwave.jpg", 1);</p>
+     *
+     * <p>Mat mtx(img); // convert IplImage* -> Mat</p>
+     *
+     * <p>CvMat oldmat = mtx; // convert Mat -> CvMat</p>
+     *
+     * <p>CV_Assert(oldmat.cols == img->width && oldmat.rows == img->height &&</p>
+     *
+     * <p>oldmat.data.ptr == (uchar*)img->imageData && oldmat.step == img->widthStep);</p>
+     *
+     * <p></code></p>
+     * <ul>
+     *   <li> Use MATLAB-style array initializers, <code>zeros(), ones(),
+     * eye()</code>, for example:
+     * </ul>
+     *
+     * <p><code></p>
+     *
+     * <p>// C++ code:</p>
+     *
+     * <p>// create a double-precision identity martix and add it to M.</p>
+     *
+     * <p>M += Mat.eye(M.rows, M.cols, CV_64F);</p>
+     *
+     * <p></code></p>
+     * <ul>
+     *   <li> Use a comma-separated initializer:
+     * </ul>
+     *
+     * <p><code></p>
+     *
+     * <p>// C++ code:</p>
+     *
+     * <p>// create a 3x3 double-precision identity matrix</p>
+     *
+     * <p>Mat M = (Mat_<double>(3,3) << 1, 0, 0, 0, 1, 0, 0, 0, 1);</p>
+     *
+     * <p></code></p>
+     *
+     * <p>With this approach, you first call a constructor of the "Mat_" class with the
+     * proper parameters, and then you just put <code><<</code> operator followed by
+     * comma-separated values that can be constants, variables, expressions, and so
+     * on. Also, note the extra parentheses required to avoid compilation errors.</p>
+     *
+     * <p>Once the array is created, it is automatically managed via a
+     * reference-counting mechanism. If the array header is built on top of
+     * user-allocated data, you should handle the data by yourself.
+     * The array data is deallocated when no one points to it. If you want to
+     * release the data pointed by a array header before the array destructor is
+     * called, use <code>Mat.release()</code>.</p>
+     *
+     * <p>The next important thing to learn about the array class is element access.
+     * This manual already described how to compute an address of each array
+     * element. Normally, you are not required to use the formula directly in the
+     * code. If you know the array element type (which can be retrieved using the
+     * method <code>Mat.type()</code>), you can access the element<em>M_(ij)</em>
+     * of a 2-dimensional array as: <code></p>
+     *
+     * <p>// C++ code:</p>
+     *
+     * <p>M.at<double>(i,j) += 1.f;</p>
+     *
+     * <p>assuming that M is a double-precision floating-point array. There are several
+     * variants of the method <code>at</code> for a different number of dimensions.
+     * </code></p>
+     *
+     * <p>If you need to process a whole row of a 2D array, the most efficient way is
+     * to get the pointer to the row first, and then just use the plain C operator
+     * <code>[]</code> : <code></p>
+     *
+     * <p>// C++ code:</p>
+     *
+     * <p>// compute sum of positive matrix elements</p>
+     *
+     * <p>// (assuming that M isa double-precision matrix)</p>
+     *
+     * <p>double sum=0;</p>
+     *
+     * <p>for(int i = 0; i < M.rows; i++)</p>
+     *
+     *
+     * <p>const double* Mi = M.ptr<double>(i);</p>
+     *
+     * <p>for(int j = 0; j < M.cols; j++)</p>
+     *
+     * <p>sum += std.max(Mi[j], 0.);</p>
+     *
+     *
+     * <p>Some operations, like the one above, do not actually depend on the array
+     * shape. They just process elements of an array one by one (or elements from
+     * multiple arrays that have the same coordinates, for example, array addition).
+     * Such operations are called *element-wise*. It makes sense to check whether
+     * all the input/output arrays are continuous, namely, have no gaps at the end
+     * of each row. If yes, process them as a long single row:</p>
+     *
+     * <p>// compute the sum of positive matrix elements, optimized variant</p>
+     *
+     * <p>double sum=0;</p>
+     *
+     * <p>int cols = M.cols, rows = M.rows;</p>
+     *
+     * <p>if(M.isContinuous())</p>
+     *
+     *
+     * <p>cols *= rows;</p>
+     *
+     * <p>rows = 1;</p>
+     *
+     *
+     * <p>for(int i = 0; i < rows; i++)</p>
+     *
+     *
+     * <p>const double* Mi = M.ptr<double>(i);</p>
+     *
+     * <p>for(int j = 0; j < cols; j++)</p>
+     *
+     * <p>sum += std.max(Mi[j], 0.);</p>
+     *
+     *
+     * <p>In case of the continuous matrix, the outer loop body is executed just once.
+     * So, the overhead is smaller, which is especially noticeable in case of small
+     * matrices.
+     * </code></p>
+     *
+     * <p>Finally, there are STL-style iterators that are smart enough to skip gaps
+     * between successive rows: <code></p>
+     *
+     * <p>// C++ code:</p>
+     *
+     * <p>// compute sum of positive matrix elements, iterator-based variant</p>
+     *
+     * <p>double sum=0;</p>
+     *
+     * <p>MatConstIterator_<double> it = M.begin<double>(), it_end = M.end<double>();</p>
+     *
+     * <p>for(; it != it_end; ++it)</p>
+     *
+     * <p>sum += std.max(*it, 0.);</p>
+     *
+     * <p>The matrix iterators are random-access iterators, so they can be passed to
+     * any STL algorithm, including <code>std.sort()</code>.
+     * </code></p>
+     *
+     * <p>Note:</p>
+     * <ul>
+     *   <li> An example demonstrating the serial out capabilities of cv.Mat can be
+     * found at opencv_source_code/samples/cpp/cout_mat.cpp
+     * </ul>
+     *
+     * @see <a href="http://docs.opencv.org/modules/core/doc/basic_structures.html#mat">org.opencv.core.Mat</a>
+     */
+    public class Mat : DisposableOpenCVObject
     {
 
 
         protected override void Dispose (bool disposing)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
 
             try {
                                 
@@ -446,14 +446,14 @@ namespace OpenCVForUnity
                 base.Dispose (disposing);
             }
 
-            #else
-            
-            #endif
+#else
+
+#endif
         }
-    
+
         public Mat (IntPtr addr)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
 
             if (addr == IntPtr.Zero)
                 throw new CvException ("Native object address is NULL");
@@ -462,11 +462,11 @@ namespace OpenCVForUnity
 
 #endif
         }
-    
+
         //
         // C++: Mat::Mat()
         //
-    
+
         /**
  * <p>Various Mat constructors</p>
  *
@@ -481,7 +481,7 @@ namespace OpenCVForUnity
  */
         public Mat ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             nativeObj = core_Mat_n_1Mat__ ();
         
@@ -490,11 +490,11 @@ namespace OpenCVForUnity
 
 #endif
         }
-    
+
         //
         // C++: Mat::Mat(int rows, int cols, int type)
         //
-    
+
         /**
  * <p>Various Mat constructors</p>
  *
@@ -515,20 +515,20 @@ namespace OpenCVForUnity
  */
         public Mat (int rows, int cols, int type)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             nativeObj = core_Mat_n_1Mat__III (rows, cols, type);
         
             return;
-            #else
-            
-            #endif
+#else
+
+#endif
         }
-    
+
         //
         // C++: Mat::Mat(Size size, int type)
         //
-    
+
         /**
  * <p>Various Mat constructors</p>
  *
@@ -550,20 +550,20 @@ namespace OpenCVForUnity
  */
         public Mat (Size size, int type)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             nativeObj = core_Mat_n_1Mat__DDI (size.width, size.height, type);
         
             return;
-            #else
-            
-            #endif
+#else
+
+#endif
         }
-    
+
         //
         // C++: Mat::Mat(int rows, int cols, int type, Scalar s)
         //
-    
+
         /**
  * <p>Various Mat constructors</p>
  *
@@ -587,21 +587,21 @@ namespace OpenCVForUnity
  */
         public Mat (int rows, int cols, int type, Scalar s)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             nativeObj = core_Mat_n_1Mat__IIIDDDD (rows, cols, type, s.val [0], s.val [1], s.val [2], s.val [3]);
 
         
             return;
-            #else
-            
-            #endif
+#else
+
+#endif
         }
-    
+
         //
         // C++: Mat::Mat(Size size, int type, Scalar s)
         //
-    
+
         /**
  * <p>Various Mat constructors</p>
  *
@@ -626,20 +626,20 @@ namespace OpenCVForUnity
  */
         public Mat (Size size, int type, Scalar s)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             nativeObj = core_Mat_n_1Mat__DDIDDDD (size.width, size.height, type, s.val [0], s.val [1], s.val [2], s.val [3]);
         
             return;
-            #else
-            
-            #endif
+#else
+
+#endif
         }
-    
+
         //
         // C++: Mat::Mat(Mat m, Range rowRange, Range colRange = Range::all())
         //
-    
+
         /**
  * <p>Various Mat constructors</p>
  *
@@ -670,16 +670,16 @@ namespace OpenCVForUnity
             if (m != null)
                 m.ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             nativeObj = core_Mat_n_1Mat__JIIII (m.nativeObj, rowRange.start, rowRange.end, colRange.start, colRange.end);
         
             return;
-            #else
-            
-            #endif
+#else
+
+#endif
         }
-//  
+        //
         /**
  * <p>Various Mat constructors</p>
  *
@@ -708,20 +708,20 @@ namespace OpenCVForUnity
             if (m != null)
                 m.ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             nativeObj = core_Mat_n_1Mat__JII (m.nativeObj, rowRange.start, rowRange.end);
         
             return;
-            #else
-            
-            #endif
+#else
+
+#endif
         }
-    
+
         //
         // C++: Mat::Mat(Mat m, Rect roi)
         //
-    
+
         /**
  * <p>Various Mat constructors</p>
  *
@@ -748,21 +748,21 @@ namespace OpenCVForUnity
             if (m != null)
                 m.ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
 
         
             nativeObj = core_Mat_n_1Mat__JIIII (m.nativeObj, roi.y, roi.y + roi.height, roi.x, roi.x + roi.width);
         
             return;
-            #else
-            
-            #endif
+#else
+
+#endif
         }
-    
+
         //
         // C++: Mat Mat::adjustROI(int dtop, int dbottom, int dleft, int dright)
         //
-    
+
         /**
  * <p>Adjusts a submatrix size and position within the parent matrix.</p>
  *
@@ -804,20 +804,20 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             Mat retVal = new Mat (core_Mat_n_1adjustROI (nativeObj, dtop, dbottom, dleft, dright));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: void Mat::assignTo(Mat m, int type = -1)
         //
-    
+
         /**
  * <p>Provides a functional form of <code>convertTo</code>.</p>
  *
@@ -835,16 +835,16 @@ namespace OpenCVForUnity
                 m.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             core_Mat_n_1assignTo__JJI (nativeObj, m.nativeObj, type);
         
             return;
-            #else
-            
-            #endif
+#else
+
+#endif
         }
-    
+
         /**
  * <p>Provides a functional form of <code>convertTo</code>.</p>
  *
@@ -860,20 +860,20 @@ namespace OpenCVForUnity
                 m.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             core_Mat_n_1assignTo__JJ (nativeObj, m.nativeObj);
         
             return;
-            #else
-            
-            #endif
+#else
+
+#endif
         }
-    
+
         //
         // C++: int Mat::channels()
         //
-    
+
         /**
  * <p>Returns the number of matrix channels.</p>
  *
@@ -885,67 +885,67 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = core_Mat_n_1channels (nativeObj);
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         //
         // C++: int Mat::checkVector(int elemChannels, int depth = -1, bool
         // requireContinuous = true)
         //
-    
+
         public int checkVector (int elemChannels, int depth, bool requireContinuous)
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = core_Mat_n_1checkVector__JIIZ (nativeObj, elemChannels, depth, requireContinuous);
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         public int checkVector (int elemChannels, int depth)
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = core_Mat_n_1checkVector__JII (nativeObj, elemChannels, depth);
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         public int checkVector (int elemChannels)
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = core_Mat_n_1checkVector__JI (nativeObj, elemChannels);
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::clone()
         //
-    
+
         /**
  * <p>Creates a full copy of the array and the underlying data.</p>
  *
@@ -959,20 +959,20 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             Mat retVal = new Mat (core_Mat_n_1clone (nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::col(int x)
         //
-    
+
         /**
  * <p>Creates a matrix header for the specified matrix column.</p>
  *
@@ -989,20 +989,20 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             Mat retVal = new Mat (core_Mat_n_1col (nativeObj, x));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::colRange(int startcol, int endcol)
         //
-    
+
         /**
  * <p>Creates a matrix header for the specified column span.</p>
  *
@@ -1018,20 +1018,20 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             Mat retVal = new Mat (core_Mat_n_1colRange (nativeObj, startcol, endcol));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::colRange(Range r)
         //
-    
+
         /**
  * <p>Creates a matrix header for the specified column span.</p>
  *
@@ -1046,58 +1046,58 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             Mat retVal = new Mat (core_Mat_n_1colRange (nativeObj, r.start, r.end));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: int Mat::dims()
         //
-    
+
         public int dims ()
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = core_Mat_n_1dims (nativeObj);
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         //
         // C++: int Mat::cols()
         //
-    
+
         public int cols ()
         {
             ThrowIfDisposed ();
 
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = core_Mat_n_1cols (nativeObj);
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         //
         // C++: void Mat::convertTo(Mat& m, int rtype, double alpha = 1, double beta
         // = 0)
         //
-    
+
         /**
  * <p>Converts an array to another data type with optional scaling.</p>
  *
@@ -1123,16 +1123,16 @@ namespace OpenCVForUnity
                 m.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             core_Mat_n_1convertTo__JJIDD (nativeObj, m.nativeObj, rtype, alpha, beta);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
-    
+
         /**
  * <p>Converts an array to another data type with optional scaling.</p>
  *
@@ -1157,15 +1157,15 @@ namespace OpenCVForUnity
                 m.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             core_Mat_n_1convertTo__JJID (nativeObj, m.nativeObj, rtype, alpha);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
-    
+
         /**
  * <p>Converts an array to another data type with optional scaling.</p>
  *
@@ -1189,20 +1189,20 @@ namespace OpenCVForUnity
                 m.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             core_Mat_n_1convertTo__JJI (nativeObj, m.nativeObj, rtype);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
-    
+
         //
         // C++: void Mat::copyTo(Mat& m)
         //
-    
+
         /**
  * <p>Copies the matrix to another one.</p>
  *
@@ -1233,20 +1233,20 @@ namespace OpenCVForUnity
                 m.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             core_Mat_n_1copyTo__JJ (nativeObj, m.nativeObj);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
-    
+
         //
         // C++: void Mat::copyTo(Mat& m, Mat mask)
         //
-    
+
         /**
  * <p>Copies the matrix to another one.</p>
  *
@@ -1281,20 +1281,20 @@ namespace OpenCVForUnity
                 mask.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             core_Mat_n_1copyTo__JJJ (nativeObj, m.nativeObj, mask.nativeObj);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
-    
+
         //
         // C++: void Mat::create(int rows, int cols, int type)
         //
-    
+
         /**
  * <p>Allocates new array data if needed.</p>
  *
@@ -1345,19 +1345,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             core_Mat_n_1create__JIII (nativeObj, rows, cols, type);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
-    
+
         //
         // C++: void Mat::create(Size size, int type)
         //
-    
+
         /**
  * <p>Allocates new array data if needed.</p>
  *
@@ -1408,19 +1408,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             core_Mat_n_1create__JDDI (nativeObj, size.width, size.height, type);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::cross(Mat m)
         //
-    
+
         /**
  * <p>Computes a cross-product of two 3-element vectors.</p>
  *
@@ -1438,36 +1438,36 @@ namespace OpenCVForUnity
                 m.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1cross (nativeObj, m.nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: long Mat::dataAddr()
         //
-    
+
         public long dataAddr ()
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             long retVal = core_Mat_n_1dataAddr (nativeObj);
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         //
         // C++: int Mat::depth()
         //
-    
+
         /**
  * <p>Returns the depth of a matrix element.</p>
  *
@@ -1493,19 +1493,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             int retVal = core_Mat_n_1depth (nativeObj);
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::diag(int d = 0)
         //
-    
+
         /**
  * <p>Extracts a diagonal from a matrix, or creates a diagonal matrix.</p>
  *
@@ -1529,15 +1529,15 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1diag__JI (nativeObj, d));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         /**
  * <p>Extracts a diagonal from a matrix, or creates a diagonal matrix.</p>
  *
@@ -1551,19 +1551,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1diag__JI (nativeObj, 0));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: static Mat Mat::diag(Mat d)
         //
-    
+
         /**
  * <p>Extracts a diagonal from a matrix, or creates a diagonal matrix.</p>
  *
@@ -1589,19 +1589,19 @@ namespace OpenCVForUnity
                 d.ThrowIfDisposed ();
 
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1diag__J (d.nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: double Mat::dot(Mat m)
         //
-    
+
         /**
  * <p>Computes a dot-product of two vectors.</p>
  *
@@ -1621,19 +1621,19 @@ namespace OpenCVForUnity
                 m.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             double retVal = core_Mat_n_1dot (nativeObj, m.nativeObj);
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         //
         // C++: size_t Mat::elemSize()
         //
-    
+
         /**
  * <p>Returns the matrix element size in bytes.</p>
  *
@@ -1647,19 +1647,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             long retVal = core_Mat_n_1elemSize (nativeObj);//TODO: @size_t long long
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         //
         // C++: size_t Mat::elemSize1()
         //
-    
+
         /**
  * <p>Returns the size of each matrix element channel in bytes.</p>
  *
@@ -1673,19 +1673,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             long retVal = core_Mat_n_1elemSize1 (nativeObj);//TODO: @size_t long long
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         //
         // C++: bool Mat::empty()
         //
-    
+
         /**
  * <p>Returns <code>true</code> if the array has no elements.</p>
  *
@@ -1700,19 +1700,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             bool retVal = core_Mat_n_1empty (nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
-    
+
         //
         // C++: static Mat Mat::eye(int rows, int cols, int type)
         //
-    
+
         /**
  * <p>Returns an identity matrix of the specified size and type.</p>
  *
@@ -1735,19 +1735,19 @@ namespace OpenCVForUnity
         public static Mat eye (int rows, int cols, int type)
         {
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1eye__III (rows, cols, type));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: static Mat Mat::eye(Size size, int type)
         //
-    
+
         /**
  * <p>Returns an identity matrix of the specified size and type.</p>
  *
@@ -1770,19 +1770,19 @@ namespace OpenCVForUnity
         public static Mat eye (Size size, int type)
         {
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1eye__DDI (size.width, size.height, type));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::inv(int method = DECOMP_LU)
         //
-    
+
         /**
  * <p>Inverses a matrix.</p>
  *
@@ -1807,15 +1807,15 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1inv__JI (nativeObj, method));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         /**
  * <p>Inverses a matrix.</p>
  *
@@ -1830,19 +1830,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1inv__J (nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: bool Mat::isContinuous()
         //
-    
+
         /**
  * <p>Reports whether the matrix is continuous or not.</p>
  *
@@ -1959,36 +1959,36 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             bool retVal = core_Mat_n_1isContinuous (nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
-    
+
         //
         // C++: bool Mat::isSubmatrix()
         //
-    
+
         public bool isSubmatrix ()
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             bool retVal = core_Mat_n_1isSubmatrix (nativeObj);
         
             return retVal;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
-    
+
         //
         // C++: void Mat::locateROI(Size wholeSize, Point ofs)
         //
-    
+
         /**
  * <p>Locates the matrix header within a parent matrix.</p>
  *
@@ -2025,15 +2025,15 @@ namespace OpenCVForUnity
                 ofs.y = ofs_out [1];
             }
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::mul(Mat m, double scale = 1)
         //
-    
+
         /**
  * <p>Performs an element-wise multiplication or division of the two matrices.</p>
  *
@@ -2058,15 +2058,15 @@ namespace OpenCVForUnity
                 m.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1mul__JJD (nativeObj, m.nativeObj, scale));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         /**
  * <p>Performs an element-wise multiplication or division of the two matrices.</p>
  *
@@ -2090,19 +2090,19 @@ namespace OpenCVForUnity
                 m.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1mul__JJ (nativeObj, m.nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: static Mat Mat::ones(int rows, int cols, int type)
         //
-    
+
         /**
  * <p>Returns an array of all 1's of the specified size and type.</p>
  *
@@ -2128,19 +2128,19 @@ namespace OpenCVForUnity
         public static Mat ones (int rows, int cols, int type)
         {
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1ones__III (rows, cols, type));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: static Mat Mat::ones(Size size, int type)
         //
-    
+
         /**
  * <p>Returns an array of all 1's of the specified size and type.</p>
  *
@@ -2165,19 +2165,19 @@ namespace OpenCVForUnity
  */
         public static Mat ones (Size size, int type)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1ones__DDI (size.width, size.height, type));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: void Mat::push_back(Mat m)
         //
-    
+
         /**
  * <p>Adds elements to the bottom of the matrix.</p>
  *
@@ -2196,19 +2196,19 @@ namespace OpenCVForUnity
                 m.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             core_Mat_n_1push_1back (nativeObj, m.nativeObj);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
-    
+
         //
         // C++: void Mat::release()
         //
-    
+
         /**
  * <p>Decrements the reference counter and deallocates the matrix if needed.</p>
  *
@@ -2231,19 +2231,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             core_Mat_n_1release (nativeObj);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::reshape(int cn, int rows = 0)
         //
-    
+
         /**
  * <p>Changes the shape and/or the number of channels of a 2D matrix without
  * copying the data.</p>
@@ -2289,15 +2289,15 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1reshape__JII (nativeObj, cn, rows));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         /**
  * <p>Changes the shape and/or the number of channels of a 2D matrix without
  * copying the data.</p>
@@ -2341,19 +2341,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1reshape__JI (nativeObj, cn));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::row(int y)
         //
-    
+
         /**
  * <p>Creates a matrix header for the specified matrix row.</p>
  *
@@ -2407,19 +2407,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1row (nativeObj, y));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::rowRange(int startrow, int endrow)
         //
-    
+
         /**
  * <p>Creates a matrix header for the specified row span.</p>
  *
@@ -2435,19 +2435,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1rowRange (nativeObj, startrow, endrow));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::rowRange(Range r)
         //
-    
+
         /**
  * <p>Creates a matrix header for the specified row span.</p>
  *
@@ -2462,53 +2462,53 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1rowRange (nativeObj, r.start, r.end));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: int Mat::rows()
         //
-    
+
         public int rows ()
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             int retVal = core_Mat_n_1rows (nativeObj);
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::operator =(Scalar s)
         //
-    
+
         public Mat setTo (Scalar s)
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1setTo__JDDDD (nativeObj, s.val [0], s.val [1], s.val [2], s.val [3]));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::setTo(Scalar value, Mat mask = Mat())
         //
-    
+
         /**
  * <p>Sets all or some of the array elements to the specified value.</p>
  *
@@ -2525,19 +2525,19 @@ namespace OpenCVForUnity
                 mask.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1setTo__JDDDDJ (nativeObj, value.val [0], value.val [1], value.val [2], value.val [3], mask.nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::setTo(Mat value, Mat mask = Mat())
         //
-    
+
         /**
  * <p>Sets all or some of the array elements to the specified value.</p>
  *
@@ -2556,15 +2556,15 @@ namespace OpenCVForUnity
                 mask.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1setTo__JJJ (nativeObj, value.nativeObj, mask.nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         /**
  * <p>Sets all or some of the array elements to the specified value.</p>
  *
@@ -2578,19 +2578,19 @@ namespace OpenCVForUnity
                 value.ThrowIfDisposed ();
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1setTo__JJ (nativeObj, value.nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Size Mat::size()
         //
-    
+
         /**
  * <p>Returns a matrix size.</p>
  *
@@ -2603,7 +2603,7 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
 //          Size retVal = new Size(opencv_core_Mat_n_1size(nativeObj));
 //      
@@ -2615,15 +2615,15 @@ namespace OpenCVForUnity
             Size retVal = new Size (tmpArray);
 
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: size_t Mat::step1(int i = 0)
         //
-    
+
         /**
  * <p>Returns a normalized step.</p>
  *
@@ -2638,15 +2638,15 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             long retVal = core_Mat_n_1step1__JI (nativeObj, i);
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         /**
  * <p>Returns a normalized step.</p>
  *
@@ -2659,20 +2659,20 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             long retVal = core_Mat_n_1step1__J (nativeObj);
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::operator()(int rowStart, int rowEnd, int colStart, int
         // colEnd)
         //
-    
+
         /**
  * <p>Extracts a rectangular submatrix.</p>
  *
@@ -2694,19 +2694,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1submat_1rr (nativeObj, rowStart, rowEnd, colStart, colEnd));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::operator()(Range rowRange, Range colRange)
         //
-    
+
         /**
  * <p>Extracts a rectangular submatrix.</p>
  *
@@ -2728,19 +2728,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1submat_1rr (nativeObj, rowRange.start, rowRange.end, colRange.start, colRange.end));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::operator()(Rect roi)
         //
-    
+
         /**
  * <p>Extracts a rectangular submatrix.</p>
  *
@@ -2759,19 +2759,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1submat (nativeObj, roi.x, roi.y, roi.width, roi.height));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: Mat Mat::t()
         //
-    
+
         /**
  * <p>Transposes a matrix.</p>
  *
@@ -2792,19 +2792,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1t (nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: size_t Mat::total()
         //
-    
+
         /**
  * <p>Returns the total number of array elements.</p>
  *
@@ -2817,19 +2817,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             long retVal = core_Mat_n_1total (nativeObj);
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         //
         // C++: int Mat::type()
         //
-    
+
         /**
  * <p>Returns the type of a matrix element.</p>
  *
@@ -2843,19 +2843,19 @@ namespace OpenCVForUnity
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             int retVal = core_Mat_n_1type (nativeObj);
         
             return retVal;
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         //
         // C++: static Mat Mat::zeros(int rows, int cols, int type)
         //
-    
+
         /**
  * <p>Returns a zero array of the specified size and type.</p>
  *
@@ -2883,19 +2883,19 @@ namespace OpenCVForUnity
  */
         public static Mat zeros (int rows, int cols, int type)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1zeros__III (rows, cols, type));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         //
         // C++: static Mat Mat::zeros(Size size, int type)
         //
-    
+
         /**
  * <p>Returns a zero array of the specified size and type.</p>
  *
@@ -2923,69 +2923,69 @@ namespace OpenCVForUnity
  */
         public static Mat zeros (Size size, int type)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat retVal = new Mat (core_Mat_n_1zeros__DDI (size.width, size.height, type));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
         //@Override
         public override string ToString ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             return "Mat [ " +
-                rows () + "*" + cols () + "*" + CvType.typeToString (type ()) +
-                ", isCont=" + isContinuous () + ", isSubmat=" + isSubmatrix () +
-                ", nativeObj=0x" + Convert.ToString (nativeObj) +
-                ", dataAddr=0x" + Convert.ToString (dataAddr ()) +
-                " ]";
-            #else
+            rows () + "*" + cols () + "*" + CvType.typeToString (type ()) +
+            ", isCont=" + isContinuous () + ", isSubmat=" + isSubmatrix () +
+            ", nativeObj=0x" + Convert.ToString (nativeObj) +
+            ", dataAddr=0x" + Convert.ToString (dataAddr ()) +
+            " ]";
+#else
             return null;
-            #endif
-            
+#endif
+
         }
-    
+
         public string dump ()
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             return Marshal.PtrToStringAnsi (core_Mat_nDump (nativeObj));
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         public int put (int row, int col, params double[] data)
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             int t = type ();
             if (data == null || data.Length % CvType.channels (t) != 0)
                 throw new CvException (
-                "Provided data element number (" +
+                    "Provided data element number (" +
                     (data == null ? 0 : data.Length) +
                     ") should be multiple of the Mat channels count (" +
                     CvType.channels (t) + ")");
             return core_Mat_nPutD (nativeObj, row, col, data.Length, data);
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         public int put (int row, int col, float[] data)
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             int t = type ();
             if (data == null || data.Length % CvType.channels (t) != 0)
                 throw new CvException (
-                "Provided data element number (" +
+                    "Provided data element number (" +
                     (data == null ? 0 : data.Length) +
                     ") should be multiple of the Mat channels count (" +
                     CvType.channels (t) + ")");
@@ -2993,20 +2993,20 @@ namespace OpenCVForUnity
                 return core_Mat_nPutF (nativeObj, row, col, data.Length, data);
             }
             throw new CvException ("Mat data type is not compatible: " + t);
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         public int put (int row, int col, int[] data)
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             int t = type ();
             if (data == null || data.Length % CvType.channels (t) != 0)
                 throw new CvException (
-                "Provided data element number (" +
+                    "Provided data element number (" +
                     (data == null ? 0 : data.Length) +
                     ") should be multiple of the Mat channels count (" +
                     CvType.channels (t) + ")");
@@ -3014,20 +3014,20 @@ namespace OpenCVForUnity
                 return core_Mat_nPutI (nativeObj, row, col, data.Length, data);
             }
             throw new CvException ("Mat data type is not compatible: " + t);
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         public int put (int row, int col, short[] data)
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             int t = type ();
             if (data == null || data.Length % CvType.channels (t) != 0)
                 throw new CvException (
-                "Provided data element number (" +
+                    "Provided data element number (" +
                     (data == null ? 0 : data.Length) +
                     ") should be multiple of the Mat channels count (" +
                     CvType.channels (t) + ")");
@@ -3035,20 +3035,20 @@ namespace OpenCVForUnity
                 return core_Mat_nPutS (nativeObj, row, col, data.Length, data);
             }
             throw new CvException ("Mat data type is not compatible: " + t);
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         public int put (int row, int col, byte[] data)
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             int t = type ();
             if (data == null || data.Length % CvType.channels (t) != 0)
                 throw new CvException (
-                "Provided data element number (" +
+                    "Provided data element number (" +
                     (data == null ? 0 : data.Length) +
                     ") should be multiple of the Mat channels count (" +
                     CvType.channels (t) + ")");
@@ -3056,20 +3056,43 @@ namespace OpenCVForUnity
                 return core_Mat_nPutB (nativeObj, row, col, data.Length, data);
             }
             throw new CvException ("Mat data type is not compatible: " + t);
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
+        public int put (int row, int col, byte[] data, int offset, int length)
+        {
+            ThrowIfDisposed ();
+
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+            int t = type();
+            if (data == null || length % CvType.channels(t) != 0)
+                throw new CvException (
+                        "Provided data element number (" +
+                                (data == null ? 0 : data.Length) +
+                                ") should be multiple of the Mat channels count (" +
+                                CvType.channels(t) + ")");
+            if (CvType.depth(t) == CvType.CV_8U || CvType.depth(t) == CvType.CV_8S)
+            {
+                return core_Mat_nPutBwOffset(nativeObj, row, col, length, offset, data);
+            }
+            throw new CvException ("Mat data type is not compatible: " + t);
+#else
+            return 0;
+#endif
+        }
+
+
         public int get (int row, int col, byte[] data)
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             int t = type ();
             if (data == null || data.Length % CvType.channels (t) != 0)
                 throw new CvException (
-                "Provided data element number (" +
+                    "Provided data element number (" +
                     (data == null ? 0 : data.Length) +
                     ") should be multiple of the Mat channels count (" +
                     CvType.channels (t) + ")");
@@ -3077,20 +3100,20 @@ namespace OpenCVForUnity
                 return core_Mat_nGetB (nativeObj, row, col, data.Length, data);
             }
             throw new CvException ("Mat data type is not compatible: " + t);
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         public int get (int row, int col, short[] data)
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             int t = type ();
             if (data == null || data.Length % CvType.channels (t) != 0)
                 throw new CvException (
-                "Provided data element number (" +
+                    "Provided data element number (" +
                     (data == null ? 0 : data.Length) +
                     ") should be multiple of the Mat channels count (" +
                     CvType.channels (t) + ")");
@@ -3098,20 +3121,20 @@ namespace OpenCVForUnity
                 return core_Mat_nGetS (nativeObj, row, col, data.Length, data);
             }
             throw new CvException ("Mat data type is not compatible: " + t);
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         public int get (int row, int col, int[] data)
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             int t = type ();
             if (data == null || data.Length % CvType.channels (t) != 0)
                 throw new CvException (
-                "Provided data element number (" +
+                    "Provided data element number (" +
                     (data == null ? 0 : data.Length) +
                     ") should be multiple of the Mat channels count (" +
                     CvType.channels (t) + ")");
@@ -3119,20 +3142,20 @@ namespace OpenCVForUnity
                 return core_Mat_nGetI (nativeObj, row, col, data.Length, data);
             }
             throw new CvException ("Mat data type is not compatible: " + t);
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         public int get (int row, int col, float[] data)
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             int t = type ();
             if (data == null || data.Length % CvType.channels (t) != 0)
                 throw new CvException (
-                "Provided data element number (" +
+                    "Provided data element number (" +
                     (data == null ? 0 : data.Length) +
                     ") should be multiple of the Mat channels count (" +
                     CvType.channels (t) + ")");
@@ -3140,20 +3163,20 @@ namespace OpenCVForUnity
                 return core_Mat_nGetF (nativeObj, row, col, data.Length, data);
             }
             throw new CvException ("Mat data type is not compatible: " + t);
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         public int get (int row, int col, double[] data)
         {
             ThrowIfDisposed ();
 
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             int t = type ();
             if (data == null || data.Length % CvType.channels (t) != 0)
                 throw new CvException (
-                "Provided data element number (" +
+                    "Provided data element number (" +
                     (data == null ? 0 : data.Length) +
                     ") should be multiple of the Mat channels count (" +
                     CvType.channels (t) + ")");
@@ -3161,16 +3184,16 @@ namespace OpenCVForUnity
                 return core_Mat_nGetD (nativeObj, row, col, data.Length, data);
             }
             throw new CvException ("Mat data type is not compatible: " + t);
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         public double[] get (int row, int col)
         {
             ThrowIfDisposed ();
-                    
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
 
             double[] tmpArray = new double[channels ()];
             int result = core_Mat_nGet (nativeObj, row, col, tmpArray.Length, tmpArray);
@@ -3180,385 +3203,406 @@ namespace OpenCVForUnity
             } else {
                 return tmpArray;
             }
-            #else
+#else
             return null;
-            #endif
+#endif
         }
-    
+
         public int height ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             return rows ();
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         public int width ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             return cols ();
-            #else
+#else
             return 0;
-            #endif
+#endif
         }
-    
+
         public IntPtr getNativeObjAddr ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
                     
 
             return nativeObj;
-            #else
+#else
             return IntPtr.Zero;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
-        
+#endif
+
         // C++: Mat::Mat()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1Mat__ ();
-        
+
         // C++: Mat::Mat(int rows, int cols, int type)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1Mat__III (int rows, int cols, int type);
-        
+
         // C++: Mat::Mat(Size size, int type)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1Mat__DDI (double size_width, double size_height, int type);
-        
+
         // C++: Mat::Mat(int rows, int cols, int type, Scalar s)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1Mat__IIIDDDD (int rows, int cols, int type, double s_val0, double s_val1, double s_val2, double s_val3);
-        
+
         // C++: Mat::Mat(Size size, int type, Scalar s)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1Mat__DDIDDDD (double size_width, double size_height, int type, double s_val0, double s_val1, double s_val2, double s_val3);
-        
+
         // C++: Mat::Mat(Mat m, Range rowRange, Range colRange = Range::all())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1Mat__JIIII (IntPtr m_nativeObj, int rowRange_start, int rowRange_end, int colRange_start, int colRange_end);
-        
-        [DllImport(LIBNAME)]
+
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1Mat__JII (IntPtr m_nativeObj, int rowRange_start, int rowRange_end);
-        
+
         // C++: Mat Mat::adjustROI(int dtop, int dbottom, int dleft, int dright)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1adjustROI (IntPtr nativeObj, int dtop, int dbottom, int dleft, int dright);
-        
+
         // C++: void Mat::assignTo(Mat m, int type = -1)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void core_Mat_n_1assignTo__JJI (IntPtr nativeObj, IntPtr m_nativeObj, int type);
-        
-        [DllImport(LIBNAME)]
+
+        [DllImport (LIBNAME)]
         private static extern void core_Mat_n_1assignTo__JJ (IntPtr nativeObj, IntPtr m_nativeObj);
-        
+
         // C++: int Mat::channels()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int core_Mat_n_1channels (IntPtr nativeObj);
-        
+
         // C++: int Mat::checkVector(int elemChannels, int depth = -1, bool
         // requireContinuous = true)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int core_Mat_n_1checkVector__JIIZ (IntPtr nativeObj, int elemChannels, int depth, bool requireContinuous);
-        
-        [DllImport(LIBNAME)]
+
+        [DllImport (LIBNAME)]
         private static extern int core_Mat_n_1checkVector__JII (IntPtr nativeObj, int elemChannels, int depth);
-        
-        [DllImport(LIBNAME)]
+
+        [DllImport (LIBNAME)]
         private static extern int core_Mat_n_1checkVector__JI (IntPtr nativeObj, int elemChannels);
-        
+
         // C++: Mat Mat::clone()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1clone (IntPtr nativeObj);
-        
+
         // C++: Mat Mat::col(int x)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1col (IntPtr nativeObj, int x);
-        
+
         // C++: Mat Mat::colRange(int startcol, int endcol)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1colRange (IntPtr nativeObj, int startcol, int endcol);
-        
+
         // C++: int Mat::dims()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int core_Mat_n_1dims (IntPtr nativeObj);
-        
+
         // C++: int Mat::cols()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int core_Mat_n_1cols (IntPtr nativeObj);
-        
+
         // C++: void Mat::convertTo(Mat& m, int rtype, double alpha = 1, double beta
         // = 0)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void core_Mat_n_1convertTo__JJIDD (IntPtr nativeObj, IntPtr m_nativeObj, int rtype, double alpha, double beta);
-        
-        [DllImport(LIBNAME)]
+
+        [DllImport (LIBNAME)]
         private static extern void core_Mat_n_1convertTo__JJID (IntPtr nativeObj, IntPtr m_nativeObj, int rtype, double alpha);
-        
-        [DllImport(LIBNAME)]
+
+        [DllImport (LIBNAME)]
         private static extern void core_Mat_n_1convertTo__JJI (IntPtr nativeObj, IntPtr m_nativeObj, int rtype);
-        
+
         // C++: void Mat::copyTo(Mat& m)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void core_Mat_n_1copyTo__JJ (IntPtr nativeObj, IntPtr m_nativeObj);
-        
+
         // C++: void Mat::copyTo(Mat& m, Mat mask)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void core_Mat_n_1copyTo__JJJ (IntPtr nativeObj, IntPtr m_nativeObj, IntPtr mask_nativeObj);
-        
+
         // C++: void Mat::create(int rows, int cols, int type)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void core_Mat_n_1create__JIII (IntPtr nativeObj, int rows, int cols, int type);
-        
+
         // C++: void Mat::create(Size size, int type)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void core_Mat_n_1create__JDDI (IntPtr nativeObj, double size_width, double size_height, int type);
-        
+
         // C++: Mat Mat::cross(Mat m)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1cross (IntPtr nativeObj, IntPtr m_nativeObj);
-        
+
         // C++: long Mat::dataAddr()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern long core_Mat_n_1dataAddr (IntPtr nativeObj);
-        
+
         // C++: int Mat::depth()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int core_Mat_n_1depth (IntPtr nativeObj);
-        
+
         // C++: Mat Mat::diag(int d = 0)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1diag__JI (IntPtr nativeObj, int d);
-        
+
         // C++: static Mat Mat::diag(Mat d)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1diag__J (IntPtr d_nativeObj);
-        
+
         // C++: double Mat::dot(Mat m)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double core_Mat_n_1dot (IntPtr nativeObj, IntPtr m_nativeObj);
-        
+
         // C++: size_t Mat::elemSize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern long core_Mat_n_1elemSize (IntPtr nativeObj);
-        
+
         // C++: size_t Mat::elemSize1()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern long core_Mat_n_1elemSize1 (IntPtr nativeObj);
-        
+
         // C++: bool Mat::empty()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool core_Mat_n_1empty (IntPtr nativeObj);
-        
+
         // C++: static Mat Mat::eye(int rows, int cols, int type)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1eye__III (int rows, int cols, int type);
-        
+
         // C++: static Mat Mat::eye(Size size, int type)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1eye__DDI (double size_width, double size_height, int type);
-        
+
         // C++: Mat Mat::inv(int method = DECOMP_LU)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1inv__JI (IntPtr nativeObj, int method);
-        
-        [DllImport(LIBNAME)]
+
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1inv__J (IntPtr nativeObj);
-        
+
         // C++: bool Mat::isContinuous()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool core_Mat_n_1isContinuous (IntPtr nativeObj);
-        
+
         // C++: bool Mat::isSubmatrix()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool core_Mat_n_1isSubmatrix (IntPtr nativeObj);
-        
+
         // C++: void Mat::locateROI(Size wholeSize, Point ofs)
-        [DllImport(LIBNAME)]
-        private static extern void core_Mat_locateROI_10 (IntPtr nativeObj, [In, Out, MarshalAs(UnmanagedType.LPArray, SizeConst = 2)] double[] wholeSize_out, [In, Out, MarshalAs(UnmanagedType.LPArray, SizeConst = 2)] double[] ofs_out);
-        
+        [DllImport (LIBNAME)]
+        private static extern void core_Mat_locateROI_10 (IntPtr nativeObj, [In, Out, MarshalAs (UnmanagedType.LPArray, SizeConst = 2)] double[] wholeSize_out, [In, Out, MarshalAs (UnmanagedType.LPArray, SizeConst = 2)] double[] ofs_out);
+
         // C++: Mat Mat::mul(Mat m, double scale = 1)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1mul__JJD (IntPtr nativeObj, IntPtr m_nativeObj, double scale);
-        
-        [DllImport(LIBNAME)]
+
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1mul__JJ (IntPtr nativeObj, IntPtr m_nativeObj);
-        
+
         // C++: static Mat Mat::ones(int rows, int cols, int type)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1ones__III (int rows, int cols, int type);
-        
+
         // C++: static Mat Mat::ones(Size size, int type)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1ones__DDI (double size_width, double size_height, int type);
-        
+
         // C++: void Mat::push_back(Mat m)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void core_Mat_n_1push_1back (IntPtr nativeObj, IntPtr m_nativeObj);
-        
+
         // C++: void Mat::release()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void core_Mat_n_1release (IntPtr nativeObj);
-        
+
         // C++: Mat Mat::reshape(int cn, int rows = 0)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1reshape__JII (IntPtr nativeObj, int cn, int rows);
-        
-        [DllImport(LIBNAME)]
+
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1reshape__JI (IntPtr nativeObj, int cn);
-        
+
         // C++: Mat Mat::row(int y)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1row (IntPtr nativeObj, int y);
-        
+
         // C++: Mat Mat::rowRange(int startrow, int endrow)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1rowRange (IntPtr nativeObj, int startrow, int endrow);
-        
+
         // C++: int Mat::rows()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int core_Mat_n_1rows (IntPtr nativeObj);
-        
+
         // C++: Mat Mat::operator =(Scalar s)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1setTo__JDDDD (IntPtr nativeObj, double s_val0, double s_val1, double s_val2, double s_val3);
-        
+
         // C++: Mat Mat::setTo(Scalar value, Mat mask = Mat())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1setTo__JDDDDJ (IntPtr nativeObj, double s_val0, double s_val1, double s_val2, double s_val3, IntPtr mask_nativeObj);
-        
+
         // C++: Mat Mat::setTo(Mat value, Mat mask = Mat())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1setTo__JJJ (IntPtr nativeObj, IntPtr value_nativeObj, IntPtr mask_nativeObj);
-        
-        [DllImport(LIBNAME)]
+
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1setTo__JJ (IntPtr nativeObj, IntPtr value_nativeObj);
-        
+
         // C++: Size Mat::size()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void core_Mat_n_1size (IntPtr nativeObj,
-                                                     [In, Out, MarshalAs(UnmanagedType.LPArray, SizeConst = 2)] double[] vals);
-        
-        
+                                                     [In, Out, MarshalAs (UnmanagedType.LPArray, SizeConst = 2)] double[] vals);
+
+
         // C++: size_t Mat::step1(int i = 0)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern long core_Mat_n_1step1__JI (IntPtr nativeObj, int i);
-        
-        [DllImport(LIBNAME)]
+
+        [DllImport (LIBNAME)]
         private static extern long core_Mat_n_1step1__J (IntPtr nativeObj);
-        
+
         // C++: Mat Mat::operator()(Range rowRange, Range colRange)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1submat_1rr (IntPtr nativeObj, int rowRange_start, int rowRange_end, int colRange_start, int colRange_end);
-        
+
         // C++: Mat Mat::operator()(Rect roi)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1submat (IntPtr nativeObj, int roi_x, int roi_y, int roi_width, int roi_height);
-        
+
         // C++: Mat Mat::t()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1t (IntPtr nativeObj);
-        
+
         // C++: size_t Mat::total()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern long core_Mat_n_1total (IntPtr nativeObj);
-        
+
         // C++: int Mat::type()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int core_Mat_n_1type (IntPtr nativeObj);
-        
+
         // C++: static Mat Mat::zeros(int rows, int cols, int type)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1zeros__III (int rows, int cols, int type);
-        
+
         // C++: static Mat Mat::zeros(Size size, int type)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_n_1zeros__DDI (double size_width, double size_height, int type);
-        
+
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void core_Mat_n_1delete (IntPtr nativeObj);
-        
-        [DllImport(LIBNAME)]
-        private static extern int core_Mat_nPutD (IntPtr self, int row, int col, int count, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] double[] data);
-        
-        [DllImport(LIBNAME)]
-        private static extern int core_Mat_nPutF (IntPtr self, int row, int col, int count, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] float[] data);
-        
-        [DllImport(LIBNAME)]
-        private static extern int core_Mat_nPutI (IntPtr self, int row, int col, int count, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] int[] data);
-        
-        [DllImport(LIBNAME)]
-        private static extern int core_Mat_nPutS (IntPtr self, int row, int col, int count, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] short[] data);
-        
-        [DllImport(LIBNAME)]
-        private static extern int core_Mat_nPutB (IntPtr self, int row, int col, int count, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] byte[] data);
-        
-        [DllImport(LIBNAME)]
-        private static extern int core_Mat_nGetB (IntPtr self, int row, int col, int count, [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] byte[] vals);
-        
-        [DllImport(LIBNAME)]
-        private static extern int core_Mat_nGetS (IntPtr self, int row, int col, int count, [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] short[] vals);
-        
-        [DllImport(LIBNAME)]
-        private static extern int core_Mat_nGetI (IntPtr self, int row, int col, int count, [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] int[] vals);
-        
-        [DllImport(LIBNAME)]
-        private static extern int core_Mat_nGetF (IntPtr self, int row, int col, int count, [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] float[] vals);
-        
-        [DllImport(LIBNAME)]
-        private static extern int core_Mat_nGetD (IntPtr self, int row, int col, int count, [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] double[] vals);
-        
-        [DllImport(LIBNAME)]
-        private static extern int core_Mat_nGet (IntPtr self, int row, int col, int count, [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] double[] vals);
-        
-        [DllImport(LIBNAME)]
+
+        [DllImport (LIBNAME)]
+        private static extern int core_Mat_nPutD (IntPtr self, int row, int col, int count, [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 3)] double[] data);
+
+        [DllImport (LIBNAME)]
+        private static extern int core_Mat_nPutF (IntPtr self, int row, int col, int count, [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 3)] float[] data);
+
+        [DllImport (LIBNAME)]
+        private static extern int core_Mat_nPutI (IntPtr self, int row, int col, int count, [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 3)] int[] data);
+
+        [DllImport (LIBNAME)]
+        private static extern int core_Mat_nPutS (IntPtr self, int row, int col, int count, [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 3)] short[] data);
+
+        [DllImport (LIBNAME)]
+        private static extern int core_Mat_nPutB (IntPtr self, int row, int col, int count, [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 3)] byte[] data);
+
+        [DllImport (LIBNAME)]
+        private static extern int core_Mat_nPutBwOffset (IntPtr self, int row, int col, int count, int offset, [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 3)] byte[] data);
+
+        [DllImport (LIBNAME)]
+        private static extern int core_Mat_nGetB (IntPtr self, int row, int col, int count, [In, Out, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 3)] byte[] vals);
+
+        [DllImport (LIBNAME)]
+        private static extern int core_Mat_nGetS (IntPtr self, int row, int col, int count, [In, Out, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 3)] short[] vals);
+
+        [DllImport (LIBNAME)]
+        private static extern int core_Mat_nGetI (IntPtr self, int row, int col, int count, [In, Out, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 3)] int[] vals);
+
+        [DllImport (LIBNAME)]
+        private static extern int core_Mat_nGetF (IntPtr self, int row, int col, int count, [In, Out, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 3)] float[] vals);
+
+        [DllImport (LIBNAME)]
+        private static extern int core_Mat_nGetD (IntPtr self, int row, int col, int count, [In, Out, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 3)] double[] vals);
+
+        [DllImport (LIBNAME)]
+        private static extern int core_Mat_nGet (IntPtr self, int row, int col, int count, [In, Out, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 3)] double[] vals);
+
+        [DllImport (LIBNAME)]
         private static extern IntPtr core_Mat_nDump (IntPtr self);
 
         //
         #region Operators
-        
-        #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-        
+
+        // (here A, B stand for matrices ( Mat ), s for a scalar ( Scalar ), alpha for a real-valued scalar ( double ).)
+
         #region Unary
-        #region +
-        public static Mat operator + (Mat mat)
-        {
-            return mat;
-        }
-        #endregion
-        
+
         #region -
-        public static Mat operator - (Mat mat)
+        // Negation.
+        // -A
+        public static Mat operator - (Mat a)
         {
             Mat m = new Mat ();
-            Core.multiply (mat, new Scalar (-1, -1, -1, -1), m);
+            Core.multiply (a, Scalar.all (-1), m);
             return m;
         }
         #endregion
+
+        #region ~
+
+        // Bitwise not.
+        // ~A
+        public static Mat operator ~ (Mat a)
+        {
+            Mat m = new Mat ();
+            Core.bitwise_not (a, m);
+            return m;
+        }
+
         #endregion
-        
+
+        #endregion
+
+
         #region Binary
+
         #region +
+        // Addition.
+        // A + B, A + s, s + A
+        // A += A, A += s
         public static Mat operator + (Mat a, Mat b)
         {
             Mat m = new Mat ();
             Core.add (a, b, m);
             return m;
         }
+
         public static Mat operator + (Mat a, Scalar s)
         {
             Mat m = new Mat ();
             Core.add (a, s, m);
             return m;
         }
+
         public static Mat operator + (Scalar s, Mat a)
         {
             Mat m = new Mat ();
@@ -3566,162 +3610,188 @@ namespace OpenCVForUnity
             return m;
         }
         #endregion
-        
+
         #region -
+        // Subtraction.
+        // A - B, A - s, s - A
+        // A -= A, A -= s
         public static Mat operator - (Mat a, Mat b)
         {
             Mat m = new Mat ();
             Core.subtract (a, b, m);
             return m;
         }
+
         public static Mat operator - (Mat a, Scalar s)
         {
             Mat m = new Mat ();
             Core.subtract (a, s, m);
             return m;
         }
+
         public static Mat operator - (Scalar s, Mat a)
         {
             Mat m = new Mat ();
-            using(Mat b = new Mat (a.size (), a.type (), s)){
+            using (Mat b = new Mat (a.size (), a.type (), s))
+            {
                 Core.subtract (b, a, m);
             }
             return m;
         }
         #endregion
-        
+
         #region *
+        // Matrix multiplication.
+        // A * A
         public static Mat operator * (Mat a, Mat b)
         {
             Mat m = new Mat ();
             Core.gemm (a, b, 1, new Mat (), 0, m);
             return m;
         }
+
+        // Scaling.
+        // A * alpha, alpha * A
         public static Mat operator * (Mat a, double s)
         {
             Mat m = new Mat ();
-            Core.multiply (a, new Scalar (s), m);
+            Core.multiply (a, Scalar.all (s), m);
             return m;
         }
+
         public static Mat operator * (double s, Mat a)
         {
             Mat m = new Mat ();
-            Core.multiply (a, new Scalar (s), m);
+            Core.multiply (a, Scalar.all (s), m);
             return m;
         }
         #endregion
-        
+
         #region /
+        // Per-element multiplication and division.
+        // A / A, alpha / A
         public static Mat operator / (Mat a, Mat b)
         {
             Mat m = new Mat ();
             Core.divide (a, b, m);
             return m;
         }
-        public static Mat operator / (Mat a, double s)
-        {
-            Mat m = new Mat ();
-            Core.divide (a, new Scalar (s), m);
-            return m;
-        }
+
         public static Mat operator / (double s, Mat a)
         {
             Mat m = new Mat ();
-            using(Mat b = new Mat (a.size (), a.type (), new Scalar (s))){
+            using (Mat b = new Mat (a.size (), a.type (), Scalar.all (s)))
+            {
                 Core.divide (b, a, m);
             }
             return m;
         }
+
+        // Scaling.
+        // A / alpha
+        public static Mat operator / (Mat a, double s)
+        {
+            Mat m = new Mat ();
+            Core.divide (a, Scalar.all (s), m);
+            return m;
+        }
         #endregion
-        
+
         #region &
+        // Bitwise and.
+        // A & A, A & s, s & A
         public static Mat operator & (Mat a, Mat b)
         {
             Mat m = new Mat ();
             Core.bitwise_and (a, b, m);
             return m;
         }
-        public static Mat operator & (Mat a, double s)
+
+        public static Mat operator & (Mat a, Scalar s)
         {
             Mat m = new Mat ();
-            using(Mat b = new Mat (a.size (), a.type (), new Scalar (s))){
+            using (Mat b = new Mat (a.size (), a.type (), s))
+            {
                 Core.bitwise_and (a, b, m);
             }
             return m;
         }
-        public static Mat operator & (double s, Mat a)
+
+        public static Mat operator & (Scalar s, Mat a)
         {
             Mat m = new Mat ();
-            using(Mat b = new Mat (a.size (), a.type (), new Scalar (s))){
+            using (Mat b = new Mat (a.size (), a.type (), s))
+            {
                 Core.bitwise_and (b, a, m);
             }
             return m;
         }
         #endregion
-        
+
         #region |
+        // Bitwise or.
+        // A | A, A | s, s | A
         public static Mat operator | (Mat a, Mat b)
         {
             Mat m = new Mat ();
             Core.bitwise_or (a, b, m);
             return m;
         }
-        public static Mat operator | (Mat a, double s)
+
+        public static Mat operator | (Mat a, Scalar s)
         {
             Mat m = new Mat ();
-            using(Mat b = new Mat (a.size (), a.type (), new Scalar (s))){
+            using (Mat b = new Mat (a.size (), a.type (), s))
+            {
                 Core.bitwise_or (a, b, m);
             }
             return m;
         }
-        public static Mat operator | (double s, Mat a)
+
+        public static Mat operator | (Scalar s, Mat a)
         {
             Mat m = new Mat ();
-            using(Mat b = new Mat (a.size (), a.type (), new Scalar (s))){
+            using (Mat b = new Mat (a.size (), a.type (), s))
+            {
                 Core.bitwise_or (b, a, m);
             }
             return m;
         }
         #endregion
-        
+
         #region ^
+        // Bitwise xor.
+        // A ^ A, A ^ s, s ^ A
         public static Mat operator ^ (Mat a, Mat b)
         {
             Mat m = new Mat ();
             Core.bitwise_xor (a, b, m);
             return m;
         }
-        public static Mat operator ^ (Mat a, double s)
+
+        public static Mat operator ^ (Mat a, Scalar s)
         {
             Mat m = new Mat ();
-            using(Mat b = new Mat (a.size (), a.type (), new Scalar (s))){
+            using (Mat b = new Mat (a.size (), a.type (), s))
+            {
                 Core.bitwise_xor (a, b, m);
             }
             return m;
         }
-        public static Mat operator ^ (double s, Mat a)
+
+        public static Mat operator ^ (Scalar s, Mat a)
         {
             Mat m = new Mat ();
-            using(Mat b = new Mat (a.size (), a.type (), new Scalar (s))){
+            using (Mat b = new Mat (a.size (), a.type (), s))
+            {
                 Core.bitwise_xor (b, a, m);
             }
             return m;
         }
         #endregion
-        
-        #region ~
-        public static Mat operator ~ (Mat a)
-        {
-            Mat m = new Mat ();
-            Core.bitwise_not (a, m);
-            return m;
-        }
+
         #endregion
-        
-        #endregion
-        
-        #endif
-        
+
         #endregion
         //
     }

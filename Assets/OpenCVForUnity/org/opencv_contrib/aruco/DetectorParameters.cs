@@ -1,41 +1,43 @@
 
-//
 
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace OpenCVForUnity
 {
-// C++: class DetectorParameters
-//javadoc: DetectorParameters
+    // C++: class DetectorParameters
+    //javadoc: DetectorParameters
+
     public class DetectorParameters : DisposableOpenCVObject
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        aruco_DetectorParameters_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+aruco_DetectorParameters_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal DetectorParameters (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal DetectorParameters (IntPtr addr) : base (addr) { }
 
+
+        public IntPtr getNativeObjAddr () { return nativeObj; }
+
+        // internal usage only
+        public static DetectorParameters __fromPtr__ (IntPtr addr) { return new DetectorParameters (addr); }
 
         //
         // C++: static Ptr_DetectorParameters create()
@@ -44,14 +46,14 @@ namespace OpenCVForUnity
         //javadoc: DetectorParameters::create()
         public static DetectorParameters create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            DetectorParameters retVal = new DetectorParameters (aruco_DetectorParameters_create_10 ());
+        DetectorParameters retVal = DetectorParameters.__fromPtr__(aruco_DetectorParameters_create_10());
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -60,17 +62,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_adaptiveThreshWinSizeMin()
-        public  int get_adaptiveThreshWinSizeMin ()
+        public int get_adaptiveThreshWinSizeMin ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = aruco_DetectorParameters_get_1adaptiveThreshWinSizeMin_10 (nativeObj);
+        int retVal = aruco_DetectorParameters_get_1adaptiveThreshWinSizeMin_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -79,17 +81,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_adaptiveThreshWinSizeMin(adaptiveThreshWinSizeMin)
-        public  void set_adaptiveThreshWinSizeMin (int adaptiveThreshWinSizeMin)
+        public void set_adaptiveThreshWinSizeMin (int adaptiveThreshWinSizeMin)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1adaptiveThreshWinSizeMin_10 (nativeObj, adaptiveThreshWinSizeMin);
+        aruco_DetectorParameters_set_1adaptiveThreshWinSizeMin_10(nativeObj, adaptiveThreshWinSizeMin);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -98,17 +100,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_adaptiveThreshWinSizeMax()
-        public  int get_adaptiveThreshWinSizeMax ()
+        public int get_adaptiveThreshWinSizeMax ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = aruco_DetectorParameters_get_1adaptiveThreshWinSizeMax_10 (nativeObj);
+        int retVal = aruco_DetectorParameters_get_1adaptiveThreshWinSizeMax_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -117,17 +119,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_adaptiveThreshWinSizeMax(adaptiveThreshWinSizeMax)
-        public  void set_adaptiveThreshWinSizeMax (int adaptiveThreshWinSizeMax)
+        public void set_adaptiveThreshWinSizeMax (int adaptiveThreshWinSizeMax)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1adaptiveThreshWinSizeMax_10 (nativeObj, adaptiveThreshWinSizeMax);
+        aruco_DetectorParameters_set_1adaptiveThreshWinSizeMax_10(nativeObj, adaptiveThreshWinSizeMax);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -136,17 +138,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_adaptiveThreshWinSizeStep()
-        public  int get_adaptiveThreshWinSizeStep ()
+        public int get_adaptiveThreshWinSizeStep ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = aruco_DetectorParameters_get_1adaptiveThreshWinSizeStep_10 (nativeObj);
+        int retVal = aruco_DetectorParameters_get_1adaptiveThreshWinSizeStep_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -155,17 +157,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_adaptiveThreshWinSizeStep(adaptiveThreshWinSizeStep)
-        public  void set_adaptiveThreshWinSizeStep (int adaptiveThreshWinSizeStep)
+        public void set_adaptiveThreshWinSizeStep (int adaptiveThreshWinSizeStep)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1adaptiveThreshWinSizeStep_10 (nativeObj, adaptiveThreshWinSizeStep);
+        aruco_DetectorParameters_set_1adaptiveThreshWinSizeStep_10(nativeObj, adaptiveThreshWinSizeStep);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -174,17 +176,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_adaptiveThreshConstant()
-        public  double get_adaptiveThreshConstant ()
+        public double get_adaptiveThreshConstant ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = aruco_DetectorParameters_get_1adaptiveThreshConstant_10 (nativeObj);
+        double retVal = aruco_DetectorParameters_get_1adaptiveThreshConstant_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -193,17 +195,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_adaptiveThreshConstant(adaptiveThreshConstant)
-        public  void set_adaptiveThreshConstant (double adaptiveThreshConstant)
+        public void set_adaptiveThreshConstant (double adaptiveThreshConstant)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1adaptiveThreshConstant_10 (nativeObj, adaptiveThreshConstant);
+        aruco_DetectorParameters_set_1adaptiveThreshConstant_10(nativeObj, adaptiveThreshConstant);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -212,17 +214,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_minMarkerPerimeterRate()
-        public  double get_minMarkerPerimeterRate ()
+        public double get_minMarkerPerimeterRate ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = aruco_DetectorParameters_get_1minMarkerPerimeterRate_10 (nativeObj);
+        double retVal = aruco_DetectorParameters_get_1minMarkerPerimeterRate_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -231,17 +233,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_minMarkerPerimeterRate(minMarkerPerimeterRate)
-        public  void set_minMarkerPerimeterRate (double minMarkerPerimeterRate)
+        public void set_minMarkerPerimeterRate (double minMarkerPerimeterRate)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1minMarkerPerimeterRate_10 (nativeObj, minMarkerPerimeterRate);
+        aruco_DetectorParameters_set_1minMarkerPerimeterRate_10(nativeObj, minMarkerPerimeterRate);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -250,17 +252,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_maxMarkerPerimeterRate()
-        public  double get_maxMarkerPerimeterRate ()
+        public double get_maxMarkerPerimeterRate ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = aruco_DetectorParameters_get_1maxMarkerPerimeterRate_10 (nativeObj);
+        double retVal = aruco_DetectorParameters_get_1maxMarkerPerimeterRate_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -269,17 +271,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_maxMarkerPerimeterRate(maxMarkerPerimeterRate)
-        public  void set_maxMarkerPerimeterRate (double maxMarkerPerimeterRate)
+        public void set_maxMarkerPerimeterRate (double maxMarkerPerimeterRate)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1maxMarkerPerimeterRate_10 (nativeObj, maxMarkerPerimeterRate);
+        aruco_DetectorParameters_set_1maxMarkerPerimeterRate_10(nativeObj, maxMarkerPerimeterRate);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -288,17 +290,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_polygonalApproxAccuracyRate()
-        public  double get_polygonalApproxAccuracyRate ()
+        public double get_polygonalApproxAccuracyRate ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = aruco_DetectorParameters_get_1polygonalApproxAccuracyRate_10 (nativeObj);
+        double retVal = aruco_DetectorParameters_get_1polygonalApproxAccuracyRate_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -307,17 +309,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_polygonalApproxAccuracyRate(polygonalApproxAccuracyRate)
-        public  void set_polygonalApproxAccuracyRate (double polygonalApproxAccuracyRate)
+        public void set_polygonalApproxAccuracyRate (double polygonalApproxAccuracyRate)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1polygonalApproxAccuracyRate_10 (nativeObj, polygonalApproxAccuracyRate);
+        aruco_DetectorParameters_set_1polygonalApproxAccuracyRate_10(nativeObj, polygonalApproxAccuracyRate);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -326,17 +328,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_minCornerDistanceRate()
-        public  double get_minCornerDistanceRate ()
+        public double get_minCornerDistanceRate ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = aruco_DetectorParameters_get_1minCornerDistanceRate_10 (nativeObj);
+        double retVal = aruco_DetectorParameters_get_1minCornerDistanceRate_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -345,17 +347,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_minCornerDistanceRate(minCornerDistanceRate)
-        public  void set_minCornerDistanceRate (double minCornerDistanceRate)
+        public void set_minCornerDistanceRate (double minCornerDistanceRate)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1minCornerDistanceRate_10 (nativeObj, minCornerDistanceRate);
+        aruco_DetectorParameters_set_1minCornerDistanceRate_10(nativeObj, minCornerDistanceRate);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -364,17 +366,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_minDistanceToBorder()
-        public  int get_minDistanceToBorder ()
+        public int get_minDistanceToBorder ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = aruco_DetectorParameters_get_1minDistanceToBorder_10 (nativeObj);
+        int retVal = aruco_DetectorParameters_get_1minDistanceToBorder_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -383,17 +385,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_minDistanceToBorder(minDistanceToBorder)
-        public  void set_minDistanceToBorder (int minDistanceToBorder)
+        public void set_minDistanceToBorder (int minDistanceToBorder)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1minDistanceToBorder_10 (nativeObj, minDistanceToBorder);
+        aruco_DetectorParameters_set_1minDistanceToBorder_10(nativeObj, minDistanceToBorder);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -402,17 +404,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_minMarkerDistanceRate()
-        public  double get_minMarkerDistanceRate ()
+        public double get_minMarkerDistanceRate ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = aruco_DetectorParameters_get_1minMarkerDistanceRate_10 (nativeObj);
+        double retVal = aruco_DetectorParameters_get_1minMarkerDistanceRate_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -421,55 +423,55 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_minMarkerDistanceRate(minMarkerDistanceRate)
-        public  void set_minMarkerDistanceRate (double minMarkerDistanceRate)
+        public void set_minMarkerDistanceRate (double minMarkerDistanceRate)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1minMarkerDistanceRate_10 (nativeObj, minMarkerDistanceRate);
+        aruco_DetectorParameters_set_1minMarkerDistanceRate_10(nativeObj, minMarkerDistanceRate);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
         //
-        // C++: bool DetectorParameters::doCornerRefinement
+        // C++: int DetectorParameters::cornerRefinementMethod
         //
 
-        //javadoc: DetectorParameters::get_doCornerRefinement()
-        public  bool get_doCornerRefinement ()
+        //javadoc: DetectorParameters::get_cornerRefinementMethod()
+        public int get_cornerRefinementMethod ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = aruco_DetectorParameters_get_1doCornerRefinement_10 (nativeObj);
+        int retVal = aruco_DetectorParameters_get_1cornerRefinementMethod_10(nativeObj);
         
-            return retVal;
-            #else
-            return false;
-            #endif
+        return retVal;
+#else
+            return -1;
+#endif
         }
 
 
         //
-        // C++: void DetectorParameters::doCornerRefinement
+        // C++: void DetectorParameters::cornerRefinementMethod
         //
 
-        //javadoc: DetectorParameters::set_doCornerRefinement(doCornerRefinement)
-        public  void set_doCornerRefinement (bool doCornerRefinement)
+        //javadoc: DetectorParameters::set_cornerRefinementMethod(cornerRefinementMethod)
+        public void set_cornerRefinementMethod (int cornerRefinementMethod)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1doCornerRefinement_10 (nativeObj, doCornerRefinement);
+        aruco_DetectorParameters_set_1cornerRefinementMethod_10(nativeObj, cornerRefinementMethod);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -478,17 +480,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_cornerRefinementWinSize()
-        public  int get_cornerRefinementWinSize ()
+        public int get_cornerRefinementWinSize ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = aruco_DetectorParameters_get_1cornerRefinementWinSize_10 (nativeObj);
+        int retVal = aruco_DetectorParameters_get_1cornerRefinementWinSize_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -497,17 +499,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_cornerRefinementWinSize(cornerRefinementWinSize)
-        public  void set_cornerRefinementWinSize (int cornerRefinementWinSize)
+        public void set_cornerRefinementWinSize (int cornerRefinementWinSize)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1cornerRefinementWinSize_10 (nativeObj, cornerRefinementWinSize);
+        aruco_DetectorParameters_set_1cornerRefinementWinSize_10(nativeObj, cornerRefinementWinSize);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -516,17 +518,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_cornerRefinementMaxIterations()
-        public  int get_cornerRefinementMaxIterations ()
+        public int get_cornerRefinementMaxIterations ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = aruco_DetectorParameters_get_1cornerRefinementMaxIterations_10 (nativeObj);
+        int retVal = aruco_DetectorParameters_get_1cornerRefinementMaxIterations_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -535,17 +537,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_cornerRefinementMaxIterations(cornerRefinementMaxIterations)
-        public  void set_cornerRefinementMaxIterations (int cornerRefinementMaxIterations)
+        public void set_cornerRefinementMaxIterations (int cornerRefinementMaxIterations)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1cornerRefinementMaxIterations_10 (nativeObj, cornerRefinementMaxIterations);
+        aruco_DetectorParameters_set_1cornerRefinementMaxIterations_10(nativeObj, cornerRefinementMaxIterations);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -554,17 +556,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_cornerRefinementMinAccuracy()
-        public  double get_cornerRefinementMinAccuracy ()
+        public double get_cornerRefinementMinAccuracy ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = aruco_DetectorParameters_get_1cornerRefinementMinAccuracy_10 (nativeObj);
+        double retVal = aruco_DetectorParameters_get_1cornerRefinementMinAccuracy_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -573,17 +575,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_cornerRefinementMinAccuracy(cornerRefinementMinAccuracy)
-        public  void set_cornerRefinementMinAccuracy (double cornerRefinementMinAccuracy)
+        public void set_cornerRefinementMinAccuracy (double cornerRefinementMinAccuracy)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1cornerRefinementMinAccuracy_10 (nativeObj, cornerRefinementMinAccuracy);
+        aruco_DetectorParameters_set_1cornerRefinementMinAccuracy_10(nativeObj, cornerRefinementMinAccuracy);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -592,17 +594,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_markerBorderBits()
-        public  int get_markerBorderBits ()
+        public int get_markerBorderBits ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = aruco_DetectorParameters_get_1markerBorderBits_10 (nativeObj);
+        int retVal = aruco_DetectorParameters_get_1markerBorderBits_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -611,17 +613,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_markerBorderBits(markerBorderBits)
-        public  void set_markerBorderBits (int markerBorderBits)
+        public void set_markerBorderBits (int markerBorderBits)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1markerBorderBits_10 (nativeObj, markerBorderBits);
+        aruco_DetectorParameters_set_1markerBorderBits_10(nativeObj, markerBorderBits);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -630,17 +632,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_perspectiveRemovePixelPerCell()
-        public  int get_perspectiveRemovePixelPerCell ()
+        public int get_perspectiveRemovePixelPerCell ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = aruco_DetectorParameters_get_1perspectiveRemovePixelPerCell_10 (nativeObj);
+        int retVal = aruco_DetectorParameters_get_1perspectiveRemovePixelPerCell_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -649,17 +651,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_perspectiveRemovePixelPerCell(perspectiveRemovePixelPerCell)
-        public  void set_perspectiveRemovePixelPerCell (int perspectiveRemovePixelPerCell)
+        public void set_perspectiveRemovePixelPerCell (int perspectiveRemovePixelPerCell)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1perspectiveRemovePixelPerCell_10 (nativeObj, perspectiveRemovePixelPerCell);
+        aruco_DetectorParameters_set_1perspectiveRemovePixelPerCell_10(nativeObj, perspectiveRemovePixelPerCell);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -668,17 +670,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_perspectiveRemoveIgnoredMarginPerCell()
-        public  double get_perspectiveRemoveIgnoredMarginPerCell ()
+        public double get_perspectiveRemoveIgnoredMarginPerCell ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = aruco_DetectorParameters_get_1perspectiveRemoveIgnoredMarginPerCell_10 (nativeObj);
+        double retVal = aruco_DetectorParameters_get_1perspectiveRemoveIgnoredMarginPerCell_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -687,17 +689,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_perspectiveRemoveIgnoredMarginPerCell(perspectiveRemoveIgnoredMarginPerCell)
-        public  void set_perspectiveRemoveIgnoredMarginPerCell (double perspectiveRemoveIgnoredMarginPerCell)
+        public void set_perspectiveRemoveIgnoredMarginPerCell (double perspectiveRemoveIgnoredMarginPerCell)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1perspectiveRemoveIgnoredMarginPerCell_10 (nativeObj, perspectiveRemoveIgnoredMarginPerCell);
+        aruco_DetectorParameters_set_1perspectiveRemoveIgnoredMarginPerCell_10(nativeObj, perspectiveRemoveIgnoredMarginPerCell);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -706,17 +708,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_maxErroneousBitsInBorderRate()
-        public  double get_maxErroneousBitsInBorderRate ()
+        public double get_maxErroneousBitsInBorderRate ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = aruco_DetectorParameters_get_1maxErroneousBitsInBorderRate_10 (nativeObj);
+        double retVal = aruco_DetectorParameters_get_1maxErroneousBitsInBorderRate_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -725,17 +727,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_maxErroneousBitsInBorderRate(maxErroneousBitsInBorderRate)
-        public  void set_maxErroneousBitsInBorderRate (double maxErroneousBitsInBorderRate)
+        public void set_maxErroneousBitsInBorderRate (double maxErroneousBitsInBorderRate)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1maxErroneousBitsInBorderRate_10 (nativeObj, maxErroneousBitsInBorderRate);
+        aruco_DetectorParameters_set_1maxErroneousBitsInBorderRate_10(nativeObj, maxErroneousBitsInBorderRate);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -744,17 +746,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_minOtsuStdDev()
-        public  double get_minOtsuStdDev ()
+        public double get_minOtsuStdDev ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = aruco_DetectorParameters_get_1minOtsuStdDev_10 (nativeObj);
+        double retVal = aruco_DetectorParameters_get_1minOtsuStdDev_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -763,17 +765,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_minOtsuStdDev(minOtsuStdDev)
-        public  void set_minOtsuStdDev (double minOtsuStdDev)
+        public void set_minOtsuStdDev (double minOtsuStdDev)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1minOtsuStdDev_10 (nativeObj, minOtsuStdDev);
+        aruco_DetectorParameters_set_1minOtsuStdDev_10(nativeObj, minOtsuStdDev);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -782,17 +784,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::get_errorCorrectionRate()
-        public  double get_errorCorrectionRate ()
+        public double get_errorCorrectionRate ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = aruco_DetectorParameters_get_1errorCorrectionRate_10 (nativeObj);
+        double retVal = aruco_DetectorParameters_get_1errorCorrectionRate_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -801,194 +803,194 @@ namespace OpenCVForUnity
         //
 
         //javadoc: DetectorParameters::set_errorCorrectionRate(errorCorrectionRate)
-        public  void set_errorCorrectionRate (double errorCorrectionRate)
+        public void set_errorCorrectionRate (double errorCorrectionRate)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            aruco_DetectorParameters_set_1errorCorrectionRate_10 (nativeObj, errorCorrectionRate);
+        aruco_DetectorParameters_set_1errorCorrectionRate_10(nativeObj, errorCorrectionRate);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++: static Ptr_DetectorParameters create()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr aruco_DetectorParameters_create_10 ();
 
         // C++: int DetectorParameters::adaptiveThreshWinSizeMin
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int aruco_DetectorParameters_get_1adaptiveThreshWinSizeMin_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::adaptiveThreshWinSizeMin
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1adaptiveThreshWinSizeMin_10 (IntPtr nativeObj, int adaptiveThreshWinSizeMin);
 
         // C++: int DetectorParameters::adaptiveThreshWinSizeMax
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int aruco_DetectorParameters_get_1adaptiveThreshWinSizeMax_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::adaptiveThreshWinSizeMax
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1adaptiveThreshWinSizeMax_10 (IntPtr nativeObj, int adaptiveThreshWinSizeMax);
 
         // C++: int DetectorParameters::adaptiveThreshWinSizeStep
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int aruco_DetectorParameters_get_1adaptiveThreshWinSizeStep_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::adaptiveThreshWinSizeStep
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1adaptiveThreshWinSizeStep_10 (IntPtr nativeObj, int adaptiveThreshWinSizeStep);
 
         // C++: double DetectorParameters::adaptiveThreshConstant
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double aruco_DetectorParameters_get_1adaptiveThreshConstant_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::adaptiveThreshConstant
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1adaptiveThreshConstant_10 (IntPtr nativeObj, double adaptiveThreshConstant);
 
         // C++: double DetectorParameters::minMarkerPerimeterRate
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double aruco_DetectorParameters_get_1minMarkerPerimeterRate_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::minMarkerPerimeterRate
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1minMarkerPerimeterRate_10 (IntPtr nativeObj, double minMarkerPerimeterRate);
 
         // C++: double DetectorParameters::maxMarkerPerimeterRate
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double aruco_DetectorParameters_get_1maxMarkerPerimeterRate_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::maxMarkerPerimeterRate
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1maxMarkerPerimeterRate_10 (IntPtr nativeObj, double maxMarkerPerimeterRate);
 
         // C++: double DetectorParameters::polygonalApproxAccuracyRate
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double aruco_DetectorParameters_get_1polygonalApproxAccuracyRate_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::polygonalApproxAccuracyRate
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1polygonalApproxAccuracyRate_10 (IntPtr nativeObj, double polygonalApproxAccuracyRate);
 
         // C++: double DetectorParameters::minCornerDistanceRate
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double aruco_DetectorParameters_get_1minCornerDistanceRate_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::minCornerDistanceRate
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1minCornerDistanceRate_10 (IntPtr nativeObj, double minCornerDistanceRate);
 
         // C++: int DetectorParameters::minDistanceToBorder
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int aruco_DetectorParameters_get_1minDistanceToBorder_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::minDistanceToBorder
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1minDistanceToBorder_10 (IntPtr nativeObj, int minDistanceToBorder);
 
         // C++: double DetectorParameters::minMarkerDistanceRate
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double aruco_DetectorParameters_get_1minMarkerDistanceRate_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::minMarkerDistanceRate
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1minMarkerDistanceRate_10 (IntPtr nativeObj, double minMarkerDistanceRate);
 
-        // C++: bool DetectorParameters::doCornerRefinement
-        [DllImport(LIBNAME)]
-        private static extern bool aruco_DetectorParameters_get_1doCornerRefinement_10 (IntPtr nativeObj);
+        // C++: int DetectorParameters::cornerRefinementMethod
+        [DllImport (LIBNAME)]
+        private static extern int aruco_DetectorParameters_get_1cornerRefinementMethod_10 (IntPtr nativeObj);
 
-        // C++: void DetectorParameters::doCornerRefinement
-        [DllImport(LIBNAME)]
-        private static extern void aruco_DetectorParameters_set_1doCornerRefinement_10 (IntPtr nativeObj, bool doCornerRefinement);
+        // C++: void DetectorParameters::cornerRefinementMethod
+        [DllImport (LIBNAME)]
+        private static extern void aruco_DetectorParameters_set_1cornerRefinementMethod_10 (IntPtr nativeObj, int cornerRefinementMethod);
 
         // C++: int DetectorParameters::cornerRefinementWinSize
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int aruco_DetectorParameters_get_1cornerRefinementWinSize_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::cornerRefinementWinSize
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1cornerRefinementWinSize_10 (IntPtr nativeObj, int cornerRefinementWinSize);
 
         // C++: int DetectorParameters::cornerRefinementMaxIterations
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int aruco_DetectorParameters_get_1cornerRefinementMaxIterations_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::cornerRefinementMaxIterations
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1cornerRefinementMaxIterations_10 (IntPtr nativeObj, int cornerRefinementMaxIterations);
 
         // C++: double DetectorParameters::cornerRefinementMinAccuracy
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double aruco_DetectorParameters_get_1cornerRefinementMinAccuracy_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::cornerRefinementMinAccuracy
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1cornerRefinementMinAccuracy_10 (IntPtr nativeObj, double cornerRefinementMinAccuracy);
 
         // C++: int DetectorParameters::markerBorderBits
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int aruco_DetectorParameters_get_1markerBorderBits_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::markerBorderBits
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1markerBorderBits_10 (IntPtr nativeObj, int markerBorderBits);
 
         // C++: int DetectorParameters::perspectiveRemovePixelPerCell
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int aruco_DetectorParameters_get_1perspectiveRemovePixelPerCell_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::perspectiveRemovePixelPerCell
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1perspectiveRemovePixelPerCell_10 (IntPtr nativeObj, int perspectiveRemovePixelPerCell);
 
         // C++: double DetectorParameters::perspectiveRemoveIgnoredMarginPerCell
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double aruco_DetectorParameters_get_1perspectiveRemoveIgnoredMarginPerCell_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::perspectiveRemoveIgnoredMarginPerCell
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1perspectiveRemoveIgnoredMarginPerCell_10 (IntPtr nativeObj, double perspectiveRemoveIgnoredMarginPerCell);
 
         // C++: double DetectorParameters::maxErroneousBitsInBorderRate
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double aruco_DetectorParameters_get_1maxErroneousBitsInBorderRate_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::maxErroneousBitsInBorderRate
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1maxErroneousBitsInBorderRate_10 (IntPtr nativeObj, double maxErroneousBitsInBorderRate);
 
         // C++: double DetectorParameters::minOtsuStdDev
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double aruco_DetectorParameters_get_1minOtsuStdDev_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::minOtsuStdDev
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1minOtsuStdDev_10 (IntPtr nativeObj, double minOtsuStdDev);
 
         // C++: double DetectorParameters::errorCorrectionRate
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double aruco_DetectorParameters_get_1errorCorrectionRate_10 (IntPtr nativeObj);
 
         // C++: void DetectorParameters::errorCorrectionRate
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_set_1errorCorrectionRate_10 (IntPtr nativeObj, double errorCorrectionRate);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void aruco_DetectorParameters_delete (IntPtr nativeObj);
 
     }

@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class BOWKMeansTrainer
-//javadoc: BOWKMeansTrainer
+    // C++: class BOWKMeansTrainer
+    //javadoc: BOWKMeansTrainer
+
     public class BOWKMeansTrainer : BOWTrainer
     {
 
@@ -33,24 +31,30 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal BOWKMeansTrainer (IntPtr addr) : base(addr)
+        protected internal BOWKMeansTrainer (IntPtr addr)
+            : base (addr)
         {
         }
 
+        // internal usage only
+        public static new BOWKMeansTrainer __fromPtr__ (IntPtr addr)
+        {
+            return new BOWKMeansTrainer (addr);
+        }
 
         //
         // C++:   BOWKMeansTrainer(int clusterCount, TermCriteria termcrit = TermCriteria(), int attempts = 3, int flags = KMEANS_PP_CENTERS)
         //
 
         //javadoc: BOWKMeansTrainer::BOWKMeansTrainer(clusterCount, termcrit, attempts, flags)
-        public  BOWKMeansTrainer (int clusterCount, TermCriteria termcrit, int attempts, int flags) :
-        #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        public BOWKMeansTrainer (int clusterCount, TermCriteria termcrit, int attempts, int flags) :
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-        base( features2d_BOWKMeansTrainer_BOWKMeansTrainer_10(clusterCount, termcrit.type, termcrit.maxCount, termcrit.epsilon, attempts, flags) )
+        base (features2d_BOWKMeansTrainer_BOWKMeansTrainer_10 (clusterCount, termcrit.type, termcrit.maxCount, termcrit.epsilon, attempts, flags))
         
-        #else
-        base(IntPtr.Zero)
-        #endif
+#else
+            base (IntPtr.Zero)
+#endif
         {
 
             return;
@@ -58,14 +62,14 @@ namespace OpenCVForUnity
         }
 
         //javadoc: BOWKMeansTrainer::BOWKMeansTrainer(clusterCount)
-        public  BOWKMeansTrainer (int clusterCount) :
-        #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+        public BOWKMeansTrainer (int clusterCount) :
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-        base( features2d_BOWKMeansTrainer_BOWKMeansTrainer_11(clusterCount) )
+        base (features2d_BOWKMeansTrainer_BOWKMeansTrainer_11 (clusterCount))
         
-        #else
-        base(IntPtr.Zero)
-        #endif
+#else
+            base (IntPtr.Zero)
+#endif
         {
 
             return;
@@ -83,14 +87,14 @@ namespace OpenCVForUnity
             ThrowIfDisposed ();
             if (descriptors != null)
                 descriptors.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             Mat retVal = new Mat (features2d_BOWKMeansTrainer_cluster_10 (nativeObj, descriptors.nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -102,42 +106,44 @@ namespace OpenCVForUnity
         public override Mat cluster ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             Mat retVal = new Mat (features2d_BOWKMeansTrainer_cluster_11 (nativeObj));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:   BOWKMeansTrainer(int clusterCount, TermCriteria termcrit = TermCriteria(), int attempts = 3, int flags = KMEANS_PP_CENTERS)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_BOWKMeansTrainer_BOWKMeansTrainer_10 (int clusterCount, int termcrit_type, int termcrit_maxCount, double termcrit_epsilon, int attempts, int flags);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_BOWKMeansTrainer_BOWKMeansTrainer_11 (int clusterCount);
 
         // C++:  Mat cluster(Mat descriptors)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_BOWKMeansTrainer_cluster_10 (IntPtr nativeObj, IntPtr descriptors_nativeObj);
 
         // C++:  Mat cluster()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr features2d_BOWKMeansTrainer_cluster_11 (IntPtr nativeObj);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void features2d_BOWKMeansTrainer_delete (IntPtr nativeObj);
 
     }

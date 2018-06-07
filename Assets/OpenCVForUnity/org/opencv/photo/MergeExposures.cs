@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class MergeExposures
-//javadoc: MergeExposures
+    // C++: class MergeExposures
+    //javadoc: MergeExposures
+
     public class MergeExposures : Algorithm
     {
 
@@ -33,10 +31,16 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal MergeExposures (IntPtr addr) : base(addr)
+        protected internal MergeExposures (IntPtr addr)
+            : base (addr)
         {
         }
 
+        // internal usage only
+        public static new MergeExposures __fromPtr__ (IntPtr addr)
+        {
+            return new MergeExposures (addr);
+        }
 
         //
         // C++:  void process(vector_Mat src, Mat& dst, Mat times, Mat response)
@@ -52,31 +56,32 @@ namespace OpenCVForUnity
                 times.ThrowIfDisposed ();
             if (response != null)
                 response.ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
             Mat src_mat = Converters.vector_Mat_to_Mat (src);
             photo_MergeExposures_process_10 (nativeObj, src_mat.nativeObj, dst.nativeObj, times.nativeObj, response.nativeObj);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  void process(vector_Mat src, Mat& dst, Mat times, Mat response)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void photo_MergeExposures_process_10 (IntPtr nativeObj, IntPtr src_mat_nativeObj, IntPtr dst_nativeObj, IntPtr times_nativeObj, IntPtr response_nativeObj);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void photo_MergeExposures_delete (IntPtr nativeObj);
 
     }

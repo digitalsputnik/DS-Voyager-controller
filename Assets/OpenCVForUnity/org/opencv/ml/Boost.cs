@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,8 +6,9 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class Boost
-//javadoc: Boost
+    // C++: class Boost
+    //javadoc: Boost
+
     public class Boost : DTrees
     {
 
@@ -33,8 +31,15 @@ namespace OpenCVForUnity
 #endif
         }
 
-        protected internal Boost (IntPtr addr) : base(addr)
+        protected internal Boost (IntPtr addr)
+            : base (addr)
         {
+        }
+
+        // internal usage only
+        public static new Boost __fromPtr__ (IntPtr addr)
+        {
+            return new Boost (addr);
         }
 
         public const int DISCRETE = 0;
@@ -46,18 +51,16 @@ namespace OpenCVForUnity
         //
 
         //javadoc: Boost::create()
-#pragma warning disable 0108
-        public static Boost create ()
+        public static new Boost create ()
         {
-#pragma warning restore 0067
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Boost retVal = new Boost (ml_Boost_create_10 ());
+            Boost retVal = Boost.__fromPtr__ (ml_Boost_create_10 ());
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -66,29 +69,29 @@ namespace OpenCVForUnity
         //
 
         //javadoc: Boost::load(filepath, nodeName)
-        public static Boost load (string filepath, string nodeName)
+        public static new Boost load (string filepath, string nodeName)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Boost retVal = new Boost (ml_Boost_load_10 (filepath, nodeName));
+            Boost retVal = Boost.__fromPtr__ (ml_Boost_load_10 (filepath, nodeName));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: Boost::load(filepath)
-        public static Boost load (string filepath)
+        public static new Boost load (string filepath)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Boost retVal = new Boost (ml_Boost_load_11 (filepath));
+            Boost retVal = Boost.__fromPtr__ (ml_Boost_load_11 (filepath));
         
             return retVal;
-            #else
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -97,17 +100,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: Boost::getWeightTrimRate()
-        public  double getWeightTrimRate ()
+        public double getWeightTrimRate ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             double retVal = ml_Boost_getWeightTrimRate_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -116,17 +119,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: Boost::getBoostType()
-        public  int getBoostType ()
+        public int getBoostType ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = ml_Boost_getBoostType_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -135,17 +138,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: Boost::getWeakCount()
-        public  int getWeakCount ()
+        public int getWeakCount ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             int retVal = ml_Boost_getWeakCount_10 (nativeObj);
         
             return retVal;
-            #else
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -154,17 +157,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: Boost::setBoostType(val)
-        public  void setBoostType (int val)
+        public void setBoostType (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_Boost_setBoostType_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -173,17 +176,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: Boost::setWeakCount(val)
-        public  void setWeakCount (int val)
+        public void setWeakCount (int val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_Boost_setWeakCount_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
@@ -192,65 +195,68 @@ namespace OpenCVForUnity
         //
 
         //javadoc: Boost::setWeightTrimRate(val)
-        public  void setWeightTrimRate (double val)
+        public void setWeightTrimRate (double val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
             ml_Boost_setWeightTrimRate_10 (nativeObj, val);
         
             return;
-            #else
+#else
             return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+        
+
+
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++: static Ptr_Boost create()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_Boost_create_10 ();
 
         // C++: static Ptr_Boost load(String filepath, String nodeName = String())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_Boost_load_10 (string filepath, string nodeName);
 
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_Boost_load_11 (string filepath);
 
         // C++:  double getWeightTrimRate()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double ml_Boost_getWeightTrimRate_10 (IntPtr nativeObj);
 
         // C++:  int getBoostType()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_Boost_getBoostType_10 (IntPtr nativeObj);
 
         // C++:  int getWeakCount()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_Boost_getWeakCount_10 (IntPtr nativeObj);
 
         // C++:  void setBoostType(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_Boost_setBoostType_10 (IntPtr nativeObj, int val);
 
         // C++:  void setWeakCount(int val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_Boost_setWeakCount_10 (IntPtr nativeObj, int val);
 
         // C++:  void setWeightTrimRate(double val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_Boost_setWeightTrimRate_10 (IntPtr nativeObj, double val);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_Boost_delete (IntPtr nativeObj);
 
     }

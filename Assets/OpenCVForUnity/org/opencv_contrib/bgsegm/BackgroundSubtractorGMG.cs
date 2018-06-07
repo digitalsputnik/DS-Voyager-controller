@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,51 +6,52 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class BackgroundSubtractorGMG
-//javadoc: BackgroundSubtractorGMG
+    // C++: class BackgroundSubtractorGMG
+    //javadoc: BackgroundSubtractorGMG
+
     public class BackgroundSubtractorGMG : BackgroundSubtractor
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        bgsegm_BackgroundSubtractorGMG_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+bgsegm_BackgroundSubtractorGMG_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal BackgroundSubtractorGMG (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal BackgroundSubtractorGMG (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new BackgroundSubtractorGMG __fromPtr__ (IntPtr addr) { return new BackgroundSubtractorGMG (addr); }
 
         //
         // C++:  bool getUpdateBackgroundModel()
         //
 
         //javadoc: BackgroundSubtractorGMG::getUpdateBackgroundModel()
-        public  bool getUpdateBackgroundModel ()
+        public bool getUpdateBackgroundModel ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bool retVal = bgsegm_BackgroundSubtractorGMG_getUpdateBackgroundModel_10 (nativeObj);
+        bool retVal = bgsegm_BackgroundSubtractorGMG_getUpdateBackgroundModel_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return false;
-            #endif
+#endif
         }
 
 
@@ -62,17 +60,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::getBackgroundPrior()
-        public  double getBackgroundPrior ()
+        public double getBackgroundPrior ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = bgsegm_BackgroundSubtractorGMG_getBackgroundPrior_10 (nativeObj);
+        double retVal = bgsegm_BackgroundSubtractorGMG_getBackgroundPrior_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -81,17 +79,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::getDecisionThreshold()
-        public  double getDecisionThreshold ()
+        public double getDecisionThreshold ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = bgsegm_BackgroundSubtractorGMG_getDecisionThreshold_10 (nativeObj);
+        double retVal = bgsegm_BackgroundSubtractorGMG_getDecisionThreshold_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -100,17 +98,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::getDefaultLearningRate()
-        public  double getDefaultLearningRate ()
+        public double getDefaultLearningRate ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = bgsegm_BackgroundSubtractorGMG_getDefaultLearningRate_10 (nativeObj);
+        double retVal = bgsegm_BackgroundSubtractorGMG_getDefaultLearningRate_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -119,17 +117,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::getMaxVal()
-        public  double getMaxVal ()
+        public double getMaxVal ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = bgsegm_BackgroundSubtractorGMG_getMaxVal_10 (nativeObj);
+        double retVal = bgsegm_BackgroundSubtractorGMG_getMaxVal_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -138,17 +136,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::getMinVal()
-        public  double getMinVal ()
+        public double getMinVal ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = bgsegm_BackgroundSubtractorGMG_getMinVal_10 (nativeObj);
+        double retVal = bgsegm_BackgroundSubtractorGMG_getMinVal_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -157,17 +155,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::getMaxFeatures()
-        public  int getMaxFeatures ()
+        public int getMaxFeatures ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = bgsegm_BackgroundSubtractorGMG_getMaxFeatures_10 (nativeObj);
+        int retVal = bgsegm_BackgroundSubtractorGMG_getMaxFeatures_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -176,17 +174,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::getNumFrames()
-        public  int getNumFrames ()
+        public int getNumFrames ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = bgsegm_BackgroundSubtractorGMG_getNumFrames_10 (nativeObj);
+        int retVal = bgsegm_BackgroundSubtractorGMG_getNumFrames_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -195,17 +193,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::getQuantizationLevels()
-        public  int getQuantizationLevels ()
+        public int getQuantizationLevels ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = bgsegm_BackgroundSubtractorGMG_getQuantizationLevels_10 (nativeObj);
+        int retVal = bgsegm_BackgroundSubtractorGMG_getQuantizationLevels_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -214,17 +212,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::getSmoothingRadius()
-        public  int getSmoothingRadius ()
+        public int getSmoothingRadius ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = bgsegm_BackgroundSubtractorGMG_getSmoothingRadius_10 (nativeObj);
+        int retVal = bgsegm_BackgroundSubtractorGMG_getSmoothingRadius_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -233,17 +231,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::setBackgroundPrior(bgprior)
-        public  void setBackgroundPrior (double bgprior)
+        public void setBackgroundPrior (double bgprior)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bgsegm_BackgroundSubtractorGMG_setBackgroundPrior_10 (nativeObj, bgprior);
+        bgsegm_BackgroundSubtractorGMG_setBackgroundPrior_10(nativeObj, bgprior);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -252,17 +250,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::setDecisionThreshold(thresh)
-        public  void setDecisionThreshold (double thresh)
+        public void setDecisionThreshold (double thresh)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bgsegm_BackgroundSubtractorGMG_setDecisionThreshold_10 (nativeObj, thresh);
+        bgsegm_BackgroundSubtractorGMG_setDecisionThreshold_10(nativeObj, thresh);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -271,17 +269,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::setDefaultLearningRate(lr)
-        public  void setDefaultLearningRate (double lr)
+        public void setDefaultLearningRate (double lr)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bgsegm_BackgroundSubtractorGMG_setDefaultLearningRate_10 (nativeObj, lr);
+        bgsegm_BackgroundSubtractorGMG_setDefaultLearningRate_10(nativeObj, lr);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -290,17 +288,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::setMaxFeatures(maxFeatures)
-        public  void setMaxFeatures (int maxFeatures)
+        public void setMaxFeatures (int maxFeatures)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bgsegm_BackgroundSubtractorGMG_setMaxFeatures_10 (nativeObj, maxFeatures);
+        bgsegm_BackgroundSubtractorGMG_setMaxFeatures_10(nativeObj, maxFeatures);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -309,17 +307,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::setMaxVal(val)
-        public  void setMaxVal (double val)
+        public void setMaxVal (double val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bgsegm_BackgroundSubtractorGMG_setMaxVal_10 (nativeObj, val);
+        bgsegm_BackgroundSubtractorGMG_setMaxVal_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -328,17 +326,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::setMinVal(val)
-        public  void setMinVal (double val)
+        public void setMinVal (double val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bgsegm_BackgroundSubtractorGMG_setMinVal_10 (nativeObj, val);
+        bgsegm_BackgroundSubtractorGMG_setMinVal_10(nativeObj, val);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -347,17 +345,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::setNumFrames(nframes)
-        public  void setNumFrames (int nframes)
+        public void setNumFrames (int nframes)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bgsegm_BackgroundSubtractorGMG_setNumFrames_10 (nativeObj, nframes);
+        bgsegm_BackgroundSubtractorGMG_setNumFrames_10(nativeObj, nframes);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -366,17 +364,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::setQuantizationLevels(nlevels)
-        public  void setQuantizationLevels (int nlevels)
+        public void setQuantizationLevels (int nlevels)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bgsegm_BackgroundSubtractorGMG_setQuantizationLevels_10 (nativeObj, nlevels);
+        bgsegm_BackgroundSubtractorGMG_setQuantizationLevels_10(nativeObj, nlevels);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -385,17 +383,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::setSmoothingRadius(radius)
-        public  void setSmoothingRadius (int radius)
+        public void setSmoothingRadius (int radius)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bgsegm_BackgroundSubtractorGMG_setSmoothingRadius_10 (nativeObj, radius);
+        bgsegm_BackgroundSubtractorGMG_setSmoothingRadius_10(nativeObj, radius);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -404,110 +402,110 @@ namespace OpenCVForUnity
         //
 
         //javadoc: BackgroundSubtractorGMG::setUpdateBackgroundModel(update)
-        public  void setUpdateBackgroundModel (bool update)
+        public void setUpdateBackgroundModel (bool update)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            bgsegm_BackgroundSubtractorGMG_setUpdateBackgroundModel_10 (nativeObj, update);
+        bgsegm_BackgroundSubtractorGMG_setUpdateBackgroundModel_10(nativeObj, update);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  bool getUpdateBackgroundModel()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern bool bgsegm_BackgroundSubtractorGMG_getUpdateBackgroundModel_10 (IntPtr nativeObj);
 
         // C++:  double getBackgroundPrior()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double bgsegm_BackgroundSubtractorGMG_getBackgroundPrior_10 (IntPtr nativeObj);
 
         // C++:  double getDecisionThreshold()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double bgsegm_BackgroundSubtractorGMG_getDecisionThreshold_10 (IntPtr nativeObj);
 
         // C++:  double getDefaultLearningRate()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double bgsegm_BackgroundSubtractorGMG_getDefaultLearningRate_10 (IntPtr nativeObj);
 
         // C++:  double getMaxVal()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double bgsegm_BackgroundSubtractorGMG_getMaxVal_10 (IntPtr nativeObj);
 
         // C++:  double getMinVal()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double bgsegm_BackgroundSubtractorGMG_getMinVal_10 (IntPtr nativeObj);
 
         // C++:  int getMaxFeatures()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int bgsegm_BackgroundSubtractorGMG_getMaxFeatures_10 (IntPtr nativeObj);
 
         // C++:  int getNumFrames()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int bgsegm_BackgroundSubtractorGMG_getNumFrames_10 (IntPtr nativeObj);
 
         // C++:  int getQuantizationLevels()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int bgsegm_BackgroundSubtractorGMG_getQuantizationLevels_10 (IntPtr nativeObj);
 
         // C++:  int getSmoothingRadius()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int bgsegm_BackgroundSubtractorGMG_getSmoothingRadius_10 (IntPtr nativeObj);
 
         // C++:  void setBackgroundPrior(double bgprior)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void bgsegm_BackgroundSubtractorGMG_setBackgroundPrior_10 (IntPtr nativeObj, double bgprior);
 
         // C++:  void setDecisionThreshold(double thresh)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void bgsegm_BackgroundSubtractorGMG_setDecisionThreshold_10 (IntPtr nativeObj, double thresh);
 
         // C++:  void setDefaultLearningRate(double lr)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void bgsegm_BackgroundSubtractorGMG_setDefaultLearningRate_10 (IntPtr nativeObj, double lr);
 
         // C++:  void setMaxFeatures(int maxFeatures)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void bgsegm_BackgroundSubtractorGMG_setMaxFeatures_10 (IntPtr nativeObj, int maxFeatures);
 
         // C++:  void setMaxVal(double val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void bgsegm_BackgroundSubtractorGMG_setMaxVal_10 (IntPtr nativeObj, double val);
 
         // C++:  void setMinVal(double val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void bgsegm_BackgroundSubtractorGMG_setMinVal_10 (IntPtr nativeObj, double val);
 
         // C++:  void setNumFrames(int nframes)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void bgsegm_BackgroundSubtractorGMG_setNumFrames_10 (IntPtr nativeObj, int nframes);
 
         // C++:  void setQuantizationLevels(int nlevels)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void bgsegm_BackgroundSubtractorGMG_setQuantizationLevels_10 (IntPtr nativeObj, int nlevels);
 
         // C++:  void setSmoothingRadius(int radius)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void bgsegm_BackgroundSubtractorGMG_setSmoothingRadius_10 (IntPtr nativeObj, int radius);
 
         // C++:  void setUpdateBackgroundModel(bool update)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void bgsegm_BackgroundSubtractorGMG_setUpdateBackgroundModel_10 (IntPtr nativeObj, bool update);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void bgsegm_BackgroundSubtractorGMG_delete (IntPtr nativeObj);
 
     }

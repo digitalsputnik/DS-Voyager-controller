@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,33 +6,35 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class SVMSGD
-//javadoc: SVMSGD
+    // C++: class SVMSGD
+    //javadoc: SVMSGD
+
     public class SVMSGD : StatModel
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        ml_SVMSGD_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+ml_SVMSGD_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal SVMSGD (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal SVMSGD (IntPtr addr) : base (addr) { }
+
+        // internal usage only
+        public static new SVMSGD __fromPtr__ (IntPtr addr) { return new SVMSGD (addr); }
 
         public const int SGD = 0;
         public const int ASGD = 1;
@@ -46,17 +45,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::getWeights()
-        public  Mat getWeights ()
+        public Mat getWeights ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            Mat retVal = new Mat (ml_SVMSGD_getWeights_10 (nativeObj));
+        Mat retVal = new Mat(ml_SVMSGD_getWeights_10(nativeObj));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -67,14 +66,14 @@ namespace OpenCVForUnity
         //javadoc: SVMSGD::create()
         public static SVMSGD create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            SVMSGD retVal = new SVMSGD (ml_SVMSGD_create_10 ());
+        SVMSGD retVal = SVMSGD.__fromPtr__(ml_SVMSGD_create_10());
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -85,27 +84,27 @@ namespace OpenCVForUnity
         //javadoc: SVMSGD::load(filepath, nodeName)
         public static SVMSGD load (string filepath, string nodeName)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            SVMSGD retVal = new SVMSGD (ml_SVMSGD_load_10 (filepath, nodeName));
+        SVMSGD retVal = SVMSGD.__fromPtr__(ml_SVMSGD_load_10(filepath, nodeName));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: SVMSGD::load(filepath)
         public static SVMSGD load (string filepath)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            SVMSGD retVal = new SVMSGD (ml_SVMSGD_load_11 (filepath));
+        SVMSGD retVal = SVMSGD.__fromPtr__(ml_SVMSGD_load_11(filepath));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -114,19 +113,19 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::getTermCriteria()
-        public  TermCriteria getTermCriteria ()
+        public TermCriteria getTermCriteria ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double[] tmpArray = new double[3];
-            ml_SVMSGD_getTermCriteria_10 (nativeObj, tmpArray);
-            TermCriteria retVal = new TermCriteria (tmpArray);
+        double[] tmpArray = new double[3];
+ml_SVMSGD_getTermCriteria_10(nativeObj, tmpArray);
+TermCriteria retVal = new TermCriteria (tmpArray);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -135,17 +134,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::getInitialStepSize()
-        public  float getInitialStepSize ()
+        public float getInitialStepSize ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            float retVal = ml_SVMSGD_getInitialStepSize_10 (nativeObj);
+        float retVal = ml_SVMSGD_getInitialStepSize_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -154,17 +153,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::getMarginRegularization()
-        public  float getMarginRegularization ()
+        public float getMarginRegularization ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            float retVal = ml_SVMSGD_getMarginRegularization_10 (nativeObj);
+        float retVal = ml_SVMSGD_getMarginRegularization_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -173,17 +172,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::getShift()
-        public  float getShift ()
+        public float getShift ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            float retVal = ml_SVMSGD_getShift_10 (nativeObj);
+        float retVal = ml_SVMSGD_getShift_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -192,17 +191,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::getStepDecreasingPower()
-        public  float getStepDecreasingPower ()
+        public float getStepDecreasingPower ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            float retVal = ml_SVMSGD_getStepDecreasingPower_10 (nativeObj);
+        float retVal = ml_SVMSGD_getStepDecreasingPower_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -211,17 +210,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::getMarginType()
-        public  int getMarginType ()
+        public int getMarginType ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ml_SVMSGD_getMarginType_10 (nativeObj);
+        int retVal = ml_SVMSGD_getMarginType_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -230,17 +229,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::getSvmsgdType()
-        public  int getSvmsgdType ()
+        public int getSvmsgdType ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = ml_SVMSGD_getSvmsgdType_10 (nativeObj);
+        int retVal = ml_SVMSGD_getSvmsgdType_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -249,17 +248,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::setInitialStepSize(InitialStepSize)
-        public  void setInitialStepSize (float InitialStepSize)
+        public void setInitialStepSize (float InitialStepSize)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_SVMSGD_setInitialStepSize_10 (nativeObj, InitialStepSize);
+        ml_SVMSGD_setInitialStepSize_10(nativeObj, InitialStepSize);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -268,17 +267,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::setMarginRegularization(marginRegularization)
-        public  void setMarginRegularization (float marginRegularization)
+        public void setMarginRegularization (float marginRegularization)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_SVMSGD_setMarginRegularization_10 (nativeObj, marginRegularization);
+        ml_SVMSGD_setMarginRegularization_10(nativeObj, marginRegularization);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -287,17 +286,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::setMarginType(marginType)
-        public  void setMarginType (int marginType)
+        public void setMarginType (int marginType)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_SVMSGD_setMarginType_10 (nativeObj, marginType);
+        ml_SVMSGD_setMarginType_10(nativeObj, marginType);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -306,31 +305,31 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::setOptimalParameters(svmsgdType, marginType)
-        public  void setOptimalParameters (int svmsgdType, int marginType)
+        public void setOptimalParameters (int svmsgdType, int marginType)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_SVMSGD_setOptimalParameters_10 (nativeObj, svmsgdType, marginType);
+        ml_SVMSGD_setOptimalParameters_10(nativeObj, svmsgdType, marginType);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
         //javadoc: SVMSGD::setOptimalParameters()
-        public  void setOptimalParameters ()
+        public void setOptimalParameters ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_SVMSGD_setOptimalParameters_11 (nativeObj);
+        ml_SVMSGD_setOptimalParameters_11(nativeObj);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -339,17 +338,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::setStepDecreasingPower(stepDecreasingPower)
-        public  void setStepDecreasingPower (float stepDecreasingPower)
+        public void setStepDecreasingPower (float stepDecreasingPower)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_SVMSGD_setStepDecreasingPower_10 (nativeObj, stepDecreasingPower);
+        ml_SVMSGD_setStepDecreasingPower_10(nativeObj, stepDecreasingPower);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -358,17 +357,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::setSvmsgdType(svmsgdType)
-        public  void setSvmsgdType (int svmsgdType)
+        public void setSvmsgdType (int svmsgdType)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_SVMSGD_setSvmsgdType_10 (nativeObj, svmsgdType);
+        ml_SVMSGD_setSvmsgdType_10(nativeObj, svmsgdType);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
@@ -377,104 +376,102 @@ namespace OpenCVForUnity
         //
 
         //javadoc: SVMSGD::setTermCriteria(val)
-        public  void setTermCriteria (TermCriteria val)
+        public void setTermCriteria (TermCriteria val)
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            ml_SVMSGD_setTermCriteria_10 (nativeObj, val.type, val.maxCount, val.epsilon);
+        ml_SVMSGD_setTermCriteria_10(nativeObj, val.type, val.maxCount, val.epsilon);
         
+        return;
+#else
             return;
-            #else
-            return;
-            #endif
+#endif
         }
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++:  Mat getWeights()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_SVMSGD_getWeights_10 (IntPtr nativeObj);
 
         // C++: static Ptr_SVMSGD create()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_SVMSGD_create_10 ();
 
         // C++: static Ptr_SVMSGD load(String filepath, String nodeName = String())
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_SVMSGD_load_10 (string filepath, string nodeName);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr ml_SVMSGD_load_11 (string filepath);
 
         // C++:  TermCriteria getTermCriteria()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_SVMSGD_getTermCriteria_10 (IntPtr nativeObj, double[] retVal);
 
         // C++:  float getInitialStepSize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float ml_SVMSGD_getInitialStepSize_10 (IntPtr nativeObj);
 
         // C++:  float getMarginRegularization()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float ml_SVMSGD_getMarginRegularization_10 (IntPtr nativeObj);
 
         // C++:  float getShift()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float ml_SVMSGD_getShift_10 (IntPtr nativeObj);
 
         // C++:  float getStepDecreasingPower()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern float ml_SVMSGD_getStepDecreasingPower_10 (IntPtr nativeObj);
 
         // C++:  int getMarginType()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_SVMSGD_getMarginType_10 (IntPtr nativeObj);
 
         // C++:  int getSvmsgdType()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int ml_SVMSGD_getSvmsgdType_10 (IntPtr nativeObj);
 
         // C++:  void setInitialStepSize(float InitialStepSize)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_SVMSGD_setInitialStepSize_10 (IntPtr nativeObj, float InitialStepSize);
 
         // C++:  void setMarginRegularization(float marginRegularization)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_SVMSGD_setMarginRegularization_10 (IntPtr nativeObj, float marginRegularization);
 
         // C++:  void setMarginType(int marginType)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_SVMSGD_setMarginType_10 (IntPtr nativeObj, int marginType);
 
         // C++:  void setOptimalParameters(int svmsgdType = SVMSGD::ASGD, int marginType = SVMSGD::SOFT_MARGIN)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_SVMSGD_setOptimalParameters_10 (IntPtr nativeObj, int svmsgdType, int marginType);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_SVMSGD_setOptimalParameters_11 (IntPtr nativeObj);
 
         // C++:  void setStepDecreasingPower(float stepDecreasingPower)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_SVMSGD_setStepDecreasingPower_10 (IntPtr nativeObj, float stepDecreasingPower);
 
         // C++:  void setSvmsgdType(int svmsgdType)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_SVMSGD_setSvmsgdType_10 (IntPtr nativeObj, int svmsgdType);
 
         // C++:  void setTermCriteria(TermCriteria val)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_SVMSGD_setTermCriteria_10 (IntPtr nativeObj, int val_type, int val_maxCount, double val_epsilon);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void ml_SVMSGD_delete (IntPtr nativeObj);
 
     }

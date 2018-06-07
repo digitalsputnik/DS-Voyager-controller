@@ -1,7 +1,4 @@
 
-//
-
-//
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,34 +6,35 @@ using System.Runtime.InteropServices;
 namespace OpenCVForUnity
 {
 
-// C++: class StandardCollector
-//javadoc: StandardCollector
+    // C++: class StandardCollector
+    //javadoc: StandardCollector
+
     public class StandardCollector : PredictCollector
     {
 
         protected override void Dispose (bool disposing)
         {
 #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
-            try {
-                if (disposing) {
-                }
-                if (IsEnabledDispose) {
-                    if (nativeObj != IntPtr.Zero)
-                        face_StandardCollector_delete (nativeObj);
-                    nativeObj = IntPtr.Zero;
-                }
-            } finally {
-                base.Dispose (disposing);
-            }
+try {
+if (disposing) {
+}
+if (IsEnabledDispose) {
+if (nativeObj != IntPtr.Zero)
+face_StandardCollector_delete(nativeObj);
+nativeObj = IntPtr.Zero;
+}
+} finally {
+base.Dispose (disposing);
+}
 #else
             return;
 #endif
         }
 
-        protected internal StandardCollector (IntPtr addr) : base(addr)
-        {
-        }
+        protected internal StandardCollector (IntPtr addr) : base (addr) { }
 
+        // internal usage only
+        public static new StandardCollector __fromPtr__ (IntPtr addr) { return new StandardCollector (addr); }
 
         //
         // C++: static Ptr_StandardCollector create(double threshold = DBL_MAX)
@@ -45,27 +43,27 @@ namespace OpenCVForUnity
         //javadoc: StandardCollector::create(threshold)
         public static StandardCollector create (double threshold)
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            StandardCollector retVal = new StandardCollector (face_StandardCollector_create_10 (threshold));
+        StandardCollector retVal = StandardCollector.__fromPtr__(face_StandardCollector_create_10(threshold));
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
         //javadoc: StandardCollector::create()
         public static StandardCollector create ()
         {
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            StandardCollector retVal = new StandardCollector (face_StandardCollector_create_11 ());
+        StandardCollector retVal = StandardCollector.__fromPtr__(face_StandardCollector_create_11());
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return null;
-            #endif
+#endif
         }
 
 
@@ -74,17 +72,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StandardCollector::getMinDist()
-        public  double getMinDist ()
+        public double getMinDist ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            double retVal = face_StandardCollector_getMinDist_10 (nativeObj);
+        double retVal = face_StandardCollector_getMinDist_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -93,17 +91,17 @@ namespace OpenCVForUnity
         //
 
         //javadoc: StandardCollector::getMinLabel()
-        public  int getMinLabel ()
+        public int getMinLabel ()
         {
             ThrowIfDisposed ();
-            #if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
+#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR) || UNITY_5 || UNITY_5_3_OR_NEWER
         
-            int retVal = face_StandardCollector_getMinLabel_10 (nativeObj);
+        int retVal = face_StandardCollector_getMinLabel_10(nativeObj);
         
-            return retVal;
-            #else
+        return retVal;
+#else
             return -1;
-            #endif
+#endif
         }
 
 
@@ -114,31 +112,30 @@ namespace OpenCVForUnity
         // Return type 'vector_pair_int_and_double' is not supported, skipping the function
 
 
-        #if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
+#if (UNITY_IOS || UNITY_WEBGL) && !UNITY_EDITOR
         const string LIBNAME = "__Internal";
-        #else
+#else
         const string LIBNAME = "opencvforunity";
-        #endif
+#endif
 
 
 
         // C++: static Ptr_StandardCollector create(double threshold = DBL_MAX)
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr face_StandardCollector_create_10 (double threshold);
-
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern IntPtr face_StandardCollector_create_11 ();
 
         // C++:  double getMinDist()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern double face_StandardCollector_getMinDist_10 (IntPtr nativeObj);
 
         // C++:  int getMinLabel()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern int face_StandardCollector_getMinLabel_10 (IntPtr nativeObj);
 
         // native support for java finalize()
-        [DllImport(LIBNAME)]
+        [DllImport (LIBNAME)]
         private static extern void face_StandardCollector_delete (IntPtr nativeObj);
 
     }
