@@ -33,7 +33,7 @@ public class MoveObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         if (dragged)
             return;
 
-        if (gameObject.transform.tag == "set")
+        if (gameObject.transform.tag == "videobg")
         {
             if (gameObject.transform.Find("VideoStreamBackground").Find("Handle1Parent").Find("Handle1").GetComponent<ScaleRotateObject>().handleDragged == true)
             {
@@ -60,7 +60,7 @@ public class MoveObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             return;
         }
 
-        if (gameObject.transform.tag == "set")
+        if (gameObject.transform.tag == "videobg")
         {
             if (gameObject.transform.Find("VideoStreamBackground").Find("Handle1Parent").Find("Handle1").GetComponent<ScaleRotateObject>().handleDragged == true)
             {
@@ -85,7 +85,7 @@ public class MoveObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             return;
         }
 
-        if (gameObject.transform.tag == "set")
+        if (gameObject.transform.tag == "videobg")
         {
             if (gameObject.transform.Find("VideoStreamBackground").Find("Handle1Parent").Find("Handle1").GetComponent<ScaleRotateObject>().handleDragged == true)
             {

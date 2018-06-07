@@ -7,12 +7,29 @@ using UnityEngine.SceneManagement;
 
 public class LampProperties
 {
+    public int lampID { get; set; }
     public string  IP { get; set; }
     public int LampLength { get; set; }
 	public int batteryLevel { get; set; }
 	public string macName { get; set; }
     public Vector2 StartPoint { get; set; }
     public Vector2 EndPoint { get; set; }
+
+    public Vector3 position { get; set; }
+    public Quaternion rotation { get; set; }
+    public Vector3 scale { get; set; }
+}
+
+public class Set
+{
+    public int setID { get; set; }
+    public string imagePath { get; set; }
+    public List<LampProperties> lampslist = new List<LampProperties>();
+    public bool isSelected = false;
+    public Vector3 position { get; set; }
+    public Quaternion rotation { get; set; }
+    public Vector3 scale { get; set; }
+
 }
 
 public class DetectedLampProperties : MonoBehaviour {
@@ -22,6 +39,9 @@ public class DetectedLampProperties : MonoBehaviour {
     public List<LampProperties> DetectedLamps = new List<LampProperties>();
     public bool AddLamps = false;
     public Dictionary<IPAddress, int> LampIPtoLengthDictionary { get; set; }
+
+    public List<Set> SetsList = new List<Set>();
+    public bool AddBackground = false;
 
     void Awake()
     {

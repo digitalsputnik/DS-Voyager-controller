@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Linq;
 using System.Collections;
@@ -52,6 +53,25 @@ public class SetupScripts : MonoBehaviour {
      public MenuPullScript PullMenu;
     public GameObject LampTools;
 
+    //for Photo handling
+    public Button AddBackgroundButton;
+    public GameObject MenuBackGround;
+    public RawImage BackgroundRawImage;
+    private Texture BackgroundTexture;
+    private Texture2D freezTexture;
+    private Texture2D flippedTexture;
+    private WebCamTexture webcamTexture = null;
+    private bool camAvailable = false;
+    public AspectRatioFitter fit;
+    public GameObject WorkSpace;
+    public Button BottomMenuShutterButton;
+    public Button BottomMenuReturnButton;
+    public Button BottomMenuOkButton;
+    public Button BottomMenuCancelButton;
+    public MenuPullScript PullScript;
+
+    //public Button ListenerToggleButton;
+
     Dictionary<IPAddress, ExtraProperties> IPtoProps = new Dictionary<IPAddress, ExtraProperties>();
 
     //int batteryLevel;
@@ -77,9 +97,15 @@ public class SetupScripts : MonoBehaviour {
         {
             throw new Exception("Couldn't receive latest light version software.");
         }
-        
-        AddLampButton.onClick.AddListener(TaskOnAddClick);
-        
+
+        AddBackgroundButton.onClick.AddListener(OnAddBackgroundClick);
+        BottomMenuShutterButton.onClick.AddListener(TaskOnShutterButtonClick);
+        BottomMenuReturnButton.onClick.AddListener(TaskOnReturnButtonClick);
+        BottomMenuOkButton.onClick.AddListener(TaskOnOkButtonClick);
+        BottomMenuCancelButton.onClick.AddListener(TaskOnCancelButtonClick);
+        AddLampButton.onClick.AddListener(OnAddLampsClick);
+        //ListenerToggleButton.onClick.AddListener(TogglePacketListener);
+
 
         LampIPtoLengthDictionary = GameObject.Find("DetectedLampProperties").GetComponent<DetectedLampProperties>().LampIPtoLengthDictionary;
 
@@ -118,7 +144,256 @@ public class SetupScripts : MonoBehaviour {
         }
     }
 
-    void TaskOnAddClick()
+
+    void OnAddBackgroundClick()
+    {
+        //BottomMenuOkButton.gameObject.SetActive(true);
+        //BottomMenuCancelButton.gameObject.SetActive(true);
+
+        PullScript = MenuBackGround.transform.Find("MenuPullImage").gameObject.GetComponent<MenuPullScript>();
+        PullScript.CloseMenu();
+        //PullScript.Start();
+        BottomMenuShutterButton.gameObject.SetActive(true);
+        BottomMenuReturnButton.gameObject.SetActive(true);
+        BackgroundRawImage.gameObject.SetActive(true);
+
+
+        WebCamDevice[] devices = WebCamTexture.devices;
+
+        if (devices.Length == 0)
+        {
+            Debug.Log("No Camera Detected!");
+            camAvailable = false;
+            return;
+        }
+
+        for (int i = 0; i < devices.Length; i++)
+        {
+            if (devices[i].isFrontFacing)
+            {
+                webcamTexture = new WebCamTexture(devices[i].name, Screen.width, Screen.height);
+
+            }
+        }
+
+        if (webcamTexture == null)
+        {
+            Debug.Log("Unable to find back camera");
+            return;
+        }
+
+        webcamTexture.Play();
+        BackgroundRawImage.material.mainTexture = webcamTexture;
+
+        camAvailable = true;
+
+    }
+
+    void TaskOnShutterButtonClick()
+    {
+        BackgroundTexture = BackgroundRawImage.material.mainTexture;
+        Debug.Log("BackgroundImage size is: " + BackgroundTexture.width + " x" + BackgroundTexture.height);
+
+        freezTexture = new Texture2D(BackgroundTexture.width, BackgroundTexture.height, TextureFormat.ARGB32, false);
+        Debug.Log("FreezTexture created...");
+
+        Color[] pixels = webcamTexture.GetPixels();
+        System.Array.Reverse(pixels, 0, pixels.Length);
+
+        //Save the image to the Texture2D
+        freezTexture.SetPixels(pixels);
+        freezTexture.Apply();
+        //flippedTexture = FlipTexture(freezTexture);
+
+        Debug.Log("freezTexture size is: " + freezTexture.width + " x" + freezTexture.height);
+
+        webcamTexture.Pause();
+        camAvailable = false;
+
+        BottomMenuShutterButton.gameObject.SetActive(false);
+        BottomMenuReturnButton.gameObject.SetActive(false);
+        BottomMenuOkButton.gameObject.SetActive(true);
+        BottomMenuCancelButton.gameObject.SetActive(true);
+    }
+
+
+    void TaskOnReturnButtonClick()
+    {
+        webcamTexture.Stop();
+        camAvailable = false;
+        BottomMenuShutterButton.gameObject.SetActive(false);
+        BottomMenuReturnButton.gameObject.SetActive(false);
+        BackgroundRawImage.gameObject.SetActive(false);
+        //MenuBackGround.SetActive(true);
+    }
+
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        if (!camAvailable)
+            return;
+
+        if (!isPollingActive)
+        {
+            StartCoroutine("GetAvailableLamp");
+            isPollingActive = true;
+        }
+
+        float ratio = (float)webcamTexture.width / (float)webcamTexture.height;
+        fit.aspectRatio = ratio;
+
+
+        float scaleY = webcamTexture.videoVerticallyMirrored ? -1f : 1f;
+        BackgroundRawImage.rectTransform.localScale = new Vector3(1f, scaleY, 1f);
+
+        int orient = -webcamTexture.videoRotationAngle;
+        BackgroundRawImage.rectTransform.localEulerAngles = new Vector3(0, 0, orient);
+    }
+
+
+
+    void TaskOnCancelButtonClick()
+    {
+        webcamTexture.Stop();
+        BackgroundRawImage.gameObject.SetActive(false);
+        camAvailable = false;
+        BottomMenuOkButton.gameObject.SetActive(false);
+        BottomMenuCancelButton.gameObject.SetActive(false);
+    }
+
+    void TaskOnOkButtonClick()
+    {
+        //Stop the webcam
+        webcamTexture.Stop();
+
+        //Prepare the new set and add to SetsList
+        StartCoroutine(PrepareNewSet());
+
+        //Hide buttons
+        BottomMenuOkButton.gameObject.SetActive(false);
+        BottomMenuCancelButton.gameObject.SetActive(false);
+        BackgroundRawImage.gameObject.SetActive(false);
+
+        //Save current transforms of all added sets
+
+        //Get list of all Sets
+        DetectedLampProperties detectedLampProperties = GameObject.Find("DetectedLampProperties").GetComponent<DetectedLampProperties>();
+        var allSetsList = detectedLampProperties.SetsList;
+
+        //Get screen setObjects
+        var setObjectsList = WorkSpace.GetChildren();
+        if (setObjectsList.Count > 0)
+        {
+            foreach (var set in allSetsList)
+            {
+                
+                foreach (var setObject in setObjectsList)
+                {
+                    var setObjectID = Convert.ToInt32(setObject.name.Substring(3));
+                    if (setObjectID == set.setID)
+                    {
+                        set.position = setObject.transform.position;
+                        set.rotation = setObject.transform.rotation;
+                        set.scale = setObject.transform.localScale;
+                        Debug.Log("Set Transform Saved...");
+
+                        //Get list of all lamps
+                        var allLampsList = set.lampslist;
+                        if (allLampsList.Count > 0)
+                        {
+                            //Get all lampObjects belonging to this set
+                            var lampObjectsList = setObject.GetChildrenWithTag("lampparent");
+                            foreach (var lamp in allLampsList)
+                            {
+                                foreach (var lampObject in lampObjectsList)
+                                {
+                                    var lampObjectID = Convert.ToInt32(lampObject.name.Substring(4));
+                                    if (lampObjectID == lamp.lampID)
+                                    {
+                                        var lightObject = lampObject.transform.GetChild(0);
+                                        lamp.position = lightObject.position;
+                                        lamp.rotation = lightObject.rotation;
+                                        lamp.scale = lightObject.localScale;
+                                        Debug.Log("Lamp Transform Saved...");
+                                    }
+
+                                }
+                            }
+                        }
+
+                    }
+
+ 
+
+                }
+
+                
+            }
+        }
+
+        //MenuBackGround.SetActive(true);
+        SceneManager.LoadScene("Main");
+    }
+
+
+    public IEnumerator PrepareNewSet()
+    {
+
+        // Wait for screen rendering to complete
+        yield return new WaitForEndOfFrame();
+
+        // File path
+        string folderPath = Application.persistentDataPath + "/images";
+        Debug.Log("Folder path is: " + folderPath);
+        string savePath = Application.persistentDataPath + "/images/" + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
+        Debug.Log("Save path is: " + savePath);
+
+        // Create the folder beforehand if not exists
+        if (!System.IO.Directory.Exists(folderPath))
+            System.IO.Directory.CreateDirectory(folderPath);
+        Debug.Log("Folder exist...");
+
+        //Encode it as a PNG.
+
+        byte[] bytes = freezTexture.EncodeToPNG();
+        Debug.Log("Texture encoded to PNG...");
+
+        //Save it in a file.
+        File.WriteAllBytes(savePath, bytes);
+
+        DetectedLampProperties detectedLampProperties = GameObject.Find("DetectedLampProperties").GetComponent<DetectedLampProperties>();
+        detectedLampProperties.AddBackground = true;
+
+        Set newSet = new Set();
+        //newSet.lampslist = detectedLampProperties.DetectedLamps;
+        newSet.imagePath = savePath;
+
+        //newSet.lampslist.AddRange(detectedLampProperties.DetectedLamps);
+        if (detectedLampProperties.SetsList.Count >= 1)
+        {
+            newSet.position = new Vector3(0, 0, detectedLampProperties.SetsList.Last().position.z - 0.5f);
+        }
+        else
+        {
+            newSet.position = new Vector3(0, 0, -0.5f);
+        }
+        newSet.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+        newSet.scale = new Vector3(1.0f, 1.0f, 1.0f);
+        newSet.setID = detectedLampProperties.SetsList.Count;
+        detectedLampProperties.SetsList.Add(newSet);
+        Debug.Log("New Set added");
+        foreach (var set in detectedLampProperties.SetsList)
+        {
+            Debug.Log("Z Position of Set is: " + set.position.z);
+        }
+
+
+    }
+
+
+    void OnAddLampsClick()
     {
          if (!UpdateWindow.activeSelf)
         {
@@ -215,8 +490,8 @@ public class SetupScripts : MonoBehaviour {
                     try
                     {
                         UDPResponse response = JsonConvert.DeserializeObject<UDPResponse>(Encoding.UTF8.GetString(ReceivedMessageBytes));
-                        Debug.Log("Got lamp");
-                        Debug.Log(Encoding.UTF8.GetString(ReceivedMessageBytes));
+                        //Debug.Log("Got lamp");
+                        //Debug.Log(Encoding.UTF8.GetString(ReceivedMessageBytes));
                         LightIP = new IPAddress(response.IP);
                         numPixels = response.length;
                         lampMacName = response.serial_name;
@@ -349,7 +624,7 @@ public class SetupScripts : MonoBehaviour {
 
             AddLampButtons(newLampIPtoLengthDictionary);
 
-            if (LampIPtoLengthDictionary.Count == 1 && !LampIPtoLengthDictionary.ContainsKey(IPAddress.Parse("172.20.1.1")) && addLampAutomatically)
+        /*    if (LampIPtoLengthDictionary.Count == 1 && !LampIPtoLengthDictionary.ContainsKey(IPAddress.Parse("172.20.1.1")) && addLampAutomatically)
             {
                 addLampAutomatically = false;
                 //Add lamp!
@@ -367,6 +642,7 @@ public class SetupScripts : MonoBehaviour {
                     }
                 }
             }
+            */
 
             yield return null;
         }

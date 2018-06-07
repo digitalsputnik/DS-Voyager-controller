@@ -53,8 +53,8 @@ public class MenuMode : MonoBehaviour {
         var lightsList = GameObject.FindGameObjectsWithTag("light");
         foreach (var light in lightsList)
 		{
-			light.transform.Find("DragAndDrop1").gameObject.SetActive(draw);
-			light.transform.Find("DragAndDrop2").gameObject.SetActive(draw);
+			light.transform.Find("Handle1").Find("DragAndDrop1").gameObject.SetActive(draw);
+			light.transform.Find("Handle2").Find("DragAndDrop2").gameObject.SetActive(draw);
 			light.transform.Find("Canvas").gameObject.SetActive(draw);
 		}
 

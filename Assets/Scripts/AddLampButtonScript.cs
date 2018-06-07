@@ -8,6 +8,7 @@ using System.Threading;
 
 public class AddLampButtonScript : MonoBehaviour {
 
+    public DetectedLampProperties detectedLampProperties { get; set; }
     public string LampIP;
     public int LampLength;
 	public int BatteryLevel;
@@ -56,8 +57,37 @@ public class AddLampButtonScript : MonoBehaviour {
 
     public void CreateLamp(int lampNum = 1, int lampsToAdd = 1)
     {
-		//Find how many lamps are already in the scene
-		numLamps = GameObject.FindGameObjectsWithTag ("light").Length;
+        //Find number of sets in scene
+        detectedLampProperties = GameObject.Find("DetectedLampProperties").GetComponent<DetectedLampProperties>();
+
+        var setObjectsList = GameObject.FindGameObjectsWithTag("set");
+        GameObject selectedSet = null;
+
+        //Find correct Z position for new light
+        Vector3 lightPosition = Lamp.transform.position;
+        Quaternion lightRotation = Lamp.transform.rotation;
+        Vector3 lightScale = Lamp.transform.localScale;
+        if (setObjectsList.Length > 0)
+        {
+            foreach (var set in setObjectsList)
+            {
+                if (set.transform.Find("Set").Find("Highlight").gameObject.activeSelf == true)
+                {
+                    selectedSet = set;
+                    lightPosition = new Vector3(Lamp.transform.position.x, Lamp.transform.position.y, set.transform.position.z + Lamp.transform.position.z);
+                    lightRotation = set.transform.rotation;
+                    lightScale = set.transform.localScale;
+                    Debug.Log("Set Scale is: "+ lightScale);
+
+                }
+            }
+
+        }
+
+        //Find correct Y position of new light
+
+        //Find how many lamps are already in the scene
+        numLamps = GameObject.FindGameObjectsWithTag ("lampparent").Length;
 
         //Find visible area
         var viewportHeight = Camera.main.pixelHeight;
@@ -67,26 +97,78 @@ public class AddLampButtonScript : MonoBehaviour {
 
         float yPosition = viewportHeight * lampNum / (lampsToAdd + 1) + UnityEngine.Random.Range(-yDistance/2, yDistance/2);
 
-        //Find default xPosition of lamp
-        var lampDefaultPosition = Camera.main.WorldToScreenPoint(Lamp.transform.position);
+        //Find default Position of light
+        var lightDefaultPosition = Camera.main.WorldToScreenPoint(lightPosition);
 
         //Convert yPosition to world position
-        var lampWorldPosition = Camera.main.ScreenToWorldPoint(new Vector3(lampDefaultPosition.x, yPosition, lampDefaultPosition.z));
+        var lightWorldPosition = Camera.main.ScreenToWorldPoint(new Vector3(lightDefaultPosition.x, yPosition, lightDefaultPosition.z));
 
-        //Instantsiate lamp with IP and length!
-        //Vector3 NewLampPosition = new Vector3(Lamp.transform.position.x, lampWorldPosition.y, Lamp.transform.position.z); 
+        //Create NewLamp gameobject and set its position, parent etc. This will be the parent of our new light.
+        Debug.Log("Creating newLamp GameObject...");
+        GameObject newLamp = new GameObject();
+        Transform parentObject;
+        if (setObjectsList.Length > 0)
+        {
+            parentObject = selectedSet.transform;
+            newLamp.transform.position = new Vector3(0, 0, selectedSet.transform.position.z);
+        }
+        else
+        {
+            parentObject = GameObject.Find("WorkSpace").transform;
+            newLamp.transform.position = Vector3.zero;
+        }
+        newLamp.transform.parent = parentObject;
+        Debug.Log("Assigned to Parent");
 
-        var newLamp = Instantiate(Lamp, lampWorldPosition, Quaternion.identity);
-		newLamp.name = "Lamp" + numLamps.ToString ();
-        newLamp.GetComponent<Ribbon>().IP = LampIP;
-        newLamp.GetComponent<Ribbon>().Mac = MacName;
-        newLamp.GetComponent<Ribbon>().pipeLength = LampLength;
-        newLamp.GetComponent<Ribbon>().Port = 30000;
-        //Place lamp in the centre of workspace! 
-        GameObject Workspace = GameObject.Find("WorkSpace");
-        newLamp.transform.SetParent(Workspace.transform);
-        var VoyagerName = newLamp.GetComponentInChildren<Canvas>().GetComponentInChildren<Text>();
+        Debug.Log("Setting Lamp tag...");
+        newLamp.tag = "lampparent";
+        int lampCount = GameObject.FindGameObjectsWithTag("lampparent").Length;
+        Debug.Log("Number of lamps is: " + lampCount.ToString());
+
+        newLamp.name = "Lamp" + lampCount.ToString();
+        Debug.Log("NewLamp " + newLamp.name + " created!");
+
+        //Instantsiate light with IP and length!
+        var newLight = Instantiate(Lamp, lightWorldPosition, Quaternion.identity, newLamp.transform);
+        Debug.Log("Light Position is: " + newLight.transform.position);
+        newLight.transform.rotation = lightRotation;
+        Debug.Log("Lamp Scale BEFORE: " + newLamp.transform.localScale);
+        newLamp.transform.localScale = lightScale;
+        Debug.Log("Lamp Scale AFTER: " + newLamp.transform.localScale);
+        Debug.Log("Light Scale is: " + newLight.transform.localScale);
+
+        //newLight.name = "Lamp" + numLamps.ToString ();
+        newLight.GetComponent<Ribbon>().IP = LampIP;
+        newLight.GetComponent<Ribbon>().Mac = MacName;
+        newLight.GetComponent<Ribbon>().pipeLength = LampLength;
+        newLight.GetComponent<Ribbon>().Port = 30000;
+
+
+        var VoyagerName = newLight.GetComponentInChildren<Canvas>().GetComponentInChildren<Text>();
         VoyagerName.text = LampProps;
+
+        //Add lamp to lampslist in Set
+        detectedLampProperties = GameObject.Find("DetectedLampProperties").GetComponent<DetectedLampProperties>();
+        var setsList = detectedLampProperties.SetsList;
+        if (setsList.Count > 0)
+        {
+            foreach (var set in setsList)
+            {
+                if (set.isSelected)
+                {
+                    set.lampslist.Add(new LampProperties
+                    {
+                        lampID = lampCount,
+                        IP = LampIP,
+                        LampLength = LampLength,
+                        batteryLevel = BatteryLevel,
+                        macName = MacName
+                    });
+
+                }
+            }
+        }
+
         //Register controller to lamp
         GameObject AnimationSender = GameObject.Find("AnimationControl");
         AnimationSender.GetComponent<AnimationSender>().RegisterControllerToDevice(true, LampIP);

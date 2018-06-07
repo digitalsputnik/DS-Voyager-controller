@@ -16,6 +16,8 @@ TagManager:
   - starttime
   - set
   - videosource
+  - videobg
+  - lampparent
   layers:
   - Default
   - TransparentFX
