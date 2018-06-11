@@ -7,7 +7,7 @@ using System.Net;
 public class LampBatteryText : MonoBehaviour {
 
 	Ribbon ribbon;
-    SetupScripts setup;
+	[SerializeField] SetupScripts setup;
     [SerializeField] Text lampInfo;
 
     IPAddress ip;
@@ -16,7 +16,7 @@ public class LampBatteryText : MonoBehaviour {
     void Start()
     {
         ribbon = GetComponent<Ribbon>();
-        setup = GameObject.Find("SetupTools").GetComponent<SetupScripts>();
+        //setup = GameObject.Find("SetupTools").GetComponent<SetupScripts>();
         ip = IPAddress.Parse(ribbon.IP);
     }
 

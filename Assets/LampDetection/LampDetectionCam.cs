@@ -74,13 +74,15 @@ public class LampDetectionCam : MonoBehaviour {
 	}
 
     void SetCameraExposuer()
-	{      
-		if (Application.platform == RuntimePlatform.IPhonePlayer)
+	{
+        if (Application.platform == RuntimePlatform.IPhonePlayer)
         {
+#if UNITY_IOS
             if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone8 || UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone8Plus || UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhoneX)
                 NatCam.Camera.ExposureBias = Mathf.Lerp(NatCam.Camera.MinExposureBias, NatCam.Camera.MaxExposureBias, 0.4f);
             else
                 NatCam.Camera.ExposureBias = Mathf.Max(NatCam.Camera.MinExposureBias, -20);
+#endif
         }
         else
             NatCam.Camera.ExposureBias = Mathf.Max(NatCam.Camera.MinExposureBias, -20);

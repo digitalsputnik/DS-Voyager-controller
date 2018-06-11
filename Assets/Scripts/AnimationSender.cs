@@ -125,10 +125,10 @@ public class Stroke
     /// <param name="pixel"></param>
     public void AddPixel(Pixel pixel, bool isStrokeActive = true)
     {
-        TimeStamp = GetCurrentTimestampUTC();
         //If pixel has been added, the order is not changed!
         if (ControlledPixels.Contains(pixel))
-            return;
+            RemovePixel(pixel);
+            //return;
 
         ControlledPixels.Add(pixel);
 
@@ -168,11 +168,54 @@ public class Stroke
         }
 
         layer.RemoveInvisibleStrokes();
+        TimeStamp = GetCurrentTimestampUTC();
     }
 
+    /// <summary>
+    /// Removes pixel from Stroke and all associated variables
+    /// </summary>
+    /// <param name="pixel"></param>
     public void RemovePixel(Pixel pixel)
     {
-        throw new NotImplementedException();
+        //TimeStamp = GetCurrentTimestampUTC();
+        
+        //Remove pixel from controlled pixels
+        if (!ControlledPixels.Contains(pixel))
+        {
+            ControlledPixels.Remove(pixel);
+        }
+
+        //Correct dictionaries according to pixel order (queue number reduction for each pixel which is higher)
+        string LampMac = pixel.transform.parent.GetComponent<Ribbon>().Mac;
+        if (PixelQueueToControlledPixel.ContainsKey(LampMac))
+        {
+            //Removes current
+            var QueueNumber = PixelQueueToControlledPixel[LampMac].FirstOrDefault(d => d.Value == pixel.ID).Key;
+            PixelQueueToControlledPixel[LampMac].Remove(QueueNumber);
+            //Each queuenumber which is larger than deleted is decrease by one
+            for (int q = QueueNumber + 1; q < TotalPixelCount; q++)
+            {
+                var pixelMac = PixelQueueToControlledPixel.FirstOrDefault(x => x.Value.ContainsKey(q)).Key;
+                var pixelID = PixelQueueToControlledPixel[pixelMac][q];
+                PixelQueueToControlledPixel[pixelMac].Remove(q);
+                PixelQueueToControlledPixel[pixelMac].Add(q - 1, pixelID);
+            }
+        }
+        TotalPixelCount--;
+
+        //TODO: Remove pixel from strokes!
+        if (layer.PixelToStrokeIDDictionary.ContainsKey(pixel))
+        {
+            var pixelStrokes = layer.PixelToStrokeIDDictionary[pixel];
+            //var strokesOnTop = pixelStrokes.Any(s => s.CreationTimestamp > ActiveStroke.CreationTimestamp);
+            //Add stroke to pixel and order
+            pixelStrokes.Remove(this);
+            pixelStrokes = pixelStrokes.OrderByDescending(s => s.CreationTimestamp).ToList();
+            layer.PixelToStrokeIDDictionary[pixel] = pixelStrokes;
+        }
+
+        //Turn pixel selection off
+        PixelSelectionOff(pixel);
     }
 
     /// <summary>
@@ -191,6 +234,15 @@ public class Stroke
             //Stroke is not visible/under another stroke
             pixel.updateSelectionPixel(2);
         }
+    }
+
+    /// <summary>
+    /// Turns off pixel selection bar
+    /// </summary>
+    /// <param name="pixel"></param>
+    public void PixelSelectionOff(Pixel pixel)
+    {
+        pixel.updateSelectionPixel(0);
     }
 
     /// <summary>

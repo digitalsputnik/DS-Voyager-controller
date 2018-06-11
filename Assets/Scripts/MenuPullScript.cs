@@ -7,21 +7,17 @@ using UnityEngine.UI;
 
 public class MenuPullScript : MonoBehaviour, IPointerClickHandler {
 
-    public enum PullDirection
-    {
-        Up,
-        Left
-    }
-
     public GameObject Menu;
     public float TimeOfTravel = 0.2f;
-    public PullDirection pulling = PullDirection.Left;
 	public Sprite imageOne;
 	public Sprite imageTwo;
 
+	RectTransform rect;
+	[SerializeField] Canvas canvas;
+
     private bool onMove = false;
-    private Vector3 StartPosition;
-    private Vector3 EndPosition;
+    private Vector2 StartPosition;
+	private Vector2 EndPosition;
     private float currentTime = 0.0f;
     private float normalizedTime = 0.0f;
 	public bool isPulled = false;
@@ -65,7 +61,6 @@ public class MenuPullScript : MonoBehaviour, IPointerClickHandler {
         onMove = true;
         currentTime = 0.0f;
         isPulled = !isPulled;
-        pulling = PullDirection.Left;
         Sprite newSprite;
 
         if (isPulled)
@@ -81,30 +76,35 @@ public class MenuPullScript : MonoBehaviour, IPointerClickHandler {
 
     }
 
-    // Use this for initialization
-    void Start () {
-        StartPosition = Menu.transform.position;
-        EndPosition = StartPosition;
-        var rt = (RectTransform)Menu.transform;
+	// Use this for initialization   
+	void Start()
+	{
+		rect = Menu.GetComponent<RectTransform>();
+		CalculatePositions();
+	}
 
-        if (pulling == PullDirection.Left)
-            EndPosition.x = EndPosition.x - rt.rect.width * (Menu.transform.lossyScale.magnitude / Menu.transform.localScale.magnitude);
-        else if (pulling == PullDirection.Up)
-            EndPosition.y = EndPosition.y + rt.rect.height * (Menu.transform.lossyScale.magnitude / Menu.transform.localScale.magnitude);
-    }
-	
+    public void CalculatePositions()
+	{      
+		StartPosition = rect.anchoredPosition;
+        EndPosition = StartPosition;
+
+		Debug.Log(StartPosition);
+
+		EndPosition.x = -EndPosition.x;
+	}
+
 	// Update is called once per frame
 	void Update () {
         if (onMove)
         {
             currentTime += Time.deltaTime;
             normalizedTime = currentTime / TimeOfTravel;
-            Menu.transform.position = Vector3.Lerp(StartPosition, EndPosition, normalizedTime);
+			rect.anchoredPosition = Vector2.Lerp(StartPosition, EndPosition, normalizedTime);
             if (currentTime >= TimeOfTravel)
             {
                 onMove = false;
                 EndPosition = StartPosition;
-                StartPosition = Menu.transform.position;
+				StartPosition = rect.anchoredPosition;
             }
         }
 	}

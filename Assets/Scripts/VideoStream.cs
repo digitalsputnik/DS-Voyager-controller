@@ -31,6 +31,7 @@ public class VideoStream : MonoBehaviour {
     // Use this for initialization
     void Start() {
         Debug.Log("VideoStream script started.......");
+        
         //NOTE: Quick hack because switching all the references is too much work at this point
         animSender = GameObject.Find("AnimationControl").GetComponent<AnimationSender>();
 
@@ -142,18 +143,19 @@ public class VideoStream : MonoBehaviour {
 
                         //    pointX = mediaPlayer.VideoWidth * (Vx.magnitude / Xs.magnitude);
                         //    pointY = mediaPlayer.VideoHeight * (Vy.magnitude / Ys.magnitude);
- 
+
                         //    //Get the color
                         //    pixelColor = tex.GetPixel((int)pointX, (int)pointY);
                         //    Debug.Log("Pixel color is: " + pixelColor.ToString());
 
                         //}
 
-                        //if ((pixelColor - previousColors[i]).maxColorComponent < 0.02)
-                        //{
-                        //    previousColors[i] = pixelColor;
-                        //    continue;
-                        //}
+                        //NOTE: Since maxColorComponent doesn't account for negative maximum, both sides are checked
+                        if (!((pixelColor - previousColors[i]).maxColorComponent >= 0.02f || (previousColors[i] - pixelColor).maxColorComponent >= 0.02f))
+                        {
+                            //previousColors[i] = pixelColor;
+                            continue;
+                        }
 
                         previousColors[i] = pixelColor;
                         float I = 0;

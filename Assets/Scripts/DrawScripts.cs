@@ -143,7 +143,6 @@ public class DrawScripts : MonoBehaviour {
         while (true)
         {
             WebCamDevice[] devicesRet = WebCamTexture.devices;
-            Debug.Log("list");
             if (devicesRet.Length != devices.Length)
             {
                 devices = devicesRet;

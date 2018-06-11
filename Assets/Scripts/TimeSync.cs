@@ -155,7 +155,7 @@ public class TimeSync : MonoBehaviour {
 
             //TODO: Waiting time should be dependent on the quality of sync data (standard deviation) and if the sync has failed or not.
             
-            yield return new WaitForSeconds(10f);
+            yield return new WaitForSeconds(60f);
         }
     }
 }
