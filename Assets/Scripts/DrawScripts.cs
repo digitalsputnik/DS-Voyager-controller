@@ -253,6 +253,16 @@ public class DrawScripts : MonoBehaviour {
         newAnim9.AnimProperties.Add(new Property("VideoStream", "stream", 0, 0, 0));
         animations.Add(newAnim9);
 
+        LightAnims newAnim10 = new LightAnims();
+        newAnim10.AnimName = "DMX";
+        newAnim10.AnimProperties.Add(new Property("Color1", "color", itshColor, 0, 0));
+        newAnim10.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        newAnim10.AnimProperties.Add(new Property("Unit size", "int", 1, 1, 128));
+        //newAnim10.AnimProperties.Add(new Property("Format", "int", 0, 0, 1));
+        //newAnim10.AnimProperties.Add(new Property("Universe offset", "int", 1, 1, 30000)); //max - 32768
+        //TODO: "Unit size" Dropdown: 1,2,4,8,16,32,64,128,lamp,all -> string!
+        //TODO: "Color format" Dropdown: ITSH/RGBW -> string!
+        animations.Add(newAnim10);
 
         //Add animation names to Dropdown
         List<string> animNames = new List<string>();

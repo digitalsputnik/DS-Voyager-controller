@@ -56,6 +56,7 @@ class ArtNetListener(threading.Thread):
                     if ArtNetData[10:12] != int(14).to_bytes(2, 'big'):
                         continue
                     # Check universe
+                    #TODO: Redo universe settings -> Check if universe is in permitted list or not
                     if ArtNetData[14:16] != int(0).to_bytes(2, 'big'):
                         continue
                     DMXData = ArtNetData[18:]
@@ -84,31 +85,64 @@ class ArtNetListener(threading.Thread):
                         if len(DMXData) < DMXOffset + StrokeStep:
                             break
 
-                        #Assessing colors with transformation 
-                        colorIndex = 0
-                        StrokeColors = stroke.Colors
+                        if stroke.Animation == "DMX":
+                            colorIndex = 0
+                            StrokeColors = stroke.Colors
                     
-                        for ci in range(0, len(StrokeColors)):
-                        #for color in StrokeColors:
-                            DMXindex = DMXOffset + colorIndex*4
-                            ArtNetColor = np.frombuffer(DMXData[DMXindex:DMXindex+4], dtype = np.uint8)/255
-                            FinalITSH = self.ColorCalibrator.PreprocessITSHValue(stroke.Properties["Color" + str(ci+1)])
-                            for i in range(0, len(ArtNetColor)):
-                                FinalITSH[i] = ArtNetColor[i] or FinalITSH[i]
-                            RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(FinalITSH)
-                            StrokeColors[ci] = RGBWColor.astype(np.uint8)
-                            #color = RGBWColor.astype(np.uint8)
-                            colorIndex = colorIndex + 1
+                            for ci in range(0, len(StrokeColors)):
+                                #TODO: Format picking!
+                                DMXindex = DMXOffset + colorIndex*4
+                                FinalITSH = np.array(StrokeColors[ci])
+                               
+                                #try:
+                                ArtNetColor = np.frombuffer(DMXData[DMXindex:DMXindex+4], dtype = np.uint8)
+                                FinalITSH[0] = ArtNetColor[0]*(100/255)
+                                FinalITSH[1] = ArtNetColor[1]*(8500/255) + 1500    #From 1 500-10 000 to 0-1
+                                FinalITSH[2] = ArtNetColor[2]*(100/255) #or 120?
+                                FinalITSH[3] = ArtNetColor[3]*(360/255)
+                                #except Exception as e:
+                                #    print(e)
+                                #    pass
+                                
+                                if FinalITSH[1] == 1500:
+                                    FinalITSH[1] = 0
+                                FinalITSH = FinalITSH.astype(np.uint16)
+
+                                for i in range(0, len(ArtNetColor)):
+                                    if ArtNetColor[i] > 0:
+                                        StrokeColors[ci][i] = FinalITSH[i]
+                                #RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(FinalITSH)
+                                #StrokeColors[ci] = RGBWColor.astype(np.uint8)
+                                colorIndex = colorIndex + 1
+
+                            stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
+
+                        else:
+                            #Assessing colors with transformation 
+                            colorIndex = 0
+                            StrokeColors = stroke.Colors
                     
-                        #Assessing properties
-                        DMXindex = DMXOffset + len(StrokeColors)*4
-                        if stroke.Properties != None:
-                            if ("Speed" in stroke.Properties and DMXData[DMXindex] > 0):
-                                stroke.Properties["Speed"][0] = DMXData[DMXindex]
-                            if ("Width" in stroke.Properties and DMXData[DMXindex + 1] > 0):
-                                stroke.Properties["Width"][0] = DMXData[DMXindex + 1]
-                        strokeIndex = strokeIndex + 1
-                        stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
+                            for ci in range(0, len(StrokeColors)):
+                            #for color in StrokeColors:
+                                DMXindex = DMXOffset + colorIndex*4
+                                ArtNetColor = np.frombuffer(DMXData[DMXindex:DMXindex+4], dtype = np.uint8)/255
+                                FinalITSH = self.ColorCalibrator.PreprocessITSHValue(stroke.Properties["Color" + str(ci+1)])
+                                for i in range(0, len(ArtNetColor)):
+                                    FinalITSH[i] = ArtNetColor[i] or FinalITSH[i]
+                                RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(FinalITSH)
+                                StrokeColors[ci] = RGBWColor.astype(np.uint8)
+                                #color = RGBWColor.astype(np.uint8)
+                                colorIndex = colorIndex + 1
+                    
+                            #Assessing properties
+                            DMXindex = DMXOffset + len(StrokeColors)*4
+                            if stroke.Properties != None:
+                                if ("Speed" in stroke.Properties and DMXData[DMXindex] > 0):
+                                    stroke.Properties["Speed"][0] = DMXData[DMXindex]
+                                if ("Width" in stroke.Properties and DMXData[DMXindex + 1] > 0):
+                                    stroke.Properties["Width"][0] = DMXData[DMXindex + 1]
+                            strokeIndex = strokeIndex + 1
+                            stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
             except :
                 pass
 
@@ -183,31 +217,64 @@ class sACNListener(threading.Thread):
                         if len(DMXData) < DMXOffset + StrokeStep:
                             break
 
-                        #Assessing colors with transformation 
-                        colorIndex = 0
-                        StrokeColors = stroke.Colors
+                        if stroke.Animation == "DMX":
+                            colorIndex = 0
+                            StrokeColors = stroke.Colors
                     
-                        for ci in range(0, len(StrokeColors)):
-                        #for color in StrokeColors:
-                            DMXindex = DMXOffset + colorIndex*4
-                            ArtNetColor = np.frombuffer(DMXData[DMXindex:DMXindex+4], dtype = np.uint8)/255
-                            FinalITSH = self.ColorCalibrator.PreprocessITSHValue(stroke.Properties["Color" + str(ci+1)])
-                            for i in range(0, len(ArtNetColor)):
-                                FinalITSH[i] = ArtNetColor[i] or FinalITSH[i]
-                            RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(FinalITSH)
-                            StrokeColors[ci] = RGBWColor.astype(np.uint8)
-                            #color = RGBWColor.astype(np.uint8)
-                            colorIndex = colorIndex + 1
+                            for ci in range(0, len(StrokeColors)):
+                                #TODO: Format picking!
+                                DMXindex = DMXOffset + colorIndex*4
+                                FinalITSH = np.array(StrokeColors[ci])
+                               
+                                #try:
+                                ArtNetColor = np.frombuffer(DMXData[DMXindex:DMXindex+4], dtype = np.uint8)
+                                FinalITSH[0] = ArtNetColor[0]*(100/255)
+                                FinalITSH[1] = ArtNetColor[1]*(8500/255) + 1500    #From 1 500-10 000 to 0-1
+                                FinalITSH[2] = ArtNetColor[2]*(100/255) #or 120?
+                                FinalITSH[3] = ArtNetColor[3]*(360/255)
+                                #except Exception as e:
+                                #    print(e)
+                                #    pass
+                                
+                                if FinalITSH[1] == 1500:
+                                    FinalITSH[1] = 0
+                                FinalITSH = FinalITSH.astype(np.uint16)
+
+                                for i in range(0, len(ArtNetColor)):
+                                    if ArtNetColor[i] > 0:
+                                        StrokeColors[ci][i] = FinalITSH[i]
+                                #RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(FinalITSH)
+                                #StrokeColors[ci] = RGBWColor.astype(np.uint8)
+                                colorIndex = colorIndex + 1
+
+                            stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
+
+                        else:
+                            #Assessing colors with transformation 
+                            colorIndex = 0
+                            StrokeColors = stroke.Colors
                     
-                        #Assessing properties
-                        DMXindex = DMXOffset + len(StrokeColors)*4
-                        if stroke.Properties != None:
-                            if ("Speed" in stroke.Properties and DMXData[DMXindex] > 0):
-                                stroke.Properties["Speed"][0] = DMXData[DMXindex]
-                            if ("Width" in stroke.Properties and DMXData[DMXindex + 1] > 0):
-                                stroke.Properties["Width"][0] = DMXData[DMXindex + 1]
-                        strokeIndex = strokeIndex + 1
-                        stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
+                            for ci in range(0, len(StrokeColors)):
+                            #for color in StrokeColors:
+                                DMXindex = DMXOffset + colorIndex*4
+                                ArtNetColor = np.frombuffer(DMXData[DMXindex:DMXindex+4], dtype = np.uint8)/255
+                                FinalITSH = self.ColorCalibrator.PreprocessITSHValue(stroke.Properties["Color" + str(ci+1)])
+                                for i in range(0, len(ArtNetColor)):
+                                    FinalITSH[i] = ArtNetColor[i] or FinalITSH[i]
+                                RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(FinalITSH)
+                                StrokeColors[ci] = RGBWColor.astype(np.uint8)
+                                #color = RGBWColor.astype(np.uint8)
+                                colorIndex = colorIndex + 1
+                    
+                            #Assessing properties
+                            DMXindex = DMXOffset + len(StrokeColors)*4
+                            if stroke.Properties != None:
+                                if ("Speed" in stroke.Properties and DMXData[DMXindex] > 0):
+                                    stroke.Properties["Speed"][0] = DMXData[DMXindex]
+                                if ("Width" in stroke.Properties and DMXData[DMXindex + 1] > 0):
+                                    stroke.Properties["Width"][0] = DMXData[DMXindex + 1]
+                            strokeIndex = strokeIndex + 1
+                            stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
             except :
                 pass
 

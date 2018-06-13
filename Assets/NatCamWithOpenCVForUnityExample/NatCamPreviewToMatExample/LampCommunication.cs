@@ -146,6 +146,13 @@ public class LampCommunication: MonoBehaviour {
             {
                 if (permutationCounter >= ColorPermutations.Count())
                     break;
+
+                //Ignore DS's
+                if (newLamp.Value < 20)
+                {
+                    continue;
+                }
+
                 //Start sending color permutation to lamp
                 var colorPattern = ColorPermutations[permutationCounter].ToArray();
 
@@ -166,8 +173,6 @@ public class LampCommunication: MonoBehaviour {
                         SendUDPMessage(cDTO);
                         Thread.Sleep(50);
                     }
-                    
-
                 }
                 else
                 {

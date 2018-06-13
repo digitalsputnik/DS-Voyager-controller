@@ -319,6 +319,22 @@ class Stroke:
                         invPercent = 1 - percent
                         for i in range(0, len(self.Colors[0])):
                             self.StrokeBitmap[0][pixel.QueueNumber][i] = int(percent*self.Colors[0][i] + invPercent*self.Colors[1][i])
+                elif self.Animation == "DMX":
+                    self.StrokeBitmap = np.zeros((1,self.TotalPixelCount,4))
+                    if self.Properties["Unit size"] == "All" or self.Properties["Unit size"] == "Lamp":
+                        for pixel in self.ControlledPixels:
+                            if int(self.Properties["Format"][0]) == 0:
+                                self.StrokeBitmap[0][pixel.QueueNumber] = self.Layer.Scene.ColorCalibrator.ITSHtoRGBWFull(self.Colors[0])
+                            else:
+                                self.StrokeBitmap[0][pixel.QueueNumber] = self.Colors[0]
+                    else:
+                        UnitSize = int(self.Properties["Unit size"][0])
+                        for pixel in self.ControlledPixels:
+                            #if int(self.Properties["Format"][0]) == 0:
+                            self.StrokeBitmap[0][pixel.QueueNumber] = self.Layer.Scene.ColorCalibrator.ITSHtoRGBWFull(self.Colors[int(pixel.QueueNumber/UnitSize)])
+                            #else:
+                            #    self.StrokeBitmap[0][pixel.QueueNumber] = self.Colors[int(pixel.QueueNumber/UnitSize)]
+
 
             for pixel in self.ControlledPixels:
                     #TODO: Better implementation on animation
@@ -393,7 +409,9 @@ class Stroke:
 
                         #Gamma correction (lookup table)
                         #pixel.PixelColor = np.array(self.Layer.Scene.ColorCalibrator.GammaCorrectionLookup[self.Properties["Gammax10"][0]][VideoPixel])
-
+                    elif self.Animation == "DMX":
+                        if self.TotalPixelCount > 0:
+                            pixel.PixelColor = self.StrokeBitmap[0][pixel.QueueNumber]
                     else:
                         if self.UpdateStationary:
                             pixel.PixelColor = np.array(self.Colors[0]) #Initialization/ugly            

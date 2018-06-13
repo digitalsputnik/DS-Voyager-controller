@@ -811,9 +811,28 @@ public class AnimationSender : MonoBehaviour
 
         List<int[]> RGBWColors = new List<int[]>();
 
-        foreach (var ITSHColor in ITSHColors)
+        if (ActiveStroke.Animation == "DMX")
         {
-            RGBWColors.Add(ITSHtoRGBW(ITSHColor));
+            int UnitSize = ActiveStroke.Properties["Unit size"][0];
+            for (int c = 0; c <= ActiveStroke.TotalPixelCount/ActiveStroke.Properties["Unit size"][0]; c++)
+            {
+                if (false)
+                {
+                    RGBWColors.Add(ITSHtoRGBW(ITSHColors[0]));
+                }
+                else
+                {
+                    RGBWColors.Add(new int[] {(int)(ITSHColors[0].x*100f), (int)((ITSHColors[0].y)*10000f), (int)(ITSHColors[0].z * 120f), (int)(ITSHColors[0].w * 360f) });
+                }
+                
+            }
+        }
+        else
+        {
+            foreach (var ITSHColor in ITSHColors)
+            {
+                RGBWColors.Add(ITSHtoRGBW(ITSHColor));
+            }
         }
 
         //TODO: This and previous part should be removed and calibration should happen on device
