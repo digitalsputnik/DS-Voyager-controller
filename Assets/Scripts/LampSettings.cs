@@ -308,6 +308,21 @@ public class LampSettings : MonoBehaviour {
         yield return null;
     }
 
+    IEnumerator GetSSIDListForLamp(LampInfoUpdate lamp)
+    {
+        Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        int port = 30000;
+        sock.SendTo(new byte[] { 0xD5, 0x0A, 0x87, 0x10 }, new IPEndPoint(lamp.ip, port));
+        while (sock.Available > 0)
+        {
+
+        }
+        
+
+
+        yield return null;
+    }
+
 	byte[] CreateClientModeJsonPackage()
     {
         string ssid = "";
