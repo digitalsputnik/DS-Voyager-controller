@@ -9,7 +9,7 @@ public class DialogBox : MonoBehaviour
 	static DialogBox dialogBox;
 
 	public static event DialogBoxCallbackEventHandler OnUserCallback;
-	public delegate void DialogBoxCallbackEventHandler(object sender, DialogBoxCallbackEventArgs e);
+	public delegate void DialogBoxCallbackEventHandler(DialogBoxCallbackEventArgs e);
 
 	[Header("UI Elements")]
 	[SerializeField] GameObject container;
@@ -87,9 +87,7 @@ public class DialogBox : MonoBehaviour
     {
 		DialogBoxCallbackEventHandler handler = OnUserCallback;
         if (handler != null)
-        {
-            handler(this, e);
-        }
+			handler(e);
     }
 }
 

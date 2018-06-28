@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -22,6 +23,7 @@ public class LoadSaveScripts : MonoBehaviour {
     public GameObject ColorDataReceiver;
     public GameObject AnimationSender;
     public GameObject VideoStream;
+    public GameObject LampsListParent;
 
     void Start () {
         //Add listeners to buttons
@@ -86,6 +88,43 @@ public class LoadSaveScripts : MonoBehaviour {
         file.Close();
     }
 
+    /// <summary>
+    /// Removes all lamps which are loaded from add lamps.
+    /// </summary>
+    /// <param name="LampMacList"></param>
+    private void RemoveAddLampButtons(List<string> LampMacList)
+    {
+        List<GameObject> ButtonsToBeDestroyed = new List<GameObject>();
+        GameObject AddAllLampsButton = new GameObject();
+        for (int c = 0; c < LampsListParent.transform.childCount; c++)
+        {
+            var LampButtonScript = LampsListParent.transform.GetChild(c).GetComponent<AddLampButtonScript>();
+            if (LampButtonScript != null)
+            {
+                if (LampMacList.Contains(LampButtonScript.MacName))
+                {
+                    ButtonsToBeDestroyed.Add(LampsListParent.transform.GetChild(c).gameObject);
+                }
+            }
+
+            if (LampsListParent.transform.GetChild(c).GetComponent<AddAllLampsScript>() != null)
+            {
+                AddAllLampsButton = LampsListParent.transform.GetChild(c).gameObject;
+            }
+        }
+
+        foreach (var button in ButtonsToBeDestroyed)
+        {
+            Destroy(button);
+        }
+
+        //Removes add all lamps button if it is the only one remaining
+        if(LampsListParent.transform.childCount == 5)
+        {
+            AddAllLampsButton.SetActive(false);
+        }
+    }
+
     public VideoStreamData GetVideoStreamData(GameObject videoStream)
     {
         VideoStreamData vsData = new VideoStreamData();
@@ -120,6 +159,14 @@ public class LoadSaveScripts : MonoBehaviour {
 
     public void LoadLampsToWorkspace(WorkspaceData wsData)
     {
+		foreach(GameObject lamp in Workspace.GetChildren())
+		{
+			Destroy(lamp);
+        }
+
+        var LampMacList = wsData.Lamps.Select(x => x.Mac).ToList();
+        RemoveAddLampButtons(LampMacList);
+
         foreach (LampData lamp in wsData.Lamps)
         {
             //TODO: Create general dictionary of lamps! This is hard-code!
@@ -154,11 +201,8 @@ public class LoadSaveScripts : MonoBehaviour {
             createdLamp.transform.Find("DragAndDrop1").localScale = HandlerScale / createdLamp.transform.localScale.magnitude * initialScaleMagnitude;
             createdLamp.transform.Find("DragAndDrop2").localScale = HandlerScale / createdLamp.transform.localScale.magnitude * initialScaleMagnitude;
 
-            if (!setupScripts.LampIPtoLengthDictionary.ContainsKey(IPAddress.Parse(lamp.IP)))
-            {
+			if (!setupScripts.LampIPtoLengthDictionary.ContainsKey(IPAddress.Parse(lamp.IP)))
                 setupScripts.LampIPtoLengthDictionary.Add(IPAddress.Parse(lamp.IP), lamp.LampLength);
-            }
-            
 
             createdLamp.GetComponentInChildren<Canvas>().GetComponentInChildren<Text>().text = lamp.LampLabel;
 

@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NatCamU.Core;
 
 
 public static class HelperMethods
@@ -109,15 +110,21 @@ public class DrawScripts : MonoBehaviour {
     public GameObject MenuBackGround;
     //public RawImage BackgroundRawImage;
     public GameObject VideoStreamBackground;
-    public Texture2D videoTexture;
-    public WebCamTexture webcamTexture = null;
+	public Texture2D videoTexture;
     private bool camAvailable = false;
     //public AspectRatioFitter fit;
     public GameObject VideoSourceTemplate;
     public GameObject VideoSourcePanel;
 
-    WebCamDevice[] devices = new WebCamDevice[] { };
+	Material backgroundMaterial;
+
+	DeviceCamera[] devices = new DeviceCamera[0];
     List<Dropdown.OptionData> deviceOptions = new List<Dropdown.OptionData>();
+
+    //DMX
+    public GameObject DMXDropdowns;
+    public Dropdown UnitDropdown;
+    public Dropdown FormatDropdown;
 
     //List of animations
     public List<LightAnims> animations = new List<LightAnims>();
@@ -135,22 +142,35 @@ public class DrawScripts : MonoBehaviour {
         cancelButton.onClick.AddListener(TaskCancelButtonClick);
         okButton.onClick.AddListener(TaskOkButtonClick);
 
+        //DMX properties
+        UnitDropdown.onValueChanged.AddListener(DMXPropertyChange);
+        FormatDropdown.onValueChanged.AddListener(DMXPropertyChange);
+
         StartCoroutine("GetWebCamDevices");
+
+		NatCam.OnStart += NatCam_OnStart;
+		NatCam.OnFrame += NatCam_OnFrame;
+		backgroundMaterial = VideoStreamBackground.GetComponent<MeshRenderer>().material;
+    }
+
+    private void DMXPropertyChange(int arg0)
+    {
+        animSender.SendAnimationWithUpdate();
     }
 
     public IEnumerator GetWebCamDevices()
     {
         while (true)
         {
-            WebCamDevice[] devicesRet = WebCamTexture.devices;
+			WebCamDevice[] devicesRet = WebCamTexture.devices;
             if (devicesRet.Length != devices.Length)
             {
-                devices = devicesRet;
+				devices = DeviceCamera.Cameras;
                 deviceOptions.Clear();
                 //Populate list!
-                foreach (var device in devices)
+				foreach (var device in devicesRet)
                 {
-                    deviceOptions.Add(new Dropdown.OptionData(device.name));
+					deviceOptions.Add(new Dropdown.OptionData(device.name));
                 }
                 //deviceOptions.Add(new Dropdown.OptionData("URL"));
             }else if(deviceOptions.Count == 0){
@@ -173,20 +193,20 @@ public class DrawScripts : MonoBehaviour {
         LightAnims newAnim1 = new LightAnims ();
 		newAnim1.AnimName = "Single Color";
 		newAnim1.AnimProperties.Add (new Property ("Color1", "color", itshColor, 0, 0));
-        newAnim1.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        //newAnim1.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim1);
 		LightAnims newAnim2 = new LightAnims ();
 		newAnim2.AnimName = "Gradient";
 		newAnim2.AnimProperties.Add (new Property ("Color1", "color", itshColor, 0, 0));
 		newAnim2.AnimProperties.Add (new Property ("Color2", "color", itshColor2, 0, 0));
-        newAnim2.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        //newAnim2.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim2);
 		LightAnims newAnim3 = new LightAnims ();
         newAnim3.AnimName = "Fire";
         newAnim3.AnimProperties.Add(new Property("Color1", "color", itshColor1, 0, 0));
         newAnim3.AnimProperties.Add(new Property("Color2", "color", itshColor3, 0, 0));
         newAnim3.AnimProperties.Add(new Property("Speed", "int", 100, 0, 200));
-        newAnim3.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        //newAnim3.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim3);
         LightAnims newAnim4 = new LightAnims();
         newAnim4.AnimName = "Police";
@@ -194,7 +214,7 @@ public class DrawScripts : MonoBehaviour {
         newAnim4.AnimProperties.Add(new Property("Color2", "color", itshColor2, 0, 0));
         newAnim4.AnimProperties.Add(new Property("Color3", "color", itshBackGround, 0, 0));
         newAnim4.AnimProperties.Add(new Property("Speed", "int", 60, 0, 500));
-        newAnim4.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        //newAnim4.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim4);
         LightAnims newAnim5 = new LightAnims();
         newAnim5.AnimName = "Chaser";
@@ -208,7 +228,7 @@ public class DrawScripts : MonoBehaviour {
         //int[] minValue = { 0, 0, 0, 0 };
         //int[] maxValue = { 23, 59, 59, 999 };
         //newAnim5.AnimProperties.Add(new Property("StartTime", "time", startValue, minValue, maxValue));
-        newAnim5.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        //newAnim5.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim5);
 
         LightAnims newAnim6 = new LightAnims();
@@ -221,7 +241,7 @@ public class DrawScripts : MonoBehaviour {
         newAnim6.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
         newAnim6.AnimProperties.Add(new Property("Time offset", "int", 0, 0, 20000));
         newAnim6.AnimProperties.Add(new Property("Hold", "int", 0, 0, 20000));
-        newAnim6.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        //newAnim6.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim6);
 
         LightAnims newAnim7 = new LightAnims();
@@ -234,7 +254,7 @@ public class DrawScripts : MonoBehaviour {
         newAnim7.AnimProperties.Add(new Property("Width", "int", 10, 0, 100));
         newAnim7.AnimProperties.Add(new Property("Time offset", "int", 0, 0, 20000));
         newAnim7.AnimProperties.Add(new Property("Hold", "int", 0, 0, 20000));
-        newAnim7.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        //newAnim7.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim7);
 
         LightAnims newAnim8 = new LightAnims();
@@ -243,7 +263,7 @@ public class DrawScripts : MonoBehaviour {
         newAnim8.AnimProperties.Add(new Property("Color2", "color", itshBackGround, 0, 0));
         newAnim8.AnimProperties.Add(new Property("Speed", "int", 30, 0, 200));
         newAnim8.AnimProperties.Add(new Property("Hold", "int", 1000, 0, 20000));
-        newAnim8.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        //newAnim8.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
         animations.Add(newAnim8);
 
         LightAnims newAnim9 = new LightAnims();
@@ -256,10 +276,19 @@ public class DrawScripts : MonoBehaviour {
         LightAnims newAnim10 = new LightAnims();
         newAnim10.AnimName = "DMX";
         newAnim10.AnimProperties.Add(new Property("Color1", "color", itshColor, 0, 0));
-        newAnim10.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
-        newAnim10.AnimProperties.Add(new Property("Unit size", "int", 1, 1, 128));
+
+        //newAnim10.AnimProperties.Add(new Property("Unit size", "int", 1, -1, 0));
         //newAnim10.AnimProperties.Add(new Property("Format", "int", 0, 0, 1));
-        //newAnim10.AnimProperties.Add(new Property("Universe offset", "int", 1, 1, 30000)); //max - 32768
+
+        newAnim10.AnimProperties.Add(new Property("Unit size", "dropdown", 1, -1, 0));
+        newAnim10.AnimProperties.Add(new Property("Format", "dropdown", 0, 0, 1));
+
+        newAnim10.AnimProperties.Add(new Property("Division", "int", 1, 1, 64));
+        newAnim10.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        newAnim10.AnimProperties.Add(new Property("Universe offset", "int", 0, 0, 30000)); //max - 32768
+        
+
+        //ArtNet/sACN option here?
         //TODO: "Unit size" Dropdown: 1,2,4,8,16,32,64,128,lamp,all -> string!
         //TODO: "Color format" Dropdown: ITSH/RGBW -> string!
         animations.Add(newAnim10);
@@ -504,6 +533,15 @@ public class DrawScripts : MonoBehaviour {
                 }
                 ChangeSource((int)animations[animNum].AnimProperties[i].startValue);
             }
+
+            if (animations[animNum].AnimName == "DMX")
+            {
+                DMXDropdowns.SetActive(true);
+            }
+            else
+            {
+                DMXDropdowns.SetActive(false);
+            }
         }
 
 
@@ -517,7 +555,20 @@ public class DrawScripts : MonoBehaviour {
                 if (animations[animNum].AnimProperties[i].type == "int" || animations[animNum].AnimProperties[i].type == "stream")
                 {
                     NewAnimProps.Properties.Add(animations[animNum].AnimProperties[i].name, new int[] { (int)animations[animNum].AnimProperties[i].startValue });
+                }else if (animations[animNum].AnimProperties[i].type == "dropdown")
+                {
+                    if (animations[animNum].AnimProperties[i].name == "Unit size")
+                    {
+                        NewAnimProps.Properties.Add(animations[animNum].AnimProperties[i].name, new int[] { UnitDropdown.value - 1 });
+                    }
+
+                    if (animations[animNum].AnimProperties[i].name == "Format")
+                    {
+                        NewAnimProps.Properties.Add(animations[animNum].AnimProperties[i].name, new int[] { FormatDropdown.value });
+                    }
+
                 }
+
                 else
                 {
                     NewAnimProps.Properties.Add(animations[animNum].AnimProperties[i].name, (int[])animations[animNum].AnimProperties[i].startValue);
@@ -534,17 +585,16 @@ public class DrawScripts : MonoBehaviour {
         
     }
 
-
+    
     void ChangeSource(int value)
     {
-        if (webcamTexture != null)
+		if (NatCam.IsPlaying)
         {
-            webcamTexture.Stop();
-            webcamTexture = null;
+			NatCam.Pause();
+			videoTexture = null;
             VideoStreamBackground.SetActive(false);
         }
 
-        WebCamDevice[] devices = WebCamTexture.devices;
         if (value < devices.Length)
         {
 
@@ -552,46 +602,38 @@ public class DrawScripts : MonoBehaviour {
             //PullScript = MenuBackGround.transform.Find("MenuPullImage").gameObject.GetComponent<MenuPullScript>();
             //PullScript.CloseMenu();
 
-            if (devices.Length == 0)
+			if (devices.Length == 0)
             {
                 Debug.Log("No Camera Detected!");
                 camAvailable = false;
                 return;
             }
+			//for (int j = 0; j < devices.Length; j++)
+			//{
+			//    if (value == 0)
+			//    {
+			//        if (devices[j].isFrontFacing)
+			//        {
+			//            webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
+			//            //Debug.Log("Webcam created!");
 
-            webcamTexture = new WebCamTexture(devices[value].name, Screen.width, Screen.height);
+			//        }
+			//    }
+			//    else if (value == 1)
+			//    {
+			//        if (!devices[j].isFrontFacing)
+			//        {
+			//            webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
+			//            //Debug.Log("Webcam created!");
 
-            //for (int j = 0; j < devices.Length; j++)
-            //{
-            //    if (value == 0)
-            //    {
-            //        if (devices[j].isFrontFacing)
-            //        {
-            //            webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
-            //            //Debug.Log("Webcam created!");
+			//        }
+			//    }
+			//}
 
-            //        }
-            //    }
-            //    else if (value == 1)
-            //    {
-            //        if (!devices[j].isFrontFacing)
-            //        {
-            //            webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
-            //            //Debug.Log("Webcam created!");
-
-            //        }
-            //    }
-            //}
-            if (webcamTexture == null)
-            {
-                Debug.Log("Unable to find camera");
-                return;
-            }
-
-            webcamTexture.Play();
+			NatCam.Camera = devices[value];
+			NatCam.Camera.Framerate = 30;
+			NatCam.Play();
             VideoStreamBackground.SetActive(true);
-            VideoStreamBackground.GetComponent<Renderer>().material.mainTexture = webcamTexture;
-
             camAvailable = true;
         }
         else {
@@ -604,19 +646,23 @@ public class DrawScripts : MonoBehaviour {
         }
     }
 
+    void NatCam_OnStart()
+	{
+		backgroundMaterial.mainTexture = NatCam.Preview;
+		videoTexture = new Texture2D(NatCam.Preview.width, NatCam.Preview.height);
+	}
+    
+	void NatCam_OnFrame()
+    {
+        OpenCVForUnity.Utils.textureToTexture2D(NatCam.Preview, videoTexture);
+    }
 
-    void PlayStream(InputField urlInput)
+	void PlayStream(InputField urlInput)
     {
 
         //TODO: Play the video from this URL
         Debug.Log("Playing stream.....");
-
-
-    }
-
-
-
-
+	}   
 
     private void NumInputEditListener(InputField numInput)
     {
@@ -674,6 +720,21 @@ public class DrawScripts : MonoBehaviour {
 
                 currentAnim.Properties.Add(animations[animNum].AnimProperties[i].name, startTime);
             }
+
+            if (animations[animNum].AnimProperties[i].type == "dropdown")
+            {
+                if (animations[animNum].AnimProperties[i].name == "Unit size")
+                {
+                    currentAnim.Properties.Add(animations[animNum].AnimProperties[i].name, new int[] { UnitDropdown.value - 1 });
+                }
+
+                if (animations[animNum].AnimProperties[i].name == "Format")
+                {
+                    currentAnim.Properties.Add(animations[animNum].AnimProperties[i].name, new int[] { FormatDropdown.value });
+                }
+
+            }
+
         }
 
         return currentAnim;
@@ -810,6 +871,20 @@ public class DrawScripts : MonoBehaviour {
 
                     newTime.transform.Find("StartTimeButton").GetComponent<Button>().onClick.AddListener(TaskSetStartTimeButtonClick);
                     timePanel.SetActive(true);
+
+                }
+
+                if (animations[animNum].AnimProperties[i].type == "dropdown")
+                {
+                    if (animations[animNum].AnimProperties[i].name == "Unit size")
+                    {
+                        UnitDropdown.value = property.Value[0] + 1;
+                    }
+
+                    if (animations[animNum].AnimProperties[i].name == "Format")
+                    {
+                        FormatDropdown.value = property.Value[0];
+                    }
 
                 }
 

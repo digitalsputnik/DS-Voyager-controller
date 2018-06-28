@@ -9,6 +9,7 @@ import serial
 import time
 import numpy as np
 import threading
+import colorsys
 
 #emergency!
 import uuid
@@ -38,8 +39,8 @@ class ArtNetListener(threading.Thread):
                 if self.Active == False:
                     continue
 
-                if time.time() - lastTime <= rate:
-                    continue
+                #if time.time() - lastTime <= rate:
+                #    continue
 
                 lastTime = time.time()
 
@@ -55,10 +56,7 @@ class ArtNetListener(threading.Thread):
                     # make sure right version
                     if ArtNetData[10:12] != int(14).to_bytes(2, 'big'):
                         continue
-                    # Check universe
-                    #TODO: Redo universe settings -> Check if universe is in permitted list or not
-                    if ArtNetData[14:16] != int(0).to_bytes(2, 'big'):
-                        continue
+                    
                     DMXData = ArtNetData[18:]
 
                     if np.array_equal(DMXData, lastDMXdata):
@@ -80,44 +78,80 @@ class ArtNetListener(threading.Thread):
                             continue
 
                         if "DMX offset" in stroke.Properties:
-                            DMXOffset = stroke.Properties["DMX offset"][0] - 1
+                            DMXOffset = stroke.DMXOffset - 1 #stroke.Properties["DMX offset"][0] - 1
 
-                        if len(DMXData) < DMXOffset + StrokeStep:
-                            break
+                        #if len(DMXData) < DMXOffset + StrokeStep:
+                        #    break
 
                         if stroke.Animation == "DMX":
                             colorIndex = 0
                             StrokeColors = stroke.Colors
+
+                            #Get universe
+                            Universe = int.from_bytes(ArtNetData[14:16], 'little')
+                            UniverseOffset = stroke.Universe #stroke.Properties["Universe offset"][0]
+                            UniverseDifference = Universe - UniverseOffset
+
+                            #Check indices
+                            #Start index
+                            ColorIndexStart = max(int((UniverseDifference*512 - DMXOffset)/4),0)
+                            #End index calculation!
+                            ColorIndexEnd = min(len(StrokeColors), ColorIndexStart + 127)
+
+                            DefaultColor = stroke.Properties["Color1"]
+                            DefaultRGB = colorsys.hsv_to_rgb(DefaultColor[3]/360, DefaultColor[2]/120, DefaultColor[0]/100)
+                            
+                            if UniverseDifference < 0:
+                                continue
+                            elif ColorIndexStart > len(StrokeColors):
+                                continue
+
+                            if UniverseDifference > 0:
+                                DMXOffset = 0
                     
-                            for ci in range(0, len(StrokeColors)):
-                                #TODO: Format picking!
+                            for ci in range(ColorIndexStart, ColorIndexEnd):
                                 DMXindex = DMXOffset + colorIndex*4
                                 FinalITSH = np.array(StrokeColors[ci])
                                
-                                #try:
                                 ArtNetColor = np.frombuffer(DMXData[DMXindex:DMXindex+4], dtype = np.uint8)
-                                FinalITSH[0] = ArtNetColor[0]*(100/255)
-                                FinalITSH[1] = ArtNetColor[1]*(8500/255) + 1500    #From 1 500-10 000 to 0-1
-                                FinalITSH[2] = ArtNetColor[2]*(100/255) #or 120?
-                                FinalITSH[3] = ArtNetColor[3]*(360/255)
-                                #except Exception as e:
-                                #    print(e)
-                                #    pass
-                                
-                                if FinalITSH[1] == 1500:
-                                    FinalITSH[1] = 0
-                                FinalITSH = FinalITSH.astype(np.uint16)
+                                colorIndex = colorIndex + 1
+                                if len(ArtNetColor) < 4:
+                                    continue
 
+                                #Format picking!
+                                if stroke.Properties["Format"][0] == 0:
+                                    #ITSH
+                                    FinalITSH[0] = ArtNetColor[0]*(100/255) or DefaultColor[0]
+                                    FinalITSH[1] = ArtNetColor[1]*(8500/255) + 1500
+                                    FinalITSH[2] = ArtNetColor[2]*(120/255) or DefaultColor[2]
+                                    FinalITSH[3] = ArtNetColor[3]*(359/255) or DefaultColor[3]
+                                else:
+                                    #RGBT
+                                    RGB = ArtNetColor[0:3]/255
+                                    HSV = colorsys.rgb_to_hsv(RGB[0] or DefaultRGB[0],RGB[1] or DefaultRGB[1],RGB[2] or DefaultRGB[2])
+                                    FinalITSH[0] = HSV[2]*100
+                                    FinalITSH[1] = ArtNetColor[3]*(8500/255) + 1500
+                                    FinalITSH[2] = HSV[1]*120
+                                    FinalITSH[3] = HSV[0]*359
+
+                                if FinalITSH[1] == 1500:
+                                    FinalITSH[1] = DefaultColor[1]
+                                
                                 for i in range(0, len(ArtNetColor)):
-                                    if ArtNetColor[i] > 0:
-                                        StrokeColors[ci][i] = FinalITSH[i]
+                                    StrokeColors[ci][i] = FinalITSH[i]
                                 #RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(FinalITSH)
                                 #StrokeColors[ci] = RGBWColor.astype(np.uint8)
-                                colorIndex = colorIndex + 1
 
                             stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
 
-                        else:
+                        #else:
+                            '''
+                            #Other strokes are ignored!
+                            # Check universe
+                            #TODO: Redo universe settings -> Check if universe is in permitted list or not
+                            if ArtNetData[14:16] != int(0).to_bytes(2, 'big'):
+                                continue
+                            
                             #Assessing colors with transformation 
                             colorIndex = 0
                             StrokeColors = stroke.Colors
@@ -143,6 +177,7 @@ class ArtNetListener(threading.Thread):
                                     stroke.Properties["Width"][0] = DMXData[DMXindex + 1]
                             strokeIndex = strokeIndex + 1
                             stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
+                            '''
             except :
                 pass
 
@@ -171,8 +206,8 @@ class sACNListener(threading.Thread):
                 if self.Active == False:
                     continue
 
-                if time.time() - lastTime <= rate:
-                    continue
+                #if time.time() - lastTime <= rate:
+                #    continue
 
                 lastTime = time.time()
 
@@ -212,68 +247,67 @@ class sACNListener(threading.Thread):
                             continue
 
                         if "DMX offset" in stroke.Properties:
-                            DMXOffset = stroke.Properties["DMX offset"][0] - 1
-
-                        if len(DMXData) < DMXOffset + StrokeStep:
-                            break
+                            DMXOffset = stroke.DMXOffset - 1 #stroke.Properties["DMX offset"][0] - 1
 
                         if stroke.Animation == "DMX":
                             colorIndex = 0
                             StrokeColors = stroke.Colors
+
+                            #Get universe
+                            Universe = int.from_bytes(sACNData[113:115], 'big')
+                            UniverseOffset = stroke.Universe #stroke.Properties["Universe offset"][0]
+                            UniverseDifference = Universe - UniverseOffset
+
+                            #Check indices
+                            #Start index
+                            ColorIndexStart = max(int((UniverseDifference*512 - DMXOffset)/4),0)
+                            #End index calculation!
+                            ColorIndexEnd = min(len(StrokeColors), ColorIndexStart + 127)
+
+                            DefaultColor = stroke.Properties["Color1"]
+                            DefaultRGB = colorsys.hsv_to_rgb(DefaultColor[3]/360, DefaultColor[2]/120, DefaultColor[0]/100)
+                            
+                            if UniverseDifference < 0:
+                                continue
+                            elif ColorIndexStart > len(StrokeColors):
+                                continue
+
+                            if UniverseDifference > 0:
+                                DMXOffset = 0
                     
-                            for ci in range(0, len(StrokeColors)):
-                                #TODO: Format picking!
+                            for ci in range(ColorIndexStart, ColorIndexEnd):
                                 DMXindex = DMXOffset + colorIndex*4
                                 FinalITSH = np.array(StrokeColors[ci])
                                
-                                #try:
                                 ArtNetColor = np.frombuffer(DMXData[DMXindex:DMXindex+4], dtype = np.uint8)
-                                FinalITSH[0] = ArtNetColor[0]*(100/255)
-                                FinalITSH[1] = ArtNetColor[1]*(8500/255) + 1500    #From 1 500-10 000 to 0-1
-                                FinalITSH[2] = ArtNetColor[2]*(100/255) #or 120?
-                                FinalITSH[3] = ArtNetColor[3]*(360/255)
-                                #except Exception as e:
-                                #    print(e)
-                                #    pass
-                                
-                                if FinalITSH[1] == 1500:
-                                    FinalITSH[1] = 0
-                                FinalITSH = FinalITSH.astype(np.uint16)
+                                colorIndex = colorIndex + 1
+                                if len(ArtNetColor) < 4:
+                                    continue
 
+                                #Format picking!
+                                if stroke.Properties["Format"][0] == 0:
+                                    #ITSH
+                                    FinalITSH[0] = ArtNetColor[0]*(100/255) or DefaultColor[0]
+                                    FinalITSH[1] = ArtNetColor[1]*(8500/255) + 1500
+                                    FinalITSH[2] = ArtNetColor[2]*(120/255) or DefaultColor[2]
+                                    FinalITSH[3] = ArtNetColor[3]*(359/255) or DefaultColor[3]
+                                else:
+                                    #RGBT
+                                    RGB = ArtNetColor[0:3]/255
+                                    HSV = colorsys.rgb_to_hsv(RGB[0] or DefaultRGB[0],RGB[1] or DefaultRGB[1],RGB[2] or DefaultRGB[2])
+                                    FinalITSH[0] = HSV[2]*100
+                                    FinalITSH[1] = ArtNetColor[3]*(8500/255) + 1500
+                                    FinalITSH[2] = HSV[1]*120
+                                    FinalITSH[3] = HSV[0]*359
+
+                                if FinalITSH[1] == 1500:
+                                    FinalITSH[1] = DefaultColor[1]
+                                
                                 for i in range(0, len(ArtNetColor)):
-                                    if ArtNetColor[i] > 0:
-                                        StrokeColors[ci][i] = FinalITSH[i]
+                                    StrokeColors[ci][i] = FinalITSH[i]
                                 #RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(FinalITSH)
                                 #StrokeColors[ci] = RGBWColor.astype(np.uint8)
-                                colorIndex = colorIndex + 1
 
-                            stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
-
-                        else:
-                            #Assessing colors with transformation 
-                            colorIndex = 0
-                            StrokeColors = stroke.Colors
-                    
-                            for ci in range(0, len(StrokeColors)):
-                            #for color in StrokeColors:
-                                DMXindex = DMXOffset + colorIndex*4
-                                ArtNetColor = np.frombuffer(DMXData[DMXindex:DMXindex+4], dtype = np.uint8)/255
-                                FinalITSH = self.ColorCalibrator.PreprocessITSHValue(stroke.Properties["Color" + str(ci+1)])
-                                for i in range(0, len(ArtNetColor)):
-                                    FinalITSH[i] = ArtNetColor[i] or FinalITSH[i]
-                                RGBWColor = self.ColorCalibrator.NormalizedITSHtoRGBW(FinalITSH)
-                                StrokeColors[ci] = RGBWColor.astype(np.uint8)
-                                #color = RGBWColor.astype(np.uint8)
-                                colorIndex = colorIndex + 1
-                    
-                            #Assessing properties
-                            DMXindex = DMXOffset + len(StrokeColors)*4
-                            if stroke.Properties != None:
-                                if ("Speed" in stroke.Properties and DMXData[DMXindex] > 0):
-                                    stroke.Properties["Speed"][0] = DMXData[DMXindex]
-                                if ("Width" in stroke.Properties and DMXData[DMXindex + 1] > 0):
-                                    stroke.Properties["Width"][0] = DMXData[DMXindex + 1]
-                            strokeIndex = strokeIndex + 1
                             stroke.ChangeProperties(colors = StrokeColors, properties = stroke.Properties)
             except :
                 pass
@@ -549,9 +583,9 @@ while True:
                                 continue
                             VisibleStrokeIDs.append(controllerStroke['StrokeID'])
     
-                            if not Layer.ChangeStrokeByID(controllerStroke['StrokeID'], startTime = controllerStroke['StartTime'], pixelDictionary = controllerStroke['PixelQueueToControlledPixel'], totalPixelCount = controllerStroke['TotalPixelCount'], colors = controllerStroke['Colors'],properties = controllerStroke['Properties'], animation = controllerStroke['Animation'], duration = controllerStroke['Duration'], timeStamp = controllerStroke['TimeStamp'], lampMac = LampMac):
+                            if not Layer.ChangeStrokeByID(controllerStroke['StrokeID'], startTime = controllerStroke['StartTime'], pixelDictionary = controllerStroke['PixelQueueToControlledPixel'], totalPixelCount = controllerStroke['TotalPixelCount'], colors = controllerStroke['Colors'],properties = controllerStroke['Properties'], animation = controllerStroke['Animation'], duration = controllerStroke['Duration'], timeStamp = controllerStroke['TimeStamp'], lampMac = LampMac, Universe = controllerStroke['Universe'], DMXOffset = controllerStroke['DMXOffset']):
                                 #print("Adding new stroke!")
-                                NewStroke = AnimationPlayer.Stroke(Layer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['StartTime'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac)
+                                NewStroke = AnimationPlayer.Stroke(Layer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['StartTime'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac, Universe = controllerStroke['Universe'], DMXOffset = controllerStroke['DMXOffset'])
                         Layer.RemoveInvisibleStrokes(VisibleStrokeIDs)
                     else:
                         #Create layer and its strokes
@@ -559,7 +593,7 @@ while True:
                         controllerLayer['Strokes'].sort(key = lambda s: s["CreationTimestamp"])
                         for controllerStroke in controllerLayer['Strokes']:
                             if LampMac in controllerStroke['PixelQueueToControlledPixel']:
-                                NewStroke = AnimationPlayer.Stroke(NewLayer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['StartTime'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac)
+                                NewStroke = AnimationPlayer.Stroke(NewLayer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['StartTime'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac, Universe = controllerStroke['Universe'], DMXOffset = controllerStroke['DMXOffset'])
                 #TODO: Delete layers and strokes which have not been sent?
                 #Save to file
                 file = open(StrokesFilename, "w")

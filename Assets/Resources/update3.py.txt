@@ -1,7 +1,8 @@
-#Main update script for CHIP system and LPC. Andro 27.03.2018
+#Main update script for CHIP system and LPC. Andro 14.06.2018
 
 #to generate md5sum file on chip, make sure no checklist file exists! : 
 #md5sum /mnt/data/update_temp/* > /mnt/data/update_temp/checklist.chk
+#remove ssidlist.txt from checklisk.chk
 
 #For LPC update, don't forget to update LPC version number!
 
@@ -18,7 +19,7 @@ def active_mode():
 	time.sleep(1)
 	ser = serial.Serial(
 		port='/dev/ttyS1',
-		baudrate=750000,	  # 115200 in versions v0.00.1 - v0.02.0. 750000 from version v0.02.1 on.
+		baudrate=750000,
 		parity=serial.PARITY_NONE,
 		stopbits=serial.STOPBITS_ONE,
 		bytesize=serial.EIGHTBITS,
@@ -32,9 +33,20 @@ def active_mode():
 	ser.close()
 
 
+
+#Just in case if multiple apps should start updating one voyager simultaneously
+#exits script
+ps = os.popen("ps ax | grep -v grep | grep update3.py | wc -l").read().strip()
+if int(ps) > 1:
+        print ("UPDATE RUNNING ALREADY")
+        sys.exit(1)
+
 #kill processes that use ttyS1
-os.popen("kill -9 $(ps ax | grep PythonReceiver.py | grep -v grep |awk 'NR==1{print $1}') 2> /dev/null")
-os.popen("kill -9 $(ps ax | grep ut2.6.py | grep -v grep | awk 'NR==1{print $1}') 2> /dev/null")
+os.system("kill -9 $(ps ax | grep PythonReceiver.py | grep -v grep |awk 'NR==1{print $1}') 2> /dev/null")
+os.system("kill -9 $(ps ax | grep ut2.6.py | grep -v grep | awk 'NR==1{print $1}') 2> /dev/null")
+
+#kill old legacy autoconnect
+os.system("kill -9 $(ps ax | grep autoconnect.sh | grep -v grep | awk 'NR==1{print $1}') 2> /dev/null")
 
 ###MOVING FILES. CHIP UPDATES###
 
@@ -51,11 +63,11 @@ if "FAILED" in os.popen("md5sum  -c /mnt/data/update_temp/checklist.chk 2> /dev/
 	sys.exit()
 
 #move new files, check new location md5sum
-os.popen("mv /mnt/data/ssidlist.txt /mnt/data/ssidlist.txt.bak")
-os.popen("mv /mnt/data/update_temp/* /mnt/data/")
+os.system("mv /mnt/data/ssidlist.txt /mnt/data/ssidlist.txt.bak")
+os.system("mv /mnt/data/update_temp/* /mnt/data/")
 time.sleep(0.1)
-os.popen("sed -i 's#update_temp/##g' /mnt/data/checklist.chk")
-os.popen("mv /mnt/data/ssidlist.txt.bak /mnt/data/ssidlist.txt")
+os.system("sed -i 's#update_temp/##g' /mnt/data/checklist.chk")
+os.system("mv /mnt/data/ssidlist.txt.bak /mnt/data/ssidlist.txt")
 time.sleep(0.4)
 if "FAILED" in os.popen("md5sum  -c /mnt/data/checklist.chk 2> /dev/null ").read().strip():
 	print ("MD5SUM FAIL")
@@ -110,9 +122,45 @@ if reboot_needed == 1:
 	print ("UPDATE SUCCESSFUL, REBOOT NEEDED")
 else:
 	print ("UPDATE SUCCESSFUL")
-
+	
+	
 ### RELAUNCH processes ###
 os.system("nice -11 setsid python3 /mnt/data/animation/PythonReceiver.py &")
 os.system("setsid python3 /mnt/data/ut2.6.py &")
 
 
+
+### WIFI RESET FROM OLD CONFIG ### 
+#check if master with _M and 172.20.1.1
+ap_ssid=os.popen("cat /mnt/data/net/hostapd.conf | grep '\<DS026.........._M\>'").readline().strip()
+ap_ip=os.popen("cat /mnt/data/net/interfaces | grep address | awk '{print $2}'").readline().strip()
+
+if ap_ssid != "" and ap_ip == "172.20.1.1":
+        #or maybe restore and just reboot?
+		
+		#reset wifi settings
+		os.system("cp /etc/net_orig/interfaces /mnt/data/net/interfaces")
+		os.system("cp /etc/net_orig/dnsmasq.conf /mnt/data/net/dnsmasq.conf ")
+		os.system("cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf")
+		os.system("sed -i '/channel=/c\channel=6' /mnt/data/net/hostapd.conf")
+		os.system("sed -i '/wpa=3/c\wpa=2' /mnt/data/net/hostapd.conf")
+		os.system("sed -i '/dhcp-range/c\dhcp-range=172.20.0.100,172.20.0.250,168h' /mnt/data/net/dnsmasq.conf")
+		
+		#restart interface
+		os.system("ifconfig wlan1 0.0.0.0")
+		os.system("/etc/init.d/S80dnsmasq stop")
+		os.system("/etc/init.d/S99_hostapd stop")
+		time.sleep(1)
+		os.system("ifdown wlan1")
+		os.system("ifconfig wlan1 down")
+		time.sleep(4)
+		os.system("ifconfig wlan1 up")
+		os.system("ifup wlan1")
+		time.sleep(1)
+		os.system("/etc/init.d/S80dnsmasq start")
+		os.system("/etc/init.d/S99_hostapd start")
+		os.system("ifconfig wlan1 172.20.0.1 netmask 255.255.255.0")
+		
+		os.system("python3 /mnt/data/ap_only.py")
+		os.system("echo 1 > /mnt/data/timesyncflag")	
+	

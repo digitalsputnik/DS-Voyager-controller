@@ -9,13 +9,13 @@ else
 	#restore
 	cp /etc/net_orig/interfaces /mnt/data/net/interfaces
 	cp /etc/net_orig/dnsmasq.conf /mnt/data/net/dnsmasq.conf 
-	cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf
+	#cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf
 
 	#changes to network config, avoids changing readonly backups of network
 	sed -i '/channel=3/c\channel=6' /mnt/data/net/hostapd.conf
 	sed -i '/wpa=3/c\wpa=2' /mnt/data/net/hostapd.conf
-	echo "wmm_enabled=0" >> /mnt/data/net/hostapd.conf
-	echo "beacon_int=300" >> /mnt/data/net/hostapd.conf
+	#echo "wmm_enabled=0" >> /mnt/data/net/hostapd.conf
+	#echo "beacon_int=300" >> /mnt/data/net/hostapd.conf
 	sed -i "/dhcp-range/c\dhcp-range=172.20.0.100,172.20.0.250,168h" /mnt/data/net/dnsmasq.conf
 	
 	#remove old leases
@@ -29,7 +29,22 @@ else
 	iwconfig wlan1 power off
 	iwconfig wlan0 power off
 
+	#reset timesyncflag
+	echo 0 > /mnt/data/timesyncflag
+	
+	network_mode=$(cat /mnt/data/network_mode)
+	
+	if [ "$network_mode" == "client_mode" ] ; then
+		(sleep 3; python3 /mnt/data/client_only.py )&
+		echo 0 > /mnt/data/timesyncflag
+	else
+		(sleep 3; python3 /mnt/data/ap_only.py )&
+		echo 1 > /mnt/data/timesyncflag
+	fi
+	echo $network_mode
 	python3 /mnt/data/ut2.6.py &
 	nice -11 python3 /mnt/data/animation/PythonReceiver.py &
-	sh /mnt/data/autoconnect.sh &
+	#sh /mnt/data/autoconnect.sh &
+	
+
 fi

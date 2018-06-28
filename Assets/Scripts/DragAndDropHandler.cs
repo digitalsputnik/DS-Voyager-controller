@@ -24,7 +24,7 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
     public GameObject drawTools;
     public GameObject videoStreamBackground;
     public List<int> VideoPixels;
-    WebCamTexture webcamTexture = null;
+	Texture2D webcamTexture;
     public float PointX = 0.0f;
     public float PointY = 0.0f;
 
@@ -37,10 +37,10 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
         TrashCan.SetActive(true);
         itemBeingDragged = gameObject;
         difference = transform.position - GetMouseLampPosition();
-        if (drawTools.GetComponent<DrawScripts>().webcamTexture != null)
+		if (drawTools.GetComponent<DrawScripts>().videoTexture != null)
         {
             //Debug.Log("Found WebCamTexture!!!");
-            webcamTexture = drawTools.GetComponent<DrawScripts>().webcamTexture;
+			webcamTexture = drawTools.GetComponent<DrawScripts>().videoTexture;
         }
     }
 

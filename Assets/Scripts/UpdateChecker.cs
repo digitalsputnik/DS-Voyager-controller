@@ -65,23 +65,28 @@ public class UpdateChecker : MonoBehaviour {
     //Bundle files
     private string[] BundleInstallationFiles = new string[]
     {
+        "ap_only.py",
+        "autoconnect.sh",
         "aux_disable_shutdown_30_sec.py",
         "checklist.chk",
+        "client_only.py",
         "connect_cm.sh",
+        "connect_cm_v2.sh",
         "lpc_firmware_exit_from_bootloader_hw3.py",
         "lpc_firmware_update_hw3.sh",
         "lpc_firmware_version.py",
         "netchanger.sh",
+        "network_mode",
         "serial_check_1.sh",
         "serial_check_2.sh",
         "ssidlist.txt",
+        "timecompare.py",
+        "timesync_router.py",
+        "timesync-ask.py",
         "update1.sh",
         "update3.py",
         "ut2.6.py",
-        "voyager_lpc_release_user_update.bin",
-        "autoconnect.sh",
-        "timecompare.py",
-        "timesync-ask.py"
+        "voyager_lpc_release_user_update.bin"
     };
 
     //utFile

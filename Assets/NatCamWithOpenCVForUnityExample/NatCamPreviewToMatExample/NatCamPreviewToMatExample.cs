@@ -132,7 +132,7 @@ namespace NatCamWithOpenCVForUnityExample
 
             // Set the camera's preview resolution
             NatCam.Camera.PreviewResolution = previewResolution;
-            NatCam.Camera.ExposureBias = -20f;
+            //NatCam.Camera.ExposureBias = -20f;
             // Set the camera framerate
             NatCam.Camera.Framerate = requestedFPS;
             NatCam.Play();
@@ -187,6 +187,23 @@ namespace NatCamWithOpenCVForUnityExample
 
             Debug.Log ("OnStart (): " + matrix.cols() + " " + matrix.rows() + " " + NatCam.Preview.width + " " + NatCam.Preview.height + " " + texture.width + " " + texture.height);
 
+			if (Application.platform == RuntimePlatform.IPhonePlayer)
+            {
+            #if UNITY_IOS
+                if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone8 ||
+                    UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone8Plus ||
+                    UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhoneX)
+                {
+                    NatCam.Camera.ExposureBias = Mathf.Lerp(NatCam.Camera.MinExposureBias, NatCam.Camera.MaxExposureBias, 0.4f);
+                }
+                else
+                    NatCam.Camera.ExposureBias = Mathf.Max(NatCam.Camera.MinExposureBias, -20);
+            #endif
+            }
+            else
+				try { NatCam.Camera.ExposureBias = Mathf.Max(NatCam.Camera.MinExposureBias, -20); }
+				catch (Exception) { }
+
             StartCoroutine("DetectLampsCoroutine");
         }
 
@@ -230,27 +247,7 @@ namespace NatCamWithOpenCVForUnityExample
                 }
             }
 
-            if (NatCam.IsPlaying && didUpdateThisFrame) {
-
-                NatCam.Camera.ExposureBias = Mathf.Max(NatCam.Camera.MinExposureBias, -20);
-#if UNITY_IOS
-            if (Application.platform == RuntimePlatform.IPhonePlayer)
-            {
-                if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone8 || UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone8Plus || UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhoneX)
-                {
-                    NatCam.Camera.ExposureBias = Mathf.Lerp(NatCam.Camera.MinExposureBias, NatCam.Camera.MaxExposureBias, 0.4f);
-                }
-                else
-                {
-                    NatCam.Camera.ExposureBias = Mathf.Max(NatCam.Camera.MinExposureBias, -20);
-                }
-            }
-            else
-            {
-                //Set the camera to be minimally exposed
-                NatCam.Camera.ExposureBias = Mathf.Max(NatCam.Camera.MinExposureBias, -20);
-            }
-#endif
+            if (NatCam.IsPlaying && didUpdateThisFrame) {    
 
                 drawCount++;
 
@@ -1091,9 +1088,12 @@ namespace NatCamWithOpenCVForUnityExample
         /// </summary>
         public void OnChangeCameraButtonClick ()
         {
-            // Switch camera
+			// Switch camera
+			NatCam.Pause();
             CameraIndex = (CameraIndex + 1) % DeviceCamera.Cameras.Length;
+			didUpdateThisFrame = false;
             NatCam.Camera = DeviceCamera.Cameras[CameraIndex];
+			NatCam.Play();         
             //if (NatCam.Camera.IsFrontFacing) NatCam.Camera = DeviceCamera.RearCamera;
             //else NatCam.Camera = DeviceCamera.FrontCamera;
         }

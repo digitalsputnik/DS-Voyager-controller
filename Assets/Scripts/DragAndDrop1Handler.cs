@@ -40,7 +40,7 @@ public class DragAndDrop1Handler : MonoBehaviour {
         initialLightAbsolutePosition = itemBeingScaled.transform.position;
         initialScale = itemBeingScaled.transform.localScale;
         HandlerScale = this.transform.localScale;
-
+		Camera.main.GetComponent<CameraMove>().enabled = false;
         //Make trashcan appear!
         //TrashCan.SetActive(true);
     }
@@ -81,7 +81,7 @@ public class DragAndDrop1Handler : MonoBehaviour {
 
         itemBeingDragged = null;
         itemBeingScaled = null;
-
+		Camera.main.GetComponent<CameraMove>().enabled = true;
     }
 
     private static Vector3 GetMouseLampPosition()

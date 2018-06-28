@@ -46,7 +46,9 @@ public class Stroke
     public string Animation;
     public Dictionary<string, int[]> Properties;
     public float Duration;
-    
+    public int Universe;
+    public int DMXOffset;
+
     //Pixel information for lamp
     public int TotalPixelCount;
     public Dictionary<string, SortedDictionary<int, int>> PixelQueueToControlledPixel;
@@ -657,7 +659,8 @@ public class AnimationSender : MonoBehaviour
                     {
                         throw new Exception("Couldn't retrieve pixel when merging!");
                     }
-                    QueueToPixel.Add(pixelQueueNumber, pix);
+					if (!QueueToPixel.ContainsKey(pixelQueueNumber))
+						QueueToPixel.Add(pixelQueueNumber, pix);
                 }
             }
         }
@@ -752,6 +755,17 @@ public class AnimationSender : MonoBehaviour
     {
         LampIPList.Clear();
 
+        if(ActiveStroke.layer.PixelToStrokeIDDictionary.Any(x => x.Value.FirstOrDefault().Animation == "DMX"))
+        {
+            scene.ArtNetMode = true;
+            scene.sACNMode = true;
+        }
+        else
+        {
+            scene.ArtNetMode = false;
+            scene.sACNMode = false;
+        }
+
         //Get lamps to send the strokes to
         foreach (var stroke in ActiveStroke.layer.Strokes)
         {
@@ -814,17 +828,20 @@ public class AnimationSender : MonoBehaviour
         if (ActiveStroke.Animation == "DMX")
         {
             int UnitSize = ActiveStroke.Properties["Unit size"][0];
-            for (int c = 0; c <= ActiveStroke.TotalPixelCount/ActiveStroke.Properties["Unit size"][0]; c++)
+            if (UnitSize == 0 || UnitSize == -1)
             {
-                if (false)
+                for (int c = 0; c < ActiveStroke.Properties["Division"][0]; c++)
                 {
-                    RGBWColors.Add(ITSHtoRGBW(ITSHColors[0]));
-                }
-                else
-                {
-                    RGBWColors.Add(new int[] {(int)(ITSHColors[0].x*100f), (int)((ITSHColors[0].y)*10000f), (int)(ITSHColors[0].z * 120f), (int)(ITSHColors[0].w * 360f) });
+                    RGBWColors.Add(new int[] { (int)(ITSHColors[0].x * 100f), (int)((ITSHColors[0].y) * 10000f), (int)(ITSHColors[0].z * 120f), (int)(ITSHColors[0].w * 360f) });
                 }
                 
+            }
+            else //Pixel chunks
+            {
+                for (int c = 0; c <= ActiveStroke.TotalPixelCount / ActiveStroke.Properties["Unit size"][0]; c++)
+                {
+                    RGBWColors.Add(new int[] { (int)(ITSHColors[0].x * 100f), (int)((ITSHColors[0].y) * 10000f), (int)(ITSHColors[0].z * 120f), (int)(ITSHColors[0].w * 360f) });
+                }
             }
         }
         else
@@ -832,6 +849,32 @@ public class AnimationSender : MonoBehaviour
             foreach (var ITSHColor in ITSHColors)
             {
                 RGBWColors.Add(ITSHtoRGBW(ITSHColor));
+            }
+        }
+
+        if(ActiveStroke.ControlledPixels.Count == 0)
+        {
+            return;
+        }
+
+        //Adding DMX offsets so individual lamp can be controlled with offset
+        Dictionary<string,Dictionary<string, int>> StrokeIDtoLampMactoDMXoffsetDictionary = new Dictionary<string, Dictionary<string, int>>();
+
+        //TODO: General layer resolution
+        foreach (var stroke in scene.Layers[0].Strokes)
+        {
+            if (stroke.Animation == "DMX" && stroke.Properties["Unit size"][0] == -1)
+            {
+                var LampDMXOrder = stroke.PixelQueueToControlledPixel.OrderBy(x => x.Value.FirstOrDefault().Key).GroupBy(x => x.Key).Select(x=> x.FirstOrDefault().Key).ToList();
+                var DMXOffset = stroke.Properties["DMX offset"][0];
+
+                Dictionary<string, int> LampMactoDMXoffsetDictionary = new Dictionary<string, int>();
+                foreach (var lamp in LampDMXOrder)
+                {
+                    LampMactoDMXoffsetDictionary.Add(lamp, DMXOffset);
+                    DMXOffset += 4;
+                }
+                StrokeIDtoLampMactoDMXoffsetDictionary.Add(stroke.StrokeID, LampMactoDMXoffsetDictionary);
             }
         }
 
@@ -849,6 +892,31 @@ public class AnimationSender : MonoBehaviour
                 {
                     var initialDictionary = partitionedScene.Layers[l].Strokes[s].PixelQueueToControlledPixel.Where(d => d.Key == LampIPtoMacDictionary[LampIP]).ToDictionary(d => d.Key, d => d.Value);
                     partitionedScene.Layers[l].Strokes[s].PixelQueueToControlledPixel = initialDictionary;
+
+                    //Add DMX offset and universe!
+                    if (scene.Layers[l].Strokes[s].Animation == "DMX")
+                    {
+                        if (scene.Layers[l].Strokes[s].Properties["Unit size"][0] == -1)
+                        {
+                            int DMXOffset = StrokeIDtoLampMactoDMXoffsetDictionary[partitionedScene.Layers[l].Strokes[s].StrokeID][LampIPtoMacDictionary[LampIP]];
+                            if (DMXOffset > 508)
+                            {
+                                partitionedScene.Layers[l].Strokes[s].Universe = (DMXOffset + 4) / 512 + scene.Layers[l].Strokes[s].Properties["Universe offset"][0];
+                                DMXOffset = DMXOffset % 512;
+                                partitionedScene.Layers[l].Strokes[s].DMXOffset = DMXOffset;
+                            }
+                            else
+                            {
+                                partitionedScene.Layers[l].Strokes[s].Universe = scene.Layers[l].Strokes[s].Properties["Universe offset"][0];
+                                partitionedScene.Layers[l].Strokes[s].DMXOffset = DMXOffset;
+                            }
+                        }
+                        else
+                        {
+                            partitionedScene.Layers[l].Strokes[s].Universe = partitionedScene.Layers[l].Strokes[s].Properties["Universe offset"][0];
+                            partitionedScene.Layers[l].Strokes[s].DMXOffset = partitionedScene.Layers[l].Strokes[s].Properties["DMX offset"][0];
+                        }
+                    }
                 }
             }
             //Send stroke information to all lamps!
@@ -938,7 +1006,8 @@ public class AnimationSender : MonoBehaviour
             {
                 foreach (var lampIP in LampIPList)
                 {
-                    SendDataToLamp(StrokeJSONData[lampIP], new IPEndPoint(IPAddress.Parse(lampIP), 30001));
+					if(StrokeJSONData.ContainsKey(lampIP))
+                        SendDataToLamp(StrokeJSONData[lampIP], new IPEndPoint(IPAddress.Parse(lampIP), 30001));
                 }
             }
             yield return new WaitForSeconds(0.1f);

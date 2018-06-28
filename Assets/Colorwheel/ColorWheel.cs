@@ -12,6 +12,8 @@ public class ColorWheel : MonoBehaviour {
 	[Header("Buttons")]
 	public Button OkButton;
 	public Button CancelButton;
+	public Button CopyButton;
+	public Button PasteButton;
     [Header("Sliders")]
     public Slider IntensitySlider;
     public Slider TemperatureSlider;
@@ -72,7 +74,11 @@ public class ColorWheel : MonoBehaviour {
         HueSlider.onValueChanged.AddListener(OnHueSliderValueChanged);
 		OkButton.onClick.AddListener(TaskOkClick);
 		CancelButton.onClick.AddListener(TaskCancelClick);
+		CopyButton.onClick.AddListener(CopyColor);
+		PasteButton.onClick.AddListener(PasteColor);
 
+		if (!HasColorPasteAvailable())
+			PasteButton.interactable = false;
     }
 
 	private void OnIntensitySliderValueChanged(float arg0)
@@ -207,6 +213,14 @@ public class ColorWheel : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+		if (Input.GetMouseButton(0))
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
+
+        if (Input.touchCount > 0)
+            if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+                return;
+
 		Camera.main.fieldOfView = 60;
 		Camera.main.transform.position = CameraInitialPosition;
 		if (!Input.GetMouseButton (0))
@@ -262,7 +276,7 @@ public class ColorWheel : MonoBehaviour {
 		}
 	}
 
-
+    
 	float cart2float(float xCord, float yCord) {
 		//case 1st quad
 		if (xCord >= 0 && yCord >= 0)
@@ -358,4 +372,52 @@ public class ColorWheel : MonoBehaviour {
             //drawTool.anim.secH = hVal;
         }
     }
+
+    public void CopyColor()
+	{
+		PlayerPrefs.SetInt("color_buf_I", iVal);
+		PlayerPrefs.SetInt("color_buf_T", tVal);
+		PlayerPrefs.SetInt("color_buf_S", sVal);
+		PlayerPrefs.SetInt("color_buf_H", hVal);
+		PasteButton.interactable = true;
+	}
+
+    public void PasteColor()
+	{
+		colorName = colorPanel.transform.Find(activator);
+        ColorButtonScript cBtnScript = colorName.gameObject.GetComponent<ColorButtonScript>();
+
+		iVal = PlayerPrefs.GetInt("color_buf_I");
+        tVal = PlayerPrefs.GetInt("color_buf_T");
+        sVal = PlayerPrefs.GetInt("color_buf_S");
+        hVal = PlayerPrefs.GetInt("color_buf_H");
+        
+        cBtnScript.iVal = iVal;
+        cBtnScript.tVal = tVal;
+        cBtnScript.sVal = sVal;
+        cBtnScript.hVal = hVal;
+
+        updateValues();
+        SetAnimationValues();
+        animSender.SendAnimationWithUpdate();
+	}
+
+    public void ClearColorPaste()
+	{
+		PlayerPrefs.DeleteKey("color_buf_I");
+		PlayerPrefs.DeleteKey("color_buf_T");
+		PlayerPrefs.DeleteKey("color_buf_S");
+        PlayerPrefs.DeleteKey("color_buf_H");
+	}
+
+    bool HasColorPasteAvailable()
+	{
+		if (PlayerPrefs.HasKey("color_buf_I") &&
+			PlayerPrefs.HasKey("color_buf_T") &&
+			PlayerPrefs.HasKey("color_buf_S") &&
+			PlayerPrefs.HasKey("color_buf_H"))
+			return true;
+
+		return false;
+	}
 }

@@ -1,1 +1,1 @@
-exampleSSID password
+voyager_router dsputnik

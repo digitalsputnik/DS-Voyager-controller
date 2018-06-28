@@ -18,7 +18,9 @@ namespace NatCamU.Extensions {
 
 		private const string
 		CameraUsageKey = @"NSCameraUsageDescription",
-		CameraUsageDescription = @"Used for Voyager lamp detection"; // Change this as necessary
+		CameraUsageDescription = @"Used for Voyager lamp detection", // Change this as necessary
+		GalleryUsageKey = @"NSPhotoLibraryUsageDescription",
+		GalleryUsageDescription = @"Used for adding background images to lamps";
 
 		#if UNITY_IOS
 
@@ -42,6 +44,7 @@ namespace NatCamU.Extensions {
 			plist.ReadFromString(File.ReadAllText(plistPath));
 			PlistElementDict rootDictionary = plist.root;
 			rootDictionary.SetString(CameraUsageKey, CameraUsageDescription);
+			rootDictionary.SetString(GalleryUsageKey, GalleryUsageDescription);
 			File.WriteAllText(plistPath, plist.WriteToString());
 		}
 		#endif

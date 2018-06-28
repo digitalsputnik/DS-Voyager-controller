@@ -1,0 +1,198 @@
+#!/bin/bash
+
+#14.06.2018. Old autoconnect script.
+#For priority listing probably need to port it to python3.
+
+
+LOCATION=/mnt/data/
+TIMEOUT=10
+PASSWORD=dsputnik
+
+SSID_FILTER='\<DS026.........._M\>'
+SSID_FILTER=$SSID_FILTER'\|''\<voyager_......_M\>'
+
+#remove old before adding new confs
+#ls /var/lib/connman/*| grep -v settings| xargs rm -rf
+
+#kill client connection attempt.. might be easier way to timeout.
+#timeout_monitor() {
+	#sleep "$TIMEOUT"
+	#ps ax | grep connmanctl | grep -v grep | awk -F ' ' '{print $1}' | xargs kill -9
+	#kill "$1"
+	#ls /var/lib/connman/*| grep -v settings| xargs rm -rf
+	#timeout_monitor "$$" &
+	#Timeout_monitor_pid=$!
+#}
+#timeout_monitor "$$" &
+#Timeout_monitor_pid=$!
+
+
+#old implementation from reading multiple ssids from 
+#Makes searchable string from ssidlist.txt, ignores empty lines
+number_of_APs=$(wc -l < $LOCATION'ssidlist.txt')
+while [ $number_of_APs -gt 0 ]
+do
+	read_ssid=$(awk NR==$number_of_APs'{print $1}' $LOCATION'ssidlist.txt')
+	if [ "$read_ssid" != "" ]; then
+		#SSID_FILTER=$SSID_FILTER'\|'$read_ssid
+		read_ssid=$read_ssid
+	fi
+	number_of_APs=$(($number_of_APs-1)) 	
+done
+
+#enable scanning for "iw dev", otherwise scans clash. Needed for signal strength.
+/etc/init.d/S45connman stop
+
+while true
+do
+	### SCAN and FILTER ###
+	
+	#reset
+	ssid=""
+	signal_level=""
+
+	#remove old before adding new confs
+	ls /var/lib/connman/*| grep -v settings| xargs rm -rf
+
+	#echo $rawscan
+	#echo "1st scan"
+	
+	#(sleep 6; ps ax | grep -v grep | grep "iw dev wlan0 scan" | awk -F ' ' '{print $1}' | xargs kill -9) &
+	rawscan=$(nice -12 iw dev wlan0 scan | grep "SSID:\|signal:" | awk '{ ORS = (NR%2 ? FS : RS) } 1' | awk '{print $2, $5, $6, $7}' | grep -w $read_ssid)
+	signal_level=$(echo $rawscan | awk '{print $1}' | cut -d "-" -f 2 | cut -d "." -f1)
+	#sleep 7
+
+	#ssid with spaces in names... reads only first string atm. otherwise adds spaces to ending
+	#ssid=$(echo $rawscan | awk 'NR==1{print $2, $3, $4}')
+	ssid=$(echo $rawscan | awk 'NR==1{print $2}')
+	
+	#echo $ssid
+	#echo $signal_level
+
+	#echo "1st end"
+
+	#second priority from classic _M
+	if [ "${#ssid}" -lt 2 ]; then
+		#echo "2nd start"
+		#echo $SSID_FILTER
+		#(sleep 6; ps ax | grep -v grep | grep "iw dev wlan0 scan" | awk -F ' ' '{print $1}' | xargs kill -9) &
+		rawscan=$(nice -12 iw dev wlan0 scan | grep "SSID:\|signal:" | awk '{ ORS = (NR%2 ? FS : RS) } 1' | awk '{print $2, $5, $6, $7}' | grep -w $SSID_FILTER)
+		ssid=$(echo $rawscan | awk 'NR==1{print $2}')
+		signal_level=$(echo $rawscan | awk '{print $1}' | cut -d "-" -f 2 | cut -d "." -f1)
+		#sleep 7
+		#echo "2 end"
+	fi
+
+	#echo $ssid
+	#echo $signal_level
+	
+	### MAIN CONNECTION LOOP ###
+	if [[  "${#ssid}" -gt 1  && "$signal_level" -lt 80 ]]; then
+		#echo "connection loop"
+
+		/etc/init.d/S45connman start
+		sleep 2
+		rfkill unblock all
+		sleep 2
+		
+		#check if SSID is from ssidlist.txt document and sets the password from there
+		password_temp=$(cat $LOCATION'ssidlist.txt' | grep -w $ssid | awk '{print $2}')		
+		ssid_temp=$(cat $LOCATION'ssidlist.txt' | grep -w $ssid | awk '{print $1}')
+		if [ "$ssid_temp" == "" ]; then
+			PASSWORD=$PASSWORD
+		#listed in file, not empty password
+		elif [ "$password_temp" != "" ]; then
+			PASSWORD=$password_temp
+		elif [ "$password_temp" == "" ]; then
+			PASSWORD="NONE"
+		fi
+		
+		connmanctl scan wifi
+		#get hash from connmanctl, filters by given ssid and looking for start: "wifi_"
+		hash=$(connmanctl services | grep -w $ssid | grep -o '\bwifi_\w*')
+
+		#echo  $hash
+		#echo $ssid_temp
+		#echo $password_temp
+		#echo $PASSWORD		
+		
+		#New conf
+		if [ "$PASSWORD" == "NONE" ]; then
+		cat << EOF > /var/lib/connman/$ssid-psk.config
+		[service_$hash]
+		Type = wifi
+		Name = $ssid
+EOF
+		else
+		cat << EOF > /var/lib/connman/$ssid-psk.config
+		[service_$hash]
+		Type = wifi
+		Name = $ssid
+		Passphrase = $PASSWORD
+EOF
+		fi
+		
+		
+		sleep 1.3
+		#connmanctl config $hash --autoconnect off > /dev/null
+		connmanctl connect $hash > /dev/null &
+		sleep 8
+		ps ax | grep connmanctl | grep -v grep | awk -F ' ' '{print $1}' | xargs kill -9
+
+		counter_ping=0
+		#As soon as get IP or loop 10 cycles
+		while [ $counter_ping -lt 10 ]
+		do
+			#check ip or ping...?
+			if [ "$(ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}')" != "" ]; then
+				#if ping -c 1 -I wlan0 $(ip route | awk 'NR==1{print $3}') > /dev/null; then
+				#echo "connection ok!"
+				counter_ping=0
+				sleep 1
+				
+				flag=$(cat /mnt/data/timesyncflag)
+				if [ "$flag" == "0" ]; then
+					python3 /mnt/data/timesync_router.py
+					#echo "timesync router"
+				fi
+				
+			fi
+			sleep 2
+			
+			counter_ping=$(($counter_ping+1))
+			#echo $counter_ping
+		done
+		
+		#echo "connection fail"
+		
+		
+		/etc/init.d/S45connman stop
+
+		#reset timesyncflag
+		echo 0 > /mnt/data/timesyncflag
+		
+	fi
+	sleep 15
+	#counter=$(($counter+1))
+	#echo $counter
+done
+
+
+
+
+
+
+	#rawscan=$(iwlist wlan0 scan | grep "Quality\|ESSID" | awk '{ ORS = (NR%2 ? FS : RS) } 1' )
+
+	
+	#first priority from ssidlist
+	#rawscan=$(nice -18 iwlist wlan1 scan | grep "Quality\|ESSID" | awk '{ ORS = (NR%2 ? FS : RS) } 1' | awk '{print $3, $5}' | sort -n | grep -w  $read_ssid)
+	#signal_level=$(echo $rawscan | awk '{print $1}' | cut -d "-" -f 2)
+	#ssid=$(echo $rawscan | awk -F'["]' 'NR==1{print $2}')
+	
+		#echo $read_ssid
+	#ssid=$(nice -12 iwlist wlan0 scan | grep "Quality\|ESSID" | awk '{ ORS = (NR%2 ? FS : RS) } 1' | awk '{print $3, $5}' | sort -n | grep -w $read_ssid | awk -F'["]' 'NR==1{print $2}')
+	#ssid=$(echo $rawscan | awk '{ ORS = (NR%2 ? FS : RS) } 1' | awk '{print $3, $5}' | sort -n | grep -w $read_ssid | awk -F'["]' 'NR==1{print $2}')
+	#echo "1st"
+	#echo $ssid
+	#echo $signal_level

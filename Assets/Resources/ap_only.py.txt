@@ -1,0 +1,29 @@
+import os
+import time
+
+#remove client conf from connman
+os.system("ls /var/lib/connman/*| grep -v settings | xargs rm -rf")
+os.system("/etc/init.d/S45connman stop")
+os.system("ifdown wlan0")
+os.system("ifconfig wlan0 down")
+#restart AP
+#os.system("ip link set arp off dev wlan1")
+#os.system("ip link set arp on dev wlan1")
+#os.system("ifconfig wlan1 0.0.0.0")
+#os.system("/etc/init.d/S80dnsmasq stop")
+#os.system("/etc/init.d/S99_hostapd stop")
+#os.system("ifdown wlan1")
+#os.system("ifconfig wlan1 down")
+os.system("ps ax | grep -v grep | grep connmand | awk -F ' ' '{print $1}' | xargs kill -9")
+os.system("ps ax | grep -v grep | grep wpa_supplicant | awk -F ' ' '{print $1}' | xargs kill -9")
+#os.system("rm /var/lib/misc/dnsmasq.leases")
+#os.system("touch /var/lib/misc/dnsmasq.leases")
+#time.sleep(4)
+os.system("rfkill unblock all")
+#os.system("ifconfig wlan1 up")
+#os.system("ifup wlan1")
+#time.sleep(1)
+#os.system("/etc/init.d/S80dnsmasq start")
+#os.system("/etc/init.d/S99_hostapd start")
+#os.system("ifconfig wlan1 172.20.0.1 netmask 255.255.255.0")
+

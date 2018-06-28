@@ -1,21 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using UnityEngine;
 
 public class DragHandle : MonoBehaviour {
 
 	public bool BeingDragged;
+	public DragPhase Phase { get; private set; }
+
 	Vector3 dragOffset;
 	int activeTouch;
 
-	public delegate void DragStarted();
-	public delegate void Dragging();
-	public delegate void DragEnded();
-
-	public event DragStarted OnDragStarted;
-	public event Dragging OnDragging;
-	public event DragEnded OnDragEnded;
+	public delegate void DragEvent();
+	public event DragEvent OnDragStarted;
+	public event DragEvent OnDragging;
+	public event DragEvent OnDragEnded;
 
 	void Update()
 	{
@@ -56,6 +52,7 @@ public class DragHandle : MonoBehaviour {
                         activeTouch = t;
 						dragOffset = transform.position - ray.GetPoint(distance);
                         if (OnDragStarted != null) OnDragStarted();
+						Phase = DragPhase.Begin;
                         return;
                     }
                 }
@@ -79,12 +76,14 @@ public class DragHandle : MonoBehaviour {
 				{
 					transform.position = ray.GetPoint(distance) + dragOffset;
 					if (OnDragging != null) OnDragging();
+					Phase = DragPhase.Moved;
 				}
 			}
 			else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
 			{
 				BeingDragged = false;
 				if (OnDragEnded != null) OnDragEnded();
+				Phase = DragPhase.Ended;
 			}
 		}
 	}
@@ -106,6 +105,7 @@ public class DragHandle : MonoBehaviour {
                     BeingDragged = true;
                     dragOffset = transform.position - ray.GetPoint(distance);
                     if (OnDragStarted != null) OnDragStarted();
+					Phase = DragPhase.Begin;
                     return true;
                 }
             }
@@ -120,6 +120,7 @@ public class DragHandle : MonoBehaviour {
             {
                 transform.position = ray.GetPoint(distance) + dragOffset;
                 if (OnDragging != null) OnDragging();
+				Phase = DragPhase.Moved;
 				return true;
             }
         }
@@ -127,9 +128,15 @@ public class DragHandle : MonoBehaviour {
         {
             BeingDragged = false;
             if (OnDragEnded != null) OnDragEnded();
+			Phase = DragPhase.Ended;
             return true;
         }
 
         return false;
     }
+}
+
+public enum DragPhase
+{
+	Begin, Moved, Ended
 }

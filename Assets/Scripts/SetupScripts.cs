@@ -13,6 +13,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Net.NetworkInformation;
 
+[Serializable]
 public class UDPResponse
 {
     public byte[] IP { get; set; }
@@ -25,12 +26,23 @@ public class UDPResponse
     public int[] CHIP_version { get; set; }
     public int[] animation_version { get; set; }
     public string serial_name { get; set; }
+	public string MAC_last6 { get; set; }
+	public string passive_active_mode { get; set; }
+	public int hardware_version { get; set; }
+	public string active_mode { get; set; }
+    public string active_pattern { get; set; }
+	public string active_pattern_ps { get; set; } 
+	public int active_channel { get; set; }
+	public string active_ssid { get; set; }
+	public string active_password { get; set; }
 }
 
+[Serializable]
 public class ExtraProperties
 {
     public string LampMac;
     public int BatteryLevel;
+	public DateTime LastUpdate;
 }
 
 public class SetupScripts : MonoBehaviour {
@@ -47,22 +59,24 @@ public class SetupScripts : MonoBehaviour {
     public GameObject DS3Lamp;
     public GameObject DSBeam;
     public AnimationSender animSender;
-    public GameObject UpdateWindow;
+	public LampUpdater lampUpdater;
 	public GameObject AboutWindow;
-     public MenuPullScript PullMenu;
+    public MenuPullScript PullMenu;
     public GameObject LampTools;
+	public GameObject SetupTools;
 
     public Dictionary<IPAddress, ExtraProperties> IPtoProps = new Dictionary<IPAddress, ExtraProperties>();
+	public Dictionary<IPAddress, UDPResponse> LampsLastResponse = new Dictionary<IPAddress, UDPResponse>();
 
     //int batteryLevel;
     //string lampMacName;
-    private bool CancelDetection = false;
-    private int[] LampAnimationSoftwareVersion = new int[] { 0, 0 };
-    private int[] LampUDPSoftwareVersion = new int[] { 0, 31 };
-    private int[] LampUDPSoftwareVersion3 = new int[] { 0, 44 };
-    private int[] LampLPCSoftwareVersion = new int[] {0, 185 };
-    private bool isPollingActive = true;
-    private bool addLampAutomatically = true;
+    bool CancelDetection = false;
+    int[] LampAnimationSoftwareVersion = { 0, 0 };
+    int[] LampUDPSoftwareVersion       = { 0, 31 };
+	int[] LampUDPSoftwareVersion3      = { 0, 46 };
+    int[] LampLPCSoftwareVersion       = {0, 185 };
+    bool isPollingActive = true;
+    bool addLampAutomatically = true;
 
     public Dictionary<IPAddress, int> LampIPtoLengthDictionary { get; set; }
 
@@ -93,14 +107,13 @@ public class SetupScripts : MonoBehaviour {
 
         GameObject.Find("DetectedLampProperties").GetComponent<DetectedLampProperties>().LampIPtoLengthDictionary = LampIPtoLengthDictionary;
     }
-
-    private void OnEnable()
+    
+    void OnEnable()
     {
         StartCoroutine("GetAvailableLamp");
     }
-
  
-    private void RemoveDetectedLampsFromPool(List<LampProperties> detectedLamps)
+    void RemoveDetectedLampsFromPool(List<LampProperties> detectedLamps)
     {
         List<IPAddress> lampsToRemove = new List<IPAddress>();
 
@@ -117,13 +130,10 @@ public class SetupScripts : MonoBehaviour {
             LampIPtoLengthDictionary.Remove(lamp);
         }
     }
-
+    
     void TaskOnAddClick()
     {
-         if (!UpdateWindow.activeSelf)
-        {
-            AvailableLampsDialog.SetActive(true);
-        }
+		AvailableLampsDialog.SetActive(true);
     }
 
     IEnumerator GetAvailableLamp()
@@ -160,7 +170,7 @@ public class SetupScripts : MonoBehaviour {
 
             client.EnableBroadcast = true;
             //Send 5 poll messages
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 5; i++)
             {
                 //Debug.Log ("Sending poll message...");
                 client.Send(message, message.Length, SendingEndpoint);
@@ -188,6 +198,7 @@ public class SetupScripts : MonoBehaviour {
                 int[] lampAnimationVersion = new int[] { 0, 0 };
                 int[] lpcSoftwareVersion = new int[] { 0, 0 };
                 bool dontUseThisDevice = false;
+                int HardwareVersion = 0;
 
                 //Verification!
                 Array.Copy(ReceivedMessageBytes, 0, IDbytes, 0, 4);
@@ -212,18 +223,24 @@ public class SetupScripts : MonoBehaviour {
                 }
                 else
                 {
-                    try
-                    {
-                        UDPResponse response = JsonConvert.DeserializeObject<UDPResponse>(Encoding.UTF8.GetString(ReceivedMessageBytes));
-                        Debug.Log("Got lamp");
-                        Debug.Log(Encoding.UTF8.GetString(ReceivedMessageBytes));
-                        LightIP = new IPAddress(response.IP);
-                        numPixels = response.length;
-                        lampMacName = response.serial_name;
-                        batteryLevel = response.battery_level;
-                        lampSoftwareVersion = response.CHIP_version;
-                        lampAnimationVersion = response.animation_version;
-                        lpcSoftwareVersion = response.LPC_version;
+					try
+					{
+						UDPResponse response = JsonConvert.DeserializeObject<UDPResponse>(Encoding.UTF8.GetString(ReceivedMessageBytes));
+						Debug.Log("Got lamp");
+						Debug.Log(Encoding.UTF8.GetString(ReceivedMessageBytes));
+						LightIP = new IPAddress(response.IP);
+						numPixels = response.length;
+						lampMacName = response.serial_name;
+						batteryLevel = response.battery_level;
+						lampSoftwareVersion = response.CHIP_version;
+						lampAnimationVersion = response.animation_version;
+						lpcSoftwareVersion = response.LPC_version;
+                        HardwareVersion = response.hardware_version;
+
+						if (!LampsLastResponse.ContainsKey(LightIP))
+							LampsLastResponse.Add(LightIP, response);
+						else
+							LampsLastResponse[LightIP] = response;
                     }
                     catch (Exception)
                     {
@@ -236,22 +253,17 @@ public class SetupScripts : MonoBehaviour {
                     continue;
                 }
 
-                if (!IPtoProps.ContainsKey(LightIP))
-                {
-                    IPtoProps.Add(LightIP, new ExtraProperties
-                    {
-                        BatteryLevel = batteryLevel,
-                        LampMac = lampMacName
-                    });
-                }
-				else
+				ExtraProperties extraProperties = new ExtraProperties
 				{
-					IPtoProps[LightIP] = new ExtraProperties
-					{
-						BatteryLevel = batteryLevel,
-						LampMac = lampMacName
-					};
-				}
+					BatteryLevel = batteryLevel,
+					LampMac = lampMacName
+				};
+				extraProperties.LastUpdate = DateTime.Now;
+
+                if (!IPtoProps.ContainsKey(LightIP))
+					IPtoProps.Add(LightIP, extraProperties);
+				else
+					IPtoProps[LightIP] = extraProperties;
 
                 if (!LampIPtoLengthDictionary.ContainsKey(LightIP))
                 {
@@ -262,10 +274,12 @@ public class SetupScripts : MonoBehaviour {
 
 
                 //Update checking
-                if (!UpdateLampWithIPs.Contains(LightIP.ToString()) && numPixels != 3 && numPixels != 18)
-                {
-                    //Debug!!
+                
+				if (!UpdateLampWithIPs.Contains(LightIP.ToString()) && numPixels != 3 && numPixels != 18 && HardwareVersion != 4)
+				{
+					//Debug!!
                     //UpdateLampWithIPs.Add(LightIP.ToString());
+                    List<string> higherSoftwareLamps = new List<string>();
 
                     try
                     {
@@ -274,24 +288,41 @@ public class SetupScripts : MonoBehaviour {
                             var lampUDPSoftwareVersion = (numPixels != 42 && numPixels != 83) ? LampUDPSoftwareVersion : LampUDPSoftwareVersion3;
 
                             //Lamp software
-                            if (lampUDPSoftwareVersion[0] > lampSoftwareVersion[0] || (lampUDPSoftwareVersion[0] == lampSoftwareVersion[0] && lampUDPSoftwareVersion[1] > lampSoftwareVersion[1]))
+                            if (lampUDPSoftwareVersion[0] > lampSoftwareVersion[0] ||
+                               (lampUDPSoftwareVersion[0] == lampSoftwareVersion[0] &&
+                                lampUDPSoftwareVersion[1] > lampSoftwareVersion[1]))
                             {
                                 if (lampSoftwareVersion[0] == 0 && lampSoftwareVersion[1] == 0)
-                                {
                                     ErrorLamps.Add(LightIP);
-                                }
                                 else
-                                {
                                     if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
-                                        UpdateLampWithIPs.Add(LightIP.ToString());
-                                }
+                                    UpdateLampWithIPs.Add(LightIP.ToString());
+
+                            }
+                            else if (lampUDPSoftwareVersion[0] < lampSoftwareVersion[0] ||
+                                    (lampUDPSoftwareVersion[0] == lampSoftwareVersion[0] &&
+                                     lampUDPSoftwareVersion[1] < lampSoftwareVersion[1]))
+                            {
+                                if (!GlobalData.NotifiedHigherVersionLamps.Contains(LightIP.ToString()))
+                                    if (!higherSoftwareLamps.Contains(LightIP.ToString()))
+                                        higherSoftwareLamps.Add(LightIP.ToString());
                             }
 
                             //Animation software
-                            if (LampAnimationSoftwareVersion[0] > lampAnimationVersion[0] || (LampAnimationSoftwareVersion[0] == lampAnimationVersion[0] && LampAnimationSoftwareVersion[1] > lampAnimationVersion[1]))
+                            if (LampAnimationSoftwareVersion[0] > lampAnimationVersion[0] ||
+                               (LampAnimationSoftwareVersion[0] == lampAnimationVersion[0] &&
+                                LampAnimationSoftwareVersion[1] > lampAnimationVersion[1]))
                             {
                                 if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
                                     UpdateLampWithIPs.Add(LightIP.ToString());
+                            }
+                            else if (LampAnimationSoftwareVersion[0] < lampAnimationVersion[0] ||
+                                    (LampAnimationSoftwareVersion[0] == lampAnimationVersion[0] &&
+                                     LampAnimationSoftwareVersion[1] < lampAnimationVersion[1]))
+                            {
+                                if (!GlobalData.NotifiedHigherVersionLamps.Contains(LightIP.ToString()))
+                                    if (!higherSoftwareLamps.Contains(LightIP.ToString()))
+                                        higherSoftwareLamps.Add(LightIP.ToString());
                             }
 
                             //LPC software - check only for Rev3 - update disabled
@@ -308,6 +339,16 @@ public class SetupScripts : MonoBehaviour {
                         {
                             if (!UpdateLampWithIPs.Contains(LightIP.ToString()))
                                 UpdateLampWithIPs.Add(LightIP.ToString());
+                        }
+
+                        // Notify user that lamps software is newer than app
+                        if (higherSoftwareLamps.Count > 0)
+                        {
+                            foreach (string lamp in higherSoftwareLamps)
+                                GlobalData.NotifiedHigherVersionLamps.Add(lamp);
+
+                            string infoMessage = "Some of your lamps have newer version of software. Those lamps might not work as expected.\n Consider updating your app.";
+                            DialogBox.ShowInfo(infoMessage);
                         }
                     }
                     catch (Exception)
@@ -345,7 +386,7 @@ public class SetupScripts : MonoBehaviour {
                 LampIPtoLengthDictionary.Clear();
                 newLampIPtoLengthDictionary.Clear();
                 CancelDetection = true;
-                UpdateWindow.GetComponent<UpdateChecker>().UpdateLampsSoftware(UpdateLampWithIPs);
+                lampUpdater.UpdateLampsSoftware(UpdateLampWithIPs);
                 isPollingActive = false;
             }
 
@@ -380,7 +421,7 @@ public class SetupScripts : MonoBehaviour {
         }
     }
     
-    private void AddLampButtons(Dictionary<IPAddress, int> newLampIPtoLengthDictionary)
+    void AddLampButtons(Dictionary<IPAddress, int> newLampIPtoLengthDictionary)
     {
         foreach (var item in newLampIPtoLengthDictionary)
         {
@@ -429,17 +470,16 @@ public class SetupScripts : MonoBehaviour {
         }
     }
 
-
     public void OnLampSettingsButtonClick()
     {
         LampTools.SetActive(true);
         var lightsList = GameObject.FindGameObjectsWithTag("light");
-        foreach (var light in lightsList)
-        {
-            light.transform.Find("DragAndDrop1").gameObject.SetActive(false);
-            light.transform.Find("DragAndDrop2").gameObject.SetActive(false);
-            //light.transform.Find("Canvas").gameObject.SetActive(false);
-        }
+        //foreach (var light in lightsList)
+        //{
+        //    light.transform.Find("DragAndDrop1").gameObject.SetActive(false);
+        //    light.transform.Find("DragAndDrop2").gameObject.SetActive(false);
+        //    //light.transform.Find("Canvas").gameObject.SetActive(false);
+        //}
 
         var videoStreamParent = GameObject.Find("VideoStreamParent");
         if (videoStreamParent.transform.Find("VideoStreamBackground").gameObject.activeSelf)
@@ -448,13 +488,9 @@ public class SetupScripts : MonoBehaviour {
             videoStreamBackground.transform.Find("Handle1Parent").Find("Handle1").gameObject.SetActive(false);
             videoStreamBackground.transform.Find("Handle2Parent").Find("Handle2").gameObject.SetActive(false);
         }
-        this.gameObject.SetActive(false);
+		SetupTools.SetActive(false);
     }
-
-
-
-
-
+       
     public void TaskOnExitClick()
     {
 //#if UNITY_IOS

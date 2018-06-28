@@ -63,7 +63,14 @@ public class LampCommunication: MonoBehaviour {
 #endif
 
         //Destination
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+        //Get local wireless endpoint
+        UdpClient PollClient = new UdpClient(localEndpoint);
+#else
         UdpClient PollClient = new UdpClient();
+#endif
+
+
         PollClient.EnableBroadcast = true;
         int Port = 30000;
         byte[] message = new byte[] { 0xD5, 0x0A, 0x80, 0x10 };
