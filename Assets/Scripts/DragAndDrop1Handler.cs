@@ -69,7 +69,9 @@ public class DragAndDrop1Handler : MonoBehaviour {
         itemBeingScaled.transform.localScale = newScale;
         this.transform.localScale = HandlerScale/newDirection.magnitude*initialDirection.magnitude;
         referenceObject.transform.localScale = HandlerScale / newDirection.magnitude * initialDirection.magnitude;
-    }
+    
+		EventManager.TriggerEvent("WorkplaceObjectMoved");
+	}
 
     private void OnMouseUp()
     {

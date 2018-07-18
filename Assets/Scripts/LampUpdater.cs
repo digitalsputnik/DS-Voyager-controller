@@ -6,8 +6,12 @@ using System;
 using Renci.SshNet;
 using System.IO;
 using System.Text;
+using Voyager.Lamps;
+using System.Net;
 
 public class LampUpdater : MonoBehaviour {
+
+	LampManager lampManager;
 
 	Queue<string> UpdateableLamps = new Queue<string>(); // As IPs
 	Dictionary<string, Thread> UpdateThreads = new Dictionary<string, Thread>();
@@ -60,6 +64,7 @@ public class LampUpdater : MonoBehaviour {
     
     string[] BundleInstallationFiles =
     {
+		/*
 		"ap_only.py",
         "autoconnect.sh",
         "aux_disable_shutdown_30_sec.py",
@@ -71,22 +76,27 @@ public class LampUpdater : MonoBehaviour {
         "lpc_firmware_update_hw3.sh",
         "lpc_firmware_version.py",
         "netchanger.sh",
-        "network_mode",
+        //"network_mode",
+		"rene-timesync.tar.xz",
         "serial_check_1.sh",
         "serial_check_2.sh",
         "ssidlist.txt",
         "timecompare.py",
         "timesync_router.py",
+		"timesync_service.py",
         "timesync-ask.py",
         "update1.sh",
         "update3.py",
         "ut2.6.py",
         "voyager_lpc_release_user_update.bin"
+		*/
+		"HW3_voyager_update.tar"
     };
 
 	void Start()
 	{
 		PreloadFiles();
+		lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
 	}
 
     void PreloadFiles()
@@ -109,8 +119,9 @@ public class LampUpdater : MonoBehaviour {
 	{
 		if(!TextAssets.ContainsKey(filename) && !ByteAssets.ContainsKey(filename))
 		{
+			//Debug.Log(filename);
 			TextAsset resource = Resources.Load(filename) as TextAsset;
-			if (resource.text.Length == 0)
+			if (resource.text.Length < resource.bytes.Length)
 				ByteAssets.Add(filename, resource.bytes);
 			else
 				TextAssets.Add(filename, resource.text);
@@ -174,7 +185,7 @@ public class LampUpdater : MonoBehaviour {
 			DialogBox.Show(settings);
 		}
 		else
-		    DialogBox.ShowInfo("Lamps updated!");
+		    DialogBox.ShowInfo("Lamps updated!");      
 	}
 
 	void RetryPressed(DialogBoxCallbackEventArgs e)
@@ -186,53 +197,59 @@ public class LampUpdater : MonoBehaviour {
 
     void UpdateFailed(string lampIP, string error)
 	{
+		lampManager.GetLamp(IPAddress.Parse(lampIP)).updatingFirmware = false;
 		if (!FailedToUpdate.ContainsKey(lampIP))
 			FailedToUpdate.Add(lampIP, error);
 	}
 
 	void LampUpdateThread(string lampIP)
     {
+		Lamp lamp = lampManager.GetLamp(IPAddress.Parse(lampIP));
+		lamp.updatingFirmware = true;
+  
 		UpdatesInProgress++;
         lock (UpdateProgress) { UpdateProgress.Add(lampIP, 0.0f); }
 
-		int updateSteps = 4;
-		float progressStep = 1.0f / updateSteps;
+        int updateSteps = 4;
+        float progressStep = 1.0f / updateSteps;
 
         bool numpyNotInstalled = false;
         bool isRev3 = false;
-		bool rebootNeeded = false;
+        bool rebootNeeded = false;
 
-		SshClient ssh = new SshClient(lampIP, LampUsername, LampPassword);
-		SftpClient sftp = new SftpClient(lampIP, LampUsername, LampPassword);
 
-		for (int i = 0; i < updateSteps; i++)
-		{
-			bool failed = false;
+        SshClient ssh = new SshClient(lampIP, LampUsername, LampPassword);
+        SftpClient sftp = new SftpClient(lampIP, LampUsername, LampPassword);
 
-			switch(i)
-			{
-				case 0:
-					failed = !GetLampStatus(lampIP, ssh, out numpyNotInstalled, out isRev3);
-					break;
-				case 1:
-					failed = !UploadFiles(lampIP, sftp, numpyNotInstalled, isRev3);
-					break;
-				case 2:
-					failed = !UpdateLamp(lampIP, ssh, numpyNotInstalled, isRev3, out rebootNeeded);
-					break;
-				case 3:
-					failed = !VersionControll(lampIP, ssh, isRev3);
-					break;
-			}
+        for (int i = 0; i < updateSteps; i++)
+        {
+            bool failed = false;
 
-			if (failed)
-				break;
-			
-			lock (UpdateProgress) { UpdateProgress[lampIP] += progressStep; }
-		}
+            switch(i)
+            {
+                case 0:
+                    failed = !GetLampStatus(lampIP, ssh, out numpyNotInstalled, out isRev3);
+                    break;
+                case 1:
+                    failed = !UploadFiles(lampIP, sftp, numpyNotInstalled, isRev3);
+                    break;
+                case 2:
+                    failed = !UpdateLamp(lampIP, ssh, numpyNotInstalled, isRev3, out rebootNeeded);
+                    break;
+                case 3:
+                    failed = !VersionControll(lampIP, ssh, isRev3);
+                    break;
+            }
+
+            if (failed)
+                break;
+            
+            lock (UpdateProgress) { UpdateProgress[lampIP] += progressStep; }
+        }
         
-		ssh.Dispose();
-		sftp.Dispose();
+        ssh.Dispose();
+        sftp.Dispose();
+		lamp.updatingFirmware = false;
 		UpdateThreads.Remove(lampIP);
 		UpdatedLamps.Add(lampIP);
 	}
@@ -363,6 +380,7 @@ public class LampUpdater : MonoBehaviour {
             {
 				string dos2unixCmd = "dos2unix " + Rev3InstallationDirectory + "/*.py " + Rev3InstallationDirectory + "/*.sh " + Rev3InstallationDirectory + "/*.txt "+ Rev3InstallationDirectory + "/*.chk";
                 SshCommand transformResult = ssh.RunCommand(dos2unixCmd);
+				SshCommand unpackResult = ssh.RunCommand("tar -xf " + Rev3InstallationDirectory + "/HW3_voyager_update.tar -C /mnt/data/");
                 SshCommand installationCmd = ssh.CreateCommand("python3 " + Rev3InstallationDirectory + "/update3.py");
                 IAsyncResult installationScriptResult = installationCmd.BeginExecute();
 
@@ -375,6 +393,7 @@ public class LampUpdater : MonoBehaviour {
                     while (!installationDone)
                     {
                         output = reader.ReadLine();
+                        Debug.Log(output);
                         if (output == null)
                             continue;
 
@@ -495,6 +514,8 @@ public class LampUpdater : MonoBehaviour {
 		else if (ByteAssets.ContainsKey(sourceFile))
 		{
 			byte[] resource = ByteAssets[sourceFile];
+			Debug.Log (sourceFile);
+			Debug.Log (resource.Length);
             using (Stream s = new MemoryStream(resource))
             {
                 sftp.BufferSize = 4 * 1024;

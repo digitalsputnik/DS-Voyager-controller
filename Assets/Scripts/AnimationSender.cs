@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 using Newtonsoft.Json;
-
+using Voyager.Lamps;
 
 [Serializable]
 public class DetectionModeDTO
@@ -135,7 +135,7 @@ public class Stroke
         ControlledPixels.Add(pixel);
 
         //Add pixel to queues
-        string LampMac = pixel.transform.parent.GetComponent<Ribbon>().Mac;
+		string LampMac = pixel.GetComponent<Pixel>().physicalLamp.Owner.Serial;
         if (PixelQueueToControlledPixel.ContainsKey(LampMac))
         {
             PixelQueueToControlledPixel[LampMac].Add(TotalPixelCount, pixel.ID);
@@ -188,7 +188,7 @@ public class Stroke
         }
 
         //Correct dictionaries according to pixel order (queue number reduction for each pixel which is higher)
-        string LampMac = pixel.transform.parent.GetComponent<Ribbon>().Mac;
+		string LampMac = pixel.GetComponent<Pixel>().physicalLamp.Owner.Serial;
         if (PixelQueueToControlledPixel.ContainsKey(LampMac))
         {
             //Removes current
@@ -416,6 +416,7 @@ public class AnimationSender : MonoBehaviour
 
     public Scene scene;
     public DrawScripts drawScripts;
+    public SetupScripts setupScripts;
     public DrawMode draw;
     public Stroke ActiveStroke;
 
@@ -435,6 +436,7 @@ public class AnimationSender : MonoBehaviour
     public Dictionary<string,Dictionary<int, int[]>> LampIPVideoStreamPixelToColor = new Dictionary<string, Dictionary<int, int[]>>();
 
     public Vector4 LastVideoStreamColor = new Vector4(1f,0.56f,1f,0f); //Normal picture with 5600K
+	public float LastGamma = 1f;
     
     //Color calibration
     int[] WhiteCalibrationTemperatureNodes;
@@ -450,7 +452,13 @@ public class AnimationSender : MonoBehaviour
 
         if (LampPollClient == null)
         {
-            LampPollClient = new UdpClient(30001);
+            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            var endPoint = new IPEndPoint(IPAddress.Any, 30001);
+            socket.Bind(endPoint);
+
+            LampPollClient = new UdpClient();
+            LampPollClient.Client = socket;
         }
 
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
@@ -469,7 +477,7 @@ public class AnimationSender : MonoBehaviour
         }
         else
         {
-            var localIP = WirelessInterface.GetIPProperties().UnicastAddresses.Where(x => x.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).FirstOrDefault().Address.Address;
+            var localIP = WirelessInterface.GetIPProperties().UnicastAddresses.Where(x => x.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).FirstOrDefault().Address;
             localEndpoint = new IPEndPoint(localIP, 0);
         }
     }
@@ -503,10 +511,10 @@ public class AnimationSender : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    //void Update()
+    //{
 
-    }
+    //}
 
     /// <summary>
     /// Removes pixel from layers. This is used in the case of lamp deletion
@@ -734,14 +742,20 @@ public class AnimationSender : MonoBehaviour
         ActiveStroke = AddedStroke;
     }
 
-    public void SetDetectionMode(bool detectionMode, string IP)
+    public void SetDetectionMode(bool detectionMode, IPAddress IP)
     {
-        SendJSONToLamp(new DetectionModeDTO() { DetectionMode = detectionMode }, new IPEndPoint(IPAddress.Parse(IP), 30001));
+        if (IP != IPAddress.None)
+        {
+            SendJSONToLamp(new DetectionModeDTO() { DetectionMode = detectionMode }, new IPEndPoint(IP, 30001));
+        }
     }
 
-    public void RegisterControllerToDevice(bool register, string IP)
+    public void RegisterControllerToDevice(bool register, IPAddress IP)
     {
-        SendJSONToLamp(new RegisterDeviceDTO() { RegisterDevice = register }, new IPEndPoint(IPAddress.Parse(IP), 30001));
+        if (IP != IPAddress.None)
+        {
+            SendJSONToLamp(new RegisterDeviceDTO() { RegisterDevice = register }, new IPEndPoint(IP, 30001));
+        }
     }
 
     public void SendAnimationWithUpdate(Anim currentAnimation = null)
@@ -771,13 +785,18 @@ public class AnimationSender : MonoBehaviour
         {
             foreach (var pixel in stroke.ControlledPixels)
             {
-                string LampIP = pixel.transform.parent.GetComponent<Ribbon>().IP;
+				Lamp lamp = pixel.GetComponent<Pixel>().physicalLamp.Owner;
+				string LampIP = lamp.IP.ToString();
                 if (!LampIPList.Contains(LampIP))
                 {
                     LampIPList.Add(LampIP);
                     if (!LampIPtoMacDictionary.ContainsKey(LampIP))
                     {
-                        LampIPtoMacDictionary.Add(LampIP, pixel.transform.parent.GetComponent<Ribbon>().Mac);
+						LampIPtoMacDictionary.Add(LampIP, lamp.Serial);
+                    }
+                    else
+                    {
+						LampIPtoMacDictionary[LampIP] = lamp.Serial;
                     }
                 }
             }
@@ -810,6 +829,7 @@ public class AnimationSender : MonoBehaviour
         {
             var VideoColor = Array.ConvertAll(ActiveStroke.Properties["Color1"], c => (float)c);
             LastVideoStreamColor = new Vector4(VideoColor[0] / 100f, VideoColor[1] / 10000f, VideoColor[2] / 120f, VideoColor[3] / 360f);
+			LastGamma = (float)ActiveStroke.Properties["Gammax10"][0];
         }
 
         //Get colors
@@ -939,10 +959,18 @@ public class AnimationSender : MonoBehaviour
     {
         Scene lampScene = JsonConvert.DeserializeObject<Scene>(sceneJSON);
 
-        MergeScenes(lampScene);
+        try
+        {
+            MergeScenes(lampScene);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Scene merging failed! Error: " + e.ToString());
+        }
+        
     }
 
-    public void RemoveLampFromStrokes(Transform lamp, string lampIP)
+    public void RemoveLampFromStrokes(Transform lamp, string lampMac)
     {
         int LampChildCount = lamp.childCount;
         for (int p = 0; p < LampChildCount; p++)
@@ -961,16 +989,16 @@ public class AnimationSender : MonoBehaviour
             RemovePixelFromLayers(pix);
         }
 
-        StopLampCommunication.Add(lampIP);
+        StopLampCommunication.Add(lampMac);
         scene.TimeStamp -= 1;
     }
 
-    public void StartPollingLayers(string LampIP)
+    public void StartPollingLayers(string LampMac)
     {
         //TODO: Generalize so it isn't lamp dependent.
-        StartCoroutine("PollLayersFromLamp", LampIP);
-        StartCoroutine("SetDetectionFalse", LampIP);
-        StartCoroutine("RegisterDevice", LampIP);
+        StartCoroutine(PollLayersFromLamp(LampMac));
+        StartCoroutine(SetDetectionFalse(LampMac));
+        StartCoroutine(RegisterDevice(LampMac));
     }
 
     byte[] SendJSONToLamp(object messageObject, IPEndPoint lampEndPoint)
@@ -995,7 +1023,7 @@ public class AnimationSender : MonoBehaviour
         UdpClient client = new UdpClient();
 #endif
         client.Send(data, data.Length, lampEndPoint);
-
+		client.Close();
     }
 
     IEnumerator SendAnimationWorker()
@@ -1014,21 +1042,33 @@ public class AnimationSender : MonoBehaviour
         }
     }
 
-    IEnumerator SetDetectionFalse(string lampIP)
+    IEnumerator SetDetectionFalse(string lampMac)
     {
         while (true)
         {
-            SetDetectionMode(false, lampIP);
+            if (setupScripts.LampMactoIPDictionary == null)
+            {
+                yield return new WaitForSeconds(1f);
+                continue;
+            }
+
+            SetDetectionMode(false, setupScripts.LampMactoIPDictionary[lampMac]);
             yield return new WaitForSeconds(2.44f);
         }
     }
 
-    IEnumerator RegisterDevice(string lampIP)
+    IEnumerator RegisterDevice(string lampMac)
     {
         while (true)
         {
+            if (setupScripts.LampMactoIPDictionary == null)
+            {
+                yield return new WaitForSeconds(1f);
+                continue;
+            }
+
             //Register constantly!
-            RegisterControllerToDevice(true, lampIP);
+            RegisterControllerToDevice(true, setupScripts.LampMactoIPDictionary[lampMac]);
             yield return new WaitForSeconds(1.33f);
         }
     }
@@ -1069,7 +1109,7 @@ public class AnimationSender : MonoBehaviour
         }
     }
 
-    IEnumerator PollLayersFromLamp(string lampIP)
+    IEnumerator PollLayersFromLamp(string LampMac)
     {
         //TODO: Broadcast and take latest layer
         var client = LampPollClient;
@@ -1079,34 +1119,47 @@ public class AnimationSender : MonoBehaviour
         var lampPort = 30001;
         while (true)
         {
-            if (StopLampCommunication.Contains(lampIP))
+            if (StopLampCommunication.Contains(LampMac))
             {
-                StopLampCommunication.Remove(lampIP);
+                StopLampCommunication.Remove(LampMac);
                 break;
             }
 
-            IPEndPoint lampEndPoint = new IPEndPoint(IPAddress.Parse(lampIP), lampPort);
+            if (setupScripts.LampMactoIPDictionary == null)
+            {
+                yield return new WaitForSeconds(1f);
+                continue;
+            }
+
+            if (setupScripts.LampMactoIPDictionary[LampMac] == IPAddress.None)
+            {
+                yield return new WaitForSeconds(1f);
+                continue;
+            }
+
+            IPEndPoint lampEndPoint = new IPEndPoint(setupScripts.LampMactoIPDictionary[LampMac], lampPort);
             client.Send(data, data.Length, lampEndPoint);
             Thread.Sleep(10);
             if (client.Available > 0)
             {
                 var receivedMessageBytes = client.Receive(ref lampEndPoint);
                 string sceneJSON = Encoding.UTF8.GetString(receivedMessageBytes);
+                Debug.Log(lampEndPoint.Address.ToString() + " = " + sceneJSON);
                 GetStrokeFromLamp(sceneJSON);
             }
-            else
-            {
-                //Backup for direct connection
-                IPEndPoint DirectLampEndpoint = new IPEndPoint(IPAddress.Parse("172.20.0.1"), lampPort);
-                client.Send(data, data.Length, DirectLampEndpoint);
-                Thread.Sleep(10);
-                if (client.Available > 0)
-                {
-                    var receivedMessageBytes = client.Receive(ref DirectLampEndpoint);
-                    string sceneJSON = Encoding.UTF8.GetString(receivedMessageBytes);
-                    GetStrokeFromLamp(sceneJSON);
-                }
-            }
+            //else
+            //{
+            //    //Backup for direct connection
+            //    IPEndPoint DirectLampEndpoint = new IPEndPoint(IPAddress.Parse("172.20.0.1"), lampPort);
+            //    client.Send(data, data.Length, DirectLampEndpoint);
+            //    Thread.Sleep(10);
+            //    if (client.Available > 0)
+            //    {
+            //        var receivedMessageBytes = client.Receive(ref DirectLampEndpoint);
+            //        string sceneJSON = Encoding.UTF8.GetString(receivedMessageBytes);
+            //        GetStrokeFromLamp(sceneJSON);
+            //    }
+            //}
 
             //Receive structure and send to 
             yield return new WaitForSeconds(0.5f);

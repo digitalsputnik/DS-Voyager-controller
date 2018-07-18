@@ -33,22 +33,22 @@ public class CameraMove : MonoBehaviour {
 
 	void Update()
 	{
-		if(setupModeObject.activeSelf)
-		{
-			if (Application.platform == RuntimePlatform.Android ||
-			    Application.platform == RuntimePlatform.IPhonePlayer)
-			{
-				CheckMoveOnTouch();
-				CheckZoomOnTouch();
-			}
-			else
+		if (Application.platform == RuntimePlatform.Android ||
+            Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            CheckMoveOnTouch();
+            CheckZoomOnTouch();
+        }
+        else
+        {
+			if(setupModeObject.activeSelf)
 			{
 				CheckMoveOnMouse();
-				CheckScrollOnMouse();
+                CheckScrollOnMouse();
 			}
-			
-			cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y, camZPos);
         }
+
+        cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y, camZPos);
 	}
 
 	void CheckZoomOnTouch()
@@ -97,19 +97,26 @@ public class CameraMove : MonoBehaviour {
 
 	void CheckMoveOnTouch()
 	{
-		if (Input.touchCount == 1)
-		{
-			Touch touch = Input.GetTouch(0);
-
-			if (IsTouchOverUIObject(touch))
-			{
-				movingWithTouch = true;
-				return;
-			}
-
-            RaycastHit hit;
-            Physics.Raycast(cam.ScreenPointToRay(touch.position), out hit, Mathf.Infinity, ~0);
+		if (Input.touchCount == 2)
+        {         
+			Touch[] touches = new Touch[2];
+			touches[0] = Input.GetTouch(0);
+			touches[1] = Input.GetTouch(1);
             
+			if (IsTouchOverUIObject(touches[0]) || IsTouchOverUIObject(touches[1]))
+            {
+                movingWithTouch = true;
+                return;
+            }
+
+			Ray ray;
+            RaycastHit hit;
+			Vector3 screenCenter = touches[1].position + (touches[0].position - touches[1].position) / 2f;
+			
+			ray = cam.ScreenPointToRay(screenCenter);
+			Physics.Raycast(ray, out hit, Mathf.Infinity, ~0);
+			Vector3 worldPosBefore = hit.point;
+
             if (!movingWithTouch)
             {            
 				if (hit.transform.tag == backgroundTag)
@@ -120,7 +127,8 @@ public class CameraMove : MonoBehaviour {
 			}
 			else
 			{
-				if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+				if (touches[0].phase == TouchPhase.Ended || touches[0].phase == TouchPhase.Canceled ||
+				    touches[1].phase == TouchPhase.Ended || touches[1].phase == TouchPhase.Canceled  )
 					movingWithTouch = false;
 				else
 				{

@@ -17,6 +17,8 @@ public class MenuCanvasScaler : MonoBehaviour
 	{
 		scaler = GetComponent<CanvasScaler>();
 		SetCanvasScaleMode();
+		if(PlayerPrefs.HasKey("UI_scale_factor"))
+		    scaleFactorSlider.value = PlayerPrefs.GetFloat("UI_scale_factor");
 		OnScaleFactorChanged();
 	}
 
@@ -45,5 +47,6 @@ public class MenuCanvasScaler : MonoBehaviour
     public void OnScaleFactorChanged()
 	{
 		scaler.scaleFactor = (maxScale - minScale) * scaleFactorSlider.value + minScale;
+		PlayerPrefs.SetFloat("UI_scale_factor", scaleFactorSlider.value);
 	}
 }

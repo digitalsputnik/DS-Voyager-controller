@@ -28,6 +28,11 @@ public class DragHandle : MonoBehaviour {
                 return;
             BeingDragged = false;
 		}
+
+		if(Input.touchCount == 0 && !Input.GetMouseButton(0))
+		{
+			BeingDragged = false;
+		}
 	}
 
     void CheckIncomingTouches()

@@ -7,35 +7,38 @@ using System.Net;
 using System.Text;
 using System.Collections;
 using System.Linq;
+using UnityEngine.EventSystems;
+using Voyager.Lamps;
+using Voyager.Networking;
 
 public class LampSettings : MonoBehaviour {
 
+	public SetupScripts setupScripts;
 	[Header("UI Settings")]
 	[SerializeField] Color lampSelectedColor;
 	[SerializeField] Color lampNormalColor;
     [Header("UI Elements")]
-	[SerializeField] Text selectionStateText;
+	public Text selectionStateText;
 
 	[Space(3)]
-	[SerializeField] GameObject clientModeBtn;
-	[SerializeField] GameObject clientModePanel;
-	[SerializeField] Toggle     clientModeFieldToggle;
-	[SerializeField] InputField clientModeFieldSsid;
-	[SerializeField] Toggle     clientModeDropToggle;
-	[SerializeField] Dropdown   clientModeDropSsid;
-	[SerializeField] InputField clientModePassword;
+	public GameObject clientModeBtn;
+	public GameObject clientModePanel;
+	public Toggle     clientModeFieldToggle;
+	public InputField clientModeFieldSsid;
+	public Toggle     clientModeDropToggle;
+	public Dropdown   clientModeDropSsid;
+	public InputField clientModePassword;
 
 	[Space(3)]
-	[SerializeField] GameObject apModeBtn;
-	[SerializeField] GameObject apModePanel;
-	[SerializeField] InputField apModeSsid;
-	[SerializeField] InputField apModePassword;
+	public GameObject apModeBtn;
+	public GameObject apModePanel;
+	public InputField apModeSsid;
+	public InputField apModePassword;
     [Header("When Leaving The Menu")]
 	[SerializeField] GameObject[] setActiveWhenLeaveMenu;
 
-	List<GameObject> selectedLamps = new List<GameObject>();
-	Dictionary<GameObject, LampInfoUpdate> lampInfo = new Dictionary<GameObject, LampInfoUpdate>();
-    Dictionary<GameObject, List<string>> LampToSSIDlistDictionary = new Dictionary<GameObject, List<string>>();
+	[SerializeField] List<PhysicalLamp> selectedLamps = new List<PhysicalLamp>();
+	Dictionary<PhysicalLamp, List<string>> LampToSSIDlistDictionary = new Dictionary<PhysicalLamp, List<string>>();
 
 	bool entered;
 
@@ -44,8 +47,12 @@ public class LampSettings : MonoBehaviour {
 		if(!entered)
 		{
 			entered = true;
-			foreach (LampInfoUpdate lamp in lampInfo.Values)
-				lamp.lampText.color = lampSelectedColor;
+			foreach (PhysicalLamp lamp in selectedLamps)
+				lamp.Text.color = lampSelectedColor;
+
+			foreach (GameObject lamp in GameObject.FindGameObjectsWithTag("light"))
+				lamp.transform.Find("Canvas").GetComponent<GraphicRaycaster>().enabled = false;
+
 			UpdateUI();
 		}
 
@@ -57,8 +64,11 @@ public class LampSettings : MonoBehaviour {
 		foreach (GameObject gObject in setActiveWhenLeaveMenu)
 			gObject.SetActive(true);
 
-		foreach (LampInfoUpdate lamp in lampInfo.Values)
-			lamp.lampText.color = lampNormalColor;
+		foreach (PhysicalLamp lamp in selectedLamps)
+			lamp.Text.color = lampNormalColor;
+
+		foreach (GameObject lamp in GameObject.FindGameObjectsWithTag("light"))
+            lamp.transform.Find("Canvas").GetComponent<GraphicRaycaster>().enabled = true;
 
 		entered = false;
 		gameObject.SetActive(false);
@@ -66,10 +76,17 @@ public class LampSettings : MonoBehaviour {
 
 	void CheckForLamps()
 	{
+		if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
+		if (Input.touchCount > 0)
+			if (IsTouchOverUIObject(Input.GetTouch(0)))
+				return;
+
 		if (Input.GetMouseButtonUp(0))
         {
             foreach (var lamp in selectedLamps)
-				Debug.Log("Lamps in List: " + lamp.name);
+				Debug.Log("Lamps in List: " + lamp.Owner.Serial);
         }
 
         if (Input.touchCount == 2)
@@ -82,9 +99,10 @@ public class LampSettings : MonoBehaviour {
             RaycastHit hit;
 			if (Physics.Raycast(ray, out hit, 100))
             {
-				if (hit.transform.tag == "lamp")
+				Debug.Log(hit.transform.name);
+				if (hit.transform.name == "Graphics")
 				{
-					GameObject currentLamp = hit.transform.parent.parent.gameObject;
+					PhysicalLamp currentLamp = hit.transform.parent.GetComponent<PhysicalLamp>();
 
 					if (selectedLamps.Contains(currentLamp))
 						LampDeselected(currentLamp);
@@ -95,22 +113,18 @@ public class LampSettings : MonoBehaviour {
         }
 	}
 
-	void LampSelected(GameObject lamp)
+	void LampSelected(PhysicalLamp lamp)
 	{
 		selectedLamps.Add(lamp);
-		lampInfo.Add(lamp, lamp.GetComponent<LampInfoUpdate>());
-
-		lampInfo[lamp].lampText.color = lampSelectedColor;
+		lamp.Text.color = lampSelectedColor;
+		NetworkManager.AskLampSsidList(lamp.Owner.IP);
 		UpdateUI();
 	}
 
-	void LampDeselected(GameObject lamp)
+	void LampDeselected(PhysicalLamp lamp)
 	{
-		lampInfo[lamp].lampText.color = lampNormalColor;
-
+		lamp.Text.color = lampNormalColor;
 		selectedLamps.Remove(lamp);
-		lampInfo.Remove(lamp);
-
 		UpdateUI();
 	}
 
@@ -133,46 +147,47 @@ public class LampSettings : MonoBehaviour {
 
 	SelectionState GetSelectionState()
 	{
-		if (lampInfo.Count == 0)
+		if (selectedLamps.Count == 0)
 			return SelectionState.None;
+        
+		List<Lamp> lampsWithApMode = new List<Lamp>();
+		List<Lamp> lampsWithClientMode = new List<Lamp>();
 
-		List<LampInfoUpdate> lampsWithApMode = new List<LampInfoUpdate>();
-        List<LampInfoUpdate> lampsWithClientMode = new List<LampInfoUpdate>();
-
-        foreach (LampInfoUpdate info in lampInfo.Values)
+		foreach (PhysicalLamp lamp in selectedLamps)
         {
-            if (info.fullLastResponse.active_mode == "ap_mode")
-                lampsWithApMode.Add(info);
-            else if (info.fullLastResponse.active_mode == "client_mode")
-                lampsWithClientMode.Add(info);
+			if (lamp.Owner.Mode == "ap_mode")
+				lampsWithApMode.Add(lamp.Owner);
+			else if (lamp.Owner.Mode == "client_mode")
+				lampsWithClientMode.Add(lamp.Owner);
             else
-                Debug.LogError("Lamp " + info.fullLastResponse.serial_name + " doesn't have a active_mode data.");
+				Debug.LogError("Lamp " + lamp.Owner.Serial + " doesn't have a active_mode data.");
         }
 
-		if (lampsWithApMode.Count == lampInfo.Count)
+		if (lampsWithApMode.Count == selectedLamps.Count)
 			return SelectionState.AdModes;
-		else if (lampsWithClientMode.Count == lampInfo.Count)
+
+		if (lampsWithClientMode.Count == selectedLamps.Count)
 			return SelectionState.ClientModes;
-		else
-			return SelectionState.Mixed;
+		
+		return SelectionState.Mixed;
 	}
 
 	string GetSelectionStateMessage(SelectionState state)
 	{      
-		if (lampInfo.Count == 0)
+		if (selectedLamps.Count == 0)
 			return "Select at last one lamp";
 		else
 		{
 			if (state == SelectionState.ClientModes)
 			{
-				if (lampInfo.Count == 1)
+				if (selectedLamps.Count == 1)
 					return "The lamp is connected to other";
 				else
 					return "The lamps are connected to somewhere else";
 			}
 			else if (state == SelectionState.AdModes)
 			{
-				if (lampInfo.Count == 1)
+				if (selectedLamps.Count == 1)
 					return "The lamp is currently an access point";
 				else
 					return "The lamps are currently an access points";
@@ -187,20 +202,20 @@ public class LampSettings : MonoBehaviour {
     public void TurnToSlave()
 	{
 		bool opening = !clientModePanel.activeSelf;
-		LampInfoUpdate lastSelectedLamp = lampInfo[selectedLamps[selectedLamps.Count - 1]];
+		Lamp lastSelectedLamp = selectedLamps[selectedLamps.Count - 1].Owner;
 
 		if (opening)
 		{
-			clientModeFieldSsid.text = lastSelectedLamp.fullLastResponse.active_pattern;
-			clientModePassword.text = lastSelectedLamp.fullLastResponse.active_pattern_ps;
+			clientModeFieldSsid.text = lastSelectedLamp.activePattern;
+			clientModePassword.text = lastSelectedLamp.activePatternPassword;
 
 			clientModeFieldToggle.isOn = true;
 			clientModeDropToggle.isOn = false;
 
-			clientModeDropSsid.ClearOptions();
-			clientModeDropSsid.AddOptions(CreateSsidList());
+            clientModeDropSsid.ClearOptions();
+            clientModeDropSsid.AddOptions(CreateSsidList());
 
-			clientModePanel.SetActive(true);
+            clientModePanel.SetActive(true);
 
 			apModeBtn.SetActive(false);
 			apModePanel.SetActive(false);
@@ -214,7 +229,20 @@ public class LampSettings : MonoBehaviour {
 
     public void Connect()
 	{
-		StartCoroutine(SendClientModeToSelectedLamps());
+		//StartCoroutine(SendClientModeToSelectedLamps());
+		string ssid = "";
+
+        if (clientModeFieldToggle.isOn)
+            ssid = clientModeFieldSsid.text;
+        else
+            ssid = clientModeDropSsid.options[clientModeDropSsid.value].text;
+		
+		foreach(PhysicalLamp lamp in selectedLamps)
+		{
+			NetworkManager.AskTurnClientMode(lamp.Owner.IP, ssid, clientModePassword.text);
+        }
+
+		SendingDataStarted();
 	}
 
     public void MakeAccessPoint()
@@ -223,7 +251,7 @@ public class LampSettings : MonoBehaviour {
 		{
 			apModeSsid.text = "";
 			apModePassword.text = "";
-			StartCoroutine(SendApModeToSelectedLamps());
+			//StartCoroutine(SendApModeToSelectedLamps());
 		}
         else
 		{
@@ -231,9 +259,9 @@ public class LampSettings : MonoBehaviour {
 
             if (opening)
             {
-				LampInfoUpdate lamp = lampInfo[selectedLamps[0]];
-				apModeSsid.text = lamp.fullLastResponse.active_ssid;
-				apModePassword.text = lamp.fullLastResponse.active_password;
+				Lamp lamp = selectedLamps[0].Owner;
+				apModeSsid.text = lamp.activeSSID;
+				apModePassword.text = lamp.activePassword;
 				apModePanel.SetActive(true);
 
 				clientModeBtn.SetActive(false);
@@ -249,7 +277,16 @@ public class LampSettings : MonoBehaviour {
 
     public void Make()
 	{
-		StartCoroutine(SendApModeToSelectedLamps());
+		//StartCoroutine(SendApModeToSelectedLamps());
+		foreach(PhysicalLamp lamp in selectedLamps)
+		{
+			int channel = lamp.Owner.activeChannel;
+			string ssid = (apModeSsid.text == "") ? lamp.Owner.activeSSID : apModeSsid.text;
+			string password = (apModePassword.text == "") ? lamp.Owner.activePassword : apModePassword.text;
+			NetworkManager.AskTurnApMode(lamp.Owner.IP, channel, ssid, password);
+		}
+
+        SendingDataStarted();
 	}
 
 	public List<string> CreateSsidList()
@@ -275,92 +312,118 @@ public class LampSettings : MonoBehaviour {
         return ssids;
 	}
     
-	byte[] CreateApModeJsonPackage(LampInfoUpdate lamp)
-	{
-		ApModePackage package = new ApModePackage()
-		{
-			set_channel = lamp.fullLastResponse.active_channel,
-			set_ssid = (apModeSsid.text == "") ? lamp.fullLastResponse.active_ssid : apModeSsid.text,
-			set_password = (apModePassword.text == "") ? lamp.fullLastResponse.active_password : apModePassword.text
-		};
+	//byte[] CreateApModeJsonPackage(LampInfoUpdate lamp)
+	//{
+	//	ApModePackage package = new ApModePackage()
+	//	{
+	//		set_channel = lamp.fullLastResponse.active_channel,
+	//		set_ssid = (apModeSsid.text == "") ? lamp.fullLastResponse.active_ssid : apModeSsid.text,
+	//		set_password = (apModePassword.text == "") ? lamp.fullLastResponse.active_password : apModePassword.text
+	//	};
+    //
+	//	return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(package));
+	//}
+    //
+	//IEnumerator SendApModeToSelectedLamps()
+   // {
+   //     SendingDataStarted();
+   //     Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+   //     int port = 30000;
+   //     Dictionary<IPEndPoint, byte[]> endPoints = new Dictionary<IPEndPoint, byte[]>();
+    //
+   //     foreach (LampInfoUpdate info in lampInfo.Values)
+			//endPoints.Add(new IPEndPoint(setupScripts.LampMactoIPDictionary[info.mac], port), CreateApModeJsonPackage(info));
+    //
+    //    for (int i = 0; i < 10; i++)
+    //    {
+    //        foreach (IPEndPoint endPoint in endPoints.Keys)
+    //            sock.SendTo(endPoints[endPoint], endPoint);
+    //        yield return new WaitForSeconds(0.2f);
+    //    }
+    //
+    //    SendingDataEnded();
+    //    yield return null;
+    //}
 
-		return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(package));
-	}
-    
-	IEnumerator SendApModeToSelectedLamps()
+	IEnumerator GetSSIDListForLamp(PhysicalLamp lamp)
     {
-        SendingDataStarted();
         Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         int port = 30000;
-        Dictionary<IPEndPoint, byte[]> endPoints = new Dictionary<IPEndPoint, byte[]>();
+        
+        byte[] ReceiveBuffer = new byte[2048];
+        bool SSIDnotReceived = true;
 
-        foreach (LampInfoUpdate info in lampInfo.Values)
-            endPoints.Add(new IPEndPoint(info.ip, port), CreateApModeJsonPackage(info));
-
-        for (int i = 0; i < 10; i++)
+        while (SSIDnotReceived)
         {
-            foreach (IPEndPoint endPoint in endPoints.Keys)
-                sock.SendTo(endPoints[endPoint], endPoint);
-            yield return new WaitForSeconds(0.2f);
+			sock.SendTo(new byte[] { 0xD5, 0x0A, 0x87, 0x10 }, new IPEndPoint(lamp.Owner.IP, port));
+            yield return new WaitForSeconds(1.0f);
+            while (sock.Available > 0)
+            {
+                int BufferSize = sock.Receive(ReceiveBuffer);
+                byte[] ReceivedBytes = ReceiveBuffer.Take(BufferSize).ToArray();
+                List<string> ssidsForLamp = JsonConvert.DeserializeObject<List<string>>(Encoding.UTF8.GetString(ReceivedBytes));
+                if (ssidsForLamp != null)
+                {
+                    if (LampToSSIDlistDictionary.ContainsKey(lamp))
+                    {
+                        LampToSSIDlistDictionary[lamp] = ssidsForLamp;
+                    }
+                    else
+                    {
+                        LampToSSIDlistDictionary.Add(lamp, ssidsForLamp);
+                    }
+                    SSIDnotReceived = false;
+                }
+                else
+                {
+                    Debug.Log("Another message");
+                }
+            }
+            yield return null;
         }
-
-        SendingDataEnded();
+        clientModeDropSsid.ClearOptions();
+        clientModeDropSsid.AddOptions(CreateSsidList());
         yield return null;
     }
 
-    IEnumerator GetSSIDListForLamp(LampInfoUpdate lamp)
-    {
-        Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-        int port = 30000;
-        sock.SendTo(new byte[] { 0xD5, 0x0A, 0x87, 0x10 }, new IPEndPoint(lamp.ip, port));
-        while (sock.Available > 0)
-        {
-
-        }
-        
-
-
-        yield return null;
-    }
-
-	byte[] CreateClientModeJsonPackage()
-    {
-        string ssid = "";
-
-		if (clientModeFieldToggle.isOn)
-			ssid = clientModeFieldSsid.text;
-		else
-			ssid = clientModeDropSsid.itemText.text;
-
-		ClientModePackage package = new ClientModePackage()
-		{
-			set_pattern = ssid,
-            set_pattern_ps = clientModePassword.text
-        };
-        return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(package));
-    }
-
-	IEnumerator SendClientModeToSelectedLamps()
-	{
-		SendingDataStarted();
-		Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-		int port = 30000;
-		List<IPEndPoint> endPoints = new List<IPEndPoint>();
-		byte[] package = CreateClientModeJsonPackage();
-
-		foreach (LampInfoUpdate info in lampInfo.Values)
-			endPoints.Add(new IPEndPoint(info.ip, port));
-
-		for (int i = 0; i < 10; i++)
-		{
-			foreach(IPEndPoint endPoint in endPoints)
-				sock.SendTo(package, endPoint);
-			yield return new WaitForSeconds(0.2f);
-		}
-        
-		SendingDataEnded();
-		yield return null;
-	}
+	//byte[] CreateClientModeJsonPackage()
+ //   {
+ //       string ssid = "";
+    //
+ //       if (clientModeFieldToggle.isOn)
+ //           ssid = clientModeFieldSsid.text;
+ //       else
+ //           ssid = clientModeDropSsid.options[clientModeDropSsid.value].text; // clientModeDropSsid.itemText.text;
+    //
+	//	ClientModePackage package = new ClientModePackage()
+	//	{
+	//		set_pattern = ssid,
+ //           set_pattern_ps = clientModePassword.text
+ //       };
+ //       return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(package));
+ //   }
+    //
+	//IEnumerator SendClientModeToSelectedLamps()
+	//{
+	//	SendingDataStarted();
+	//	Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+	//	int port = 30000;
+	//	List<IPEndPoint> endPoints = new List<IPEndPoint>();
+	//	byte[] package = CreateClientModeJsonPackage();
+    //
+	//	foreach (LampInfoUpdate info in lampInfo.Values)
+	//		endPoints.Add(new IPEndPoint(setupScripts.LampMactoIPDictionary[info.mac], port));
+    //
+ //       for (int i = 0; i < 10; i++)
+ //       {
+ //           foreach (IPEndPoint endPoint in endPoints)
+ //               sock.SendTo(package, endPoint);
+ //           yield return new WaitForSeconds(0.2f);
+ //       }
+    //
+ //       SendingDataEnded();
+	//	yield return null;
+	//}
 
     void SendingDataStarted()
 	{
@@ -375,6 +438,15 @@ public class LampSettings : MonoBehaviour {
 	{
 		UpdateUI();
 	}
+
+	bool IsTouchOverUIObject(Touch touch)
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = touch.position;
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
+    }
 }
 
 public class ApModePackage

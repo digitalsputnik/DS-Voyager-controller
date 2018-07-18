@@ -144,18 +144,19 @@ EOF
 		while [ $counter_ping -lt 10 ]
 		do
 			#check ip or ping...?
-			if [ "$(ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}')" != "" ]; then
-				#if ping -c 1 -I wlan0 $(ip route | awk 'NR==1{print $3}') > /dev/null; then
+			#if [ "$(ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}')" != "" ]; then
+			if ping -c 1 -I wlan0 $(ip route | awk 'NR==1{print $3}') > /dev/null; then
 				#echo "connection ok!"
+
 				counter_ping=0
-				sleep 1
 				
-				flag=$(cat /mnt/data/timesyncflag)
-				if [ "$flag" == "0" ]; then
-					python3 /mnt/data/timesync_router.py
-					#echo "timesync router"
-				fi
+				#flag=$(cat /mnt/data/timesyncflag)
+				#if [ "$flag" == "0" ]; then
+				#	python3 /mnt/data/timesync_router.py
+				#	#echo "timesync router"
+				#fi
 				
+				sleep 5
 			fi
 			sleep 2
 			

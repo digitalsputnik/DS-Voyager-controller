@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NatCamU.Core;
-
+using Voyager.Lamps;
 
 public static class HelperMethods
 {
@@ -109,7 +109,7 @@ public class DrawScripts : MonoBehaviour {
     public MenuPullScript PullScript;
     public GameObject MenuBackGround;
     //public RawImage BackgroundRawImage;
-    public GameObject VideoStreamBackground;
+	public GameObject videoStream;
 	public Texture2D videoTexture;
     private bool camAvailable = false;
     //public AspectRatioFitter fit;
@@ -125,6 +125,8 @@ public class DrawScripts : MonoBehaviour {
     public GameObject DMXDropdowns;
     public Dropdown UnitDropdown;
     public Dropdown FormatDropdown;
+
+	public WebCamTexture webCamTexture;
 
     //List of animations
     public List<LightAnims> animations = new List<LightAnims>();
@@ -150,7 +152,7 @@ public class DrawScripts : MonoBehaviour {
 
 		NatCam.OnStart += NatCam_OnStart;
 		NatCam.OnFrame += NatCam_OnFrame;
-		backgroundMaterial = VideoStreamBackground.GetComponent<MeshRenderer>().material;
+		backgroundMaterial = videoStream.GetComponent<MeshRenderer>().material;
     }
 
     private void DMXPropertyChange(int arg0)
@@ -592,10 +594,20 @@ public class DrawScripts : MonoBehaviour {
         {
 			NatCam.Pause();
 			videoTexture = null;
-            VideoStreamBackground.SetActive(false);
+            videoStream.SetActive(false);
         }
 
-        if (value < devices.Length)
+		if(webCamTexture != null)
+		{
+			if(webCamTexture.isPlaying)
+			{
+				webCamTexture.Stop();
+				videoTexture = null;
+				videoStream.SetActive(false);
+			}
+		}
+
+		if (value < WebCamTexture.devices.Length)
         {
 
             //Debug.Log("Video Stream selected...");
@@ -608,6 +620,7 @@ public class DrawScripts : MonoBehaviour {
                 camAvailable = false;
                 return;
             }
+
 			//for (int j = 0; j < devices.Length; j++)
 			//{
 			//    if (value == 0)
@@ -616,7 +629,7 @@ public class DrawScripts : MonoBehaviour {
 			//        {
 			//            webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
 			//            //Debug.Log("Webcam created!");
-
+            //
 			//        }
 			//    }
 			//    else if (value == 1)
@@ -625,31 +638,45 @@ public class DrawScripts : MonoBehaviour {
 			//        {
 			//            webcamTexture = new WebCamTexture(devices[j].name, Screen.width, Screen.height);
 			//            //Debug.Log("Webcam created!");
-
+            //
 			//        }
 			//    }
 			//}
 
-			NatCam.Camera = devices[value];
-			NatCam.Camera.Framerate = 30;
-			NatCam.Play();
-            VideoStreamBackground.SetActive(true);
-            camAvailable = true;
+			if(value >= devices.Length)
+			{            
+				string camName = WebCamTexture.devices[value].name;
+				Debug.LogError(camName);
+				webCamTexture = new WebCamTexture();
+				webCamTexture.deviceName = camName;
+				backgroundMaterial.mainTexture = webCamTexture;
+                webCamTexture.Play();
+				Debug.LogError(webCamTexture.isPlaying);
+				EventManager.TriggerEvent("WorkplaceObjectMoved");
+            }
+            else
+            {
+                NatCam.Camera = devices[value];
+                NatCam.Play();
+            }
+			videoStream.SetActive(true);
+			camAvailable = true;
         }
-        else {
-            var videoSourcePanels = VideoSourcePanel.GetChildrenWithTag("videosource");
-            var urlInput = videoSourcePanels[0].transform.Find("urlInput").gameObject;
-            urlInput.SetActive(true);
-            VideoStreamBackground.SetActive(true);
-            //VideoStreamBackground.GetComponent<Renderer>().material.mainTexture = videoTexture;
-            //urlInput.GetComponent<InputField>().onEndEdit.AddListener(delegate { PlayStream(urlInput.GetComponent<InputField>()); });
-        }
+        //else {
+        //    var videoSourcePanels = VideoSourcePanel.GetChildrenWithTag("videosource");
+        //    var urlInput = videoSourcePanels[0].transform.Find("urlInput").gameObject;
+        //    urlInput.SetActive(true);
+        //    VideoStreamBackground.SetActive(true);
+        //    //VideoStreamBackground.GetComponent<Renderer>().material.mainTexture = videoTexture;
+        //    //urlInput.GetComponent<InputField>().onEndEdit.AddListener(delegate { PlayStream(urlInput.GetComponent<InputField>()); });
+        //}
     }
 
     void NatCam_OnStart()
 	{
 		backgroundMaterial.mainTexture = NatCam.Preview;
 		videoTexture = new Texture2D(NatCam.Preview.width, NatCam.Preview.height);
+		EventManager.TriggerEvent("WorkplaceObjectMoved");
 	}
     
 	void NatCam_OnFrame()
@@ -1083,117 +1110,123 @@ public class DrawScripts : MonoBehaviour {
 
     private void ChangeTool(int arg0)
 	{
+		LampManager lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
 		switch (toolsDropdown.value)
 		{
 			case 1: //Paint Pixel
 				drawMode.SetActive(true);
-				int lightCount = workSpace.transform.childCount;
-				for (int i = 0; i < lightCount; i++)
-				{
-					var light = workSpace.transform.GetChild(i);
-                    var pipeLength = light.GetComponent<Ribbon>().pipeLength;
-                    if (pipeLength == 3)
-                    {
-                        var pix0 = light.Find("pixel0");
-                        pix0.Find("DragAndDrop1").gameObject.SetActive(false);
-                        pix0.Find("DragAndDrop2").gameObject.SetActive(false);
-                        pix0.Find("DragAndDrop2").gameObject.SetActive(false);
-                        pix0.Find("Canvas").gameObject.SetActive(false);
+				lampManager.HideGraphics(true);
+				lampManager.SetGraphicsCollision(false);
+				//int lightCount = workSpace.transform.childCount;
+				//for (int i = 0; i < lightCount; i++)
+				//{
+				//	var light = workSpace.transform.GetChild(i);
+    //                var pipeLength = light.GetComponent<Ribbon>().pipeLength;
+    //                if (pipeLength == 3)
+    //                {
+    //                    var pix0 = light.Find("pixel0");
+    //                    pix0.Find("DragAndDrop1").gameObject.SetActive(false);
+    //                    pix0.Find("DragAndDrop2").gameObject.SetActive(false);
+    //                    pix0.Find("DragAndDrop2").gameObject.SetActive(false);
+    //                    pix0.Find("Canvas").gameObject.SetActive(false);
 
-                        var pix1 = light.Find("pixel1");
-                        pix1.Find("DragAndDrop1").gameObject.SetActive(false);
-                        pix1.Find("DragAndDrop2").gameObject.SetActive(false);
-                        pix1.Find("DragAndDrop2").gameObject.SetActive(false);
-                        pix1.Find("Canvas").gameObject.SetActive(false);
+    //                    var pix1 = light.Find("pixel1");
+    //                    pix1.Find("DragAndDrop1").gameObject.SetActive(false);
+    //                    pix1.Find("DragAndDrop2").gameObject.SetActive(false);
+    //                    pix1.Find("DragAndDrop2").gameObject.SetActive(false);
+    //                    pix1.Find("Canvas").gameObject.SetActive(false);
 
-                        var pix2 = light.Find("pixel2");
-                        pix2.Find("DragAndDrop1").gameObject.SetActive(false);
-                        pix2.Find("DragAndDrop2").gameObject.SetActive(false);
-                        pix2.Find("DragAndDrop2").gameObject.SetActive(false);
-                        pix2.Find("Canvas").gameObject.SetActive(false);
+    //                    var pix2 = light.Find("pixel2");
+    //                    pix2.Find("DragAndDrop1").gameObject.SetActive(false);
+    //                    pix2.Find("DragAndDrop2").gameObject.SetActive(false);
+    //                    pix2.Find("DragAndDrop2").gameObject.SetActive(false);
+    //                    pix2.Find("Canvas").gameObject.SetActive(false);
 
-                    }
-                    else
-                    {
-                        light.Find("DragAndDrop1").gameObject.SetActive(false);
-                        light.Find("DragAndDrop2").gameObject.SetActive(false);
-                        light.Find("Canvas").gameObject.SetActive(false);
-                    }
-				}
+    //                }
+    //                else
+    //                {
+    //                    light.Find("DragAndDrop1").gameObject.SetActive(false);
+    //                    light.Find("DragAndDrop2").gameObject.SetActive(false);
+    //                    light.Find("Canvas").gameObject.SetActive(false);
+    //                }
+				//}
 
 				break;
 			case 2: //Move Lamp
 				drawMode.SetActive(false);
-				
-				lightCount = workSpace.transform.childCount;
-				for (int i = 0; i < lightCount; i++)
-				{
-                    var light = workSpace.transform.GetChild(i);
-                    var pipeLength = light.GetComponent<Ribbon>().pipeLength;
-                    if (pipeLength == 3)
-                    {
-                        var pix0 = light.Find("pixel0");
-                        pix0.Find("DragAndDrop1").gameObject.SetActive(true);
-                        pix0.Find("DragAndDrop2").gameObject.SetActive(true);
-                        pix0.Find("DragAndDrop2").gameObject.SetActive(true);
-                        pix0.Find("Canvas").gameObject.SetActive(true);
+				lampManager.HideGraphics(false);
+                lampManager.SetGraphicsCollision(true);
+				//lightCount = workSpace.transform.childCount;
+				//for (int i = 0; i < lightCount; i++)
+				//{
+                //    var light = workSpace.transform.GetChild(i);
+                //    var pipeLength = light.GetComponent<Ribbon>().pipeLength;
+                //    if (pipeLength == 3)
+                //    {
+                //        var pix0 = light.Find("pixel0");
+                //        pix0.Find("DragAndDrop1").gameObject.SetActive(true);
+                //        pix0.Find("DragAndDrop2").gameObject.SetActive(true);
+                //        pix0.Find("DragAndDrop2").gameObject.SetActive(true);
+                //        pix0.Find("Canvas").gameObject.SetActive(true);
 
-                        var pix1 = light.Find("pixel1");
-                        pix1.Find("DragAndDrop1").gameObject.SetActive(true);
-                        pix1.Find("DragAndDrop2").gameObject.SetActive(true);
-                        pix1.Find("DragAndDrop2").gameObject.SetActive(true);
-                        pix1.Find("Canvas").gameObject.SetActive(true);
+                //        var pix1 = light.Find("pixel1");
+                //        pix1.Find("DragAndDrop1").gameObject.SetActive(true);
+                //        pix1.Find("DragAndDrop2").gameObject.SetActive(true);
+                //        pix1.Find("DragAndDrop2").gameObject.SetActive(true);
+                //        pix1.Find("Canvas").gameObject.SetActive(true);
 
-                        var pix2 = light.Find("pixel2");
-                        pix2.Find("DragAndDrop1").gameObject.SetActive(true);
-                        pix2.Find("DragAndDrop2").gameObject.SetActive(true);
-                        pix2.Find("DragAndDrop2").gameObject.SetActive(true);
-                        pix2.Find("Canvas").gameObject.SetActive(true);
+                //        var pix2 = light.Find("pixel2");
+                //        pix2.Find("DragAndDrop1").gameObject.SetActive(true);
+                //        pix2.Find("DragAndDrop2").gameObject.SetActive(true);
+                //        pix2.Find("DragAndDrop2").gameObject.SetActive(true);
+                //        pix2.Find("Canvas").gameObject.SetActive(true);
 
-                    }
-                    else
-                    {
-                        light.Find("DragAndDrop1").gameObject.SetActive(true);
-                        light.Find("DragAndDrop2").gameObject.SetActive(true);
-                        light.Find("Canvas").gameObject.SetActive(true);
-                    }
-                }
+                //    }
+                //    else
+                //    {
+                //        light.Find("DragAndDrop1").gameObject.SetActive(true);
+                //        light.Find("DragAndDrop2").gameObject.SetActive(true);
+                //        light.Find("Canvas").gameObject.SetActive(true);
+                //    }
+                //}
 				break;
-			default: //Paint Lamp
-				drawMode.SetActive(true);
-				lightCount = workSpace.transform.childCount;
-				for (int i = 0; i < lightCount; i++)
-				{
-                    var light = workSpace.transform.GetChild(i);
-                    var pipeLength = light.GetComponent<Ribbon>().pipeLength;
-                    if (pipeLength == 3)
-                    {
-                        var pix0 = light.Find("pixel0");
-                        pix0.Find("DragAndDrop1").gameObject.SetActive(false);
-                        pix0.Find("DragAndDrop2").gameObject.SetActive(false);
-                        pix0.Find("DragAndDrop2").gameObject.SetActive(false);
-                        pix0.Find("Canvas").gameObject.SetActive(false);
+            default: //Paint Lamp
+                drawMode.SetActive(true);
+				lampManager.HideGraphics(true);
+				lampManager.SetGraphicsCollision(false);
+                //lightCount = workSpace.transform.childCount;
+                //for (int i = 0; i < lightCount; i++)
+                //{
+                //    var light = workSpace.transform.GetChild(i);
+                //    var pipeLength = light.GetComponent<Ribbon>().pipeLength;
+                //    if (pipeLength == 3)
+                //    {
+                //        var pix0 = light.Find("pixel0");
+                //        pix0.Find("DragAndDrop1").gameObject.SetActive(false);
+                //        pix0.Find("DragAndDrop2").gameObject.SetActive(false);
+                //        pix0.Find("DragAndDrop2").gameObject.SetActive(false);
+                //        pix0.Find("Canvas").gameObject.SetActive(false);
 
-                        var pix1 = light.Find("pixel1");
-                        pix1.Find("DragAndDrop1").gameObject.SetActive(false);
-                        pix1.Find("DragAndDrop2").gameObject.SetActive(false);
-                        pix1.Find("DragAndDrop2").gameObject.SetActive(false);
-                        pix1.Find("Canvas").gameObject.SetActive(false);
+                //        var pix1 = light.Find("pixel1");
+                //        pix1.Find("DragAndDrop1").gameObject.SetActive(false);
+                //        pix1.Find("DragAndDrop2").gameObject.SetActive(false);
+                //        pix1.Find("DragAndDrop2").gameObject.SetActive(false);
+                //        pix1.Find("Canvas").gameObject.SetActive(false);
 
-                        var pix2 = light.Find("pixel2");
-                        pix2.Find("DragAndDrop1").gameObject.SetActive(false);
-                        pix2.Find("DragAndDrop2").gameObject.SetActive(false);
-                        pix2.Find("DragAndDrop2").gameObject.SetActive(false);
-                        pix2.Find("Canvas").gameObject.SetActive(false);
+                //        var pix2 = light.Find("pixel2");
+                //        pix2.Find("DragAndDrop1").gameObject.SetActive(false);
+                //        pix2.Find("DragAndDrop2").gameObject.SetActive(false);
+                //        pix2.Find("DragAndDrop2").gameObject.SetActive(false);
+                //        pix2.Find("Canvas").gameObject.SetActive(false);
 
-                    }
-                    else
-                    {
-                        light.Find("DragAndDrop1").gameObject.SetActive(false);
-                        light.Find("DragAndDrop2").gameObject.SetActive(false);
-                        light.Find("Canvas").gameObject.SetActive(false);
-                    }
-                }			
+                //    }
+                //    else
+                //    {
+                //        light.Find("DragAndDrop1").gameObject.SetActive(false);
+                //        light.Find("DragAndDrop2").gameObject.SetActive(false);
+                //        light.Find("Canvas").gameObject.SetActive(false);
+                //    }
+                //}     
 				break;
 		}
 	}
@@ -1205,7 +1238,8 @@ public class DrawScripts : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void LateUpdate () {
+
         /*
         if (!camAvailable)
             return;
@@ -1222,4 +1256,28 @@ public class DrawScripts : MonoBehaviour {
         */
 
     }
+
+    public void UpdateLampVideoStream()
+	{
+		if (webCamTexture != null)
+        {
+            if (webCamTexture.isPlaying && webCamTexture.didUpdateThisFrame)
+            {
+				if (videoTexture == null)
+				{
+					videoTexture = new Texture2D(webCamTexture.width, webCamTexture.height, TextureFormat.RGBA32, false);
+					EventManager.TriggerEvent("WorkplaceObjectMoved");
+					Debug.LogError("Start");
+                }
+
+                OpenCVForUnity.Mat mat = new OpenCVForUnity.Mat(webCamTexture.height, webCamTexture.width, OpenCVForUnity.CvType.CV_8UC4);
+                OpenCVForUnity.Utils.webCamTextureToMat(webCamTexture, mat);
+                OpenCVForUnity.Utils.matToTexture2D(mat, videoTexture);
+                mat.Dispose();
+                mat = null;
+                //videoTexture.SetPixels32(webCamTexture.GetPixels32());
+                //videoTexture.Apply();
+            }
+        }
+	}
 }

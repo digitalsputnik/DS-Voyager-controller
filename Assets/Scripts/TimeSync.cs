@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -43,8 +44,10 @@ public class TimeSync : MonoBehaviour {
 #else
         udpClient = new UdpClient();
 #endif
+        udpClient.Client.ReceiveTimeout = 10000; // Timeout = 10s
 
         //Start coroutine to timesync each minute
+        //TODO: Sync with each lamp individually
         StartCoroutine("TimeSyncCoroutine");
 	}
 
@@ -82,14 +85,17 @@ public class TimeSync : MonoBehaviour {
         PTPDTO returnData = new PTPDTO();
         //if (udpClient.Available == 0)
         //{
-        //    return new PTPDTO {Response = "0", Timestamp = 0};
+        //    return new PTPDTO { Response = "0", Timestamp = 0 };
         //}
-        while (udpClient.Available == 0)
-        {
-            //TODO: Add timeout after which 0-s is returned
-            continue;
+        var receivedData = new byte[] { };
+        try { 
+            receivedData = udpClient.Receive(ref SlaveEndpoint);
         }
-        var receivedData = udpClient.Receive(ref SlaveEndpoint);
+        catch (Exception)
+        {
+            UnityEngine.Debug.Log("Time sync failed due to receive timeout. Will try again!");
+        }
+
         returnData.Timestamp = GetTime();
         returnData.Response = Encoding.ASCII.GetString(receivedData);
         //returnData.Response = GetTime().ToString(); // Encoding.ASCII.GetString(receivedData);
@@ -118,14 +124,36 @@ public class TimeSync : MonoBehaviour {
     {
         while (true)
         {
+            //Not to overload the coroutine of sync packet is 0
+            yield return new WaitForSeconds(5f);
+
             List<double> Offsets = new List<double>();
             List<double> Delays = new List<double>();
 
             if (SendData("sync") == 0)
             {
-                yield return new WaitForSeconds(5f);
                 continue;
             }
+
+            /*
+             * This part is for timeout TODO: Coroutine timeout handling
+            Stopwatch sw = new Stopwatch();
+            bool TimeoutExceeded = false;
+            while (udpClient.Available == 0 && !TimeoutExceeded)
+            {
+                if(sw.ElapsedMilliseconds > 2000)
+                {
+                    TimeoutExceeded = true;
+                }
+                yield return null;
+            }
+            if (TimeoutExceeded)
+            {
+                TimeoutExceeded = false;
+                continue;
+            }
+            */
+
             PTPDTO p1 = ReceiveData();
 
             SendData(numberOfTimes.ToString());
@@ -145,17 +173,15 @@ public class TimeSync : MonoBehaviour {
                     SendData("next");
                 }
 
-                Debug.Log("Offset delta " + (Offsets.Max() - Offsets.Min()));
-                Debug.Log("Delay delta " + (Delays.Max() - Delays.Min()));
+                UnityEngine.Debug.Log("Offset delta " + (Offsets.Max() - Offsets.Min()));
+                UnityEngine.Debug.Log("Delay delta " + (Delays.Max() - Delays.Min()));
                 TimeOffset = Offsets.Sum() / Offsets.Count + Delays.Sum() / Delays.Count;
 
                 //Sets the offset time for calculation
                 AnimationControl.TimeOffset = TimeOffset;
             }
 
-            //TODO: Waiting time should be dependent on the quality of sync data (standard deviation) and if the sync has failed or not.
-            
-            yield return new WaitForSeconds(60f);
+            yield return new WaitForSeconds(55f);
         }
     }
 }

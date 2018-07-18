@@ -9,7 +9,21 @@ else
 	#restore
 	cp /etc/net_orig/interfaces /mnt/data/net/interfaces
 	cp /etc/net_orig/dnsmasq.conf /mnt/data/net/dnsmasq.conf 
-	#cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf
+
+	#restore in case hostapd conf goes missing..
+	hostapd_line_check=$(wc -l < /mnt/data/net/hostapd.conf)
+	if [[ ! -f /mnt/data/net/hostapd.conf  || "$hostapd_line_check" -lt  2 ]]; then
+		#hostapd conf file not empty
+		cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf
+		#ssid changed backup name. otherwise keeps original.
+		active_ssid_line_check=$(wc -l < /mnt/data/active_ssid.txt)
+		if [ "$active_ssid_line_check" -gt 1 ]; then
+			ssid=$(cat /mnt/data/active_ssid.txt | awk 'NR==1')
+			password=$(cat /mnt/data/active_ssid.txt | awk 'NR==2')
+			sed -i "4 s/.*/ssid=$ssid/" /mnt/data/net/hostapd.conf
+			sed -i "/wpa_passphrase=/c\wpa_passphrase=$password" /mnt/data/net/hostapd.conf
+		fi
+	fi
 
 	#changes to network config, avoids changing readonly backups of network
 	sed -i '/channel=3/c\channel=6' /mnt/data/net/hostapd.conf
@@ -46,5 +60,6 @@ else
 	nice -11 python3 /mnt/data/animation/PythonReceiver.py &
 	#sh /mnt/data/autoconnect.sh &
 	
+	python3 /mnt/data/rene-timesync/ntp-discovery.py &
 
 fi

@@ -6,10 +6,11 @@ using UnityEngine.UI;
 public class UpdateProgressText : MonoBehaviour {
 
 	Text updateText;
-	[SerializeField] LampUpdater lampUpdater;
+	LampUpdater lampUpdater;
 
 	void Start()
 	{
+		lampUpdater = GameObject.FindWithTag("Networking").GetComponent<LampUpdater>();
 		updateText = GetComponent<Text>();
 		updateText.enabled = false;
 	}

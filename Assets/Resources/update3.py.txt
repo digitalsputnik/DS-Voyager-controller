@@ -1,10 +1,11 @@
-#Main update script for CHIP system and LPC. Andro 14.06.2018
+#Main update script for CHIP system and LPC. Andro 10.07.2018
+
+### IMPORTANT ###
 
 #to generate md5sum file on chip, make sure no checklist file exists! : 
 #md5sum /mnt/data/update_temp/* > /mnt/data/update_temp/checklist.chk
 #remove ssidlist.txt from checklisk.chk
-
-#For LPC update, don't forget to update LPC version number!
+#For LPC update, don't forget to update LPC NEW VERSION number!
 
 import time
 import os
@@ -12,7 +13,7 @@ import sys
 import serial
 
 reboot_needed = 0
-NEW_VERSION = 185
+NEW_VERSION = 200
 
 
 def active_mode():
@@ -45,8 +46,9 @@ if int(ps) > 1:
 os.system("kill -9 $(ps ax | grep PythonReceiver.py | grep -v grep |awk 'NR==1{print $1}') 2> /dev/null")
 os.system("kill -9 $(ps ax | grep ut2.6.py | grep -v grep | awk 'NR==1{print $1}') 2> /dev/null")
 
-#kill old legacy autoconnect
+#kill old legacy autoconnect,timesync. just in case
 os.system("kill -9 $(ps ax | grep autoconnect.sh | grep -v grep | awk 'NR==1{print $1}') 2> /dev/null")
+os.system("kill -9 $(ps ax | grep timecompare.py | grep -v grep | awk 'NR==1{print $1}') 2> /dev/null")
 
 ###MOVING FILES. CHIP UPDATES###
 
@@ -61,6 +63,9 @@ if "FAILED" in os.popen("md5sum  -c /mnt/data/update_temp/checklist.chk 2> /dev/
 	print ("MD5SUM FAIL")
 	os.system("setsid python3 /mnt/data/ut2.6.py &")
 	sys.exit()
+
+#remove old timesync zips
+#os.system("rm /mnt/data/timesync-on-chip-*")
 
 #move new files, check new location md5sum
 os.system("mv /mnt/data/ssidlist.txt /mnt/data/ssidlist.txt.bak")
@@ -83,12 +88,22 @@ if os.popen("sh /mnt/data/serial_check_2.sh").readline().strip() != "serial_chec
 		os.system("setsid python3 /mnt/data/ut2.6.py &")
 		sys.exit()
 
+#tar chrony stuff
+#os.system("unxz /mnt/data/timesync-on-chip-*")
+#os.system("tar -xf /mnt/data/timesync-on-chip-*")
+os.system("unxz -f /mnt/data/rene-timesync.tar.xz")
+time.sleep(0.5)
+os.system("tar -xf /mnt/data/rene-timesync.tar -C /mnt/data/")
+os.system("chmod -R 777 /mnt/data/rene-timesync")
+
+#remove old tars
+#os.system("rm /mnt/data/timesync-on-chip-*")
+
 ###LPC###
 
 #Tries to flash twice, if fails 1st.
 try:
 	lpc_version = os.popen("python3 /mnt/data/lpc_firmware_version.py").readline().strip()[-3:]
-	
 	#LPC MAIN FLASHING
 	if int(lpc_version) < NEW_VERSION:
 		
@@ -116,28 +131,42 @@ except:
 		print ("FAIL. LPC NEEDS REFLASHING")
 		os.system("setsid python3 /mnt/data/ut2.6.py &")
 		sys.exit()
-
 		
 if reboot_needed == 1:
 	print ("UPDATE SUCCESSFUL, REBOOT NEEDED")
 else:
 	print ("UPDATE SUCCESSFUL")
+
 	
+#Default ssid replacement. Checks for old placeholder exampleSSID and password
+if os.path.isfile("/mnt/data/ssidlist.txt"):
+	f = open("/mnt/data/ssidlist.txt", "r")
+	temp_ssid = f.readline()
+	if len(temp_ssid.split()) > 1:
+		if temp_ssid.split()[0] == "exampleSSID" and temp_ssid.split()[1] == "password":
+			os.system("echo 'voyager_router dsputnik' > /mnt/data/ssidlist.txt")
+	f.close
 	
-### RELAUNCH processes ###
-os.system("nice -11 setsid python3 /mnt/data/animation/PythonReceiver.py &")
-os.system("setsid python3 /mnt/data/ut2.6.py &")
 
+#Update from old legacy version, checks if network_file mode exists. All this or just reboot after update.
+if os.path.isfile("/mnt/data/network_mode"):
+	#print ("already updated")
+	pass
+else:
 
+	ap_ssid=os.popen("cat /mnt/data/net/hostapd.conf | grep '\<DS026.........._M\>'").readline().strip()
+	ap_ip=os.popen("cat /mnt/data/net/interfaces | grep address | awk '{print $2}'").readline().strip()
 
-### WIFI RESET FROM OLD CONFIG ### 
-#check if master with _M and 172.20.1.1
-ap_ssid=os.popen("cat /mnt/data/net/hostapd.conf | grep '\<DS026.........._M\>'").readline().strip()
-ap_ip=os.popen("cat /mnt/data/net/interfaces | grep address | awk '{print $2}'").readline().strip()
+	#Old Client mode
+	if os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'").readline().strip() != '':
+		os.system("echo client_mode > /mnt/data/network_mode")
+		os.system("python3 /mnt/data/client_only.py &")
+		os.system("echo 0 > /mnt/data/timesyncflag")
 
-if ap_ssid != "" and ap_ip == "172.20.1.1":
-        #or maybe restore and just reboot?
-		
+	### WIFI RESET FROM OLD _M CONFIG ### 
+	#check if master with _M and 172.20.1.1
+	elif ap_ssid != "" and ap_ip == "172.20.1.1":	
+	
 		#reset wifi settings
 		os.system("cp /etc/net_orig/interfaces /mnt/data/net/interfaces")
 		os.system("cp /etc/net_orig/dnsmasq.conf /mnt/data/net/dnsmasq.conf ")
@@ -145,6 +174,9 @@ if ap_ssid != "" and ap_ip == "172.20.1.1":
 		os.system("sed -i '/channel=/c\channel=6' /mnt/data/net/hostapd.conf")
 		os.system("sed -i '/wpa=3/c\wpa=2' /mnt/data/net/hostapd.conf")
 		os.system("sed -i '/dhcp-range/c\dhcp-range=172.20.0.100,172.20.0.250,168h' /mnt/data/net/dnsmasq.conf")
+		
+		#add _M back
+		os.system("sed -i '/^ssid=DS026/ s/$/_M/' /mnt/data/net/hostapd.conf")
 		
 		#restart interface
 		os.system("ifconfig wlan1 0.0.0.0")
@@ -162,5 +194,32 @@ if ap_ssid != "" and ap_ip == "172.20.1.1":
 		os.system("ifconfig wlan1 172.20.0.1 netmask 255.255.255.0")
 		
 		os.system("python3 /mnt/data/ap_only.py")
-		os.system("echo 1 > /mnt/data/timesyncflag")	
+		os.system("echo 1 > /mnt/data/timesyncflag")
+		os.system("echo ap_mode > /mnt/data/network_mode")
 	
+	#regular ap mode
+	else:
+		os.system("python3 /mnt/data/ap_only.py")
+		os.system("echo ap_mode > /mnt/data/network_mode")
+		os.system("echo 1 > /mnt/data/timesyncflag")	
+		
+		
+#backup of a backup. In case hostapd conf goes missing and SSID has been changed.
+if not os.path.isfile("/mnt/data/active_ssid.txt"):
+	ap_ssid = os.popen("cat /mnt/data/net/hostapd.conf | grep '\<DS026..........\>'").readline().strip()
+	serial_ssid = os.popen("cat /mnt/data/serial.txt").readline().strip()
+	ap_password = os.popen("cat /mnt/data/net/hostapd.conf | grep passphrase").readline().strip()
+	if ap_ssid != "ssid="+serial_ssid or "wpa_passphrase=dsputnik" != ap_password:
+		os.system("echo %s > /mnt/data/active_ssid.txt" % ap_ssid)
+		os.system("echo %s >> /mnt/data/active_ssid.txt" % ap_password)
+
+
+### RELAUNCH processes ###
+os.system("nice -11 setsid python3 /mnt/data/animation/PythonReceiver.py &")
+os.system("setsid python3 /mnt/data/ut2.6.py &")
+
+os.system("kill -9 $(ps ax | grep timesync_service | grep -v grep | awk 'NR==1{print $1}') 2> /dev/null")
+#os.system("setsid python3 /mnt/data/timesync_service.py &")
+
+os.system("kill -9 $(ps ax | grep ntp-discovery | grep -v grep | awk 'NR==1{print $1}') 2> /dev/null")
+os.system("python3 /mnt/data/rene-timesync/ntp-discovery.py &")

@@ -11,9 +11,10 @@ public class LampInfoUpdate : MonoBehaviour {
 	[SerializeField] SetupScripts setup;
 	public Text lampText;
 	[SerializeField] float connectionLostTime;
-	[SerializeField] Image warningImage;
+	[SerializeField] GameObject warningImage;
 
-    public IPAddress ip;
+	public string mac;
+	//public IPAddress ip;
 	ExtraProperties properties;
 	public UDPResponse fullLastResponse;
 
@@ -22,20 +23,24 @@ public class LampInfoUpdate : MonoBehaviour {
     void Start()
     {
         ribbon = GetComponent<Ribbon>();
-        ip = IPAddress.Parse(ribbon.IP);
+		mac = ribbon.Mac;
     }
 
 	void Update()
 	{
-		if (setup.IPtoProps[ip] != properties)
+        if (!setup.MactoProps.ContainsKey(mac))
+            return;
+
+		if (setup.MactoProps[mac] != properties)
         {
-            properties = setup.IPtoProps[ip];
+			properties = setup.MactoProps[mac];
 			connectionLost = false;
+			//ip = setup.LampMactoIPDictionary[mac];
             ChangeText();
         }
 
-		if (setup.LampsLastResponse[ip] != fullLastResponse)
-			fullLastResponse = setup.LampsLastResponse[ip];
+		if (setup.LampsLastResponse[mac] != fullLastResponse)
+			fullLastResponse = setup.LampsLastResponse[mac];
 
 		if (!connectionLost && DateTime.Now.TimeOfDay.TotalSeconds >=
 		    properties.LastUpdate.TimeOfDay.TotalSeconds + connectionLostTime)
@@ -51,6 +56,6 @@ public class LampInfoUpdate : MonoBehaviour {
 		lampText.text = lampName + " " + properties.LampMac + " " + properties.BatteryLevel + "% charged";
 		if (connectionLost)
 			lampText.text += " - connection lost";
-		warningImage.gameObject.SetActive(connectionLost);
+		warningImage.SetActive(connectionLost);
 	}
 }

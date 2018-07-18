@@ -9,9 +9,11 @@
 
 # - maybe remove delay and add refresh telemetry packet, controlled delay
 
-VERSION=[0, 46] # 2 byte values
+VERSION=[0, 52] # 2 byte values
 CLIENT_PING_DELAY = 5 # for led status, how often tries to ping, inbetween sends previous state
-POLLING_DELAY = 10 # how often reads info from LPC when receives polling state.
+POLLING_DELAY = 5 # how often reads info from LPC when receives polling state.
+SSIDLIST_POLL_DELAY = 10 # ssidlist polling time
+NETWORK_CHANGE_DELAY = 20 # wait before accecpting another network change
 
 import time
 import serial
@@ -73,6 +75,9 @@ if int(current_time) < 1262304000:
 # time delays how often some action
 client_start_time = time.time() - CLIENT_PING_DELAY
 start_time_polling = time.time() - POLLING_DELAY
+start_time_ssidlist = time.time() - SSIDLIST_POLL_DELAY
+start_time_network_change = time.time() - NETWORK_CHANGE_DELAY
+
 ping_response = 0
 #for timesync package, values above need reset
 	
@@ -96,6 +101,18 @@ client_mode=0
 UDPResponseJSON=0
 led_number=0
 
+rawscan = ""
+ssidlist_counter = 0
+
+#read lamp length from file
+try:
+	if os.path.isfile("/mnt/data/led_number.txt"):
+		led_number = int(os.popen("cat /mnt/data/led_number.txt").readline().strip())
+		if led_number == 42 or led_number == 83:
+			length_read_flag = 1
+except:
+	pass
+
 #CRC
 crctab = bytearray([0x00,0x5e,0xbc,0xe2,0x61,0x3f,0xdd,0x83,0xc2,0x9c,0x7e,0x20,0xa3,0xfd,0x1f,0x41,0x9d,0xc3,0x21,0x7f,0xfc,0xa2,0x40,0x1e,0x5f,0x01,0xe3,0xbd,0x3e,0x60,0x82,0xdc,0x23,0x7d,0x9f,0xc1,0x42,0x1c,0xfe,0xa0,0xe1,0xbf,0x5d,0x03,0x80,0xde,0x3c,0x62,0xbe,0xe0,0x02,0x5c,0xdf,0x81,0x63,0x3d,0x7c,0x22,0xc0,0x9e,0x1d,0x43,0xa1,0xff,0x46,0x18,0xfa,0xa4,0x27,0x79,0x9b,0xc5,0x84,0xda,0x38,0x66,0xe5,0xbb,0x59,0x07,0xdb,0x85,0x67,0x39,0xba,0xe4,0x06,0x58,0x19,0x47,0xa5,0xfb,0x78,0x26,0xc4,0x9a,0x65,0x3b,0xd9,0x87,0x04,0x5a,0xb8,0xe6,0xa7,0xf9,0x1b,0x45,0xc6,0x98,0x7a,0x24,0xf8,0xa6,0x44,0x1a,0x99,0xc7,0x25,0x7b,0x3a,0x64,0x86,0xd8,0x5b,0x05,0xe7,0xb9,0x8c,0xd2,0x30,0x6e,0xed,0xb3,0x51,0x0f,0x4e,0x10,0xf2,0xac,0x2f,0x71,0x93,0xcd,0x11,0x4f,0xad,0xf3,0x70,0x2e,0xcc,0x92,0xd3,0x8d,0x6f,0x31,0xb2,0xec,0x0e,0x50,0xaf,0xf1,0x13,0x4d,0xce,0x90,0x72,0x2c,0x6d,0x33,0xd1,0x8f,0x0c,0x52,0xb0,0xee,0x32,0x6c,0x8e,0xd0,0x53,0x0d,0xef,0xb1,0xf0,0xae,0x4c,0x12,0x91,0xcf,0x2d,0x73,0xca,0x94,0x76,0x28,0xab,0xf5,0x17,0x49,0x08,0x56,0xb4,0xea,0x69,0x37,0xd5,0x8b,0x57,0x09,0xeb,0xb5,0x36,0x68,0x8a,0xd4,0x95,0xcb,0x29,0x77,0xf4,0xaa,0x48,0x16,0xe9,0xb7,0x55,0x0b,0x88,0xd6,0x34,0x6a,0x2b,0x75,0x97,0xc9,0x4a,0x14,0xf6,0xa8,0x74,0x2a,0xc8,0x96,0x15,0x4b,0xa9,0xf7,0xb6,0xe8,0x0a,0x54,0xd7,0x89,0x6b,0x35])
 def CalcCrc8(packet, length):
@@ -105,49 +122,14 @@ def CalcCrc8(packet, length):
 		temp = temp ^ crctab[temp ^ packet[i]]
 	return temp
 
-#send start polling signal to LPC
-periodic_update_length = 10
-periodic_update = bytearray()
-periodic_update = bytearray([0xD5, 0x0A, 0x50, 0x0A, 0x30, 0x01, 0x30, 0xEF, 0xFE, 0x00])
-periodic_update[9] = CalcCrc8(periodic_update, periodic_update_length-1)
-#print (list(periodic_update))
-
-poll_info = 0
-time.sleep(0.1)
-periodic_update_ok = 0
-while periodic_update_ok == 0:
-
-	ser.write(periodic_update)
-	time.sleep(0.05)
-	periodic_update_answer = ser.read(20)
-	#print ("periodic", list(periodic_update_answer))
-
-	if len(periodic_update_answer) > 4:
-		#enabled
-		if periodic_update_answer[0] == 0xD5 and periodic_update_answer[1] == 0x0A and periodic_update_answer[2] == 0x50 and periodic_update_answer[3] == 0x0A and periodic_update_answer[4] == 0x31:
-			periodic_update_ok = 1
-		
-		#already enabled, poll packet
-		if periodic_update_answer[0] == 0xD5 and periodic_update_answer[1] == 0x0A and periodic_update_answer[2] == 0x50 and periodic_update_answer[3] == 0x0B:
-			periodic_update_ok = 1
-			poll_info=serReceivedData=periodic_update_answer
-			udp_data[0:4] = 0xD5, 0x0A, 0x80, 0x10
-	
-	time.sleep(0.1)
-
 def wifi_reset():
 	#AP config
-	os.system("cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf")
-
-	#serial = os.popen("cat /mnt/data/serial.txt").readline().strip()
-	#if serial != "":
-	#os.system("sed -i '4 s/.*/ssid=%s/' /mnt/data/net/hostapd.conf" % serial)
-	#os.system("sed -i '/wpa_passphrase=/c\wpa_passphrase=dsputnik' /mnt/data/net/hostapd.conf")
-	
-	
-	os.system("sed -i '/channel=/c\channel=6' /mnt/data/net/hostapd.conf")
-	os.system("sed -i '/wpa=/c\wpa=2' /mnt/data/net/hostapd.conf")
-
+	#os.system("cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf")
+	#set active ssid to system default
+	serial = os.popen("cat /mnt/data/serial.txt").readline().strip()
+	if serial != "":
+		os.system("echo %s > /mnt/data/active_ssid.txt" % serial)
+		os.system("echo 'dsputnik' >> /mnt/data/active_ssid.txt")
 	#Default ssid to connect to
 	os.system("echo 'voyager_router dsputnik' > /mnt/data/ssidlist.txt")
 	
@@ -155,6 +137,7 @@ def wifi_reset():
 	ap_start()
 
 def connect_client():
+	os.system("echo client_mode > /mnt/data/network_mode")
 	#kill AP
 	os.system("/etc/init.d/S99_hostapd stop")
 	os.system("/etc/init.d/S80dnsmasq stop")
@@ -182,9 +165,34 @@ def connect_client():
 	os.system("echo 0 > /mnt/data/timesyncflag")
 	os.system("sh /mnt/data/connect_cm_v2.sh &")
 	#set flag
-	os.system("echo client_mode > /mnt/data/network_mode")
 	
 def ap_start():
+	os.system("echo ap_mode > /mnt/data/network_mode")
+	#reset AP config
+	os.system("cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf")
+	
+	serial = os.popen("cat /mnt/data/serial.txt").readline().strip()
+	if serial != "":
+		os.system("sed -i '4 s/.*/ssid=%s/' /mnt/data/net/hostapd.conf" % serial)
+	
+	os.system("sed -i '/channel=/c\channel=6' /mnt/data/net/hostapd.conf")
+	os.system("sed -i '/wpa_passphrase=/c\wpa_passphrase=dsputnik' /mnt/data/net/hostapd.conf")
+	os.system("sed -i '/wpa=/c\wpa=2' /mnt/data/net/hostapd.conf")
+
+	#restore ssid from backup txt
+	try:
+		if os.path.isfile("/mnt/data/active_ssid.txt"):
+			with open("/mnt/data/active_ssid.txt") as f:
+				templist = f.readlines()
+				os.system("sed -i '4 s/.*/ssid=%s/' /mnt/data/net/hostapd.conf" % templist[0].strip())
+				if templist[1].strip() != "":
+					os.system("sed -i '/wpa_passphrase=/c\wpa_passphrase=%s' /mnt/data/net/hostapd.conf" % templist[1].strip())
+				else:
+					#no password
+					os.system("sed -i '/wpa=/c\wpa=0' /mnt/data/net/hostapd.conf")
+					os.system("sed -i '/wpa_passphrase=/c\wpa_passphrase=%s' /mnt/data/net/hostapd.conf" % templist[1].strip())
+	except:
+		print ("active ssid file error")
 
 	### SET SSID AND PASSWORD
 	try:
@@ -193,17 +201,19 @@ def ap_start():
 		#ssid
 		if ssid != "":
 			os.system("sed -i '4 s/.*/ssid=%s/' /mnt/data/net/hostapd.conf" % ssid) #kinda danger, replaces by line number
-		#open network settings..
-		if password != "":
-			os.system("sed -i '/wpa_passphrase=/c\wpa_passphrase=%s' /mnt/data/net/hostapd.conf" % password)
-			os.system("sed -i '/wpa=/c\wpa=2' /mnt/data/net/hostapd.conf")
-		else:
-			os.system("sed -i '/wpa_passphrase=/c\wpa_passphrase=%s' /mnt/data/net/hostapd.conf" % password)
-			os.system("sed -i '/wpa=/c\wpa=0' /mnt/data/net/hostapd.conf")
+			os.system("echo %s > /mnt/data/active_ssid.txt" % ssid)
+			#open network settings..
+			if password != "":
+				os.system("sed -i '/wpa_passphrase=/c\wpa_passphrase=%s' /mnt/data/net/hostapd.conf" % password)
+				os.system("sed -i '/wpa=/c\wpa=2' /mnt/data/net/hostapd.conf")
+				os.system("echo %s >> /mnt/data/active_ssid.txt" % password)
+			else:
+				os.system("sed -i '/wpa_passphrase=/c\wpa_passphrase=%s' /mnt/data/net/hostapd.conf" % password)
+				os.system("sed -i '/wpa=/c\wpa=0' /mnt/data/net/hostapd.conf")
+				os.system("echo %s >> /mnt/data/active_ssid.txt" % password)
 	except:
 		print ("no ssid, password")	
-		
-		
+
 	### SET CHANNEL
 	try:
 		channel = network_dict['set_channel']
@@ -238,11 +248,64 @@ def ap_start():
 	os.system("/etc/init.d/S99_hostapd start")
 	os.system("ifconfig wlan1 172.20.0.1 netmask 255.255.255.0")
 	#set flag
-	os.system("echo ap_mode > /mnt/data/network_mode")
 	os.system("echo 1 > /mnt/data/timesyncflag")
+
+#send start polling signal to LPC
+periodic_update_length = 10
+periodic_update = bytearray()
+periodic_update = bytearray([0xD5, 0x0A, 0x50, 0x0A, 0x30, 0x01, 0x30, 0xEF, 0xFE, 0x00])
+periodic_update[9] = CalcCrc8(periodic_update, periodic_update_length-1)
+#print (list(periodic_update))
+
+poll_info = 0
+time.sleep(0.1)
+periodic_update_ok = 0
+"""
+while periodic_update_ok == 0:
+
+	ser.write(periodic_update)
+	time.sleep(0.05)
+	periodic_update_answer = ser.read(20)
+	#print ("periodic", list(periodic_update_answer))
+
+	if len(periodic_update_answer) > 4:
+		#enabled
+		if periodic_update_answer[0] == 0xD5 and periodic_update_answer[1] == 0x0A and periodic_update_answer[2] == 0x50 and periodic_update_answer[3] == 0x0A and periodic_update_answer[4] == 0x31:
+			periodic_update_ok = 1
+		
+		#already enabled, poll packet
+		if periodic_update_answer[0] == 0xD5 and periodic_update_answer[1] == 0x0A and periodic_update_answer[2] == 0x50 and periodic_update_answer[3] == 0x0B:
+			periodic_update_ok = 1
+			poll_info=serReceivedData=periodic_update_answer
+			udp_data[0:4] = 0xD5, 0x0A, 0x80, 0x10
 	
+	time.sleep(0.1)
+"""
 while True:
-	try:		
+	try:
+
+		try:
+			if periodic_update_ok == 0:
+				ser.write(periodic_update)
+				time.sleep(0.05)
+				periodic_update_answer = ser.read(20)
+				#print ("periodic", listc(periodic_update_answer))
+
+				if len(periodic_update_answer) > 4:
+					#enabled
+					if periodic_update_answer[0] == 0xD5 and periodic_update_answer[1] == 0x0A and periodic_update_answer[2] == 0x50 and periodic_update_answer[3] == 0x0A and periodic_update_answer[4] == 0x31:
+						periodic_update_ok = 1
+					
+					#already enabled, poll packet
+					if periodic_update_answer[0] == 0xD5 and periodic_update_answer[1] == 0x0A and periodic_update_answer[2] == 0x50 and periodic_update_answer[3] == 0x0B:
+						periodic_update_ok = 1
+						poll_info=serReceivedData=periodic_update_answer
+						udp_data[0:4] = 0xD5, 0x0A, 0x80, 0x10
+				
+				time.sleep(0.1)
+		except:
+			pass
+
 		try:
 			udp_data, addr = sock.recvfrom(4096)
 		except KeyboardInterrupt:
@@ -266,21 +329,73 @@ while True:
 				
 				#print(list(ser.read(len(udp_data))))
 
+			#SSID LIST PACKET RESPONSE
+			if (udp_data[2] == 0x87 and udp_data[3] == 0x10):
+				try:
+					wlan1_interface=os.popen("ifconfig | grep wlan1").readline().strip()
+					
+					if (time.time() - start_time_ssidlist > POLLING_DELAY or time.time() - start_time_ssidlist < 0):
+						if ssidlist_counter >= 3:
+							start_time_ssidlist=time.time()
+							ssidlist_counter = 0
+						else:
+							ssidlist_counter += 1
+					
+						#print (time.time() - start_time_ssidlist)
+						#print (ssidlist_counter)
+
+						#fix for stuck iw scan...
+						os.system("ps ax | grep -v grep | grep 'iw dev' | awk -F ' ' '{print $1}' | xargs kill -9 2> /dev/null ")
+						os.system("echo "" > /tmp/temp_scanlist 2> /dev/null ")
+							
+						if wlan1_interface == "":
+							os.system("nice --19 iw dev wlan0 scan | grep 'SSID:' | column -t | tr -s ' ' >> /tmp/temp_scanlist & ")
+							#rawscan_temp = os.popen("nice --19 iw dev wlan0 scan | grep 'SSID:' | column -t | tr -s ' ' &").read()
+							
+							#include dbm
+							#rawscan_temp  = os.popen("iw dev wlan0 scan | grep 'SSID:\|signal:' | awk '{ ORS = (NR%2 ? FS : RS) } 1' | column -t | tr -s ' ' | grep -E '^.{26,}$' &").read()
+						
+						else:
+							os.system("nice --19 iw dev wlan1 scan | grep 'SSID:' | column -t | tr -s ' ' >> /tmp/temp_scanlist & ")
+							#rawscan_temp = os.popen("nice --19 iw dev wlan1 scan | grep 'SSID:' | column -t | tr -s ' ' &").read()
+							
+							#include dbm
+							#rawscan_temp  = os.popen("iw dev wlan1 scan | grep 'SSID:\|signal:' | awk '{ ORS = (NR%2 ? FS : RS) } 1' | column -t | tr -s ' ' | grep -E '^.{26,}$' &").read()
+
+						#include dbm
+						#ssidlist = rawscan.replace('SSID:', '').replace('SSID:', '').replace('signal:', '').replace('dBm ', '').replace('.00 ', '').replace(' -','').strip().replace('\n\n','\n').splitlines()
+						
+						
+						time.sleep(3)
+						
+						with open("/tmp/temp_scanlist") as f: 
+							rawscan_temp = f.read()
+						
+						if rawscan_temp != "":
+							rawscan = rawscan_temp
+
+						ssidlist=rawscan.replace('SSID: ', '').replace('SSID:', '').strip().replace('\n\n','\n').splitlines()
+
+						if (len(ssidlist)) > 0:
+							#print(ssidlist)
+							sock.sendto(json.dumps(ssidlist).encode() , addr)
+							#print("SENT")
+						
+					else:
+						if (len(ssidlist)) > 0:
+							#print(ssidlist)
+							#send old packet, clears buffer..
+							sock.sendto(json.dumps(ssidlist).encode() , addr)
+							#print ("RESENT")
+						
+				except:
+					pass
+					#print ("ssidlist sending failed")
+				
 			#RESET PACKET
 			if (udp_data[2] == 0x82 and udp_data[3] == 0x10):
 				#reset animation
 				os.system("rm /mnt/data/animation/strokedata.dat")
-				
-				#AP config
-				os.system("cp /etc/net_orig/hostapd.conf /mnt/data/net/hostapd.conf")
-				
-				serial = os.popen("cat /mnt/data/serial.txt").readline().strip()
-				if serial != "":
-					os.system("sed -i '4 s/.*/ssid=%s/' /mnt/data/net/hostapd.conf" % serial)
-				
-				os.system("sed -i '/channel=/c\channel=6' /mnt/data/net/hostapd.conf")
-				os.system("sed -i '/wpa_passphrase=/c\wpa_passphrase=dsputnik' /mnt/data/net/hostapd.conf")
-				os.system("sed -i '/wpa=/c\wpa=2' /mnt/data/net/hostapd.conf")
 				
 				#Default ssid to connect to
 				os.system("echo 'voyager_router dsputnik' > /mnt/data/ssidlist.txt")
@@ -300,7 +415,7 @@ while True:
 			
 			#TIME SYNC PACKET
 			if (udp_data[2] == 0x83 and udp_data[3] == 0x10):
-				print ("Timesync respond")
+				#print ("Timesync respond")
 				
 				#send current time
 				time_start = bytearray()
@@ -343,10 +458,9 @@ while True:
 				#not an empty packet from LPC
 				if poll_info != 0:
 				
-					#timedelay how often reads and calculates poll
-					#if (time.time() - start_time_polling > POLLING_DELAY ):
-					#	start_time_polling=time.time()
-					if True:
+					#timedelay how often reads and calculates poll, incase timesync sets time back...
+					if (time.time() - start_time_polling > POLLING_DELAY or time.time() - start_time_polling < 0):
+						start_time_polling=time.time()
 					
 						#crc check for lpc sent packet
 						poll_info_crc = CalcCrc8(poll_info, len(poll_info)-1)
@@ -364,8 +478,13 @@ while True:
 								#no ip.. still fails length check..
 							
 							### NUMBER OF LEDS
-							UDPResponse["length"] = poll_info[12]
-							led_number = poll_info[12]
+							if length_read_flag == 0:
+								UDPResponse["length"] = poll_info[12]
+								led_number = poll_info[12]
+								length_read_flag = 1
+								os.system("echo %s > /mnt/data/led_number.txt" % led_number)
+							else:
+								UDPResponse["length"] = poll_info[12]
 							
 							### BATTERY LEVEL
 							UDPResponse["battery_level"] = poll_info[5]
@@ -410,33 +529,45 @@ while True:
 								mac_read_flag = 1
 							
 							### PASSIVE/ACTIVE MODE
-							#UDPResponse["passive_active_mode"] = int(os.popen("cat /sys/class/gpio/gpio128/value").readline().strip())						#f = open("/sys/class/gpio/gpio128/value","r")
-							f = open("/sys/class/gpio/gpio128/value", "r")
-							UDPResponse["passive_active_mode"] = int(f.read())
-							f.close()
+							try:
+								with open("/sys/class/gpio/gpio128/value") as f:
+									UDPResponse["passive_active_mode"] = int(f.read())
+							except:
+								pass
 
 							### ACTIVE SSID PATTERN TO CONNECT TO ###
-							f = open("/mnt/data/ssidlist.txt", "r")
-							templist = f.readline()
-							UDPResponse["active_pattern"] = templist.split()[0].strip()
-							UDPResponse["active_pattern_ps"] = templist.split()[1].strip()
-							templist = ""
-							f.close()
-
-							
+							try:
+								if os.path.isfile("/mnt/data/ssidlist.txt"):
+									with open("/mnt/data/ssidlist.txt") as f:
+										temp_pattern = f.readline()
+									if len(temp_pattern.split()) > 0:
+										UDPResponse["active_pattern"] = temp_pattern.split()[0].strip()
+										UDPResponse["active_pattern_ps"] = ""
+										if len(temp_pattern.split()) > 1:
+											UDPResponse["active_pattern_ps"] = temp_pattern.split()[1].strip()
+									else:
+										UDPResponse["active_pattern"] = ""
+										UDPResponse["active_pattern_ps"] = ""
+							except:
+								pass
+	
 							### ACTIVE SSID AND CHANNEL ###
-							f = open("/mnt/data/net/hostapd.conf", "r")
-							templist = f.readlines()[3:12]
-							UDPResponse["active_ssid"] = templist[0].strip()[5:]
-							UDPResponse["active_channel"] = templist[1].strip()[8:]
-							UDPResponse["active_password"] = templist[8].strip()[15:]
-							templist = ""
-							f.close()
+							try:
+								with open("/mnt/data/net/hostapd.conf") as f:
+									templist = f.readlines()[3:12]
+								UDPResponse["active_ssid"] = templist[0].strip()[5:]
+								UDPResponse["active_channel"] = templist[1].strip()[8:]
+								UDPResponse["active_password"] = templist[8].strip()[15:]
+								templist = ""
+							except:
+								pass
 
 							### ACTIVE NETWORK MODE ###
-							f = open("/mnt/data/network_mode", "r")
-							UDPResponse["active_mode"] = f.readline().strip()
-							f.close()
+							try:
+								with open("/mnt/data/network_mode") as f:
+									UDPResponse["active_mode"] = f.readline().strip()
+							except:
+								pass
 						
 							### SERIAL NAME
 							if serial_read_flag == 0:
@@ -451,8 +582,8 @@ while True:
 								pass
 							#print ("POLL", UDPResponseJSON)
 							#print ("POLL")
-							#time.sleep(0.1)			
-					else:						
+							#time.sleep(0.1)
+					else:
 						try:
 							sock.sendto(UDPResponseJSON.encode(), addr)
 						except:
@@ -467,30 +598,41 @@ while True:
 		### Needs a better way to listen for JSON and filter it###
 		#Network mode 22.05.18
 		elif len(udp_data) > 6:
-			try:
-				network_dict = json.loads(udp_data.decode('utf-8'))
-				if 'network_mode' in network_dict:				
-					if network_dict['network_mode'] == "ap_mode":	
-						network_response = bytearray()
-						network_response[0:8] = 0xD5, 0x0A, 0x86, 0x01, 0x20, 0xEF, 0xFE, 0x00
-						sock.sendto(network_response, addr)
-						udp_data = bytearray(5)
-						
-						ap_start()
-						
-					elif network_dict['network_mode'] == "client_mode":
-						network_response = bytearray()
-						network_response[0:8] = 0xD5, 0x0A, 0x86, 0x02, 0x20, 0xEF, 0xFE, 0x00
-						sock.sendto(network_response, addr)
-						udp_data = bytearray(5)
+			#print (time.time() - start_time_network_change)
+			if time.time() - start_time_network_change > NETWORK_CHANGE_DELAY or time.time() - start_time_network_change < 0:
+				try:
+					start_time_network_change=time.time()
+				
+					network_dict = json.loads(udp_data.decode('utf-8'))
 					
-						connect_client()
-			except:
-				pass
-			
+					#print (network_dict)
+					
+					if 'network_mode' in network_dict:				
+						if network_dict['network_mode'] == "ap_mode":	
+							network_response = bytearray()
+							network_response[0:8] = 0xD5, 0x0A, 0x86, 0x01, 0x20, 0xEF, 0xFE, 0x00
+							sock.sendto(network_response, addr)
+							udp_data = bytearray(5)
+							
+							ap_start()
+							
+						elif network_dict['network_mode'] == "client_mode":
+							network_response = bytearray()
+							network_response[0:8] = 0xD5, 0x0A, 0x86, 0x02, 0x20, 0xEF, 0xFE, 0x00
+							sock.sendto(network_response, addr)
+							udp_data = bytearray(5)
+						
+							connect_client()
+				except:
+					pass
+				
+
+			#else:
+			#	print ("igno")
+
 			udp_data = bytearray(5)
 			network_dict = {}
-		
+			
 		### READ SERIAL INFO on ttyS1 ###
 		if(ser.in_waiting != 0):
 			serReceivedData = ser.read(50)
@@ -506,21 +648,21 @@ while True:
 			### SIDE BUTTON ###
 			if len(serReceivedData) > 4 and led_number != 0:
 				if serReceivedData[0] == 0xD5  and serReceivedData[1]== 0x0A and serReceivedData[2] == 0x50 and serReceivedData[3] == 0x04:
-							
+					
 					sidebutton_press_time = int.from_bytes(serReceivedData[5:7], byteorder='big')
 					#print (sidebutton_press_time)
 					
 					counter=0
 					if sidebutton_press_time >=5000 and sidebutton_press_time < 11000:
-						
-						#pause pythonreceiver							
+						#pause pythonreceiver
 						os.system("kill -STOP $(ps ax | grep PythonReceiver.py | grep -v grep |awk 'NR==1{print $1}')")
 						
-						#reads side button with good old timeout, on case python
-						while counter<5:		
+						#reads side button with timeout
+						while counter<10:
 							if (ser.in_waiting != 0):
 								serReceivedData = ser.read(50)
 								#print (list(serReceivedData))
+								
 								if len(serReceivedData) > 4:
 									if serReceivedData[0] == 0xD5  and serReceivedData[1]== 0x0A and serReceivedData[2] == 0x50 and serReceivedData[3] == 0x04:
 										counter=0
@@ -540,9 +682,13 @@ while True:
 												rgbw3[332:336] = 0x00, 0x00, 0xFF
 											ser.write(rgbw3[:len(rgbw3)])
 										
+											#print (list(serReceivedData))
+										
 											#2 packets in one.. old way of reading serial issues
 											if len(list(serReceivedData)) == 20:
 												if serReceivedData[14] == 0x03:
+													
+													#print ("AP CLIENT CHANGE 1")
 													
 													if os.popen("ps ax | grep -v grep | grep connmand | awk -F ' ' 'NR==1{print $3, $4, $5, $6, $7}'").readline().strip() == "/usr/sbin/connmand -n --nodnsproxy -i wlan0":
 														ap_start()
@@ -550,21 +696,26 @@ while True:
 														connect_client()
 													else:
 														ap_start()
+													counter = 10000
 																							
 											elif serReceivedData[4] == 0x03:
 
+												#print ("AP CLIENT CHANGE 2")
+											
 												if os.popen("ps ax | grep -v grep | grep connmand | awk -F ' ' 'NR==1{print $3, $4, $5, $6, $7}'").readline().strip() == "/usr/sbin/connmand -n --nodnsproxy -i wlan0":
 													ap_start()
 												elif os.popen("ps ax | grep -v grep | grep hostapd | awk -F ' ' 'NR==1{print $4}'").readline().strip() == "/etc/hostapd.conf":
 													connect_client()
 												else:
 													ap_start()										
+												counter = 10000
 													
 										### long press, switching 
 										if sidebutton_press_time >=10000:
 											
 											rgbw3 = list(rgbw2)														
 
+											#print ("WIFI RESET")
 
 											if led_number == 42:
 												rgbw3[168:172] = 0xFF, 0xFF, 0xFF
@@ -576,12 +727,26 @@ while True:
 											wifi_reset()
 											
 											#exit while loop
-											counter = 10000		
+											counter = 10000
 							else:
 								counter+=1
 								time.sleep(0.1)
 								#print (counter, "exit loop")
+								
+								#print ("AP CLIENT CHANGE 3")
+								
+								if counter > 8:
+									if os.popen("ps ax | grep -v grep | grep connmand | awk -F ' ' 'NR==1{print $3, $4, $5, $6, $7}'").readline().strip() == "/usr/sbin/connmand -n --nodnsproxy -i wlan0":
+										ap_start()
+									elif os.popen("ps ax | grep -v grep | grep hostapd | awk -F ' ' 'NR==1{print $4}'").readline().strip() == "/etc/hostapd.conf":
+										connect_client()
+									else:
+										ap_start()
+									counter = 10000
+								
 						#resume python player	
+						os.system("kill -CONT $(ps ax | grep PythonReceiver.py | grep -v grep |awk 'NR==1{print $1}')")
+						os.system("kill -CONT $(ps ax | grep PythonReceiver.py | grep -v grep |awk 'NR==1{print $1}')")
 						os.system("kill -CONT $(ps ax | grep PythonReceiver.py | grep -v grep |awk 'NR==1{print $1}')")
 						
 					sidebutton_press_time=0
@@ -610,7 +775,7 @@ while True:
 								 
 						# connected client mode. tries to ping host. pings again in CLIENT_PING_DELAY
 						elif (os.popen("ip addr | egrep -i 'inet.+wlan0' | awk -F[\ /] '{print $6}'").readline().strip() != ''):
-							if (time.time() - client_start_time > CLIENT_PING_DELAY ):
+							if (time.time() - client_start_time > CLIENT_PING_DELAY or time.time() - client_start_time < 0):
 							
 								#ping ok, display green
 								if (os.system("ping -c 1 -W 1 -I wlan0 $(ip route | awk 'NR==1{print $3}') > /dev/null") == 0 ):
@@ -803,5 +968,4 @@ if udp_data[4] == 0x33 and udp_data[5] == 0x10:
 	#SSID
 	#channel
 	#pattern + password
-"""	
-
+"""
