@@ -2664,22 +2664,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 190037017}
---- !u!1 &192733033 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1803243663320382, guid: 879df77b669434db094050523da20fd1,
-    type: 2}
-  m_PrefabInternal: {fileID: 1347376896}
---- !u!114 &192733034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 192733033}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abf26d9271db549d1972c352d8406f76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &216054021
 GameObject:
   m_ObjectHideFlags: 0
@@ -15565,11 +15549,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114032981690824530, guid: eeabb94b1b5ed48c5a216c5d324c509b,
-        type: 2}
-      propertyPath: LampTimeoutTime
-      value: 5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: eeabb94b1b5ed48c5a216c5d324c509b, type: 2}
   m_IsPrefabParent: 0
@@ -21889,8 +21868,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: OnDetectionModeClick
+      - m_Target: {fileID: 1509357876}
+        m_MethodName: DetectLamps
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -22636,11 +22615,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114258150051250186, guid: 879df77b669434db094050523da20fd1,
-        type: 2}
-      propertyPath: ListenPorts.Array.size
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 4181109390180138, guid: 879df77b669434db094050523da20fd1, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -22672,25 +22646,6 @@ Prefab:
     - target: {fileID: 4181109390180138, guid: 879df77b669434db094050523da20fd1, type: 2}
       propertyPath: m_RootOrder
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1803243663320382, guid: 879df77b669434db094050523da20fd1, type: 2}
-      propertyPath: m_TagString
-      value: Networking
-      objectReference: {fileID: 0}
-    - target: {fileID: 114258150051250186, guid: 879df77b669434db094050523da20fd1,
-        type: 2}
-      propertyPath: ListenPorts.Array.data[0]
-      value: 30000
-      objectReference: {fileID: 0}
-    - target: {fileID: 114258150051250186, guid: 879df77b669434db094050523da20fd1,
-        type: 2}
-      propertyPath: ListenPorts.Array.data[1]
-      value: 31000
-      objectReference: {fileID: 0}
-    - target: {fileID: 114258150051250186, guid: 879df77b669434db094050523da20fd1,
-        type: 2}
-      propertyPath: ListenPorts.Array.data[2]
-      value: 30001
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 879df77b669434db094050523da20fd1, type: 2}

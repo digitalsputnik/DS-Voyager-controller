@@ -377,7 +377,6 @@ public class DrawScripts : MonoBehaviour {
 		//Debug.Log ("Inside ChangeAnimation....");
 		int animNum = AnimationDropdown.value;
 
-        Debug.Log ("Selected animation number: "+animNum);
 		int numProperties = animations[animNum].AnimProperties.Count;
 		int numColors = 1;
 

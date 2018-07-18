@@ -40,6 +40,16 @@ public class SetupTools : MonoBehaviour {
 		}
 
 		addAllLampsBtn.GetComponent<Button>().onClick.AddListener(AddAllLampsBtnClick);
+
+        if(PlayerPrefs.GetInt("ComingFromDetectionScene") != 0)
+        {
+			if(PlayerPrefs.GetInt("ComingFromDetectionScene") == 1)
+				lampManager.LoadWorkplace("main_temp");
+			else
+				lampManager.LoadWorkplace("detection");
+			PlayerPrefs.SetInt("ComingFromDetectionScene", 0);
+        }
+
 		InvokeRepeating("CheckUpdates", 1.0f, updateCheckInterval);
 	}
 
@@ -110,10 +120,8 @@ public class SetupTools : MonoBehaviour {
 
 	public void DetectLamps()
 	{
-		// Some woodoo magic here.
-		// Ideas:
-		//  - Save the workspace.
-        //  - Go to another scene to detect.
+		lampManager.SaveWorkplace("main_temp");
+		SceneManager.LoadScene(1);
 	}
 
     public void AddLamps()

@@ -60,7 +60,6 @@ public class VideoStream : MonoBehaviour {
 
 	void Start() {
 		physicalLamp = GetComponent<PhysicalLamp>();
-        Debug.Log("VideoStream script started.......");
 		ribbon = GetComponent<Ribbon>();
 		//drawScripts = drawTools.GetComponent<DrawScripts>();
 		//NOTE: Quick hack because switching all the references is too much work at this point

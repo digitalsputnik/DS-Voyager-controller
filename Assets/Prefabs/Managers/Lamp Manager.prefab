@@ -54,7 +54,7 @@ MonoBehaviour:
   Lamps: []
   LampsLookInterval: 0.5
   LampsAskColorInterval: 0.05
-  LampTimeoutTime: 10
+  LampTimeoutTime: 5
   workPlace: {fileID: 0}
   PhysicalLamps:
   - {fileID: 1304731441019712, guid: e467f7af145e6427a8898aaed60a8f34, type: 2}

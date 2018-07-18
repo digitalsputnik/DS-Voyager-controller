@@ -53,7 +53,6 @@ namespace Voyager.Lamps
 
         void AskLampsColor()
 		{
-			Debug.Log("LampsInWorkplace: " + GetLampsInWorkplace().Count);
 			foreach(Lamp lamp in GetLampsInWorkplace())
 				NetworkManager.AskColorData(lamp.IP);
 		}

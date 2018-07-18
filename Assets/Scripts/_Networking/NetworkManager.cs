@@ -61,15 +61,8 @@ namespace Voyager.Networking
 			Clients.Add(client30000);
 
 
-
-			var socket31000 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            var endPoint31000 = new IPEndPoint(IPAddress.Any, 31000);
-			socket31000.Bind(endPoint31000);
-			socket31000.ReceiveBufferSize = 1024;
-			socket31000.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            client31000 = new UdpClient();
-            //client31000.ExclusiveAddressUse = false;
-            client31000.Client = socket31000;
+			client31000 = new UdpClient(31000);
+			client31000.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 			Clients.Add(client31000);
 		}
 
