@@ -47,7 +47,7 @@ namespace NatCamU.Core.Platforms {
         }
 
         public float MinExposureBias (int camera) {
-            Debug.LogError("NatCam Error: Exposure is not supported on legacy");
+			Debug.LogWarning("NatCam Error: Exposure is not supported on legacy");
             return 0f;
         }
 
@@ -122,7 +122,7 @@ namespace NatCamU.Core.Platforms {
         }
 
         public void SetExposure (int camera, float bias) {
-            Debug.LogError("NatCam Error: Exposure is not supported on legacy");
+			Debug.LogWarning("NatCam Error: Exposure is not supported on legacy");
         }
 
         public void SetExposureMode (int camera, int state) {

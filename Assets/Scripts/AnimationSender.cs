@@ -10,6 +10,7 @@ using System.Threading;
 using UnityEngine;
 using Newtonsoft.Json;
 using Voyager.Lamps;
+using Voyager.Networking;
 
 [Serializable]
 public class DetectionModeDTO
@@ -413,7 +414,9 @@ public class Scene
 
 public class AnimationSender : MonoBehaviour
 {
-
+	[Header("Settings")]
+	[SerializeField] float AskForScenesInterval = 0.2f;
+	[Space(5)]
     public Scene scene;
     public DrawScripts drawScripts;
     public SetupScripts setupScripts;
@@ -424,6 +427,8 @@ public class AnimationSender : MonoBehaviour
     public UdpClient LampPollClient;
 
     public IPEndPoint localEndpoint;
+
+	LampManager lampManager;
 
     public double TimeOffset;
 
@@ -445,10 +450,14 @@ public class AnimationSender : MonoBehaviour
 
     private void Awake()
     {
-        /* if (LampCommunicationClient == null)
+		/* if (LampCommunicationClient == null)
          {
              LampCommunicationClient = new UdpClient(31000);
          }*/
+
+		lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+		NetworkManager.OnLampSceneResponse += NetworkManager_OnLampSceneResponse;
+		InvokeRepeating("AskForScenes", 0.0f, AskForScenesInterval);
 
         if (LampPollClient == null)
         {
@@ -465,6 +474,19 @@ public class AnimationSender : MonoBehaviour
         //Get local wireless endpoint
         SetLocalEndpoint();
 #endif
+    }
+
+    void AskForScenes()
+	{
+		foreach(Lamp lamp in lampManager.GetLamps())
+			NetworkManager.AskLampLayers(lamp.IP);
+	}
+
+	void NetworkManager_OnLampSceneResponse(string response, IPAddress ip)
+    {
+		Debug.Log(response);
+        Scene newScene = JsonConvert.DeserializeObject<Scene>(response);
+		MergeScenes(newScene);
     }
 
     private void SetLocalEndpoint()
@@ -645,33 +667,28 @@ public class AnimationSender : MonoBehaviour
 
     private static void SelectPixelsFromDictionary(Stroke MergedStroke)
     {
-        Transform Workspace = GameObject.Find("WorkSpace").transform;
-        int lampCount = Workspace.childCount;
-
+		LampManager lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();      
         SortedDictionary<int, Pixel> QueueToPixel = new SortedDictionary<int, Pixel>();
 
-        for (int i = 0; i < lampCount; i++)
-        {
-            Transform lamp = Workspace.GetChild(i);
-            var lampRibbon = lamp.GetComponent<Ribbon>();
-            if (lampRibbon == null)
-                continue;
+		foreach(Lamp lamp in lampManager.GetLampsInWorkplace())
+		{
+			PhysicalLamp physicalLamp = lamp.physicalLamp;
+			Ribbon ribbon = physicalLamp.GetComponent<Ribbon>();
 
-            if (MergedStroke.PixelQueueToControlledPixel.ContainsKey(lampRibbon.Mac))
-            {
-                foreach (var QueuePixelKeyValue in MergedStroke.PixelQueueToControlledPixel[lampRibbon.Mac])
+			if (ribbon == null) continue;
+            
+			if (MergedStroke.PixelQueueToControlledPixel.ContainsKey(lamp.Serial))
+			{
+				foreach (var QueuePixelKeyValue in MergedStroke.PixelQueueToControlledPixel[lamp.Serial])
                 {
-                    int pixelQueueNumber = QueuePixelKeyValue.Key;
-                    Pixel pix = lamp.Find("pixel" + QueuePixelKeyValue.Value).GetComponent<Pixel>();
-                    if (pix == null)
-                    {
-                        throw new Exception("Couldn't retrieve pixel when merging!");
-                    }
+					int pixelQueueNumber = QueuePixelKeyValue.Key;
+					Pixel pixel = ribbon.pixelsParent.Find("pixel" + QueuePixelKeyValue.Value).GetComponent<Pixel>();
+					if(pixel == null) throw new Exception("Couldn't retrieve pixel when merging!");
 					if (!QueueToPixel.ContainsKey(pixelQueueNumber))
-						QueueToPixel.Add(pixelQueueNumber, pix);
+                        QueueToPixel.Add(pixelQueueNumber, pixel);
                 }
-            }
-        }
+			}
+		}
 
         MergedStroke.ControlledPixels = QueueToPixel.Values.ToList();
 
@@ -998,7 +1015,6 @@ public class AnimationSender : MonoBehaviour
         //TODO: Generalize so it isn't lamp dependent.
         StartCoroutine(PollLayersFromLamp(LampMac));
         StartCoroutine(SetDetectionFalse(LampMac));
-        StartCoroutine(RegisterDevice(LampMac));
     }
 
     byte[] SendJSONToLamp(object messageObject, IPEndPoint lampEndPoint)
@@ -1044,15 +1060,17 @@ public class AnimationSender : MonoBehaviour
 
     IEnumerator SetDetectionFalse(string lampMac)
     {
+		Lamp lamp = lampManager.GetLamp(lampMac);
+
         while (true)
         {
-            if (setupScripts.LampMactoIPDictionary == null)
+			if (lamp == null)
             {
                 yield return new WaitForSeconds(1f);
                 continue;
             }
 
-            SetDetectionMode(false, setupScripts.LampMactoIPDictionary[lampMac]);
+			SetDetectionMode(false, lamp.IP);
             yield return new WaitForSeconds(2.44f);
         }
     }
@@ -1119,25 +1137,10 @@ public class AnimationSender : MonoBehaviour
         var lampPort = 30001;
         while (true)
         {
-            if (StopLampCommunication.Contains(LampMac))
-            {
-                StopLampCommunication.Remove(LampMac);
-                break;
-            }
+			Lamp lamp = lampManager.GetLamp(LampMac);
+            if (lamp == null) break;
 
-            if (setupScripts.LampMactoIPDictionary == null)
-            {
-                yield return new WaitForSeconds(1f);
-                continue;
-            }
-
-            if (setupScripts.LampMactoIPDictionary[LampMac] == IPAddress.None)
-            {
-                yield return new WaitForSeconds(1f);
-                continue;
-            }
-
-            IPEndPoint lampEndPoint = new IPEndPoint(setupScripts.LampMactoIPDictionary[LampMac], lampPort);
+			IPEndPoint lampEndPoint = new IPEndPoint(lamp.IP, lampPort);
             client.Send(data, data.Length, lampEndPoint);
             Thread.Sleep(10);
             if (client.Available > 0)

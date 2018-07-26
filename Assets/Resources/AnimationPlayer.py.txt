@@ -353,9 +353,12 @@ class Stroke:
                             Index += 1
                     elif UnitSize == 0: #Stroke
                         DivSize = max(1, self.TotalPixelCount/self.Properties["Division"][0])
+                        ColorIndices = (np.arange(self.TotalPixelCount)/DivSize).astype(np.uint8)
+                        Index = 0
                         for pixel in self.ControlledPixels:
                             #ColorIndex = int(pixel.QueueNumber/DivSize)
                             self.StrokeBitmap[0][pixel.QueueNumber] = CalibratedColors[ColorIndices[Index]]
+                            Index += 1
                     else:
                         for pixel in self.ControlledPixels:
                             self.StrokeBitmap[0][pixel.QueueNumber] = self.Layer.Scene.ColorCalibrator.ITSHtoRGBWFull(self.Colors[int(pixel.QueueNumber/UnitSize)])

@@ -26,8 +26,9 @@ public class LampUpdater : MonoBehaviour {
 	public bool Updating { get; private set; }
 	public int UpdatesInProgress { get; private set; }
 
-	public const string LampUsername = "root";
-	public const string LampPassword = "groundcontrol";
+    public const string LampUsername = "root";
+    public const string LampPassword = "groundcontrol";
+	public const string LampPasswordHW4 = "controlground";
 
 	const string NumpyDestinationFolder = "/media/numpy_install_temp";
 	const string NetworkFolder = "/media/network_control.status";
@@ -90,7 +91,8 @@ public class LampUpdater : MonoBehaviour {
         "ut2.6.py",
         "voyager_lpc_release_user_update.bin"
 		*/
-		"HW3_voyager_update.tar"
+		"HW3_voyager_update.tar",
+		"HW4_voyager_update.tar"
     };
 
 	void Start()
@@ -175,7 +177,7 @@ public class LampUpdater : MonoBehaviour {
 				errors += error + "\n";
 
 			DialogBoxSettings settings = new DialogBoxSettings();
-			settings.ShowIgnoreBtn = false;
+			settings.ShowIgnoreBtn = true;
 			settings.Info = errors;
 			settings.RespondBtnText = "Retry";
 			settings.Title = "Failed to update " + FailedToUpdate.Count + " lamp(s)";
@@ -191,8 +193,12 @@ public class LampUpdater : MonoBehaviour {
 	void RetryPressed(DialogBoxCallbackEventArgs e)
 	{
 		UpdateLampsSoftware(new List<string>(FailedToUpdate.Keys));
-		FailedToUpdate.Clear();
-		DialogBox.OnUserCallback -= RetryPressed;
+		foreach (var lamp in FailedToUpdate.Keys)
+            UpdatedLamps.Remove(lamp);
+
+        UpdateLampsSoftware(new List<string>(FailedToUpdate.Keys));
+        DialogBox.OnUserCallback -= RetryPressed;
+        FailedToUpdate.Clear();
 	}
 
     void UpdateFailed(string lampIP, string error)
@@ -204,28 +210,38 @@ public class LampUpdater : MonoBehaviour {
 
 	void LampUpdateThread(string lampIP)
     {
-		Lamp lamp = lampManager.GetLamp(IPAddress.Parse(lampIP));
-		lamp.updatingFirmware = true;
-  
 		UpdatesInProgress++;
         lock (UpdateProgress) { UpdateProgress.Add(lampIP, 0.0f); }
 
         int updateSteps = 4;
         float progressStep = 1.0f / updateSteps;
 
+		IPAddress ip = IPAddress.Parse(lampIP);
+		int hardwareVersion = lampManager.GetLamp(ip).hardwareVersion;
+        
+		if (hardwareVersion == 0)
+        {
+            Debug.LogError("Error finding hardware version");
+            UpdatedLamps.Add(lampIP);
+            UpdateThreads.Remove(lampIP);
+            UpdateProgress.Remove(lampIP);
+            FailedToUpdate.Add(lampIP, "Error finding hardware version");
+            return;
+        }
+        
+
+		SshClient ssh = new SshClient(lampIP, LampUsername, (hardwareVersion == 4) ? LampPasswordHW4 : LampPassword);
+		SftpClient sftp = new SftpClient(lampIP, LampUsername, (hardwareVersion == 4) ? LampPasswordHW4 : LampPassword);
+
         bool numpyNotInstalled = false;
         bool isRev3 = false;
         bool rebootNeeded = false;
 
-
-        SshClient ssh = new SshClient(lampIP, LampUsername, LampPassword);
-        SftpClient sftp = new SftpClient(lampIP, LampUsername, LampPassword);
+        bool failed = false;
 
         for (int i = 0; i < updateSteps; i++)
         {
-            bool failed = false;
-
-            switch(i)
+            switch (i)
             {
                 case 0:
                     failed = !GetLampStatus(lampIP, ssh, out numpyNotInstalled, out isRev3);
@@ -243,15 +259,14 @@ public class LampUpdater : MonoBehaviour {
 
             if (failed)
                 break;
-            
+
             lock (UpdateProgress) { UpdateProgress[lampIP] += progressStep; }
         }
-        
+
         ssh.Dispose();
         sftp.Dispose();
-		lamp.updatingFirmware = false;
-		UpdateThreads.Remove(lampIP);
-		UpdatedLamps.Add(lampIP);
+        UpdatedLamps.Add(lampIP);
+        UpdateThreads.Remove(lampIP);
 	}
 
 	bool GetLampStatus (string lampIP, SshClient ssh, out bool numpyNotInstalled, out bool isRev3)
@@ -323,8 +338,12 @@ public class LampUpdater : MonoBehaviour {
                     sftp.CreateDirectory(Rev3InstallationDirectory);
 
                 sftp.ChangeDirectory(Rev3InstallationDirectory);
-                foreach (string filename in BundleInstallationFiles)
-                    UploadFileAsset(filename, sftp);
+
+				int hardwareVersion = lampManager.GetLamp(IPAddress.Parse(lampIP)).hardwareVersion;
+
+				if (hardwareVersion == 4) UploadFileAsset(BundleInstallationFiles[1], sftp);
+				else if (hardwareVersion != -1) UploadFileAsset(BundleInstallationFiles[0], sftp);
+				else throw new Exception("Unknow hardware version");
             }
             else
             {
@@ -380,7 +399,14 @@ public class LampUpdater : MonoBehaviour {
             {
 				string dos2unixCmd = "dos2unix " + Rev3InstallationDirectory + "/*.py " + Rev3InstallationDirectory + "/*.sh " + Rev3InstallationDirectory + "/*.txt "+ Rev3InstallationDirectory + "/*.chk";
                 SshCommand transformResult = ssh.RunCommand(dos2unixCmd);
-				SshCommand unpackResult = ssh.RunCommand("tar -xf " + Rev3InstallationDirectory + "/HW3_voyager_update.tar -C /mnt/data/");
+
+				SshCommand unpackResult;
+				int hardwareVersion = lampManager.GetLamp(IPAddress.Parse(lampIP)).hardwareVersion;
+
+				if (hardwareVersion == 4)       unpackResult = ssh.RunCommand("tar -xf " + Rev3InstallationDirectory + "/HW4_voyager_update.tar -C /mnt/data/");
+				else if (hardwareVersion != -1) unpackResult = ssh.RunCommand("tar -xf " + Rev3InstallationDirectory + "/HW3_voyager_update.tar -C /mnt/data/");
+				else throw new Exception("Unknow hardware version");
+
                 SshCommand installationCmd = ssh.CreateCommand("python3 " + Rev3InstallationDirectory + "/update3.py");
                 IAsyncResult installationScriptResult = installationCmd.BeginExecute();
 

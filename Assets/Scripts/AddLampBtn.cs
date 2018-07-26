@@ -25,10 +25,11 @@ public class AddLampBtn : MonoBehaviour {
 	public void Use(Vector3 position)
 	{
 		manager.InstantiateLamp(lamp, position);
-		if (transform.parent.childCount == 3)
-			transform.parent.GetChild(0).gameObject.SetActive(false);
-		if (transform.parent.childCount <= 2)
-			transform.parent.parent.parent.gameObject.SetActive(false);
+		Transform parent = transform.parent;
+		if (parent.childCount == 3)
+			parent.GetChild(0).gameObject.SetActive(false);
+		if (parent.childCount <= 2)
+			parent.parent.parent.gameObject.SetActive(false);
         Destroy(gameObject);
 	}
 }

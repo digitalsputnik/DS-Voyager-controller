@@ -15,9 +15,9 @@ namespace Voyager.Lamps
 		[SerializeField] List<Lamp> Lamps = new List<Lamp>();
 		[Header("Settings")]
 		[SerializeField] float LampsLookInterval = 0.2f;
-		[SerializeField] float LampsAskColorInterval = 0.1f;
+		[SerializeField] float RegisterDeviceInterval = 0.1f;
 		[SerializeField] float LampTimeoutTime = 10.0f;
-		[SerializeField] Transform workPlace;
+		[SerializeField] Transform workSpace;
         [Space(3)]
 		[SerializeField] GameObject[] PhysicalLamps;
 
@@ -27,12 +27,12 @@ namespace Voyager.Lamps
 			NetworkManager.OnLampColorResponse += NetworkManager_OnLampColorResponse;
 
 			InvokeRepeating("LookForAvailableLamps", 0.0f, LampsLookInterval);
-			InvokeRepeating("CheckLampsTimeout", 0.0f, LampsAskColorInterval);
-			InvokeRepeating("AskLampsColor", 0.0f, LampsAskColorInterval);
+			InvokeRepeating("CheckLampsTimeout", 0.0f, RegisterDeviceInterval);
+			InvokeRepeating("RegisterDevices", 0.0f, RegisterDeviceInterval);
 
-			if (workPlace == null) workPlace = transform;
+			if (workSpace == null) workSpace = transform;
 		}      
-
+        
 		void NetworkManager_OnAvailableLampsResponse(string response, IPAddress ip)
         {
 			ReplyUdpResponse lampData = JsonConvert.DeserializeObject<ReplyUdpResponse>(response);
@@ -51,10 +51,10 @@ namespace Voyager.Lamps
 			NetworkManager.AskAvailableLamps();
 		}
 
-        void AskLampsColor()
+        void RegisterDevices()
 		{
 			foreach(Lamp lamp in GetLampsInWorkplace())
-				NetworkManager.AskColorData(lamp.IP);
+				NetworkManager.RegisterDevice(lamp.IP);
 		}
 
         void CheckLampsTimeout()
@@ -80,8 +80,14 @@ namespace Voyager.Lamps
                 Lamp lamp = new Lamp();
                 lamp.Setup(response);
                 Lamps.Add(lamp);
+				NewLampAdded(lamp);
 			}         
 	    }
+
+        void NewLampAdded(Lamp lamp)
+		{
+			NetworkManager.RegisterDevice(lamp.IP);
+		}
 
 		public Lamp GetLamp(string serial)
 		{
@@ -185,7 +191,7 @@ namespace Voyager.Lamps
 				return null;
 			}
 
-			GameObject physicalObject = Instantiate(lampPrefab, position, Quaternion.identity, workPlace);
+			GameObject physicalObject = Instantiate(lampPrefab, position, Quaternion.identity, workSpace);
 			PhysicalLamp physicalLamp = physicalObject.GetComponent<PhysicalLamp>();
             physicalLamp.Setup(lamp);
 			lamp.physicalLamp = physicalLamp;

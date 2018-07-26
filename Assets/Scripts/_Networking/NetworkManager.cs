@@ -21,6 +21,7 @@ namespace Voyager.Networking
 		UdpClient sendingClient = new UdpClient();
 
 		UdpClient client30000;
+		UdpClient client30001;
 		UdpClient client31000;
 
 		List<UdpClient> Clients = new List<UdpClient>();
@@ -47,7 +48,7 @@ namespace Voyager.Networking
             }
         }
 
-        void Init()
+		void Init()
         {
             InvokeRepeating("ReadClient", 0.0f, NetworkReadInterval);
 			NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
@@ -60,9 +61,16 @@ namespace Voyager.Networking
 			client30000.EnableBroadcast = true;
 			Clients.Add(client30000);
 
+			IPEndPoint endPoint30001 = new IPEndPoint(IPAddress.Any, 30001);
+            Socket socket30001 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            socket30001.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+			socket30001.Bind(endPoint30001);
+			client30001 = new UdpClient();
+			client30001.Client = socket30001;
+			Clients.Add(client30001);
 
 			client31000 = new UdpClient(31000);
-			client31000.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+			client31000.Client.ReceiveBufferSize = 1024;
 			Clients.Add(client31000);
 		}
 
@@ -74,10 +82,10 @@ namespace Voyager.Networking
         }
         
         void ReadClient()
-        {         
+        {              
 			foreach(UdpClient client in Clients)
 			{
-				IPEndPoint receivalEndpoint = new IPEndPoint(IPAddress.None, 0);
+				IPEndPoint receivalEndpoint = new IPEndPoint(IPAddress.Any, 0);
                 
 				while(client.Available > 0)
 				{
@@ -92,7 +100,7 @@ namespace Voyager.Networking
 		{
 			string receivedString = Encoding.UTF8.GetString(receivedBytes);
 			IPAddress ip = endpoint.Address;
-
+         
             if(receivedString.StartsWith("{", StringComparison.Ordinal))
             {            
                 var jObj = JObject.Parse(receivedString);
@@ -130,7 +138,7 @@ namespace Voyager.Networking
 		public static void AskAvailableLamps(int pollTimes)
         {
 			IPEndPoint sendingEndpoint = new IPEndPoint(IPAddress.Broadcast, 30000);
-            byte[] message = { 0xD5, 0x0A, 0x80, 0x10 };
+			byte[] message = { 0xD5, 0x0A, 0x80, 0x10 };
 
 			for (int i = 0; i < pollTimes; i++)
 				instance.client30000.Send(message, message.Length, sendingEndpoint);
@@ -143,20 +151,13 @@ namespace Voyager.Networking
 
 		public static void AskLampLayers(int pollTimes, IPAddress ip)
 		{
-			//int port = 30001;
-			//IPEndPoint sendingEndpoint = new IPEndPoint(ip, port);
-			//string jsonData = JsonConvert.SerializeObject(new LayerPollPackage { PollLayers = true });
-			//byte[] message = Encoding.ASCII.GetBytes(jsonData);
-			////IPEndPoint sendingEndpoint = new IPEndPoint(IPAddress.Any, port);
+			IPEndPoint sendingEndpoint = new IPEndPoint(ip, 30001);
+			LayerPollPackage pollPackage = new LayerPollPackage { PollLayers = true };
+			string jsonData = JsonConvert.SerializeObject(pollPackage);
+			byte[] message = Encoding.ASCII.GetBytes(jsonData);
 
-			//Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-			//socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-			//socket.Bind(new IPEndPoint(IPAddress.Any, port));
-
-			//UdpClient client = instance.GetClient(sendingEndpoint, socket);
-
-			//for (int i = 0; i < pollTimes; i++)
-                //client.Send(message, message.Length, sendingEndpoint);
+			for (int i = 0; i < pollTimes; i++)
+				instance.sendingClient.Send(message, message.Length, sendingEndpoint);
         }
 
 		public static void AskLampSsidList(IPAddress ip)
@@ -166,10 +167,12 @@ namespace Voyager.Networking
 
 		public static void AskLampSsidList(int pollTimes, IPAddress ip)
 		{
-			//int port = 30000;
-   //         IPEndPoint sendingEndpoint = new IPEndPoint(IPAddress.Broadcast, port);
-			//byte[] message = { 0xD5, 0x0A, 0x87, 0x10 };
-			//PollMessage(pollTimes, sendingEndpoint, message);
+			int port = 30000;
+            IPEndPoint sendingEndpoint = new IPEndPoint(ip, port);
+			byte[] message = { 0xD5, 0x0A, 0x87, 0x10 };
+
+			for (int i = 0; i < pollTimes; i++)
+                instance.sendingClient.Send(message, message.Length, sendingEndpoint);
 		}
 
 		public static void AskTurnApMode(IPAddress ip, int channel, string ssid, string password)
@@ -222,10 +225,18 @@ namespace Voyager.Networking
 		public static void AskColorData(int pollTimes, IPAddress ip)
 		{
 			IPEndPoint sendingEndpoint = new IPEndPoint(ip, 31000);
-			byte[] message = { 0 };
-
+			Debug.Log("Asking for color data");
+                     
 			for (int i = 0; i < pollTimes; i++)
-				instance.sendingClient.Send(message, message.Length, sendingEndpoint);
+				instance.sendingClient.Send(new byte[] { 0 }, 1, sendingEndpoint);
+		}
+        
+		public static void RegisterDevice(IPAddress ip)
+		{
+			IPEndPoint sendingEndpoint = new IPEndPoint(ip, 30001);
+			string jsonData = JsonConvert.SerializeObject(new RegisterDevicePackage() { RegisterDevice = true });
+            byte[] message = Encoding.ASCII.GetBytes(jsonData);
+			instance.sendingClient.Send(message, message.Length, sendingEndpoint);
 		}
 
 		public static void PollMessage(int times, byte[] message, IPEndPoint endPoint, UdpClient client)
@@ -262,11 +273,17 @@ namespace Voyager.Networking
 	[Serializable]
     public struct LayerPollPackage
 	{
-		public bool PollLayers;
-	}
+        public bool PollLayers;
+    }
 
 	[Serializable]
-	public class ApModePackage
+	public struct RegisterDevicePackage
+	{
+		public bool RegisterDevice;
+	}
+ 
+	[Serializable]
+    public class ApModePackage
     {
         public string network_mode = "ap_mode";
         public int set_channel { get; set; }
@@ -274,7 +291,7 @@ namespace Voyager.Networking
         public string set_password { get; set; }
     }
 
-	[Serializable]
+    [Serializable]
     public class ClientModePackage
     {
         public string network_mode = "client_mode";

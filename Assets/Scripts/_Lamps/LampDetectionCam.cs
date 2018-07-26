@@ -24,6 +24,8 @@ public class LampDetectionCam : MonoBehaviour {
 		NatCam.OnStart += NatCam_OnStart;
 		NatCam.OnFrame += NatCam_OnFrame;
         NatCam.Play();
+
+		preview.texture = NatCam.Preview;
 	}
 
 	void Update()
@@ -36,7 +38,6 @@ public class LampDetectionCam : MonoBehaviour {
 	{
 		pixelBuffer = new byte[NatCam.Preview.width * NatCam.Preview.height * 4];
         NatCam.CaptureFrame(pixelBuffer, true);
-		preview.texture = NatCam.Preview;
 
 		InitializeMatrix();
 		SetCameraExposuer();
@@ -82,7 +83,7 @@ public class LampDetectionCam : MonoBehaviour {
 #endif
         }
         else
-            NatCam.Camera.ExposureBias = Mathf.Max(NatCam.Camera.MinExposureBias, -20);
+			NatCam.Camera.ExposureBias = Mathf.Max(NatCam.Camera.MinExposureBias, -20);
 	}
 
     void HandleCameraMatrix()

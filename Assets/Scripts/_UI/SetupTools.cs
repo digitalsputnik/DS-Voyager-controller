@@ -139,7 +139,7 @@ public class SetupTools : MonoBehaviour {
 
 		foreach(Lamp lamp in lamps)
 		{
-			GameObject newBtn = Instantiate(addLampBtnPrefab, addLampBtnParent);
+			GameObject newBtn = Instantiate(addLampBtnPrefab, addLampBtnParent.transform);
 			newBtn.GetComponent<AddLampBtn>().Setup(lamp);
 		}
 		addLampsWindow.SetActive(true);
