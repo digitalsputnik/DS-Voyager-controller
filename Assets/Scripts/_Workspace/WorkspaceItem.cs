@@ -5,22 +5,38 @@ using UnityEngine;
 
 public class WorkspaceItem : MonoBehaviour {
 
-	public MonoBehaviour[] hideableItems;
+	[Space(5)]
+	[SerializeField] GameObject[] hideableItems;
+	[SerializeField] MonoBehaviour[] hideableComponents;
+	[SerializeField] Collider[] hideableColliders;
+	[Space(3)]
 	public WorkspaceItemType Type;
 
 	public WorkspaceItem parent;
 	public List<WorkspaceItem> children = new List<WorkspaceItem>();
 
-    public void Show()
+    public void ShowGraphics()
 	{
-		foreach (MonoBehaviour item in hideableItems)
-            item.enabled = true;
-	}
+		foreach (GameObject item in hideableItems)
+			item.SetActive(true);
 
-    public void Hide()
-	{
-		foreach (MonoBehaviour item in hideableItems)
+		foreach (MonoBehaviour item in hideableComponents)
 			item.enabled = true;
+
+		foreach (Collider coll in hideableColliders)
+			coll.enabled = true;
+	}
+       
+    public void HideGraphics()
+	{
+		foreach (GameObject item in hideableItems)
+			item.SetActive(false);
+
+		foreach (MonoBehaviour item in hideableComponents)
+			item.enabled = false;
+
+		foreach (Collider coll in hideableColliders)
+            coll.enabled = false;
 	}
 
 	public void SetParent(WorkspaceItem parent)

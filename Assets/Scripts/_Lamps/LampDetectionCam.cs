@@ -6,12 +6,13 @@ using NatCamU.Core;
 using OpenCVForUnity;
 using System.Linq;
 using Voyager.Lamps;
+using Voyager.Workspace;
 
 public class LampDetectionCam : MonoBehaviour
 {
     [Space(3)]
 	[SerializeField] RawImage preview;
-	[SerializeField] LampManager lampManager;
+	LampManager lampManager;
 
     int camIndex;
 
@@ -135,16 +136,12 @@ public class LampDetectionCam : MonoBehaviour
 
 			if (lamp.physicalLamp == null)
 			{
-				lampManager.InstantiateLamp(lamp, data.lampPoint1, data.lampPoint2);
-				lampManager.HideGraphics(true);
+				Workspace.InstantiateLamp(lamp, data.lampPoint1, data.lampPoint2);
+				Workspace.HideGraphics();
 			}
 			else
 			{
-				Transform handle1 = lamp.physicalLamp.GetComponent<LampMove>().sizeHandle1.transform;
-				Transform handle2 = lamp.physicalLamp.GetComponent<LampMove>().sizeHandle2.transform;
-				handle1.position = data.lampPoint1;
-				handle2.position = data.lampPoint2;
-				lamp.physicalLamp.GetComponent<LampMove>().CalculateGraphicsPositionAndRotation();
+				lamp.physicalLamp.GetComponent<LampMove>().SetPosition(data.lampPoint1, data.lampPoint2);
 			}
 		}
 	}

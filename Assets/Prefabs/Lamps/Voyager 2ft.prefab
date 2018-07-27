@@ -957,6 +957,7 @@ GameObject:
   - component: {fileID: 114414491565956138}
   - component: {fileID: 114299892673089454}
   - component: {fileID: 114974840800792586}
+  - component: {fileID: 114980664901129286}
   m_Layer: 0
   m_Name: Voyager 2ft
   m_TagString: Untagged
@@ -11128,6 +11129,29 @@ MonoBehaviour:
   maxX: {fileID: 0}
   maxY: {fileID: 0}
   PixelsParent: {fileID: 4556542207339454}
+--- !u!114 &114980664901129286
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1304731441019712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4bba98c14ea441e5acd96c77298edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hideableItems:
+  - {fileID: 1648845802698504}
+  - {fileID: 1309890079697440}
+  - {fileID: 1672631072987892}
+  hideableComponents:
+  - {fileID: 114414491565956138}
+  - {fileID: 114841200175068298}
+  hideableColliders:
+  - {fileID: 65472457121791182}
+  Type: 0
+  parent: {fileID: 0}
+  children: []
 --- !u!212 &212247665999329278
 SpriteRenderer:
   m_ObjectHideFlags: 1

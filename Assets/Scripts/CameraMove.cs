@@ -65,7 +65,7 @@ public class CameraMove : MonoBehaviour {
 			if(!zoomingWithTouch)
 			{
 				startTouchDistance = Vector3.Distance(touches[1].position, touches[0].position);
-				distanceToFOV = cam.fieldOfView / startTouchDistance;
+				distanceToFOV = transform.position.z / startTouchDistance;
 				zoomingWithTouch = true;
 				movingWithTouch = false;
 			}
@@ -80,8 +80,8 @@ public class CameraMove : MonoBehaviour {
 			Vector3 worldPosBefore = hit.point;
 
 			float distance = startTouchDistance - Vector3.Distance(touches[0].position, touches[1].position);
-			cam.fieldOfView = (distance + startTouchDistance) * distanceToFOV;
-            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, minZoom, maxZoom);
+			camZPos = (distance + startTouchDistance) * distanceToFOV;
+			camZPos = Mathf.Clamp(camZPos, maxZoom, minZoom);
 
 			ray = cam.ScreenPointToRay(screenCenter);
             Physics.Raycast(ray, out hit, Mathf.Infinity, ~0);
@@ -155,8 +155,9 @@ public class CameraMove : MonoBehaviour {
         Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, ~0);
         Vector3 worldMousePos = hit.point;
               
-		cam.fieldOfView -= scroll * mouseScrollSpeed;
-		cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, minZoom, maxZoom);
+		camZPos += scroll * mouseScrollSpeed;
+		camZPos = Mathf.Clamp(camZPos, maxZoom, minZoom);
+		cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y, camZPos); 
 
         Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, ~0);
         Vector3 newWorldMousePos = hit.point;

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Voyager.Lamps;
+using Voyager.Workspace;
 
 public class Trashcan : MonoBehaviour {
 
@@ -64,7 +65,7 @@ public class Trashcan : MonoBehaviour {
 			{
 				image.color = DeleteColor;
 				if (touch.phase == TouchPhase.Ended)
-					lampManager.DestroyLamp(movingLamp);
+					Workspace.DestroyLamp(movingLamp);
             }
             else
             {
@@ -75,7 +76,7 @@ public class Trashcan : MonoBehaviour {
         {
 			image.color = DeleteColor;
 			if (Input.GetMouseButtonUp(0))
-				lampManager.DestroyLamp(movingLamp);
+				Workspace.DestroyLamp(movingLamp);
 		}
 		else
 		{

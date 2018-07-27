@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Voyager.Lamps;
+using Voyager.Workspace;
 
 public class SetupTools : MonoBehaviour {
 
@@ -111,11 +112,11 @@ public class SetupTools : MonoBehaviour {
 			}
 		}
 	}
-
+    
 	void OneLampAdd()
     {
 		if (lampManager.GetAddableLamps().Count == 1)
-			lampManager.InstantiateLamp(lampManager.GetLamp(0));
+			Workspace.InstantiateLamp(lampManager.GetLamp(0));
     }
 
 	public void DetectLamps()
@@ -191,7 +192,7 @@ public class SetupTools : MonoBehaviour {
     public void Load()
 	{
 		foreach (Lamp lamp in lampManager.GetLampsInWorkplace())
-			lampManager.DestroyLamp(lamp.physicalLamp);
+			Workspace.DestroyLamp(lamp.physicalLamp);
 		lampManager.LoadWorkplace();
 	}
 

@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NatCamU.Core;
 using Voyager.Lamps;
+using Voyager.Workspace;
 
 public static class HelperMethods
 {
@@ -1114,8 +1115,7 @@ public class DrawScripts : MonoBehaviour {
 		{
 			case 1: //Paint Pixel
 				drawMode.SetActive(true);
-				lampManager.HideGraphics(true);
-				lampManager.SetGraphicsCollision(false);
+				Workspace.HideGraphics();
 				//int lightCount = workSpace.transform.childCount;
 				//for (int i = 0; i < lightCount; i++)
 				//{
@@ -1153,8 +1153,7 @@ public class DrawScripts : MonoBehaviour {
 				break;
 			case 2: //Move Lamp
 				drawMode.SetActive(false);
-				lampManager.HideGraphics(false);
-                lampManager.SetGraphicsCollision(true);
+				Workspace.ShowGraphics();
 				//lightCount = workSpace.transform.childCount;
 				//for (int i = 0; i < lightCount; i++)
 				//{
@@ -1191,8 +1190,7 @@ public class DrawScripts : MonoBehaviour {
 				break;
             default: //Paint Lamp
                 drawMode.SetActive(true);
-				lampManager.HideGraphics(true);
-				lampManager.SetGraphicsCollision(false);
+				Workspace.HideGraphics();
                 //lightCount = workSpace.transform.childCount;
                 //for (int i = 0; i < lightCount; i++)
                 //{

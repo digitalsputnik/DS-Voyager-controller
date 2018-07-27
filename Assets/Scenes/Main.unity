@@ -1164,7 +1164,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &68415526
 MonoBehaviour:
@@ -3942,9 +3942,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1521210425}
-        m_MethodName: SetGraphicsCollision
-        m_Mode: 6
+      - m_Target: {fileID: 1399975195}
+        m_MethodName: DrawBtn
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3952,17 +3952,6 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1521210425}
-        m_MethodName: HideGraphics
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
@@ -6249,7 +6238,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &404138995
 MonoBehaviour:
@@ -13444,7 +13433,7 @@ Transform:
   - {fileID: 481701725}
   - {fileID: 1224962377}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &875851421
 GameObject:
@@ -14826,8 +14815,79 @@ Transform:
   - {fileID: 2004429234}
   - {fileID: 995149877}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &975985970
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 114995930833923784, guid: 9b426a8db0c514b4599d48e5edf33d93,
+        type: 2}
+      propertyPath: SpawnableItems.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532096354048692, guid: 9b426a8db0c514b4599d48e5edf33d93, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532096354048692, guid: 9b426a8db0c514b4599d48e5edf33d93, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532096354048692, guid: 9b426a8db0c514b4599d48e5edf33d93, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532096354048692, guid: 9b426a8db0c514b4599d48e5edf33d93, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532096354048692, guid: 9b426a8db0c514b4599d48e5edf33d93, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532096354048692, guid: 9b426a8db0c514b4599d48e5edf33d93, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532096354048692, guid: 9b426a8db0c514b4599d48e5edf33d93, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532096354048692, guid: 9b426a8db0c514b4599d48e5edf33d93, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114995930833923784, guid: 9b426a8db0c514b4599d48e5edf33d93,
+        type: 2}
+      propertyPath: SpawnableItems.Array.data[0]
+      value: 
+      objectReference: {fileID: 1304731441019712, guid: e467f7af145e6427a8898aaed60a8f34,
+        type: 2}
+    - target: {fileID: 114995930833923784, guid: 9b426a8db0c514b4599d48e5edf33d93,
+        type: 2}
+      propertyPath: SpawnableItems.Array.data[2]
+      value: 
+      objectReference: {fileID: 1181793714595124, guid: 94869674e97bc46e99e338c2a5dec745,
+        type: 2}
+    - target: {fileID: 114995930833923784, guid: 9b426a8db0c514b4599d48e5edf33d93,
+        type: 2}
+      propertyPath: SpawnableItems.Array.data[1]
+      value: 
+      objectReference: {fileID: 1312387806207338, guid: 6cbaa08ccce3440a2a4f0e8dd9090645,
+        type: 2}
+    - target: {fileID: 114995930833923784, guid: 9b426a8db0c514b4599d48e5edf33d93,
+        type: 2}
+      propertyPath: SpawnableItems.Array.data[3]
+      value: 
+      objectReference: {fileID: 1771336966127618, guid: edac7cbfd67b340c7babfa43563f487d,
+        type: 2}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 9b426a8db0c514b4599d48e5edf33d93, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &976366551
 GameObject:
   m_ObjectHideFlags: 0
@@ -17320,8 +17380,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mouseScrollSpeed: 5
-  minZoom: 20
-  maxZoom: 160
+  minZoom: -20
+  maxZoom: -160
   backgroundTag: Background
   setupModeObject: {fileID: 1509357874}
 --- !u!20 &1098985457
@@ -17341,7 +17401,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 100
+  far clip plane: 200
   field of view: 60
   orthographic: 0
   orthographic size: 12.97
@@ -17376,7 +17436,7 @@ Transform:
   - {fileID: 409035343}
   - {fileID: 369448962}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &1102782305
 RectTransform:
@@ -22953,7 +23013,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4181109390180138, guid: 879df77b669434db094050523da20fd1, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 879df77b669434db094050523da20fd1, type: 2}
@@ -25419,7 +25479,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1455855791
 MonoBehaviour:
@@ -25876,7 +25936,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1468842241
 MonoBehaviour:
@@ -26953,12 +27013,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1521006325}
---- !u!114 &1521210425 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114032981690824530, guid: eeabb94b1b5ed48c5a216c5d324c509b,
-    type: 2}
-  m_PrefabInternal: {fileID: 1017708775}
-  m_Script: {fileID: 11500000, guid: b30ab10525af14120b501d85e67542fd, type: 3}
 --- !u!1 &1530283572
 GameObject:
   m_ObjectHideFlags: 0
@@ -27429,7 +27483,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &1559354764
 GameObject:
@@ -31769,20 +31823,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1521210425}
-        m_MethodName: SetGraphicsCollision
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1521210425}
-        m_MethodName: HideGraphics
-        m_Mode: 6
+      - m_Target: {fileID: 1399975195}
+        m_MethodName: SetupBtn
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -35461,7 +35504,7 @@ Transform:
   m_LocalScale: {x: 1000, y: 1000, z: 1000}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &2103415665
 GameObject:

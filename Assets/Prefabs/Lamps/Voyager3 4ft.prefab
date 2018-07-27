@@ -4254,6 +4254,7 @@ GameObject:
   - component: {fileID: 114282617615932294}
   - component: {fileID: 114889776034669456}
   - component: {fileID: 114052186746831212}
+  - component: {fileID: 114397455918156818}
   m_Layer: 0
   m_Name: Voyager3 4ft
   m_TagString: Untagged
@@ -22421,6 +22422,29 @@ MonoBehaviour:
   physicalLamp: {fileID: 0}
   ITSH: {x: 0, y: 0, z: 0, w: 0}
   ID: 0
+--- !u!114 &114397455918156818
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1771336966127618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4bba98c14ea441e5acd96c77298edd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hideableItems:
+  - {fileID: 1859167120606648}
+  - {fileID: 1688230363729846}
+  - {fileID: 1037549647258702}
+  hideableComponents:
+  - {fileID: 114282617615932294}
+  - {fileID: 114330459437818870}
+  hideableColliders:
+  - {fileID: 65817353651437014}
+  Type: 0
+  parent: {fileID: 0}
+  children: []
 --- !u!114 &114400433940631386
 MonoBehaviour:
   m_ObjectHideFlags: 1

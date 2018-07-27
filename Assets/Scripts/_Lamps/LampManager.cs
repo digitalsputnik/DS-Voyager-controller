@@ -2,6 +2,7 @@
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using Voyager.Networking;
+using Voyager.Workspace;
 using Newtonsoft.Json;
 using UnityEngine;
 using System.Net;
@@ -17,9 +18,6 @@ namespace Voyager.Lamps
 		[SerializeField] float LampsLookInterval = 0.2f;
 		[SerializeField] float RegisterDeviceInterval = 0.1f;
 		[SerializeField] float LampTimeoutTime = 10.0f;
-		[SerializeField] Transform workSpace;
-        [Space(3)]
-		[SerializeField] GameObject[] PhysicalLamps;
 
 		void Start()
 		{
@@ -29,8 +27,6 @@ namespace Voyager.Lamps
 			InvokeRepeating("LookForAvailableLamps", 0.0f, LampsLookInterval);
 			InvokeRepeating("CheckLampsTimeout", 0.0f, RegisterDeviceInterval);
 			InvokeRepeating("RegisterDevices", 0.0f, RegisterDeviceInterval);
-
-			if (workSpace == null) workSpace = transform;
 		}      
         
 		void NetworkManager_OnAvailableLampsResponse(string response, IPAddress ip)
@@ -170,59 +166,6 @@ namespace Voyager.Lamps
 		{
 			return (GetLamp(serial) != null);
 		}
-
-		public PhysicalLamp InstantiateLamp(Lamp lamp)
-		{
-			return InstantiateLamp(lamp, Vector3.zero);
-		}
-
-		public PhysicalLamp InstantiateLamp(Lamp lamp, Vector3 position)
-		{
-			if(lamp.physicalLamp != null)
-			{
-				Debug.LogError("Lamp allready in a scene.");
-				return null;
-			}
-			
-			GameObject lampPrefab = GetLampPrefab(lamp.Type);
-			if(lampPrefab == null)
-			{
-				Debug.LogError("This type of lamp has no prefab in PlysicalLamps list.");
-				return null;
-			}
-
-			GameObject physicalObject = Instantiate(lampPrefab, position, Quaternion.identity, workSpace);
-			PhysicalLamp physicalLamp = physicalObject.GetComponent<PhysicalLamp>();
-            physicalLamp.Setup(lamp);
-			lamp.physicalLamp = physicalLamp;
-
-			return physicalLamp;
-		}
-
-		public PhysicalLamp InstantiateLamp(Lamp lamp, Vector3 handle1, Vector3 handle2)
-		{
-			PhysicalLamp physical = InstantiateLamp(lamp);
-			physical.GetComponent<LampMove>().SetPosition(handle1, handle2);
-			return physical;
-		}
-
-		public void DestroyLamp(PhysicalLamp lamp)
-		{
-			lamp.Owner.physicalLamp = null;
-			Destroy(lamp.gameObject);
-		}
-
-		public GameObject GetLampPrefab(LampType type)
-		{
-			PhysicalLamp physicalLamp;
-			foreach(GameObject go in PhysicalLamps)
-			{
-				physicalLamp = go.GetComponent<PhysicalLamp>();
-				if (physicalLamp.Type == type)
-					return go;
-			}
-			return null;
-		}
         
 		bool SerialExistsInLamps(string serial)
 		{
@@ -304,7 +247,7 @@ namespace Voyager.Lamps
 						lamp = GetLamp(lampData.serial);
 
 						if (LampExistsInWorkplace(lamp.Serial))
-							DestroyLamp(lamp.physicalLamp);             
+							Workspace.Workspace.DestroyLamp(lamp.physicalLamp);
 					}
 					else
 					{
@@ -312,27 +255,9 @@ namespace Voyager.Lamps
 						lamp.Setup(lampData.serial, lampData.ip, (LampType)lampData.type, lampData.lenght, lampData.colordata);
 						Lamps.Add(lamp);
 					}
-                                   
-					InstantiateLamp(lamp, lampData.handle1.ToVector3(), lampData.handle2.ToVector3());
+					Workspace.Workspace.InstantiateLamp(lamp, lampData.handle1.ToVector3(), lampData.handle2.ToVector3());
 				}
             }
-		}
-
-        public void SetGraphicsCollision(bool value)
-		{
-			foreach(Lamp lamp in GetLampsInWorkplace())
-				lamp.physicalLamp.transform.Find("Graphics").GetComponent<BoxCollider>().enabled = value;
-		}
-
-        public void HideGraphics(bool value)
-		{
-			foreach(Lamp lamp in GetLampsInWorkplace())
-			{
-				PhysicalLamp physicalLamp = lamp.physicalLamp;
-				physicalLamp.Text.gameObject.SetActive(!value);
-				physicalLamp.move.sizeHandle1.gameObject.SetActive(!value);
-				physicalLamp.move.sizeHandle2.gameObject.SetActive(!value);
-			}
 		}
 
 		[Serializable]

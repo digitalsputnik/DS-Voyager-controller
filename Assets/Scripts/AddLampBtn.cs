@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Voyager.Lamps;
+using Voyager.Workspace;
 
 public class AddLampBtn : MonoBehaviour {
 
@@ -24,7 +25,7 @@ public class AddLampBtn : MonoBehaviour {
 
 	public void Use(Vector3 position)
 	{
-		manager.InstantiateLamp(lamp, position);
+		Workspace.InstantiateLamp(lamp, position);
 		Transform parent = transform.parent;
 		if (parent.childCount == 3)
 			parent.GetChild(0).gameObject.SetActive(false);

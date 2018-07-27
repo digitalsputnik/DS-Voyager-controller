@@ -34,8 +34,8 @@ public class LampMove : MonoBehaviour {
 	void MoveOnDragStarted()
 	{
 		Camera.main.GetComponent<CameraMove>().enabled = false;
-        
-		sizeHandle1Offset = lampGraphics.position - sizeHandle1T.position;
+
+        sizeHandle1Offset = lampGraphics.position - sizeHandle1T.position;
         sizeHandle2Offset = lampGraphics.position - sizeHandle2T.position;
 
         sizeHandle1.enabled = false;
@@ -47,8 +47,8 @@ public class LampMove : MonoBehaviour {
 	void MoveOnDragging()
 	{
 		sizeHandle1T.position = lampGraphics.position - sizeHandle1Offset;
-		sizeHandle2T.position = lampGraphics.position - sizeHandle2Offset;
-		EventManager.TriggerEvent("WorkplaceObjectMoved");
+        sizeHandle2T.position = lampGraphics.position - sizeHandle2Offset;
+        EventManager.TriggerEvent("WorkplaceObjectMoved");
 	}
 
 	void MoveOnDragEnded()

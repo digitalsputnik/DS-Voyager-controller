@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Voyager.Workspace;
 
 public class MenuMode : MonoBehaviour {
 
@@ -70,40 +71,13 @@ public class MenuMode : MonoBehaviour {
 
     }
 
-
-	/*
-    public static Toggle toggle;
-    // Use this for initialization
-	void Start () {
-        toggle = this.GetComponent<Toggle>();
-        toggle.onValueChanged.AddListener(SwitchModes);
+    public void SetupBtn()
+	{
+		Workspace.ShowGraphics();
 	}
 
-    private void SwitchModes(bool arg0)
-    {
-        SetLightSetupStatus(toggle.isOn);
-    }
-
-    private void SetLightSetupStatus(bool activeVal)
-    {
-		if (!toggle.isOn) {
-			toolsDropDown.value = 0;
-		}
-        drawMode.SetActive(!activeVal);
-        drawTools.SetActive(!activeVal);
-        //colorButton.SetActive(!activeVal);
-        //colorButton2.SetActive(false);
-        setupMode.SetActive(activeVal);
-        
-        int lightCount = workSpace.transform.childCount;
-        for (int i = 0; i < lightCount; i++)
-        {
-            var light = workSpace.transform.GetChild(i);
-            light.Find("DragAndDrop1").gameObject.SetActive(activeVal);
-            light.Find("DragAndDrop2").gameObject.SetActive(activeVal);
-            light.Find("Canvas").gameObject.SetActive(activeVal);
-        }
-    }
-*/
-
+    public void DrawBtn()
+	{
+		Workspace.HideGraphics();
+	}
 }
