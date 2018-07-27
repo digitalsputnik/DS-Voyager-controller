@@ -419,7 +419,7 @@ public class AnimationSender : MonoBehaviour
 	[Space(5)]
     public Scene scene;
     public DrawScripts drawScripts;
-    public SetupScripts setupScripts;
+    //public SetupScripts setupScripts;
     public DrawMode draw;
     public Stroke ActiveStroke;
 
@@ -1077,18 +1077,20 @@ public class AnimationSender : MonoBehaviour
 
     IEnumerator RegisterDevice(string lampMac)
     {
-        while (true)
-        {
-            if (setupScripts.LampMactoIPDictionary == null)
-            {
-                yield return new WaitForSeconds(1f);
-                continue;
-            }
+		//while (true)
+		//{
+		//    if (setupScripts.LampMactoIPDictionary == null)
+		//    {
+		//        yield return new WaitForSeconds(1f);
+		//        continue;
+		//    }
 
-            //Register constantly!
-            RegisterControllerToDevice(true, setupScripts.LampMactoIPDictionary[lampMac]);
-            yield return new WaitForSeconds(1.33f);
-        }
+		//    //Register constantly!
+		//    RegisterControllerToDevice(true, setupScripts.LampMactoIPDictionary[lampMac]);
+		//    yield return new WaitForSeconds(1.33f);
+		//}
+
+		yield return null;
     }
 
     IEnumerator SendVideoStream()

@@ -93,7 +93,7 @@ public class LampMove : MonoBehaviour {
 
 	}
 
-    void CalculateGraphicsPositionAndRotation()
+    public void CalculateGraphicsPositionAndRotation()
 	{
 		//Simplified variables
 		Vector3 p1 = sizeHandle1T.position;

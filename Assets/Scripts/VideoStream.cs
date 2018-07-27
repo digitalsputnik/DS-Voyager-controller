@@ -63,32 +63,34 @@ public class VideoStream : MonoBehaviour {
 		ribbon = GetComponent<Ribbon>();
 		//drawScripts = drawTools.GetComponent<DrawScripts>();
 		//NOTE: Quick hack because switching all the references is too much work at this point
+		try
+		{
+			drawScripts = GameObject.Find("MenuBackground").GetComponent<MenuMode>().drawTools.GetComponent<DrawScripts>();
+            animSender = GameObject.Find("AnimationControl").GetComponent<AnimationSender>();
 
-        drawScripts = GameObject.Find("MenuBackground").GetComponent<MenuMode>().drawTools.GetComponent<DrawScripts>();
-        animSender = GameObject.Find("AnimationControl").GetComponent<AnimationSender>();
+            videoStreamBackground = GameObject.Find("MenuBackground").GetComponent<MenuMode>().videoStream.gameObject;
+            Transform videoStream = videoStreamBackground.transform.Find("Graphics").Find("Video Screen");
+            minXY = videoStream.GetChild(0).gameObject;
+            maxX = videoStream.GetChild(1).gameObject;
+            maxY = videoStream.GetChild(2).gameObject;
 
-		videoStreamBackground = GameObject.Find("MenuBackground").GetComponent<MenuMode>().videoStream.gameObject;
-		Transform videoStream = videoStreamBackground.transform.Find("Graphics").Find("Video Screen");
-		minXY = videoStream.GetChild(0).gameObject;
-		maxX  = videoStream.GetChild(1).gameObject;
-		maxY  = videoStream.GetChild(2).gameObject;
+            StartCoroutine(CheckForVideo());
 
-		StartCoroutine(CheckForVideo());
-
-        //Initialization of video stream array
-		IP = ribbon.IP;
-        if (!animSender.LampIPVideoStreamPixelToColor.ContainsKey(IP))
-        {
-            animSender.LampIPVideoStreamPixelToColor.Add(IP, new Dictionary<int, int[]>());
-        }
-        animSender.LampIPVideoStreamPixelToColor[IP].Clear();
-		int PixelCount = ribbon.pipeLength;
-        for (int p = 0; p < PixelCount; p++)
-        {
-            animSender.LampIPVideoStreamPixelToColor[IP].Add(p, blackColor);
-            previousColors.Add(BlackColor);
-        }
-
+            //Initialization of video stream array
+            IP = ribbon.IP;
+            if (!animSender.LampIPVideoStreamPixelToColor.ContainsKey(IP))
+            {
+                animSender.LampIPVideoStreamPixelToColor.Add(IP, new Dictionary<int, int[]>());
+            }
+            animSender.LampIPVideoStreamPixelToColor[IP].Clear();
+            int PixelCount = ribbon.pipeLength;
+            for (int p = 0; p < PixelCount; p++)
+            {
+                animSender.LampIPVideoStreamPixelToColor[IP].Add(p, blackColor);
+                previousColors.Add(BlackColor);
+            }
+		}
+		catch (Exception e) { Debug.LogWarning(e.Message); }
     }
 
     IEnumerator CheckForVideo() {
@@ -206,16 +208,17 @@ public class VideoStream : MonoBehaviour {
      // Update is called once per frame
     void Update()
     {
-		if (animSender.ActiveStroke.Animation != "Video Stream")
-		{
-			if (!animSender.ActiveStroke.layer.PixelToStrokeIDDictionary.Any(x => x.Value.FirstOrDefault().Animation == "Video Stream"))
+		if(animSender != null)
+        {
+			if (animSender.ActiveStroke.Animation != "Video Stream")
 			{
-				videoStreamBackground.SetActive(false);
+				if (!animSender.ActiveStroke.layer.PixelToStrokeIDDictionary.Any(x => x.Value.FirstOrDefault().Animation == "Video Stream"))
+					videoStreamBackground.SetActive(false);
 			}
-		}
-		else
-			videoStreamBackground.SetActive(true);
-		
-		DrawPixels();
+			else
+				videoStreamBackground.SetActive(true);
+			
+			DrawPixels();
+        }
     }
 }
