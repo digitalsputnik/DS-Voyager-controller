@@ -153,9 +153,8 @@ public class DrawScripts : MonoBehaviour {
 
 		NatCam.OnStart += NatCam_OnStart;
 		NatCam.OnFrame += NatCam_OnFrame;
-		backgroundMaterial = videoStream.GetComponent<MeshRenderer>().material;
     }
-
+       
     private void DMXPropertyChange(int arg0)
     {
         animSender.SendAnimationWithUpdate();
@@ -590,6 +589,13 @@ public class DrawScripts : MonoBehaviour {
     
     void ChangeSource(int value)
     {
+		if (!Workspace.ContainsVideoStream())
+        {
+            videoStream = Workspace.InstantiateVideoStream().gameObject;
+			backgroundMaterial = videoStream.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material;
+			Workspace.HideGraphics();
+        }
+
 		if (NatCam.IsPlaying)
         {
 			NatCam.Pause();
@@ -659,6 +665,7 @@ public class DrawScripts : MonoBehaviour {
                 NatCam.Camera = devices[value];
                 NatCam.Play();
             }
+
 			videoStream.SetActive(true);
 			camAvailable = true;
         }

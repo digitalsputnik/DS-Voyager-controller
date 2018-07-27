@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using Voyager.Lamps;
+using Voyager.Workspace;
 
 public class VideoStream : MonoBehaviour {
 
@@ -61,37 +62,36 @@ public class VideoStream : MonoBehaviour {
 	void Start() {
 		physicalLamp = GetComponent<PhysicalLamp>();
 		ribbon = GetComponent<Ribbon>();
+		SetupVideoStream(transform);
 		//drawScripts = drawTools.GetComponent<DrawScripts>();
 		//NOTE: Quick hack because switching all the references is too much work at this point
-		try
-		{
-			drawScripts = GameObject.Find("MenuBackground").GetComponent<MenuMode>().drawTools.GetComponent<DrawScripts>();
-            animSender = GameObject.Find("AnimationControl").GetComponent<AnimationSender>();
-
-            videoStreamBackground = GameObject.Find("MenuBackground").GetComponent<MenuMode>().videoStream.gameObject;
-            Transform videoStream = videoStreamBackground.transform.Find("Graphics").Find("Video Screen");
-            minXY = videoStream.GetChild(0).gameObject;
-            maxX = videoStream.GetChild(1).gameObject;
-            maxY = videoStream.GetChild(2).gameObject;
-
-            StartCoroutine(CheckForVideo());
-
-            //Initialization of video stream array
-            IP = ribbon.IP;
-            if (!animSender.LampIPVideoStreamPixelToColor.ContainsKey(IP))
-            {
-                animSender.LampIPVideoStreamPixelToColor.Add(IP, new Dictionary<int, int[]>());
-            }
-            animSender.LampIPVideoStreamPixelToColor[IP].Clear();
-            int PixelCount = ribbon.pipeLength;
-            for (int p = 0; p < PixelCount; p++)
-            {
-                animSender.LampIPVideoStreamPixelToColor[IP].Add(p, blackColor);
-                previousColors.Add(BlackColor);
-            }
-		}
-		catch (Exception e) { Debug.LogWarning(e.Message); }
     }
+    
+	void SetupVideoStream(Transform videoStream)
+	{
+		drawScripts = GameObject.Find("MenuBackground").GetComponent<MenuMode>().drawTools.GetComponent<DrawScripts>();
+        animSender = GameObject.Find("AnimationControl").GetComponent<AnimationSender>();
+
+        minXY = videoStream.GetChild(0).gameObject;
+        maxX = videoStream.GetChild(1).gameObject;
+        maxY = videoStream.GetChild(2).gameObject;
+
+        StartCoroutine(CheckForVideo());
+
+        //Initialization of video stream array
+        IP = ribbon.IP;
+        if (!animSender.LampIPVideoStreamPixelToColor.ContainsKey(IP))
+        {
+            animSender.LampIPVideoStreamPixelToColor.Add(IP, new Dictionary<int, int[]>());
+        }
+        animSender.LampIPVideoStreamPixelToColor[IP].Clear();
+        int PixelCount = ribbon.pipeLength;
+        for (int p = 0; p < PixelCount; p++)
+        {
+            animSender.LampIPVideoStreamPixelToColor[IP].Add(p, blackColor);
+            previousColors.Add(BlackColor);
+        }
+	}
 
     IEnumerator CheckForVideo() {
         while (!videoRunning)
@@ -213,10 +213,19 @@ public class VideoStream : MonoBehaviour {
 			if (animSender.ActiveStroke.Animation != "Video Stream")
 			{
 				if (!animSender.ActiveStroke.layer.PixelToStrokeIDDictionary.Any(x => x.Value.FirstOrDefault().Animation == "Video Stream"))
-					videoStreamBackground.SetActive(false);
+				{
+					if(Workspace.ContainsVideoStream())
+					{
+						//Transform videoStream = Workspace.GetVideoSteam();
+						//Workspace.DestroyItem(videoStream.GetComponent<WorkspaceItem>());
+					}
+                }
 			}
 			else
-				videoStreamBackground.SetActive(true);
+			{
+				//if (!Workspace.ContainsVideoStream())
+					//SetupVideoStream(Workspace.InstantiateVideoStream());
+			}
 			
 			DrawPixels();
         }

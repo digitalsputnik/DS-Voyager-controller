@@ -51,5 +51,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5326cad5644c448a783d8541cb0ad528, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnableItems: []
+  SpawnableItems:
+  - {fileID: 1304731441019712, guid: e467f7af145e6427a8898aaed60a8f34, type: 2}
+  - {fileID: 1312387806207338, guid: 6cbaa08ccce3440a2a4f0e8dd9090645, type: 2}
+  - {fileID: 1181793714595124, guid: 94869674e97bc46e99e338c2a5dec745, type: 2}
+  - {fileID: 1771336966127618, guid: edac7cbfd67b340c7babfa43563f487d, type: 2}
+  - {fileID: 1263195221941342, guid: 6faf72e327d67428db665ea73345dc77, type: 2}
   ItemsInWorkspace: []

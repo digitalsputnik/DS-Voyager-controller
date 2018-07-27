@@ -60,12 +60,12 @@ public class MenuMode : MonoBehaviour {
 			light.transform.Find("Canvas").gameObject.SetActive(draw);
 		}
 
-		if (videoStream.Find("Graphics").Find("Video Screen").gameObject.activeSelf)
-        {
-			videoStream.transform.Find("DragHandle1").gameObject.SetActive(draw);
-			videoStream.transform.Find("DragHandle2").gameObject.SetActive(draw);
-			videoStream.transform.Find("Graphics").GetComponent<DragHandle>().enabled = draw;
-        }
+		//if (videoStream.Find("Graphics").Find("Video Screen").gameObject.activeSelf)
+   //     {
+			//videoStream.transform.Find("DragHandle1").gameObject.SetActive(draw);
+			//videoStream.transform.Find("DragHandle2").gameObject.SetActive(draw);
+			//videoStream.transform.Find("Graphics").GetComponent<DragHandle>().enabled = draw;
+        //}
 
 
 

@@ -12,7 +12,7 @@ public class LampDetectionCam : MonoBehaviour
 {
     [Space(3)]
 	[SerializeField] RawImage preview;
-	LampManager lampManager;
+	[SerializeField] LampManager lampManager;
 
     int camIndex;
 

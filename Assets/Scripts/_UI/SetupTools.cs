@@ -45,9 +45,9 @@ public class SetupTools : MonoBehaviour {
         if(PlayerPrefs.GetInt("ComingFromDetectionScene") != 0)
         {
 			if(PlayerPrefs.GetInt("ComingFromDetectionScene") == 1)
-				lampManager.LoadWorkplace("main_temp");
+				Workspace.LoadWorkplace("main_temp");
 			else
-				lampManager.LoadWorkplace("detection");
+				Workspace.LoadWorkplace("detection");
 			PlayerPrefs.SetInt("ComingFromDetectionScene", 0);
         }
 
@@ -121,7 +121,7 @@ public class SetupTools : MonoBehaviour {
 
 	public void DetectLamps()
 	{
-		lampManager.SaveWorkplace("main_temp");
+		Workspace.SaveWorkplace("main_temp");
 		SceneManager.LoadScene(1);
 	}
 
@@ -186,14 +186,14 @@ public class SetupTools : MonoBehaviour {
 
     public void Save()
 	{
-		lampManager.SaveWorkplace();
+		Workspace.SaveWorkplace();
 	}
 
     public void Load()
 	{
 		foreach (Lamp lamp in lampManager.GetLampsInWorkplace())
 			Workspace.DestroyLamp(lamp.physicalLamp);
-		lampManager.LoadWorkplace();
+		Workspace.LoadWorkplace();
 	}
 
     public void Exit()
