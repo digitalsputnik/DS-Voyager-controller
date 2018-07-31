@@ -32,7 +32,7 @@ namespace Voyager.Lamps
 		void NetworkManager_OnAvailableLampsResponse(string response, IPAddress ip)
         {
 			ReplyUdpResponse lampData = JsonConvert.DeserializeObject<ReplyUdpResponse>(response);
-			Debug.Log("Lamp data received from " + ip);
+			Debug.Log("Lamp data received from " + ip + " - " + response);
 			UpdateOrAddLamp(lampData);
         }
 

@@ -9,15 +9,13 @@ using Voyager.Workspace;
 public class Trashcan : MonoBehaviour {
 
 	[SerializeField] Color NormalColor, DeleteColor;
-	LampManager lampManager;
-	PhysicalLamp movingLamp;
+	LampMove movingItem;
 	Image image;
 	bool readyToDelete;
 	Rect rect;
 
 	void Start()
 	{
-		lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
 		image = GetComponent<Image>();
 		image.color = NormalColor;
 		RectTransform menuCanvas = GameObject.Find("MenuCanvas").GetComponent<RectTransform>();
@@ -33,7 +31,7 @@ public class Trashcan : MonoBehaviour {
 	{
 		CheckMovingLamps();
         
-		if(movingLamp != null)
+		if(movingItem != null)
 		{
 			image.enabled = true;
 			CheckLampRemove();
@@ -44,16 +42,17 @@ public class Trashcan : MonoBehaviour {
 
 	void CheckMovingLamps()
 	{
-		foreach(Lamp lamp in lampManager.GetLampsInWorkplace())
+		foreach(WorkspaceItem item in Workspace.GetItemsInWorkspace())
 		{
-			if (lamp.physicalLamp.MovingInWorkspace)
+			LampMove move = item.GetComponent<LampMove>();
+			if (move.moving)
 			{
-				movingLamp = lamp.physicalLamp;
+				movingItem = move;
 				return;
 			}
         }
 
-		movingLamp = null;
+		movingItem = null;
 	}
 
     void CheckLampRemove()
@@ -65,7 +64,7 @@ public class Trashcan : MonoBehaviour {
 			{
 				image.color = DeleteColor;
 				if (touch.phase == TouchPhase.Ended)
-					Workspace.DestroyLamp(movingLamp);
+					Workspace.DestroyItem(movingItem.GetComponent<WorkspaceItem>());
             }
             else
             {
@@ -76,7 +75,7 @@ public class Trashcan : MonoBehaviour {
         {
 			image.color = DeleteColor;
 			if (Input.GetMouseButtonUp(0))
-				Workspace.DestroyLamp(movingLamp);
+				Workspace.DestroyItem(movingItem.GetComponent<WorkspaceItem>());
 		}
 		else
 		{

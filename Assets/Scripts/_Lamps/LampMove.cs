@@ -9,6 +9,7 @@ public class LampMove : MonoBehaviour {
 	public Transform lampGraphics;
 
 	public bool moving;
+	public bool scaling;
 
 	float lampOffsetFromHandle;
 	float lampZPos;
@@ -26,9 +27,14 @@ public class LampMove : MonoBehaviour {
 		sizeHandle1T = sizeHandle1.transform;
 		sizeHandle2T = sizeHandle2.transform;
 
+		SetupOffsets();
+	}
+
+    public void SetupOffsets()
+	{
 		lampOffsetFromHandle = Vector3.Distance(lampGraphics.position, sizeHandle1T.position);
-		lampZPos = lampGraphics.position.z;
-		scaleMultiplier = (Vector3.Distance(sizeHandle1T.position, sizeHandle2T.position) - 2 * lampOffsetFromHandle) / lampGraphics.localScale.x;
+        lampZPos = lampGraphics.position.z;
+        scaleMultiplier = (Vector3.Distance(sizeHandle1T.position, sizeHandle2T.position) - 2 * lampOffsetFromHandle) / lampGraphics.localScale.x;
 	}
 
 	void MoveOnDragStarted()
@@ -62,6 +68,7 @@ public class LampMove : MonoBehaviour {
 	void SizeOnDragStarted()
 	{
 		Camera.main.GetComponent<CameraMove>().enabled = false;
+		scaling = true;
 		sizeTouchCount++;
 	}
 
@@ -75,6 +82,7 @@ public class LampMove : MonoBehaviour {
 	{
 		sizeTouchCount--;
 		Camera.main.GetComponent<CameraMove>().enabled = false;
+		if (sizeTouchCount == 0) scaling = false;
 	}
 
     void InitializeEvents()
@@ -90,7 +98,6 @@ public class LampMove : MonoBehaviour {
         sizeHandle2.OnDragStarted += SizeOnDragStarted;
         sizeHandle2.OnDragging += SizeOnDragging;
 		sizeHandle2.OnDragEnded += SizeOnDragEnded;
-
 	}
 
     public void CalculateGraphicsPositionAndRotation()

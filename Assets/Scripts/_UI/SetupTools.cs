@@ -7,6 +7,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Voyager.Lamps;
 using Voyager.Workspace;
+using UnityEditor;
+using GracesGames.SimpleFileBrowser.Scripts;
+using System;
 
 public class SetupTools : MonoBehaviour {
 
@@ -18,6 +21,8 @@ public class SetupTools : MonoBehaviour {
 	[SerializeField] GameObject addLampsText;
 	[SerializeField] Transform addLampBtnParent;
 	[SerializeField] GameObject addAllLampsBtn;
+	[SerializeField] SavePanel savePanel;
+	[SerializeField] LoadPanel loadPanel;
 	[Space(5)]
     [SerializeField] Transform aboutWindow;
 	[Header("Updating")]
@@ -26,8 +31,11 @@ public class SetupTools : MonoBehaviour {
 	public Vector2Int lpcVersion2ft;
 	public Vector2Int lpcVersion4ft;
 	public Vector2Int chipVersion;
+    [Space(3)]
+	public string[] FileExtensions;
+	public GameObject FileBrowserPrefab;
 
-	bool oneLampChecked;
+    bool oneLampChecked;
 
 	void Start()
 	{
@@ -186,14 +194,12 @@ public class SetupTools : MonoBehaviour {
 
     public void Save()
 	{
-		Workspace.SaveWorkplace();
-	}
+		savePanel.Open();
+	}   
 
     public void Load()
 	{
-		foreach (Lamp lamp in lampManager.GetLampsInWorkplace())
-			Workspace.DestroyLamp(lamp.physicalLamp);
-		Workspace.LoadWorkplace();
+		loadPanel.Open();
 	}
 
     public void Exit()
@@ -206,5 +212,47 @@ public class SetupTools : MonoBehaviour {
 		Text versionText = aboutWindow.Find("Version Text").GetComponent<Text>();
         versionText.text = "Version " + Application.version;
 		aboutWindow.gameObject.SetActive(true);
+	}
+
+	public void OpenPhoto()
+	{
+		OpenFileBrowser(FileBrowserMode.Load);
+	}
+
+	// Open a file browser to save and load files
+    private void OpenFileBrowser(FileBrowserMode fileBrowserMode)
+    {
+        // Create the file browser and name it
+        //GameObject fileBrowserObject = Instantiate(FileBrowserPrefab, transform);
+        //fileBrowserObject.name = "Find picture";
+        // Set the mode to save or load
+		FileBrowser fileBrowserScript = GameObject.FindWithTag("File").GetComponent<FileBrowser>();
+		fileBrowserScript.SetupFileBrowser(ViewMode.Landscape);
+        if (fileBrowserMode == FileBrowserMode.Save)
+        {
+            fileBrowserScript.SaveFilePanel("DemoText", FileExtensions);
+            // Subscribe to OnFileSelect event (call SaveFileUsingPath using path) 
+            fileBrowserScript.OnFileSelect += SaveFileUsingPath;
+        }
+        else
+        {
+            fileBrowserScript.OpenFilePanel(FileExtensions);
+            // Subscribe to OnFileSelect event (call LoadFileUsingPath using path) 
+            fileBrowserScript.OnFileSelect += LoadFileUsingPath;
+        }
+    }
+
+	private void LoadFileUsingPath(string obj)
+	{
+		byte[] file = File.ReadAllBytes(obj);
+		Texture2D texture = new Texture2D(2, 2);
+		texture.LoadImage(file);
+		string photoName = Path.GetFileName(obj).Split('.')[0];
+		Workspace.InstantiateImage(texture, photoName);
+	}
+
+	private void SaveFileUsingPath(string obj)
+	{
+		throw new NotImplementedException();
 	}
 }

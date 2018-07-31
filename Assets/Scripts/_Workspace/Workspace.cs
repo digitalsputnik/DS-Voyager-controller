@@ -72,6 +72,29 @@ namespace Voyager.Workspace
 			return InstantiateItem(GetVideoStreamPrefab(), Vector3.forward * 0.7f).transform;
 		}
 
+		public static Photo InstantiateImage(Texture2D texture)
+		{
+			string photoName = (DateTime.Now.ToShortDateString() + "-" + DateTime.Now.ToLongTimeString()).Replace("/", "_").Replace(".", "_").Replace(":", "_");
+			return InstantiateImage(texture, Vector3.zero, photoName);
+		}
+
+		public static Photo InstantiateImage(Texture2D texture, string photoName)
+        {
+            return InstantiateImage(texture, Vector3.zero, photoName);
+        }
+
+		public static Photo InstantiateImage(Texture2D texture, Vector3 position, string photoName)
+		{
+			GameObject gameObject = InstantiateItem(GetImagePrefab(), position + Vector3.forward * 0.7f);
+            MeshRenderer renderer = gameObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>();
+            renderer.material = new Material(Shader.Find("Unlit/Texture"));
+            renderer.material.mainTexture = texture;
+			Photo photo = gameObject.GetComponent<Photo>();
+			photo.photoName = photoName;
+			photo.texture = renderer.material.mainTexture as Texture2D;
+			return photo;
+		}
+
 		static GameObject InstantiateItem(GameObject prefab, Vector3 position, WorkspaceItem parent = null)
         {
             GameObject item = Instantiate(prefab, position, Quaternion.identity, instance.transform);
@@ -81,6 +104,9 @@ namespace Voyager.Workspace
 
 		public static void DestroyItem(WorkspaceItem item)
         {
+			foreach(WorkspaceItem wi in item.children)
+				DestroyItem(wi);
+
             if (item.Type == WorkspaceItem.WorkspaceItemType.Lamp)
                 item.GetComponent<PhysicalLamp>().Owner.physicalLamp = null;
 
@@ -95,6 +121,12 @@ namespace Voyager.Workspace
             Destroy(physicalLamp.gameObject);
         }
 
+        public static void Clear()
+		{
+			while(instance.ItemsInWorkspace.Count != 0)
+				DestroyItem(instance.ItemsInWorkspace[0]);
+		}
+
         public static bool ContainsVideoStream()
 		{
 			foreach (WorkspaceItem item in instance.ItemsInWorkspace)
@@ -107,6 +139,19 @@ namespace Voyager.Workspace
 		{
 			foreach (WorkspaceItem item in instance.ItemsInWorkspace)
 				if (item.Type == WorkspaceItem.WorkspaceItemType.Video) return item.transform;
+
+            return null;
+		}
+
+		public static List<WorkspaceItem> GetItemsInWorkspace()
+        {
+			return instance.ItemsInWorkspace;
+        }
+
+		static GameObject GetImagePrefab()
+		{
+			foreach (GameObject item in instance.SpawnableItems)
+				if (item.GetComponent<WorkspaceItem>().Type == WorkspaceItem.WorkspaceItemType.Image) return item;
 
             return null;
 		}
@@ -138,22 +183,49 @@ namespace Voyager.Workspace
             return null;
 		}
 
+		public static Transform GetWorkspaceTransform()
+		{
+			return instance.transform;
+		}
+
 		public static void SaveWorkplace()
         {
-            string filename = "/workplace_" + SceneManager.GetActiveScene().name + ".dat";
+            string filename = SceneManager.GetActiveScene().name;
             SaveWorkplace(filename);
         }
 
 		public static void SaveWorkplace(string filename)
         {
+			if (!Directory.Exists(Application.persistentDataPath + "/images"))
+				Directory.CreateDirectory(Application.persistentDataPath + "/images");
+			if (!Directory.Exists(Application.persistentDataPath + "/workspaces"))
+				Directory.CreateDirectory(Application.persistentDataPath + "/workspaces");
+
             BinaryFormatter bf = new BinaryFormatter();
 
-			List<Lamp> lampsInWorkplace = new List<Lamp>();
-			foreach (WorkspaceItem item in instance.ItemsInWorkspace) 
+			LampSaveData[] lampSaveData = GenerateLampsSaveData();
+			ImageSaveData[] imageSaveData = GenerateImagesSaveData();
+
+			WorkplaceData data = new WorkplaceData()
 			{
-				if (item.Type == WorkspaceItem.WorkspaceItemType.Lamp)
-					lampsInWorkplace.Add(item.GetComponent<PhysicalLamp>().Owner);
-			}
+				lamps = lampSaveData,
+				images = imageSaveData
+			};
+
+			FileStream file = File.Create(Application.persistentDataPath + "/workspaces/" + filename + ".dsw");
+            bf.Serialize(file, data);
+            file.Close();
+            file.Dispose();
+        }
+
+		static LampSaveData[] GenerateLampsSaveData()
+		{
+			List<Lamp> lampsInWorkplace = new List<Lamp>();
+            foreach (WorkspaceItem item in instance.ItemsInWorkspace)
+            {
+                if (item.Type == WorkspaceItem.WorkspaceItemType.Lamp)
+                    lampsInWorkplace.Add(item.GetComponent<PhysicalLamp>().Owner);
+            }
 
             LampSaveData[] lampSaveData = new LampSaveData[lampsInWorkplace.Count];
 
@@ -178,60 +250,146 @@ namespace Voyager.Workspace
                 lampSaveData[i] = lampData;
             }
 
-            WorkplaceData data = new WorkplaceData() { lamps = lampSaveData };
+			return lampSaveData;
+		}
 
-            FileStream file = File.Create(Application.persistentDataPath + filename);
-            bf.Serialize(file, data);
-            file.Close();
-            file.Dispose();
-        }
+		static ImageSaveData[] GenerateImagesSaveData()
+		{
+			List<Photo> photosInWorkspace = new List<Photo>();
+            foreach (WorkspaceItem item in instance.ItemsInWorkspace)
+            {
+				if (item.Type == WorkspaceItem.WorkspaceItemType.Image)
+					photosInWorkspace.Add(item.GetComponent<Photo>());
+            }
+
+			ImageSaveData[] imageSaveData = new ImageSaveData[photosInWorkspace.Count];
+
+			for (int i = 0; i < photosInWorkspace.Count; i++)
+			{
+				Photo photo = photosInWorkspace[i];
+				string path = Application.persistentDataPath + "/images/" + photo.photoName + ".png";
+				LampMove move = photo.GetComponent<LampMove>();
+				Vector3 handle1 = move.sizeHandle1.transform.position;
+				Vector3 handle2 = move.sizeHandle2.transform.position;
+
+				WorkspaceItem item = photo.GetComponent<WorkspaceItem>();
+				string[] serials = new string[item.children.Count];
+				for (int wi = 0; wi < item.children.Count; wi++)
+				{
+					Lamp child = item.children[wi].GetComponent<PhysicalLamp>().Owner;
+					serials[wi] = child.Serial;
+				}
+
+				if (!File.Exists(path))
+				{
+					FileStream createFile = new FileStream(path, FileMode.Create);
+					createFile.Dispose();
+				}
+
+				byte[] pngData = photo.texture.EncodeToPNG();
+				File.WriteAllBytes(path, pngData);
+                Debug.Log(path);
+
+				ImageSaveData imageData = new ImageSaveData
+				{
+					filepath = path,
+					handle1 = new SerVector3(handle1),
+					handle2 = new SerVector3(handle2),
+					childrenSerials = serials
+				};
+
+				imageSaveData[i] = imageData;
+			}
+
+			return imageSaveData;
+		}
 
 		public static void LoadWorkplace()
         {
-            string filename = "/workplace_" + SceneManager.GetActiveScene().name + ".dat";
+            string filename = SceneManager.GetActiveScene().name;
             LoadWorkplace(filename);
         }
 
 		public static void LoadWorkplace(string filename)
         {
-            if (File.Exists(Application.persistentDataPath + filename))
+			if (File.Exists(Application.persistentDataPath + "/workspaces/" + filename + ".dsw"))
             {
                 BinaryFormatter bf = new BinaryFormatter();
-                FileStream file = File.Open(Application.persistentDataPath + filename, FileMode.Open);
+				FileStream file = File.Open(Application.persistentDataPath + "/workspaces/" + filename + ".dsw", FileMode.Open);
                 WorkplaceData data = (WorkplaceData)bf.Deserialize(file);
                 file.Close();
                 file.Dispose();
-
-                LampSaveData[] lampDataArray = data.lamps;
-                List<Lamp> returnLamps = new List<Lamp>();
-
-				LampManager lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
-
-                foreach (LampSaveData lampData in lampDataArray)
-                {
-                    Lamp lamp = null;
-					if (lampManager.LampExists(lampData.serial))
-                    {
-						lamp = lampManager.GetLamp(lampData.serial);
-
-						if (lampManager.LampExistsInWorkplace(lamp.Serial))
-                            DestroyLamp(lamp.physicalLamp);
-                    }
-                    else
-                    {
-                        lamp = new Lamp();
-                        lamp.Setup(lampData.serial, lampData.ip, (LampType)lampData.type, lampData.lenght, lampData.colordata);
-						lampManager.GetLamps().Add(lamp);
-                    }
-                    InstantiateLamp(lamp, lampData.handle1.ToVector3(), lampData.handle2.ToVector3());
-                }
+                
+				LoadLamps(data.lamps);
+				LoadImages(data.images);
             }
         }
+
+		static void LoadLamps(LampSaveData[] lampDataArray)
+		{         
+            LampManager lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+
+            foreach (LampSaveData lampData in lampDataArray)
+            {
+                Lamp lamp = null;
+                if (lampManager.LampExists(lampData.serial))
+                {
+                    lamp = lampManager.GetLamp(lampData.serial);
+
+                    if (lampManager.LampExistsInWorkplace(lamp.Serial))
+                        DestroyLamp(lamp.physicalLamp);
+                }
+                else
+                {
+                    lamp = new Lamp();
+                    lamp.Setup(lampData.serial, lampData.ip, (LampType)lampData.type, lampData.lenght, lampData.colordata);
+                    lampManager.GetLamps().Add(lamp);
+                }
+                InstantiateLamp(lamp, lampData.handle1.ToVector3(), lampData.handle2.ToVector3());
+            }
+		}
+
+		static void LoadImages(ImageSaveData[] imageDataArray)
+		{
+			LampManager lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+
+			foreach(ImageSaveData imageData in imageDataArray)
+			{
+				if (File.Exists(imageData.filepath))
+				{
+					byte[] file = File.ReadAllBytes(imageData.filepath);
+					Texture2D texture = new Texture2D(2, 2);
+					texture.LoadImage(file);
+					string photoName = Path.GetFileName(imageData.filepath).Split('.')[0];
+					LampMove move = InstantiateImage(texture, photoName).GetComponent<LampMove>();
+					move.SetPosition(imageData.handle1.ToVector3(), imageData.handle2.ToVector3());
+
+					WorkspaceItem item = move.GetComponent<WorkspaceItem>();
+
+					foreach (string ssid in imageData.childrenSerials)
+						lampManager.GetLamp(ssid).physicalLamp.GetComponent<WorkspaceItem>().SetParent(item);
+				}
+				else
+				{
+					Debug.LogError("Saved image not found! " + imageData.filepath);
+                }
+			}
+		}
 
 		[Serializable]
         public struct WorkplaceData
         {
             public LampSaveData[] lamps;
+			public ImageSaveData[] images;
         }
+
+		[Serializable]
+		public struct ImageSaveData
+		{
+			public string filepath;
+			public SerVector3 handle1;
+			public SerVector3 handle2;
+			public string[] childrenSerials;
+		}
 	}
 }
