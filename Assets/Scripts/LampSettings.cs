@@ -13,7 +13,6 @@ using Voyager.Networking;
 
 public class LampSettings : MonoBehaviour {
 
-	public SetupScripts setupScripts;
 	[Header("UI Settings")]
 	[SerializeField] Color lampSelectedColor;
 	[SerializeField] Color lampNormalColor;
@@ -27,11 +26,13 @@ public class LampSettings : MonoBehaviour {
 	public InputField clientModeFieldSsid;
 	public Toggle     clientModeDropToggle;
 	public Dropdown   clientModeDropSsid;
+	public GameObject clientModeDropLoading;
 	public InputField clientModePassword;
 
 	[Space(3)]
 	public GameObject apModeBtn;
 	public GameObject apModePanel;
+	public GameObject apModePanelMultiple;
 	public InputField apModeSsid;
 	public InputField apModePassword;
     [Header("When Leaving The Menu")]
@@ -133,6 +134,10 @@ public class LampSettings : MonoBehaviour {
 		SelectionState selectionState = GetSelectionState();
 		selectionStateText.text = GetSelectionStateMessage(selectionState);
 
+		clientModePanel.SetActive(false);
+		apModePanel.SetActive(false);
+		apModePanelMultiple.SetActive(false);
+
 		if(selectionState == SelectionState.None)
 		{
 			clientModeBtn.SetActive(false);
@@ -215,10 +220,19 @@ public class LampSettings : MonoBehaviour {
             clientModeDropSsid.ClearOptions();
             clientModeDropSsid.AddOptions(CreateSsidList());
 
+			if(clientModeDropSsid.options.Count == 0)
+			{
+				clientModeDropSsid.interactable = false;
+				clientModeDropToggle.interactable = false;
+				clientModeDropLoading.SetActive(true);
+			}
+
+			foreach (PhysicalLamp pLamp in selectedLamps)
+				StartCoroutine(GetSSIDListForLamp(pLamp));
+
             clientModePanel.SetActive(true);
 
 			apModeBtn.SetActive(false);
-			apModePanel.SetActive(false);
 		}
 		else
 		{
@@ -251,7 +265,20 @@ public class LampSettings : MonoBehaviour {
 		{
 			apModeSsid.text = "";
 			apModePassword.text = "";
-			//StartCoroutine(SendApModeToSelectedLamps());
+
+			bool opening = !apModePanelMultiple.activeSelf;
+
+            if (opening)
+            {
+				apModePanelMultiple.SetActive(true);
+                clientModeBtn.SetActive(false);
+                clientModePanel.SetActive(false);
+            }
+            else
+            {
+				apModePanelMultiple.SetActive(false);
+                clientModeBtn.SetActive(true);
+            }
 		}
         else
 		{
@@ -311,39 +338,6 @@ public class LampSettings : MonoBehaviour {
 
         return ssids;
 	}
-    
-	//byte[] CreateApModeJsonPackage(LampInfoUpdate lamp)
-	//{
-	//	ApModePackage package = new ApModePackage()
-	//	{
-	//		set_channel = lamp.fullLastResponse.active_channel,
-	//		set_ssid = (apModeSsid.text == "") ? lamp.fullLastResponse.active_ssid : apModeSsid.text,
-	//		set_password = (apModePassword.text == "") ? lamp.fullLastResponse.active_password : apModePassword.text
-	//	};
-    //
-	//	return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(package));
-	//}
-    //
-	//IEnumerator SendApModeToSelectedLamps()
-   // {
-   //     SendingDataStarted();
-   //     Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-   //     int port = 30000;
-   //     Dictionary<IPEndPoint, byte[]> endPoints = new Dictionary<IPEndPoint, byte[]>();
-    //
-   //     foreach (LampInfoUpdate info in lampInfo.Values)
-			//endPoints.Add(new IPEndPoint(setupScripts.LampMactoIPDictionary[info.mac], port), CreateApModeJsonPackage(info));
-    //
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        foreach (IPEndPoint endPoint in endPoints.Keys)
-    //            sock.SendTo(endPoints[endPoint], endPoint);
-    //        yield return new WaitForSeconds(0.2f);
-    //    }
-    //
-    //    SendingDataEnded();
-    //    yield return null;
-    //}
 
 	IEnumerator GetSSIDListForLamp(PhysicalLamp lamp)
     {
@@ -381,8 +375,13 @@ public class LampSettings : MonoBehaviour {
             }
             yield return null;
         }
-        clientModeDropSsid.ClearOptions();
-        clientModeDropSsid.AddOptions(CreateSsidList());
+		clientModeDropSsid.ClearOptions();
+		clientModeDropSsid.AddOptions(CreateSsidList());
+
+        clientModeDropSsid.interactable = true;
+        clientModeDropToggle.interactable = true;
+        clientModeDropLoading.SetActive(false);
+
         yield return null;
     }
 
