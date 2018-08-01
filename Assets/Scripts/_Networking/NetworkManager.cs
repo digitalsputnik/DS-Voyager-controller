@@ -244,6 +244,12 @@ namespace Voyager.Networking
 			for (int i = 0; i < times; i++)
 				client.Send(message, message.Length, endPoint);
 		}
+
+		public void SendMessage(IPAddress ip, byte[] message)
+		{
+			IPEndPoint endPoint = new IPEndPoint (ip, 30000);
+			instance.sendingClient.Send (message, message.Length, endPoint);
+		}
     }
 
 	[Serializable]

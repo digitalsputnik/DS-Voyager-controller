@@ -173,9 +173,9 @@ namespace Voyager.Lamps
 	[Serializable]
 	public struct SerVector3
 	{
-		public float x { get; set; }
-		public float y { get; set; }
-		public float z { get; set; }
+		public float x;
+		public float y;
+		public float z;
 
 		public SerVector3(float x, float y, float z)
 		{
@@ -186,9 +186,9 @@ namespace Voyager.Lamps
 
 		public SerVector3(Vector3 vector)
 		{
-			x = vector.x;
-			y = vector.y;
-			z = vector.z;
+			this.x = vector.x;
+			this.y = vector.y;
+			this.z = vector.z;
 		}
 
 		public Vector3 ToVector3()
