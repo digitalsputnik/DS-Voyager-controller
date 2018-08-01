@@ -62,7 +62,6 @@ public class VideoStream : MonoBehaviour {
 	void Start() {
 		physicalLamp = GetComponent<PhysicalLamp>();
 		ribbon = GetComponent<Ribbon>();
-		SetupVideoStream(transform);
 		//drawScripts = drawTools.GetComponent<DrawScripts>();
 		//NOTE: Quick hack because switching all the references is too much work at this point
     }
@@ -71,10 +70,10 @@ public class VideoStream : MonoBehaviour {
 	{
 		drawScripts = GameObject.Find("MenuBackground").GetComponent<MenuMode>().drawTools.GetComponent<DrawScripts>();
         animSender = GameObject.Find("AnimationControl").GetComponent<AnimationSender>();
-
-        minXY = videoStream.GetChild(0).gameObject;
-        maxX = videoStream.GetChild(1).gameObject;
-        maxY = videoStream.GetChild(2).gameObject;
+		Transform videoStreamCon = videoStream.GetChild(0).GetChild(0);
+		minXY = videoStreamCon.GetChild(0).gameObject;
+		maxX = videoStreamCon.GetChild(1).gameObject;
+		maxY = videoStreamCon.GetChild(2).gameObject;
 
         StartCoroutine(CheckForVideo());
 
@@ -108,6 +107,9 @@ public class VideoStream : MonoBehaviour {
 
     void OnWorkplaceObjectMoved()
 	{
+		if (drawScripts == null || minXY == null)
+			return;
+		
 		if (drawScripts.videoTexture != null)
         {
 			var numPixelsToDraw = ribbon.pipeLength;
@@ -208,6 +210,12 @@ public class VideoStream : MonoBehaviour {
      // Update is called once per frame
     void Update()
     {
+		if(minXY == null || maxX == null || maxY == null)
+		{
+			if (Workspace.GetVideoSteam() != null)
+                SetupVideoStream(Workspace.GetVideoSteam());
+		}
+
 		if(animSender != null)
         {
 			if (animSender.ActiveStroke.Animation != "Video Stream")
