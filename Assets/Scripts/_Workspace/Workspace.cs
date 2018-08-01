@@ -90,8 +90,7 @@ namespace Voyager.Workspace
             renderer.material = new Material(Shader.Find("Unlit/Texture"));
             renderer.material.mainTexture = texture;
 			Photo photo = gameObject.GetComponent<Photo>();
-			photo.photoName = photoName;
-			photo.texture = renderer.material.mainTexture as Texture2D;
+			photo.Setup(renderer.material.mainTexture as Texture2D, photoName);
 			return photo;
 		}
 

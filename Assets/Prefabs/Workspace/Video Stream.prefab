@@ -462,6 +462,7 @@ MonoBehaviour:
   sizeHandle2: {fileID: 114176632036696352}
   lampGraphics: {fileID: 4639075822396472}
   moving: 0
+  scaling: 0
 --- !u!114 &114468699501330132
 MonoBehaviour:
   m_ObjectHideFlags: 1

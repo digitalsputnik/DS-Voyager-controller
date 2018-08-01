@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Voyager.Lamps;
 using Voyager.Workspace;
-using UnityEditor;
 using GracesGames.SimpleFileBrowser.Scripts;
 using System;
+using Kakera;
 
 public class SetupTools : MonoBehaviour {
 
@@ -23,6 +23,7 @@ public class SetupTools : MonoBehaviour {
 	[SerializeField] GameObject addAllLampsBtn;
 	[SerializeField] SavePanel savePanel;
 	[SerializeField] LoadPanel loadPanel;
+	[SerializeField] Unimgpicker mobileImagePicker;
 	[Space(5)]
     [SerializeField] Transform aboutWindow;
 	[Header("Updating")]
@@ -36,6 +37,11 @@ public class SetupTools : MonoBehaviour {
 	public GameObject FileBrowserPrefab;
 
     bool oneLampChecked;
+
+	void Awake()
+	{
+		mobileImagePicker.Completed += MobileImagePicker_Completed;
+	}
 
 	void Start()
 	{
@@ -216,11 +222,14 @@ public class SetupTools : MonoBehaviour {
 
 	public void OpenPhoto()
 	{
-		OpenFileBrowser(FileBrowserMode.Load);
+		if (!Application.isMobilePlatform)
+			OpenFileBrowser(FileBrowserMode.Load);
+		else
+			mobileImagePicker.Show("Select Image", DateTime.Now.ToShortDateString().Replace("/", "-") + "_" + DateTime.Now.ToShortTimeString().Replace(":", "-"), 2048);
 	}
 
 	// Open a file browser to save and load files
-    private void OpenFileBrowser(FileBrowserMode fileBrowserMode)
+    void OpenFileBrowser(FileBrowserMode fileBrowserMode)
     {
         // Create the file browser and name it
         //GameObject fileBrowserObject = Instantiate(FileBrowserPrefab, transform);
@@ -228,31 +237,25 @@ public class SetupTools : MonoBehaviour {
         // Set the mode to save or load
 		FileBrowser fileBrowserScript = GameObject.FindWithTag("File").GetComponent<FileBrowser>();
 		fileBrowserScript.SetupFileBrowser(ViewMode.Landscape);
-        if (fileBrowserMode == FileBrowserMode.Save)
+		if (fileBrowserMode == FileBrowserMode.Load)
         {
-            fileBrowserScript.SaveFilePanel("DemoText", FileExtensions);
-            // Subscribe to OnFileSelect event (call SaveFileUsingPath using path) 
-            fileBrowserScript.OnFileSelect += SaveFileUsingPath;
-        }
-        else
-        {
-            fileBrowserScript.OpenFilePanel(FileExtensions);
+			fileBrowserScript.OpenFilePanel(FileExtensions);
             // Subscribe to OnFileSelect event (call LoadFileUsingPath using path) 
             fileBrowserScript.OnFileSelect += LoadFileUsingPath;
         }
     }
 
-	private void LoadFileUsingPath(string obj)
+	void MobileImagePicker_Completed(string path)
+	{
+		LoadFileUsingPath(path);
+	}
+
+	void LoadFileUsingPath(string obj)
 	{
 		byte[] file = File.ReadAllBytes(obj);
 		Texture2D texture = new Texture2D(2, 2);
 		texture.LoadImage(file);
 		string photoName = Path.GetFileName(obj).Split('.')[0];
 		Workspace.InstantiateImage(texture, photoName);
-	}
-
-	private void SaveFileUsingPath(string obj)
-	{
-		throw new NotImplementedException();
 	}
 }
