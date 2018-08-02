@@ -109,7 +109,7 @@ public class SetupTools : MonoBehaviour {
 
 			foreach(Lamp lamp in uncheckedLamps)
 			{
-				if(lampManager.LampExists(lamp.Serial))
+				if(lamp.animationVersion != null)
 				{
 					bool update = false;
 					Vector2Int lpcVersion = (lamp.Lenght > 50) ? lpcVersion4ft : lpcVersion2ft;

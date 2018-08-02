@@ -270,6 +270,8 @@ public class LampSettings : MonoBehaviour {
 
             if (opening)
             {
+				apModeSsid.text = "";
+				apModePassword.text = "";
 				apModePanelMultiple.SetActive(true);
                 clientModeBtn.SetActive(false);
                 clientModePanel.SetActive(false);

@@ -43,7 +43,7 @@ public class LampDetectionCam : MonoBehaviour
 
 	Vector3 WorldPointCorner1;
 	Vector3 WorldPointCorner2;
-	float worldPointWidth;
+	public float worldPointWidth;
 	float worldPointHeight;
 
 	void Start()
