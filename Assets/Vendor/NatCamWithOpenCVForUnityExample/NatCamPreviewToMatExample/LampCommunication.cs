@@ -306,10 +306,7 @@ public class LampCommunication: MonoBehaviour {
 
         while (true)
         {
-            udpDTO.client.Send(udpDTO.data, udpDTO.length, udpDTO.endpoint);
-
-            animsender.SetDetectionMode(true, udpDTO.endpoint.Address);
-
+            udpDTO.client.Send(udpDTO.data, udpDTO.length, udpDTO.endpoint);         
             yield return new WaitForSeconds(.1f);
         }
     }

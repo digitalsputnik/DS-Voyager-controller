@@ -16,6 +16,7 @@ public class LampDetectionCam : MonoBehaviour
 	[SerializeField] RawImage preview;
 	[SerializeField] LampManager lampManager;
 	[SerializeField] NetworkManager networkManager;
+	[SerializeField] float SetDetectionInterval = 0.5f;
 
     int camIndex;
 
@@ -40,6 +41,11 @@ public class LampDetectionCam : MonoBehaviour
 	public List<List<MatOfPoint>> ColorContourCollection;
 	public Dictionary<MatOfPoint, List<Vector2>> ContourColorPointDictionary;
 
+	Vector3 WorldPointCorner1;
+	Vector3 WorldPointCorner2;
+	float worldPointWidth;
+	float worldPointHeight;
+
 	void Start()
 	{   
 		InitializeColorLimits ();
@@ -51,6 +57,9 @@ public class LampDetectionCam : MonoBehaviour
 		NatCam.Play();
 
 		preview.texture = NatCam.Preview;
+		InvokeRepeating("SetDetectionModes", 2.0f, SetDetectionInterval);
+
+		SetupWorldPoints();
 	}
 
 	void Update()
@@ -60,6 +69,30 @@ public class LampDetectionCam : MonoBehaviour
 
 		if (updateCam && NatCam.IsPlaying)
 			CamUpdate();
+	}
+
+    void SetupWorldPoints()
+	{
+		Ray ray;
+        Plane hPlane = new Plane(Vector3.back, Vector3.zero);
+        float distance = 0;
+
+        ray = Camera.main.ScreenPointToRay(new Vector3(0.0f, 0.0f, 0.0f));
+        if (hPlane.Raycast(ray, out distance))
+            WorldPointCorner1 = ray.GetPoint(distance);
+
+        ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width, Screen.height, 0.0f));
+        if (hPlane.Raycast(ray, out distance))
+            WorldPointCorner2 = ray.GetPoint(distance);
+
+		worldPointWidth = WorldPointCorner2.x - WorldPointCorner1.x;
+		worldPointHeight = WorldPointCorner2.y - WorldPointCorner1.y;
+	}
+
+    void SetDetectionModes()
+	{
+		foreach (Lamp lamp in lampManager.GetLamps())
+			NetworkManager.SetDetectionMode(lamp.IP, true);
 	}
 
 	void NatCam_OnStart()
@@ -156,7 +189,6 @@ public class LampDetectionCam : MonoBehaviour
 	void DetectLamps()
 	{
 		List<DetectionLampData> detectionLamps = LampImageToLampData();
-
 		foreach (DetectionLampData data in detectionLamps)
 		{
 			Lamp lamp = lampManager.GetLamp(data.Serial);
@@ -404,11 +436,11 @@ public class LampDetectionCam : MonoBehaviour
 			//Get start and end points
 			var points = functionValueToPointsDictionary[min[k].value];
 
-			detectionLamps.Add (new DetectionLampData (){
+			detectionLamps.Add (new DetectionLampData {
 				Serial = LampSerialsForDetection[min[k].i],
 				lampPoint1 = TransformPoint(points[0]),
 				lampPoint2 = TransformPoint(points[1])
-			});
+			});         
 		}
 
 		/*
@@ -427,7 +459,6 @@ public class LampDetectionCam : MonoBehaviour
 
 		return detectionLamps;
 	}
-
 
 	void CreateColorContourCentres (List<MatOfPoint> Contours)
 	{
@@ -479,18 +510,23 @@ public class LampDetectionCam : MonoBehaviour
 	/// </summary>
 	/// <returns>Transformed point.</returns>
 	/// <param name="point">Initial point.</param>
-	private static Vector2 TransformPoint(Vector2 point)
+	Vector3 TransformPoint(Vector2 point)
 	{
-		var ScreenDimensions = NatCam.Camera.PreviewResolution;
-		var transformedPoint = point;
-		transformedPoint.x = Mathf.Max(Mathf.Min(transformedPoint.x, ScreenDimensions.width), 0f);
-		transformedPoint.y = Mathf.Max(Mathf.Min(transformedPoint.y, ScreenDimensions.height), 0f);
-		transformedPoint.x = transformedPoint.x / ScreenDimensions.width;
-		transformedPoint.y = (ScreenDimensions.height - transformedPoint.y) / ScreenDimensions.height;
+		CameraResolution imageDimentions = NatCam.Camera.PreviewResolution;
+        Vector3 transformedPoint = new Vector3(point.x, point.y, 0.0f);
+
+		transformedPoint.x = Mathf.Max(Mathf.Min(transformedPoint.x, imageDimentions.width), 0f);
+		transformedPoint.y = Mathf.Max(Mathf.Min(transformedPoint.y, imageDimentions.height), 0f);
+		transformedPoint.x = transformedPoint.x / imageDimentions.width;
+		transformedPoint.y = (imageDimentions.height - transformedPoint.y) / imageDimentions.height;
+
+		transformedPoint.x = WorldPointCorner1.x + (transformedPoint.x * worldPointWidth);
+		transformedPoint.y = WorldPointCorner1.y + (transformedPoint.y * worldPointHeight);
+
 		return transformedPoint;
 	}
-
-#region Image Manipulation routines
+       
+	#region Image Manipulation routines
 	/// <summary>
 	/// Performs morphological operations on image to make it discoverable
 	/// </summary>
@@ -533,8 +569,6 @@ public class LampDetectionCam : MonoBehaviour
 	}
 
 }
-
-
 
 public struct DetectionLampData
 {

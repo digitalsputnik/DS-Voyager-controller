@@ -13,18 +13,6 @@ using Voyager.Lamps;
 using Voyager.Networking;
 
 [Serializable]
-public class DetectionModeDTO
-{
-    public bool DetectionMode;
-}
-
-[Serializable]
-public class RegisterDeviceDTO
-{
-    public bool RegisterDevice;
-}
-
-[Serializable]
 public class LayerPollDTO
 {
     public bool PollLayers;
@@ -484,7 +472,7 @@ public class AnimationSender : MonoBehaviour
 
 	void NetworkManager_OnLampSceneResponse(string response, IPAddress ip)
     {
-		Debug.Log(response);
+		//Debug.Log(response);
         Scene newScene = JsonConvert.DeserializeObject<Scene>(response);
 		MergeScenes(newScene);
     }
@@ -759,22 +747,6 @@ public class AnimationSender : MonoBehaviour
         ActiveStroke = AddedStroke;
     }
 
-    public void SetDetectionMode(bool detectionMode, IPAddress IP)
-    {
-        if (IP != IPAddress.None)
-        {
-            SendJSONToLamp(new DetectionModeDTO() { DetectionMode = detectionMode }, new IPEndPoint(IP, 30001));
-        }
-    }
-
-    public void RegisterControllerToDevice(bool register, IPAddress IP)
-    {
-        if (IP != IPAddress.None)
-        {
-            SendJSONToLamp(new RegisterDeviceDTO() { RegisterDevice = register }, new IPEndPoint(IP, 30001));
-        }
-    }
-
     public void SendAnimationWithUpdate(Anim currentAnimation = null)
     {
         ActiveStroke.AddLatestTimestamp();
@@ -1014,7 +986,6 @@ public class AnimationSender : MonoBehaviour
     {
         //TODO: Generalize so it isn't lamp dependent.
         StartCoroutine(PollLayersFromLamp(LampMac));
-        StartCoroutine(SetDetectionFalse(LampMac));
     }
 
     byte[] SendJSONToLamp(object messageObject, IPEndPoint lampEndPoint)
@@ -1057,42 +1028,7 @@ public class AnimationSender : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
     }
-
-    IEnumerator SetDetectionFalse(string lampMac)
-    {
-		Lamp lamp = lampManager.GetLamp(lampMac);
-
-        while (true)
-        {
-			if (lamp == null)
-            {
-                yield return new WaitForSeconds(1f);
-                continue;
-            }
-
-			SetDetectionMode(false, lamp.IP);
-            yield return new WaitForSeconds(2.44f);
-        }
-    }
-
-    IEnumerator RegisterDevice(string lampMac)
-    {
-		//while (true)
-		//{
-		//    if (setupScripts.LampMactoIPDictionary == null)
-		//    {
-		//        yield return new WaitForSeconds(1f);
-		//        continue;
-		//    }
-
-		//    //Register constantly!
-		//    RegisterControllerToDevice(true, setupScripts.LampMactoIPDictionary[lampMac]);
-		//    yield return new WaitForSeconds(1.33f);
-		//}
-
-		yield return null;
-    }
-
+       
     IEnumerator SendVideoStream()
     {
         //Dictionary<string, Dictionary<int, int[]>> jsonDict = new Dictionary<string, Dictionary<int, int[]>>();

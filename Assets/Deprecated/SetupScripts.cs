@@ -107,10 +107,7 @@ public class SetupScripts : MonoBehaviour {
 
         var detectedLamps = GameObject.Find("DetectedLampProperties").GetComponent<DetectedLampProperties>().DetectedLamps;
 
-        RemoveDetectedLampsFromPool(detectedLamps);
-
-        SetDetectionMode(false);
-
+        RemoveDetectedLampsFromPool(detectedLamps);      
         //StartCoroutine("GetAvailableLamp");
 
         //GameObject.Find("DetectedLampProperties").GetComponent<DetectedLampProperties>().LampIPtoLengthDictionary = LampMactoLengthDictionary;
@@ -523,43 +520,6 @@ public class SetupScripts : MonoBehaviour {
 //        System.Diagnostics.Process.GetCurrentProcess().Kill();
 //#endif
         Application.Quit();
-    }
-
-    public void OnDetectionModeClick()
-    {
-        //LampIPtoLengthDictionary.Add(IPAddress.Parse("172.20.0.1"), 1);
-        //Send calibration colors
-        //LampCommunication lampComm = new LampCommunication();
-        //lampComm.SetupPermutations();
-        //lampComm.LampIPtoLengthDictionary = LampIPtoLengthDictionary;
-        //lampComm.permutationCounter = 0;
-        //lampComm.SendPermutationsToNewLamps(LampIPtoLengthDictionary);
-
-        //GetAvailableLamps();
-
-        if (!CancelDetection)
-        {
-            SetDetectionMode(true);
-
-            SceneManager.LoadScene("VisionCam");
-        }
-        else
-        {
-            CancelDetection = false;
-        }
-    }
-
-    private void SetDetectionMode(bool detectionMode)
-    {
-        foreach (var MacToLength in LampMactoLengthDictionary)
-        {
-            for (int i = 0; i < 5; i++)
-            {
-				animSender.SetDetectionMode(detectionMode, LampMactoIPDictionary[MacToLength.Key]);
-                Thread.Sleep(10);
-            }
-            
-        }
     }
 
 	public void TaskOnAboutClick()

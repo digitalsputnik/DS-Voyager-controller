@@ -239,6 +239,20 @@ namespace Voyager.Networking
 			instance.sendingClient.Send(message, message.Length, sendingEndpoint);
 		}
 
+		public static void SetDetectionMode(IPAddress ip, bool detection)
+		{
+			SetDetectionMode(ip, detection, 1);
+		}
+
+		public static void SetDetectionMode(IPAddress ip, bool detection, int pollTimes)
+        {
+			IPEndPoint sendingEndpoint = new IPEndPoint(ip, 30001);
+			DetectionModePackage package = new DetectionModePackage { DetectionMode = detection };
+            string jsonData = JsonConvert.SerializeObject(package);
+            byte[] message = Encoding.UTF8.GetBytes(jsonData);
+			PollMessage(pollTimes, message, sendingEndpoint, instance.client30001);
+        }
+
 		public static void PollMessage(int times, byte[] message, IPEndPoint endPoint, UdpClient client)
 		{
 			for (int i = 0; i < times; i++)
@@ -281,6 +295,12 @@ namespace Voyager.Networking
 	{
         public bool PollLayers;
     }
+
+	[Serializable]
+    public struct DetectionModePackage
+	{
+		public bool DetectionMode;
+	}
 
 	[Serializable]
 	public struct RegisterDevicePackage

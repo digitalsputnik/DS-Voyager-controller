@@ -18,6 +18,8 @@ namespace Voyager.Lamps
 		[SerializeField] float LampsLookInterval = 0.2f;
 		[SerializeField] float RegisterDeviceInterval = 0.1f;
 		[SerializeField] float LampTimeoutTime = 10.0f;
+		[Space(3)]
+		[SerializeField] bool Debugging;
 
 		void Start()
 		{
@@ -32,13 +34,13 @@ namespace Voyager.Lamps
 		void NetworkManager_OnAvailableLampsResponse(string response, IPAddress ip)
         {
 			ReplyUdpResponse lampData = JsonConvert.DeserializeObject<ReplyUdpResponse>(response);
-			Debug.Log("Lamp data received from " + ip + " - " + response);
+			if(Debugging) Debug.Log("Lamp data received from " + ip + " - " + response);
 			UpdateOrAddLamp(lampData);
         }
 
 		void NetworkManager_OnLampColorResponse(byte[] data, IPAddress ip)
         {
-			Debug.Log("Lamp colors received from " + ip);
+			if(Debugging) Debug.Log("Lamp colors received from " + ip);
             UpdateLampColors(data, ip);
         }
 

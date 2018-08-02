@@ -10,6 +10,7 @@ using Voyager.Workspace;
 using GracesGames.SimpleFileBrowser.Scripts;
 using System;
 using Kakera;
+using Voyager.Networking;
 
 public class SetupTools : MonoBehaviour {
 
@@ -56,15 +57,9 @@ public class SetupTools : MonoBehaviour {
 
 		addAllLampsBtn.GetComponent<Button>().onClick.AddListener(AddAllLampsBtnClick);
 
-        if(PlayerPrefs.GetInt("ComingFromDetectionScene") != 0)
-        {
-			if(PlayerPrefs.GetInt("ComingFromDetectionScene") == 1)
-				Workspace.LoadWorkplace("main_temp");
-			else
-				Workspace.LoadWorkplace("detection");
-			PlayerPrefs.SetInt("ComingFromDetectionScene", 0);
-        }
-
+		if (PlayerPrefs.GetInt("ComingFromDetectionScene") != 0)
+			ComingFromDetection();
+                  
 		InvokeRepeating("CheckUpdates", 1.0f, updateCheckInterval);
 	}
 
@@ -84,6 +79,26 @@ public class SetupTools : MonoBehaviour {
 		}
     }
 
+    void ComingFromDetection()
+	{
+		if (PlayerPrefs.GetInt("ComingFromDetectionScene") == 1)
+            Workspace.LoadWorkplace("main_temp");
+        else
+            Workspace.LoadWorkplace("detection");
+        PlayerPrefs.SetInt("ComingFromDetectionScene", 0);
+
+        File.Delete(Application.persistentDataPath + "/workspaces/main_temp.dsw");
+        File.Delete(Application.persistentDataPath + "/workspaces/detection.dsw");
+
+		Invoke("SetDetectionModeFalse", 2.0f);
+	}
+
+    void SetDetectionModeFalse()
+	{
+		foreach(Lamp lamp in lampManager.GetLamps())
+			NetworkManager.SetDetectionMode(lamp.IP, false);
+	}
+
     public void CheckUpdates()
 	{
 		List<Lamp> uncheckedLamps = lampManager.GetUncheckedLamps();
@@ -94,25 +109,28 @@ public class SetupTools : MonoBehaviour {
 
 			foreach(Lamp lamp in uncheckedLamps)
 			{
-				bool update = false;
-				Vector2Int lpcVersion = (lamp.Lenght > 50) ? lpcVersion4ft : lpcVersion2ft;
-
-				if (lamp.animationVersion[0] < animVersion.x)
-					update = true;
-				else if (lamp.animationVersion[0] == animVersion.x &&
-						 lamp.animationVersion[1] < animVersion.y)
-					update = true;
-
-				if (lamp.lpcVersion[0] < lpcVersion.x)
-					update = true;
-				else if (lamp.lpcVersion[0] == lpcVersion.x &&
-						 lamp.lpcVersion[1] < lpcVersion.y)
-					update = true;
-
-				if (update)
-					lampsToUpdate.Add(lamp);
-				else
-					lamp.updateChecked = true;
+				if(lampManager.LampExists(lamp.Serial))
+				{
+					bool update = false;
+					Vector2Int lpcVersion = (lamp.Lenght > 50) ? lpcVersion4ft : lpcVersion2ft;
+					
+					if (lamp.animationVersion[0] < animVersion.x)
+						update = true;
+					else if (lamp.animationVersion[0] == animVersion.x &&
+					         lamp.animationVersion[1] < animVersion.y)
+						update = true;
+					
+					if (lamp.lpcVersion[0] < lpcVersion.x)
+						update = true;
+					else if (lamp.lpcVersion[0] == lpcVersion.x &&
+					         lamp.lpcVersion[1] < lpcVersion.y)
+						update = true;
+					
+					if (update)
+						lampsToUpdate.Add(lamp);
+					else
+						lamp.updateChecked = true;
+                }
 			}
 
 			if (lampsToUpdate.Count > 0)
