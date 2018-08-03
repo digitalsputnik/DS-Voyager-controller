@@ -66,6 +66,12 @@ public class WorkspaceItem : MonoBehaviour {
 
 	public void SetParent(WorkspaceItem parent)
 	{
+		if(parent == null && this.parent != null)
+		{
+			if (this.parent.children.Contains(this))
+                this.parent.children.Remove(this);
+		}
+
 		if (this.parent != null)
 		{
 			if (this.parent.children.Contains(this))

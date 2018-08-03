@@ -41,8 +41,8 @@ namespace Voyager.Workspace
         {
             if (lamp.physicalLamp != null)
             {
-                Debug.LogError("Lamp allready in a scene.");
-                return null;
+                Debug.LogError("Lamp allready in a scene. New position given.");
+				DestroyItem(lamp.physicalLamp.GetComponent<WorkspaceItem>());
             }
 
             GameObject lampPrefab = GetLampPrefab(lamp.Type);
@@ -62,6 +62,12 @@ namespace Voyager.Workspace
 
         public static PhysicalLamp InstantiateLamp(Lamp lamp, Vector3 handle1, Vector3 handle2)
         {
+			if (lamp.physicalLamp != null)
+			{
+                Debug.LogError("Lamp allready in a scene. New position given.");
+				DestroyItem(lamp.physicalLamp.GetComponent<WorkspaceItem>());
+            }
+			
             PhysicalLamp physical = InstantiateLamp(lamp);
             physical.GetComponent<LampMove>().SetPosition(handle1, handle2);
             return physical;
@@ -103,8 +109,11 @@ namespace Voyager.Workspace
 
 		public static void DestroyItem(WorkspaceItem item)
         {
-			foreach(WorkspaceItem wi in item.children)
-				DestroyItem(wi);
+			if (item.parent != null)
+				item.parent.children.Remove(item);
+
+            foreach(WorkspaceItem wi in item.children)
+				DestroyItem(wi);         
 
             if (item.Type == WorkspaceItem.WorkspaceItemType.Lamp)
                 item.GetComponent<PhysicalLamp>().Owner.physicalLamp = null;
@@ -332,12 +341,7 @@ namespace Voyager.Workspace
             {
                 Lamp lamp = null;
                 if (lampManager.LampExists(lampData.serial))
-                {
-                    lamp = lampManager.GetLamp(lampData.serial);
-
-                    if (lampManager.LampExistsInWorkplace(lamp.Serial))
-                        DestroyLamp(lamp.physicalLamp);
-                }
+					lamp = lampManager.GetLamp(lampData.serial);
                 else
                 {
                     lamp = new Lamp();

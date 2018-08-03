@@ -81,10 +81,10 @@ public class SetupTools : MonoBehaviour {
 
     void ComingFromDetection()
 	{
-		if (PlayerPrefs.GetInt("ComingFromDetectionScene") == 1)
-            Workspace.LoadWorkplace("main_temp");
-        else
-            Workspace.LoadWorkplace("detection");
+		Workspace.LoadWorkplace("main_temp");
+
+		if (PlayerPrefs.GetInt("ComingFromDetectionScene") == 2)
+			Workspace.LoadWorkplace("detection");
         PlayerPrefs.SetInt("ComingFromDetectionScene", 0);
 
         File.Delete(Application.persistentDataPath + "/workspaces/main_temp.dsw");
