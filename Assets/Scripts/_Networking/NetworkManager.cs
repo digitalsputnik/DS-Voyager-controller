@@ -8,10 +8,11 @@ using System;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Net.NetworkInformation;
+using DS.Voyager.Timesync;
 
 namespace Voyager.Networking
 {
-    public class NetworkManager : MonoBehaviour
+	public class NetworkManager : MonoBehaviour
     {
         public static NetworkManager instance;
 
@@ -20,6 +21,7 @@ namespace Voyager.Networking
 
 		UdpClient sendingClient = new UdpClient();
 
+		VoyagerOffsetService offsetService;
 		UdpClient client30000;
 		UdpClient client30001;
 		UdpClient client31000;
@@ -57,9 +59,12 @@ namespace Voyager.Networking
 
 		void SetupClients()
 		{
+			offsetService = new VoyagerOffsetService();
+   
 			client30000 = new UdpClient(30000);
-			client30000.EnableBroadcast = true;
-			Clients.Add(client30000);
+            client30000.EnableBroadcast = true;
+            Clients.Add(client30000);
+
 
 			IPEndPoint endPoint30001 = new IPEndPoint(IPAddress.Any, 30001);
             Socket socket30001 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -82,7 +87,9 @@ namespace Voyager.Networking
         }
         
         void ReadClient()
-        {              
+        {
+			Debug.Log(offsetService.Offset);
+
 			foreach(UdpClient client in Clients)
 			{
 				IPEndPoint receivalEndpoint = new IPEndPoint(IPAddress.Any, 0);

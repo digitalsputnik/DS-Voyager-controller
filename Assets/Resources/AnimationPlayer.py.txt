@@ -357,7 +357,7 @@ class Stroke:
                         Index = 0
                         for pixel in self.ControlledPixels:
                             #ColorIndex = int(pixel.QueueNumber/DivSize)
-                            self.StrokeBitmap[0][pixel.QueueNumber] = CalibratedColors[ColorIndices[Index]]
+                            self.StrokeBitmap[0][pixel.QueueNumber] = CalibratedColors[ColorIndices[pixel.QueueNumber]]
                             Index += 1
                     else:
                         for pixel in self.ControlledPixels:

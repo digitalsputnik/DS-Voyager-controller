@@ -18,7 +18,7 @@ public class LampSettings : MonoBehaviour {
 	[SerializeField] Color lampNormalColor;
     [Header("UI Elements")]
 	public Text selectionStateText;
-
+	public GameObject selectAllBtn;
 	[Space(3)]
 	public GameObject clientModeBtn;
 	public GameObject clientModePanel;
@@ -105,10 +105,13 @@ public class LampSettings : MonoBehaviour {
 				{
 					PhysicalLamp currentLamp = hit.transform.parent.GetComponent<PhysicalLamp>();
 
-					if (selectedLamps.Contains(currentLamp))
-						LampDeselected(currentLamp);
-					else
-						LampSelected(currentLamp);
+					if(currentLamp != null)
+					{
+						if (selectedLamps.Contains(currentLamp))
+                            LampDeselected(currentLamp);
+                        else
+                            LampSelected(currentLamp);
+					}
 				}
             }
         }
@@ -231,12 +234,13 @@ public class LampSettings : MonoBehaviour {
 				StartCoroutine(GetSSIDListForLamp(pLamp));
 
             clientModePanel.SetActive(true);
-
+			selectAllBtn.SetActive(false);
 			apModeBtn.SetActive(false);
 		}
 		else
 		{
 			clientModePanel.SetActive(false);
+			selectAllBtn.SetActive(true);
 			apModeBtn.SetActive(true);
         }
 	}
@@ -275,11 +279,13 @@ public class LampSettings : MonoBehaviour {
 				apModePanelMultiple.SetActive(true);
                 clientModeBtn.SetActive(false);
                 clientModePanel.SetActive(false);
+				selectAllBtn.SetActive(false);
             }
             else
             {
 				apModePanelMultiple.SetActive(false);
                 clientModeBtn.SetActive(true);
+				selectAllBtn.SetActive(true);
             }
 		}
         else
@@ -295,11 +301,13 @@ public class LampSettings : MonoBehaviour {
 
 				clientModeBtn.SetActive(false);
 				clientModePanel.SetActive(false);
+				selectAllBtn.SetActive(false);
             }
             else
             {
 				apModePanel.SetActive(false);
 				clientModeBtn.SetActive(true);
+				selectAllBtn.SetActive(true);
             }
 		}
 	}
@@ -448,6 +456,14 @@ public class LampSettings : MonoBehaviour {
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
         return results.Count > 0;
     }
+
+    public void SelectAll()
+	{
+		selectedLamps.Clear();
+		LampManager lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+		foreach (Lamp lamp in lampManager.GetLampsInWorkplace())
+			LampSelected(lamp.physicalLamp);
+	}
 }
 
 public class ApModePackage

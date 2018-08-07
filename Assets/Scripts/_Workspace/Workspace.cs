@@ -112,8 +112,10 @@ namespace Voyager.Workspace
 			if (item.parent != null)
 				item.parent.children.Remove(item);
 
-            foreach(WorkspaceItem wi in item.children)
-				DestroyItem(wi);         
+			WorkspaceItem[] clone = item.children.ToArray();
+
+			foreach(WorkspaceItem wi in clone)
+				DestroyItem(wi);
 
             if (item.Type == WorkspaceItem.WorkspaceItemType.Lamp)
                 item.GetComponent<PhysicalLamp>().Owner.physicalLamp = null;

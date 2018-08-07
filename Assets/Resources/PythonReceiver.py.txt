@@ -571,7 +571,7 @@ while True:
                         continue
                     else:
                         LampScene.TimeStamp = jsonDict['TimeStamp']
-
+                useMessage = False
                 for controllerLayer in jsonDict['Layers']:
                     Layer = next((layer for layer in LampScene.Layers if layer.LayerID == controllerLayer['LayerID']), False)
                     if Layer:
@@ -581,6 +581,10 @@ while True:
                         for controllerStroke in controllerLayer['Strokes']:
                             if controllerStroke['PixelQueueToControlledPixel'] == None:
                                 continue
+
+                            if LampMac in controllerStroke['PixelQueueToControlledPixel']:
+                                useMessage = True
+
                             VisibleStrokeIDs.append(controllerStroke['StrokeID'])
     
                             if not Layer.ChangeStrokeByID(controllerStroke['StrokeID'], startTime = controllerStroke['StartTime'], pixelDictionary = controllerStroke['PixelQueueToControlledPixel'], totalPixelCount = controllerStroke['TotalPixelCount'], colors = controllerStroke['Colors'],properties = controllerStroke['Properties'], animation = controllerStroke['Animation'], duration = controllerStroke['Duration'], timeStamp = controllerStroke['TimeStamp'], lampMac = LampMac, Universe = controllerStroke['Universe'], DMXOffset = controllerStroke['DMXOffset']):
@@ -596,9 +600,10 @@ while True:
                                 NewStroke = AnimationPlayer.Stroke(NewLayer, controllerStroke['StrokeID'], controllerStroke['TimeStamp'], controllerStroke['StartTime'], controllerStroke['PixelQueueToControlledPixel'], controllerStroke['TotalPixelCount'], controllerStroke['Colors'], controllerStroke['Properties'], controllerStroke['Animation'], duration = controllerStroke['Duration'], LampMac = LampMac, Universe = controllerStroke['Universe'], DMXOffset = controllerStroke['DMXOffset'])
                 #TODO: Delete layers and strokes which have not been sent?
                 #Save to file
-                file = open(StrokesFilename, "w")
-                file.write(DecodedMessage)
-                file.close()
+                if useMessage:
+                    file = open(StrokesFilename, "w")
+                    file.write(DecodedMessage)
+                    file.close()
 
                 #print(addr)
 
