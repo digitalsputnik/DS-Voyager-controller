@@ -5366,60 +5366,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 322635427}
---- !u!1001 &328264179
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4117306877770294, guid: 4599b5ba3543545db92bb18160cea721, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0.00012207031
-      objectReference: {fileID: 0}
-    - target: {fileID: 4117306877770294, guid: 4599b5ba3543545db92bb18160cea721, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0.000061035156
-      objectReference: {fileID: 0}
-    - target: {fileID: 4117306877770294, guid: 4599b5ba3543545db92bb18160cea721, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4117306877770294, guid: 4599b5ba3543545db92bb18160cea721, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4117306877770294, guid: 4599b5ba3543545db92bb18160cea721, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4117306877770294, guid: 4599b5ba3543545db92bb18160cea721, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4117306877770294, guid: 4599b5ba3543545db92bb18160cea721, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4117306877770294, guid: 4599b5ba3543545db92bb18160cea721, type: 2}
-      propertyPath: m_RootOrder
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 4117306877770294, guid: 4599b5ba3543545db92bb18160cea721, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4117306877770294, guid: 4599b5ba3543545db92bb18160cea721, type: 2}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4117306877770294, guid: 4599b5ba3543545db92bb18160cea721, type: 2}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 4599b5ba3543545db92bb18160cea721, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &335472127
 GameObject:
   m_ObjectHideFlags: 0
@@ -15576,6 +15522,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114995930833923784, guid: 9b426a8db0c514b4599d48e5edf33d93,
+        type: 2}
+      propertyPath: SpawnableItems.Array.size
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 4532096354048692, guid: 9b426a8db0c514b4599d48e5edf33d93, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -15608,6 +15559,12 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114995930833923784, guid: 9b426a8db0c514b4599d48e5edf33d93,
+        type: 2}
+      propertyPath: SpawnableItems.Array.data[6]
+      value: 
+      objectReference: {fileID: 1706943194086240, guid: 875aca40cce9d4177afc3cbd8cbd6760,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9b426a8db0c514b4599d48e5edf33d93, type: 2}
   m_IsPrefabParent: 0
@@ -16466,6 +16423,11 @@ Prefab:
     - target: {fileID: 4545082427431956, guid: eeabb94b1b5ed48c5a216c5d324c509b, type: 2}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114032981690824530, guid: eeabb94b1b5ed48c5a216c5d324c509b,
+        type: 2}
+      propertyPath: Debugging
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: eeabb94b1b5ed48c5a216c5d324c509b, type: 2}
@@ -24410,7 +24372,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000031329142}
+  m_AnchoredPosition: {x: 0, y: 0.0000025212437}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1369542640
@@ -24996,17 +24958,6 @@ GameObject:
   m_PrefabParentObject: {fileID: 1334809191505784, guid: eeabb94b1b5ed48c5a216c5d324c509b,
     type: 2}
   m_PrefabInternal: {fileID: 1017708775}
---- !u!114 &1382871776
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1382871775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb9be943675c940c9951c0967443e2ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1386330117
 GameObject:
   m_ObjectHideFlags: 0
@@ -26977,7 +26928,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65739fd08edebe648b53cb65c7544df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Debugging: 0
   AskForScenesInterval: 0.2
+  scene:
+    TimeStamp: 0
+    Layers: []
+    ArtNetMode: 0
+    sACNMode: 0
   drawScripts: {fileID: 411981887}
   draw: {fileID: 404138995}
   ActiveStroke:
@@ -26993,6 +26950,7 @@ MonoBehaviour:
   TimeOffset: 0
   LastVideoStreamColor: {x: 1, y: 0.56, z: 1, w: 0}
   LastGamma: 1
+  videoStreamFPS: 30
 --- !u!1 &1468988091
 GameObject:
   m_ObjectHideFlags: 0
@@ -27833,15 +27791,14 @@ MonoBehaviour:
   loadPanel: {fileID: 704588152}
   mobileImagePicker: {fileID: 1356568793}
   aboutWindow: {fileID: 1373103120}
-  updateCheckInterval: 5
-  animVersion: {x: 0, y: 37}
-  lpcVersion2ft: {x: 0, y: 200}
-  lpcVersion4ft: {x: 0, y: 200}
-  chipVersion: {x: 0, y: 60}
-  FileExtensions:
-  - png
-  FileBrowserPrefab: {fileID: 1183516625028436, guid: e246cc6e9fd91465a9045cee33e07e0a,
-    type: 2}
+  updateCheckInterval: 2
+  animVersion: {x: 0, y: 41}
+  hw3Version:
+    lpcVersion: {x: 0, y: 212}
+    chipVersion: {x: 0, y: 72}
+  hw4Version:
+    lpcVersion: {x: 0, y: 209}
+    chipVersion: {x: 0, y: 76}
 --- !u!114 &1509357878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29757,7 +29714,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Open Photo
+  m_Text: Open Media
 --- !u!222 &1661534699
 CanvasRenderer:
   m_ObjectHideFlags: 0

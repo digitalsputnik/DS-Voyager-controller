@@ -103,6 +103,7 @@ public class WorkspaceItem : MonoBehaviour {
 	{
 		Lamp,
         Image,
+        Cam,
         Video
 	}
 }

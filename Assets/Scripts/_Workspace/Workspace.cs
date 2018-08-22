@@ -73,9 +73,9 @@ namespace Voyager.Workspace
             return physical;
         }
 
-		public static Transform InstantiateVideoStream()
+		public static Transform InstantiateCamStream()
 		{
-			return InstantiateItem(GetVideoStreamPrefab(), Vector3.forward * 0.7f).transform;
+			return InstantiateItem(GetCamStreamPrefab(), Vector3.forward * 0.7f).transform;
 		}
 
 		public static Photo InstantiateImage(Texture2D texture)
@@ -98,6 +98,14 @@ namespace Voyager.Workspace
 			Photo photo = gameObject.GetComponent<Photo>();
 			photo.Setup(renderer.material.mainTexture as Texture2D, photoName);
 			return photo;
+		}
+
+		public static Video InstantiateVideo(string url, Vector3 position)
+		{
+			GameObject gameObject = InstantiateItem(GetVideoStreamPrefab(), position + Vector3.forward * 0.7f);
+			Video video = gameObject.GetComponent<Video>();
+			video.Setup(url);
+			return video;
 		}
 
 		static GameObject InstantiateItem(GameObject prefab, Vector3 position, WorkspaceItem parent = null)
@@ -140,7 +148,7 @@ namespace Voyager.Workspace
         public static bool ContainsVideoStream()
 		{
 			foreach (WorkspaceItem item in instance.ItemsInWorkspace)
-				if (item.Type == WorkspaceItem.WorkspaceItemType.Video) return true;
+				if (item.Type == WorkspaceItem.WorkspaceItemType.Cam) return true;
 
 			return false;
 		}
@@ -148,7 +156,7 @@ namespace Voyager.Workspace
 		public static Transform GetVideoSteam()
 		{
 			foreach (WorkspaceItem item in instance.ItemsInWorkspace)
-				if (item.Type == WorkspaceItem.WorkspaceItemType.Video) return item.transform;
+				if (item.Type == WorkspaceItem.WorkspaceItemType.Cam) return item.transform;
 
             return null;
 		}
@@ -156,6 +164,14 @@ namespace Voyager.Workspace
 		public static List<WorkspaceItem> GetItemsInWorkspace()
         {
 			return instance.ItemsInWorkspace;
+        }
+
+		static GameObject GetVideoStreamPrefab()
+        {
+            foreach (GameObject item in instance.SpawnableItems)
+				if (item.GetComponent<WorkspaceItem>().Type == WorkspaceItem.WorkspaceItemType.Video) return item;
+
+            return null;
         }
 
 		static GameObject GetImagePrefab()
@@ -182,12 +198,12 @@ namespace Voyager.Workspace
             return null;
         }
 
-		static GameObject GetVideoStreamPrefab()
+		static GameObject GetCamStreamPrefab()
 		{
 			foreach (GameObject go in instance.SpawnableItems)
             {
                 WorkspaceItem item = go.GetComponent<WorkspaceItem>();
-				if (item.Type == WorkspaceItem.WorkspaceItemType.Video)
+				if (item.Type == WorkspaceItem.WorkspaceItemType.Cam)
 					return go;
             }
             return null;

@@ -7,7 +7,7 @@ using System.Text;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-
+using Voyager.Networking;
 
 public class GetLampColorData : MonoBehaviour {
 
@@ -29,7 +29,7 @@ public class GetLampColorData : MonoBehaviour {
 
 		if (receivingUDPClient == null) {
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            var endPoint = new IPEndPoint(IPAddress.Any, 31000);
+			var endPoint = new IPEndPoint(NetworkManager.GetWifiInterfaceAddress(), 31000);
             socket.Bind(endPoint);
 
             receivingUDPClient = new UdpClient();

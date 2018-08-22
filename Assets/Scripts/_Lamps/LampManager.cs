@@ -51,7 +51,7 @@ namespace Voyager.Lamps
 
         void RegisterDevices()
 		{
-			foreach(Lamp lamp in GetLampsInWorkplace())
+			foreach(Lamp lamp in GetConnectedLamps())
 				NetworkManager.RegisterDevice(lamp.IP);
 		}
 

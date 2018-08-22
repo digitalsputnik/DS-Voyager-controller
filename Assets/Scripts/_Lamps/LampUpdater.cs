@@ -52,14 +52,21 @@ public class LampUpdater : MonoBehaviour {
         "liblapack3_3.5.0-4_armhf.deb",
         "python3-numpy_1.8.2-2_armhf.deb"
     };
-
-	string[] AnimationInstallationFiles =
+    
+	string[] AnimationInstallationFilesHW3 =
     {
         "PythonReceiver.py",
         "AnimationPlayer.py",
         "HueCalibration.csv",
         "IntensityCalibration.csv",
         "TemperatureCalibration.csv",
+        "version"
+    };
+    
+	string[] AnimationInstallationFilesHW4 =
+    {
+        "PythonReceiver.py",
+        "AnimationPlayer.py",
         "version"
     };
     
@@ -105,7 +112,9 @@ public class LampUpdater : MonoBehaviour {
 	{
 		foreach (string filename in NumpyInstallationFiles)
             LoadAssets(filename);
-        foreach (string filename in AnimationInstallationFiles)
+        foreach (string filename in AnimationInstallationFilesHW3)
+            LoadAssets(filename);
+		foreach (string filename in AnimationInstallationFilesHW4)
             LoadAssets(filename);
         foreach (string filename in BundleInstallationFiles)
             LoadAssets(filename);
@@ -217,18 +226,7 @@ public class LampUpdater : MonoBehaviour {
         float progressStep = 1.0f / updateSteps;
 
 		IPAddress ip = IPAddress.Parse(lampIP);
-		int hardwareVersion = lampManager.GetLamp(ip).hardwareVersion;
-        
-		if (hardwareVersion == 0)
-        {
-            Debug.LogError("Error finding hardware version");
-            UpdatedLamps.Add(lampIP);
-            UpdateThreads.Remove(lampIP);
-            UpdateProgress.Remove(lampIP);
-            FailedToUpdate.Add(lampIP, "Error finding hardware version");
-            return;
-        }
-        
+		int hardwareVersion = lampManager.GetLamp(ip).hardwareVersion;      
 
 		SshClient ssh = new SshClient(lampIP, LampUsername, (hardwareVersion == 4) ? LampPasswordHW4 : LampPassword);
 		SftpClient sftp = new SftpClient(lampIP, LampUsername, (hardwareVersion == 4) ? LampPasswordHW4 : LampPassword);
@@ -329,8 +327,19 @@ public class LampUpdater : MonoBehaviour {
                 sftp.CreateDirectory(animDestFolder);
 
             sftp.ChangeDirectory(animDestFolder);
-            foreach (string filename in AnimationInstallationFiles)
-                UploadFileAsset(filename, sftp);
+
+			int hardwareVersion = lampManager.GetLamp(IPAddress.Parse(lampIP)).hardwareVersion;
+            
+			if (hardwareVersion == 4)
+			{
+				foreach (string filename in AnimationInstallationFilesHW4)
+                    UploadFileAsset(filename, sftp);	
+			}
+			else
+			{
+				foreach (string filename in AnimationInstallationFilesHW3)
+                    UploadFileAsset(filename, sftp);
+			}
 
             if (isRev3)
             {
@@ -339,7 +348,7 @@ public class LampUpdater : MonoBehaviour {
 
                 sftp.ChangeDirectory(Rev3InstallationDirectory);
 
-				int hardwareVersion = lampManager.GetLamp(IPAddress.Parse(lampIP)).hardwareVersion;
+				hardwareVersion = lampManager.GetLamp(IPAddress.Parse(lampIP)).hardwareVersion;
 
 				if (hardwareVersion == 4) UploadFileAsset(BundleInstallationFiles[1], sftp);
 				else if (hardwareVersion != -1) UploadFileAsset(BundleInstallationFiles[0], sftp);

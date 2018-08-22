@@ -7,10 +7,10 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Voyager.Lamps;
 using Voyager.Workspace;
-using GracesGames.SimpleFileBrowser.Scripts;
 using System;
 using Kakera;
 using Voyager.Networking;
+using Crosstales.FB;
 
 public class SetupTools : MonoBehaviour {
 
@@ -30,12 +30,8 @@ public class SetupTools : MonoBehaviour {
 	[Header("Updating")]
 	public float updateCheckInterval = 5.0f;
 	public Vector2Int animVersion;
-	public Vector2Int lpcVersion2ft;
-	public Vector2Int lpcVersion4ft;
-	public Vector2Int chipVersion;
-    [Space(3)]
-	public string[] FileExtensions;
-	public GameObject FileBrowserPrefab;
+	public Version hw3Version;
+	public Version hw4Version;
 
     bool oneLampChecked;
 
@@ -111,25 +107,28 @@ public class SetupTools : MonoBehaviour {
 			{
 				if(lamp.animationVersion != null)
 				{
+					Version version = lamp.hardwareVersion == 4 ? hw4Version : hw3Version;
 					bool update = false;
-					Vector2Int lpcVersion = (lamp.Lenght > 50) ? lpcVersion4ft : lpcVersion2ft;
 					
 					if (lamp.animationVersion[0] < animVersion.x)
 						update = true;
-					else if (lamp.animationVersion[0] == animVersion.x &&
-					         lamp.animationVersion[1] < animVersion.y)
+					else if (lamp.animationVersion[0] == animVersion.x && lamp.animationVersion[1] < animVersion.y)
 						update = true;
 					
-					if (lamp.lpcVersion[0] < lpcVersion.x)
+					if (lamp.lpcVersion[0] < version.lpcVersion.x)
 						update = true;
-					else if (lamp.lpcVersion[0] == lpcVersion.x &&
-					         lamp.lpcVersion[1] < lpcVersion.y)
+					else if (lamp.lpcVersion[0] == version.lpcVersion.x && lamp.lpcVersion[1] < version.lpcVersion.y)
 						update = true;
+
+					if (lamp.chipVersion[0] < version.chipVersion.x)
+                        update = true;
+					else if (lamp.chipVersion[0] == version.chipVersion.x && lamp.chipVersion[1] < version.chipVersion.y)
+                        update = true;
 					
 					if (update)
 						lampsToUpdate.Add(lamp);
-					else
-						lamp.updateChecked = true;
+
+					lamp.updateChecked = true;
                 }
 			}
 
@@ -240,28 +239,22 @@ public class SetupTools : MonoBehaviour {
 
 	public void OpenPhoto()
 	{
+		string documentsPath = "";
+
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+			documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        else
+			documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+
 		if (!Application.isMobilePlatform)
-			OpenFileBrowser(FileBrowserMode.Load);
+		{
+			string file = FileBrowser.OpenSingleFile("Open Media", documentsPath, new ExtensionFilter[] { new ExtensionFilter("Media", "png", "mp4") });
+            if(file != "")
+			    LoadFileUsingPath(file);
+        }
 		else
 			mobileImagePicker.Show("Select Image", DateTime.Now.ToShortDateString().Replace("/", "-") + "_" + DateTime.Now.ToShortTimeString().Replace(":", "-"), 2048);
 	}
-
-	// Open a file browser to save and load files
-    void OpenFileBrowser(FileBrowserMode fileBrowserMode)
-    {
-        // Create the file browser and name it
-        //GameObject fileBrowserObject = Instantiate(FileBrowserPrefab, transform);
-        //fileBrowserObject.name = "Find picture";
-        // Set the mode to save or load
-		FileBrowser fileBrowserScript = GameObject.FindWithTag("File").GetComponent<FileBrowser>();
-		fileBrowserScript.SetupFileBrowser(ViewMode.Landscape);
-		if (fileBrowserMode == FileBrowserMode.Load)
-        {
-			fileBrowserScript.OpenFilePanel(FileExtensions);
-            // Subscribe to OnFileSelect event (call LoadFileUsingPath using path) 
-            fileBrowserScript.OnFileSelect += LoadFileUsingPath;
-        }
-    }
 
 	void MobileImagePicker_Completed(string path)
 	{
@@ -274,6 +267,22 @@ public class SetupTools : MonoBehaviour {
 		Texture2D texture = new Texture2D(2, 2);
 		texture.LoadImage(file);
 		string photoName = Path.GetFileName(obj).Split('.')[0];
-		Workspace.InstantiateImage(texture, photoName);
+
+		switch (Path.GetFileName(obj).Split('.')[Path.GetFileName(obj).Split('.').Length - 1])
+		{
+			case "png":
+				Workspace.InstantiateImage(texture, photoName);
+                break;
+			case "mp4":
+				Workspace.InstantiateVideo(obj, Vector3.zero);
+				break;
+        }
 	}
+}
+
+[Serializable]
+public class Version
+{
+	public Vector2Int lpcVersion;
+	public Vector2Int chipVersion;
 }

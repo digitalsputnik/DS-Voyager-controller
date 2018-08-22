@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.NetworkInformation;
+using Voyager.Networking;
 
 [Serializable]
 public class UDPResponse
@@ -162,8 +163,7 @@ public class SetupScripts : MonoBehaviour {
                 continue;
             }
 
-            var localIP = WirelessInterface.GetIPProperties().UnicastAddresses.Where(x => x.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).FirstOrDefault().Address.Address;
-            IPEndPoint localEndpoint = new IPEndPoint(localIP, 0);
+			IPEndPoint localEndpoint = new IPEndPoint(NetworkManager.GetWifiInterfaceAddress(), 0);
             //Send poll message
             if (localEndpoint == null)
             {

@@ -8,7 +8,7 @@ using System;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Net.NetworkInformation;
-using DS.Voyager.Timesync;
+using System.Linq;
 
 namespace Voyager.Networking
 {
@@ -19,9 +19,9 @@ namespace Voyager.Networking
         [Tooltip("Time in seconds, that the network manager reads incoming messages")]
         [SerializeField] float NetworkReadInterval = 0.5f;
 
-		UdpClient sendingClient = new UdpClient();
-
-		VoyagerOffsetService offsetService;
+		UdpClient sendingClient;
+        
+		OffsetService offsetService;
 		UdpClient client30000;
 		UdpClient client30001;
 		UdpClient client31000;
@@ -53,20 +53,27 @@ namespace Voyager.Networking
 		void Init()
         {
             InvokeRepeating("ReadClient", 0.0f, NetworkReadInterval);
-			NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
 			SetupClients();
         }
 
 		void SetupClients()
 		{
-			offsetService = new VoyagerOffsetService();
-   
-			client30000 = new UdpClient(30000);
-            client30000.EnableBroadcast = true;
+			IPEndPoint sendingEndpoint = new IPEndPoint(GetWifiInterfaceAddress(), 0);
+			Socket sendingSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+			sendingSocket.Bind(sendingEndpoint);
+			sendingClient = new UdpClient();
+			sendingClient.Client = sendingSocket;
+
+			IPEndPoint endPoint30000 = new IPEndPoint(GetWifiInterfaceAddress(), 30000);
+			Socket socket30000 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+			socket30000.Bind(endPoint30000);
+			client30000 = new UdpClient();
+            client30000.Client = socket30000;
+			client30000.EnableBroadcast = true;
             Clients.Add(client30000);
 
 
-			IPEndPoint endPoint30001 = new IPEndPoint(IPAddress.Any, 30001);
+			IPEndPoint endPoint30001 = new IPEndPoint(GetWifiInterfaceAddress(), 30001);
             Socket socket30001 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket30001.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 			socket30001.Bind(endPoint30001);
@@ -74,22 +81,19 @@ namespace Voyager.Networking
 			client30001.Client = socket30001;
 			Clients.Add(client30001);
 
-			client31000 = new UdpClient(31000);
+			IPEndPoint endPoint31000 = new IPEndPoint(GetWifiInterfaceAddress(), 31000);
+            Socket socket31000 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            socket31000.Bind(endPoint31000);
+			client31000 = new UdpClient();
+			client31000.Client = socket31000;
 			client31000.Client.ReceiveBufferSize = 1024;
 			Clients.Add(client31000);
-		}
 
-		void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
-        {
-			//Clients.Clear();
-			//client30000 = null;
-			//SetupClients();
-        }
+			offsetService = new OffsetService();
+		}
         
         void ReadClient()
-        {
-			Debug.Log(offsetService.Offset);
-
+        {         
 			foreach(UdpClient client in Clients)
 			{
 				IPEndPoint receivalEndpoint = new IPEndPoint(IPAddress.Any, 0);
@@ -260,16 +264,55 @@ namespace Voyager.Networking
 			PollMessage(pollTimes, message, sendingEndpoint, instance.client30001);
         }
 
+		public static double GetTimesyncOffset()
+		{
+			return instance.offsetService.Offset.TotalSeconds;
+		}
+
 		public static void PollMessage(int times, byte[] message, IPEndPoint endPoint, UdpClient client)
 		{
 			for (int i = 0; i < times; i++)
 				client.Send(message, message.Length, endPoint);
 		}
-
+              
 		public void SendMessage(IPAddress ip, byte[] message)
 		{
 			IPEndPoint endPoint = new IPEndPoint (ip, 30000);
 			instance.sendingClient.Send (message, message.Length, endPoint);
+		}
+
+		public static void SendMessage(IPEndPoint endPoint, byte[] message)
+		{
+			instance.sendingClient.Send(message, message.Length, endPoint);
+		}
+        
+		public static void SendVideoStream(IPEndPoint endPoint, byte[] message)
+		{
+			instance.client30001.Send(message, message.Length, endPoint);
+		}
+
+        public static IPAddress GetWifiInterfaceAddress()
+		{
+			if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+
+                if (adapters.Length > 1)
+                {
+                    NetworkInterface WirelessInterface = adapters.Where(x => x.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 &&
+                                                                        x.SupportsMulticast && x.OperationalStatus == OperationalStatus.Up && 
+    					                                                x.GetIPProperties().GetIPv4Properties() != null).FirstOrDefault();
+                    if (WirelessInterface != null)
+                    {
+                        byte[] addressBytes = WirelessInterface.GetIPProperties().UnicastAddresses
+        						                               .Where(x => x.Address.AddressFamily == AddressFamily.InterNetwork)
+        						                               .FirstOrDefault().Address.GetAddressBytes();
+                        return new IPAddress(addressBytes);
+                    }
+                }
+            }
+
+            return IPAddress.Any;
 		}
     }
 

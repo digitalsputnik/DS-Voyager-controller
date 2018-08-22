@@ -591,7 +591,7 @@ public class DrawScripts : MonoBehaviour {
     {
 		if (!Workspace.ContainsVideoStream())
         {
-            videoStream = Workspace.InstantiateVideoStream().gameObject;
+            videoStream = Workspace.InstantiateCamStream().gameObject;
 			backgroundMaterial = videoStream.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material;
 			Workspace.HideGraphics();
         }
