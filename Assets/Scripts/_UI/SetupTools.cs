@@ -124,9 +124,11 @@ public class SetupTools : MonoBehaviour {
                         update = true;
 					else if (lamp.chipVersion[0] == version.chipVersion.x && lamp.chipVersion[1] < version.chipVersion.y)
                         update = true;
-					
+
 					if (update)
 						lampsToUpdate.Add(lamp);
+					else
+						lamp.upToDate = true;
 
 					lamp.updateChecked = true;
                 }

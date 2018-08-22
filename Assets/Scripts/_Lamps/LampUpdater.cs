@@ -178,6 +178,7 @@ public class LampUpdater : MonoBehaviour {
 	{
 		Updating = false;
 		UpdatesInProgress = 0;
+		UpdateProgress.Clear();
 
 		if(FailedToUpdate.Count > 0)
 		{
@@ -186,7 +187,6 @@ public class LampUpdater : MonoBehaviour {
 				errors += error + "\n";
 
 			DialogBoxSettings settings = new DialogBoxSettings();
-			settings.ShowIgnoreBtn = true;
 			settings.Info = errors;
 			settings.RespondBtnText = "Retry";
 			settings.Title = "Failed to update " + FailedToUpdate.Count + " lamp(s)";

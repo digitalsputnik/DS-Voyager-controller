@@ -32,8 +32,10 @@ namespace Voyager.Lamps
 		public DateTime lastUpdate;
 		public byte[] pixelColorData;
 
+		[Space(3)]
 		public bool updateChecked;
         public bool updatingFirmware;
+		public bool upToDate;
 
 		public void Setup(ReplyUdpResponse response)
 		{

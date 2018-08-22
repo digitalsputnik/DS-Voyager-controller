@@ -136,7 +136,7 @@ namespace Voyager.Lamps
 		{
 			List<Lamp> lamps = new List<Lamp>();
             foreach (Lamp lamp in Lamps)
-				if (lamp.physicalLamp == null && !lamp.ConnectionLost && lamp.updateChecked)
+				if (lamp.physicalLamp == null && !lamp.ConnectionLost && lamp.upToDate)
                     lamps.Add(lamp);
             return lamps;
 		}
