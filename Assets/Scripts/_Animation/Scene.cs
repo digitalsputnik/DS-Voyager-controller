@@ -24,7 +24,7 @@ namespace Voyager.Animation
 
         public void AddLatestTimeStamp()
         {
-			TimeStamp = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+			TimeStamp = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds + NetworkManager.GetTimesyncOffset();
         }
 	}   
 }

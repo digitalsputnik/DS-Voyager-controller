@@ -14,16 +14,10 @@ using Voyager.Networking;
 using Voyager.Animation;
 
 [Serializable]
-public class LayerPollDTO
-{
-    public bool PollLayers;
-}
+public class LayerPollDTO { public bool PollLayers; }
 
 [Serializable]
-public class ArtNetActivationDTO
-{
-    public bool ArtNetActive;
-}
+public class ArtNetActivationDTO { public bool ArtNetActive; }
 
 public class AnimationSender : MonoBehaviour
 {
@@ -103,51 +97,22 @@ public class AnimationSender : MonoBehaviour
 	void NetworkManager_OnLampSceneResponse(string response, IPAddress ip)
     {
         Scene newScene = JsonConvert.DeserializeObject<Scene>(response);
-		newScene = RemoveSceneTimeOffset(newScene);
 		if (Debugging) Debug.Log(response);
+		if (Debugging) Debug.Log(NetworkManager.GetTimesyncOffset());
 		MergeScenes(newScene);
     }
-
-    private void SetLocalEndpoint()
-    {
-        NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
-        var WirelessInterface = adapters.Where(x => x.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 && x.SupportsMulticast && x.OperationalStatus == OperationalStatus.Up && x.GetIPProperties().GetIPv4Properties() != null).FirstOrDefault();
-        if (WirelessInterface == null)
-        {
-            localEndpoint = null;
-        }
-        else
-        {
-            var localIP = WirelessInterface.GetIPProperties().UnicastAddresses.Where(x => x.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).FirstOrDefault().Address;
-            localEndpoint = new IPEndPoint(localIP, 0);
-        }
-    }
-
-    // Use this for initialization
+    
     void Start()
     {
         scene = new Scene();
         scene.ArtNetMode = false;
         scene.sACNMode = false;
-
-        //Generate 5 layers with GUIDs or fixed names
-        //Only one layer for now to avoid confusion
-        var layer1 = new Layer("Layer", scene, true);
-        //var layer2 = new Layer("Layer2", scene, false);
-        //var layer3 = new Layer("Layer3", scene, false);
-        //var layer4 = new Layer("Layer4", scene, false);
-        //var layer5 = new Layer("Layer5", scene, false);
         
-        //Generate empty stroke to each layer, first layer stroke being the active
+        Layer layer1 = new Layer("Layer", scene, true);
         ActiveStroke = new Stroke(Guid.NewGuid().ToString(), layer1);
-        //var NewStroke2 = new Stroke(Guid.NewGuid().ToString(), layer2);
-        //var NewStroke3 = new Stroke(Guid.NewGuid().ToString(), layer3);
-        //var NewStroke4 = new Stroke(Guid.NewGuid().ToString(), layer4);
-        //var NewStroke5 = new Stroke(Guid.NewGuid().ToString(), layer5);
 
-        drawScripts.setupAnimations();
-
-		//StartCoroutine("SendAnimationWorker");
+        drawScripts.setupAnimations();      
+		scene.TimeStamp = 0;
 
         videoStreamInterval = 1.0f / videoStreamFPS;
         jsonDict.Add(videoString, new int[1][]);
@@ -179,7 +144,7 @@ public class AnimationSender : MonoBehaviour
     /// <param name="importScene"></param>
     public void MergeScenes(Scene importScene)
     {      
-		if (scene.TimeStamp <= importScene.TimeStamp)
+		if (importScene.TimeStamp <= scene.TimeStamp)
             return;
 
         foreach (var newLayer in importScene.Layers)
@@ -216,8 +181,8 @@ public class AnimationSender : MonoBehaviour
 
 		foreach (var newStroke in sortedStrokes)
         {
-            //Add layer reference to imported stroke
-            //TODO: Refactor
+            // Add layer reference to imported stroke
+            // TODO: Refactor
             newStroke.layer = OriginalLayer;
 
             var StrokeIndex = OriginalLayer.Strokes.FindIndex(s => s.StrokeID == newStroke.StrokeID);
@@ -255,7 +220,7 @@ public class AnimationSender : MonoBehaviour
         }
 
 		Stroke MergedStroke = OriginalStroke;
-        
+
         if (ImportStroke.TimeStamp > OriginalStroke.TimeStamp)
         {
             MergedStroke = ImportStroke;
@@ -425,11 +390,11 @@ public class AnimationSender : MonoBehaviour
 
         foreach (var property in ActiveStroke.Properties)
         {
-            if (property.Key.StartsWith("Color"))
+            if (property.Key.StartsWith("Color", StringComparison.Ordinal))
             {
                 ITSHColors.Add(new Vector4((float)property.Value[0] / 100.0f, (float)property.Value[1] / 10000f, (float)property.Value[2] / 120.0f, (float)property.Value[3] / 360.0f));
             }
-        };
+        }
 
         List<int[]> RGBWColors = new List<int[]>();
 
@@ -622,7 +587,8 @@ public class AnimationSender : MonoBehaviour
 
 	void SendSceneToLamp(SceneSendingPackage package)
     {
-		Scene sceneToSend = AddSceneTimeOffsets(package.scene);
+		Scene sceneToSend = package.scene;
+		sceneToSend.AddLatestTimeStamp();
 		string jsonData = JsonConvert.SerializeObject(sceneToSend);
 		if (Debugging) Debug.Log("[OUT]" + jsonData);
 		byte[] byteData = Encoding.ASCII.GetBytes(jsonData);
@@ -790,7 +756,7 @@ public class AnimationSender : MonoBehaviour
         int interpolation = 0;
 
         //White balance
-        int[] WB_RGBW = new int[] { 0, 0, 0, 0 };
+        int[] WB_RGBW = { 0, 0, 0, 0 };
 
         int T = (int)ITSH_16.y;
         for (i = 0; i < WhiteCalibrationTemperatureNodes.Length - 2; i++)
@@ -818,7 +784,7 @@ public class AnimationSender : MonoBehaviour
         }
 
         //Hue
-        int[] HS_RGBW = new int[] { 0, 0, 0, 0 };
+        int[] HS_RGBW = { 0, 0, 0, 0 };
         int H = (int)ITSH_16.w;
 
         for (i = 0; i < HueCalibrationTable.Length - 2; i++)
@@ -838,7 +804,7 @@ public class AnimationSender : MonoBehaviour
         }
 
         //Saturation (Blend between White Balance and Hue)
-        int[] Blend_RGBW = new int[] { 0, 0, 0, 0 };
+        int[] Blend_RGBW = { 0, 0, 0, 0 };
         int S = (int)ITSH_16.z;
 
         for (int c = 0; c < 4; c++)

@@ -67,7 +67,7 @@ namespace Voyager.Animation
 
         public void AddLatestTimestamp()
         {
-            TimeStamp = GetCurrentTimestampUTC();
+			TimeStamp = GetCurrentTimestampUTC() + NetworkManager.GetTimesyncOffset();
         }
         
         double GetCurrentTimestampUTC()

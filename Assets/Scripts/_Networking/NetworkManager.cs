@@ -261,7 +261,7 @@ namespace Voyager.Networking
 			DetectionModePackage package = new DetectionModePackage { DetectionMode = detection };
             string jsonData = JsonConvert.SerializeObject(package);
             byte[] message = Encoding.UTF8.GetBytes(jsonData);
-			PollMessage(pollTimes, message, sendingEndpoint, instance.client30001);
+			PollMessage(pollTimes, message, sendingEndpoint, instance.sendingClient);
         }
 
 		public static double GetTimesyncOffset()

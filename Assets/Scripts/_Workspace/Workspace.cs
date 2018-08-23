@@ -64,7 +64,7 @@ namespace Voyager.Workspace
         {
 			if (lamp.physicalLamp != null)
 			{
-                Debug.LogError("Lamp allready in a scene. New position given.");
+                Debug.Log("Lamp allready in a scene. New position given.");
 				DestroyItem(lamp.physicalLamp.GetComponent<WorkspaceItem>());
             }
 			
@@ -224,6 +224,8 @@ namespace Voyager.Workspace
         {
 			if (!Directory.Exists(Application.persistentDataPath + "/images"))
 				Directory.CreateDirectory(Application.persistentDataPath + "/images");
+			if (!Directory.Exists(Application.persistentDataPath + "/videos"))
+                Directory.CreateDirectory(Application.persistentDataPath + "/videos");
 			if (!Directory.Exists(Application.persistentDataPath + "/workspaces"))
 				Directory.CreateDirectory(Application.persistentDataPath + "/workspaces");
 
@@ -231,11 +233,13 @@ namespace Voyager.Workspace
 
 			LampSaveData[] lampSaveData = GenerateLampsSaveData();
 			ImageSaveData[] imageSaveData = GenerateImagesSaveData();
+			VideoSaveData[] videoSaveData = GenerateVideoSaveData();
 
 			WorkplaceData data = new WorkplaceData()
 			{
 				lamps = lampSaveData,
-				images = imageSaveData
+				images = imageSaveData,
+				videos = videoSaveData
 			};
 
 			FileStream file = File.Create(Application.persistentDataPath + "/workspaces/" + filename + ".dsw");
@@ -330,6 +334,49 @@ namespace Voyager.Workspace
 			return imageSaveData;
 		}
 
+		static VideoSaveData[] GenerateVideoSaveData()
+		{
+			List<Video> videosInWorkspace = new List<Video>();
+			foreach (WorkspaceItem item in instance.ItemsInWorkspace)
+            {
+				if (item.Type == WorkspaceItem.WorkspaceItemType.Video)
+					videosInWorkspace.Add(item.GetComponent<Video>());
+            }
+			VideoSaveData[] videoSaveData = new VideoSaveData[videosInWorkspace.Count];
+
+			for (int i = 0; i < videosInWorkspace.Count; i++)
+			{
+				Video video = videosInWorkspace[i];
+				string path = Application.persistentDataPath + "/videos/" + video.filename + ".mp4";
+				if(path != video.videoUrl)
+				{
+					byte[] videoData = File.ReadAllBytes(video.videoUrl);
+					if (!File.Exists(path))
+					{
+						FileStream createFile = new FileStream(path, FileMode.Create);
+						createFile.Dispose();
+					}
+					File.WriteAllBytes(path, videoData);
+                }
+
+				LampMove move = video.GetComponent<LampMove>();
+                Vector3 handle1 = move.sizeHandle1.transform.position;
+                Vector3 handle2 = move.sizeHandle2.transform.position;
+
+				VideoSaveData saveData = new VideoSaveData
+				{
+					filepath = path,
+					handle1 = new SerVector3(handle1),
+					handle2 = new SerVector3(handle2),
+					videoTime = video.GetVideoTime()
+				};
+
+				videoSaveData[i] = saveData;
+			}
+
+			return videoSaveData;
+		}
+
 		public static void LoadWorkplace()
         {
             string filename = SceneManager.GetActiveScene().name;
@@ -348,6 +395,7 @@ namespace Voyager.Workspace
                 
 				LoadLamps(data.lamps);
 				LoadImages(data.images);
+				LoadVideos(data.videos);
             }
         }
 
@@ -397,11 +445,30 @@ namespace Voyager.Workspace
 			}
 		}
 
+		static void LoadVideos(VideoSaveData[] videoDataArray)
+		{
+			LampManager lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+
+			foreach(VideoSaveData videoData in videoDataArray)
+			{
+				if (File.Exists(videoData.filepath))
+				{
+					Video video = InstantiateVideo(videoData.filepath, Vector3.zero);
+                    LampMove move = video.GetComponent<LampMove>();
+                    move.SetPosition(videoData.handle1.ToVector3(), videoData.handle2.ToVector3());
+					video.SetTime(videoData.videoTime);
+				}
+				else
+					Debug.LogError("Saved video not found! " + videoData.filepath);
+			}
+		}
+
 		[Serializable]
         public struct WorkplaceData
         {
             public LampSaveData[] lamps;
 			public ImageSaveData[] images;
+			public VideoSaveData[] videos;
         }
 
 		[Serializable]
@@ -411,6 +478,15 @@ namespace Voyager.Workspace
 			public SerVector3 handle1;
 			public SerVector3 handle2;
 			public string[] childrenSerials;
+		}
+
+		[Serializable]
+		public struct VideoSaveData 
+		{
+			public string filepath;
+            public SerVector3 handle1;
+            public SerVector3 handle2;
+			public float videoTime; // How far the video was last time you saved.
 		}
 	}
 }

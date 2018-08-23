@@ -37,7 +37,7 @@ public class Ribbon : MonoBehaviour {
 	public Transform pixelsParent;
 
 	PhysicalLamp physicalLamp;
-    Pixel[] LampPixels;
+    public Pixel[] LampPixels;
 
 	void Start()
 	{
