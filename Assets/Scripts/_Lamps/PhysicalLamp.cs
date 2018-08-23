@@ -23,11 +23,6 @@ namespace Voyager.Lamps
 			Owner = owner;
             InvokeRepeating("UpdateUI", 0.0f, 1.0f);
             move = GetComponent<LampMove>();
-			try
-			{
-				GameObject.Find("AnimationControl").GetComponent<AnimationSender>().StartPollingLayers(Owner.Serial);
-			}
-			catch (System.Exception ex) { Debug.LogWarning(ex.Message); }
         }
 
         void UpdateUI()

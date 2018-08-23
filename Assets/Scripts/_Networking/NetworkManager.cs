@@ -72,7 +72,6 @@ namespace Voyager.Networking
 			client30000.EnableBroadcast = true;
             Clients.Add(client30000);
 
-
 			IPEndPoint endPoint30001 = new IPEndPoint(GetWifiInterfaceAddress(), 30001);
             Socket socket30001 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket30001.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
@@ -168,7 +167,7 @@ namespace Voyager.Networking
 			byte[] message = Encoding.ASCII.GetBytes(jsonData);
 
 			for (int i = 0; i < pollTimes; i++)
-				instance.sendingClient.Send(message, message.Length, sendingEndpoint);
+				instance.client30001.Send(message, message.Length, sendingEndpoint);
         }
 
 		public static void AskLampSsidList(IPAddress ip)

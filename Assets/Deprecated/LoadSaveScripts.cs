@@ -210,7 +210,7 @@ public class LoadSaveScripts : MonoBehaviour {
 
             createdLamp.GetComponentInChildren<Canvas>().GetComponentInChildren<Text>().text = lamp.LampLabel;
 
-            AnimationSender.GetComponent<AnimationSender>().StartPollingLayers(lamp.Mac);
+            //AnimationSender.GetComponent<AnimationSender>().StartPollingLayers(lamp.Mac);
 
             if (!ColorDataReceiver.activeSelf)
             {

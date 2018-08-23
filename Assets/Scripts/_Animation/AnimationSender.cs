@@ -14,10 +14,18 @@ using Voyager.Networking;
 using Voyager.Animation;
 
 [Serializable]
-public class LayerPollDTO { public bool PollLayers; }
+public class LayerPollDTO
+{ public bool PollLayers; }
 
 [Serializable]
-public class ArtNetActivationDTO { public bool ArtNetActive; }
+public class ArtNetActivationDTO
+{ public bool ArtNetActive; }
+
+public struct SceneSendingPackage
+{
+    public IPEndPoint endpoint;
+    public Scene scene;
+}
 
 public class AnimationSender : MonoBehaviour
 {
@@ -59,51 +67,12 @@ public class AnimationSender : MonoBehaviour
 	Dictionary<string, int[][]> jsonDict = new Dictionary<string, int[][]>();
 	string videoString = "VideoStream";
     string lastVideoJSON = "";
-
-    void Awake()
-    {
-		/* if (LampCommunicationClient == null)
-         {
-             LampCommunicationClient = new UdpClient(31000);
-         }*/
-
-		lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
-		NetworkManager.OnLampSceneResponse += NetworkManager_OnLampSceneResponse;
-		InvokeRepeating("AskForScenes", 0.0f, AskForScenesInterval);
-
-        if (LampPollClient == null)
-        {
-            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-			var endPoint = new IPEndPoint(NetworkManager.GetWifiInterfaceAddress(), 30001);
-            socket.Bind(endPoint);
-
-            LampPollClient = new UdpClient();
-            LampPollClient.Client = socket;
-        }
-
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-        //Get local wireless endpoint
-        SetLocalEndpoint();
-#endif
-    }
-
-    void AskForScenes()
-	{
-		foreach(Lamp lamp in lampManager.GetLamps())
-			NetworkManager.AskLampLayers(lamp.IP);
-	}
-
-	void NetworkManager_OnLampSceneResponse(string response, IPAddress ip)
-    {
-        Scene newScene = JsonConvert.DeserializeObject<Scene>(response);
-		if (Debugging) Debug.Log(response);
-		if (Debugging) Debug.Log(NetworkManager.GetTimesyncOffset());
-		MergeScenes(newScene);
-    }
     
     void Start()
     {
+		lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+        NetworkManager.OnLampSceneResponse += NetworkManager_OnLampSceneResponse;
+
         scene = new Scene();
         scene.ArtNetMode = false;
         scene.sACNMode = false;
@@ -111,12 +80,27 @@ public class AnimationSender : MonoBehaviour
         Layer layer1 = new Layer("Layer", scene, true);
         ActiveStroke = new Stroke(Guid.NewGuid().ToString(), layer1);
 
-        drawScripts.setupAnimations();      
-		scene.TimeStamp = 0;
+        drawScripts.setupAnimations();
+		scene.TimeStamp = 0d;
 
         videoStreamInterval = 1.0f / videoStreamFPS;
         jsonDict.Add(videoString, new int[1][]);
         InvokeRepeating("SendVideoStream", 1.0f, videoStreamInterval);
+		InvokeRepeating("AskForScenes", 1.0f, AskForScenesInterval);
+    }
+
+	void AskForScenes()
+    {
+        if (Debugging) Debug.Log("Asking for lamps scenes");
+        foreach (Lamp lamp in lampManager.GetLamps())
+            NetworkManager.AskLampLayers(lamp.IP);
+    }
+
+    void NetworkManager_OnLampSceneResponse(string response, IPAddress ip)
+    {
+        Scene newScene = JsonConvert.DeserializeObject<Scene>(response);
+        if (Debugging) Debug.Log(response);
+        MergeScenes(newScene);
     }
 
     /// <summary>
@@ -143,11 +127,16 @@ public class AnimationSender : MonoBehaviour
     /// </summary>
     /// <param name="importScene"></param>
     public void MergeScenes(Scene importScene)
-    {      
-		if (importScene.TimeStamp <= scene.TimeStamp)
+    {
+        if (importScene.TimeStamp < scene.TimeStamp)
             return;
 
-        foreach (var newLayer in importScene.Layers)
+        if (Debugging) Debug.Log("Scene TimeStamp check " + scene.TimeStamp + " - " + importScene.TimeStamp);
+
+		scene.TimeStamp = importScene.TimeStamp;
+		ActiveStroke.SelectionOff();
+
+		foreach (var newLayer in importScene.Layers)
         {
             int LayerIndex = scene.Layers.FindIndex(l => l.LayerID == newLayer.LayerID);
             if (LayerIndex != -1)
@@ -177,7 +166,7 @@ public class AnimationSender : MonoBehaviour
         }
 
 		//TODO: Check for timestamps
-		List<Stroke> sortedStrokes = ImportLayer.Strokes.OrderBy(x => x.TimeStamp).ToList();
+		List<Stroke> sortedStrokes = ImportLayer.Strokes.OrderByDescending(x => x.CreationTimestamp).ToList();
 
 		foreach (var newStroke in sortedStrokes)
         {
@@ -190,6 +179,7 @@ public class AnimationSender : MonoBehaviour
             {
                 //Stroke is present in imported layer
 				OriginalLayer.Strokes[StrokeIndex] = MergeStrokes(OriginalLayer.Strokes[StrokeIndex], newStroke);
+
 				//OriginalLayer.Strokes[StrokeIndex] = newStroke;
             }
             else
@@ -199,6 +189,11 @@ public class AnimationSender : MonoBehaviour
                 OriginalLayer.AddStroke(newStroke);
                 SelectPixelsFromDictionary(newStroke);
             }
+
+			ActiveStroke.SelectionOff();
+			if (OriginalLayer.Strokes[StrokeIndex].StrokeID == ActiveStroke.StrokeID)
+                ActiveStroke = OriginalLayer.Strokes[StrokeIndex];
+			ActiveStroke.SelectionOn();
         }
 
         OriginalLayer.RemoveInvisibleStrokes(ActiveStroke);
@@ -236,8 +231,8 @@ public class AnimationSender : MonoBehaviour
             MergedStroke = OriginalStroke;
         }
 
-        //Merge partial strokes!!
-		MergedStroke.PixelQueueToControlledPixel = OriginalStroke.PixelQueueToControlledPixel.Concat(ImportStroke.PixelQueueToControlledPixel).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.FirstOrDefault().Value);
+		//Merge partial strokes!!
+		MergedStroke.PixelQueueToControlledPixel = ImportStroke.PixelQueueToControlledPixel; //.Concat(ImportStroke.PixelQueueToControlledPixel).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.FirstOrDefault().Value);
         SelectPixelsFromDictionary(MergedStroke);
 
         return MergedStroke;
@@ -285,6 +280,11 @@ public class AnimationSender : MonoBehaviour
                     pixelStrokes = pixelStrokes.OrderByDescending(s => s.CreationTimestamp).ToList();
                     MergedStroke.layer.PixelToStrokeIDDictionary[pixel] = pixelStrokes;
                 }
+				else
+				{
+					int strokeIndex = pixelStrokes.FindIndex(s => s.StrokeID == MergedStroke.StrokeID);
+					MergedStroke.layer.PixelToStrokeIDDictionary[pixel][strokeIndex] = MergedStroke;
+				}
             }
             else
             {
@@ -497,6 +497,7 @@ public class AnimationSender : MonoBehaviour
 
 			//New version to relieve the udp message length!
 
+			partitionedScene.AddLatestTimeStamp();
 			if (SendingPackages.ContainsKey(lamp.Serial))
 				SendingPackages[lamp.Serial] = SendJSONToLamp(partitionedScene, new IPEndPoint(lamp.IP, 30001));
 			else
@@ -541,12 +542,6 @@ public class AnimationSender : MonoBehaviour
         StopLampCommunication.Add(lampMac);
         scene.TimeStamp -= 1;
     }
-
-    public void StartPollingLayers(string LampMac)
-    {
-        //TODO: Generalize so it isn't lamp dependent.
-        StartCoroutine(PollLayersFromLamp(LampMac));
-    }
     
 	SceneSendingPackage SendJSONToLamp(Scene sce, IPEndPoint lampEndPoint)
     {
@@ -559,32 +554,6 @@ public class AnimationSender : MonoBehaviour
         return package;
     }
 
-	Scene AddSceneTimeOffsets(Scene sce)
-	{
-		Scene returnScene = sce;
-
-		returnScene.TimeStamp += NetworkManager.GetTimesyncOffset();
-        
-		foreach(Layer layer in scene.Layers)
-			foreach (Stroke stroke in layer.Strokes)
-                stroke.TimeStamp += NetworkManager.GetTimesyncOffset();
-
-		return returnScene;
-	}
-
-    Scene RemoveSceneTimeOffset(Scene sce)
-	{
-		Scene returnScene = sce;
-
-        returnScene.TimeStamp -= NetworkManager.GetTimesyncOffset();
-
-        foreach (Layer layer in scene.Layers)
-            foreach (Stroke stroke in layer.Strokes)
-                stroke.TimeStamp -= NetworkManager.GetTimesyncOffset();
-
-        return returnScene;
-	}
-
 	void SendSceneToLamp(SceneSendingPackage package)
     {
 		Scene sceneToSend = package.scene;
@@ -593,22 +562,6 @@ public class AnimationSender : MonoBehaviour
 		if (Debugging) Debug.Log("[OUT]" + jsonData);
 		byte[] byteData = Encoding.ASCII.GetBytes(jsonData);
 		NetworkManager.SendMessage(package.endpoint, byteData);
-    }
-
-    IEnumerator SendAnimationWorker()
-    {
-        while (true)
-        {
-			if (SendingPackages != null && lampManager.GetLamps().Count > 0)
-            {
-				foreach (var lamp in lampManager.GetConnectedLamps())
-                {
-					if(SendingPackages.ContainsKey(lamp.Serial))
-						SendSceneToLamp(SendingPackages[lamp.Serial]);
-                }
-            }
-            yield return new WaitForSeconds(0.1f);
-        }
     }
        
     void SendVideoStream()
@@ -636,50 +589,6 @@ public class AnimationSender : MonoBehaviour
                 }
             }
         }
-    }
-
-    IEnumerator PollLayersFromLamp(string LampMac)
-    {
-        //TODO: Broadcast and take latest layer
-        var client = LampPollClient;
-        var messageDTO = new LayerPollDTO() { PollLayers = true };
-        var messageJSON = JsonConvert.SerializeObject(messageDTO);
-        byte[] data = Encoding.ASCII.GetBytes(messageJSON);
-        var lampPort = 30001;
-        while (true)
-        {
-			Lamp lamp = lampManager.GetLamp(LampMac);
-            if (lamp == null) break;
-
-			IPEndPoint lampEndPoint = new IPEndPoint(lamp.IP, lampPort);
-            client.Send(data, data.Length, lampEndPoint);
-            Thread.Sleep(10);
-            if (client.Available > 0)
-            {
-                var receivedMessageBytes = client.Receive(ref lampEndPoint);
-                string sceneJSON = Encoding.UTF8.GetString(receivedMessageBytes);
-                Debug.Log(lampEndPoint.Address.ToString() + " = " + sceneJSON);
-                GetStrokeFromLamp(sceneJSON);
-            }
-            //else
-            //{
-            //    //Backup for direct connection
-            //    IPEndPoint DirectLampEndpoint = new IPEndPoint(IPAddress.Parse("172.20.0.1"), lampPort);
-            //    client.Send(data, data.Length, DirectLampEndpoint);
-            //    Thread.Sleep(10);
-            //    if (client.Available > 0)
-            //    {
-            //        var receivedMessageBytes = client.Receive(ref DirectLampEndpoint);
-            //        string sceneJSON = Encoding.UTF8.GetString(receivedMessageBytes);
-            //        GetStrokeFromLamp(sceneJSON);
-            //    }
-            //}
-
-            //Receive structure and send to 
-            yield return new WaitForSeconds(0.5f);
-        }
-
-        yield return null;
     }
 
     //Color calibration and converstion from ITSH to RGBW
@@ -828,10 +737,4 @@ public class AnimationSender : MonoBehaviour
         return Blend_RGBW;
     }
 
-}
-
-public struct SceneSendingPackage
-{
-	public IPEndPoint endpoint;
-	public Scene scene;
 }

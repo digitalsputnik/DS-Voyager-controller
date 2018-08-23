@@ -16427,7 +16427,7 @@ Prefab:
     - target: {fileID: 114032981690824530, guid: eeabb94b1b5ed48c5a216c5d324c509b,
         type: 2}
       propertyPath: Debugging
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: eeabb94b1b5ed48c5a216c5d324c509b, type: 2}
@@ -26928,7 +26928,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65739fd08edebe648b53cb65c7544df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Debugging: 1
+  Debugging: 0
   AskForScenesInterval: 0.2
   scene:
     TimeStamp: 0

@@ -66,7 +66,7 @@ public class LoadDetectedLampsScript : MonoBehaviour {
         var VoyagerName = newLamp.GetComponentInChildren<Canvas>().GetComponentInChildren<Text>();
         string VoyagerText = properties.LampLength < 50 ? "Short Voyager " : "Long Voyager ";
         VoyagerName.text = VoyagerText + properties.macName + " " + properties.batteryLevel.ToString() + "% charged";
-        AnimationSender.GetComponent<AnimationSender>().StartPollingLayers(properties.macName);
+        //AnimationSender.GetComponent<AnimationSender>().StartPollingLayers(properties.macName);
 
         if (!ColorDataReceiver.activeSelf)
             {

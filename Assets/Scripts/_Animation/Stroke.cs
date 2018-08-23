@@ -67,12 +67,12 @@ namespace Voyager.Animation
 
         public void AddLatestTimestamp()
         {
-			TimeStamp = GetCurrentTimestampUTC() + NetworkManager.GetTimesyncOffset();
+			TimeStamp = GetCurrentTimestampUTC();
         }
         
         double GetCurrentTimestampUTC()
         {
-			return (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+			return (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds + NetworkManager.GetTimesyncOffset();
         }
 
         double GetStartTimeFromProperties(Dictionary<string, int[]> properties = null)
