@@ -79,12 +79,12 @@ public class VideoStream : MonoBehaviour {
 
         //Initialization of video stream array
         IP = ribbon.IP;
+
         if (!animSender.LampIPVideoStreamPixelToColor.ContainsKey(IP))
-        {
-            animSender.LampIPVideoStreamPixelToColor.Add(IP, new Dictionary<int, int[]>());
-        }
+			animSender.LampIPVideoStreamPixelToColor.Add(IP, new Dictionary<int, int[]>());
         animSender.LampIPVideoStreamPixelToColor[IP].Clear();
-        int PixelCount = ribbon.pipeLength;
+
+		int PixelCount = physicalLamp.Owner.Lenght;
         for (int p = 0; p < PixelCount; p++)
         {
             animSender.LampIPVideoStreamPixelToColor[IP].Add(p, blackColor);
@@ -107,12 +107,11 @@ public class VideoStream : MonoBehaviour {
 
     void OnWorkplaceObjectMoved()
 	{
-		if (drawScripts == null || minXY == null)
-			return;
-		
+		if (drawScripts == null) return;
+
 		if (drawScripts.videoTexture != null)
         {
-			var numPixelsToDraw = ribbon.pipeLength;
+			var numPixelsToDraw = physicalLamp.Owner.Lenght;
             
             string pixelName;
 
@@ -137,8 +136,7 @@ public class VideoStream : MonoBehaviour {
                 var Vy = Vector3.Project(Vp, Ys);
 
                 //Check if in limits
-                if (Vx.normalized == Xs.normalized && Vy.normalized == Ys.normalized &&
-                    Vx.magnitude <= Xs.magnitude && Vy.magnitude <= Ys.magnitude)
+                if (Vx.normalized == Xs.normalized && Vy.normalized == Ys.normalized && Vx.magnitude <= Xs.magnitude && Vy.magnitude <= Ys.magnitude)
                 {
                     Color pixelColor = Color.white; // default color
 
@@ -149,13 +147,19 @@ public class VideoStream : MonoBehaviour {
 					}
                 }
                 else
-					animSender.LampIPVideoStreamPixelToColor[IP][i] = blackColor;      
+				{
+					animSender.LampIPVideoStreamPixelToColor[IP][i] = blackColor;
+					if (physicalLamp.Owner.hardwareVersion == 4)
+						animSender.LampIPVideoStreamPixelToColor[IP][i][1] = 1500;
+                }
             }
         }
 	}
 
 	void DrawPixels()
 	{
+		if (drawScripts == null) return;
+
 		if (drawScripts.videoTexture != null)
         {
             var numPixelsToDraw = ribbon.pipeLength;
@@ -181,8 +185,8 @@ public class VideoStream : MonoBehaviour {
                     var c = animSender.LastVideoStreamColor;
                     //ITSH with color correction
                     Vector4 itsh = new Vector4(I * c.x, c.y, S * c.z, (H + c.w) % 1f);
-
-                    if (ribbon.pipeLength < 30)
+                    
+					if (physicalLamp.Owner.hardwareVersion == 4)
                         animSender.LampIPVideoStreamPixelToColor[IP][i] = new int[]
                         {
                             (int)(itsh.x * 100),
@@ -228,11 +232,6 @@ public class VideoStream : MonoBehaviour {
 						//Workspace.DestroyItem(videoStream.GetComponent<WorkspaceItem>());
 					}
                 }
-			}
-			else
-			{
-				//if (!Workspace.ContainsVideoStream())
-					//SetupVideoStream(Workspace.InstantiateVideoStream());
 			}
 			
 			DrawPixels();

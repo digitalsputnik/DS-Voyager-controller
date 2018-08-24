@@ -18,6 +18,7 @@ namespace Voyager.Networking
 
         [Tooltip("Time in seconds, that the network manager reads incoming messages")]
         [SerializeField] float NetworkReadInterval = 0.5f;
+		[SerializeField] bool Debugging;
 
 		UdpClient sendingClient;
         
@@ -287,7 +288,9 @@ namespace Voyager.Networking
         
 		public static void SendVideoStream(IPEndPoint endPoint, byte[] message)
 		{
-			instance.client30001.Send(message, message.Length, endPoint);
+			UdpClient client = new UdpClient(new IPEndPoint(GetWifiInterfaceAddress(), 0));
+			if (instance.Debugging) Debug.Log("[VIDEO STREAM] Sending to " + endPoint + ": " + Encoding.ASCII.GetString(message));
+			client.Send(message, message.Length, endPoint);
 		}
 
         public static IPAddress GetWifiInterfaceAddress()

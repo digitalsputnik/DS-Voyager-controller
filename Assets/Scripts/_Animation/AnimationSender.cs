@@ -133,7 +133,7 @@ public class AnimationSender : MonoBehaviour
 
         if (Debugging) Debug.Log("Scene TimeStamp check " + scene.TimeStamp + " - " + importScene.TimeStamp);
 
-		scene.TimeStamp = importScene.TimeStamp;
+		//scene.TimeStamp = importScene.TimeStamp;
 		ActiveStroke.SelectionOff();
 
 		foreach (var newLayer in importScene.Layers)
@@ -181,6 +181,9 @@ public class AnimationSender : MonoBehaviour
 				OriginalLayer.Strokes[StrokeIndex] = MergeStrokes(OriginalLayer.Strokes[StrokeIndex], newStroke);
 
 				//OriginalLayer.Strokes[StrokeIndex] = newStroke;
+
+				if (OriginalLayer.Strokes[StrokeIndex].StrokeID == ActiveStroke.StrokeID)
+                    ActiveStroke = OriginalLayer.Strokes[StrokeIndex];
             }
             else
             {
@@ -189,11 +192,6 @@ public class AnimationSender : MonoBehaviour
                 OriginalLayer.AddStroke(newStroke);
                 SelectPixelsFromDictionary(newStroke);
             }
-
-			ActiveStroke.SelectionOff();
-			if (OriginalLayer.Strokes[StrokeIndex].StrokeID == ActiveStroke.StrokeID)
-                ActiveStroke = OriginalLayer.Strokes[StrokeIndex];
-			ActiveStroke.SelectionOn();
         }
 
         OriginalLayer.RemoveInvisibleStrokes(ActiveStroke);
@@ -221,18 +219,14 @@ public class AnimationSender : MonoBehaviour
             MergedStroke = ImportStroke;
             MergedStroke.layer = ActiveStroke.layer;
             if (ActiveStroke.StrokeID == ImportStroke.StrokeID)
-            {
-                ActiveStroke.SelectionOff();
-            }
+				ActiveStroke.SelectionOff();
             //TODO: Create getter and setter to workspace for lamp handling
         }
         else
-        {
-            MergedStroke = OriginalStroke;
-        }
+			MergedStroke = OriginalStroke;
 
 		//Merge partial strokes!!
-		MergedStroke.PixelQueueToControlledPixel = ImportStroke.PixelQueueToControlledPixel; //.Concat(ImportStroke.PixelQueueToControlledPixel).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.FirstOrDefault().Value);
+		MergedStroke.PixelQueueToControlledPixel = MergedStroke.PixelQueueToControlledPixel.Concat(ImportStroke.PixelQueueToControlledPixel).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.FirstOrDefault().Value);
         SelectPixelsFromDictionary(MergedStroke);
 
         return MergedStroke;
@@ -280,11 +274,11 @@ public class AnimationSender : MonoBehaviour
                     pixelStrokes = pixelStrokes.OrderByDescending(s => s.CreationTimestamp).ToList();
                     MergedStroke.layer.PixelToStrokeIDDictionary[pixel] = pixelStrokes;
                 }
-				else
-				{
-					int strokeIndex = pixelStrokes.FindIndex(s => s.StrokeID == MergedStroke.StrokeID);
-					MergedStroke.layer.PixelToStrokeIDDictionary[pixel][strokeIndex] = MergedStroke;
-				}
+				//else
+				//{
+				//	int strokeIndex = pixelStrokes.FindIndex(s => s.StrokeID == MergedStroke.StrokeID);
+				//	MergedStroke.layer.PixelToStrokeIDDictionary[pixel][strokeIndex] = MergedStroke;
+				//}
             }
             else
             {
@@ -390,7 +384,7 @@ public class AnimationSender : MonoBehaviour
 
         foreach (var property in ActiveStroke.Properties)
         {
-            if (property.Key.StartsWith("Color", StringComparison.Ordinal))
+            if (property.Key.StartsWith("Color"))
             {
                 ITSHColors.Add(new Vector4((float)property.Value[0] / 100.0f, (float)property.Value[1] / 10000f, (float)property.Value[2] / 120.0f, (float)property.Value[3] / 360.0f));
             }
@@ -574,16 +568,16 @@ public class AnimationSender : MonoBehaviour
             {
                 foreach (var lamp in lampManager.GetConnectedLamps())
                 {
-                    string lampIP = lamp.IP.ToString();
-					if(LampIPVideoStreamPixelToColor.ContainsKey(lampIP))
+					string ipString = lamp.IP.ToString();
+					if(LampIPVideoStreamPixelToColor.ContainsKey(ipString))
 					{
-						jsonDict[videoString] = LampIPVideoStreamPixelToColor[lampIP].Values.ToArray();
+						jsonDict[videoString] = LampIPVideoStreamPixelToColor[ipString].Values.ToArray();
 						var messageJSON = JsonConvert.SerializeObject(jsonDict);
 						if (messageJSON != lastVideoJSON)
 						{
 							lastVideoJSON = messageJSON;
 							var data = Encoding.ASCII.GetBytes(messageJSON);
-							NetworkManager.SendMessage(new IPEndPoint(IPAddress.Parse(lampIP), 30001), data);
+							NetworkManager.SendVideoStream(new IPEndPoint(lamp.IP, 30001), data);
 						}
                     }
                 }
