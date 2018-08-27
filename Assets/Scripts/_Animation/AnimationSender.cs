@@ -226,7 +226,7 @@ public class AnimationSender : MonoBehaviour
 			MergedStroke = OriginalStroke;
 
 		//Merge partial strokes!!
-		MergedStroke.PixelQueueToControlledPixel = MergedStroke.PixelQueueToControlledPixel.Concat(ImportStroke.PixelQueueToControlledPixel).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.FirstOrDefault().Value);
+		MergedStroke.PixelQueueToControlledPixel = ImportStroke.PixelQueueToControlledPixel.Concat(MergedStroke.PixelQueueToControlledPixel).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.FirstOrDefault().Value);
         SelectPixelsFromDictionary(MergedStroke);
 
         return MergedStroke;
