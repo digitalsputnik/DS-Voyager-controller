@@ -148,7 +148,10 @@ namespace Voyager.Workspace
         public static bool ContainsVideoStream()
 		{
 			foreach (WorkspaceItem item in instance.ItemsInWorkspace)
+			{
 				if (item.Type == WorkspaceItem.WorkspaceItemType.Cam) return true;
+				if (item.Type == WorkspaceItem.WorkspaceItemType.Video) return true;
+            }
 
 			return false;
 		}
@@ -156,9 +159,12 @@ namespace Voyager.Workspace
 		public static Transform GetVideoSteam()
 		{
 			foreach (WorkspaceItem item in instance.ItemsInWorkspace)
+			{
 				if (item.Type == WorkspaceItem.WorkspaceItemType.Cam) return item.transform;
+				if (item.Type == WorkspaceItem.WorkspaceItemType.Video) return item.transform;
+            }
 
-            return null;
+			return null;
 		}
 
 		public static List<WorkspaceItem> GetItemsInWorkspace()
@@ -239,7 +245,7 @@ namespace Voyager.Workspace
 			{
 				lamps = lampSaveData,
 				images = imageSaveData,
-				videos = videoSaveData
+				//videos = videoSaveData
 			};
 
 			FileStream file = File.Create(Application.persistentDataPath + "/workspaces/" + filename + ".dsw");
@@ -362,13 +368,22 @@ namespace Voyager.Workspace
 				LampMove move = video.GetComponent<LampMove>();
                 Vector3 handle1 = move.sizeHandle1.transform.position;
                 Vector3 handle2 = move.sizeHandle2.transform.position;
+                
+				WorkspaceItem item = video.GetComponent<WorkspaceItem>();
+                string[] serials = new string[item.children.Count];
+				for (int wi = 0; wi < item.children.Count; wi++)
+                {
+                    Lamp child = item.children[wi].GetComponent<PhysicalLamp>().Owner;
+                    serials[wi] = child.Serial;
+                }
 
 				VideoSaveData saveData = new VideoSaveData
 				{
 					filepath = path,
 					handle1 = new SerVector3(handle1),
 					handle2 = new SerVector3(handle2),
-					videoTime = video.GetVideoTime()
+					videoTime = video.GetVideoTime(),
+					childrenSerials = serials
 				};
 
 				videoSaveData[i] = saveData;
@@ -395,7 +410,7 @@ namespace Voyager.Workspace
                 
 				LoadLamps(data.lamps);
 				LoadImages(data.images);
-				LoadVideos(data.videos);
+				//LoadVideos(data.videos);
             }
         }
 
@@ -457,6 +472,11 @@ namespace Voyager.Workspace
                     LampMove move = video.GetComponent<LampMove>();
                     move.SetPosition(videoData.handle1.ToVector3(), videoData.handle2.ToVector3());
 					video.SetTime(videoData.videoTime);
+
+					WorkspaceItem item = move.GetComponent<WorkspaceItem>();
+
+					foreach (string ssid in videoData.childrenSerials)
+                        lampManager.GetLamp(ssid).physicalLamp.GetComponent<WorkspaceItem>().SetParent(item);
 				}
 				else
 					Debug.LogError("Saved video not found! " + videoData.filepath);
@@ -487,6 +507,7 @@ namespace Voyager.Workspace
             public SerVector3 handle1;
             public SerVector3 handle2;
 			public float videoTime; // How far the video was last time you saved.
+			public string[] childrenSerials;
 		}
 	}
 }

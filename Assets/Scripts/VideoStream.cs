@@ -66,7 +66,7 @@ public class VideoStream : MonoBehaviour {
 		//NOTE: Quick hack because switching all the references is too much work at this point
     }
     
-	void SetupVideoStream(Transform videoStream)
+	public void SetupVideoStream(Transform videoStream)
 	{
 		drawScripts = GameObject.Find("MenuBackground").GetComponent<MenuMode>().drawTools.GetComponent<DrawScripts>();
         animSender = GameObject.Find("AnimationControl").GetComponent<AnimationSender>();
@@ -90,6 +90,7 @@ public class VideoStream : MonoBehaviour {
             animSender.LampIPVideoStreamPixelToColor[IP].Add(p, blackColor);
             previousColors.Add(BlackColor);
         }
+		OnWorkplaceObjectMoved();
 	}
 
     IEnumerator CheckForVideo() {
@@ -108,52 +109,55 @@ public class VideoStream : MonoBehaviour {
     void OnWorkplaceObjectMoved()
 	{
 		if (drawScripts == null) return;
-
-		if (drawScripts.videoTexture != null)
-        {
-			var numPixelsToDraw = physicalLamp.Owner.Lenght;
-            
-            string pixelName;
-
-			xPositions.Clear();
-			yPositions.Clear();
-
-            for (int i = 0; i < numPixelsToDraw; i++)
+		try
+		{
+			if (drawScripts.videoTexture != null)
             {
-				pixelName = "pixel" + i;
+                var numPixelsToDraw = physicalLamp.Owner.Lenght;
 
-                //TODO: Move calculation to OnDrag!
-				var lampPixelLED = PixelsParent.Find(pixelName).Find("LEDmodule");
-                var lampPixelCenter = lampPixelLED.GetComponent<Renderer>().bounds.center;
+                string pixelName;
 
-                //Find position of video stream pixel corresponding to lampPixelCenter
-                var Xs = maxX.transform.position - minXY.transform.position;
-                var Ys = maxY.transform.position - minXY.transform.position;
+                xPositions.Clear();
+                yPositions.Clear();
 
-                var Vp = lampPixelCenter - minXY.transform.position;
-
-                var Vx = Vector3.Project(Vp, Xs);
-                var Vy = Vector3.Project(Vp, Ys);
-
-                //Check if in limits
-                if (Vx.normalized == Xs.normalized && Vy.normalized == Ys.normalized && Vx.magnitude <= Xs.magnitude && Vy.magnitude <= Ys.magnitude)
+                for (int i = 0; i < numPixelsToDraw; i++)
                 {
-                    Color pixelColor = Color.white; // default color
+                    pixelName = "pixel" + i;
 
-					if (drawScripts.videoTexture != null)
+                    //TODO: Move calculation to OnDrag!
+                    var lampPixelLED = PixelsParent.Find(pixelName).Find("LEDmodule");
+                    var lampPixelCenter = lampPixelLED.GetComponent<Renderer>().bounds.center;
+
+                    //Find position of video stream pixel corresponding to lampPixelCenter
+                    var Xs = maxX.transform.position - minXY.transform.position;
+                    var Ys = maxY.transform.position - minXY.transform.position;
+
+                    var Vp = lampPixelCenter - minXY.transform.position;
+
+                    var Vx = Vector3.Project(Vp, Xs);
+                    var Vy = Vector3.Project(Vp, Ys);
+
+                    //Check if in limits
+                    if (Vx.normalized == Xs.normalized && Vy.normalized == Ys.normalized && Vx.magnitude <= Xs.magnitude && Vy.magnitude <= Ys.magnitude)
                     {
-						xPositions.Add(i, drawScripts.videoTexture.width * (Vx.magnitude / Xs.magnitude));
-						yPositions.Add(i, drawScripts.videoTexture.height * (Vy.magnitude / Ys.magnitude));
-					}
-                }
-                else
-				{
-					animSender.LampIPVideoStreamPixelToColor[IP][i] = blackColor;
-					if (physicalLamp.Owner.hardwareVersion == 4)
-						animSender.LampIPVideoStreamPixelToColor[IP][i][1] = 1500;
+                        Color pixelColor = Color.white; // default color
+
+                        if (drawScripts.videoTexture != null)
+                        {
+                            xPositions.Add(i, drawScripts.videoTexture.width * (Vx.magnitude / Xs.magnitude));
+                            yPositions.Add(i, drawScripts.videoTexture.height * (Vy.magnitude / Ys.magnitude));
+                        }
+                    }
+                    else
+                    {
+                        animSender.LampIPVideoStreamPixelToColor[IP][i] = blackColor;
+                        if (physicalLamp.Owner.hardwareVersion == 4)
+                            animSender.LampIPVideoStreamPixelToColor[IP][i][1] = 1500;
+                    }
                 }
             }
-        }
+		}
+		catch (Exception) { SetupVideoStream(drawScripts.videoStream.transform); }
 	}
 
 	void DrawPixels()

@@ -35,15 +35,20 @@ public class Pixel : MonoBehaviour {
 
 	public void updateSelectionPixel(int val) {
 		//Debug.Log ("Changing material color...");
-		if (val == 0) {
-			selectionPixel.SetActive (false);
-		} else if (val == 1) {
-            selectionPixel.GetComponent<Renderer>().material.SetColor("_EmissionColor", VisibleEmissionColor);
-            selectionPixel.SetActive (true);
-		} else if (val == 2) {
-			selectionPixel.GetComponent<Renderer> ().material.SetColor ("_EmissionColor", InvisibleEmissionColor);
-			selectionPixel.SetActive (true);
+		if(selectionPixel != null)
+		{
+			if (val == 0)
+				selectionPixel.SetActive(false);
+            else if (val == 1)
+            {
+                selectionPixel.GetComponent<Renderer>().material.SetColor("_EmissionColor", VisibleEmissionColor);
+                selectionPixel.SetActive(true);
+            }
+            else if (val == 2)
+            {
+                selectionPixel.GetComponent<Renderer>().material.SetColor("_EmissionColor", InvisibleEmissionColor);
+                selectionPixel.SetActive(true);
+            }	
 		}
-
 	}
 }

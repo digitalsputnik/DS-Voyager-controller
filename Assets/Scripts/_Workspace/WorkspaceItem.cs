@@ -106,4 +106,5 @@ public class WorkspaceItem : MonoBehaviour {
         Cam,
         Video
 	}
+
 }

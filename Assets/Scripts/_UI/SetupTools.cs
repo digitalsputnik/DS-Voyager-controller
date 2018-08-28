@@ -250,7 +250,7 @@ public class SetupTools : MonoBehaviour {
 
 		if (!Application.isMobilePlatform)
 		{
-			string file = FileBrowser.OpenSingleFile("Open Media", documentsPath, new ExtensionFilter[] { new ExtensionFilter("Media", "png", "mp4") });
+			string file = FileBrowser.OpenSingleFile("Open Picture", documentsPath, new ExtensionFilter[] { new ExtensionFilter("Media", "png") });
             if(file != "")
 			    LoadFileUsingPath(file);
         }
