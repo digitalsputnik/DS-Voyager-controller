@@ -11,6 +11,7 @@ using System;
 using Kakera;
 using Voyager.Networking;
 using Crosstales.FB;
+using NatCamU.Core;
 
 public class SetupTools : MonoBehaviour {
 
@@ -154,6 +155,7 @@ public class SetupTools : MonoBehaviour {
 
 	public void DetectLamps()
 	{
+		NatCam.Release();
 		Workspace.SaveWorkplace("main_temp");
 		SceneManager.LoadScene(1);
 	}

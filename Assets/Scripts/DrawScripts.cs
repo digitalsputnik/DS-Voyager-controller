@@ -632,6 +632,20 @@ public class DrawScripts : MonoBehaviour {
 				value--;
 			}
 		}
+		else
+		{
+			if (value == deviceOptions.Count - 1)
+			{
+				string path = "";
+				NativeGallery.Permission permission = NativeGallery.GetVideoFromGallery((tpath) => { path = tpath;}, "Select a video");
+				if(path != "")
+				{
+					StartCoroutine(LoadFileUsingPath(path));
+                    return;
+				}
+                value--;
+			}
+		}
 
 		//if (!Workspace.ContainsVideoStream())
         //{
@@ -715,12 +729,14 @@ public class DrawScripts : MonoBehaviour {
 
 	void Player_FrameReady(VideoPlayer source, long frameIdx)
 	{
-		OpenCVForUnity.Utils.textureToTexture2D(source.texture, videoTexture);
+		if (videoTexture != null)
+		    OpenCVForUnity.Utils.textureToTexture2D(source.texture, videoTexture);
 	}
     
 	void NatCam_OnFrame()
     {
-        OpenCVForUnity.Utils.textureToTexture2D(NatCam.Preview, videoTexture);
+		if(videoTexture != null)
+            OpenCVForUnity.Utils.textureToTexture2D(NatCam.Preview, videoTexture);
     }
 
 	void PlayStream(InputField urlInput)

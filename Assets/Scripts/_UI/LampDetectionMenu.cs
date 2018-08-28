@@ -4,6 +4,7 @@ using Voyager.Lamps;
 using Voyager.Workspace;
 using UnityEngine.UI;
 using System;
+using NatCamU.Core;
 
 public class LampDetectionMenu : MonoBehaviour {
     
@@ -11,6 +12,7 @@ public class LampDetectionMenu : MonoBehaviour {
 	{
 		PlayerPrefs.SetInt("ComingFromDetectionScene", 1);
 		SceneManager.LoadScene(0);
+		NatCam.Release();
 	}
     
     public void AddDetectedLampsBtn()
@@ -18,6 +20,7 @@ public class LampDetectionMenu : MonoBehaviour {
 		PlayerPrefs.SetInt("ComingFromDetectionScene", 2);
 		Workspace.SaveWorkplace("detection");
 		SceneManager.LoadScene(0);
+		NatCam.Release();
 	}
 
     public void AddDetectedLampsWithPicture()
@@ -43,5 +46,6 @@ public class LampDetectionMenu : MonoBehaviour {
         PlayerPrefs.SetInt("ComingFromDetectionScene", 2);
         Workspace.SaveWorkplace("detection");
         SceneManager.LoadScene(0);
+		NatCam.Release();
 	}
 }

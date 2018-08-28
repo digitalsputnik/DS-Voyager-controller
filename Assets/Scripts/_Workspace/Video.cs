@@ -55,7 +55,7 @@ public class Video : MonoBehaviour {
         outline.GetComponent<MeshRenderer>().material.color = outlineColor;
 		outline.SetActive(false);
 
-		controller.localPosition = new Vector3(15.0f, -(30 * aspect) / 2.0f - 1.5f, 0.2f);
+		controller.localPosition = new Vector3(15.0f, -(30 * aspect) / 2.0f - 1.5f, 0.0f);
 	}
     
 	public void Play()

@@ -874,7 +874,6 @@ MonoBehaviour:
   hideableItems:
   - {fileID: 1465723106251760}
   - {fileID: 1908812337194130}
-  - {fileID: 1934047261726208}
   hideableComponents:
   - {fileID: 114132538971928810}
   hideableColliders:

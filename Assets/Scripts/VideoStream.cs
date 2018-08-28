@@ -157,7 +157,7 @@ public class VideoStream : MonoBehaviour {
                 }
             }
 		}
-		catch (Exception) { SetupVideoStream(drawScripts.videoStream.transform); }
+		catch (Exception) { if (drawScripts.videoStream != null) SetupVideoStream(drawScripts.videoStream.transform); }
 	}
 
 	void DrawPixels()

@@ -204,6 +204,18 @@ public class LampDetectionCam : MonoBehaviour
 				lamp.physicalLamp.GetComponent<LampMove>().SetPosition(data.lampPoint1, data.lampPoint2);
 			}
 		}
+
+		List<WorkspaceItem> items = new List<WorkspaceItem>(Workspace.GetItemsInWorkspace());
+		foreach(WorkspaceItem item in items)
+		{
+			if(item.Type == WorkspaceItem.WorkspaceItemType.Lamp)
+			{
+				PhysicalLamp lamp = item.GetComponent<PhysicalLamp>();
+				DetectionLampData detectionLamp = detectionLamps.Find(x => x.Serial == lamp.Owner.Serial);
+				if (detectionLamp == null)
+					Workspace.DestroyItem(item);
+            }
+		}
 	}
 
 	/// <summary>
@@ -219,7 +231,7 @@ public class LampDetectionCam : MonoBehaviour
 		CalibrationColors.Add(new byte[] { 0, 0, 100, 0 });
 
 		//Permutations
-		int[][] permutations = new int[][]
+		int[][] permutations =
 		{
 			new int[] {1,2,3,4},
 			new int[] {1,2,4,3},
@@ -258,27 +270,28 @@ public class LampDetectionCam : MonoBehaviour
 		}
 	}
 
-	private byte[] GenerateColorPacket(int pixelCount, int[] permutation)
+	byte[] GenerateColorPacket(int pixelCount, int[] permutation)
 	{
 		byte[] data = new byte[343];
 		byte[] lightValues = new byte[332];
 
 		//header
 		//RGBW
-		System.Buffer.BlockCopy(new byte[] { 0xD5, 0x0A, 0x10, 0x03 }, 0, data, 0, 4);
+		Buffer.BlockCopy(new byte[] { 0xD5, 0x0A, 0x10, 0x03 }, 0, data, 0, 4);
 		//General color sending!
-		System.Buffer.BlockCopy(new byte[] { 0x00, 0x00, 0x00, Convert.ToByte(pixelCount) }, 0, data, 4, 4);
+		Buffer.BlockCopy(new byte[] { 0x00, 0x00, 0x00, Convert.ToByte(pixelCount) }, 0, data, 4, 4);
 		//terminator + empty checksum
-		System.Buffer.BlockCopy(new byte[] { 0xEF, 0xFE, 0x00 }, 0, data, 8 + 4*pixelCount, 3);
-
+		Buffer.BlockCopy(new byte[] { 0xEF, 0xFE, 0x00 }, 0, data, 8 + 4*pixelCount, 3);
+        
 		int lightStep = pixelCount / CalibrationColors.Count;
 
-		for (int pixNr = 0; pixNr < pixelCount; pixNr++) {
+		for (int pixNr = 0; pixNr < pixelCount; pixNr++)
+		{
 			int colorIndex = (pixNr / lightStep) == CalibrationColors.Count ? CalibrationColors.Count - 1 : pixNr / lightStep;
-			System.Buffer.BlockCopy (CalibrationColors [permutation [colorIndex] - 1], 0, lightValues, pixNr * 4, 4);
+			Buffer.BlockCopy (CalibrationColors [permutation [colorIndex] - 1], 0, lightValues, pixNr * 4, 4);
 		}
 
-		System.Buffer.BlockCopy(lightValues, 0, data, 8, 4*pixelCount);
+		Buffer.BlockCopy(lightValues, 0, data, 8, 4 * pixelCount);
 
 		return data;
 	}
@@ -402,12 +415,9 @@ public class LampDetectionCam : MonoBehaviour
 					startVectors.Add((Pc - start).magnitude);
 					endVectors.Add((Pc - end).magnitude);
 				}
-
-				//DebugText.text = "start + " + string.Join(",", startVectors.Select(x => x.ToString()).ToArray())
-				//    + "\n end " + string.Join(",", endVectors.Select(x => x.ToString()).ToArray());
-
-				startFunction = previousStartVector == float.MaxValue ? startFunction * 100f : startFunction;
-				endFunction = previousEndVector == float.MaxValue ? endFunction * 100f : endFunction;
+                            
+				startFunction = previousStartVector.Equals(float.MaxValue) ? startFunction * 100f : startFunction;
+				endFunction = previousEndVector.Equals(float.MaxValue) ? endFunction * 100f : endFunction;
 
 				if (!functionValueToPointsDictionary.ContainsKey(startFunction))
 					functionValueToPointsDictionary.Add(startFunction, new List<Vector2> { end, start });
@@ -443,20 +453,6 @@ public class LampDetectionCam : MonoBehaviour
 			});         
 		}
 
-		/*
-		if(lampManager.GetLamps().Count != 0)
-		{
-			// This is here for testing
-            DetectionLampData data = new DetectionLampData()
-            {
-                Serial = lampManager.GetLamps()[0].Serial,
-                lampPoint1 = Vector3.up * 6,
-                lampPoint2 = Vector3.right * 10
-            };
-            detectionLamps.Add(data);
-		}
-		*/
-
 		return detectionLamps;
 	}
 
@@ -488,7 +484,7 @@ public class LampDetectionCam : MonoBehaviour
 								ContourColorPointDictionary [generalContour] [ContourColorPointDictionary [generalContour].Count - 1] = new Vector2 ((float)(moments.get_m10 () / area), (float)(moments.get_m01 () / area));
 							}
 							else
-								if (previousArea == 0) {
+								if (previousArea.Equals(0.0f)) {
 									ContourColorPointDictionary [generalContour].Add (new Vector2 ((float)(moments.get_m10 () / area), (float)(moments.get_m01 () / area)));
 								}
 						}
@@ -570,7 +566,7 @@ public class LampDetectionCam : MonoBehaviour
 
 }
 
-public struct DetectionLampData
+public class DetectionLampData
 {
 	public string Serial;
 	public Vector3 lampPoint1;

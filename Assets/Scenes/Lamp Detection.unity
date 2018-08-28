@@ -387,7 +387,7 @@ MonoBehaviour:
   preview: {fileID: 416891598}
   lampManager: {fileID: 1594841113}
   networkManager: {fileID: 768251554}
-  SetDetectionInterval: 0.2
+  SetDetectionInterval: 1
   worldPointWidth: 0
 --- !u!114 &401303113
 MonoBehaviour:
