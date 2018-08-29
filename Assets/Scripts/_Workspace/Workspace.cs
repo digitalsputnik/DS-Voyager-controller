@@ -86,7 +86,7 @@ namespace Voyager.Workspace
 
 		public static Photo InstantiateImage(Texture2D texture, string photoName)
         {
-            return InstantiateImage(texture, Vector3.zero, photoName);
+			return InstantiateImage(texture, Vector3.zero, photoName);
         }
 
 		public static Photo InstantiateImage(Texture2D texture, Vector3 position, string photoName)

@@ -722,9 +722,12 @@ public class DrawScripts : MonoBehaviour {
 
     void NatCam_OnStart()
 	{
-		backgroundMaterial.mainTexture = NatCam.Preview;
-		videoTexture = new Texture2D(NatCam.Preview.width, NatCam.Preview.height);
-		EventManager.TriggerEvent("WorkplaceObjectMoved");
+		if(backgroundMaterial != null)
+		{
+			backgroundMaterial.mainTexture = NatCam.Preview;
+            videoTexture = new Texture2D(NatCam.Preview.width, NatCam.Preview.height);
+            EventManager.TriggerEvent("WorkplaceObjectMoved");
+		}
 	}
 
 	void Player_FrameReady(VideoPlayer source, long frameIdx)

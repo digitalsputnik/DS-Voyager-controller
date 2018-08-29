@@ -271,8 +271,9 @@ public class SetupTools : MonoBehaviour {
 		Texture2D texture = new Texture2D(2, 2);
 		texture.LoadImage(file);
 		string photoName = Path.GetFileName(obj).Split('.')[0];
+		string extenstion = Path.GetFileName(obj).Split('.')[Path.GetFileName(obj).Split('.').Length - 1];
 
-		switch (Path.GetFileName(obj).Split('.')[Path.GetFileName(obj).Split('.').Length - 1])
+		switch (extenstion)
 		{
 			case "png":
 				Workspace.InstantiateImage(texture, photoName);

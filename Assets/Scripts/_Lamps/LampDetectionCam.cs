@@ -32,8 +32,8 @@ public class LampDetectionCam : MonoBehaviour
 	public List<byte[]> CalibrationColors { get; set; }
 
 	//Color limits for detecting colors from image
-	private List<Scalar> LowerColors = new List<Scalar>();
-	private List<Scalar> UpperColors = new List<Scalar>();
+	List<Scalar> LowerColors = new List<Scalar>();
+	List<Scalar> UpperColors = new List<Scalar>();
 
 	//Contours for detection
 	//Detection
