@@ -220,13 +220,7 @@ namespace Voyager.Workspace
 			return instance.transform;
 		}
 
-		public static void SaveWorkplace()
-        {
-            string filename = SceneManager.GetActiveScene().name;
-            SaveWorkplace(filename);
-        }
-
-		public static void SaveWorkplace(string filename)
+		public static void SaveWorkplace(string filename, Texture2D thumbnailTexture = null)
         {
 			if (!Directory.Exists(Application.persistentDataPath + "/images"))
 				Directory.CreateDirectory(Application.persistentDataPath + "/images");
@@ -241,8 +235,11 @@ namespace Voyager.Workspace
 			ImageSaveData[] imageSaveData = GenerateImagesSaveData();
 			VideoSaveData[] videoSaveData = GenerateVideoSaveData();
 
+			string thumbnail = (thumbnailTexture != null) ? SaveThumbnail(thumbnailTexture, filename) : "";
+
 			WorkplaceData data = new WorkplaceData()
 			{
+				thumbnail = thumbnail,
 				lamps = lampSaveData,
 				images = imageSaveData,
 				//videos = videoSaveData
@@ -253,6 +250,14 @@ namespace Voyager.Workspace
             file.Close();
             file.Dispose();
         }
+
+		static string SaveThumbnail(Texture2D texture, string filename)
+		{
+			string path = Application.persistentDataPath + "/images/thumb_" + filename + ".png";
+			byte[] pngData = texture.EncodeToPNG();
+            File.WriteAllBytes(path, pngData);
+			return path;
+		}
 
 		static LampSaveData[] GenerateLampsSaveData()
 		{
@@ -486,6 +491,7 @@ namespace Voyager.Workspace
 		[Serializable]
         public struct WorkplaceData
         {
+			public string thumbnail;
             public LampSaveData[] lamps;
 			public ImageSaveData[] images;
 			public VideoSaveData[] videos;
@@ -506,7 +512,7 @@ namespace Voyager.Workspace
 			public string filepath;
             public SerVector3 handle1;
             public SerVector3 handle2;
-			public float videoTime; // How far the video was last time you saved.
+			public float videoTime; // How far the video was last time you saved. // NOT WORKING
 			public string[] childrenSerials;
 		}
 	}

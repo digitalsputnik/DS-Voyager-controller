@@ -13,6 +13,7 @@ public class LoadItem : MonoBehaviour {
 	[SerializeField] Text dateText;
 	[SerializeField] Text lampsText;
 	[SerializeField] Text imagesText;
+	[SerializeField] RawImage thumbnail;
 
 	string workspaceName;
 	string path;
@@ -42,10 +43,22 @@ public class LoadItem : MonoBehaviour {
 			}
 		}
 
+		if (workspace.thumbnail != "")
+			SetThumbnail(workspace.thumbnail);
+
 		nameText.text = workspaceName;
 		dateText.text = "Created " + File.GetCreationTime(path);
 		lampsText.text = "Lamp count: " + workspace.lamps.Length + " - found " + lamps.Count;
 		imagesText.text = "Image count: " + workspace.images.Length;
+	}
+
+	void SetThumbnail(string thumbnailPath)
+	{
+		byte[] file = File.ReadAllBytes(thumbnailPath);
+        Texture2D texture = new Texture2D(2, 2);
+        texture.LoadImage(file);
+		thumbnail.texture = texture;
+		thumbnail.color = Color.white;
 	}
 
     public void Load()

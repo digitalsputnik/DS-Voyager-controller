@@ -9,6 +9,7 @@ public class SavePanel : MonoBehaviour {
 
 	CanvasGroup canvasGroup;
 	public InputField nameField;
+	public PhotoCamera cam;
 
 	void Start()
 	{
@@ -16,7 +17,7 @@ public class SavePanel : MonoBehaviour {
 	}
     public void Save()
 	{
-		Workspace.SaveWorkplace(nameField.text);
+		Workspace.SaveWorkplace(nameField.text, cam.WorkspacePhoto());
 		Close();
 	}
 
