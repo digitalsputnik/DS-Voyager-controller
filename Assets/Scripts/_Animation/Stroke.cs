@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using Voyager.Networking;
 
 namespace Voyager.Animation
 {
@@ -37,7 +34,7 @@ namespace Voyager.Animation
         public Stroke(string ID, Layer ParentLayer, Dictionary<string, SortedDictionary<int, int>> LampPixQueueToPixel = null, int pixelCount = 0, string animation = "", Dictionary<string, int[]> properties = null)
         {
             //Timestamps
-			CreationTimestamp = GetCurrentTimestampUTC() + NetworkManager.GetTimesyncOffset();
+			CreationTimestamp = GetCurrentTimestampUTC();
             Duration = 2000f;
             StartTime = GetStartTimeFromProperties(properties);
 
@@ -72,7 +69,7 @@ namespace Voyager.Animation
         
         double GetCurrentTimestampUTC()
         {
-			return (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds + NetworkManager.GetTimesyncOffset();
+			return (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
         }
 
         double GetStartTimeFromProperties(Dictionary<string, int[]> properties = null)
@@ -143,6 +140,7 @@ namespace Voyager.Animation
 
             layer.RemoveInvisibleStrokes();
             TimeStamp = GetCurrentTimestampUTC();
+			layer.scene.TimeStamp = GetCurrentTimestampUTC();
         }
 
         /// <summary>
@@ -170,9 +168,12 @@ namespace Voyager.Animation
                 for (int q = QueueNumber + 1; q < TotalPixelCount; q++)
                 {
                     var pixelMac = PixelQueueToControlledPixel.FirstOrDefault(x => x.Value.ContainsKey(q)).Key;
-                    var pixelID = PixelQueueToControlledPixel[pixelMac][q];
-                    PixelQueueToControlledPixel[pixelMac].Remove(q);
-                    PixelQueueToControlledPixel[pixelMac].Add(q - 1, pixelID);
+					if(pixelMac != null)
+					{
+						var pixelID = PixelQueueToControlledPixel[pixelMac][q];
+						PixelQueueToControlledPixel[pixelMac].Remove(q);
+						PixelQueueToControlledPixel[pixelMac].Add(q - 1, pixelID);
+                    }
                 }
             }
             TotalPixelCount--;

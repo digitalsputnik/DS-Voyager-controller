@@ -45,14 +45,31 @@ namespace Voyager.Networking
 
     static class OffsetServiceClient
     {
+		public static TimeSpan LastOffset;
+
         public static TimeSpan GetOffset()
         {
             try
             {
-                using (var ntp = new NtpClient(FindMasterIp()))
-                {
-                    return ntp.GetCorrectionOffset();
-                }
+				IPEndPoint endPoint = FindMasterIp();
+				if(endPoint == null)
+				{
+					UnityEngine.Debug.LogError("[TIMEOFFSET] Master IP == null");
+					return LastOffset;
+				}
+				else
+				{
+					using (var ntp = new NtpClient(endPoint))
+                    {
+						if (ntp.GetCorrectionOffset().Equals(TimeSpan.Zero))
+						{
+							UnityEngine.Debug.LogError("[TIMEOFFSET] Time offset == 0");
+							return LastOffset;
+						}
+						else
+							return ntp.GetCorrectionOffset();
+                    }	
+				}
             }
             catch (Exception) { return TimeSpan.Zero; }
         }
@@ -84,7 +101,7 @@ namespace Voyager.Networking
 
             var sw = new Stopwatch();
             // No timeout if timeout equals zero 
-            if (timeoutMilliseconds > 0) sw.Start();
+			sw.Start();
 
             try
             {
@@ -97,7 +114,7 @@ namespace Voyager.Networking
                     return server;
                 }
 
-                throw new TimeoutException("Did not find suitable server for sync");
+				return null;
             }
             finally { listener.Close(); }
         }

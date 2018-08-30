@@ -24487,7 +24487,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000018291397}
+  m_AnchoredPosition: {x: 0, y: -0.00004261572}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1369542640
@@ -27910,10 +27910,10 @@ MonoBehaviour:
   animVersion: {x: 0, y: 41}
   hw3Version:
     lpcVersion: {x: 0, y: 212}
-    chipVersion: {x: 0, y: 72}
+    chipVersion: {x: 0, y: 74}
   hw4Version:
     lpcVersion: {x: 0, y: 209}
-    chipVersion: {x: 0, y: 76}
+    chipVersion: {x: 0, y: 78}
 --- !u!114 &1509357878
 MonoBehaviour:
   m_ObjectHideFlags: 0

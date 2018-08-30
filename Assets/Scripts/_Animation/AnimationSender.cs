@@ -91,6 +91,7 @@ public class AnimationSender : MonoBehaviour
 
 	void AskForScenes()
     {
+		if (Debugging) Debug.Log(NetworkManager.GetTimesyncOffset());
         if (Debugging) Debug.Log("Asking for lamps scenes");
         foreach (Lamp lamp in lampManager.GetLamps())
             NetworkManager.AskLampLayers(lamp.IP);
@@ -98,10 +99,44 @@ public class AnimationSender : MonoBehaviour
 
     void NetworkManager_OnLampSceneResponse(string response, IPAddress ip)
     {
-        Scene newScene = JsonConvert.DeserializeObject<Scene>(response);
+		Scene newScene = ConvertTakeTimestamp(JsonConvert.DeserializeObject<Scene>(response));
         if (Debugging) Debug.Log(response);
         MergeScenes(newScene);
     }
+
+    Scene ConvertAddTimestamp(Scene current)
+	{
+		Scene rScene = current;
+		rScene.TimeStamp += NetworkManager.GetTimesyncOffset();
+
+		foreach(Layer layer in rScene.Layers)
+		{
+			foreach(Stroke stroke in layer.Strokes)
+			{
+				stroke.TimeStamp += NetworkManager.GetTimesyncOffset();
+				stroke.CreationTimestamp += NetworkManager.GetTimesyncOffset();
+			}
+		}
+
+		return rScene;
+	}
+
+	Scene ConvertTakeTimestamp(Scene import)
+	{
+		Scene rScene = import;
+        rScene.TimeStamp -= NetworkManager.GetTimesyncOffset();
+
+        foreach (Layer layer in rScene.Layers)
+        {
+            foreach (Stroke stroke in layer.Strokes)
+            {
+                stroke.TimeStamp -= NetworkManager.GetTimesyncOffset();
+                stroke.CreationTimestamp -= NetworkManager.GetTimesyncOffset();
+            }
+        }
+
+		return rScene;
+	}
 
     /// <summary>
     /// Removes pixel from layers. This is used in the case of lamp deletion
@@ -542,7 +577,7 @@ public class AnimationSender : MonoBehaviour
 		SceneSendingPackage package = new SceneSendingPackage
 		{
 			endpoint = lampEndPoint,
-			scene = sce
+			scene = ConvertAddTimestamp(sce)
 		};
         SendSceneToLamp(package);
         return package;
