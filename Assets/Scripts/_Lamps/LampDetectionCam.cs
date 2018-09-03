@@ -443,6 +443,9 @@ public class LampDetectionCam : MonoBehaviour
 
 		for (int k = 0; k < min.Length; k++)
 		{
+			if (excludedMacIndex.Count == SsidToPattern.Count() || excludedContourIndex.Count == finalContours.Count)
+				break;
+
 			//Get start and end points
 			var points = functionValueToPointsDictionary[min[k].value];
 
@@ -450,7 +453,10 @@ public class LampDetectionCam : MonoBehaviour
 				Serial = LampSerialsForDetection[min[k].i],
 				lampPoint1 = TransformPoint(points[0]),
 				lampPoint2 = TransformPoint(points[1])
-			});         
+			});
+
+			excludedMacIndex.Add(min[k].i);
+			excludedContourIndex.Add(min[k].j);
 		}
 
 		return detectionLamps;
