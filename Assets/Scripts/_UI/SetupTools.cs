@@ -25,7 +25,6 @@ public class SetupTools : MonoBehaviour {
 	[SerializeField] GameObject addAllLampsBtn;
 	[SerializeField] SavePanel savePanel;
 	[SerializeField] LoadPanel loadPanel;
-	[SerializeField] Unimgpicker mobileImagePicker;
 	[Space(5)]
     [SerializeField] Transform aboutWindow;
 	[Header("Updating")]
@@ -35,11 +34,6 @@ public class SetupTools : MonoBehaviour {
 	public Version hw4Version;
 
     bool oneLampChecked;
-
-	void Awake()
-	{
-		mobileImagePicker.Completed += MobileImagePicker_Completed;
-	}
 
 	void Start()
 	{
@@ -257,12 +251,16 @@ public class SetupTools : MonoBehaviour {
 			    LoadFileUsingPath(file);
         }
 		else
-			mobileImagePicker.Show("Select Image", DateTime.Now.ToShortDateString().Replace("/", "-") + "_" + DateTime.Now.ToShortTimeString().Replace(":", "-"), 2048);
-	}
+		{
+			// TODO: WRONG! FIX IT!
+			NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((path) =>
+            {
+                if (path != null)
+					LoadFileUsingPath(path);
+            }, "Select a PNG image", "image/png");
+		}
 
-	void MobileImagePicker_Completed(string path)
-	{
-		LoadFileUsingPath(path);
+			//mobileImagePicker.Show("Select Image", DateTime.Now.ToShortDateString().Replace("/", "-") + "_" + DateTime.Now.ToShortTimeString().Replace(":", "-"), 2048);
 	}
 
 	void LoadFileUsingPath(string obj)
@@ -276,11 +274,9 @@ public class SetupTools : MonoBehaviour {
 		switch (extenstion)
 		{
 			case "png":
+			case "jpg":
 				Workspace.InstantiateImage(texture, photoName);
                 break;
-			case "mp4":
-				Workspace.InstantiateVideo(obj, Vector3.zero);
-				break;
         }
 	}
 }

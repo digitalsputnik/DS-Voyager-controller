@@ -261,6 +261,9 @@ public class LampUpdater : MonoBehaviour {
             lock (UpdateProgress) { UpdateProgress[lampIP] += progressStep; }
         }
 
+		if (!failed)
+			lampManager.GetLamp(IPAddress.Parse(lampIP)).upToDate = true;
+
         ssh.Dispose();
         sftp.Dispose();
         UpdatedLamps.Add(lampIP);

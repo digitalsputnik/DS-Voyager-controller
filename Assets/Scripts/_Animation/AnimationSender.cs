@@ -218,7 +218,10 @@ public class AnimationSender : MonoBehaviour
 				//OriginalLayer.Strokes[StrokeIndex] = newStroke;
 
 				if (OriginalLayer.Strokes[StrokeIndex].StrokeID == ActiveStroke.StrokeID)
-                    ActiveStroke = OriginalLayer.Strokes[StrokeIndex];
+				{
+					ActiveStroke = OriginalLayer.Strokes[StrokeIndex];
+                    drawScripts.SetAnimation(ActiveStroke.Animation, ActiveStroke.Properties);
+                }
             }
             else
             {
@@ -309,11 +312,11 @@ public class AnimationSender : MonoBehaviour
                     pixelStrokes = pixelStrokes.OrderByDescending(s => s.CreationTimestamp).ToList();
                     MergedStroke.layer.PixelToStrokeIDDictionary[pixel] = pixelStrokes;
                 }
-				//else
-				//{
-				//	int strokeIndex = pixelStrokes.FindIndex(s => s.StrokeID == MergedStroke.StrokeID);
-				//	MergedStroke.layer.PixelToStrokeIDDictionary[pixel][strokeIndex] = MergedStroke;
-				//}
+				else
+				{
+					int strokeIndex = pixelStrokes.FindIndex(s => s.StrokeID == MergedStroke.StrokeID);
+					MergedStroke.layer.PixelToStrokeIDDictionary[pixel][strokeIndex] = MergedStroke;
+				}
             }
             else
             {

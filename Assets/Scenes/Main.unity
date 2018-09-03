@@ -7541,7 +7541,18 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 960339917}
+        m_MethodName: set_isOn
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Dropdown+DropdownEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &449657364
@@ -18057,6 +18068,7 @@ GameObject:
   - component: {fileID: 1098985457}
   - component: {fileID: 1098985454}
   - component: {fileID: 1098985456}
+  - component: {fileID: 1098985455}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -18075,6 +18087,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bf455901e8637b4ba858d7f809cad23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1098985455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1098985453}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f395d0a4a73e93419a5ddd12309ab32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FPS: {fileID: 0}
 --- !u!114 &1098985456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24158,12 +24182,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d404a7c743785496d9709917da87b8e3, type: 2}
   m_IsPrefabParent: 0
---- !u!114 &1356568793 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11470950, guid: d404a7c743785496d9709917da87b8e3,
-    type: 2}
-  m_PrefabInternal: {fileID: 1356568792}
-  m_Script: {fileID: 11500000, guid: e673e7642862948e29c760426f26905f, type: 3}
 --- !u!1 &1361722513
 GameObject:
   m_ObjectHideFlags: 0
@@ -24487,7 +24505,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00004261572}
+  m_AnchoredPosition: {x: 0, y: -0.0000037741052}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1369542640
@@ -27904,7 +27922,6 @@ MonoBehaviour:
   addAllLampsBtn: {fileID: 1217000089}
   savePanel: {fileID: 409268970}
   loadPanel: {fileID: 704588152}
-  mobileImagePicker: {fileID: 1356568793}
   aboutWindow: {fileID: 1373103120}
   updateCheckInterval: 2
   animVersion: {x: 0, y: 41}
