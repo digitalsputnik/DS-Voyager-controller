@@ -57,7 +57,7 @@ public class LampDetectionCam : MonoBehaviour
 		NatCam.Play();
 
 		preview.texture = NatCam.Preview;
-		InvokeRepeating("SetDetectionModes", 2.0f, SetDetectionInterval);
+		InvokeRepeating("SetDetectionModes", 0.2f, SetDetectionInterval);
 
 		SetupWorldPoints();
 	}
@@ -272,8 +272,8 @@ public class LampDetectionCam : MonoBehaviour
 
 	byte[] GenerateColorPacket(int pixelCount, int[] permutation)
 	{
-		byte[] data = new byte[343];
-		byte[] lightValues = new byte[332];
+		byte[] data = new byte[8 + 4 * pixelCount + 3];
+		byte[] lightValues = new byte[4 * pixelCount + 3];
 
 		//header
 		//RGBW
