@@ -468,7 +468,8 @@ public class AnimationSender : MonoBehaviour
         //TODO: General layer resolution
         foreach (var stroke in scene.Layers[0].Strokes)
         {
-            if (stroke.Animation == "DMX" && stroke.Properties["Unit size"][0] == -1)
+            //Lamp distribution
+			if (stroke.Animation == "DMX" && stroke.Properties["Unit size"][0] == -1)
             {
                 var LampDMXOrder = stroke.PixelQueueToControlledPixel.OrderBy(x => x.Value.FirstOrDefault().Key).GroupBy(x => x.Key).Select(x=> x.FirstOrDefault().Key).ToList();
                 var DMXOffset = stroke.Properties["DMX offset"][0];
@@ -477,7 +478,7 @@ public class AnimationSender : MonoBehaviour
                 foreach (var lamp in LampDMXOrder)
                 {
                     LampMactoDMXoffsetDictionary.Add(lamp, DMXOffset);
-                    DMXOffset += 4;
+					DMXOffset += 4 * (stroke.Properties["Division"][0]);
                 }
                 StrokeIDtoLampMactoDMXoffsetDictionary.Add(stroke.StrokeID, LampMactoDMXoffsetDictionary);
             }
