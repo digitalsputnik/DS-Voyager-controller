@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -28,7 +29,11 @@ public class LoadPanel : MonoBehaviour {
 		foreach(string path in paths)
 		{
 			if(path.EndsWith(".dsw", new System.StringComparison()) == true)
-				Instantiate(template, content).GetComponent<LoadItem>().Setup(path, this);
+			{
+				try { Instantiate(template, content).GetComponent<LoadItem>().Setup(path, this); }
+				catch (Exception ex) { Debug.LogError(ex.Message); }
+                
+            }
 		}
     }
 

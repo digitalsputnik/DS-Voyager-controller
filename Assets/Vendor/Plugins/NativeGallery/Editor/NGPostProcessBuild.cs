@@ -10,7 +10,7 @@ public class NGPostProcessBuild
 	private const bool ENABLED = true;
 
 	private const string PHOTO_LIBRARY_USAGE_DESCRIPTION = "Used to stream videos to DS Voyager lamps.";
-	private const bool MINIMUM_TARGET_8_OR_ABOVE = true;
+	private const bool MINIMUM_TARGET_8_OR_ABOVE = false;
     
 #if UNITY_IOS
 #pragma warning disable 0162

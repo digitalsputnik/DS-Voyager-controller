@@ -421,7 +421,7 @@ namespace Voyager.Workspace
 
 		static void LoadLamps(LampSaveData[] lampDataArray)
 		{         
-            LampManager lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+			LampManager lampManager = LampManager.Instance;
 
             foreach (LampSaveData lampData in lampDataArray)
             {
@@ -440,7 +440,7 @@ namespace Voyager.Workspace
 
 		static void LoadImages(ImageSaveData[] imageDataArray)
 		{
-			LampManager lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+			LampManager lampManager = LampManager.Instance;
 
 			foreach(ImageSaveData imageData in imageDataArray)
 			{
@@ -467,7 +467,7 @@ namespace Voyager.Workspace
 
 		static void LoadVideos(VideoSaveData[] videoDataArray)
 		{
-			LampManager lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+			LampManager lampManager = LampManager.Instance;
 
 			foreach(VideoSaveData videoData in videoDataArray)
 			{

@@ -105,7 +105,7 @@ public class LampUpdater : MonoBehaviour {
 	void Start()
 	{
 		PreloadFiles();
-		lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+		lampManager = LampManager.Instance;
 	}
 
     void PreloadFiles()

@@ -260,7 +260,8 @@ namespace Voyager.Networking
 			IPEndPoint sendingEndpoint = new IPEndPoint(ip, 30001);
 			DetectionModePackage package = new DetectionModePackage { DetectionMode = detection };
             string jsonData = JsonConvert.SerializeObject(package);
-            byte[] message = Encoding.UTF8.GetBytes(jsonData);
+			byte[] message = Encoding.ASCII.GetBytes(jsonData);
+			//Debug.Log("Sending to " + sendingEndpoint + " a detection mode.");
 			PollMessage(pollTimes, message, sendingEndpoint, instance.sendingClient);
         }
 

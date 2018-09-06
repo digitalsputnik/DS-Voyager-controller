@@ -70,7 +70,7 @@ public class AnimationSender : MonoBehaviour
     
     void Start()
     {
-		lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+		lampManager = LampManager.Instance;
         NetworkManager.OnLampSceneResponse += NetworkManager_OnLampSceneResponse;
 
         scene = new Scene();
@@ -272,7 +272,7 @@ public class AnimationSender : MonoBehaviour
 
     static void SelectPixelsFromDictionary(Stroke MergedStroke)
     {
-		LampManager lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();      
+		LampManager lampManager = LampManager.Instance;
         SortedDictionary<int, Pixel> QueueToPixel = new SortedDictionary<int, Pixel>();
         
 		foreach(Lamp lamp in lampManager.GetLampsInWorkplace())
