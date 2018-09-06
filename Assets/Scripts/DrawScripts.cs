@@ -587,6 +587,7 @@ public class DrawScripts : MonoBehaviour {
         }
 
 		CheckIfVideoStramNeeded();
+		CheckIfVideoStramNeeded();
         
     }
 
@@ -721,7 +722,9 @@ public class DrawScripts : MonoBehaviour {
 
 	IEnumerator LoadFileUsingPath(string path)
     {
-		Workspace.DestroyItem(Workspace.GetVideoSteam().GetComponent<WorkspaceItem>());
+		if(Workspace.GetVideoSteam() != null)
+		    Workspace.DestroyItem(Workspace.GetVideoSteam().GetComponent<WorkspaceItem>());
+		
         byte[] file = File.ReadAllBytes(path);       
 		Video video = Workspace.InstantiateVideo(path, Vector3.zero);
         VideoPlayer player = video.GetVideoPlayer();
