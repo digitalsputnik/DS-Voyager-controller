@@ -12,7 +12,7 @@ public class AddLampBtn : MonoBehaviour {
 
 	public void Setup(Lamp lamp)
 	{
-		manager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+		manager = LampManager.Instance;
 		this.lamp = lamp;
 
 		GetComponentInChildren<Text>().text = lamp.Serial;

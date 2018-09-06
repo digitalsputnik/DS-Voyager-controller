@@ -460,7 +460,7 @@ public class LampSettings : MonoBehaviour {
     public void SelectAll()
 	{
 		selectedLamps.Clear();
-		LampManager lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+		LampManager lampManager = LampManager.Instance;
 		foreach (Lamp lamp in lampManager.GetLampsInWorkplace())
 			LampSelected(lamp.physicalLamp);
 	}

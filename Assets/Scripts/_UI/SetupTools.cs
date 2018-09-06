@@ -8,7 +8,6 @@ using UnityEngine.UI;
 using Voyager.Lamps;
 using Voyager.Workspace;
 using System;
-using Kakera;
 using Voyager.Networking;
 using Crosstales.FB;
 using NatCamU.Core;
@@ -37,7 +36,7 @@ public class SetupTools : MonoBehaviour {
 
 	void Start()
 	{
-		lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+		lampManager = LampManager.Instance;
 
 		if (lampManager == null)
 		{
@@ -252,10 +251,10 @@ public class SetupTools : MonoBehaviour {
         }
 		else
 		{
-			// TODO: WRONG! FIX IT!
 			NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((path) =>
             {
-                if (path != null)
+				Debug.Log(path);
+                if (path != "")
 					LoadFileUsingPath(path);
             }, "Select a PNG image", "image/png");
 		}
@@ -269,6 +268,8 @@ public class SetupTools : MonoBehaviour {
 		Texture2D texture = new Texture2D(2, 2);
 		texture.LoadImage(file);
 		string photoName = Path.GetFileName(obj).Split('.')[0];
+		if (photoName == "tmp")
+			photoName = Guid.NewGuid().ToString();
 		string extenstion = Path.GetFileName(obj).Split('.')[Path.GetFileName(obj).Split('.').Length - 1];
 
 		switch (extenstion)

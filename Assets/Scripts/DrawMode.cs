@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Voyager.Animation;
+using Voyager.Workspace;
 
 public class DrawMode : MonoBehaviour {
 
@@ -131,7 +134,7 @@ public class DrawMode : MonoBehaviour {
 			RaycastHit hit;
 			Physics.Raycast (ray, out hit, 100);
 			if (Physics.Raycast (ray, out hit, 100) && hit.transform.tag == "lamp") {
-
+				
 				if (BrushDropdown.value == 0) { //If lamp brush!
 					var lamp = hit.transform.parent.parent;
 					for (int i = 0; i < lamp.childCount; i++) {
@@ -208,8 +211,8 @@ public class DrawMode : MonoBehaviour {
 					
 	}
 
-    //Called when "Add Stroke" button is clicked
-    public void OnNewStrokeAddClick()
+	//Called when "Add Stroke" button is clicked
+	public void OnNewStrokeAddClick()
     {
         if (BrushDropdown.value > 1)
         {

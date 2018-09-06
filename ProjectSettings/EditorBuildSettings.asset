@@ -11,3 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Lamp Detection.unity
     guid: 2939334ba34fd4b9291e19599699836b
+  - enabled: 0
+    path: Assets/Scenes/New Design.unity
+    guid: 1584424787ba240c28b972aa52175d3f

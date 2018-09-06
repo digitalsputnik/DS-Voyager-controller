@@ -34,7 +34,7 @@ public class LoadItem : MonoBehaviour {
 
 		List<Lamp> lamps = new List<Lamp>();
 
-		foreach(Lamp lamp in GameObject.FindWithTag("LampManager").GetComponent<LampManager>().GetLamps())
+		foreach(Lamp lamp in LampManager.Instance.GetLamps())
 		{
 			foreach(LampSaveData lampData in workspace.lamps)
 			{

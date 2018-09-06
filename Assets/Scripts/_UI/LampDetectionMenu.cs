@@ -39,7 +39,7 @@ public class LampDetectionMenu : MonoBehaviour {
 
         move.SetPosition(point1, point2);
 
-        LampManager lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+		LampManager lampManager = LampManager.Instance;
         foreach (Lamp lamp in lampManager.GetLampsInWorkplace())
             lamp.physicalLamp.GetComponent<WorkspaceItem>().SetParent(wItem);
 

@@ -385,9 +385,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   preview: {fileID: 416891598}
-  lampManager: {fileID: 1594841113}
   networkManager: {fileID: 768251554}
-  SetDetectionInterval: 1
+  SetDetectionInterval: 0.5
   worldPointWidth: 0
 --- !u!114 &401303113
 MonoBehaviour:
@@ -1194,12 +1193,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1535354416}
---- !u!114 &1594841113 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114032981690824530, guid: eeabb94b1b5ed48c5a216c5d324c509b,
-    type: 2}
-  m_PrefabInternal: {fileID: 70845430}
-  m_Script: {fileID: 11500000, guid: b30ab10525af14120b501d85e67542fd, type: 3}
 --- !u!1 &1695221768
 GameObject:
   m_ObjectHideFlags: 0
@@ -1532,7 +1525,7 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1

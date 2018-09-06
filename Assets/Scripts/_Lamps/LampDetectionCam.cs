@@ -47,16 +47,17 @@ public class LampDetectionCam : MonoBehaviour
 	float worldPointHeight;
 
 	void Start()
-	{   
+	{
+		lampManager = LampManager.Instance;
 		InitializeColorLimits ();
+		preview = transform.GetChild(0).GetComponent<RawImage>();
 
 		//Camera initialization
 		NatCam.Camera = DeviceCamera.Cameras[0];
 		NatCam.OnStart += NatCam_OnStart;
 		NatCam.OnFrame += NatCam_OnFrame;
 		NatCam.Play();
-
-		preview.texture = NatCam.Preview;
+        
 		InvokeRepeating("SetDetectionModes", 0.2f, SetDetectionInterval);
 
 		SetupWorldPoints();
@@ -97,6 +98,8 @@ public class LampDetectionCam : MonoBehaviour
 
 	void NatCam_OnStart()
 	{
+		preview.texture = NatCam.Preview;
+		Debug.Log(NatCam.Preview.width);
 		pixelBuffer = new byte[NatCam.Preview.width * NatCam.Preview.height * 4];
 		NatCam.CaptureFrame(pixelBuffer, true);
 

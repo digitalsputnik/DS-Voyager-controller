@@ -13,6 +13,8 @@ namespace Voyager.Lamps
 {
 	public class LampManager : MonoBehaviour
 	{
+		public static LampManager Instance;
+
 		[SerializeField] List<Lamp> Lamps = new List<Lamp>();
 		[Header("Settings")]
 		[SerializeField] float LampsLookInterval = 0.2f;
@@ -21,8 +23,23 @@ namespace Voyager.Lamps
 		[Space(3)]
 		[SerializeField] bool Debugging;
 
+		public bool LookForLamps { get; set; }
+
+		void Awake()
+		{
+			if (Instance == null)
+            {
+                DontDestroyOnLoad(this);
+				Instance = this;
+            }
+            else
+				Destroy(gameObject);
+		}
+
 		void Start()
 		{
+			LookForLamps = true;
+
 			NetworkManager.OnAvailableLampsResponse += NetworkManager_OnAvailableLampsResponse;
 			NetworkManager.OnLampColorResponse += NetworkManager_OnLampColorResponse;
 
@@ -43,21 +60,24 @@ namespace Voyager.Lamps
 			if(Debugging) Debug.Log("Lamp colors received from " + ip);
             UpdateLampColors(data, ip);
         }
-
+        
 		void LookForAvailableLamps()
 		{
-			NetworkManager.AskAvailableLamps();
+			if(LookForLamps)
+			    NetworkManager.AskAvailableLamps();
 		}
 
         void RegisterDevices()
 		{
-			foreach(Lamp lamp in GetConnectedLamps())
-				NetworkManager.RegisterDevice(lamp.IP);
+			if (LookForLamps)
+			    foreach(Lamp lamp in GetConnectedLamps())
+				    NetworkManager.RegisterDevice(lamp.IP);
 		}
 
         void CheckLampsTimeout()
 		{
-			foreach (Lamp lamp in Lamps) lamp.CheckTimeout(LampTimeoutTime);
+			if (LookForLamps)
+			    foreach (Lamp lamp in Lamps) lamp.CheckTimeout(LampTimeoutTime);
 		}
 
 		void UpdateLampColors(byte[] data, IPAddress ip)

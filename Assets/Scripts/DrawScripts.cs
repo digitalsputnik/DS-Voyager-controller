@@ -9,10 +9,10 @@ using Newtonsoft.Json.Linq;
 using NatCamU.Core;
 using Voyager.Lamps;
 using Voyager.Workspace;
-using Kakera;
 using Crosstales.FB;
 using System.IO;
 using UnityEngine.Video;
+using Voyager.Animation;
 
 public static class HelperMethods
 {
@@ -377,7 +377,7 @@ public class DrawScripts : MonoBehaviour {
 	}
 
 	private void ChangeAnimation(int arg0)
-    {
+    {      
 		//Debug.Log ("Inside ChangeAnimation....");
 		int animNum = AnimationDropdown.value;
 
@@ -586,13 +586,29 @@ public class DrawScripts : MonoBehaviour {
             doAnimationUpdate = true;
         }
 
-
+		CheckIfVideoStramNeeded();
         
+    }
+
+	void CheckIfVideoStramNeeded()
+    {
+        foreach (Layer layer in animSender.scene.Layers)
+        {
+            foreach (Stroke stroke in layer.Strokes)
+            {
+                if (stroke.Animation == "Video Stream")
+                    return;
+            }
+        }
+
+		if(Workspace.GetVideoSteam() != null)
+            Workspace.DestroyItem(Workspace.GetVideoSteam().GetComponent<WorkspaceItem>());
     }
 
     
     void ChangeSource(int value)
 	{
+		bool doReturn = false;
         if (Workspace.ContainsVideoStream())
         {
 			WorkspaceItem item = Workspace.GetVideoSteam().GetComponent<WorkspaceItem>();
@@ -626,26 +642,30 @@ public class DrawScripts : MonoBehaviour {
 				string file = FileBrowser.OpenSingleFile("Open Picture", documentsPath, new ExtensionFilter[] { new ExtensionFilter("Video", "mp4") });
 				if (file != "")
 				{
-                    StartCoroutine(LoadFileUsingPath(file));
-					return;
+					StartCoroutine(LoadFileUsingPath(file));
+                    doReturn = true;
                 }
-				value--;
+				else
+				    value--;
 			}
 		}
 		else
 		{
 			if (value == deviceOptions.Count - 1)
 			{
-				string path = "";
-				NativeGallery.Permission permission = NativeGallery.GetVideoFromGallery((tpath) => { path = tpath;}, "Select a video");
-				if(path != "")
+				NativeGallery.GetVideoFromGallery((path) =>
 				{
-					StartCoroutine(LoadFileUsingPath(path));
-                    return;
-				}
-                value--;
+					Debug.Log(path);
+					if (path != null)
+					{
+						StartCoroutine(LoadFileUsingPath(path));
+                        doReturn = true;
+                    }
+				}, "Select a video");
 			}
 		}
+
+		if (doReturn) return;
 
 		//if (!Workspace.ContainsVideoStream())
         //{
@@ -701,22 +721,18 @@ public class DrawScripts : MonoBehaviour {
 
 	IEnumerator LoadFileUsingPath(string path)
     {
-        byte[] file = File.ReadAllBytes(path);            
-        switch (Path.GetFileName(path).Split('.')[Path.GetFileName(path).Split('.').Length - 1])
-        {
-            case "mp4":
-                Video video = Workspace.InstantiateVideo(path, Vector3.zero);
-				VideoPlayer player = video.GetVideoPlayer();
-				yield return new WaitUntil(() => player.isPrepared);
-				videoStream = video.gameObject;
-				videoTexture = new Texture2D(player.texture.width, player.texture.height);
-				player.sendFrameReadyEvents = true;
-				player.frameReady += Player_FrameReady;
-				player.isLooping = true;
-				Workspace.HideGraphics();
-				EventManager.TriggerEvent("WorkplaceObjectMoved");
-                break;
-        }
+		Workspace.DestroyItem(Workspace.GetVideoSteam().GetComponent<WorkspaceItem>());
+        byte[] file = File.ReadAllBytes(path);       
+		Video video = Workspace.InstantiateVideo(path, Vector3.zero);
+        VideoPlayer player = video.GetVideoPlayer();
+        yield return new WaitUntil(() => player.isPrepared);
+        videoStream = video.gameObject;
+        videoTexture = new Texture2D(player.texture.width, player.texture.height);
+        player.sendFrameReadyEvents = true;
+        player.frameReady += Player_FrameReady;
+        player.isLooping = true;
+        Workspace.HideGraphics();
+        EventManager.TriggerEvent("WorkplaceObjectMoved");
 		yield return null;
     }
 
@@ -1108,7 +1124,7 @@ public class DrawScripts : MonoBehaviour {
 
     void ChangeTool(int arg0)
 	{
-		LampManager lampManager = GameObject.FindWithTag("LampManager").GetComponent<LampManager>();
+		LampManager lampManager = LampManager.Instance;
 		switch (toolsDropdown.value)
 		{
 			case 1: //Paint Pixel
