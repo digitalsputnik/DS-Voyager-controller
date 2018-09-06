@@ -1,4 +1,4 @@
-﻿#V0.25
+#V0.25
 
 #Use from here
 import AnimationPlayer
@@ -403,7 +403,7 @@ class ColorCalibration:
         return RGBW
 
     def GenerateGammaCorrectionLookup(self):
-        for g in range(10,41):
+        for g in range(10,101):
             self.GammaCorrectionLookup[g] = (np.power(np.arange(256)/255, 10/g)*255).astype(np.uint8)
 
 def GetSavedStrokes(filename):

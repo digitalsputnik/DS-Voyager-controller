@@ -1,4 +1,4 @@
-﻿#V0.25
+#V0.25
 
 import threading
 import time
@@ -348,6 +348,7 @@ class Stroke:
                         ColorIndex = 0
                         Index = 0
                         ColorIndices = (np.arange(len(self.ControlledPixels))/DivSize).astype(np.uint8)
+                        self.ControlledPixels.sort(key = lambda p: p.QueueNumber)
                         for pixel in self.ControlledPixels:
                             self.StrokeBitmap[0][pixel.QueueNumber] = CalibratedColors[ColorIndices[Index]]
                             Index += 1

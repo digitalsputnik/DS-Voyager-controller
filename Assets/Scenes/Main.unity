@@ -27882,13 +27882,13 @@ MonoBehaviour:
   loadPanel: {fileID: 704588152}
   aboutWindow: {fileID: 1373103120}
   updateCheckInterval: 2
-  animVersion: {x: 0, y: 41}
+  animVersion: {x: 0, y: 42}
   hw3Version:
     lpcVersion: {x: 0, y: 212}
-    chipVersion: {x: 0, y: 74}
+    chipVersion: {x: 0, y: 76}
   hw4Version:
     lpcVersion: {x: 0, y: 209}
-    chipVersion: {x: 0, y: 78}
+    chipVersion: {x: 0, y: 79}
 --- !u!114 &1509357878
 MonoBehaviour:
   m_ObjectHideFlags: 0
