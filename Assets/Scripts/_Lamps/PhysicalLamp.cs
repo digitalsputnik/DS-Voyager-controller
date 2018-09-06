@@ -27,7 +27,7 @@ namespace Voyager.Lamps
 
         void UpdateUI()
         {
-			Text.text = Owner.Name + " " + Owner.Serial + " " + Owner.BatteryLevel;
+			Text.text = Owner.Name + " " + Owner.Serial + " " + Owner.BatteryLevel + "%";
 			Text.text += Owner.ConnectionLost ? " Disconnected" : " Connected";
 			DisconnectionSprite.SetActive(Owner.ConnectionLost);
 		}
