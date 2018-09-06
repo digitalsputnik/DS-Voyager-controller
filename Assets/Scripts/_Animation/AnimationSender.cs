@@ -505,11 +505,11 @@ public class AnimationSender : MonoBehaviour
                         if (scene.Layers[l].Strokes[s].Properties["Unit size"][0] == -1)
                         {
 							int DMXOffset = StrokeIDtoLampMactoDMXoffsetDictionary[partitionedScene.Layers[l].Strokes[s].StrokeID][lamp.Serial];
-                            if (DMXOffset > 508)
+                            if (DMXOffset > 509)
                             {
-                                partitionedScene.Layers[l].Strokes[s].Universe = (DMXOffset + 4) / 512 + scene.Layers[l].Strokes[s].Properties["Universe offset"][0];
-                                DMXOffset = DMXOffset % 512;
-                                partitionedScene.Layers[l].Strokes[s].DMXOffset = DMXOffset;
+								partitionedScene.Layers[l].Strokes[s].Universe = (DMXOffset + 3) / 512 + scene.Layers[l].Strokes[s].Properties["Universe offset"][0];
+								DMXOffset = ((DMXOffset - 1) % 512) + 1;
+								partitionedScene.Layers[l].Strokes[s].DMXOffset = DMXOffset;
                             }
                             else
                             {
