@@ -99,7 +99,6 @@ public class LampDetectionCam : MonoBehaviour
 	void NatCam_OnStart()
 	{
 		preview.texture = NatCam.Preview;
-		Debug.Log(NatCam.Preview.width);
 		pixelBuffer = new byte[NatCam.Preview.width * NatCam.Preview.height * 4];
 		NatCam.CaptureFrame(pixelBuffer, true);
 
