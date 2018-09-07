@@ -290,7 +290,7 @@ public class DrawScripts : MonoBehaviour {
         newAnim10.AnimProperties.Add(new Property("Format", "dropdown", 0, 0, 1));
 
         newAnim10.AnimProperties.Add(new Property("Division", "int", 1, 1, 64));
-        newAnim10.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 500));
+        newAnim10.AnimProperties.Add(new Property("DMX offset", "int", 1, 1, 509));
         newAnim10.AnimProperties.Add(new Property("Universe offset", "int", 0, 0, 30000)); //max - 32768
         
 
