@@ -10,21 +10,19 @@ public class MinMaxValues : MonoBehaviour {
 	public int maxValue;
 	public int startValue;
 
-    private void Start()
+    void Start()
     {
-        this.gameObject.GetComponent<InputField>().text = startValue.ToString();
+        gameObject.GetComponent<InputField>().text = startValue.ToString();
     }
 
-    private void Update()
-    {
-        if (Convert.ToInt32(this.gameObject.GetComponent<InputField>().text) <= minValue)
-        {
-            this.gameObject.GetComponent<InputField>().text = minValue.ToString();
-        }
-        else if (Convert.ToInt32(this.gameObject.GetComponent<InputField>().text) >= maxValue) {
-            this.gameObject.GetComponent<InputField>().text = maxValue.ToString();
-        }
-    }
-
-
+    public void EndEdit()
+	{
+		if (gameObject.GetComponent<InputField>().isFocused)
+			return;
+		
+		if (Convert.ToInt32(gameObject.GetComponent<InputField>().text) <= minValue)
+			gameObject.GetComponent<InputField>().text = minValue.ToString();
+        else if (Convert.ToInt32(gameObject.GetComponent<InputField>().text) >= maxValue)
+			gameObject.GetComponent<InputField>().text = maxValue.ToString();
+	}   
 }

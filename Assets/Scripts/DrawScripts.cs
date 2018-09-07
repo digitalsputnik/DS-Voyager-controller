@@ -354,10 +354,9 @@ public class DrawScripts : MonoBehaviour {
                 numSpeeds += 1;
 
                 
-                GameObject numInput = newNum.transform.Find("numberInput").gameObject;
-                numInput.GetComponent<InputField>().text = animations[0].AnimProperties[i].startValue.ToString();
-                
-
+				InputField numInput = newNum.transform.Find("numberInput").GetComponent<InputField>();
+				if(!numInput.isFocused)
+                    numInput.text = animations[0].AnimProperties[i].startValue.ToString();            
             }
 
             if (animations[0].AnimProperties[i].type == "time")
@@ -471,12 +470,14 @@ public class DrawScripts : MonoBehaviour {
 				GameObject numObject = newNum.transform.Find("numberInput").gameObject;
 				InputField numInput = numObject.GetComponent<InputField> ();
 				//numInput.onEndEdit.AddListener(delegate {CheckInput(numInput); });
-				numInput.onValueChanged.AddListener(delegate {CheckInput(numInput); });
+				//numInput.onValueChanged.AddListener(delegate {CheckInput(numInput); });
                 numInput.onEndEdit.AddListener(delegate { NumInputEditListener(numInput); });
                 numObject.GetComponent<MinMaxValues>().minValue = (int)animations [animNum].AnimProperties [i].minValue;
 				numObject.GetComponent<MinMaxValues>().maxValue = (int)animations [animNum].AnimProperties [i].maxValue;
 				numObject.GetComponent<MinMaxValues>().startValue = (int)animations [animNum].AnimProperties [i].startValue;
-				numInput.text = animations [animNum].AnimProperties [i].startValue.ToString();
+				if(!numInput.isFocused)
+				    numInput.text = animations [animNum].AnimProperties [i].startValue.ToString();
+				
 				numberPanel.SetActive (true);
 			}
 
@@ -807,10 +808,12 @@ public class DrawScripts : MonoBehaviour {
             if (animations[animNum].AnimProperties[i].type == "int") {
 				GameObject numObject = numberPanel.transform.Find (animations[animNum].AnimProperties[i].name).gameObject;
 				GameObject numInput = numObject.transform.Find("numberInput").gameObject;
-				numInput.GetComponent<InputField>().onEndEdit.AddListener(delegate {CheckInput(numInput.GetComponent<InputField>()); });
-				numValue = new int[] { Convert.ToInt32(numInput.transform.Find("Text").gameObject.GetComponent<Text>().text) }; 
-
-				currentAnim.Properties.Add (animations [animNum].AnimProperties [i].name, numValue );
+				numValue = new int[] { Convert.ToInt32(numInput.GetComponent<InputField>().text) };
+				currentAnim.Properties.Add(animations[animNum].AnimProperties[i].name, numValue);
+                //if (numInput.GetComponent<InputField>().isFocused)
+                //{
+                //    //numInput.GetComponent<InputField>().onEndEdit.AddListener(delegate {CheckInput(numInput.GetComponent<InputField>()); });
+                //}
 			}
 
             if (animations[animNum].AnimProperties[i].type == "time")
@@ -948,14 +951,16 @@ public class DrawScripts : MonoBehaviour {
 					GameObject numObject = newNum.transform.Find("numberInput").gameObject;
 					InputField numInput = numObject.GetComponent<InputField> ();
 					//numInput.onEndEdit.AddListener(delegate {CheckInput(numInput); });
-					numInput.onValueChanged.AddListener(delegate {CheckInput(numInput); });
+					//numInput.onValueChanged.AddListener(delegate {CheckInput(numInput); });
                     numInput.onEndEdit.AddListener(delegate { NumInputEditListener(numInput); });
                     numObject.GetComponent<MinMaxValues>().minValue = (int)animations [animNum].AnimProperties [i].minValue;
 					numObject.GetComponent<MinMaxValues>().maxValue = (int)animations [animNum].AnimProperties [i].maxValue;
 					numObject.GetComponent<MinMaxValues>().startValue = (int)animations [animNum].AnimProperties [i].startValue;
-                    numInput.text = property.Value[0].ToString();
-					numberPanel.SetActive (true);
-
+					if(!numInput.isFocused)
+					{
+						numInput.text = property.Value[0].ToString();
+						numberPanel.SetActive (true);
+                    }
                 }
                 if (animations[animNum].AnimProperties[i].type == "time" )
                 {
@@ -1039,7 +1044,8 @@ public class DrawScripts : MonoBehaviour {
 					numValue = property.Value[0].ToString();
 					GameObject numObject = numberPanel.transform.Find (property.Key).gameObject;
 					GameObject numInput = numObject.transform.Find ("numberInput").gameObject;
-					numInput.GetComponent<InputField> ().text = numValue;
+					if(numInput.GetComponent<InputField>().isFocused)
+					    numInput.GetComponent<InputField> ().text = numValue;
 
 				}
 

@@ -68,6 +68,8 @@ public class AnimationSender : MonoBehaviour
 	string videoString = "VideoStream";
     string lastVideoJSON = "";
     
+	double LastCheckedTimestamp = 0.0d;
+    
     void Start()
     {
 		lampManager = LampManager.Instance;
@@ -163,8 +165,10 @@ public class AnimationSender : MonoBehaviour
     /// <param name="importScene"></param>
     public void MergeScenes(Scene importScene)
     {
-        if (importScene.TimeStamp < scene.TimeStamp)
+		if (importScene.TimeStamp <= LastCheckedTimestamp)
             return;
+
+		LastCheckedTimestamp = importScene.TimeStamp;
 
         if (Debugging) Debug.Log("Scene TimeStamp check " + scene.TimeStamp + " - " + importScene.TimeStamp);
 
