@@ -38,10 +38,10 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
         itemBeingDragged = gameObject;
         difference = transform.position - GetMouseLampPosition();
 		if (drawTools.GetComponent<DrawScripts>().videoTexture != null)
-        {
-            //Debug.Log("Found WebCamTexture!!!");
+		{
+			//Debug.Log("Found WebCamTexture!!!");
 			webcamTexture = drawTools.GetComponent<DrawScripts>().videoTexture;
-        }
+		}
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -65,7 +65,7 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
 		} else {
 			binImage.color = Color.white;
 		}
-
+		EventManager.TriggerEvent("WorkplaceObjectMoved");
     }
 
 
@@ -89,14 +89,14 @@ public class DragAndDropHandler : MonoBehaviour, IBeginDragHandler, IDragHandler
 		if(binRect.Contains(Input.mousePosition)){
 			binImage.color = Color.white;
 			Destroy (this.gameObject);
-            IPAddress thisIP = IPAddress.Parse(this.GetComponent<Ribbon>().IP);
-            if (setupScripts.LampIPtoLengthDictionary.ContainsKey(thisIP))
+            string thisMac = this.GetComponent<Ribbon>().Mac;
+            if (setupScripts.LampMactoLengthDictionary.ContainsKey(thisMac))
             {
-                setupScripts.LampIPtoLengthDictionary.Remove(thisIP);
+                setupScripts.LampMactoLengthDictionary.Remove(thisMac);
             }
 
             //Remove controlled pixels from strokes and animation
-            animSender.RemoveLampFromStrokes(this.transform, thisIP.ToString());
+            animSender.RemoveLampFromStrokes(this.transform, thisMac.ToString());
 		}
 
         TrashCan.SetActive(false);

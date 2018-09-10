@@ -6,10 +6,11 @@ using UnityEngine.UI;
 public class UpdateProgressText : MonoBehaviour {
 
 	Text updateText;
-	[SerializeField] LampUpdater lampUpdater;
+	LampUpdater lampUpdater;
 
 	void Start()
 	{
+		lampUpdater = GameObject.FindWithTag("Networking").GetComponent<LampUpdater>();
 		updateText = GetComponent<Text>();
 		updateText.enabled = false;
 	}
@@ -22,7 +23,8 @@ public class UpdateProgressText : MonoBehaviour {
 		if(updateText.enabled)
 		{
 			float progress = 0;
-			foreach (float lampProgress in lampUpdater.UpdateProgress.Values)
+			List<float> lampProcesses = new List<float>(lampUpdater.UpdateProgress.Values);
+			foreach (float lampProgress in lampProcesses)
 				progress += lampProgress;
 			int lampCount = lampUpdater.UpdatesInProgress;
             

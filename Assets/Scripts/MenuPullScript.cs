@@ -45,14 +45,14 @@ public class MenuPullScript : MonoBehaviour, IPointerClickHandler {
         Image theImage = gameObject.GetComponent<Image>();
         theImage.sprite = newSprite;
 
-        Startup start = GameObject.Find("Main Camera").GetComponent<Startup>();
+        //Startup start = GameObject.Find("Main Camera").GetComponent<Startup>();
 
-        if (start.tutorialMode)
-        {
-            start.action1 = true;
-            start.tutorial.transform.Find("HelpWindow").GetComponent<RectTransform>().sizeDelta = new Vector2(550f, 340f);
-            start.tutorial.transform.Find("HelpWindow").GetComponent<RectTransform>().localPosition = new Vector3(-50f, 0f, 0f);
-        }
+        //if (start.tutorialMode)
+        //{
+        //    start.action1 = true;
+        //    start.tutorial.transform.Find("HelpWindow").GetComponent<RectTransform>().sizeDelta = new Vector2(550f, 340f);
+        //    start.tutorial.transform.Find("HelpWindow").GetComponent<RectTransform>().localPosition = new Vector3(-50f, 0f, 0f);
+        //}
     }
 
 
@@ -86,10 +86,7 @@ public class MenuPullScript : MonoBehaviour, IPointerClickHandler {
     public void CalculatePositions()
 	{      
 		StartPosition = rect.anchoredPosition;
-        EndPosition = StartPosition;
-
-		Debug.Log(StartPosition);
-
+        EndPosition = StartPosition;      
 		EndPosition.x = -EndPosition.x;
 	}
 

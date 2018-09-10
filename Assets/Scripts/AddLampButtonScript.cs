@@ -89,15 +89,9 @@ public class AddLampButtonScript : MonoBehaviour {
         VoyagerName.text = LampProps;
         //Register controller to lamp
         GameObject AnimationSender = GameObject.Find("AnimationControl");
-        AnimationSender.GetComponent<AnimationSender>().RegisterControllerToDevice(true, LampIP);
-        AnimationSender.GetComponent<AnimationSender>().StartPollingLayers(LampIP);
-        for (int i = 0; i < 10; i++)
-        {
-            Thread.Sleep(10);
-            AnimationSender.GetComponent<AnimationSender>().SetDetectionMode(false, LampIP);
-        }
+        //AnimationSender.GetComponent<AnimationSender>().StartPollingLayers(MacName);
 
-		ColorDataReceiver.GetComponent<GetLampColorData> ().IP.Add (LampIP);
+		ColorDataReceiver.GetComponent<GetLampColorData> ().Mac.Add (MacName);
 		ColorDataReceiver.SetActive (true);
     }
 }

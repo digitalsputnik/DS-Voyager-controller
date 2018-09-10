@@ -126,7 +126,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 1.2.31
+  bundleVersion: 1.2.50
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -164,9 +164,9 @@ PlayerSettings:
     iOS: com.digitalsputnik.voyagercontroller
     tvOS: com.DS.LightGrade
   buildNumber:
-    Standalone: 31
-    iOS: 1.2.31
-  AndroidBundleVersionCode: 31
+    Standalone: 50
+    iOS: 1.2.50
+  AndroidBundleVersionCode: 50
   AndroidMinSdkVersion: 21
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -666,9 +666,9 @@ PlayerSettings:
   webGLUseWasm: 0
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
-    1: NATCAM_16;NATCAM_CORE;NATCAM_PRO
-    4: NATCAM_16;INATCAM_C;NATCAM_CORE;NATCAM_PRO
-    7: NATCAM_16;NATCAM_CORE;NATCAM_PRO
+    1: NATCAM_16;NATCAM_CORE;NATCAM_PRO;CT_FB
+    4: NATCAM_16;INATCAM_C;NATCAM_CORE;NATCAM_PRO;CT_FB
+    7: NATCAM_16;NATCAM_CORE;NATCAM_PRO;CT_FB
     13: NATCAM_16;NATCAM_CORE;NATCAM_PRO
     14: NATCAM_16;NATCAM_CORE;NATCAM_PRO
   platformArchitecture: {}
@@ -676,7 +676,8 @@ PlayerSettings:
   incrementalIl2cppBuild: {}
   additionalIl2CppArgs: 
   scriptingRuntimeVersion: 0
-  apiCompatibilityLevelPerPlatform: {}
+  apiCompatibilityLevelPerPlatform:
+    Standalone: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Click order test

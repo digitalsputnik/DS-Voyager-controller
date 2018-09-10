@@ -26,10 +26,13 @@ public class DialogBox : MonoBehaviour
 
 	public bool isShowing { get; private set; }
 
-	void Start()
+	void Awake()
 	{
 		dialogBox = this;
+	}
 
+	void Start()
+	{
 		if (container.activeInHierarchy)
 			isShowing = true;
 	}

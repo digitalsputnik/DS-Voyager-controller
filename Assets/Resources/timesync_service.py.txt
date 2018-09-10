@@ -1,0 +1,66 @@
+import time
+import sys
+import socket
+import os
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+#sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+PORT  = 30005
+HOST = ""                       #listen to all IPs
+sock.bind((HOST,PORT))
+#sock.settimeout(0.1)			#socket timeout, tries to read serial inbetween udp timeouts.
+
+udp_data = bytearray(5)
+
+# Checks flag bytes
+while True:
+	try:
+		udp_data, addr = sock.recvfrom(4096)
+	except KeyboardInterrupt:
+		sock.close()
+		sys.exit()
+	except:
+		pass
+
+	try:
+		if udp_data[0] == 0xD5 and udp_data[1]== 0x0A:
+			#TIME SYNC PACKET
+			if (udp_data[2] == 0x83 and udp_data[3] == 0x10):
+
+				#send current time
+				time_start = bytearray()
+				time_start[0:4] = 0xD5, 0x0A, 0x83, 0x20
+				#current_time = os.popen("date +%s%3N").readline().strip()
+				current_time = str(time.time())
+				time_start[4:] = bytearray(current_time, "ascii")
+				#print (time.time())
+				#print (list(time_start))
+				sock.sendto(time_start, addr)
+				udp_data = bytearray(5)
+
+			#DUMMY TIME SYNC PACKET - testing timedelays.
+			if (udp_data[2] == 0x84 and udp_data[3] == 0x10):
+				#send current time
+				time_start = bytearray()
+				time_start[0:4] = 0xD5, 0x0A, 0x84, 0x20
+				#current_time = os.popen("date +%s%3N").readline().strip()
+				current_time = str(time.time())
+				time_start[4:] = bytearray(current_time, "ascii")
+				#print (list(time_start))
+				sock.sendto(time_start, addr)
+				udp_data = bytearray(5)
+			#TIMESYNC FLAGED PACKET - using router. Time has been set or first one in network 
+			if (udp_data[2] == 0x85 and udp_data[3] == 0x10):
+				#send current time
+				if os.popen("cat /mnt/data/timesyncflag").readline().strip() == "1":
+					time_start = bytearray()
+					time_start[0:4] = 0xD5, 0x0A, 0x85, 0x20
+					current_time = str(time.time())
+					time_start[4:] = bytearray(current_time, "ascii")
+					sock.sendto(time_start, addr)
+					udp_data = bytearray(5)
+		else:
+			udp_data = bytearray(5)
+	except:
+		pass

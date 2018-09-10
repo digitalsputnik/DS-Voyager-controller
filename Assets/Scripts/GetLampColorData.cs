@@ -4,9 +4,10 @@ using UnityEngine;
 
 using System;
 using System.Text;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-
+using Voyager.Networking;
 
 public class GetLampColorData : MonoBehaviour {
 
@@ -14,11 +15,10 @@ public class GetLampColorData : MonoBehaviour {
     //IPEndPoint sendingEnpoint;
 	UdpClient receivingUDPClient;
 
-	public byte[] ReceivedMessageBytes;
+    public SetupScripts setupScripts;
+    public byte[] ReceivedMessageBytes;
 	public Dictionary<string, byte[]> colorData = new Dictionary<string, byte[]>();
-	public List<string> IP;
-
-
+	public List<string> Mac;
 
 	// Use this for initialization
 	void Start () {
@@ -28,7 +28,14 @@ public class GetLampColorData : MonoBehaviour {
         //sendingEnpoint = new IPEndPoint(IPAddress.Broadcast, 31000);
 
 		if (receivingUDPClient == null) {
-			receivingUDPClient = new UdpClient(31000); //animSender.LampCommunicationClient;
+            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+			var endPoint = new IPEndPoint(NetworkManager.GetWifiInterfaceAddress(), 31000);
+            socket.Bind(endPoint);
+
+            receivingUDPClient = new UdpClient();
+            receivingUDPClient.Client = socket;
+
+            //receivingUDPClient = new UdpClient(31000); //animSender.LampCommunicationClient;
             //receivingUDPClient.Client.ReceiveBufferSize = 4096;
 		}
         //receivingUDPClient.EnableBroadcast = true;
@@ -36,10 +43,10 @@ public class GetLampColorData : MonoBehaviour {
         //receivingUDPClient.Client.ReceiveTimeout = 40;
         //receivingUDPClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
         receivingUDPClient.Client.ReceiveBufferSize = 1024;
-        IP.Add("172.20.0.1");
-		for (int i = 0; i < IP.Count; i++) {
+        //Mac.Add("172.20.0.1");
+		for (int i = 0; i < Mac.Count; i++) {
 			//Debug.Log ("Sending data out to lamp....");
-			receivingUDPClient.Send (new byte[] { 0 }, 1, new IPEndPoint(IPAddress.Parse(IP[i]), 31000));
+			receivingUDPClient.Send (new byte[] { 0 }, 1, new IPEndPoint(setupScripts.LampMactoIPDictionary[Mac[i]], 31000));
 			//Debug.Log ("Data sent....");
 		}
 		//colorsArray = new byte[100, 4];
@@ -68,21 +75,26 @@ public class GetLampColorData : MonoBehaviour {
 					continue;
 				}
 
-				//Debug.Log ("Recevied data from lamp IP: "+lampEndPoint.Address.ToString());
+                //Debug.Log ("Recevied data from lamp IP: "+lampEndPoint.Address.ToString());
 
-				//Debug.Log ("Received Data = "+ReceivedMessageBytes.GetLength(0));
-				if (!colorData.ContainsKey (lampEndPoint.Address.ToString ())) {
-					colorData.Add (lampEndPoint.Address.ToString (), ReceivedMessageBytes);
+                //Debug.Log ("Received Data = "+ReceivedMessageBytes.GetLength(0));
+                string LampMac = setupScripts.LampMactoIPDictionary.FirstOrDefault(x => x.Value.ToString() == lampEndPoint.Address.ToString()).Key;
+
+                if (LampMac == null)
+                    continue;
+
+                if (!colorData.ContainsKey (LampMac)) {
+					colorData.Add (LampMac, ReceivedMessageBytes);
 					//Debug.Log ("Added KEY to color dictionary");
 				} else {
-					colorData [lampEndPoint.Address.ToString ()] = ReceivedMessageBytes;
+					colorData [LampMac] = ReceivedMessageBytes;
 					//Debug.Log ("Added DATA to color dictionary");
 				}
 
 			} else {
                 //Debug.Log("No data!");
-				for (int i = 0; i < IP.Count; i++) {
-					receivingUDPClient.Send (new byte[] { 0 }, 1, new IPEndPoint(IPAddress.Parse(IP[i]), 31000));
+				for (int i = 0; i < Mac.Count; i++) {
+					receivingUDPClient.Send (new byte[] { 0 }, 1, new IPEndPoint(setupScripts.LampMactoIPDictionary[Mac[i]], 31000));
 				}
                 //receivingUDPClient.Send(new byte[] {0 }, 1, sendingEnpoint);
                 yield return null;

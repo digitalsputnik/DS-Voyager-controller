@@ -39,11 +39,6 @@ public class LoadDetectedLampsScript : MonoBehaviour {
         }
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     void generateLamp(GameObject lamp, LampProperties properties)
     {
         //Lamp itself
@@ -51,7 +46,7 @@ public class LoadDetectedLampsScript : MonoBehaviour {
         Vector3 LampEndVector = Camera.main.ScreenToWorldPoint(new Vector3((float)properties.EndPoint.x * Screen.width, (float)properties.EndPoint.y * Screen.height, lamp.transform.position.z - Camera.main.transform.position.z));
         var newLamp = Instantiate(lamp, LampStartVector, Quaternion.identity, WorkSpace);
 
-        //TODO: rotation and scaling
+        //Rotation and scaling
         var initialDirection = Vector3.right;
         var newDirection = (LampEndVector - LampStartVector);
         newLamp.transform.rotation = Quaternion.FromToRotation(initialDirection, newDirection);
@@ -71,16 +66,16 @@ public class LoadDetectedLampsScript : MonoBehaviour {
         var VoyagerName = newLamp.GetComponentInChildren<Canvas>().GetComponentInChildren<Text>();
         string VoyagerText = properties.LampLength < 50 ? "Short Voyager " : "Long Voyager ";
         VoyagerName.text = VoyagerText + properties.macName + " " + properties.batteryLevel.ToString() + "% charged";
-        AnimationSender.GetComponent<AnimationSender>().StartPollingLayers(properties.IP);
+        //AnimationSender.GetComponent<AnimationSender>().StartPollingLayers(properties.macName);
 
         if (!ColorDataReceiver.activeSelf)
             {
             ColorDataReceiver.SetActive(true);
         }
 
-        if (!ColorDataReceiver.GetComponent<GetLampColorData>().IP.Contains(properties.IP))
+        if (!ColorDataReceiver.GetComponent<GetLampColorData>().Mac.Contains(properties.macName))
         {
-            ColorDataReceiver.GetComponent<GetLampColorData>().IP.Add(properties.IP);
+            ColorDataReceiver.GetComponent<GetLampColorData>().Mac.Add(properties.macName);
         }
         
     }

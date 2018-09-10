@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Voyager.Workspace;
 
 public class MenuMode : MonoBehaviour {
 
@@ -13,6 +14,7 @@ public class MenuMode : MonoBehaviour {
 	public Dropdown toolsDropDown;
     public Button DrawButton;
 	public Button SetupButton;
+	public Transform videoStream;
 	bool toggle = false;
     //public GameObject colorButton2;
 
@@ -26,11 +28,11 @@ public class MenuMode : MonoBehaviour {
 		DrawButton.gameObject.SetActive (false);
 		toggle = false;
 		SetLightSetupStatus(toggle);
-		Startup start = GameObject.Find ("Main Camera").GetComponent<Startup> ();
+		//Startup start = GameObject.Find ("Main Camera").GetComponent<Startup> ();
 
-		if (start.tutorialMode){
-			start.action3 = true;
-		}
+		//if (start.tutorialMode){
+		//	start.action3 = true;
+		//}
 	}
 
 	void TaskOnSetupClicked () {
@@ -58,53 +60,24 @@ public class MenuMode : MonoBehaviour {
 			light.transform.Find("Canvas").gameObject.SetActive(draw);
 		}
 
-
-        var videoStreamParent = GameObject.Find("VideoStreamParent");
-        if (videoStreamParent.transform.Find("VideoStreamBackground").gameObject.activeSelf)
-        {
-            var videoStreamBackground = videoStreamParent.transform.Find("VideoStreamBackground");
-            videoStreamBackground.transform.Find("Handle1Parent").Find("Handle1").gameObject.SetActive(draw);
-            videoStreamBackground.transform.Find("Handle2Parent").Find("Handle2").gameObject.SetActive(draw);
-        }
+		//if (videoStream.Find("Graphics").Find("Video Screen").gameObject.activeSelf)
+   //     {
+			//videoStream.transform.Find("DragHandle1").gameObject.SetActive(draw);
+			//videoStream.transform.Find("DragHandle2").gameObject.SetActive(draw);
+			//videoStream.transform.Find("Graphics").GetComponent<DragHandle>().enabled = draw;
+        //}
 
 
 
     }
 
-
-	/*
-    public static Toggle toggle;
-    // Use this for initialization
-	void Start () {
-        toggle = this.GetComponent<Toggle>();
-        toggle.onValueChanged.AddListener(SwitchModes);
+    public void SetupBtn()
+	{
+		Workspace.ShowGraphics();
 	}
 
-    private void SwitchModes(bool arg0)
-    {
-        SetLightSetupStatus(toggle.isOn);
-    }
-
-    private void SetLightSetupStatus(bool activeVal)
-    {
-		if (!toggle.isOn) {
-			toolsDropDown.value = 0;
-		}
-        drawMode.SetActive(!activeVal);
-        drawTools.SetActive(!activeVal);
-        //colorButton.SetActive(!activeVal);
-        //colorButton2.SetActive(false);
-        setupMode.SetActive(activeVal);
-        
-        int lightCount = workSpace.transform.childCount;
-        for (int i = 0; i < lightCount; i++)
-        {
-            var light = workSpace.transform.GetChild(i);
-            light.Find("DragAndDrop1").gameObject.SetActive(activeVal);
-            light.Find("DragAndDrop2").gameObject.SetActive(activeVal);
-            light.Find("Canvas").gameObject.SetActive(activeVal);
-        }
-    }
-*/
-
+    public void DrawBtn()
+	{
+		Workspace.HideGraphics();
+	}
 }

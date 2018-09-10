@@ -17,6 +17,11 @@ TagManager:
   - set
   - videosource
   - Background
+  - LampManager
+  - Networking
+  - Workspace
+  - File
+  - Photo
   layers:
   - Default
   - TransparentFX

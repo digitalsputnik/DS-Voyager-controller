@@ -21,13 +21,15 @@ public class DetectedLampProperties : MonoBehaviour {
 
     public List<LampProperties> DetectedLamps = new List<LampProperties>();
     public bool AddLamps = false;
-    public Dictionary<IPAddress, int> LampIPtoLengthDictionary { get; set; }
+    public Dictionary<string, int> LampMactoLengthDictionary { get; set; }
+    public Dictionary<string, IPAddress> LampMactoIPDictionary { get; set; }
 
     void Awake()
     {
         SingletonApplication();
 
-        LampIPtoLengthDictionary = new Dictionary<IPAddress, int>();
+        LampMactoLengthDictionary = new Dictionary<string, int>();
+        LampMactoIPDictionary = new Dictionary<string, IPAddress>();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -75,7 +77,7 @@ public class DetectedLampProperties : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	//void Update () {
         //if (Input.GetMouseButtonDown(0))
         //{
         //    if (DetectedLamps.Count > 0)
@@ -89,5 +91,5 @@ public class DetectedLampProperties : MonoBehaviour {
         //        }
         //    }
         //}
-	}
+	//}
 }

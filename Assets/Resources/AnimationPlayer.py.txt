@@ -1,4 +1,4 @@
-﻿#V0.25
+#V0.25
 
 import threading
 import time
@@ -348,14 +348,18 @@ class Stroke:
                         ColorIndex = 0
                         Index = 0
                         ColorIndices = (np.arange(len(self.ControlledPixels))/DivSize).astype(np.uint8)
+                        self.ControlledPixels.sort(key = lambda p: p.QueueNumber)
                         for pixel in self.ControlledPixels:
                             self.StrokeBitmap[0][pixel.QueueNumber] = CalibratedColors[ColorIndices[Index]]
                             Index += 1
                     elif UnitSize == 0: #Stroke
                         DivSize = max(1, self.TotalPixelCount/self.Properties["Division"][0])
+                        ColorIndices = (np.arange(self.TotalPixelCount)/DivSize).astype(np.uint8)
+                        Index = 0
                         for pixel in self.ControlledPixels:
                             #ColorIndex = int(pixel.QueueNumber/DivSize)
-                            self.StrokeBitmap[0][pixel.QueueNumber] = CalibratedColors[ColorIndices[Index]]
+                            self.StrokeBitmap[0][pixel.QueueNumber] = CalibratedColors[ColorIndices[pixel.QueueNumber]]
+                            Index += 1
                     else:
                         for pixel in self.ControlledPixels:
                             self.StrokeBitmap[0][pixel.QueueNumber] = self.Layer.Scene.ColorCalibrator.ITSHtoRGBWFull(self.Colors[int(pixel.QueueNumber/UnitSize)])
