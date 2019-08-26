@@ -1,0 +1,44 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+using VoyagerApp.Videos;
+
+namespace VoyagerApp.UI.Menus
+{
+	public class PickVideoItem : MonoBehaviour
+	{
+        [SerializeField] RawImage thumbnailImage    = null;
+        [SerializeField] Text nameText              = null;
+        [SerializeField] Text infoText              = null;
+
+        public Video video { get; set; }
+
+        public void SetVideo(Video video)
+        {
+            this.video = video;
+
+            thumbnailImage.texture = video.thumbnail;
+            nameText.text = video.name;
+            infoText.text = InfoText;
+        }
+
+        string InfoText
+        {
+            get
+            {
+                return $"FPS: {video.fps}\n" +
+                       $"SIZE: {video.width} x {video.height}\n" +
+                       $"DURATION: {video.duraction} SEC";
+            }
+        }
+
+        public void OnClick()
+        {
+            GetComponentInParent<PickVideoMenu>().PickVideo(video);
+        }
+
+        public void Remove()
+        {
+            VideoManager.instance.RemoveVideo(video);
+        }
+	}
+}

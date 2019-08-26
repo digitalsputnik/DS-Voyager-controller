@@ -1,37 +1,31 @@
 ﻿#if !UNITY_EDITOR && UNITY_ANDROID
-using System.Threading;
 using UnityEngine;
 
 namespace NativeGalleryNamespace
 {
 	public class NGMediaReceiveCallbackAndroid : AndroidJavaProxy
 	{
-		private object threadLock;
+		private readonly NativeGallery.MediaPickCallback callback;
+		private readonly NativeGallery.MediaPickMultipleCallback callbackMultiple;
 
-		public string Path { get; private set; }
-		public string[] Paths { get; private set; }
+		private readonly NGCallbackHelper callbackHelper;
 
-		public NGMediaReceiveCallbackAndroid( object threadLock ) : base( "com.yasirkula.unity.NativeGalleryMediaReceiver" )
+		public NGMediaReceiveCallbackAndroid( NativeGallery.MediaPickCallback callback, NativeGallery.MediaPickMultipleCallback callbackMultiple ) : base( "com.yasirkula.unity.NativeGalleryMediaReceiver" )
 		{
-			Path = string.Empty;
-			this.threadLock = threadLock;
+			this.callback = callback;
+			this.callbackMultiple = callbackMultiple;
+			callbackHelper = new GameObject( "NGCallbackHelper" ).AddComponent<NGCallbackHelper>();
 		}
 
 		public void OnMediaReceived( string path )
 		{
-			Path = path;
-
-			lock( threadLock )
-			{
-				Monitor.Pulse( threadLock );
-			}
+			callbackHelper.CallOnMainThread( () => MediaReceiveCallback( path ) );
 		}
 
 		public void OnMultipleMediaReceived( string paths )
 		{
-			if( string.IsNullOrEmpty( paths ) )
-				Paths = new string[0];
-			else
+			string[] result = null;
+			if( !string.IsNullOrEmpty( paths ) )
 			{
 				string[] pathsSplit = paths.Split( '>' );
 
@@ -56,12 +50,41 @@ namespace NativeGalleryNamespace
 					pathsSplit = validPaths;
 				}
 
-				Paths = pathsSplit;
+				result = pathsSplit;
 			}
-			
-			lock( threadLock )
+
+			callbackHelper.CallOnMainThread( () => MediaReceiveMultipleCallback( result ) );
+		}
+
+		private void MediaReceiveCallback( string path )
+		{
+			if( string.IsNullOrEmpty( path ) )
+				path = null;
+
+			try
 			{
-				Monitor.Pulse( threadLock );
+				if( callback != null )
+					callback( path );
+			}
+			finally
+			{
+				Object.Destroy( callbackHelper );
+			}
+		}
+
+		private void MediaReceiveMultipleCallback( string[] paths )
+		{
+			if( paths != null && paths.Length == 0 )
+				paths = null;
+
+			try
+			{
+				if( callbackMultiple != null )
+					callbackMultiple( paths );
+			}
+			finally
+			{
+				Object.Destroy( callbackHelper );
 			}
 		}
 	}

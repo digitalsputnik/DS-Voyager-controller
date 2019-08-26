@@ -1,0 +1,6 @@
+<ListOfTaskListEntry>
+  <TaskListEntry file="" description="Items outline size stays same after scaling item" />
+  <TaskListEntry file="" description="Network settings menu and backend" />
+  <TaskListEntry file="" description="Saving and Loading scene with children" priority="High" completed="True" />
+  <TaskListEntry file="" description="Create a menu for lamp updating" />
+</ListOfTaskListEntry>

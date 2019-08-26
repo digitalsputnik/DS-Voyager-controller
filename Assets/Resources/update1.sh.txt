@@ -1,9 +1,0 @@
-mount -o remount,rw /dev/ubi0_0 / -t ubifs
-
-cat /mnt/data/serial.txt > /etc/hostname
-
-serial="ssid="$(cat /mnt/data/serial.txt)
-sed -i "/voyager_/c $serial" /mnt/data/net/hostapd.conf
-sed -i "/voyager_/c $serial" /etc/net_orig/hostapd.conf
-
-echo "update successful"

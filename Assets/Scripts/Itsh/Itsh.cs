@@ -1,0 +1,43 @@
+﻿using System;
+using Newtonsoft.Json;
+using UnityEngine;
+
+namespace VoyagerApp
+{
+    [Serializable]
+    public class Itsh
+    {
+        public const float DEFAULT_TEMPERATURE = 0.6588335f;
+
+        public float i;
+        public float t;
+        public float s;
+        public float h;
+
+        public Itsh() { }
+
+        public Itsh(float i, float t, float s, float h)
+        {
+            this.i = i;
+            this.t = t;
+            this.s = s;
+            this.h = h;
+        }
+
+        public Itsh(Color color)
+        {
+            Color.RGBToHSV(color, out float h, out float s, out float i);
+            this.i = i;
+            this.t = DEFAULT_TEMPERATURE;
+            this.s = s;
+            this.h = h;
+        }
+
+        [JsonIgnore]
+        public Color AsColor => Color.HSVToRGB(h, s, i);
+
+        public static Itsh white => new Itsh(1.0f, DEFAULT_TEMPERATURE, 0.0f, 0.0f);
+
+        public override string ToString() => $"[{i}, {t}, {s}, {h}]";
+    }
+}
