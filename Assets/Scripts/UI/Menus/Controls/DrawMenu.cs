@@ -9,15 +9,24 @@ namespace VoyagerApp.UI.Menus
     {
         [SerializeField] GameObject infoText        = null;
         [SerializeField] GameObject videoMappingBtn = null;
-        [SerializeField] GameObject settingsBtn     = null;
         [SerializeField] ItshPickView itshPick      = null;
+        [SerializeField] GameObject selectAllBtn    = null;
+        [SerializeField] GameObject deselectAllBtn  = null;
+
+        public void SelectAll()
+        {
+            foreach (var view in WorkspaceUtils.LampItems)
+                WorkspaceSelection.instance.SelectLamp(view);
+        }
+
+        public void DeselectAll()
+        {
+            WorkspaceSelection.instance.Clear();
+        }
 
         internal override void OnShow()
         {
-            WorkspaceSelection.instance.Enabled = true;
-            WorkspaceSelection.instance.ShowSelection = true;
             WorkspaceSelection.instance.onSelectionChanged += SelectionChanged;
-
             itshPick.onValueChanged.AddListener(ItshChanged);
 
             CheckForButtons();
@@ -26,15 +35,7 @@ namespace VoyagerApp.UI.Menus
         internal override void OnHide()
         {
             WorkspaceSelection.instance.onSelectionChanged -= SelectionChanged;
-            WorkspaceSelection.instance.Enabled = false;
-
             itshPick.onValueChanged.RemoveListener(ItshChanged);
-        }
-
-        public void OnBack()
-        {
-            WorkspaceSelection.instance.ShowSelection = false;
-            WorkspaceSelection.instance.Clear();
         }
 
         void ItshChanged(Itsh itsh)
@@ -59,8 +60,15 @@ namespace VoyagerApp.UI.Menus
         {
             infoText.SetActive(!AtLeastOneSelected);
             videoMappingBtn.SetActive(AtLeastOneSelected);
-            settingsBtn.SetActive(AtLeastOneSelected);
             itshPick.gameObject.SetActive(AtLeastOneSelected);
+
+            selectAllBtn.SetActive(!AllSelected);
+            deselectAllBtn.SetActive(AtLeastOneSelected);
+        }
+
+        bool AllSelected
+        {
+            get => WorkspaceUtils.SelectedLamps.Count == WorkspaceUtils.Lamps.Count;
         }
 
         bool AtLeastOneSelected

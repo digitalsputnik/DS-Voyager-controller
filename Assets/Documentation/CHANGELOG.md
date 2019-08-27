@@ -1,4 +1,12 @@
-﻿2.0.24-alpha    27.08.2019
+﻿2.0.25-alpha    27.08.2019
+- Polling ssid lists from lamps and showing in client mode settings.
+- Bugfix, where default name in settings menu didn't work.
+- Possible UI fix, where settings menu was empty (only in clound builds).
+- Bugfix, where loading a workspace also added one lamp to scene, that caused
+  lamp duplication.
+- Possible bugfix, where deselected lamps applied itsh from color wheel.
+
+2.0.24-alpha    27.08.2019
 - Colorwheel disables moving items in workspace completely.
 - Bug, where trashcan deletes object at instance is removed.
 - Bug, where colorwheel doesn't cancel picked itsh, when not hitting "KEEP"

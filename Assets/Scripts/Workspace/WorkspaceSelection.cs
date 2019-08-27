@@ -43,10 +43,21 @@ namespace VoyagerApp.Workspace
         Camera cam;
         float mouseDownTime;
 
+        public void SelectLamp(LampItemView view)
+        {
+            if (!Selected.Contains(view))
+            {
+                view.Select();
+                selected.Add(view);
+                onSelectionChanged?.Invoke(this);
+            }
+        }
+
         public void Clear()
         {
             selected.ForEach(_ => _.Deselect());
             selected.Clear();
+            onSelectionChanged?.Invoke(this);
         }
 
         void Start()

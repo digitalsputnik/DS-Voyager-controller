@@ -1,5 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using Newtonsoft.Json;
 using UnityEngine;
 using VoyagerApp.Dmx;
 using VoyagerApp.Lamps;
@@ -163,6 +170,47 @@ namespace VoyagerApp.Networking
         {
             IPEndPoint endpoint = new IPEndPoint(address, SETTINGS_PORT);
             dmx.Send(endpoint, settings.ToData());
+        }
+
+        public void GetSsidListFromLamp(Lamp lamp, Action<string[]> received, float timeout)
+        {
+            new Thread(() => GetSsidListFromLampThread(lamp, received, timeout)).Start();
+        }
+
+        void GetSsidListFromLampThread(Lamp lamp, Action<string[]> received, float timeout)
+        {
+            Socket socket = new Socket(
+                AddressFamily.InterNetwork,
+                SocketType.Dgram,
+                ProtocolType.Udp
+            );
+
+            int port = 30000;
+
+            byte[] receiveBuffer = new byte[2048];
+            bool ssidsReceived = false;
+
+            byte[] sendMessage = { 0xD5, 0x0A, 0x87, 0x10 };
+            IPEndPoint endpoint = new IPEndPoint(lamp.address, port);
+
+            double starttime = TimeUtils.Epoch;
+
+            while (!ssidsReceived && (TimeUtils.Epoch - starttime) < timeout)
+            {
+                socket.SendTo(sendMessage, endpoint);
+                while (socket.Available > 0)
+                {
+                    int bufferSize = socket.Receive(receiveBuffer);
+                    byte[] buffer = receiveBuffer.Take(bufferSize).ToArray();
+                    string json = Encoding.UTF8.GetString(buffer);
+                    var ssidsForLamp = JsonConvert.DeserializeObject<List<string>>(json);
+                    received?.Invoke(ssidsForLamp.ToArray());
+                    ssidsReceived = true;
+                }
+                Thread.Sleep(10);
+            }
+
+            socket.Dispose();
         }
 
         void ReceiveClient(RudpClient client)

@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Utilities;
@@ -15,9 +14,8 @@ namespace VoyagerApp.UI.Menus
         internal override void OnShow()
         {
             filenameField.onValueChanged.AddListener(FilenameFieldChanged);
-            // ToShortDateString confuses the program to find paths because of '/' between dates
-            filenameField.text = $"workspace_{DateTime.Now.ToLongDateString()}_" +
-                                 $"{DateTime.Now.ToLongTimeString()}".Replace(".", "_");
+            filenameField.text = $"save_{Random.Range(0, 1000)}";
+            FilenameFieldChanged(filenameField.text);
         }
 
         internal override void OnHide()
