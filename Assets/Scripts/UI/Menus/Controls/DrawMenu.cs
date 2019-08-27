@@ -26,6 +26,9 @@ namespace VoyagerApp.UI.Menus
 
         internal override void OnShow()
         {
+            WorkspaceSelection.instance.Enabled = true;
+            WorkspaceSelection.instance.ShowSelection = true;
+
             WorkspaceSelection.instance.onSelectionChanged += SelectionChanged;
             itshPick.onValueChanged.AddListener(ItshChanged);
 

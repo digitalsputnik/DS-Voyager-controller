@@ -1,4 +1,8 @@
-﻿2.0.26-alpha    27.08.2019
+﻿2.0.27-alpha    27.08.2019
+- Bug #157 fixed, where all lamps where added to workspace at start.
+- Bug #158 fixed, where coming from video mapping disables selection.
+
+2.0.26-alpha    27.08.2019
 - Selecting is disabled through color wheen.
 
 2.0.25-alpha    27.08.2019
