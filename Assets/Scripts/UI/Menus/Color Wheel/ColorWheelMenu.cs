@@ -20,6 +20,7 @@ namespace VoyagerApp.UI.Menus
         Itsh itsh;
 
         bool approved;
+        bool selectionEnabled;
 
         public void SetItsh(Itsh itsh)
         {
@@ -147,8 +148,10 @@ namespace VoyagerApp.UI.Menus
             controlsContainer.SetActive(false);
 
             approved = false;
+            selectionEnabled = WorkspaceSelection.instance.Enabled;
 
             ItemMove.Enabled = false;
+            WorkspaceSelection.instance.Enabled = false;
         }
 
         void HideColorWheel()
@@ -163,6 +166,7 @@ namespace VoyagerApp.UI.Menus
                 ColorwheelManager.instance.ValuePicked(beginning);
 
             ItemMove.Enabled = true;
+            WorkspaceSelection.instance.Enabled = selectionEnabled;
         }
     }
 }
