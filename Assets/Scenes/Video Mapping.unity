@@ -2757,7 +2757,7 @@ PrefabInstance:
     - target: {fileID: 897986247512020121, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_MatchWidthOrHeight
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 897986247512020121, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -2917,6 +2917,25 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1230988019}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1230988025 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 897986247512020123, guid: 696c43ec365ed4a45a6c16df774dc048,
+    type: 3}
+  m_PrefabInstance: {fileID: 1230988019}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1230988026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1230988025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4e7eaf00b3ef4daa98802b40c4e5414, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Canvas: {fileID: 1230988025}
 --- !u!1001 &1233879029
 PrefabInstance:
   m_ObjectHideFlags: 0

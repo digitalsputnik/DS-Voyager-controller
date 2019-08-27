@@ -1,4 +1,8 @@
-﻿2.0.27-alpha    27.08.2019
+﻿2.0.28-alpha    27.08.2019
+- Added a script to Canvas that detects the size of a device at the start and
+  changes reference value if necessary.
+
+2.0.27-alpha    27.08.2019
 - Bug #157 fixed, where all lamps where added to workspace at start.
 - Bug #158 fixed, where coming from video mapping disables selection.
 

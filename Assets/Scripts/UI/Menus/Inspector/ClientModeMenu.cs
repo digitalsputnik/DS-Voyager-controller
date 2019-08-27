@@ -51,8 +51,6 @@ namespace VoyagerApp.UI.Menus
             int count = WorkspaceUtils.SelectedLamps.Count;
             int gathered = 0;
 
-            Debug.Log(count);
-
             foreach (var lamp in WorkspaceUtils.SelectedLamps)
                 PollSsidsFromLamp(lamp);
 
@@ -66,7 +64,7 @@ namespace VoyagerApp.UI.Menus
 
             void OnSsidsReceived(string[] ssids)
             {
-                Debug.Log("HERE!");
+                foreach (var ssid in ssids) Debug.Log(ssid);
                 allSsids.Add(ssids.ToList());
                 gathered++;
             }
@@ -77,8 +75,6 @@ namespace VoyagerApp.UI.Menus
             yield return new WaitWhile(() =>
                 (gathered == count) || ((TimeUtils.Epoch - starttime) < timeout)
             );
-
-            Debug.Log("HERE!2");
 
             List<string> returnSsids = new List<string>();
 
