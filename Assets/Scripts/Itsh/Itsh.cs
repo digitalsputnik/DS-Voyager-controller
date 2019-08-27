@@ -5,7 +5,7 @@ using UnityEngine;
 namespace VoyagerApp
 {
     [Serializable]
-    public class Itsh
+    public struct Itsh
     {
         public const float DEFAULT_TEMPERATURE = 0.6588335f;
 
@@ -13,8 +13,6 @@ namespace VoyagerApp
         public float t;
         public float s;
         public float h;
-
-        public Itsh() { }
 
         public Itsh(float i, float t, float s, float h)
         {

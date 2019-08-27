@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using VoyagerApp.Workspace;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -146,6 +147,8 @@ namespace VoyagerApp.UI.Menus
             controlsContainer.SetActive(false);
 
             approved = false;
+
+            ItemMove.Enabled = false;
         }
 
         void HideColorWheel()
@@ -158,6 +161,8 @@ namespace VoyagerApp.UI.Menus
 
             if (!approved)
                 ColorwheelManager.instance.ValuePicked(beginning);
+
+            ItemMove.Enabled = true;
         }
     }
 }

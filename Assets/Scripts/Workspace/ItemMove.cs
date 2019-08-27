@@ -10,6 +10,7 @@ namespace VoyagerApp.Workspace
     {
         public static event ItemMoveHandler onItemMoveStarted;
         public static event ItemMoveHandler onItemMoveEnded;
+        public static bool Enabled = true;
 
         Transform target;
         WorkspaceItemView targetItem;
@@ -38,36 +39,33 @@ namespace VoyagerApp.Workspace
 
         void OnMouseDown()
         {
-            Vector2 pressPosition = cam.ScreenToWorldPoint(Input.mousePosition);
+            approved = !PointerOverUI && Enabled;
 
-            pressStartPosition = pressPosition - (Vector2)transform.position;
-            objectStartPosition = target.position;
+            if (approved)
+            {
+                Vector2 pressPosition = cam.ScreenToWorldPoint(Input.mousePosition);
 
-            startAngle = AngleFromTo(objectStartPosition, pressPosition);
-            offsetAngle = startAngle - target.eulerAngles.z;
+                pressStartPosition = pressPosition - (Vector2)transform.position;
+                objectStartPosition = target.position;
 
-            startDistance = Vector2.Distance(objectStartPosition, pressPosition);
-            startScale = target.localScale;
+                startAngle = AngleFromTo(objectStartPosition, pressPosition);
+                offsetAngle = startAngle - target.eulerAngles.z;
 
-            float scaleDistance = transform.lossyScale.x * 0.85f / 2.0f;
-            moving = startDistance < scaleDistance;
+                startDistance = Vector2.Distance(objectStartPosition, pressPosition);
+                startScale = target.localScale;
 
-            prevUnder.Clear();
+                float scaleDistance = transform.lossyScale.x * 0.85f / 2.0f;
+                moving = startDistance < scaleDistance;
 
-            approved = !PointerOverUI;
+                prevUnder.Clear();
 
-            if (approved) onItemMoveStarted?.Invoke(this);
+                if (approved) onItemMoveStarted?.Invoke(this);
+            }
         }
 
         void OnMouseDrag()
         {
             if (!approved) return;
-
-            if (PointerOverUI)
-            {
-                OnMouseUp();
-                return;
-            }
 
             Vector2 pressPosition = cam.ScreenToWorldPoint(Input.mousePosition);
 

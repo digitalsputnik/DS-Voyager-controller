@@ -30,11 +30,13 @@ namespace VoyagerApp.UI.Menus
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            ColorwheelManager.instance.OpenColorwheel(Value, (itsh) =>
-            {
-                Value = itsh;
-                onValueChanged?.Invoke(itsh);
-            });
+            ColorwheelManager.instance.OpenColorwheel(Value, OnItshPicked);
+        }
+
+        public void OnItshPicked(Itsh itsh)
+        {
+            Value = itsh;
+            onValueChanged?.Invoke(itsh);
         }
     }
 

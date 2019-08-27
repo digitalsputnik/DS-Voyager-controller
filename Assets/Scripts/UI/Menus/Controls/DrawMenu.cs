@@ -50,7 +50,7 @@ namespace VoyagerApp.UI.Menus
             if (selection.Selected.Count == 1)
             {
                 Itsh itsh = selection.Selected[0].lamp.itsh;
-                if (itsh == null) itsh = Itsh.white;
+                if (itsh.Equals(default(Itsh))) itsh = Itsh.white;
                 itshPick.Value = itsh;
             }
         }

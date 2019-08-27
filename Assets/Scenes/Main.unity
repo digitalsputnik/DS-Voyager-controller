@@ -2157,14 +2157,12 @@ PrefabInstance:
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_Pivot.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8269508053611200199, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_Text
-      value: 'SETTINGS
-
-'
+      value: SETTINGS
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
@@ -3306,6 +3304,11 @@ PrefabInstance:
         type: 3}
       propertyPath: max
       value: 99999
+      objectReference: {fileID: 0}
+    - target: {fileID: 2402640394965750235, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: startValue
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1418213714327141904, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
@@ -6786,7 +6789,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b1ff3e7ffdf04df381c19065250750e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectModeBtn: {fileID: 1874036970}
 --- !u!225 &1269254569
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7667,6 +7669,11 @@ PrefabInstance:
         type: 3}
       propertyPath: max
       value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 2402640394965750235, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: startValue
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1418213714327141904, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
@@ -10009,12 +10016,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1955140867715460773, guid: 079bdac9c0e1f4af69afcada9cbc0c3c,
     type: 3}
   m_PrefabInstance: {fileID: 1871388417}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1874036970 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
-    type: 3}
-  m_PrefabInstance: {fileID: 1914047690}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1883185072
 PrefabInstance:

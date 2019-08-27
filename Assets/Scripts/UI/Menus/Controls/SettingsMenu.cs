@@ -8,21 +8,6 @@ namespace VoyagerApp.UI.Menus
 {
     public class SettingsMenu : Menu
     {
-        [SerializeField] GameObject selectModeBtn = null;
-
-        public override void Start()
-        {
-            base.Start();
-            WorkspaceManager.instance.onItemAdded += WorkspaceChanged;
-            WorkspaceManager.instance.onItemRemoved += WorkspaceChanged;
-            WorkspaceChanged(null);
-        }
-
-        public void WorkspaceChanged(WorkspaceItemView item)
-        {
-            selectModeBtn.SetActive(WorkspaceUtils.Lamps.Count > 0);
-        }
-
         public void AddPicture()
         {
             FileUtils.LoadPictureFromDevice(VideoPicked);

@@ -1,4 +1,10 @@
-﻿2.0.23-alpha
+﻿2.0.24-alpha    27.08.2019
+- Colorwheel disables moving items in workspace completely.
+- Bug, where trashcan deletes object at instance is removed.
+- Bug, where colorwheel doesn't cancel picked itsh, when not hitting "KEEP"
+  button, is now fixed.
+
+2.0.23-alpha
 - Reordered UI based on Kaspar's wishes.
 - First lamp is always added to workspace.
 - Removed screen DPI debug messages.

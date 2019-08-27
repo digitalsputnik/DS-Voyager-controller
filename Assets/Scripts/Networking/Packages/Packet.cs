@@ -8,7 +8,7 @@ namespace VoyagerApp.Networking.Packages
     [Serializable]
     public abstract class Packet
     {
-        [JsonProperty("op", Order = -2)]
+        [JsonProperty("op_code", Order = -2)]
         public OpCode op;
         [JsonProperty("timestamp", Order = -1)]
         public double timestamp;
