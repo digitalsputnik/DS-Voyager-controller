@@ -6,7 +6,7 @@
 - Fix #163 where cutout area side in workspace view is blue but transparent in
   video mapping.
 - Fix #164 where default color wheel temperature value was 5599. Note: Lamps
-  that have been connevted before, might have temperature 5599 allready saved,
+  that have been connected before, might have temperature 5599 allready saved,
   so the color wheel shows it.
 
 2.0.29-alpha                                                          28.08.2019
