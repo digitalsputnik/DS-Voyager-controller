@@ -19,12 +19,33 @@ namespace VoyagerApp.Utilities
             get
             {
                 Camera cam = Camera.main;
-                var upper = new Vector2(Screen.width / 2f, 0);
-                var bottom = new Vector2(Screen.width / 2f, Screen.height / 2f);
+                var upper = new Vector2(Screen.width / 2f, Screen.height);
+                var bottom = new Vector2(Screen.width / 2f, 0);
                 float t = Random.value;
                 Vector2 point = Vector2.Lerp(upper, bottom, t);
                 return cam.ScreenToWorldPoint(point);
             }
+        }
+
+        public static Vector2[] ScreenVerticalPositions(int count)
+        {
+            var upper = new Vector2(Screen.width / 2f, Screen.height);
+            var bottom = new Vector2(Screen.width / 2f, 0);
+
+            float padding = 1.0f / (count + 2);
+            float step = (1.0f - padding) / count;
+
+            Camera cam = Camera.main;
+            Vector2[] points = new Vector2[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                float t = padding + step * i;
+                Vector2 point = Vector2.Lerp(upper, bottom, t);
+                points[i] = cam.ScreenToWorldPoint(point);
+            }
+
+            return points;
         }
     }
 }

@@ -128,9 +128,14 @@ MonoBehaviour:
   image: {fileID: 436607198637722093}
   itsh:
     i: 1
-    t: 0.65882
+    t: 0.65885
     s: 1
     h: 0
+  onValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: VoyagerApp.UI.Menus.ItshEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
 --- !u!1001 &436607199204390696
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -142,6 +147,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Label
+      objectReference: {fileID: 0}
+    - target: {fileID: 802620914053610848, guid: 0c2615ce77e7f493a9998d23cd0e9155,
+        type: 3}
+      propertyPath: m_FontData.m_Alignment
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 802620914053610848, guid: 0c2615ce77e7f493a9998d23cd0e9155,
+        type: 3}
+      propertyPath: m_Text
+      value: ITSH
       objectReference: {fileID: 0}
     - target: {fileID: 802620914053610863, guid: 0c2615ce77e7f493a9998d23cd0e9155,
         type: 3}
@@ -247,16 +262,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 802620914053610848, guid: 0c2615ce77e7f493a9998d23cd0e9155,
-        type: 3}
-      propertyPath: m_FontData.m_Alignment
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 802620914053610848, guid: 0c2615ce77e7f493a9998d23cd0e9155,
-        type: 3}
-      propertyPath: m_Text
-      value: ITSH
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c2615ce77e7f493a9998d23cd0e9155, type: 3}

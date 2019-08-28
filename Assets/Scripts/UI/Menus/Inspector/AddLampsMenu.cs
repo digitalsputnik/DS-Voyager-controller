@@ -63,7 +63,18 @@ namespace VoyagerApp.UI.Menus
 
         public void AddAllLamps()
         {
-            new List<AddLampItem>(items).ForEach(item => item.OnClick());
+            int count = items.Count;
+            Vector2[] points = VectorUtils.ScreenVerticalPositions(count);
+            AddLampItem[] itms = items.ToArray();
+            for (int i = 0; i < count; i++)
+            {
+                Vector2 point = points[i];
+                AddLampItem item = itms[i];
+                item.lamp.AddToWorkspace(point);
+            }
+
+            while (items.Count > 0)
+                RemoveLampItem(items[0]);
         }
 
         public void RemoveLampItem(AddLampItem item)

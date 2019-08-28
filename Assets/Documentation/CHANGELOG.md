@@ -1,4 +1,15 @@
-﻿2.0.29-alpha                                                          28.08.2019
+﻿2.0.30-alpha                                                          28.08.2019
+- Added network packages ready to use: Set Video, Video Request, Video Response,
+  Fps Request, Fps Response, Set Fps, Set Frame.
+- Updated Newtonsoft Json library.
+- Clicking "Add all lamps" splits lamp on the workspace uniformly.
+- Fix #163 where cutout area side in workspace view is blue but transparent in
+  video mapping.
+- Fix #164 where default color wheel temperature value was 5599. Note: Lamps
+  that have been connevted before, might have temperature 5599 allready saved,
+  so the color wheel shows it.
+
+2.0.29-alpha                                                          28.08.2019
 - Polling ssid list from lamp works now fine after lamp software was updated.
   Known issue: UI is bad in ssid list dropdown after ssid list is received #160.
 - Master mode requires lamps to be selected.

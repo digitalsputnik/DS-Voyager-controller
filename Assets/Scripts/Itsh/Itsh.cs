@@ -7,7 +7,7 @@ namespace VoyagerApp
     [Serializable]
     public struct Itsh
     {
-        public const float DEFAULT_TEMPERATURE = 0.6588335f;
+        public const float DEFAULT_TEMPERATURE = 0.65884f;
 
         public float i;
         public float t;
