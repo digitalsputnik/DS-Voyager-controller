@@ -23,6 +23,9 @@ namespace VoyagerApp.Videos
         bool stopRequested;
         bool running;
 
+        double latestPauseStartTime;
+        double pauseTime;
+
         void Start()
         {
             player = GetComponent<VideoPlayer>();
@@ -53,18 +56,31 @@ namespace VoyagerApp.Videos
 
         public void Play()
         {
+            if (latestPauseStartTime > 0.01)
+                pauseTime += TimeUtils.Epoch - latestPauseStartTime;
+            else if (latestPauseStartTime < -0.01)
+            {
+                float duration = video.frames / video.fps;
+                double time = TimeUtils.Epoch - video.lastStartTime - pauseTime;
+                pauseTime += time % duration;
+            }
+
             if (video != null && !player.isPlaying)
                 player.Play();
         }
 
         public void Pause()
         {
+            latestPauseStartTime = TimeUtils.Epoch;
+
             if (video != null && !player.isPaused)
                 player.Pause();
         }
 
         public void Stop()
         {
+            latestPauseStartTime = -1;
+
             if (video != null)
             {
                 player.frame = 0;
@@ -102,9 +118,21 @@ namespace VoyagerApp.Videos
                 WorkspaceUtils.Lamps.ForEach(SendFps);
 
                 if (player.isPlaying)
+                {
                     player.playbackSpeed = video.fps / player.frameRate;
+                    player.frame = GetFrameOfVideo();
+                }
             }
             this.fps = fps;
+        }
+
+        long GetFrameOfVideo()
+        {
+            float duration = video.frames / video.fps;
+            double time = TimeUtils.Epoch - video.lastStartTime - pauseTime;
+            float videoTime = (float)time % duration;
+            long frame = (long)(videoTime * video.fps);
+            return MathUtils.Clamp(frame, 0, video.frames);
         }
 
         void OnDestroy()

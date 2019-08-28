@@ -73,7 +73,7 @@ namespace VoyagerApp.UI.Menus
             double timeout = ssidPollTimeout;
 
             yield return new WaitWhile(() =>
-                (gathered == count) || ((TimeUtils.Epoch - starttime) < timeout)
+                (gathered != count) && ((TimeUtils.Epoch - starttime) < timeout)
             );
 
             List<string> returnSsids = new List<string>();

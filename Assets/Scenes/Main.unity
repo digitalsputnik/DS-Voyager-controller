@@ -6457,7 +6457,7 @@ PrefabInstance:
     - target: {fileID: 897986247512020121, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_MatchWidthOrHeight
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 897986247512020121, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -6467,7 +6467,7 @@ PrefabInstance:
     - target: {fileID: 897986247512020121, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_ReferenceResolution.y
-      value: 1080
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7372718236647302751, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -7494,7 +7494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68ccce510c2f84b308df2c58dee30f35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ssidPollTimeout: 460
+  ssidPollTimeout: 30
   infoText: {fileID: 1842764250}
   ssidsToggle: {fileID: 12415368}
   ssidsDropdown: {fileID: 1166860732503721010}

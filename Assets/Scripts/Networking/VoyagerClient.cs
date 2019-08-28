@@ -188,11 +188,10 @@ namespace VoyagerApp.Networking
 
             bool ssidsReceived = false;
             double starttime = TimeUtils.Epoch;
-            while (!ssidsReceived || (TimeUtils.Epoch - starttime) < timeout)
+            while (!ssidsReceived && (TimeUtils.Epoch - starttime) < timeout)
             {
                 while (client.Available > 0)
                 {
-                    Debug.Log("HERE!");
                     var data = client.Receive(ref endpoint);
                     var json = Encoding.UTF8.GetString(data);
                     var ssidsForLamp = JsonConvert.DeserializeObject<List<string>>(json);

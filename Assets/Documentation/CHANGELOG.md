@@ -1,16 +1,24 @@
-﻿2.0.28-alpha    27.08.2019
+﻿2.0.29-alpha                                                          28.08.2019
+- Polling ssid list from lamp works now fine after lamp software was updated.
+  Known issue: UI is bad in ssid list dropdown after ssid list is received #160.
+- Master mode requires lamps to be selected.
+- Router mode requires lamps to be selected.
+- Lazy bugfix for #155, where changing fps gave unity player a random frame
+  index.
+
+2.0.28-alpha                                                          27.08.2019
 - Added a script to Canvas that detects the size of a device at the start and
   changes reference value if necessary.
 - Added new update bundle.
 
-2.0.27-alpha    27.08.2019
+2.0.27-alpha                                                          27.08.2019
 - Bug #157 fixed, where all lamps where added to workspace at start.
 - Bug #158 fixed, where coming from video mapping disables selection.
 
-2.0.26-alpha    27.08.2019
+2.0.26-alpha                                                          27.08.2019
 - Selecting is disabled through color wheen.
 
-2.0.25-alpha    27.08.2019
+2.0.25-alpha                                                          27.08.2019
 - Polling ssid lists from lamps and showing in client mode settings.
 - Bugfix, where default name in settings menu didn't work.
 - Possible UI fix, where settings menu was empty (only in clound builds).
@@ -19,7 +27,7 @@
 - Possible bugfix, where deselected lamps applied itsh from color wheel.
 - Added "select all" & "Deselect all" buttons to draw menu.
 
-2.0.24-alpha    27.08.2019
+2.0.24-alpha                                                          27.08.2019
 - Colorwheel disables moving items in workspace completely.
 - Bug, where trashcan deletes object at instance is removed.
 - Bug, where colorwheel doesn't cancel picked itsh, when not hitting "KEEP"
