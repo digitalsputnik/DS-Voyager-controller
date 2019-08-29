@@ -1,16 +1,16 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
+using VoyagerApp.Utilities;
 
 namespace VoyagerApp.Networking.Packages
 {
     [Serializable]
-    [JsonConverter(typeof(StringEnumConverter), typeof(SnakeCaseNamingStrategy))]
+    [JsonConverter(typeof(OpCodeConverter))]
     public enum OpCode
     {
         Collection,
-        DiscoveryRequest,
+        DiscoveryRequest, 
         DiscoveryResponse,
         InfoRequest,
         InfoResponse,

@@ -6049,15 +6049,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5315098365362245240, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 897986247512020123, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 5315098365362245240, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1632970400711532949, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -6382,7 +6382,7 @@ PrefabInstance:
     - target: {fileID: 897986247512020121, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_ReferenceResolution.x
-      value: 1920
+      value: 2400
       objectReference: {fileID: 0}
     - target: {fileID: 897986247512020121, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -8216,6 +8216,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1502510711}
   - component: {fileID: 1502510712}
+  - component: {fileID: 1502510713}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -8247,6 +8248,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d4211642350548f497e3d3de452726c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1502510713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1502510710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86d1cf9abddb94473814b9a1c669e4bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1556780131

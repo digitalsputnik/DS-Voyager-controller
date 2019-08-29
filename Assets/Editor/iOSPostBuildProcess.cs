@@ -22,11 +22,11 @@ public class iOSPostBuildProcess
         //string shortenVersion = version.Substring(0, index + 1);
         //var buildKey = "CFBundleVersion";
         //rootDict.SetString(buildKey, shortenVersion);
-            
+
         rootDict.SetBoolean("ITSAppUsesNonExemptEncryption", false);
 
         File.WriteAllText(plistPath, plist.WriteToString());
     }
 }
- 
+
 #endif

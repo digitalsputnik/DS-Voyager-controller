@@ -1,4 +1,15 @@
-﻿2.0.30-alpha                                                          28.08.2019
+﻿2.0.33-alpha                                                          29.08.2019
+- Net video position struct that lamp saves to save positions on video.
+- Downgraded Newtonsoft JSON library and added needed functionality manually.
+
+2.0.32-alpha                                                          29.08.2019
+- fixed an issue where "hold" would activate when clicking the ITSH values.
+
+2.0.31-alpha                                                          29.08.2019
+- Changed slider behaviour. It now takes equal amount of time to get from one
+  end of the slider to another for all options when holding down.
+
+2.0.30-alpha                                                          28.08.2019
 - Added network packages ready to use: Set Video, Video Request, Video Response,
   Fps Request, Fps Response, Set Fps, Set Frame.
 - Updated Newtonsoft Json library.

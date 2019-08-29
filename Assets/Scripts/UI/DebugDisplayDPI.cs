@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DisplayDPI : MonoBehaviour
+public class DebugDisplayDPI : MonoBehaviour
 {
     float curDPI;
     float screenHeight;

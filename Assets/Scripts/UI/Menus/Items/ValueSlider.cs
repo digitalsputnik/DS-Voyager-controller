@@ -18,23 +18,20 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Image fillImage;
         [SerializeField] RectTransform controlArea;
         [Space(3)]
-        [SerializeField] int intensityStep = 1;
-        [SerializeField] int temperatureStep = 10;
-        [SerializeField] int saturationStep = 1;
-        [SerializeField] int hueStep = 3;
 
-        string sliderName;
-        [Space(3)]
         public ValueSliderEvent onChanged;
         public float normalized => (float)(value - min) / (max - min);
 		bool mouseHold;
         bool mouseDrag;
         bool buttonUp;
+        float stepVal;
 
+        [Range(1f, 5f)]
+        public int stepMultiplier = 1;
 
         float val;
         float update;
-        private float updateSpeed = 0.03f;
+        private float updateSpeed = 0.03f; // lower value increases the speed of the update
 
         IEnumerator waitForHold()
         {
@@ -47,7 +44,6 @@ namespace VoyagerApp.UI.Menus
         {
             valueText.text = value.ToString();
             update = 0.0f;
-           
         }
 
 		void Update()
@@ -64,40 +60,23 @@ namespace VoyagerApp.UI.Menus
 		}
 
         public void changeValueOnHold()
-        { 
-            switch(sliderName)
-            {   
-                case "Itensity":
-                    changeValue(intensityStep, intensityStep * -1);
-                    break;
-                case "Temperature":
-                    changeValue(temperatureStep, temperatureStep * -1);
-                    break;
-                case "Saturation":
-                    changeValue(saturationStep, saturationStep * -1);
-                    break;
-                case "Hue":
-                    changeValue(hueStep, hueStep * -1);
-                    break;
-                default:
-                    changeValue(1, -1);
-                    break;
-            }
+        {
+            int range = max - min;
+            stepVal = range / 100;
+            changeValue(stepVal * stepMultiplier, (stepVal * stepMultiplier) * -1);
         }
 
 
-        public void changeValue(int posVal, int negVal)
+        public void changeValue(float posVal, float negVal)
         {
-            int increasement = val > 0.5 ? posVal : negVal;
+            int increasement = val > 0.5 ? (int)posVal : (int)negVal;
             SetValue(Mathf.Clamp(value + increasement, min, max));
         }
 
 		public void OnPointerDown(PointerEventData eventData)
 		{
-
             val = HorizontalValueFromPosition(eventData.position);
             changeValue(1, -1); // Increases or decreases value once per click
-            sliderName = name;
             buttonUp = false;
             StartCoroutine("waitForHold"); // Delay before update
 		}
@@ -105,11 +84,11 @@ namespace VoyagerApp.UI.Menus
 		public void OnPointerUp(PointerEventData pointerEventData)
 		{
             buttonUp = true; // Prevents coroutine from activating
-            sliderName = null;
             //Resets booleans
             mouseHold = false;
             mouseDrag = false;
-		}
+            StopCoroutine("waitForHold");
+        }
 
 		public void OnDrag(PointerEventData eventData)
         {

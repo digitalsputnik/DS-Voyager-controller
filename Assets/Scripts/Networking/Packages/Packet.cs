@@ -8,9 +8,9 @@ namespace VoyagerApp.Networking.Packages
     [Serializable]
     public abstract class Packet
     {
-        [JsonProperty("op_code", Order = -2)]
+        [JsonProperty("op_code", Order = -3)]
         public OpCode op;
-        [JsonProperty("timestamp", Order = -1)]
+        [JsonProperty("timestamp", Order = -2)]
         public double timestamp;
 
         protected Packet(OpCode op) => this.op = op;
@@ -24,7 +24,7 @@ namespace VoyagerApp.Networking.Packages
         public byte[] Serialize()
         {
             timestamp = TimeUtils.Epoch;
-            string json = JsonConvert.SerializeObject(this);
+            string json = JsonConvert.SerializeObject(this, Formatting.Indented);
             return Encoding.UTF8.GetBytes(json);
         }
     }
