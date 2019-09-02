@@ -77,7 +77,7 @@ namespace VoyagerApp.Workspace.Views
         {
             latestPauseStartTime = -1;
             playing = false;
-            DrawBufferFrame(lamp.videoBuffer, 0);
+            DrawBufferFrame(lamp.buffer, 0);
             client.SendPlaymode(lamp, VoyagerPlaybackMode.Stop);
         }
 
@@ -121,28 +121,19 @@ namespace VoyagerApp.Workspace.Views
 
         void RenderPixels()
         {
-            VideoBuffer buffer = lamp.videoBuffer;
+            VideoBuffer buffer = lamp.buffer;
 
             if (buffer.ContainsVideo)
             {
                 if (playing)
                 {
-                    long frame = GetFrameOfVideo(lamp.video);
+                    long frame = TimeUtils.GetFrameOfVideo(lamp.video);
                     frame = buffer.GetClosestIndex(frame, 3);
                     if (buffer.FrameExists(frame))
                         DrawBufferFrame(buffer, frame);
                 }
             }
             else DrawItshFrame();
-        }
-
-        long GetFrameOfVideo(Video video)
-        {
-            float duration = video.frames / video.fps;
-            double time = TimeUtils.Epoch - video.lastStartTime - pauseTime;
-            float videoTime = (float)time % duration;
-            long frame = (long)(videoTime * video.fps);
-            return MathUtils.Clamp(frame, 0, video.frames);
         }
 
         void DrawBufferFrame(VideoBuffer buffer, long frame)
@@ -163,8 +154,11 @@ namespace VoyagerApp.Workspace.Views
 
         void PushToPixels(Color32[] colors)
         {
-            pixelsTexture.SetPixels32(colors);
-            pixelsTexture.Apply();
+            if (colors.Length == lamp.pixels)
+            {
+                pixelsTexture.SetPixels32(colors);
+                pixelsTexture.Apply();
+            }
         }
     }
 }

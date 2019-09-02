@@ -30,6 +30,8 @@ namespace VoyagerApp.UI.Menus
         public int stepMultiplier = 1;
 
         float val;
+
+
         float update;
         private float updateSpeed = 0.03f; // lower value increases the speed of the update
 
@@ -78,7 +80,7 @@ namespace VoyagerApp.UI.Menus
             val = HorizontalValueFromPosition(eventData.position);
             changeValue(1, -1); // Increases or decreases value once per click
             buttonUp = false;
-            StartCoroutine("waitForHold"); // Delay before update
+            StartCoroutine(waitForHold()); // Delay before update
 		}
 
 		public void OnPointerUp(PointerEventData pointerEventData)
@@ -87,7 +89,7 @@ namespace VoyagerApp.UI.Menus
             //Resets booleans
             mouseHold = false;
             mouseDrag = false;
-            StopCoroutine("waitForHold");
+            StopAllCoroutines();
         }
 
 		public void OnDrag(PointerEventData eventData)
@@ -125,7 +127,7 @@ namespace VoyagerApp.UI.Menus
 
         public void SetValue(float val)
         {
-            int iVal = (int)((max - min) * val);
+            int iVal = (int)((max - min) * val) + min;
             SetValue(iVal);
         }
 

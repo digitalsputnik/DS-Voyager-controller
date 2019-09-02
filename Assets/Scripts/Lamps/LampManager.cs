@@ -26,6 +26,7 @@ namespace VoyagerApp.Lamps
         public List<Lamp> ConnectedLamps => GetConnectedLamps();
 
         public event LampHandler onLampAdded;
+        public event LampHandler onLampRemoved;
 
         List<LampDataProcessor> dataProcessors = new List<LampDataProcessor>();
 
@@ -42,6 +43,18 @@ namespace VoyagerApp.Lamps
                 onLampAdded?.Invoke(lamp);
             }
         }
+
+        public void RemoveLamp(Lamp lamp)
+        {
+            if (Lamps.Any(_ => _.serial == lamp.serial))
+            {
+                Lamp same = instance.GetLampWithSerial(lamp.serial);
+                Lamps.Remove(same);
+                onLampRemoved?.Invoke(same);
+            }
+        }
+
+        public void Clear() => new List<Lamp>(Lamps).ForEach(RemoveLamp);
 
         public Lamp GetLampWithAddress(IPAddress address)
         {

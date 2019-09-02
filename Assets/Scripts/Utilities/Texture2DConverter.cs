@@ -3,7 +3,7 @@ using System.Text;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace VoyagerApp.Networking
+namespace VoyagerApp.Utilities
 {
     class Texture2DConverter : JsonConverter
     {

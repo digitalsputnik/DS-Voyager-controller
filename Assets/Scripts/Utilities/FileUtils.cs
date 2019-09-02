@@ -79,6 +79,8 @@ namespace VoyagerApp.Utilities
                                 "workspaces",
                                 WorkspaceStatePath + ".ws");
         }
+
+        public static string ProjectPath => Application.persistentDataPath;
 	}
 
     public delegate void PathHandler(string path);

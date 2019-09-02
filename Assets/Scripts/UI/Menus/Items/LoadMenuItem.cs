@@ -1,12 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
-using VoyagerApp.Networking;
-using VoyagerApp.Workspace;
+using VoyagerApp.Projects;
 using VoyagerApp.Workspace.Views;
-using static VoyagerApp.Workspace.WorkspaceSaveLoad;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -16,41 +15,54 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Text lampsText = null;
 
         string path;
-        bool vm;
 
-        public void SetPath(string path, bool vm)
+        public void SetPath(string path)
         {
-            var settings = new JsonSerializerSettings();
-            settings.Converters.Add(new IPAddressConverter());
-            settings.Converters.Add(new IPEndPointConverter());
-            settings.Converters.Add(new Texture2DConverter());
-            settings.TypeNameHandling = TypeNameHandling.All;
-            settings.Formatting = Formatting.Indented;
+            try
+            {
+                var file = Path.Combine(path, Project.PROJECT_FILE);
 
-            var json = File.ReadAllText(path);
-            var data = JsonConvert.DeserializeObject<WorkspaceSaveData>(json, settings);
-            var lamps = data.items.Where(_ => _ is LampItemSaveData).ToList();
+                if (!File.Exists(file))
+                    throw new Exception($"File {file} doesn't exist!");
 
-            nameText.text = Path.GetFileNameWithoutExtension(path);
-            lampsText.text = $"LAMPS: {lamps.Count}";
+                var settings = Project.JsonSettings();
+                var json = File.ReadAllText(file);
+                var project = JsonConvert.DeserializeObject<Project>(json, settings);
 
-            this.path = path;
-            this.vm = vm;
+                var lampsCount = project
+                    .items
+                    .Where(i => i is LampItemSaveData)
+                    .ToList()
+                    .Count;
+
+                nameText.text = Path.GetFileName(path);
+                lampsText.text = $"LAMPS: {lampsCount}";
+                this.path = path;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(ex);
+                GetComponentInParent<LoadMenu>().RemoveItem(this);
+            }
         }
 
         public void Load()
         {
-            string prefix = "";
-            if (vm) prefix = "vm/";
-            WorkspaceSaveLoad.Load(prefix + Path.GetFileNameWithoutExtension(path));
-            if (vm) GetComponentInParent<LoadMenu>().VideoMappingLoaded();
+            string project = Path.GetFileName(path);
+            Project.Load(project);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
+        // Should be used only by LoadMenu!
         public void Remove()
         {
-            File.Delete(path);
             Destroy(gameObject);
+        }
+
+        public void Delete()
+        {
+            Directory.Delete(path);
+            GetComponentInParent<LoadMenu>().RemoveItem(this);
         }
     }
 }

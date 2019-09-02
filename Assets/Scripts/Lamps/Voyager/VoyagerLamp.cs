@@ -25,7 +25,9 @@ namespace VoyagerApp.Lamps.Voyager
 
         VoyagerClient client;
 
-        internal VoyagerLamp()
+        public override int pixels => length;
+
+        public VoyagerLamp()
         {
             type = "Voyager";
         }
@@ -81,8 +83,7 @@ namespace VoyagerApp.Lamps.Voyager
             base.SetItsh(itsh);
             client = NetworkManager.instance.GetLampClient<VoyagerClient>();
             client.SendItshAsMetadata(this);
-
-            videoBuffer.RecreateBuffer(0);
+            buffer.RecreateBuffer(0);
         }
 
         public override void SetVideo(Video video)
@@ -91,19 +92,16 @@ namespace VoyagerApp.Lamps.Voyager
             client = NetworkManager.instance.GetLampClient<VoyagerClient>();
             client.SendVideoMetadata(this);
 
-            videoBuffer.RecreateBuffer(video.frames);
+            buffer.RecreateBuffer(video.frames);
         }
 
         public override void PushFrame(Color32[] colors, long frame)
         {
+            base.PushFrame(colors, frame);
+
             if (client == null)
                 client = NetworkManager.instance.GetLampClient<VoyagerClient>();
             client.SendVideoFrameData(this, frame, colors);
-
-            if (!videoBuffer.FrameExists(frame))
-                videoBuffer.SetFrame(frame, ColorUtils.ColorsToBytes(colors));
         }
-
-        public override int pixelsCount => length;
     }
 }

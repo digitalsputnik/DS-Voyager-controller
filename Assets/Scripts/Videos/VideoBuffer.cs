@@ -1,13 +1,17 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace VoyagerApp.Videos
 {
     [Serializable]
-    public class VideoBuffer
+    public struct VideoBuffer
     {
         public long frames;
+        [JsonProperty(ItemTypeNameHandling = TypeNameHandling.None,
+                      ReferenceLoopHandling = ReferenceLoopHandling.Ignore)]
         public byte[][] framesToBuffer;
 
+        [JsonIgnore]
         public bool ContainsVideo => frames != 0;
 
         public void RecreateBuffer(long frames)
@@ -21,6 +25,7 @@ namespace VoyagerApp.Videos
 
         public void SetFrame(long frame, byte[] buffer)
         {
+            if (frame < 0 || frame >= frames) return;
             framesToBuffer[frame] = buffer;
         }
 

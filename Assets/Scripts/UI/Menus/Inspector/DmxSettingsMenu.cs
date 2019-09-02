@@ -154,7 +154,7 @@ namespace VoyagerApp.UI.Menus
                 case 1:
                     return 16 * stackIncreasement;
                 case 2:
-                    return lamp.pixelsCount * stackIncreasement;
+                    return lamp.pixels * stackIncreasement;
                 default:
                     return 0;
             }

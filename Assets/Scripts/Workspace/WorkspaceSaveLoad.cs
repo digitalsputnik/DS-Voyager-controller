@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using UnityEngine;
 using VoyagerApp.Networking;
+using VoyagerApp.Utilities;
 
 namespace VoyagerApp.Workspace
 {

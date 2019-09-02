@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using VoyagerApp.Utilities;
+using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
 
 namespace VoyagerApp.UI.Menus
@@ -8,8 +10,10 @@ namespace VoyagerApp.UI.Menus
     public class DrawMenu : Menu
     {
         [SerializeField] GameObject infoText        = null;
-        [SerializeField] GameObject videoMappingBtn = null;
         [SerializeField] ItshPickView itshPick      = null;
+        [SerializeField] GameObject setVideoBtn     = null;
+        [SerializeField] GameObject videoMappingBtn = null;
+        [SerializeField] GameObject splitter        = null;
         [SerializeField] GameObject selectAllBtn    = null;
         [SerializeField] GameObject deselectAllBtn  = null;
 
@@ -62,8 +66,15 @@ namespace VoyagerApp.UI.Menus
         void CheckForButtons()
         {
             infoText.SetActive(!AtLeastOneSelected);
-            videoMappingBtn.SetActive(AtLeastOneSelected);
             itshPick.gameObject.SetActive(AtLeastOneSelected);
+            setVideoBtn.SetActive(AtLeastOneSelected);
+
+            videoMappingBtn.SetActive(
+                AtLeastOneSelected &&
+                SelectedItemsHaveSameVideo
+            );
+
+            splitter.SetActive(AtLeastOneSelected);
 
             selectAllBtn.SetActive(!AllSelected);
             deselectAllBtn.SetActive(AtLeastOneSelected);
@@ -81,13 +92,29 @@ namespace VoyagerApp.UI.Menus
 
         public void VideoMappingBtnClicked()
         {
-            var selected = WorkspaceSelection.instance.Selected.ToArray();
-            var items = WorkspaceManager.instance.Items.ToArray();
+            if (!SelectedItemsHaveSameVideo) return;
 
-            WorkspaceSaveLoad.Save("tmp/to_vm", selected);
-            WorkspaceSaveLoad.Save("tmp/from_vm", items);
+            WorkspaceSaveLoad.Save(
+                FileUtils.WorkspaceStatePath,
+                WorkspaceManager.instance.Items.ToArray());
+
+            var settings = new VideoMappingSettings(
+                WorkspaceUtils.SelectedLamps,
+                WorkspaceUtils.SelectedLamps[0].video);
+
+            settings.Save();
 
             SceneManager.LoadScene("Video Mapping");
+        }
+
+        bool SelectedItemsHaveSameVideo
+        {
+            get
+            {
+                if (WorkspaceUtils.SelectedLamps.Count == 0) return false;
+                Video video = WorkspaceUtils.SelectedLamps[0].video;
+                return WorkspaceUtils.SelectedLamps.All(l => l.video == video);
+            }
         }
     }
 }

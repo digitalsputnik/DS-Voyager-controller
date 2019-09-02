@@ -2,11 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Video;
-using VoyagerApp.Networking;
 using VoyagerApp.Utilities;
 
 namespace VoyagerApp.Videos
@@ -21,12 +18,6 @@ namespace VoyagerApp.Videos
             {
                 instance = this;
                 DontDestroyOnLoad(this);
-
-                jsonSettings = new JsonSerializerSettings();
-                jsonSettings.Converters.Add(new Texture2DConverter());
-                jsonSettings.Formatting = Formatting.Indented;
-
-                LoadVideos();
             }
             else
                 Destroy(this);
@@ -40,9 +31,19 @@ namespace VoyagerApp.Videos
         public event VideoHandler onVideoAdded;
         public event VideoHandler onVideoRemoved;
 
-        JsonSerializerSettings jsonSettings;
-
         public List<Video> Videos { get; } = new List<Video>();
+
+        public void Clear()
+        {
+            foreach (var video in new List<Video>(Videos))
+                RemoveVideo(video);
+        }
+
+        public void AddLoadedVideo(Video video)
+        {
+            Videos.Add(video);
+            onVideoAdded?.Invoke(video);
+        }
 
         public void LoadVideo(string path, VideoHandler onLoaded)
         {
@@ -56,7 +57,6 @@ namespace VoyagerApp.Videos
                 Destroy(video.thumbnail);
                 Videos.Remove(video);
                 onVideoRemoved(video);
-                SaveVideos();
             }
         }
 
@@ -85,7 +85,6 @@ namespace VoyagerApp.Videos
                 Videos.Add(video);
                 onLoaded?.Invoke(video);
                 onVideoAdded?.Invoke(video);
-                SaveVideos();
             }
 
             Destroy(player);
@@ -131,35 +130,6 @@ namespace VoyagerApp.Videos
         bool LoadingTimeout(float startTime)
         {
             return Time.time - startTime > loadTimeout;
-        }
-        #endregion
-
-        #region Save & Load
-        void SaveVideos()
-        {
-            string json = JsonConvert.SerializeObject(Videos, jsonSettings);
-            File.WriteAllText(MetadataPath, json);
-        }
-
-        void LoadVideos()
-        {
-            if (!File.Exists(MetadataPath)) return;
-            string json = File.ReadAllText(MetadataPath);
-            var videos = JsonConvert.DeserializeObject<List<Video>>(json, jsonSettings);
-
-            foreach (var video in videos)
-            {
-                if (!Videos.Any(_ => _.hash == video.hash))
-                {
-                    Videos.Add(video);
-                    onVideoAdded?.Invoke(video);
-                }
-            }
-        }
-
-        static string MetadataPath
-        {
-            get => Path.Combine(Application.persistentDataPath, "videos_meta.vmd");
         }
         #endregion
     }

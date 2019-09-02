@@ -11,7 +11,6 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] PickVideoItem itemPrefab   = null;
         [SerializeField] Transform container        = null;
         [SerializeField] GameObject loadingText     = null;
-        [SerializeField] VideoMapper mapper         = null;
 
         List<PickVideoItem> items = new List<PickVideoItem>();
 
@@ -29,8 +28,9 @@ namespace VoyagerApp.UI.Menus
 
         public void PickVideo(Video video)
         {
-            mapper.SetVideo(video);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+            foreach (var item in WorkspaceUtils.SelectedLamps)
+                item.SetVideo(video);
         }
 
         internal override void OnShow()

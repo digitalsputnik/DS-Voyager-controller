@@ -24,6 +24,7 @@ namespace VoyagerApp.UI.Menus
 
         public void SetItsh(Itsh itsh)
         {
+            Debug.Log($"Itsh on open {itsh}");
             beginning = itsh;
             this.itsh = itsh;
 
@@ -37,6 +38,7 @@ namespace VoyagerApp.UI.Menus
 
         public void Approve()
         {
+            Debug.Log($"Itsh on keep {itsh}");
             approved = true;
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }

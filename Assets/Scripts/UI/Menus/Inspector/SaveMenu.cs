@@ -1,8 +1,6 @@
-﻿using System.IO;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using VoyagerApp.Utilities;
-using VoyagerApp.Workspace;
+using VoyagerApp.Projects;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -30,17 +28,7 @@ namespace VoyagerApp.UI.Menus
 
         public void Save()
         {
-            var items = WorkspaceManager.instance.Items.ToArray();
-            WorkspaceSaveLoad.Save(filenameField.text, items);
-            GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
-        }
-
-        public void SaveVideoMapping()
-        {
-            if (!Directory.Exists(FileUtils.WorkspaceSavesPath + "/vm"))
-                Directory.CreateDirectory(FileUtils.WorkspaceSavesPath + "/vm");
-            var items = WorkspaceManager.instance.Items.ToArray();
-            WorkspaceSaveLoad.Save("vm/" + filenameField.text, items);
+            Project.Save(filenameField.text);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
     }
