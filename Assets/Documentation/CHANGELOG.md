@@ -1,10 +1,15 @@
-﻿2.0.37-alpha                                                          29.08.2019
+﻿2.0.38-alpha                                                          02.09.2019
+- Added and improved scroll rects.
+- Picking video takes to videom mapping right away.
+- Fixed mapping error in video mapping.
+
+2.0.37-alpha                                                          29.08.2019
 - Removed: All unnessesary UI from video mapping.
 - Change: Moved video setting to draw menu.
 - Added #169: New project save, load and handling system.
 - Added #169: Saving lamps UI coordinates on video.
 - Added #169: Videos are now copied to a application directory, where they stay
-              until a project save is deleted.
+  until a project save is deleted.
 
 2.0.33-alpha                                                          29.08.2019
 - Net video position struct that lamp saves to save positions on video.

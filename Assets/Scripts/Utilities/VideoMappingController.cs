@@ -56,8 +56,8 @@ namespace VoyagerApp.UI
 
         Vector2 GetLampVideoPosition(Lamp lamp)
         {
-            float x = (lamp.mapping.x1 + lamp.mapping.x2) / 2.0f;
-            float y = (lamp.mapping.y1 + lamp.mapping.y2) / 2.0f;
+            float x = (lamp.mapping.x1 + lamp.mapping.x2) / 2.0f - 0.5f;
+            float y = (lamp.mapping.y1 + lamp.mapping.y2) / 2.0f - 0.5f;
             return mapper.MeshTransform.TransformPoint(x, y, 0);
         }
 
