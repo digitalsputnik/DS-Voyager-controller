@@ -3,7 +3,7 @@
 - Picking video takes to videom mapping right away.
 - Fixed mapping error in video mapping.
 
-2.0.37-alpha                                                          29.08.2019
+2.0.37-alpha                                                          02.09.2019
 - Removed: All unnessesary UI from video mapping.
 - Change: Moved video setting to draw menu.
 - Added #169: New project save, load and handling system.
