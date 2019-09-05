@@ -1,4 +1,4 @@
-﻿## In this file is list of features that are finished and ready to test.
+﻿## In this file is list of features that are expected to be in Voyager Controller v2.0.
 
 **Some things to note:**
 * Controls menu container is on the right side.
