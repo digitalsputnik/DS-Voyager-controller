@@ -1,25 +1,35 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
 
 namespace VoyagerApp.UI.Menus
 {
     public class VideoMappingMenu : Menu
     {
-        [SerializeField] IntField intField      = null;
+        [SerializeField] IntField fpsField      = null;
         [SerializeField] VideoMapper mapper     = null;
 
-        public override void Start()
-        {
-            base.Start();
+        Video video;
 
-            intField.onChanged += FpsChanged;
-            //FpsChanged(intField.Value);
+        public void SetVideo(Video video)
+        {
+            this.video = video;
+            SetupFps();
+        }
+
+        void SetupFps()
+        {
+            fpsField.SetValue((int)video.fps);
+            fpsField.onChanged += FpsChanged;
         }
 
         private void FpsChanged(int value)
         {
-            //mapper.SetFps(value);
+            video.fps = value;
+            foreach (var lamp in WorkspaceUtils.Lamps)
+                lamp.SetVideo(video);
+            mapper.SetFps(value);
         }
 
         public void ReturnToWorkspace()
@@ -29,7 +39,7 @@ namespace VoyagerApp.UI.Menus
 
         void OnDestroy()
         {
-            intField.onChanged -= FpsChanged;
+            fpsField.onChanged -= FpsChanged;
         }
     }
 }

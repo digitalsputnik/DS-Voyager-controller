@@ -56,7 +56,7 @@ namespace VoyagerApp.Videos
             {
                 Destroy(video.thumbnail);
                 Videos.Remove(video);
-                onVideoRemoved(video);
+                onVideoRemoved?.Invoke(video);
             }
         }
 

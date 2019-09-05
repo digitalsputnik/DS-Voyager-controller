@@ -17,7 +17,11 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Text valueText;
         [SerializeField] Image fillImage;
         [SerializeField] RectTransform controlArea;
+
+        public Slider sliderObject;
         [Space(3)]
+
+        public GameObject sliderText;
 
         public ValueSliderEvent onChanged;
         public float normalized => (float)(value - min) / (max - min);
@@ -45,11 +49,13 @@ namespace VoyagerApp.UI.Menus
         void Start()
         {
             valueText.text = value.ToString();
+            sliderText.GetComponent<Text>().text = value.ToString();
             update = 0.0f;
         }
 
 		void Update()
         {
+ 
             //Update speed
             update += Time.deltaTime;
             if (update > updateSpeed)
@@ -57,17 +63,26 @@ namespace VoyagerApp.UI.Menus
                 update = 0.0f;
                 // Increases or decreases value once per update when enabled
                 if (mouseHold == true && mouseDrag == false)
-                    changeValueOnHold();
+                {
+                    //sliderObject.value = val; // Updates slider when holding
+                    ChangeValueOnHold();
+                }
             }
 		}
 
-        public void changeValueOnHold()
+        public void ChangeValueOnHold()
         {
             int range = max - min;
             stepVal = range / 100;
             changeValue(stepVal * stepMultiplier, (stepVal * stepMultiplier) * -1);
         }
 
+        // Only used when pressing a button
+        public void SliderUpdate()
+        {
+            //Divided with 100 as slider takes values from 0 to 1
+            sliderObject.value = ((float)value - min) / (max - min);
+        }
 
         public void changeValue(float posVal, float negVal)
         {
@@ -79,6 +94,7 @@ namespace VoyagerApp.UI.Menus
 		{
             val = HorizontalValueFromPosition(eventData.position);
             changeValue(1, -1); // Increases or decreases value once per click
+            //sliderObject.value = value; // Updates slider when clicked
             buttonUp = false;
             StartCoroutine(waitForHold()); // Delay before update
 		}
@@ -135,6 +151,7 @@ namespace VoyagerApp.UI.Menus
         {
             fillImage.fillAmount = fill;
             valueText.text = value.ToString();
+            sliderText.GetComponent<Text>().text = value.ToString();
         }
     }
 

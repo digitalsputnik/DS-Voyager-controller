@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using VoyagerApp.Lamps;
+using VoyagerApp.UI.Menus;
 using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
 
@@ -9,6 +10,7 @@ namespace VoyagerApp.UI
     public class VideoMappingController : MonoBehaviour
     {
         [SerializeField] VideoMapper mapper;
+        [SerializeField] VideoMappingMenu menu;
 
         void Start()
         {
@@ -23,6 +25,7 @@ namespace VoyagerApp.UI
             var lamps = LampsFromSerials(settings.lamps);
 
             mapper.SetVideo(video);
+            menu.SetVideo(video);
 
             foreach (var lamp in lamps)
             {

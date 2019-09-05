@@ -63,7 +63,7 @@ namespace VoyagerApp.Videos
 
         public void SetFps(float fps)
         {
-            player.playbackSpeed = player.frameRate / fps;
+            player.playbackSpeed = 1.0f / player.frameRate * fps;
             SetFrame(TimeUtils.GetFrameOfVideo(video));
         }
 
@@ -167,12 +167,15 @@ namespace VoyagerApp.Videos
         #region Handling events
         void ItemMoved(ItemMove move)
         {
-            foreach (var item in WorkspaceUtils.LampItems)
-            {
-                var mapping = GetLampMapping(item);
-                item.lamp.SetMapping(mapping);
-                item.lamp.buffer.RecreateBuffer(video.frames);
-            }
+            var item = move.GetComponentInParent<LampItemView>();
+            if (item == null) return;
+
+            var mapping = GetLampMapping(item);
+            var lamp = item.lamp;
+
+            lamp.SetVideo(video);
+            lamp.SetMapping(mapping);
+            lamp.buffer.RecreateBuffer(video.frames);
         }
 
         VideoPosition GetLampMapping(LampItemView lamp)

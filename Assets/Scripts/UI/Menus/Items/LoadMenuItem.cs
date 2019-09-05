@@ -61,7 +61,7 @@ namespace VoyagerApp.UI.Menus
 
         public void Delete()
         {
-            Directory.Delete(path);
+            Directory.Delete(path, true);
             GetComponentInParent<LoadMenu>().RemoveItem(this);
         }
     }

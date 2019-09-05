@@ -32,7 +32,7 @@ namespace VoyagerApp.Videos
             x1 = start.x;
             y1 = start.y;
             x2 = end.x;
-            y2 = end.x;
+            y2 = end.y;
         }
     }
 }

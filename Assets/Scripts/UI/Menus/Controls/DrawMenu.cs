@@ -1,9 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using VoyagerApp.Lamps;
 using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
+using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -94,17 +97,28 @@ namespace VoyagerApp.UI.Menus
         {
             if (!SelectedItemsHaveSameVideo) return;
 
+            var video = WorkspaceUtils.SelectedLamps[0].video;
+
             WorkspaceSaveLoad.Save(
                 FileUtils.WorkspaceStatePath,
                 WorkspaceManager.instance.Items.ToArray());
 
             var settings = new VideoMappingSettings(
-                WorkspaceUtils.SelectedLamps,
-                WorkspaceUtils.SelectedLamps[0].video);
+                LampsWithVideo(video),
+                video);
 
             settings.Save();
 
             SceneManager.LoadScene("Video Mapping");
+        }
+
+        static List<Lamp> LampsWithVideo(Video video)
+        {
+            return LampManager
+                .instance
+                .Lamps
+                .Where(l => l.video == video)
+                .ToList();
         }
 
         bool SelectedItemsHaveSameVideo

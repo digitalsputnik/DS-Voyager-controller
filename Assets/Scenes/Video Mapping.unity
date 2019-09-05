@@ -503,6 +503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapper: {fileID: 599089774}
+  menu: {fileID: 687523371}
 --- !u!1001 &432099482
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1066,7 +1067,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b4afd1ba79ee42fc931bd9f1ce327ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  intField: {fileID: 1750708790}
+  fpsField: {fileID: 1750708790}
   mapper: {fileID: 599089774}
 --- !u!225 &687523372
 CanvasGroup:
@@ -1114,7 +1115,7 @@ RectTransform:
   - {fileID: 2018886541}
   - {fileID: 211750352}
   m_Father: {fileID: 1230988021}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1562,11 +1563,6 @@ PrefabInstance:
       propertyPath: m_UiScaleMode
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7372718237629441577, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
-      propertyPath: m_ScrollSensitivity
-      value: 15
-      objectReference: {fileID: 0}
     - target: {fileID: 1467568856626609616, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_IsActive
@@ -1676,6 +1672,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_BoolArgument
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7372718237629441577, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: m_ScrollSensitivity
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 696c43ec365ed4a45a6c16df774dc048, type: 3}
@@ -1812,7 +1813,7 @@ PrefabInstance:
     - target: {fileID: 1418213714044641582, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
       propertyPath: m_Name
-      value: Int Field
+      value: Fps Field
       objectReference: {fileID: 0}
     - target: {fileID: 1418213714044641569, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}

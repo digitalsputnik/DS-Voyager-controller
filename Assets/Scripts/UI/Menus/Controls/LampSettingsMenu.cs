@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Utilities;
-using VoyagerApp.Workspace;
 
 namespace VoyagerApp.UI.Menus
 {

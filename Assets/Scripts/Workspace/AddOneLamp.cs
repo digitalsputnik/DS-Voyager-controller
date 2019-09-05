@@ -16,7 +16,6 @@ namespace VoyagerApp.Workspace
         void LampManager_LampAdded(Lamp lamp)
         {
             StartCoroutine(WaitBeforeAdding(lamp));
-            LampManager.instance.onLampAdded -= LampManager_LampAdded;
         }
 
         IEnumerator WaitBeforeAdding(Lamp lamp)
@@ -25,10 +24,15 @@ namespace VoyagerApp.Workspace
             WorkspaceManager manager = WorkspaceManager.instance;
             Lamp[] lamps = WorkspaceUtils.Lamps.ToArray();
 
-            if (!lamps.Any(l => l == lamp))
+            if (!lamps.Any(l => l == lamp) && WorkspaceUtils.LampItems.Count == 0)
                 lamp.AddToWorkspace();
 
-            enabled = false;
+            Destroy(this);
+        }
+
+        void OnDestroy()
+        {
+            LampManager.instance.onLampAdded -= LampManager_LampAdded;
         }
     }
 }
