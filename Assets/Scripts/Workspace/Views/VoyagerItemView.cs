@@ -22,11 +22,9 @@ namespace VoyagerApp.Workspace.Views
         public new VoyagerLamp lamp;
         VoyagerClient client;
 
-        double latestPauseStartTime;
-        double pauseTime;
         bool playing = true;
 
-        void FixedUpdate()
+        void LateUpdate()
         {
             RenderPixels();
         }
@@ -50,35 +48,26 @@ namespace VoyagerApp.Workspace.Views
             PlayPauseStop.onStop  -= OnStop;
         }
 
-        void OnPlay()
+        void OnPlay(double startTime, bool fromStop)
         {
-            if (latestPauseStartTime > 0.01)
-                pauseTime += TimeUtils.Epoch - latestPauseStartTime;
-            else if (latestPauseStartTime < -0.01)
-            {
-                Video video = lamp.video;
-                float duration = video.frames / video.fps;
-                double time = TimeUtils.Epoch - video.lastStartTime - pauseTime;
-                pauseTime += time % duration;
-            }
-
-            playing = true;
             client.SendPlaymode(lamp, VoyagerPlaybackMode.Play);
+            playing = true;
         }
 
         void OnPause()
         {
-            latestPauseStartTime = TimeUtils.Epoch;
-            playing = false;
             client.SendPlaymode(lamp, VoyagerPlaybackMode.Pause);
+            playing = false;
         }
 
         void OnStop()
         {
-            latestPauseStartTime = -1;
-            playing = false;
-            DrawBufferFrame(lamp.buffer, 0);
             client.SendPlaymode(lamp, VoyagerPlaybackMode.Stop);
+            var buffer = lamp.buffer;
+            long frame = buffer.GetClosestIndex(0, 3);
+            if (buffer.FrameExists(frame))
+                DrawBufferFrame(buffer, frame);
+            playing = false;
         }
 
         protected override void Generate()

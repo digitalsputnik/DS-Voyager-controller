@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.Video;
+using VoyagerApp.UI;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
@@ -20,12 +21,18 @@ namespace VoyagerApp.Videos
         RenderTexture render;
         MeshRenderer renderMesh;
 
+        bool stopRequested;
+
         void Start()
         {
             player = GetComponent<VideoPlayer>();
             renderMesh = GetComponent<MeshRenderer>();
 
             ItemMove.onItemMoveEnded += ItemMoved;
+
+            PlayPauseStop.onPlay  += OnPlayClicked;
+            PlayPauseStop.onPause += OnPauseClicked;
+            PlayPauseStop.onStop  += OnStopClicked;
         }
 
         void Update()
@@ -37,13 +44,23 @@ namespace VoyagerApp.Videos
             PushPixelsToLamps(frame);
             Destroy(frame);
 
-            if (TimeUtils.GetFrameOfVideo(video) == 0)
+            if (TimeUtils.GetFrameOfVideo(video) == 0 && player.isPlaying)
                 SetFrame(TimeUtils.GetFrameOfVideo(video));
+
+            if (stopRequested)
+            {
+                player.Pause();
+                stopRequested = false;
+            }
         }
 
         private void OnDestroy()
         {
             ItemMove.onItemMoveEnded -= ItemMoved;
+
+            PlayPauseStop.onPlay  -= OnPlayClicked;
+            PlayPauseStop.onPause -= OnPauseClicked;
+            PlayPauseStop.onStop  -= OnStopClicked;
         }
 
         #region Setting video
@@ -164,7 +181,7 @@ namespace VoyagerApp.Videos
         }
         #endregion
 
-        #region Handling events
+        #region Handling position changed event
         void ItemMoved(ItemMove move)
         {
             var item = move.GetComponentInParent<LampItemView>();
@@ -200,6 +217,41 @@ namespace VoyagerApp.Videos
             return new VideoPosition(pixels[0], pixels[1]);
         }
 
+        #endregion
+
+        #region Play / Pause / Stop
+        private void OnPlayClicked(double pauseTime, bool fromStop)
+        {
+            if (pauseTime > 0.0)
+			{
+                video.lastStartTime += pauseTime;
+                SetFrame(TimeUtils.GetFrameOfVideo(video));
+			}
+
+            if (fromStop)
+            {
+                video.lastStartTime = TimeUtils.Epoch;
+                SetFrame(TimeUtils.GetFrameOfVideo(video));
+            }
+
+            if (video != null)
+                player.Play();
+        }
+
+        private void OnPauseClicked()
+        {
+            if (video != null)
+                player.Pause();
+        }
+
+        private void OnStopClicked()
+        {
+            if (video != null)
+            {
+                player.frame = 0;
+                stopRequested = true;
+            }
+        }
         #endregion
     }
 

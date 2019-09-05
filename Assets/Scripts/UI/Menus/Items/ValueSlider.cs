@@ -17,6 +17,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Text valueText;
         [SerializeField] Image fillImage;
         [SerializeField] RectTransform controlArea;
+        public bool isTemperature;
 
         public Slider sliderObject;
         [Space(3)]
@@ -80,7 +81,7 @@ namespace VoyagerApp.UI.Menus
         // Only used when pressing a button
         public void SliderUpdate()
         {
-            //Divided with 100 as slider takes values from 0 to 1
+            //Updates slider value when pressing "slider" button
             sliderObject.value = ((float)value - min) / (max - min);
         }
 
@@ -143,8 +144,18 @@ namespace VoyagerApp.UI.Menus
 
         public void SetValue(float val)
         {
+            //Different calculation for Temperature
+            if(isTemperature)
+            {
+                int iVal = (int)((max - min) * val) + min;
+                iVal /= 100;
+                SetValue((iVal * 100));
+            }
+
+            else { 
             int iVal = (int)((max - min) * val) + min;
             SetValue(iVal);
+            }
         }
 
         void UpdateUI(float fill)

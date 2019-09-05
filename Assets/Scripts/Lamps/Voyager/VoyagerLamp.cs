@@ -93,6 +93,7 @@ namespace VoyagerApp.Lamps.Voyager
             client.SendVideoMetadata(this);
 
             buffer.RecreateBuffer(video.frames);
+            Debug.Log($"HERE {serial}");
         }
 
         public override void PushFrame(Color32[] colors, long frame)

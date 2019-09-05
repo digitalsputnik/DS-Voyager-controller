@@ -1,4 +1,10 @@
-﻿2.0.40-alpha                                                          05.09.2019
+﻿2.0.42-alpha                                                          05.09.2019
+- Fix #174: Implemented Play pause stop in video mapping.
+
+2.0.41-alpha                                                          05.09.2019
+- Temperature slider step value from 1 to 100
+
+2.0.40-alpha                                                          05.09.2019
 - Fix #170: Lamp didn't send new metadata if moved in video mapping.
 - Fix #171: New lamp added from network in video mapping crashed program.
 - Fix #172: Fps field didn't change video fps in video mapping.
@@ -6,6 +12,9 @@
 - Remove:   Color wheele is not part of the canvas prefab anymore.
 - Refactor: Tweeked some UI settings.
 - Fix:      Loads can be deleted now.
+
+2.0.39-alpha                                                          05.09.2019
+- Added sliders to ITSH menu
 
 2.0.38-alpha                                                          02.09.2019
 - Added and improved scroll rects.
