@@ -40,6 +40,7 @@ VIDEO MAPPING
 
 SET VIDEO MENU
 * Should contain list of videos selected before.
+* Should contain list of preset videos. **NOT FINISHED**
 * Every video should have a thumbnail.
 * Clicking OPEN NEW should open up a file dialogue and only .mp4 files
   should be selectable.
