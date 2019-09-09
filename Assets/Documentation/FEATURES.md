@@ -1,4 +1,4 @@
-﻿## In this file is list of features that are finished and ready to test.
+﻿## In this file is list of features that are expected to be in Voyager Controller v2.0.
 
 **Some things to note:**
 * Controls menu container is on the right side.
@@ -40,6 +40,7 @@ VIDEO MAPPING
 
 SET VIDEO MENU
 * Should contain list of videos selected before.
+* Should contain list of preset videos. **NOT FINISHED**
 * Every video should have a thumbnail.
 * Clicking OPEN NEW should open up a file dialogue and only .mp4 files
   should be selectable.
@@ -47,7 +48,7 @@ SET VIDEO MENU
 * Clicking on garbage bin should remove it from the list.
 * Clicking on a video item should open the video mapping menu.
 * The opened video should be inside a camera view bounderies.
-* Lamps should show mapped pixels, video multiplied with ITSH.
+* Lamps should show mapped pixels, video multiplied with ITSH and effect. **NOT FINISHED**
 
 LAMPS SETTINGS
 * Contains list of different settings, including:
@@ -90,7 +91,8 @@ LOAD
 * Clicking on a save, the saved workspace should appear.
 * Removing the saved project should remove it from the list.
 
-NEW PROJECT **NOT FINISHED**
+NEW PROJECT
+* Creates new empty workspace **NOT FINISHED**
 
 ABOUT
 * The copyright year should be right.
