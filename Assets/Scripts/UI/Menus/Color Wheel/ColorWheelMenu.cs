@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using VoyagerApp.Workspace;
+using UnityEngine.UI;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -13,33 +14,37 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] ValueSlider temperatureSlider      = null;
         [SerializeField] ValueSlider saturationSlider       = null;
         [SerializeField] ValueSlider hueSlider              = null;
+        [SerializeField] ValueSlider effectSlider           = null;
         [Space(3)]
         [SerializeField] ColorWheelEventSystem wheel        = null;
 
-        Itsh beginning;
-        Itsh itsh;
+        Itshe beginning;
+        Itshe itshe;
 
         bool approved;
         bool selectionEnabled;
 
-        public void SetItsh(Itsh itsh)
+        public void SetItsh(Itshe itshe)
         {
-            Debug.Log($"Itsh on open {itsh}");
-            beginning = itsh;
-            this.itsh = itsh;
+            Debug.Log($"Itsh on open {itshe}");
+            beginning = itshe;
+            this.itshe = itshe;
 
-            itensitySlider.SetValue(itsh.i);
-            temperatureSlider.SetValue(itsh.t);
-            saturationSlider.SetValue(itsh.s);
-            hueSlider.SetValue(itsh.h);
+            itensitySlider.SetValue(itshe.i);
+            temperatureSlider.SetValue(itshe.t);
+            saturationSlider.SetValue(itshe.s);
+            hueSlider.SetValue(itshe.h);
+            effectSlider.SetValue(itshe.e);
 
-            wheel.SetFromItsh(itsh);
+            wheel.SetFromItsh(itshe);
         }
 
         public void Approve()
         {
-            Debug.Log($"Itsh on keep {itsh}");
+            Debug.Log($"Itsh on keep {itshe}");
             approved = true;
+            GameObject.Find("Minimize / Maximize").GetComponent<Button>().enabled = true;
+            GameObject.Find("CWSliderToggle").SetActive(false);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
@@ -76,6 +81,7 @@ namespace VoyagerApp.UI.Menus
             temperatureSlider.onChanged.AddListener(SliderChanged);
             saturationSlider.onChanged.AddListener(SliderChanged);
             hueSlider.onChanged.AddListener(SliderChanged);
+            effectSlider.onChanged.AddListener(SliderChanged);
         }
 
         void UnsubscribeSliders()
@@ -84,6 +90,7 @@ namespace VoyagerApp.UI.Menus
             temperatureSlider.onChanged.RemoveListener(SliderChanged);
             saturationSlider.onChanged.RemoveListener(SliderChanged);
             hueSlider.onChanged.RemoveListener(SliderChanged);
+            effectSlider.onChanged.RemoveListener(SliderChanged);
         }
 
         void SliderChanged(ValueSliderEventData data)
@@ -92,12 +99,14 @@ namespace VoyagerApp.UI.Menus
             float t = temperatureSlider.normalized;
             float s = saturationSlider.normalized;
             float h = hueSlider.normalized;
-            itsh = new Itsh(i, t, s, h);
+            float e = effectSlider.normalized;
 
-            ColorwheelManager.instance.ValuePicked(itsh);
+            itshe = new Itshe(i, t, s, h, e);
+
+            ColorwheelManager.instance.ValuePicked(itshe);
 
             UnsubscribeWheel();
-            wheel.SetFromItsh(itsh);
+            wheel.SetFromItsh(itshe);
             SubscribeWheel();
         }
 
@@ -117,10 +126,10 @@ namespace VoyagerApp.UI.Menus
 
         private void WheelHueSaturationChanged(float hue, float saturation)
         {
-            itsh.s = saturation;
-            itsh.h = hue;
+            itshe.s = saturation;
+            itshe.h = hue;
 
-            ColorwheelManager.instance.ValuePicked(itsh);
+            ColorwheelManager.instance.ValuePicked(itshe);
 
             UnsubscribeSliders();
             saturationSlider.SetValue(saturation);

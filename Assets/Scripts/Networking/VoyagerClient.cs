@@ -11,8 +11,8 @@ using UnityEngine;
 using VoyagerApp.Dmx;
 using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
+using VoyagerApp.Networking.Packages;
 using VoyagerApp.Utilities;
-using VoyagerApp.Videos;
 
 namespace VoyagerApp.Networking
 {
@@ -45,42 +45,6 @@ namespace VoyagerApp.Networking
             behaviour.StartCoroutine(IEnumDmxPollLoop());
         }
 
-        IEnumerator IEnumDiscoveryLoop()
-        {
-            while (true)
-            {
-                Discover();
-                yield return new WaitForSeconds(DISCOVERY_INTERVAL);
-            }
-        }
-
-        void Discover()
-        {
-            byte[] message = { 0xD5, 0x0A, 0x80, 0x10 };
-            var endpoint = new IPEndPoint(NetUtils.BroadcastAddress,
-                                          DISCOVERY_PORT);
-            Send(message, endpoint);
-        }
-
-        IEnumerator IEnumDmxPollLoop()
-        {
-            while (true)
-            {
-                PollDmx();
-                yield return new WaitForSeconds(DMX_POLL_INTERVAL);
-            }
-        }
-
-        void PollDmx()
-        {
-            byte[] data = new DmxPoll().ToData();
-            foreach (var lamp in LampManager.instance.Lamps)
-            {
-                IPEndPoint endpoint = new IPEndPoint(lamp.address, SETTINGS_PORT);
-                Send(data, endpoint);
-            }
-        }
-
         public double TimeOffset => offset.Offset.TotalSeconds;
 
         public void SendPlaymode(Lamp lamp, VoyagerPlaybackMode mode)
@@ -91,39 +55,55 @@ namespace VoyagerApp.Networking
             Send(container.ToData(), endpoint);
         }
 
-        public void SendVideoMetadata(Lamp lamp)
+        public void SendPacket(Lamp lamp, Packet packet)
         {
-            if (lamp.video != null)
-            {
-                double time = TimeUtils.Epoch;
-                lamp.video.lastTimestamp = time;
-                var container = VideoFrameMetadata.FromVideo(lamp.video, lamp.itsh,
-                                                             time, TimeOffset);
-
-                IPEndPoint endpoint = new IPEndPoint(lamp.address, SETTINGS_PORT);
-                Send(container.ToData(), endpoint);
-            }
-        }
-
-        public void SendItshAsMetadata(Lamp lamp)
-        {
-            double time = TimeUtils.Epoch;
-            var container = VideoFrameMetadata.FromVideo(null, lamp.itsh,
-                                                         time, TimeOffset);
+            byte[] data = packet.Serialize();
             IPEndPoint endpoint = new IPEndPoint(lamp.address, SETTINGS_PORT);
-            Send(container.ToData(), endpoint);
+            Send(data, endpoint);
         }
 
-        public void SendFpsAsMetadata(Lamp lamp)
-        {
-            double time = TimeUtils.Epoch;
-            var container = VideoFrameMetadata.FromVideo(lamp.video, lamp.itsh,
-                                                         time, TimeOffset);
+        //public void SendVideoMetadata(Lamp lamp)
+        //{
+        //    if (lamp.video != null)
+        //    {
+        //        double time = TimeUtils.Epoch;
+        //        lamp.video.lastTimestamp = time;
+        //        var container = VideoFrameMetadata.FromVideo(
+        //            lamp.video,
+        //            lamp.itshe,
+        //            time,
+        //            TimeOffset);
 
-            IPEndPoint endpoint = new IPEndPoint(lamp.address, SETTINGS_PORT);
-            Send(container.ToData(), endpoint);
-        }
+        //        IPEndPoint endpoint = new IPEndPoint(lamp.address, SETTINGS_PORT);
+        //        Send(container.ToData(), endpoint);
+        //    }
+        //}
 
+        //public void SendItshAsMetadata(Lamp lamp)
+        //{
+        //    double time = TimeUtils.Epoch;
+        //    var container = VideoFrameMetadata.FromVideo(
+        //        null,
+        //        lamp.itshe,
+        //        time,
+        //        TimeOffset);
+
+        //    IPEndPoint endpoint = new IPEndPoint(lamp.address, SETTINGS_PORT);
+        //    Send(container.ToData(), endpoint);
+        //}
+
+        //public void SendFpsAsMetadata(Lamp lamp)
+        //{
+        //    double time = TimeUtils.Epoch;
+        //    var container = VideoFrameMetadata.FromVideo(
+        //        lamp.video,
+        //        lamp.itshe,
+        //        time,
+        //        TimeOffset);
+
+        //    IPEndPoint endpoint = new IPEndPoint(lamp.address, SETTINGS_PORT);
+        //    Send(container.ToData(), endpoint);
+        //}
 
         public void TurnToClient(Lamp lamp, string ssid, string password)
         {
@@ -211,6 +191,42 @@ namespace VoyagerApp.Networking
                 IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
                 byte[] data = client.Receive(ref sender);
                 InvokeReceived(sender, data);
+            }
+        }
+
+        IEnumerator IEnumDiscoveryLoop()
+        {
+            while (true)
+            {
+                Discover();
+                yield return new WaitForSeconds(DISCOVERY_INTERVAL);
+            }
+        }
+
+        void Discover()
+        {
+            byte[] message = { 0xD5, 0x0A, 0x80, 0x10 };
+            var endpoint = new IPEndPoint(NetUtils.BroadcastAddress,
+                                          DISCOVERY_PORT);
+            Send(message, endpoint);
+        }
+
+        IEnumerator IEnumDmxPollLoop()
+        {
+            while (true)
+            {
+                PollDmx();
+                yield return new WaitForSeconds(DMX_POLL_INTERVAL);
+            }
+        }
+
+        void PollDmx()
+        {
+            byte[] data = new DmxPoll().ToData();
+            foreach (var lamp in LampManager.instance.Lamps)
+            {
+                IPEndPoint endpoint = new IPEndPoint(lamp.address, SETTINGS_PORT);
+                Send(data, endpoint);
             }
         }
     }

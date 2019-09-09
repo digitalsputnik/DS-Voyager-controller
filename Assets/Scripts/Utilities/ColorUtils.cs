@@ -49,6 +49,17 @@ namespace VoyagerApp.Utilities
 				colors[i] = colors[i] * itsh.AsColor;
 			return colors;
 		}
+
+        public static Color32[] MixColorsToItshe(Color32[] colors, Itshe itshe)
+        {
+            for (int i = 0; i < colors.Length; i++)
+            {
+                Color color = itshe.AsColor;
+                Color videoColor = colors[i] * color;
+                colors[i] = Color.Lerp(color, videoColor, itshe.e);
+            }
+            return colors;
+        }
     }
 
     public static class MathUtils

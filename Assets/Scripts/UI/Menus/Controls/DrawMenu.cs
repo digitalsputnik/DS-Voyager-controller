@@ -3,10 +3,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using VoyagerApp.Lamps;
+using VoyagerApp.Networking.Packages.Voyager;
 using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
-using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -37,7 +37,7 @@ namespace VoyagerApp.UI.Menus
             WorkspaceSelection.instance.ShowSelection = true;
 
             WorkspaceSelection.instance.onSelectionChanged += SelectionChanged;
-            itshPick.onValueChanged.AddListener(ItshChanged);
+            itshPick.onValueChanged.AddListener(ItsheChanged);
 
             CheckForButtons();
         }
@@ -45,13 +45,13 @@ namespace VoyagerApp.UI.Menus
         internal override void OnHide()
         {
             WorkspaceSelection.instance.onSelectionChanged -= SelectionChanged;
-            itshPick.onValueChanged.RemoveListener(ItshChanged);
+            itshPick.onValueChanged.RemoveListener(ItsheChanged);
         }
 
-        void ItshChanged(Itsh itsh)
+        void ItsheChanged(Itshe itshe)
         {
             var lamps = WorkspaceUtils.SelectedVoyagerLampItems;
-            lamps.ForEach(_ => _.lamp.SetItshWithoutVideo(itsh));
+            lamps.ForEach(_ => _.lamp.SetItshe(itshe));
         }
 
         void SelectionChanged(WorkspaceSelection selection)
@@ -60,9 +60,9 @@ namespace VoyagerApp.UI.Menus
 
             if (selection.Selected.Count == 1)
             {
-                Itsh itsh = selection.Selected[0].lamp.itsh;
-                if (itsh.Equals(default(Itsh))) itsh = Itsh.white;
-                itshPick.Value = itsh;
+                Itshe itshe = selection.Selected[0].lamp.itshe;
+                if (itshe.Equals(default(Itsh))) itshe = Itshe.white;
+                itshPick.Value = itshe;
             }
         }
 

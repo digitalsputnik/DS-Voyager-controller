@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace VoyagerApp.Networking.Packages.Voyager
 {
+    [Serializable]
     public class VideoResponsePacket : Packet
     {
         [JsonProperty("frame_count")]

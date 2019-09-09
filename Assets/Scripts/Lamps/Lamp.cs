@@ -24,7 +24,7 @@ namespace VoyagerApp.Lamps
         public double lastMessage;
         public abstract int pixels { get; }
 
-        public Itsh itsh;
+        public Itshe itshe;
         public Video video;
         public VideoPosition mapping;
         public VideoBuffer buffer;
@@ -40,17 +40,14 @@ namespace VoyagerApp.Lamps
             lastMessage = TimeUtils.Epoch;
         }
 
-        public virtual void SetItsh(Itsh itsh) => this.itsh = itsh;
+        public virtual void SetItshe(Itshe itshe) => this.itshe = itshe;
 
         public virtual void SetVideo(Video video) => this.video = video;
 
         public virtual void PushFrame(Color32[] colors, long frame)
         {
             if (!buffer.FrameExists(frame))
-            {
                 buffer.SetFrame(frame, ColorUtils.ColorsToBytes(colors));
-                Debug.Log("HERE! " + frame);
-            }
         }
 
         public virtual void SetMapping(VideoPosition mapping) => this.mapping = mapping;

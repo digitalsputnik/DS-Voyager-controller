@@ -2,6 +2,8 @@
 using System.Net;
 using UnityEngine;
 using VoyagerApp.Networking;
+using VoyagerApp.Networking.Packages;
+using VoyagerApp.Networking.Packages.Voyager;
 using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
@@ -71,38 +73,42 @@ namespace VoyagerApp.Lamps.Voyager
             return WorkspaceManager.instance.InstantiateItem<VoyagerItemView>(this, position, scale, rotation);
         }
 
-        public void SetItshWithVideo(Itsh itsh)
-        {
-            base.SetItsh(itsh);
-            client = NetworkManager.instance.GetLampClient<VoyagerClient>();
-            client.SendVideoMetadata(this);
-        }
-
-        public void SetItshWithoutVideo(Itsh itsh)
-        {
-            base.SetItsh(itsh);
-            client = NetworkManager.instance.GetLampClient<VoyagerClient>();
-            client.SendItshAsMetadata(this);
-            buffer.RecreateBuffer(0);
-        }
-
         public override void SetVideo(Video video)
         {
             base.SetVideo(video);
-            client = NetworkManager.instance.GetLampClient<VoyagerClient>();
-            client.SendVideoMetadata(this);
 
+            var packet = new PacketCollection(
+                new SetVideoPacket(video.frames, video.lastStartTime),
+                new SetFpsPacket((int)video.fps)
+            );
+
+            NetUtils.VoyagerClient.SendPacket(this, packet);
             buffer.RecreateBuffer(video.frames);
-            Debug.Log($"HERE {serial}");
+        }
+
+        public override void SetItshe(Itshe itshe)
+        {
+            base.SetItshe(itshe);
+
+            var packet = new SetItshePacket(itshe);
+            NetUtils.VoyagerClient.SendPacket(this, packet);
+        }
+
+        public void SendVideoWithItsh()
+        {
+            var packet = new PacketCollection(
+                new SetVideoPacket(video.frames, video.lastStartTime),
+                new SetItshePacket(itshe));
+            NetUtils.VoyagerClient.SendPacket(this, packet);
         }
 
         public override void PushFrame(Color32[] colors, long frame)
         {
             base.PushFrame(colors, frame);
 
-            if (client == null)
-                client = NetworkManager.instance.GetLampClient<VoyagerClient>();
-            client.SendVideoFrameData(this, frame, colors);
+            byte[] data = ColorUtils.ColorsToBytes(colors);
+            var packet = new SetFramePacket(frame, data);
+            NetUtils.VoyagerClient.SendPacket(this, packet);
         }
     }
 }

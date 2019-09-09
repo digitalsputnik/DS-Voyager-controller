@@ -8,8 +8,8 @@ namespace VoyagerApp.Lamps.Voyager
     [Serializable]
     public class VideoFrameMetadata : JsonData<VideoFrameMetadata>
     {
-        [JsonProperty("itsh")]
-        public Itsh itsh;
+        [JsonProperty("itshe")]
+        public Itshe itshe;
         [JsonProperty("fps")]
         public float fps;
         [JsonProperty("frame_count")]
@@ -21,11 +21,11 @@ namespace VoyagerApp.Lamps.Voyager
         [JsonProperty("timestamp")]
         public double timestamp;
 
-        public VideoFrameMetadata(Itsh itsh, float fps, float frames,
+        public VideoFrameMetadata(Itshe itshe, float fps, float frames,
                                   double timestamp, double videoStartTime,
                                   double videoTimestamp)
         {
-            this.itsh = itsh;
+            this.itshe = itshe;
             this.fps = fps;
             this.frames = frames;
             this.videoStartTime = videoStartTime;
@@ -33,19 +33,19 @@ namespace VoyagerApp.Lamps.Voyager
             this.timestamp = timestamp;
         }
 
-        public static VideoFrameMetadata FromVideo(Video video, Itsh itsh,
+        public static VideoFrameMetadata FromVideo(Video video, Itshe itshe,
                                                    double timestamp,
                                                    double offset)
         {
             timestamp += offset;
 
             if (video == null)
-                return new VideoFrameMetadata(itsh, 0, 0, timestamp, 0, 0);
+                return new VideoFrameMetadata(itshe, 0, 0, timestamp, 0, 0);
 
             double vStart = video.lastStartTime + offset;
             double vTimestamp = video.lastTimestamp + offset;
 
-            return new VideoFrameMetadata(itsh, video.fps, video.frames,
+            return new VideoFrameMetadata(itshe, video.fps, video.frames,
                                           timestamp, vStart, vTimestamp);
         }
     }

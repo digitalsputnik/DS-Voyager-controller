@@ -13,18 +13,18 @@ namespace VoyagerApp.UI
 
         ColorwheelHandler onPick;
 
-        public void OpenColorwheel(Itsh itsh, ColorwheelHandler onPick)
+        public void OpenColorwheel(Itshe itshe, ColorwheelHandler onPick)
         {
             this.onPick = onPick;
-            colorwheelMenu.SetItsh(itsh);
+            colorwheelMenu.SetItsh(itshe);
             container.ShowMenu(colorwheelMenu);
         }
 
-        public void ValuePicked(Itsh itsh)
+        public void ValuePicked(Itshe itshe)
         {
-            onPick?.Invoke(itsh);
+            onPick?.Invoke(itshe);
         }
     }
 
-    public delegate void ColorwheelHandler(Itsh itsh);
+    public delegate void ColorwheelHandler(Itshe itshe);
 }

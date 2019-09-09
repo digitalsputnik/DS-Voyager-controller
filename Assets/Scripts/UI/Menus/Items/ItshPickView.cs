@@ -8,38 +8,43 @@ namespace VoyagerApp.UI.Menus
 {
     public class ItshPickView : MonoBehaviour, IPointerClickHandler
     {
-        [SerializeField] Image image    = null;
-        [SerializeField] Itsh itsh      = Itsh.white;
+        [SerializeField] Image image = null;
+        [SerializeField] Itshe itshe = Itshe.white;
+
+        GameObject CWSliderToggle;
 
         public ItshEvent onValueChanged;
 
         void Start()
         {
-            Value = itsh;
+            Value = itshe;
+            CWSliderToggle = GameObject.Find("CWSliderToggle");
         }
 
-        public Itsh Value
+        public Itshe Value
         {
-            get => itsh;
+            get => itshe;
             set
             {
                 image.color = value.AsColor;
-                itsh = value;
+                itshe = value;
             }
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
             ColorwheelManager.instance.OpenColorwheel(Value, OnItshPicked);
+            CWSliderToggle.SetActive(true);
+            GameObject.Find("Minimize / Maximize").GetComponent<Button>().enabled = false;
         }
 
-        public void OnItshPicked(Itsh itsh)
+        public void OnItshPicked(Itshe itshe)
         {
-            Value = itsh;
-            onValueChanged?.Invoke(itsh);
+            Value = itshe;
+            onValueChanged?.Invoke(itshe);
         }
     }
 
     [Serializable]
-    public class ItshEvent : UnityEvent<Itsh> { }
+    public class ItshEvent : UnityEvent<Itshe> { }
 }

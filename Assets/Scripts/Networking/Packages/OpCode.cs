@@ -25,12 +25,14 @@ namespace VoyagerApp.Networking.Packages
         ItshRequest,
         ItshResponse,
         SetItsh,
+        SetItshe,
         VideoRequest,
         VideoResponse,
         SetVideo,
         FpsRequest,
         FpsResponse,
         SetFps,
-        SetFrame
+        SetFrame,
+        SetEffect
     }
 }

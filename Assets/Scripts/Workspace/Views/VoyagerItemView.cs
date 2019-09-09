@@ -129,7 +129,7 @@ namespace VoyagerApp.Workspace.Views
         {
             byte[] bytes = buffer.GetFrame(frame);
             Color32[] colors = ColorUtils.BytesToColors(bytes);
-            colors = ColorUtils.MixColorsToItsh(colors, lamp.itsh);
+            colors = ColorUtils.MixColorsToItshe(colors, lamp.itshe);
             PushToPixels(colors);
         }
 
@@ -137,7 +137,7 @@ namespace VoyagerApp.Workspace.Views
         {
             Color32[] colors = new Color32[lamp.length];
             for (int i = 0; i < lamp.length; i++)
-                colors[i] = lamp.itsh.AsColor;
+                colors[i] = lamp.itshe.AsColor;
             PushToPixels(colors);
         }
 

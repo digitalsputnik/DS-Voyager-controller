@@ -86,11 +86,11 @@ namespace VoyagerApp.Lamps.Voyager
 
             onDone?.Invoke(new VoyagerUpdateResponse(success, error, lamp));
 #endif
-		}
+        }
 
 #if !UNITY_IOS
 
-		SshClient CreateSshClient(VoyagerLamp lamp)
+        SshClient CreateSshClient(VoyagerLamp lamp)
         {
             return new SshClient(lamp.address.ToString(),
                                  LAMP_USERNAME,
@@ -205,7 +205,7 @@ namespace VoyagerApp.Lamps.Voyager
             }
         }
 #endif
-	}
+    }
 
     public delegate void VoyagerUpdateHandler(VoyagerUpdateResponse response);
 	public delegate void VoyagerUpdateMessageHandler(VoyagerUpdateMessage message);

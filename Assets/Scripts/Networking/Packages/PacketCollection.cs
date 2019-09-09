@@ -4,12 +4,12 @@ using Newtonsoft.Json;
 namespace VoyagerApp.Networking.Packages
 {
     [Serializable]
-    public class PacketCollision : Packet
+    public class PacketCollection : Packet
     {
         [JsonProperty("packets")]
         public Packet[] packets;
 
-        public PacketCollision(params Packet[] packets)
+        public PacketCollection(params Packet[] packets)
             : base(OpCode.Collection) => this.packets = packets;
     }
 }

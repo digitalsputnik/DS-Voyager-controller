@@ -19,103 +19,107 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] RectTransform controlArea;
         public bool isTemperature;
 
-        public Slider sliderObject;
+        public Slider[] sliderObject;
         [Space(3)]
 
-        public GameObject sliderText;
+        public GameObject[] sliderText;
 
         public ValueSliderEvent onChanged;
-        public float normalized => (float)(value - min) / (max - min);
-		bool mouseHold;
-        bool mouseDrag;
-        bool buttonUp;
+
+        public float normalized;
         float stepVal;
 
         [Range(1f, 5f)]
         public int stepMultiplier = 1;
-
-        float val;
-
-
-        float update;
-        private float updateSpeed = 0.03f; // lower value increases the speed of the update
-
-        IEnumerator waitForHold()
-        {
-            yield return new WaitForSeconds(timer);
-            if(buttonUp != true)
-            mouseHold = true;
-        }
+        private float updateSpeed = 0.1f;
 
         void Start()
         {
+            normalized = (float)(value - min) / (max - min);
             valueText.text = value.ToString();
-            sliderText.GetComponent<Text>().text = value.ToString();
-            update = 0.0f;
+            foreach (Slider sO in sliderObject)
+                sO.value = normalized;
         }
 
-		void Update()
-        {
- 
-            //Update speed
-            update += Time.deltaTime;
-            if (update > updateSpeed)
-            {
-                update = 0.0f;
-                // Increases or decreases value once per update when enabled
-                if (mouseHold == true && mouseDrag == false)
-                {
-                    //sliderObject.value = val; // Updates slider when holding
-                    ChangeValueOnHold();
-                }
-            }
-		}
-
-        public void ChangeValueOnHold()
+        public void ChangeValueOnHold(float position)
         {
             int range = max - min;
             stepVal = range / 100;
-            changeValue(stepVal * stepMultiplier, (stepVal * stepMultiplier) * -1);
+            ChangeValue(
+                stepVal,
+                stepVal * -1,
+                position);
         }
 
-        // Only used when pressing a button
         public void SliderUpdate()
         {
-            //Updates slider value when pressing "slider" button
-            sliderObject.value = ((float)value - min) / (max - min);
+            foreach (Slider sO in sliderObject)
+                sO.value = normalized;
         }
 
-        public void changeValue(float posVal, float negVal)
+        public void ChangeValue(float posVal, float negVal, float pos)
         {
-            int increasement = val > 0.5 ? (int)posVal : (int)negVal;
+            int increasement = pos > 0.5 ? (int)posVal : (int)negVal;
             SetValue(Mathf.Clamp(value + increasement, min, max));
+        }
+
+        SliderState state;
+        bool pointerDown;
+        float updateTime;
+        float startPosition;
+
+        enum SliderState
+        {
+            Click,
+            Slide,
+            Hold
         }
 
 		public void OnPointerDown(PointerEventData eventData)
 		{
-            val = HorizontalValueFromPosition(eventData.position);
-            changeValue(1, -1); // Increases or decreases value once per click
-            //sliderObject.value = value; // Updates slider when clicked
-            buttonUp = false;
-            StartCoroutine(waitForHold()); // Delay before update
-		}
-
-		public void OnPointerUp(PointerEventData pointerEventData)
-		{
-            buttonUp = true; // Prevents coroutine from activating
-            //Resets booleans
-            mouseHold = false;
-            mouseDrag = false;
-            StopAllCoroutines();
+            state = SliderState.Click;
+            updateTime = Time.time;
+            pointerDown = true;
+            startPosition = HorizontalValueFromPosition(eventData.position);
         }
 
-		public void OnDrag(PointerEventData eventData)
+        void Update()
         {
-            mouseDrag = true; // Prevents value changing during drag
+            if (!pointerDown) return;
 
-            val = HorizontalValueFromPosition(eventData.position);
-            int iVal = (int)((max - min) * val + min);
-            SetValue(iVal);
+            float passed = Time.time - updateTime;
+            if (state == SliderState.Click && passed > timer)
+                state = SliderState.Hold;
+
+            passed = Time.time - updateSpeed;
+            if (state == SliderState.Hold && passed > timer)
+            {
+                ChangeValueOnHold(startPosition);
+                updateTime = Time.time;
+            }
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            if (state == SliderState.Click)
+                state = SliderState.Slide;
+
+            if (state == SliderState.Slide)
+            {
+                float val = HorizontalValueFromPosition(eventData.position);
+                SetValue(val);
+            }
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            if (state == SliderState.Click)
+            {
+                float pos = startPosition;
+                ChangeValue(1, -1, pos);
+            }
+
+            pointerDown = false;
         }
 
         float HorizontalValueFromPosition(Vector2 position)
@@ -135,9 +139,8 @@ namespace VoyagerApp.UI.Menus
             if (val != value)
             {
                 value = val;
-                float fill = (float)(value - min) / (max - min);
-                UpdateUI(fill);
-                var eventData = new ValueSliderEventData(min, max, value, fill);
+                UpdateUI(normalized);
+                var eventData = new ValueSliderEventData(min, max, value, normalized);
                 onChanged.Invoke(eventData);
             }
         }
@@ -145,24 +148,28 @@ namespace VoyagerApp.UI.Menus
         public void SetValue(float val)
         {
             //Different calculation for Temperature
-            if(isTemperature)
+            if (isTemperature)
             {
                 int iVal = (int)((max - min) * val) + min;
                 iVal /= 100;
-                SetValue((iVal * 100));
+                SetValue(iVal * 100);
+            }
+            else
+            { 
+                int iVal = (int)(((max - min) * val) + min);
+                SetValue(iVal);
             }
 
-            else { 
-            int iVal = (int)((max - min) * val) + min;
-            SetValue(iVal);
-            }
+            normalized = val;
         }
 
         void UpdateUI(float fill)
         {
             fillImage.fillAmount = fill;
             valueText.text = value.ToString();
-            sliderText.GetComponent<Text>().text = value.ToString();
+            
+            foreach (GameObject sText in sliderText)
+                sText.GetComponent<Text>().text = value.ToString();
         }
     }
 

@@ -36,10 +36,10 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
-        public void SetFromItsh(Itsh itsh)
+        public void SetFromItsh(Itshe itshe)
         {
-            float dist = itsh.s * rect.rect.width / 2.0f;
-            float angle = 360.0f - (itsh.h * 360.0f - 90.0f);
+            float dist = itshe.s * rect.rect.width / 2.0f;
+            float angle = 360.0f - (itshe.h * 360.0f - 90.0f);
             Vector3 position = Vector3.zero;
             position.x = 1 * Mathf.Cos(angle * Mathf.PI / 180) * dist;
             position.y = 1 * Mathf.Sin(angle * Mathf.PI / 180) * dist;

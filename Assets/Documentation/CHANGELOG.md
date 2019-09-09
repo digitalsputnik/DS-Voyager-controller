@@ -1,4 +1,21 @@
-﻿2.0.42-alpha                                                          05.09.2019
+﻿2.0.46-alpha                                                          09.09.2019
+- Added op codes into the network.
+
+2.0.45-alpha                                                          09.09.2019
+- Effect slider added
+- Fixed issue with value downscaling
+- Added outline for text 
+
+2.0.44-alpha                                                          06.09.2019
+- Colorwheel inspector arrow now expands the sliders.
+- Changed the padding between options
+- Increased the size of the "SIZING" buttons
+
+2.0.43-alpha                                                          06.09.2019
+- Fps should be changed without sending video metadata with new start time.
+- Removed debug messages.
+
+2.0.42-alpha                                                          05.09.2019
 - Fix #174: Implemented Play pause stop in video mapping.
 
 2.0.41-alpha                                                          05.09.2019
