@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace VoyagerApp.UI.Menus
 {
-    public class ValueSlider : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
+    public class ValueSlider : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         public int min;
         public int max;
@@ -17,6 +17,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Text valueText;
         [SerializeField] Image fillImage;
         [SerializeField] RectTransform controlArea;
+        [SerializeField] InputField field = null;
         public bool isTemperature;
 
         public Slider[] sliderObject;
@@ -81,7 +82,7 @@ namespace VoyagerApp.UI.Menus
             updateTime = Time.time;
             pointerDown = true;
             startPosition = HorizontalValueFromPosition(eventData.position);
-        }
+        }            
 
         void Update()
         {
@@ -99,16 +100,23 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
-        public void OnDrag(PointerEventData eventData)
-        {
-            if (state == SliderState.Click)
-                state = SliderState.Slide;
+        //public void OnDrag(PointerEventData eventData)
+        //{
+        //    if (state == SliderState.Click)
+        //        state = SliderState.Slide;
 
-            if (state == SliderState.Slide)
-            {
-                float val = HorizontalValueFromPosition(eventData.position);
-                SetValue(val);
-            }
+        //    if (state == SliderState.Slide)
+        //    {
+        //        float val = HorizontalValueFromPosition(eventData.position);
+        //        SetValue(val);
+        //    }
+        //}
+
+
+        public void textInput()
+        {
+            value = int.Parse(field.text);
+            SetValue(value);
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -139,6 +147,8 @@ namespace VoyagerApp.UI.Menus
             if (val != value)
             {
                 value = val;
+                normalized = (float)(value - min) / (max - min);
+//                field.text = value.ToString();
                 UpdateUI(normalized);
                 var eventData = new ValueSliderEventData(min, max, value, normalized);
                 onChanged.Invoke(eventData);
@@ -165,9 +175,8 @@ namespace VoyagerApp.UI.Menus
 
         void UpdateUI(float fill)
         {
-            fillImage.fillAmount = fill;
+            //fillImage.fillAmount = fill;
             valueText.text = value.ToString();
-            
             foreach (GameObject sText in sliderText)
                 sText.GetComponent<Text>().text = value.ToString();
         }

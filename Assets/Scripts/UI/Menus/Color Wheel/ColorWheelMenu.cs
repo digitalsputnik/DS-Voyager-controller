@@ -18,6 +18,8 @@ namespace VoyagerApp.UI.Menus
         [Space(3)]
         [SerializeField] ColorWheelEventSystem wheel        = null;
 
+        public GameObject CWSliderToggle;
+
         Itshe beginning;
         Itshe itshe;
 
@@ -44,7 +46,7 @@ namespace VoyagerApp.UI.Menus
             Debug.Log($"Itsh on keep {itshe}");
             approved = true;
             GameObject.Find("Minimize / Maximize").GetComponent<Button>().enabled = true;
-            GameObject.Find("CWSliderToggle").SetActive(false);
+            CWSliderToggle.SetActive(false);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 

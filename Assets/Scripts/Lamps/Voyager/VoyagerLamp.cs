@@ -32,6 +32,7 @@ namespace VoyagerApp.Lamps.Voyager
         public VoyagerLamp()
         {
             type = "Voyager";
+            itshe = Itshe.white;
         }
 
         internal override void Update(object data)
@@ -76,13 +77,13 @@ namespace VoyagerApp.Lamps.Voyager
         public override void SetVideo(Video video)
         {
             base.SetVideo(video);
-
+            var start = video.lastStartTime + NetUtils.VoyagerClient.TimeOffset;
             var packet = new PacketCollection(
-                new SetVideoPacket(video.frames, video.lastStartTime),
+                new SetVideoPacket(video.frames, start),
                 new SetFpsPacket((int)video.fps)
             );
 
-            NetUtils.VoyagerClient.SendPacket(this, packet);
+            NetUtils.VoyagerClient.SendPacket(this, packet, start);
             buffer.RecreateBuffer(video.frames);
         }
 
@@ -94,21 +95,17 @@ namespace VoyagerApp.Lamps.Voyager
             NetUtils.VoyagerClient.SendPacket(this, packet);
         }
 
-        public void SendVideoWithItsh()
-        {
-            var packet = new PacketCollection(
-                new SetVideoPacket(video.frames, video.lastStartTime),
-                new SetItshePacket(itshe));
-            NetUtils.VoyagerClient.SendPacket(this, packet);
-        }
-
         public override void PushFrame(Color32[] colors, long frame)
         {
-            base.PushFrame(colors, frame);
-
             byte[] data = ColorUtils.ColorsToBytes(colors);
-            var packet = new SetFramePacket(frame, data);
-            NetUtils.VoyagerClient.SendPacket(this, packet);
+            PushFrame(data, frame);
+        }
+        
+        public override void PushFrame(byte[] colors, long frame)
+        {
+            base.PushFrame(colors, frame);
+            var packet = new SetFramePacket(frame, colors);
+            NetUtils.VoyagerClient.SendPacketToVideoPort(this, packet, video.lastStartTime);
         }
     }
 }

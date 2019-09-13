@@ -186,6 +186,12 @@ MonoBehaviour:
       division: 0
       protocol: 
     lastMessage: 0
+    itshe:
+      i: 0
+      t: 0
+      s: 0
+      h: 0
+      e: 0
     video:
       name: 
       hash: 
@@ -196,6 +202,15 @@ MonoBehaviour:
       thumbnail: {fileID: 0}
       width: 0
       height: 0
+      lastStartTime: 0
+      lastTimestamp: 0
+    mapping:
+      x1: -0.5
+      y1: 0
+      x2: 0.5
+      y2: 0
+    buffer:
+      frames: 0
     length: 0
     battery: 0
     mode: 
@@ -215,6 +230,7 @@ GameObject:
   - component: {fileID: 7589136646990628862}
   - component: {fileID: 4524858710648681756}
   - component: {fileID: 8222461828947152306}
+  - component: {fileID: 790639037548520256}
   m_Layer: 0
   m_Name: Serial
   m_TagString: Untagged
@@ -296,6 +312,22 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
+--- !u!114 &790639037548520256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5384046695329273923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78790934dca234a439ee473ded7024b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pixelSize: 2
+  outlineColor: {r: 0, g: 0, b: 0, a: 1}
+  resolutionDependant: 0
+  doubleResolution: 1024
 --- !u!1 &6736121996719407398
 GameObject:
   m_ObjectHideFlags: 0

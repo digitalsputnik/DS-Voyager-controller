@@ -24,10 +24,11 @@ public class TextOutline : MonoBehaviour
             GameObject outline = new GameObject("outline", typeof(TextMesh));
             outline.transform.parent = transform;
             outline.transform.localScale = new Vector3(1, 1, 1);
+            outline.transform.localEulerAngles = Vector3.zero;
 
             MeshRenderer otherMeshRenderer = outline.GetComponent<MeshRenderer>();
             otherMeshRenderer.material = new Material(meshRenderer.material);
-            otherMeshRenderer.castShadows = false;
+            otherMeshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             otherMeshRenderer.receiveShadows = false;
             otherMeshRenderer.sortingLayerID = meshRenderer.sortingLayerID;
             otherMeshRenderer.sortingLayerName = meshRenderer.sortingLayerName;

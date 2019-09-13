@@ -33,6 +33,8 @@ namespace VoyagerApp.Networking.Packages
         FpsResponse,
         SetFps,
         SetFrame,
-        SetEffect
+        SetEffect,
+        MissingFramesRequest,
+        MissingFramesResponse
     }
 }

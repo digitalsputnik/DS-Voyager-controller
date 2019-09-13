@@ -23,7 +23,14 @@ namespace VoyagerApp.Networking.Packages
 
         public byte[] Serialize()
         {
-            timestamp = TimeUtils.Epoch;
+            timestamp = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset;
+            string json = JsonConvert.SerializeObject(this, Formatting.Indented);
+            return Encoding.UTF8.GetBytes(json);
+        }
+
+        public byte[] Serialize(double timestamp)
+        {
+            this.timestamp = timestamp;
             string json = JsonConvert.SerializeObject(this, Formatting.Indented);
             return Encoding.UTF8.GetBytes(json);
         }

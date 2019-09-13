@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using UnityEngine;
 using VoyagerApp.Lamps.Voyager;
+using VoyagerApp.Videos;
 
 namespace VoyagerApp.Lamps
 {
@@ -72,9 +73,15 @@ namespace VoyagerApp.Lamps
             dataProcessors.Add(new VoyagerDataProcessor(this));
         }
 
-        List<Lamp> GetConnectedLamps()
+        public List<Lamp> GetConnectedLamps()
         {
             return Lamps.Where(_ => _.connected).ToList();
+        }
+
+        // TODO: Move to utilities.
+        public List<Lamp> LampsWithVideo(Video video)
+        {
+            return Lamps.Where(lamp => lamp.video.hash == video.hash).ToList();
         }
     }
 

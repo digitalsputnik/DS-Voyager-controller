@@ -4,7 +4,10 @@ using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerApp.Lamps;
 using VoyagerApp.Projects;
+using VoyagerApp.UI.Overlays;
+using VoyagerApp.Utilities;
 using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.UI.Menus
@@ -48,8 +51,25 @@ namespace VoyagerApp.UI.Menus
 
         public void Load()
         {
+            //LampManager.instance.Lamps.Clear();
+
             string project = Path.GetFileName(path);
             Project.Load(project);
+
+            DialogBox.Show(
+                "Send loaded video buffer to lamps?",
+                "Clicking \"Ok\" will send loaded video to lamps, otherwise " +
+                "Only lamp positions will be loaded, but lamps will still play " +
+                "the video, they have at the moment.",
+                "Cancel", "Ok",
+                () => { },  // On cancel
+                () => {     // On okey
+                    var bufferSender = new ProjectBufferSender(
+                        WorkspaceUtils.Lamps.ToArray(),
+                        this);
+                    bufferSender.StartSending();
+                });
+
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 

@@ -30,6 +30,7 @@ namespace VoyagerApp.UI.Menus
         public void PickVideo(Video video)
         {
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+            //video.lastStartTime = TimeUtils.Epoch;
             foreach (var item in WorkspaceUtils.SelectedLamps)
                 item.SetVideo(video);
             drawMenu.VideoMappingBtnClicked();

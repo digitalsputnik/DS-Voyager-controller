@@ -6,9 +6,9 @@ using System.Threading;
 using UnityEngine;
 using VoyagerApp.Utilities;
 
-#if !UNITY_IOS
+//#if !UNITY_IOS
 using Renci.SshNet;
-#endif
+//#endif
 
 namespace VoyagerApp.Lamps.Voyager
 {
@@ -55,7 +55,7 @@ namespace VoyagerApp.Lamps.Voyager
                               VoyagerUpdateHandler onDone,
                               VoyagerUpdateMessageHandler onMessage)
         {
-#if !UNITY_IOS
+//#if !UNITY_IOS
 			SshClient ssh = CreateSshClient(lamp);
             SftpClient sftp = CreateSftpClient(lamp);
 
@@ -85,10 +85,10 @@ namespace VoyagerApp.Lamps.Voyager
             }
 
             onDone?.Invoke(new VoyagerUpdateResponse(success, error, lamp));
-#endif
+//#endif
         }
 
-#if !UNITY_IOS
+//#if !UNITY_IOS
 
         SshClient CreateSshClient(VoyagerLamp lamp)
         {
@@ -204,7 +204,7 @@ namespace VoyagerApp.Lamps.Voyager
                 sftp.UploadFile(stream, destination);
             }
         }
-#endif
+//#endif
     }
 
     public delegate void VoyagerUpdateHandler(VoyagerUpdateResponse response);

@@ -1,4 +1,21 @@
-﻿2.0.46-alpha                                                          09.09.2019
+﻿2.0.49-alpha                                                          13.09.2019
+- Itsh -> Itshe
+- Dialog system
+- Loading system
+- Sending video buffer to lamps on load
+- Dialog box title font size from 46 to 50 and increased the box size, so all
+  titles in the app have the same size.
+
+2.0.48-alpha                                                          13.09.2019
+- Changed the sliderToggle rect value to 1920 unknown issue.
+
+2.0.47-alpha                                                          12.09.2019
+- Dialog box title font from 50 to 46 to display whole message
+- Grammar error fix from Explenation to Explanation
+- Fixed an issue with buttons where the arrow sometimes was in wrong direction
+and did not allow to press hide a menu or crashed the app.
+
+2.0.46-alpha                                                          09.09.2019
 - Added op codes into the network.
 
 2.0.45-alpha                                                          09.09.2019

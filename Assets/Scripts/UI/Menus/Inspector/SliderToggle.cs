@@ -18,8 +18,14 @@ public class SliderToggle : MonoBehaviour
 
     private void Start()
     {
-        rectWidth = myrect.GetComponent<RectTransform>().rect.width; //Canvas length
+        //rectWidth = myrect.GetComponent<RectTransform>().rect.width; //Canvas length
+        // For some reason the canvas scales the Width to 2560 on start.
+        // The colorwheel may not scale properly as the increased resolution makes it overlap
+        // Temp solution
+        rectWidth = 1920;
+        Debug.Log(rectWidth);
         menuWidth = ColorWheelMenu.GetComponent<RectTransform>().rect.xMax;
+        Debug.Log(menuWidth);
     }
 
     public void ExpandMenu()

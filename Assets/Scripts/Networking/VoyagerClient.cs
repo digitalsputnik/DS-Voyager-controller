@@ -57,53 +57,38 @@ namespace VoyagerApp.Networking
 
         public void SendPacket(Lamp lamp, Packet packet)
         {
+            if (packet.op == OpCode.Collection)
+            {
+                var collection = (PacketCollection)packet;
+                for (int i = 0; i < collection.packets.Length; i++)
+                    collection.packets[i].timestamp = TimeUtils.Epoch;
+                packet = collection;
+            }
             byte[] data = packet.Serialize();
             IPEndPoint endpoint = new IPEndPoint(lamp.address, SETTINGS_PORT);
             Send(data, endpoint);
         }
 
-        //public void SendVideoMetadata(Lamp lamp)
-        //{
-        //    if (lamp.video != null)
-        //    {
-        //        double time = TimeUtils.Epoch;
-        //        lamp.video.lastTimestamp = time;
-        //        var container = VideoFrameMetadata.FromVideo(
-        //            lamp.video,
-        //            lamp.itshe,
-        //            time,
-        //            TimeOffset);
+        public void SendPacket(Lamp lamp, Packet packet, double timestamp)
+        {
+            if (packet.op == OpCode.Collection)
+            {
+                var collection = (PacketCollection)packet;
+                for (int i = 0; i < collection.packets.Length; i++)
+                    collection.packets[i].timestamp = TimeUtils.Epoch;
+                packet = collection;
+            }
+            byte[] data = packet.Serialize(timestamp);
+            IPEndPoint endpoint = new IPEndPoint(lamp.address, SETTINGS_PORT);
+            Send(data, endpoint);
+        }
 
-        //        IPEndPoint endpoint = new IPEndPoint(lamp.address, SETTINGS_PORT);
-        //        Send(container.ToData(), endpoint);
-        //    }
-        //}
-
-        //public void SendItshAsMetadata(Lamp lamp)
-        //{
-        //    double time = TimeUtils.Epoch;
-        //    var container = VideoFrameMetadata.FromVideo(
-        //        null,
-        //        lamp.itshe,
-        //        time,
-        //        TimeOffset);
-
-        //    IPEndPoint endpoint = new IPEndPoint(lamp.address, SETTINGS_PORT);
-        //    Send(container.ToData(), endpoint);
-        //}
-
-        //public void SendFpsAsMetadata(Lamp lamp)
-        //{
-        //    double time = TimeUtils.Epoch;
-        //    var container = VideoFrameMetadata.FromVideo(
-        //        lamp.video,
-        //        lamp.itshe,
-        //        time,
-        //        TimeOffset);
-
-        //    IPEndPoint endpoint = new IPEndPoint(lamp.address, SETTINGS_PORT);
-        //    Send(container.ToData(), endpoint);
-        //}
+        public void SendPacketToVideoPort(Lamp lamp, Packet packet, double time)
+        {
+            byte[] data = packet.Serialize(time);
+            IPEndPoint endpoint = new IPEndPoint(lamp.address, VIDEO_PORT);
+            Send(data, endpoint);
+        }
 
         public void TurnToClient(Lamp lamp, string ssid, string password)
         {
@@ -130,6 +115,11 @@ namespace VoyagerApp.Networking
         {
             var container = VideoFrameData.FromColors(frame, colors);
             byte[] data = container.ToData();
+            SendVideoFrameData(lamp, data);
+        }
+
+        public void SendVideoFrameData(Lamp lamp, byte[] data)
+        {
             IPEndPoint endpoint = new IPEndPoint(lamp.address, VIDEO_PORT);
             Send(data, endpoint);
         }

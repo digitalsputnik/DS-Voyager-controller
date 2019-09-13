@@ -11,14 +11,15 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Image image = null;
         [SerializeField] Itshe itshe = Itshe.white;
 
-        GameObject CWSliderToggle;
+        public GameObject CWSliderToggle;
+        public GameObject MinMaxToggle;
 
         public ItshEvent onValueChanged;
 
         void Start()
         {
             Value = itshe;
-            CWSliderToggle = GameObject.Find("CWSliderToggle");
+            //CWSliderToggle = GameObject.Find("CWSliderToggle");
         }
 
         public Itshe Value
@@ -35,7 +36,8 @@ namespace VoyagerApp.UI.Menus
         {
             ColorwheelManager.instance.OpenColorwheel(Value, OnItshPicked);
             CWSliderToggle.SetActive(true);
-            GameObject.Find("Minimize / Maximize").GetComponent<Button>().enabled = false;
+            MinMaxToggle.GetComponent<Button>().enabled = false;
+            //MinMaxToggle.SetActive(false);
         }
 
         public void OnItshPicked(Itshe itshe)

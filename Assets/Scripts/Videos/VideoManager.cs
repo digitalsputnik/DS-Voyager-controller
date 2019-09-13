@@ -123,7 +123,8 @@ namespace VoyagerApp.Videos
                 duraction = player.frameCount / player.frameRate,
                 thumbnail = thumbnail,
                 width = player.width,
-                height = player.height
+                height = player.height,
+                lastStartTime = TimeUtils.Epoch
             };
         }
 

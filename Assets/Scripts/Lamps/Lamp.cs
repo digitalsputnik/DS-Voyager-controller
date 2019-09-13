@@ -50,6 +50,12 @@ namespace VoyagerApp.Lamps
                 buffer.SetFrame(frame, ColorUtils.ColorsToBytes(colors));
         }
 
+        public virtual void PushFrame(byte[] colors, long frame)
+        {
+            if (!buffer.FrameExists(frame))
+                buffer.SetFrame(frame, colors);
+        }
+
         public virtual void SetMapping(VideoPosition mapping) => this.mapping = mapping;
 
         public abstract LampItemView AddToWorkspace();
