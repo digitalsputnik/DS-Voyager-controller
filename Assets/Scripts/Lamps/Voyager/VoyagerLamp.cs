@@ -74,17 +74,23 @@ namespace VoyagerApp.Lamps.Voyager
             return WorkspaceManager.instance.InstantiateItem<VoyagerItemView>(this, position, scale, rotation);
         }
 
+        double last = 0.0f;
+        bool skip = false;
+
         public override void SetVideo(Video video)
         {
             base.SetVideo(video);
+            last = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset;
             var start = video.lastStartTime + NetUtils.VoyagerClient.TimeOffset;
             var packet = new PacketCollection(
                 new SetVideoPacket(video.frames, start),
-                new SetFpsPacket((int)video.fps)
+                new SetFpsPacket((int)video.fps),
+                new SetItshePacket(itshe)
             );
 
-            NetUtils.VoyagerClient.SendPacket(this, packet, start);
+            NetUtils.VoyagerClient.SendPacket(this, packet, last);
             buffer.RecreateBuffer(video.frames);
+            skip = true;
         }
 
         public override void SetItshe(Itshe itshe)
@@ -97,15 +103,27 @@ namespace VoyagerApp.Lamps.Voyager
 
         public override void PushFrame(Color32[] colors, long frame)
         {
+            if (skip)
+            {
+                skip = false;
+                return;
+            }
+
             byte[] data = ColorUtils.ColorsToBytes(colors);
             PushFrame(data, frame);
         }
         
         public override void PushFrame(byte[] colors, long frame)
         {
+            if (skip)
+            {
+                skip = false;
+                return;
+            }
+
             base.PushFrame(colors, frame);
             var packet = new SetFramePacket(frame, colors);
-            NetUtils.VoyagerClient.SendPacketToVideoPort(this, packet, video.lastStartTime);
+            NetUtils.VoyagerClient.SendPacketToVideoPort(this, packet, last);
         }
     }
 }

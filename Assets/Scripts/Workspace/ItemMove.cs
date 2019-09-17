@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using VoyagerApp.UI;
 using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.Workspace
@@ -39,7 +40,10 @@ namespace VoyagerApp.Workspace
 
         void OnMouseDown()
         {
-            approved = !PointerOverUI && Enabled;
+            approved =
+                !PointerOverUI &&
+                Enabled &&
+                CameraMove.state != CameraMoveState.CameraMouseZoom;
 
             if (approved)
             {

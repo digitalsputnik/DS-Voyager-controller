@@ -13,18 +13,6 @@ namespace VoyagerApp.UI.Menus
             FileUtils.LoadPictureFromDevice(VideoPicked);
         }
 
-        internal override void OnShow()
-        {
-            WorkspaceSelection.instance.ShowSelection = false;
-            WorkspaceSelection.instance.Enabled = false;
-        }
-
-        internal override void OnHide()
-        {
-            WorkspaceSelection.instance.ShowSelection = true;
-            WorkspaceSelection.instance.Enabled = true;
-        }
-
         void VideoPicked(string path)
         {
             if (path == null || path == "Null" || path == "") return;

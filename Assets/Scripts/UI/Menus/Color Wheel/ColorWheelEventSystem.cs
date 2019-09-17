@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -17,6 +19,12 @@ namespace VoyagerApp.UI.Menus
         void Start()
         {
             rect = GetComponent<RectTransform>();
+            StartCoroutine(LateStart());
+        }
+
+        IEnumerator LateStart()
+        {
+            yield return new WaitForSeconds(0.5f);
             SetupSnappingPoints();
         }
 
@@ -48,9 +56,8 @@ namespace VoyagerApp.UI.Menus
 
         public void OnDrag(PointerEventData eventData)
         {
-            float multiplier = rect.rect.width / ActualSize.x;
             Vector2 point = eventData.position - (Vector2)rect.position;
-            SetCursorToClosestPoint(point * multiplier);
+            SetCursorToClosestPoint(point);
         }
 
         public void OnPointerClick(PointerEventData eventData)

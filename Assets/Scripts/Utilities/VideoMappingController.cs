@@ -4,6 +4,7 @@ using VoyagerApp.Lamps;
 using VoyagerApp.UI.Menus;
 using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
+using VoyagerApp.Workspace;
 
 namespace VoyagerApp.UI
 {
@@ -15,6 +16,8 @@ namespace VoyagerApp.UI
         void Start()
         {
             LoadVideoMappingMenu();
+            WorkspaceSelection.instance.Enabled = true;
+            WorkspaceSelection.instance.ShowSelection = true;
         }
 
         void LoadVideoMappingMenu()
@@ -24,9 +27,18 @@ namespace VoyagerApp.UI
             var video = VideoFromHash(settings.video);
             var lamps = LampsFromSerials(settings.lamps);
 
+            SetVideo(video);
+            PositionLamps(lamps);
+        }
+
+        public void SetVideo(Video video)
+        {
             mapper.SetVideo(video);
             menu.SetVideo(video);
+        }
 
+        public void PositionLamps(List<Lamp> lamps)
+        {
             foreach (var lamp in lamps)
             {
                 if (lamp.mapping == null)
