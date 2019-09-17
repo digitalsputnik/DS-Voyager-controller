@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using VoyagerApp.Lamps.Voyager;
-using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.Workspace
 {
@@ -20,12 +17,6 @@ namespace VoyagerApp.Workspace
         [SerializeField]
         List<WorkspaceItemView> prefabs = new List<WorkspaceItemView>();
         List<WorkspaceItemView> items = new List<WorkspaceItemView>();
-
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.F))
-                GetItemsOfType<LampItemView>().ToList().ForEach(_ => Debug.Log(_.lamp.serial));
-        }
 
         public List<WorkspaceItemView> Items => items;
 

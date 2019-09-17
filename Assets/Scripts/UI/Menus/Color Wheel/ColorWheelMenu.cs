@@ -152,8 +152,6 @@ namespace VoyagerApp.UI.Menus
 
         void ShowColorWheel()
         {
-            Debug.Log("Here show");
-
             colorWheelCanvasGroup.alpha = 1.0f;
             colorWheelCanvasGroup.interactable = true;
             colorWheelCanvasGroup.blocksRaycasts = true;
@@ -169,8 +167,6 @@ namespace VoyagerApp.UI.Menus
 
         void HideColorWheel()
         {
-            Debug.Log("Here hide");
-
             colorWheelCanvasGroup.alpha = 0.0f;
             colorWheelCanvasGroup.interactable = false;
             colorWheelCanvasGroup.blocksRaycasts = false;

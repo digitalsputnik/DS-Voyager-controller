@@ -82,18 +82,20 @@ namespace VoyagerApp.UI
                 if (state == CameraMoveState.CameraMove ||
                     state == CameraMoveState.CameraPanAndZoom)
                     state = CameraMoveState.None;
-
-                var touch = Input.GetTouch(0);
-                if (touch.phase == TouchPhase.Began)
+                else
                 {
-                    var screenPos = cam.ScreenToWorldPoint(touch.position);
-                    if (IsPointerOverAnythingTouch(screenPos))
-                        state = CameraMoveState.WorkspaceOverItem;
-                    else
-                        state = CameraMoveState.WorkspaceClear;
+                    var touch = Input.GetTouch(0);
+                    if (touch.phase == TouchPhase.Began)
+                    {
+                        var screenPos = cam.ScreenToWorldPoint(touch.position);
+                        if (IsPointerOverAnythingTouch(screenPos))
+                            state = CameraMoveState.WorkspaceOverItem;
+                        else
+                            state = CameraMoveState.WorkspaceClear;
+                    }
+                    else if (touch.phase == TouchPhase.Ended)
+                        state = CameraMoveState.None;
                 }
-                else if (touch.phase == TouchPhase.Ended)
-                    state = CameraMoveState.None;
             }
             else if (Input.touchCount == 2)
             {

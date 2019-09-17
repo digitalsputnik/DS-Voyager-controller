@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using VoyagerApp.Networking.Packages.Voyager;
 using VoyagerApp.Utilities;
@@ -13,6 +12,11 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] IntField fpsField      = null;
         [SerializeField] ItshPickView itshePick = null;
         [SerializeField] VideoMapper mapper     = null;
+        [Space(4)]
+        [SerializeField] GameObject splitter    = null;
+        [Space(4)]
+        [SerializeField] GameObject selectAllBtn    = null;
+        [SerializeField] GameObject deselectAllBtn  = null;
 
         Video video;
         bool hasFpsInitialized;
@@ -29,6 +33,7 @@ namespace VoyagerApp.UI.Menus
         {
             WorkspaceSelection.instance.onSelectionChanged += SelectionChanged;
             itshePick.onValueChanged.AddListener(ItsheChanged);
+            CheckSelectButtons();
         }
 
         internal override void OnHide()
@@ -45,6 +50,8 @@ namespace VoyagerApp.UI.Menus
                 if (itshe.Equals(default(Itshe))) itshe = Itshe.white;
                 itshePick.Value = itshe;
             }
+
+            CheckSelectButtons();
         }
 
         private void ItsheChanged(Itshe itshe)
@@ -80,5 +87,29 @@ namespace VoyagerApp.UI.Menus
         {
             fpsField.onChanged -= FpsChanged;
         }
+
+        public void SelectAll()
+        {
+            foreach (var view in WorkspaceUtils.LampItems)
+                WorkspaceSelection.instance.SelectLamp(view);
+        }
+
+        public void DeselectAll()
+        {
+            WorkspaceSelection.instance.Clear();
+        }
+
+        void CheckSelectButtons()
+        {
+            selectAllBtn.SetActive(!AllSelected);
+            deselectAllBtn.SetActive(AtLeastOneSelected);
+
+            splitter.SetActive(
+                selectAllBtn.activeInHierarchy ||
+                deselectAllBtn.activeInHierarchy);
+        }
+
+        bool AllSelected => WorkspaceUtils.SelectedLamps.Count == WorkspaceUtils.Lamps.Count;
+        bool AtLeastOneSelected => WorkspaceSelection.instance.Selected.Count > 0;
     }
 }

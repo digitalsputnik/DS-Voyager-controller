@@ -49,6 +49,7 @@ MonoBehaviour:
   prefabs:
   - {fileID: 3730633102130956921, guid: 65a50c755f5ed43efad3e5a89f32601d, type: 3}
   - {fileID: 2071389813385008852, guid: d179ce69fe01d40bc9957cfaacc374e6, type: 3}
+  - {fileID: 2152250943620162194, guid: 2f80f9f22ad3c48308ae7f72520ea733, type: 3}
 --- !u!114 &2599882026844819180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,7 +65,7 @@ MonoBehaviour:
   clickTime: 0.2
   selected: []
   selectingEnabled: 1
-  showSelection: 0
+  showSelection: 1
 --- !u!114 &2599882026844819182
 MonoBehaviour:
   m_ObjectHideFlags: 0

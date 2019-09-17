@@ -66,22 +66,19 @@ namespace VoyagerApp.UI
                     lamps.Add(item);
             }
 
-            if (lamps.Count > 0)
+            if (Input.GetKey(KeyCode.LeftShift))
             {
-                if (Input.GetKey(KeyCode.LeftShift))
+                foreach (var lamp in lamps)
                 {
-                    foreach (var lamp in lamps)
-                    {
-                        if (!WorkspaceSelection.instance.Selected.Contains(lamp))
-                            WorkspaceSelection.instance.SelectLamp(lamp);
-                    }
-                }
-                else
-                {
-                    WorkspaceSelection.instance.Clear();
-                    foreach (var lamp in lamps)
+                    if (!WorkspaceSelection.instance.Selected.Contains(lamp))
                         WorkspaceSelection.instance.SelectLamp(lamp);
                 }
+            }
+            else
+            {
+                WorkspaceSelection.instance.Clear();
+                foreach (var lamp in lamps)
+                    WorkspaceSelection.instance.SelectLamp(lamp);
             }
         }
     }

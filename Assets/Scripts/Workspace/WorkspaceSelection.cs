@@ -55,7 +55,7 @@ namespace VoyagerApp.Workspace
 
         public void Clear()
         {
-            selected.ForEach(_ => _.Deselect());
+            selected.ForEach(s => s.Deselect());
             selected.Clear();
             onSelectionChanged?.Invoke(this);
         }
@@ -63,7 +63,6 @@ namespace VoyagerApp.Workspace
         void Start()
         {
             cam = Camera.main;
-            Enabled = false;
             WorkspaceManager.instance.onItemRemoved += Instance_onItemRemoved;
         }
 
@@ -92,7 +91,6 @@ namespace VoyagerApp.Workspace
 
         bool CheckOnLamp()
         {
-            
             Vector2 point = cam.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(point, Vector2.zero);
             if (hit.collider != null)
@@ -114,7 +112,6 @@ namespace VoyagerApp.Workspace
             }
             else
             {
-                
                 lamp.Select();
                 selected.Add(lamp);
             }

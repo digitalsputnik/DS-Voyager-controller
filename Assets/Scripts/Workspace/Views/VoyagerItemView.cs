@@ -15,7 +15,7 @@ namespace VoyagerApp.Workspace.Views
         [SerializeField] Transform outline          = null;
         [SerializeField] float outlineThickness     = 0.0f;
         [Space(3)]
-        [SerializeField] new MeshRenderer renderer  = null;
+        public new MeshRenderer renderer            = null;
 
         Texture2D pixelsTexture;
 
