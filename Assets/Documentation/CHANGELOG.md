@@ -1,6 +1,7 @@
 ﻿2.0.51-beta                                                           17.09.2019
 - Selected items in video mapping have bounding box around them to move and
   resize the selected lamps together.
+- Select all & Deselect all button in video mapping.
 
 2.0.50-beta                                                           17.09.2019
 - New camera move & box select features:
