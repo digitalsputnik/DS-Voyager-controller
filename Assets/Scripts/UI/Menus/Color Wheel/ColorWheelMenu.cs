@@ -28,7 +28,6 @@ namespace VoyagerApp.UI.Menus
 
         public void SetItsh(Itshe itshe)
         {
-            Debug.Log($"Itsh on open {itshe}");
             beginning = itshe;
             this.itshe = itshe;
 
@@ -43,7 +42,6 @@ namespace VoyagerApp.UI.Menus
 
         public void Approve()
         {
-            Debug.Log($"Itsh on keep {itshe}");
             approved = true;
             GameObject.Find("Minimize / Maximize").GetComponent<Button>().enabled = true;
             CWSliderToggle.SetActive(false);
@@ -154,6 +152,8 @@ namespace VoyagerApp.UI.Menus
 
         void ShowColorWheel()
         {
+            Debug.Log("Here show");
+
             colorWheelCanvasGroup.alpha = 1.0f;
             colorWheelCanvasGroup.interactable = true;
             colorWheelCanvasGroup.blocksRaycasts = true;
@@ -169,6 +169,8 @@ namespace VoyagerApp.UI.Menus
 
         void HideColorWheel()
         {
+            Debug.Log("Here hide");
+
             colorWheelCanvasGroup.alpha = 0.0f;
             colorWheelCanvasGroup.interactable = false;
             colorWheelCanvasGroup.blocksRaycasts = false;

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Net;
-using Newtonsoft.Json;
 using UnityEngine;
 using VoyagerApp.Dmx;
-using VoyagerApp.Networking;
 using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
 using VoyagerApp.Workspace.Views;

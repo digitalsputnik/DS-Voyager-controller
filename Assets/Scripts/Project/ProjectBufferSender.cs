@@ -58,6 +58,8 @@ namespace VoyagerApp.Projects
                 frames.Add(i, lamp.buffer.GetFrame(i));
 
             lamp.SetVideo(lamp.video);
+            lamp.SetItshe(lamp.itshe);
+
             behaviour.StartCoroutine(SendFramesToLamp(lamp, frames));
         }
 

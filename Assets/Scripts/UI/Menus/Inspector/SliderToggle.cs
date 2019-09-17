@@ -23,9 +23,7 @@ public class SliderToggle : MonoBehaviour
         // The colorwheel may not scale properly as the increased resolution makes it overlap
         // Temp solution
         rectWidth = 1920;
-        Debug.Log(rectWidth);
         menuWidth = ColorWheelMenu.GetComponent<RectTransform>().rect.xMax;
-        Debug.Log(menuWidth);
     }
 
     public void ExpandMenu()

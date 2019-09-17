@@ -13,7 +13,6 @@ namespace VoyagerApp.UI.Menus
     public class DrawMenu : Menu
     {
         [SerializeField] GameObject infoText        = null;
-        [SerializeField] ItshPickView itshPick      = null;
         [SerializeField] GameObject setVideoBtn     = null;
         [SerializeField] GameObject videoMappingBtn = null;
         [SerializeField] GameObject splitter        = null;
@@ -33,49 +32,28 @@ namespace VoyagerApp.UI.Menus
 
         internal override void OnShow()
         {
-            WorkspaceSelection.instance.Enabled = true;
-            WorkspaceSelection.instance.ShowSelection = true;
-
             WorkspaceSelection.instance.onSelectionChanged += SelectionChanged;
-            itshPick.onValueChanged.AddListener(ItsheChanged);
-
             CheckForButtons();
         }
 
         internal override void OnHide()
         {
             WorkspaceSelection.instance.onSelectionChanged -= SelectionChanged;
-            itshPick.onValueChanged.RemoveListener(ItsheChanged);
-        }
-
-        void ItsheChanged(Itshe itshe)
-        {
-            var lamps = WorkspaceUtils.SelectedVoyagerLampItems;
-            lamps.ForEach(_ => _.lamp.SetItshe(itshe));
         }
 
         void SelectionChanged(WorkspaceSelection selection)
         {
             CheckForButtons();
-
-            if (selection.Selected.Count == 1)
-            {
-                Itshe itshe = selection.Selected[0].lamp.itshe;
-                if (itshe.Equals(default(Itsh))) itshe = Itshe.white;
-                itshPick.Value = itshe;
-            }
         }
 
         void CheckForButtons()
         {
             infoText.SetActive(!AtLeastOneSelected);
-            itshPick.gameObject.SetActive(AtLeastOneSelected);
-            setVideoBtn.SetActive(AtLeastOneSelected);
 
+            setVideoBtn.SetActive(AtLeastOneSelected);
             videoMappingBtn.SetActive(
                 AtLeastOneSelected &&
-                SelectedItemsHaveSameVideo
-            );
+                SelectedItemsHaveSameVideo);
 
             splitter.SetActive(AtLeastOneSelected);
 
@@ -95,16 +73,17 @@ namespace VoyagerApp.UI.Menus
 
         public void VideoMappingBtnClicked()
         {
-            if (!SelectedItemsHaveSameVideo) return;
+            Video video = null;
 
-            var video = WorkspaceUtils.SelectedLamps[0].video;
+            if (SelectedItemsHaveSameVideo)
+                video = WorkspaceUtils.SelectedLamps[0].video;
 
             WorkspaceSaveLoad.Save(
                 FileUtils.WorkspaceStatePath,
                 WorkspaceManager.instance.Items.ToArray());
 
             var settings = new VideoMappingSettings(
-                LampsWithVideo(video),
+                WorkspaceUtils.SelectedLamps,
                 video);
 
             settings.Save();

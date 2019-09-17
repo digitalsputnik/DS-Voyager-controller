@@ -3,15 +3,19 @@ using System.Linq;
 using UnityEngine;
 using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
+using VoyagerApp.Workspace;
 
 namespace VoyagerApp.UI.Menus
 {
     public class PickVideoMenu : Menu
     {
-        [SerializeField] PickVideoItem itemPrefab   = null;
-        [SerializeField] Transform container        = null;
-        [SerializeField] GameObject loadingText     = null;
-        [SerializeField] DrawMenu drawMenu          = null;
+        [SerializeField] PickVideoItem itemPrefab       = null;
+        [SerializeField] Transform container            = null;
+        [SerializeField] GameObject loadingText         = null;
+        [Space(5)]
+        [SerializeField] bool inVideoMapping            = false;
+        [SerializeField] DrawMenu drawMenu              = null;
+        [SerializeField] VideoMappingController mapping = null;
 
         List<PickVideoItem> items = new List<PickVideoItem>();
 
@@ -30,10 +34,30 @@ namespace VoyagerApp.UI.Menus
         public void PickVideo(Video video)
         {
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
-            //video.lastStartTime = TimeUtils.Epoch;
             foreach (var item in WorkspaceUtils.SelectedLamps)
                 item.SetVideo(video);
-            drawMenu.VideoMappingBtnClicked();
+
+            if (!inVideoMapping)
+                drawMenu.VideoMappingBtnClicked();
+            else
+            {
+                foreach (var lamp in WorkspaceUtils.Lamps)
+                    lamp.SetVideo(video);
+
+                var lamps = WorkspaceUtils.Lamps;
+                var selection = WorkspaceUtils.SelectedLamps;
+
+                WorkspaceManager.instance.Clear();
+
+                mapping.SetVideo(video);
+                mapping.PositionLamps(lamps);
+
+                foreach (var view in WorkspaceUtils.LampItems)
+                {
+                    if (selection.Contains(view.lamp))
+                        WorkspaceSelection.instance.SelectLamp(view);
+                }
+            }
         }
 
         internal override void OnShow()

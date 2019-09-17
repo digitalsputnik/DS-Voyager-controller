@@ -7,120 +7,207 @@ namespace VoyagerApp.UI
 {
     public class CameraMove : MonoBehaviour
     {
+        public static CameraMoveState state = CameraMoveState.None;
+        public static Vector2 pointerPosition;
+
         [SerializeField] float minSize = 5.0f;
         [SerializeField] float maxSize = 30.0f;
-        [SerializeField] float zoomSpeed = 5.0f;
+        [SerializeField] float mouseZoomSpeed = 5.0f;
+        [SerializeField] float touchZoomSpeed = 0.05f;
 
         Camera cam;
-        Vector2 mouseStartPosition;
-        Vector2 touchStartPosition;
-        bool moving;
-        bool movementRestriction;
 
-        Touch touchZero;
-        Touch touchOne;
-        Touch touchTwo;
+        Vector2 pointerStart;
 
-        public float orthoZoomSpeed = 1f;
+        float prevTouchDistance;
+        float touchDistanceDelta;
 
-        void Start()
-        {
-            cam = GetComponent<Camera>();
-            orthoZoomSpeed = 1f;
-        }
+        void Start() => cam = GetComponent<Camera>();
 
         void Update()
         {
             if (Application.isMobilePlatform)
-            {
                 HandleTouch();
-            }
             else
                 HandleMouse();
+
+            HandleState();
+        }
+
+        void HandleMouse()
+        {
+            if (!Input.GetKey(KeyCode.LeftControl))
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    var screenPos = cam.ScreenToWorldPoint(Input.mousePosition);
+                    if (IsPointOverAnything(screenPos))
+                        state = CameraMoveState.WorkspaceOverItem;
+                    else
+                        state = CameraMoveState.WorkspaceClear;
+                }
+                else if (Input.GetMouseButtonUp(0))
+                    state = CameraMoveState.None;
+            }
+            else
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    pointerStart = cam.ScreenToWorldPoint(Input.mousePosition);
+                    state = CameraMoveState.CameraMove;
+                }
+                else if (Input.GetMouseButtonUp(0))
+                    state = CameraMoveState.None;
+            }
+
+            if (state == CameraMoveState.None)
+            {
+                if (Mathf.Abs(Input.mouseScrollDelta.y) > 0.0001f)
+                    state = CameraMoveState.CameraMouseZoom;
+            }
+            else if (state == CameraMoveState.CameraMouseZoom)
+            {
+                if (Mathf.Abs(Input.mouseScrollDelta.y) < 0.0001f)
+                    state = CameraMoveState.None;
+            }
+
+            if (state != CameraMoveState.None)
+                pointerPosition = cam.ScreenToWorldPoint(Input.mousePosition);
         }
 
         void HandleTouch()
         {
             if (Input.touchCount == 1)
             {
-                //Store first touch
-                touchZero = Input.GetTouch(0);
+                if (state == CameraMoveState.CameraMove ||
+                    state == CameraMoveState.CameraPanAndZoom)
+                    state = CameraMoveState.None;
 
-                //Get startPos and check if over UI
-                if (touchZero.phase == TouchPhase.Began)
+                var touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Began)
                 {
-                    movementRestriction = true;
-
-                    touchStartPosition = cam.ScreenToWorldPoint(touchZero.position);
-                    moving = !IsPointerOverAnythingTouch(touchStartPosition);
+                    var screenPos = cam.ScreenToWorldPoint(touch.position);
+                    if (IsPointerOverAnythingTouch(screenPos))
+                        state = CameraMoveState.WorkspaceOverItem;
+                    else
+                        state = CameraMoveState.WorkspaceClear;
+                }
+                else if (touch.phase == TouchPhase.Ended)
+                    state = CameraMoveState.None;
+            }
+            else if (Input.touchCount == 2)
+            {
+                if (state != CameraMoveState.CameraMove)
+                {
+                    var touch = Input.GetTouch(1);
+                    pointerStart = cam.ScreenToWorldPoint(touch.position);
+                    state = CameraMoveState.CameraMove;
                 }
             }
-
-            if (touchZero.phase == TouchPhase.Moved && Input.touchCount < 2 && movementRestriction != false) // Prevents moving when zooming
+            else if (Input.touchCount == 3)
             {
-                if (moving)
+                if (state != CameraMoveState.CameraPanAndZoom)
                 {
-                    Vector2 position = cam.ScreenToWorldPoint(touchZero.position);
-                    Vector2 delta = touchStartPosition - position;
-                    transform.Translate(delta);
+                    pointerStart = cam.ScreenToWorldPoint(GetTouchMiddle());
+                    prevTouchDistance = GetTouchDistance();
+                    state = CameraMoveState.CameraPanAndZoom;
                 }
             }
+            else
+                state = CameraMoveState.None;
 
-            if (Input.touchCount >= 2)
+			if (state == CameraMoveState.WorkspaceClear)
+				pointerPosition = cam.ScreenToWorldPoint(Input.GetTouch(0).position);
+
+			if (state == CameraMoveState.CameraMove)
+                pointerPosition = cam.ScreenToWorldPoint(Input.GetTouch(1).position);
+
+            if (state == CameraMoveState.CameraPanAndZoom)
             {
-                if (moving) // Prevents scene scrolling when on UI
-                {
-                    touchOne = Input.GetTouch(1);
-                    // Find the position in the previous frame of each touch.
-                    Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-                    Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
-
-                    // Find the magnitude of the vector (the distance) between the touches in each frame.
-                    float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-                    float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
-
-                    // Find the difference in the distances between each frame.
-                    float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
-
-                    //Handles camera zoom
-                    float step = (deltaMagnitudeDiff / 100) * orthoZoomSpeed;
-                    float size = cam.orthographicSize + step;
-                    cam.orthographicSize = Mathf.Clamp(size, minSize, maxSize);
-                    movementRestriction = false;
-                }
+                float distance = GetTouchDistance();
+                touchDistanceDelta = distance - prevTouchDistance;
+                prevTouchDistance = distance;
+                pointerPosition = cam.ScreenToWorldPoint(GetTouchMiddle());
             }
         }
 
-        void HandleMouse()
+        Vector2 GetTouchMiddle()
         {
-            // Prevents UI and Game scene from scrolling at the same time
-            if (Input.GetMouseButtonDown(0) || Mathf.Abs(Input.mouseScrollDelta.y) > 0.0001f)
-            {
-                mouseStartPosition = cam.ScreenToWorldPoint(Input.mousePosition);
-                moving = !IsPointOverAnything(mouseStartPosition);
-            }
+            var touch1 = Input.GetTouch(1).position;
+            var touch2 = Input.GetTouch(2).position;
+            return touch1 + (touch2 - touch1) / 2.0f;
+        }
 
-            if (Input.GetMouseButton(0))
-            {
-                if (moving)
-                {
-                    Vector2 position = cam.ScreenToWorldPoint(Input.mousePosition);
-                    Vector2 delta = mouseStartPosition - position;
-                    transform.Translate(delta);
-                }
-            }
+        float GetTouchDistance()
+        {
+            var touch1 = Input.GetTouch(1).position;
+            var touch2 = Input.GetTouch(2).position;
+            return Vector2.Distance(touch1, touch2);
+        }
 
-            if (Mathf.Abs(Input.mouseScrollDelta.y) > 0.0001f)
+        void HandleState()
+        {
+
+            switch (state)
             {
-                if (moving) // Prevents scene scrolling when on UI
-                {
-                    float step = Input.mouseScrollDelta.y * zoomSpeed * -1;
-                    float size = cam.orthographicSize + step;
-                    cam.orthographicSize = Mathf.Clamp(size, minSize, maxSize);
-                }
+                case CameraMoveState.CameraMove:
+                    MoveCamera();
+                    break;
+                case CameraMoveState.CameraMouseZoom:
+                    ZoomCamera();
+                    break;
+                case CameraMoveState.CameraPanAndZoom:
+                    MoveCamera();
+                    ZoomCamera();
+                    break;
+                default:
+                    break;
             }
         }
-        // Use for mouse
+
+        void MoveCamera()
+        {
+            Vector2 delta = pointerStart - pointerPosition;
+            transform.Translate(delta);
+        }
+
+        void ZoomCamera()
+        {
+            float step = GetStep();
+            float size = cam.orthographicSize + step;
+
+            Vector3 before = WorldPoint();
+            cam.orthographicSize = Mathf.Clamp(size, minSize, maxSize);
+            Vector3 after = WorldPoint();
+
+            transform.position = transform.position - (after - before);
+        }
+
+        float GetStep()
+        {
+            if (!Application.isMobilePlatform)
+                return -Input.mouseScrollDelta.y * mouseZoomSpeed;
+
+            if (Input.touchCount == 3)
+                return -touchDistanceDelta * touchZoomSpeed * cam.orthographicSize;
+
+            return 0.0f;
+        }
+
+        Vector3 WorldPoint()
+        {
+            if (!Application.isMobilePlatform)
+                return cam.ScreenToWorldPoint(Input.mousePosition);
+
+            if (Input.touchCount == 2)
+                return cam.ScreenToWorldPoint(Input.GetTouch(1).position);
+
+            if (Input.touchCount == 3)
+                return cam.ScreenToWorldPoint(GetTouchMiddle());
+
+            return Vector3.zero;
+        }
+
         bool IsPointOverAnything(Vector2 screenPoint)
         {
             RaycastHit2D hit = Physics2D.Raycast(screenPoint, Vector2.zero);
@@ -130,14 +217,24 @@ namespace VoyagerApp.UI
             return overObject || overUI;
         }
 
-        // Use for touch
         bool IsPointerOverAnythingTouch(Vector2 screenPoint)
         {
             RaycastHit2D hit = Physics2D.Raycast(screenPoint, Vector2.zero);
             bool overObject = hit.collider != null;
-            bool overUI = EventSystem.current.IsPointerOverGameObject(touchZero.fingerId);
+            bool overUI = EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
 
             return overObject || overUI;
         }
+    }
+
+    // Maybe replace with bit enum, so you can get rid of pan and zoom.
+    public enum CameraMoveState
+    {
+        WorkspaceOverItem,
+        WorkspaceClear,
+        CameraMove,
+        CameraMouseZoom,
+        CameraPanAndZoom,
+        None
     }
 }

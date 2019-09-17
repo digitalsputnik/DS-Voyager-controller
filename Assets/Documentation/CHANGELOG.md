@@ -1,4 +1,19 @@
-﻿2.0.49-alpha                                                          13.09.2019
+﻿2.0.50-beta                                                           17.09.2019
+- New camera move & box select features:
+  - Mobile:
+    - One finger to box select & lamp select
+    - Two fingers to move camera aroud
+    - Three fingers to pan and zoom
+  - Desktop:
+    - Cursor to click select and box select
+    - Hold down Control to move camera
+    - New zoom
+    - Hold shift on boxz select to add selection to previous
+- Bug fixes with with sending frames.
+- Send video buffer to lamps on load.
+- Itshe and set video are moved to video mapping.
+
+2.0.49-alpha                                                          13.09.2019
 - Itsh -> Itshe
 - Dialog system
 - Loading system

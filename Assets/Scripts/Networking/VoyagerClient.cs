@@ -75,7 +75,7 @@ namespace VoyagerApp.Networking
             {
                 var collection = (PacketCollection)packet;
                 for (int i = 0; i < collection.packets.Length; i++)
-                    collection.packets[i].timestamp = TimeUtils.Epoch;
+                    collection.packets[i].timestamp = timestamp;
                 packet = collection;
             }
             byte[] data = packet.Serialize(timestamp);
