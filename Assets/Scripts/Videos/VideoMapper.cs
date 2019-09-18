@@ -199,9 +199,25 @@ namespace VoyagerApp.Videos
         #region Handling position changed event
         void ItemMoved(ItemMove move)
         {
-            var item = move.GetComponentInParent<LampItemView>();
+            var item = move.GetComponentInParent<WorkspaceItemView>();
             if (item == null) return;
 
+            switch (item)
+            {
+                case LampItemView lampItem:
+                    WorkspaceSelection.instance.Clear();
+                    WorkspaceSelection.instance.SelectLamp(lampItem);
+                    HandleLampMove(lampItem);
+                    break;
+                case SelectionControllerView selectionItem:
+                    foreach (var lampItem in WorkspaceUtils.SelectedLampItems)
+                        HandleLampMove(lampItem);
+                    break;
+            }
+        }
+
+        void HandleLampMove(LampItemView item)
+        {
             var mapping = GetLampMapping(item);
             var lamp = item.lamp;
 

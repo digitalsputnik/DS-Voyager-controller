@@ -77,46 +77,43 @@ namespace VoyagerApp.UI
 
         void HandleTouch()
         {
-            if (Input.touchCount == 1)
+            if (!MoveIcon.pressed)
             {
-                if (state == CameraMoveState.CameraMove ||
-                    state == CameraMoveState.CameraPanAndZoom)
+                var touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Began)
+                {
+                    var screenPos = cam.ScreenToWorldPoint(touch.position);
+                    if (IsPointerOverAnythingTouch(screenPos))
+                        state = CameraMoveState.WorkspaceOverItem;
+                    else
+                        state = CameraMoveState.WorkspaceClear;
+                }
+                else if (touch.phase == TouchPhase.Ended)
                     state = CameraMoveState.None;
-                else
-                {
-                    var touch = Input.GetTouch(0);
-                    if (touch.phase == TouchPhase.Began)
-                    {
-                        var screenPos = cam.ScreenToWorldPoint(touch.position);
-                        if (IsPointerOverAnythingTouch(screenPos))
-                            state = CameraMoveState.WorkspaceOverItem;
-                        else
-                            state = CameraMoveState.WorkspaceClear;
-                    }
-                    else if (touch.phase == TouchPhase.Ended)
-                        state = CameraMoveState.None;
-                }
-            }
-            else if (Input.touchCount == 2)
-            {
-                if (state != CameraMoveState.CameraMove)
-                {
-                    var touch = Input.GetTouch(1);
-                    pointerStart = cam.ScreenToWorldPoint(touch.position);
-                    state = CameraMoveState.CameraMove;
-                }
-            }
-            else if (Input.touchCount == 3)
-            {
-                if (state != CameraMoveState.CameraPanAndZoom)
-                {
-                    pointerStart = cam.ScreenToWorldPoint(GetTouchMiddle());
-                    prevTouchDistance = GetTouchDistance();
-                    state = CameraMoveState.CameraPanAndZoom;
-                }
             }
             else
-                state = CameraMoveState.None;
+            {
+                if (Input.touchCount == 2)
+                {
+                    if (state != CameraMoveState.CameraMove)
+                    {
+                        var touch = Input.GetTouch(1);
+                        pointerStart = cam.ScreenToWorldPoint(touch.position);
+                        state = CameraMoveState.CameraMove;
+                    }
+                }
+                else if (Input.touchCount == 3)
+                {
+                    if (state != CameraMoveState.CameraPanAndZoom)
+                    {
+                        pointerStart = cam.ScreenToWorldPoint(GetTouchMiddle());
+                        prevTouchDistance = GetTouchDistance();
+                        state = CameraMoveState.CameraPanAndZoom;
+                    }
+                }
+                else
+                    state = CameraMoveState.None;
+            }
 
 			if (state == CameraMoveState.WorkspaceClear)
 				pointerPosition = cam.ScreenToWorldPoint(Input.GetTouch(0).position);

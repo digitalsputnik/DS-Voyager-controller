@@ -1,4 +1,9 @@
-﻿2.0.51-beta                                                           17.09.2019
+﻿2.0.52-beta                                                           18.09.2019
+- Bugfixes to moving items group in video mapping.
+- Added button for pan and zoom.
+- Removed access to DMX menu.
+
+2.0.51-beta                                                           17.09.2019
 - Selected items in video mapping have bounding box around them to move and
   resize the selected lamps together.
 - Select all & Deselect all button in video mapping.
