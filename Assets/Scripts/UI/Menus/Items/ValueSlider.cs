@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using System.Collections;
 using UnityEngine.UI;
 
 namespace VoyagerApp.UI.Menus
@@ -14,9 +13,9 @@ namespace VoyagerApp.UI.Menus
         public int value;
         public float timer = 0.6f;
         [Space(3)]
-        [SerializeField] Text valueText;
-        [SerializeField] Image fillImage;
-        [SerializeField] RectTransform controlArea;
+        [SerializeField] Text valueText = null;
+        [SerializeField] Image fillImage = null;
+        [SerializeField] RectTransform controlArea = null;
         [SerializeField] InputField field = null;
         public bool isTemperature;
 

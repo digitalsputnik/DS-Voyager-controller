@@ -7,8 +7,8 @@ public class MoveIcon : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public static bool pressed;
 
-    [SerializeField] Color pressedColor;
-    [SerializeField] Color releasedColor;
+    [SerializeField] Color pressedColor = Color.white;
+    [SerializeField] Color releasedColor = Color.white;
 
     Image image;
 

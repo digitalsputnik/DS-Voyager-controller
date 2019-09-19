@@ -12,10 +12,10 @@ namespace VoyagerApp.UI.Overlays
         void Awake() => instance = this;
         #endregion
 
-        [SerializeField] Text titleText;
-        [SerializeField] Text explanationText;
-        [SerializeField] Button button1;
-        [SerializeField] Button button2;
+        [SerializeField] Text titleText = null;
+        [SerializeField] Text explanationText = null;
+        [SerializeField] Button button1 = null;
+        [SerializeField] Button button2 = null;
 
         CanvasGroup canvas;
         Queue<DialogBoxSettings> dialogues = new Queue<DialogBoxSettings>();

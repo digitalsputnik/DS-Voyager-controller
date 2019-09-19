@@ -8,8 +8,10 @@ namespace VoyagerApp.UI
 {
     public class BoxSelection : MonoBehaviour
     {
-        [SerializeField] Transform selectionBox;
+        public static BoxSelectionMode mode = BoxSelectionMode.Set;
 
+        [SerializeField] Transform selectionBox = null;
+         
         CameraMoveState prevState;
         Transform currentSelection;
         Vector2 startPoint;
@@ -48,6 +50,9 @@ namespace VoyagerApp.UI
 
         void OnSelectionEnded()
         {
+            if (!Application.isMobilePlatform)
+                SetModeOnDesktop();
+
             CheckForItems();
             Destroy(currentSelection.gameObject);
             currentSelection = null;
@@ -66,20 +71,47 @@ namespace VoyagerApp.UI
                     lamps.Add(item);
             }
 
-            if (Input.GetKey(KeyCode.LeftShift))
+            var selection = WorkspaceSelection.instance;
+
+            switch (mode)
             {
-                foreach (var lamp in lamps)
-                {
-                    if (!WorkspaceSelection.instance.Selected.Contains(lamp))
+                case BoxSelectionMode.Add:
+                    foreach (var lamp in lamps)
+                    {
+                        if (!selection.Selected.Contains(lamp))
+                            selection.SelectLamp(lamp);
+                    }
+                    break;
+                case BoxSelectionMode.Remove:
+                    foreach (var lamp in lamps)
+                    {
+                        if (selection.Selected.Contains(lamp))
+                            selection.DeselectLamp(lamp);
+                    }
+                    break;
+                case BoxSelectionMode.Set:
+                    WorkspaceSelection.instance.Clear();
+                    foreach (var lamp in lamps)
                         WorkspaceSelection.instance.SelectLamp(lamp);
-                }
-            }
-            else
-            {
-                WorkspaceSelection.instance.Clear();
-                foreach (var lamp in lamps)
-                    WorkspaceSelection.instance.SelectLamp(lamp);
+                    break;
             }
         }
+
+        void SetModeOnDesktop()
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+                mode = BoxSelectionMode.Add;
+            else if (Input.GetKey(KeyCode.LeftControl))
+                mode = BoxSelectionMode.Remove;
+            else
+                mode = BoxSelectionMode.Set;
+        }
+    }
+
+    public enum BoxSelectionMode
+    {
+        Add,
+        Remove,
+        Set
     }
 }

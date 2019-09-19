@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,8 +11,8 @@ namespace VoyagerApp.UI.Overlays
         void Awake() => instance = this;
         #endregion
 
-        [SerializeField] Text titleText;
-        [SerializeField] Image barImage;
+        [SerializeField] Text titleText = null;
+        [SerializeField] Image barImage = null;
 
         CanvasGroup canvas;
         Queue<LoadingBarProcess> processes = new Queue<LoadingBarProcess>();

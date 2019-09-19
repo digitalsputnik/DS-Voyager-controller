@@ -9,8 +9,8 @@ namespace VoyagerApp.Workspace.Views
         const int HEIGHT = 4;
 
         [SerializeField] new MeshRenderer renderer = null;
-        [SerializeField] Color color;
-        [SerializeField] TextMesh nameText;
+        [SerializeField] Color color = Color.white;
+        [SerializeField] TextMesh nameText = null;
 
         public override void Setup(object data)
         {

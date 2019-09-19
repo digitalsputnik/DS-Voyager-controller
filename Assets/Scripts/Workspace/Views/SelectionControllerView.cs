@@ -4,7 +4,7 @@ namespace VoyagerApp.Workspace
 {
     public class SelectionControllerView : WorkspaceItemView
     {
-        [SerializeField] Transform render;
+        [SerializeField] Transform render = null;
 
         public void SetBounds(Bounds bounds)
         {

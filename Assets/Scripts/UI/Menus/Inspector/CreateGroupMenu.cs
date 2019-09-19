@@ -7,8 +7,8 @@ namespace VoyagerApp.UI.Menus
 {
     public class CreateGroupMenu : Menu
     {
-        [SerializeField] InputField nameField;
-        [SerializeField] Button createButton;
+        [SerializeField] InputField nameField = null;
+        [SerializeField] Button createButton = null;
 
         internal override void OnShow()
         {

@@ -10,8 +10,8 @@ namespace VoyagerApp.UI
 {
     public class VideoMappingController : MonoBehaviour
     {
-        [SerializeField] VideoMapper mapper;
-        [SerializeField] VideoMappingMenu menu;
+        [SerializeField] VideoMapper mapper = null;
+        [SerializeField] VideoMappingMenu menu = null;
 
         void Start()
         {

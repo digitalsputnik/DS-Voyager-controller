@@ -1,4 +1,9 @@
-﻿2.0.52-beta                                                           18.09.2019
+﻿2.0.53-beta                                                           19.09.2019
+- Added: Modes to box selection.
+- Changed: Camera movement desktop Control -> Alt.
+- Added: UI to mobile to change box selection mode.
+
+2.0.52-beta                                                           18.09.2019
 - Bugfixes to moving items group in video mapping.
 - Added button for pan and zoom.
 - Removed access to DMX menu.

@@ -53,6 +53,16 @@ namespace VoyagerApp.Workspace
             }
         }
 
+        public void DeselectLamp(LampItemView view)
+        {
+            if (Selected.Contains(view))
+            {
+                view.Deselect();
+                selected.Remove(view);
+                onSelectionChanged?.Invoke(this);
+            }
+        }
+
         public void Clear()
         {
             selected.ForEach(s => s.Deselect());

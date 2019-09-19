@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace VoyagerApp.UI
@@ -36,7 +34,7 @@ namespace VoyagerApp.UI
 
         void HandleMouse()
         {
-            if (!Input.GetKey(KeyCode.LeftControl))
+            if (!Input.GetKey(KeyCode.LeftAlt))
             {
                 if (Input.GetMouseButtonDown(0))
                 {
