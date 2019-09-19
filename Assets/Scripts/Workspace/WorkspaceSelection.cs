@@ -89,14 +89,14 @@ namespace VoyagerApp.Workspace
         {
             if (!selectingEnabled) return;
 
-            if (Input.GetMouseButtonDown(0))
-                mouseDownTime = Time.time;
+            //if (Input.GetMouseButtonDown(0))
+            //    mouseDownTime = Time.time;
 
-            if (Input.GetMouseButtonUp(0))
-            {
-                if (Time.time - mouseDownTime < clickTime)
-                    CheckOnLamp();
-            }
+            //if (Input.GetMouseButtonUp(0))
+            //{
+            //    if (Time.time - mouseDownTime < clickTime)
+            //        CheckOnLamp();
+            //}
         }
 
         bool CheckOnLamp()

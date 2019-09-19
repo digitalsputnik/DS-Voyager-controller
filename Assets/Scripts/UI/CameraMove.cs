@@ -20,7 +20,11 @@ namespace VoyagerApp.UI
         float prevTouchDistance;
         float touchDistanceDelta;
 
-        void Start() => cam = GetComponent<Camera>();
+        void Start()
+        {
+            cam = GetComponent<Camera>();
+            Input.simulateMouseWithTouches = false;
+        }
 
         void Update()
         {
@@ -39,7 +43,9 @@ namespace VoyagerApp.UI
                 if (Input.GetMouseButtonDown(0))
                 {
                     var screenPos = cam.ScreenToWorldPoint(Input.mousePosition);
-                    if (IsPointOverAnything(screenPos))
+                    if (IsPointerOverUI())
+                        state = CameraMoveState.None;
+                    else if (IsPointOverObject(screenPos))
                         state = CameraMoveState.WorkspaceOverItem;
                     else
                         state = CameraMoveState.WorkspaceClear;
@@ -81,7 +87,9 @@ namespace VoyagerApp.UI
                 if (touch.phase == TouchPhase.Began)
                 {
                     var screenPos = cam.ScreenToWorldPoint(touch.position);
-                    if (IsPointerOverAnythingTouch(screenPos))
+                    if (IsPointerOverUI())
+                        state = CameraMoveState.None;
+                    else if (IsPointOverObject(screenPos))
                         state = CameraMoveState.WorkspaceOverItem;
                     else
                         state = CameraMoveState.WorkspaceClear;
@@ -113,7 +121,7 @@ namespace VoyagerApp.UI
                     state = CameraMoveState.None;
             }
 
-			if (state == CameraMoveState.WorkspaceClear)
+			if (state == CameraMoveState.WorkspaceClear || state == CameraMoveState.WorkspaceOverItem)
 				pointerPosition = cam.ScreenToWorldPoint(Input.GetTouch(0).position);
 
 			if (state == CameraMoveState.CameraMove)
@@ -205,26 +213,30 @@ namespace VoyagerApp.UI
             return Vector3.zero;
         }
 
-        bool IsPointOverAnything(Vector2 screenPoint)
+        bool IsPointOverObject(Vector2 screenPoint)
         {
             RaycastHit2D hit = Physics2D.Raycast(screenPoint, Vector2.zero);
-            bool overObject = hit.collider != null;
-            bool overUI = EventSystem.current.IsPointerOverGameObject();
-
-            return overObject || overUI;
+            return hit.collider != null;
         }
 
-        bool IsPointerOverAnythingTouch(Vector2 screenPoint)
+        bool IsPointerOverUI()
         {
-            RaycastHit2D hit = Physics2D.Raycast(screenPoint, Vector2.zero);
-            bool overObject = hit.collider != null;
-            bool overUI = EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+            if (Application.isMobilePlatform)
+            {
+                for (int t = 0; t < Input.touchCount; t++)
+                {
+                    Touch touch = Input.GetTouch(t);
+                    bool overUI = EventSystem.current.IsPointerOverGameObject(touch.fingerId);
+                    if (overUI) return overUI; 
+                }
+            }
+            else
+                return EventSystem.current.IsPointerOverGameObject();
 
-            return overObject || overUI;
+            return false;
         }
     }
 
-    // Maybe replace with bit enum, so you can get rid of pan and zoom.
     public enum CameraMoveState
     {
         WorkspaceOverItem,

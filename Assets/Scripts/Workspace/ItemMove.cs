@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -25,53 +26,78 @@ namespace VoyagerApp.Workspace
         float startDistance;
         Vector2 startScale;
 
+        float zPos;
+
         Camera cam;
         bool moving;
-        bool approved;
+        bool active;
 
         List<ItemsContainerView> prevUnder = new List<ItemsContainerView>();
+        CameraMoveState prevState;
 
         void Start()
         {
             targetItem = GetComponentInParent<WorkspaceItemView>();
             target = targetItem.transform;
+            zPos = target.transform.position.z;
             cam = Camera.main;
         }
 
-        void OnMouseDown()
+        void Update()
         {
-            approved =
-                !PointerOverUI &&
-                Enabled &&
-                CameraMove.state != CameraMoveState.CameraMouseZoom;
-
-            if (approved)
+            if (!Enabled)
             {
-                Vector2 pressPosition = cam.ScreenToWorldPoint(Input.mousePosition);
-
-                pressStartPosition = pressPosition - (Vector2)transform.position;
-                objectStartPosition = target.position;
-
-                startAngle = AngleFromTo(objectStartPosition, pressPosition);
-                offsetAngle = startAngle - target.eulerAngles.z;
-
-                startDistance = Vector2.Distance(objectStartPosition, pressPosition);
-                startScale = target.localScale;
-
-                float scaleDistance = transform.lossyScale.x * 0.85f / 2.0f;
-                moving = startDistance < scaleDistance;
-
-                prevUnder.Clear();
-
-                if (approved) onItemMoveStarted?.Invoke(this);
+                if (prevState == CameraMoveState.WorkspaceOverItem)
+                    OnMoveEnded();
+                return;
             }
+
+            if (prevState != CameraMoveState.WorkspaceOverItem &&
+                CameraMove.state == CameraMoveState.WorkspaceOverItem)
+                OnMoveStarted();
+
+            if (prevState == CameraMoveState.WorkspaceOverItem &&
+                CameraMove.state != CameraMoveState.WorkspaceOverItem)
+                OnMoveEnded();
+
+            if (active)
+                OnMove();
+
+            prevState = CameraMove.state;
         }
 
-        void OnMouseDrag()
+        void OnMoveStarted()
         {
-            if (!approved) return;
+            var bounds = GetComponent<BoxCollider2D>().bounds;
+            bounds.Expand(Vector3.forward * 100.0f);
+            bounds.Expand(Vector3.back * 100.0f);
 
-            Vector2 pressPosition = cam.ScreenToWorldPoint(Input.mousePosition);
+            if (!bounds.Contains(CameraMove.pointerPosition))
+                return;
+
+            Vector2 pressPosition = CameraMove.pointerPosition;
+
+            pressStartPosition = pressPosition - (Vector2)transform.position;
+            objectStartPosition = target.position;
+
+            startAngle = AngleFromTo(objectStartPosition, pressPosition);
+            offsetAngle = startAngle - target.eulerAngles.z;
+
+            startDistance = Vector2.Distance(objectStartPosition, pressPosition);
+            startScale = target.localScale;
+
+            float scaleDistance = transform.lossyScale.x * 0.85f / 2.0f;
+            moving = startDistance < scaleDistance;
+
+            prevUnder.Clear();
+            onItemMoveStarted?.Invoke(this);
+            active = true;
+        }
+
+
+        void OnMove()
+        {
+            Vector2 pressPosition = CameraMove.pointerPosition;
 
             if (moving)
             {
@@ -85,25 +111,25 @@ namespace VoyagerApp.Workspace
             }
         }
 
-        void OnMouseUp()
+        void OnMoveEnded()
         {
-            if (!approved) return;
+            if (!active) return;
 
             onItemMoveEnded?.Invoke(this);
-
             if (moving)
             {
                 WorkspaceItemView self = target.GetComponent<WorkspaceItemView>();
                 self.SetParent(prevUnder.Count > 0 ? prevUnder[0] : null);
                 ManageOldUnder(prevUnder);
             }
+            active = false;
         }
 
         void HandleMoving(Vector2 pressPosition)
         {
             Vector2 delta = pressStartPosition - pressPosition;
             Vector3 position = -delta;
-            position.z = transform.position.z;
+            position.z = zPos;
             target.position = position;
         }
 
@@ -167,23 +193,6 @@ namespace VoyagerApp.Workspace
         void ManageOldUnder(List<ItemsContainerView> under)
         {
             under.ForEach(_ => _.OnChildExit());
-        }
-
-        bool PointerOverUI
-        {
-            get
-            {
-                if (Application.isMobilePlatform)
-                {
-                    for (int i = 0; i < Input.touchCount; i++)
-                    {
-                        int id = Input.GetTouch(i).fingerId;
-                        if (EventSystem.current.IsPointerOverGameObject(id))
-                            return true;
-                    }
-				}
-                return EventSystem.current.IsPointerOverGameObject();
-            }
         }
     }
 
