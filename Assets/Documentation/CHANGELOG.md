@@ -1,4 +1,7 @@
-﻿2.0.53-beta                                                           19.09.2019
+﻿2.0.54-beta                                                           19.09.2019
+- Fix: Loading workspace and sending buffer to lamps now showes progress.
+
+2.0.53-beta                                                           19.09.2019
 - Added: Modes to box selection.
 - Changed: Camera movement desktop Control -> Alt.
 - Added: UI to mobile to change box selection mode.
