@@ -65,6 +65,8 @@ namespace VoyagerApp.Workspace
             children.Remove(item);
         }
 
+        
+
         protected virtual void Generate() { }
     }
 }

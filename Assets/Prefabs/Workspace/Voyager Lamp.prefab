@@ -170,7 +170,7 @@ MonoBehaviour:
   children: []
   nameText: {fileID: 8222461828947152306}
   normalTextColor: {r: 0.43244928, g: 0.66740847, b: 0.8113208, a: 1}
-  selectedTextColor: {r: 0.43244928, g: 0.66740847, b: 0.8113208, a: 1}
+  selectedTextColor: {r: 1, g: 0.67096573, b: 0.07075471, a: 1}
   pixels: {fileID: 3730633101815870764}
   pixelSize: {x: 0.15, y: 0.3}
   outline: {fileID: 834895026173934442}

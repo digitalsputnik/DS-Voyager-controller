@@ -10,10 +10,10 @@ namespace VoyagerApp.UI.Menus
     {
         public void AddPicture()
         {
-            FileUtils.LoadPictureFromDevice(VideoPicked);
+            FileUtils.LoadPictureFromDevice(PicturePicked);
         }
 
-        void VideoPicked(string path)
+        void PicturePicked(string path)
         {
             if (path == null || path == "Null" || path == "") return;
 
@@ -22,7 +22,9 @@ namespace VoyagerApp.UI.Menus
             texture.LoadImage(data);
             texture.Apply();
 
-            WorkspaceManager.instance.InstantiateItem<PictureItemView>(texture);
+            WorkspaceManager.instance
+                .InstantiateItem<PictureItemView>(texture)
+                .PositionBasedCamera();
         }
     }
 }

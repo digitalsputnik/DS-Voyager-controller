@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 956265330751005177}
   - component: {fileID: 956265330751005175}
   - component: {fileID: 956265330751005176}
-  - component: {fileID: 3449752978089724238}
+  - component: {fileID: 7627344489101607328}
+  - component: {fileID: 3973544655850096084}
   m_Layer: 0
-  m_Name: Controller
+  m_Name: Managers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89b0db6dec33c416db4901639d8d611e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3449752978089724238
+--- !u!114 &7627344489101607328
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -66,6 +67,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 956265330751005178}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d872424c512cb4b12b0728c78acd269c, type: 3}
+  m_Script: {fileID: 11500000, guid: e2b39a236826741d08f74887f7a52f69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thumbnailTime: 0.5
+  loadTimeout: 5
+  thumbnailSize: {x: 480, y: 270}
+--- !u!114 &3973544655850096084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956265330751005178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6494d18e03b47a89205abd030da1ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

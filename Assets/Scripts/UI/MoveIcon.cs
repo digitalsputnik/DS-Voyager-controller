@@ -47,4 +47,13 @@ public class MoveIcon : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         image.color = releasedColor;
         pressed = false;
     }
+
+    void OnDestroy()
+    {
+        if (Application.isMobilePlatform)
+        {
+            ItemMove.onItemMoveStarted -= ItemMoveStarted;
+            ItemMove.onItemMoveEnded -= ItemMoveEnded;
+        }
+    }
 }

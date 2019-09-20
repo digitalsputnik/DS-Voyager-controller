@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using VoyagerApp.UI;
 using VoyagerApp.Workspace.Views;
 
@@ -70,9 +68,8 @@ namespace VoyagerApp.Workspace
         {
             var bounds = GetComponent<BoxCollider2D>().bounds;
             bounds.Expand(Vector3.forward * 100.0f);
-            bounds.Expand(Vector3.back * 100.0f);
 
-            if (!bounds.Contains(CameraMove.pointerPosition))
+            if (!bounds.Contains(CameraMove.pointerPosition) || CameraMove.Used)
                 return;
 
             Vector2 pressPosition = CameraMove.pointerPosition;
@@ -91,6 +88,8 @@ namespace VoyagerApp.Workspace
 
             prevUnder.Clear();
             onItemMoveStarted?.Invoke(this);
+
+            CameraMove.Used = true;
             active = true;
         }
 
@@ -122,6 +121,8 @@ namespace VoyagerApp.Workspace
                 self.SetParent(prevUnder.Count > 0 ? prevUnder[0] : null);
                 ManageOldUnder(prevUnder);
             }
+
+            CameraMove.Used = false;
             active = false;
         }
 

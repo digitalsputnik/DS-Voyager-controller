@@ -7,6 +7,7 @@ namespace VoyagerApp.UI
     {
         public static CameraMoveState state = CameraMoveState.None;
         public static Vector2 pointerPosition;
+        public static bool Used;
 
         [SerializeField] float minSize = 5.0f;
         [SerializeField] float maxSize = 30.0f;
@@ -83,18 +84,23 @@ namespace VoyagerApp.UI
         {
             if (!MoveIcon.pressed)
             {
-                var touch = Input.GetTouch(0);
-                if (touch.phase == TouchPhase.Began)
+                if (Input.touchCount == 1)
                 {
-                    var screenPos = cam.ScreenToWorldPoint(touch.position);
-                    if (IsPointerOverUI())
+                    var touch = Input.GetTouch(0);
+                    if (touch.phase == TouchPhase.Began)
+                    {
+                        var screenPos = cam.ScreenToWorldPoint(touch.position);
+                        if (IsPointerOverUI())
+                            state = CameraMoveState.None;
+                        else if (IsPointOverObject(screenPos))
+                            state = CameraMoveState.WorkspaceOverItem;
+                        else
+                            state = CameraMoveState.WorkspaceClear;
+                    }
+                    else if (touch.phase == TouchPhase.Ended)
                         state = CameraMoveState.None;
-                    else if (IsPointOverObject(screenPos))
-                        state = CameraMoveState.WorkspaceOverItem;
-                    else
-                        state = CameraMoveState.WorkspaceClear;
                 }
-                else if (touch.phase == TouchPhase.Ended)
+                else
                     state = CameraMoveState.None;
             }
             else

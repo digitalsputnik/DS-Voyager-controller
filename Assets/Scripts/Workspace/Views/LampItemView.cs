@@ -9,7 +9,7 @@ namespace VoyagerApp.Workspace.Views
     {
         [SerializeField] protected TextMesh nameText    = null;
         [SerializeField] Color normalTextColor          = Color.black;
-        [SerializeField] Color selectedTextColor        = Color.black;
+        [SerializeField] internal Color selectedTextColor = Color.black;
 
         public Lamp lamp;
         string info = "";

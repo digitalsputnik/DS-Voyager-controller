@@ -23,6 +23,7 @@ namespace VoyagerApp.Workspace.Views
         VoyagerClient client;
 
         bool playing = true;
+        Color outlineColor;
 
         void LateUpdate()
         {
@@ -39,6 +40,8 @@ namespace VoyagerApp.Workspace.Views
             PlayPauseStop.onStop  += OnStop;
 
             base.Setup(data);
+
+            outlineColor = outline.GetComponent<MeshRenderer>().material.color;
         }
 
         void OnDestroy()
@@ -148,6 +151,18 @@ namespace VoyagerApp.Workspace.Views
                 pixelsTexture.SetPixels32(colors);
                 pixelsTexture.Apply();
             }
+        }
+
+        public override void Select()
+        {
+            base.Select();
+            outline.transform.GetComponent<MeshRenderer>().material.color = selectedTextColor;
+        }
+
+        public override void Deselect()
+        {
+            base.Deselect();
+            outline.transform.GetComponent<MeshRenderer>().material.color = outlineColor;
         }
     }
 }

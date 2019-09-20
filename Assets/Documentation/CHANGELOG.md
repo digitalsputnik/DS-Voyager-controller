@@ -1,4 +1,12 @@
-﻿2.0.55-beta                                                           19.09.2019
+﻿2.0.56-beta                                                           20.09.2019
+- New:    Update boundle.
+- Fix:    Moving items in video mapping on mobile.
+- Add:    Adding pictures adds the pictures with screen size nad right aspect
+          ratio.
+- Change: Selection lamps have colored outline and with new brighter color.
+- Fix:    Colorwheel gived an error.
+
+2.0.55-beta                                                           19.09.2019
 - Fix: Moving items through UI.
 - Change: New update boundle.
 
