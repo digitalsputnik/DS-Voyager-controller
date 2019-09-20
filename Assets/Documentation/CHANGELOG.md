@@ -1,4 +1,7 @@
-﻿2.0.57-beta                                                           20.09.2019
+﻿2.0.58-beta                                                           20.09.2019
+- New: Update boundle
+
+2.0.57-beta                                                           20.09.2019
 - New: Update boundle
 - Fix: Set video was not available in video mapping.
 
