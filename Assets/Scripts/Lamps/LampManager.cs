@@ -26,6 +26,9 @@ namespace VoyagerApp.Lamps
         public List<Lamp> Lamps = new List<Lamp>();
         public List<Lamp> ConnectedLamps => GetConnectedLamps();
 
+        public List<Lamp> UpdatedLamps = new List<Lamp>();
+
+        public event LampHandler onLampOutdated;
         public event LampHandler onLampAdded;
         public event LampHandler onLampRemoved;
 
@@ -42,6 +45,9 @@ namespace VoyagerApp.Lamps
             {
                 Lamps.Add(lamp);
                 onLampAdded?.Invoke(lamp);
+
+                if (!lamp.updated)
+                    onLampOutdated?.Invoke(lamp);
             }
         }
 

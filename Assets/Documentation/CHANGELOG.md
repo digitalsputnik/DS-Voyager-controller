@@ -1,4 +1,8 @@
-﻿2.0.58-beta                                                           20.09.2019
+﻿2.0.59-beta                                                           23.09.2019
+- Add #179: Update prompt, if lamps are out of date.
+- Fix: Zoom disabled through UI.
+
+2.0.58-beta                                                           20.09.2019
 - New: Update boundle
 
 2.0.57-beta                                                           20.09.2019

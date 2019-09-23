@@ -16,6 +16,7 @@ namespace VoyagerApp.Lamps.Voyager
     {
         public int length;
         public int battery;
+        public int[] animVersion;
 
         public string mode;
         public string activeSsid;
@@ -28,6 +29,8 @@ namespace VoyagerApp.Lamps.Voyager
         VoyagerClient client;
 
         public override int pixels => length;
+        public override string version => animVersion == null ? "0.0" : string.Join(".", animVersion);
+        public override bool updated => version == UpdateSettings.VoyagerAnimationVersion;
 
         public VoyagerLamp()
         {
@@ -44,6 +47,7 @@ namespace VoyagerApp.Lamps.Voyager
 
             length = unpacked.length;
             battery = unpacked.battery;
+            animVersion = unpacked.animVersion;
 
             mode = unpacked.activeMode;
             activeSsid = unpacked.activeSsid;

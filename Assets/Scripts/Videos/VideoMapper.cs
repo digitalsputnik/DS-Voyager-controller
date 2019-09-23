@@ -44,8 +44,8 @@ namespace VoyagerApp.Videos
             PushPixelsToLamps(frame);
             Destroy(frame);
 
-            if (TimeUtils.GetFrameOfVideo(video) == 0 && player.isPlaying)
-                SetFrame(TimeUtils.GetFrameOfVideo(video));
+            //if (TimeUtils.GetFrameOfVideo(video) == 0 && player.isPlaying)
+            //    SetFrame(TimeUtils.GetFrameOfVideo(video));
 
             if (stopRequested)
             {

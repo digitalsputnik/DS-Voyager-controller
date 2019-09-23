@@ -67,7 +67,7 @@ namespace VoyagerApp.UI
 
             if (state == CameraMoveState.None)
             {
-                if (Mathf.Abs(Input.mouseScrollDelta.y) > 0.0001f)
+                if (Mathf.Abs(Input.mouseScrollDelta.y) > 0.0001f && !IsPointerOverUI())
                     state = CameraMoveState.CameraMouseZoom;
             }
             else if (state == CameraMoveState.CameraMouseZoom)

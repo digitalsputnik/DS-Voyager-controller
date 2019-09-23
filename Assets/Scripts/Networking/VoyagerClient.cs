@@ -19,7 +19,7 @@ namespace VoyagerApp.Networking
     public class VoyagerClient : LampClient
     {
         public const int  DISCOVERY_PORT = 30000;
-        public const float DISCOVERY_INTERVAL = 0.2f;
+        public const float DISCOVERY_INTERVAL = 1f;
 
         public const int SETTINGS_PORT = 30001;
 

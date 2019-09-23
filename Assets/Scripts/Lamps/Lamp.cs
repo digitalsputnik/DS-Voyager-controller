@@ -21,6 +21,8 @@ namespace VoyagerApp.Lamps
         public bool connected => (TimeUtils.Epoch - lastMessage) < TIMEOUT;
         public double lastMessage;
         public abstract int pixels { get; }
+        public abstract string version { get; }
+        public abstract bool updated { get; }
 
         public Itshe itshe;
         public Video video;

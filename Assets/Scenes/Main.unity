@@ -485,7 +485,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1500, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &57028725
@@ -7940,6 +7940,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1502510711}
   - component: {fileID: 1502510712}
+  - component: {fileID: 1502510713}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -7973,6 +7974,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d4211642350548f497e3d3de452726c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1502510713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1502510710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 359f7d992f0a5454d8907118a6766482, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  container: {fileID: 7372718238239525712}
+  updateMenu: {fileID: 57028725}
+  waitTime: 5
 --- !u!1001 &1556780131
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12101,6 +12117,25 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 3449752978089724238, guid: 5a5e02a9e8076452585ceb20c6b05f0a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5a5e02a9e8076452585ceb20c6b05f0a, type: 3}
+--- !u!1 &956265329312912224 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 956265330751005178, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
+    type: 3}
+  m_PrefabInstance: {fileID: 956265329312912223}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &956265329312912225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956265329312912224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb1df5edc4081416ca0373d00d5d3cb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  voyagerAnimVersion: 0.70
 --- !u!1 &1166860730924851568
 GameObject:
   m_ObjectHideFlags: 0
@@ -14029,6 +14064,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460918170185903900, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460918170192513821, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460918170749424036, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 696c43ec365ed4a45a6c16df774dc048, type: 3}

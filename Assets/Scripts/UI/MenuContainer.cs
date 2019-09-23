@@ -9,7 +9,7 @@ namespace VoyagerApp.UI
         [SerializeField] Transform container    = null;
         [SerializeField] Menu startMenu         = null;
 
-        Menu current;
+        public Menu current { get; private set; }
         internal Menu[] menus;
 
         internal virtual void Start()
