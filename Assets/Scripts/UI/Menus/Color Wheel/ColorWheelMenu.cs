@@ -10,15 +10,13 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] ShowHideMenu showHide              = null;
         [SerializeField] GameObject controlsContainer       = null;
         [Space(3)]
-        [SerializeField] ValueSlider itensitySlider         = null;
-        [SerializeField] ValueSlider temperatureSlider      = null;
-        [SerializeField] ValueSlider saturationSlider       = null;
-        [SerializeField] ValueSlider hueSlider              = null;
-        [SerializeField] ValueSlider effectSlider           = null;
+        [SerializeField] IntField itensitySlider            = null;
+        [SerializeField] IntField temperatureSlider         = null;
+        [SerializeField] IntField saturationSlider          = null;
+        [SerializeField] IntField hueSlider                 = null;
+        [SerializeField] IntField effectSlider              = null;
         [Space(3)]
         [SerializeField] ColorWheelEventSystem wheel        = null;
-
-        public GameObject CWSliderToggle;
 
         Itshe beginning;
         Itshe itshe;
@@ -43,8 +41,6 @@ namespace VoyagerApp.UI.Menus
         public void Approve()
         {
             approved = true;
-            GameObject.Find("Minimize / Maximize").GetComponent<Button>().enabled = true;
-            CWSliderToggle.SetActive(false);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
@@ -77,23 +73,23 @@ namespace VoyagerApp.UI.Menus
 
         void SubscribeSliders()
         {
-            itensitySlider.onChanged.AddListener(SliderChanged);
-            temperatureSlider.onChanged.AddListener(SliderChanged);
-            saturationSlider.onChanged.AddListener(SliderChanged);
-            hueSlider.onChanged.AddListener(SliderChanged);
-            effectSlider.onChanged.AddListener(SliderChanged);
+            itensitySlider.onChanged += SliderChanged;
+            temperatureSlider.onChanged += SliderChanged;
+            saturationSlider.onChanged += SliderChanged;
+            hueSlider.onChanged += SliderChanged;
+            effectSlider.onChanged += SliderChanged;
         }
 
         void UnsubscribeSliders()
         {
-            itensitySlider.onChanged.RemoveListener(SliderChanged);
-            temperatureSlider.onChanged.RemoveListener(SliderChanged);
-            saturationSlider.onChanged.RemoveListener(SliderChanged);
-            hueSlider.onChanged.RemoveListener(SliderChanged);
-            effectSlider.onChanged.RemoveListener(SliderChanged);
+            itensitySlider.onChanged -= SliderChanged;
+            temperatureSlider.onChanged -= SliderChanged;
+            saturationSlider.onChanged -= SliderChanged;
+            hueSlider.onChanged -= SliderChanged;
+            effectSlider.onChanged -= SliderChanged;
         }
 
-        void SliderChanged(ValueSliderEventData data)
+        void SliderChanged(int value)
         {
             float i = itensitySlider.normalized;
             float t = temperatureSlider.normalized;

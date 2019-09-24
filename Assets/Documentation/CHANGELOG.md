@@ -1,4 +1,10 @@
-﻿2.0.60-beta                                                           24.09.2019
+﻿2.0.61-beta                                                           24.09.2019
+- Change: Lamps default mapping position is on video.
+- Change: Colorwheel fields are same as fps.
+- Change: Slider menu is refactored.
+- New: Update boundle.
+
+2.0.60-beta                                                           24.09.2019
 - Fix: Update dialog appears only if lamps is connected.
 - Fix: Setting video from video mapping menu.
 - Change: Going to video mapping without video.

@@ -1,52 +1,56 @@
 ﻿using UnityEngine;
-using VoyagerApp.Workspace;
+using UnityEngine.UI;
 
 namespace VoyagerApp.UI.Menus
 {
     public class SliderMenu : Menu
     {
+        public static SliderMenu instance;
+        void Awake() => instance = this;
 
-        [SerializeField] CanvasGroup SliderRect = null;
+        public Slider slider;
+        public Text text;
+        public Text valueText;
 
-        [SerializeField] CanvasGroup sliderCanvasGroup = null;
-        public GameObject[] disableObject;
-
+        IntField toModify;
 
         public override void Start()
         {
             base.Start();
 
-            var rect = SliderRect.GetComponent<RectTransform>();
+            var rect = GetComponent<RectTransform>();
             rect.offsetMin = new Vector2(0.0f, 0.0f);
             rect.offsetMax = new Vector2(0.0f, 0.0f);
 
+            slider.onValueChanged.AddListener(ValueChanged);
         }
 
-        public void DisableGO()
+        void OnDestroy()
         {
-            foreach (GameObject GO in disableObject)
+            slider.onValueChanged.RemoveListener(ValueChanged);
+        }
+
+        public void Use(IntField field)
+        {
+            text.text = field.gameObject.name.ToUpper();
+            toModify = field;
+            slider.value = field.normalized;
+            Open = true;
+        }
+
+        public void Close()
+        {
+            toModify = null;
+            Open = false;
+        }
+
+        void ValueChanged(float value)
+        {
+            if (toModify != null)
             {
-                GO.SetActive(false);
+                toModify.SetValue(value);
+                valueText.text = toModify.Value.ToString();
             }
-        }
-
-
-        public void EnableSliderMenu()
-        {
-            sliderCanvasGroup.interactable = true;
-            sliderCanvasGroup.blocksRaycasts = true;
-            sliderCanvasGroup.alpha = 1;
-
-            //sliderOption.SetActive(true);
-        }
-
-        public void DisableSliderMenu()
-        {
-            sliderCanvasGroup.interactable = false;
-            sliderCanvasGroup.blocksRaycasts = false;
-            sliderCanvasGroup.alpha = 0;
-
-           // sliderOption.SetActive(false);
         }
     }
 }

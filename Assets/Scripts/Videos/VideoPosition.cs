@@ -13,10 +13,10 @@ namespace VoyagerApp.Videos
 
         public VideoPosition()
         {
-            x1 = -0.5f;
-            y1 =  0.0f;
-            x2 =  0.5f;
-            y2 =  0.0f;
+            x1 = 0.0f;
+            y1 = 0.5f;
+            x2 = 1.0f;
+            y2 = 0.5f;
         }
 
         public VideoPosition(float x1, float y1, float x2, float y2)

@@ -11,7 +11,7 @@ namespace VoyagerApp.Lamps
     [Serializable]
     public abstract class Lamp
     {
-        public const double TIMEOUT = 5.0f;
+        public const double TIMEOUT = 15.0f;
 
         public string type;
         public string serial;

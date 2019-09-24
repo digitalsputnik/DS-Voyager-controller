@@ -15,6 +15,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] int startValue     = 50;
 
         public int Value => int.Parse(field.text);
+        public float normalized => (float)(Value - min) / (max - min);
 
         void Start()
         {
@@ -48,6 +49,17 @@ namespace VoyagerApp.UI.Menus
             value = Mathf.Clamp(value, min, max);
             field.text = value.ToString();
             onChanged?.Invoke(value);
+        }
+
+        public void SetValue(float value)
+        {
+            int val = (int)((max - min) * value) + min;
+            SetValue(val);
+        }
+
+        public void Expand()
+        {
+            SliderMenu.instance.Use(this);
         }
     }
 
