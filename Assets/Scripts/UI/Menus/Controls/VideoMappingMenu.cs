@@ -24,9 +24,12 @@ namespace VoyagerApp.UI.Menus
         public void SetVideo(Video video)
         {
             this.video = video;
+
             if (hasFpsInitialized)
                 fpsField.onChanged -= FpsChanged;
-            SetupFps();
+
+            if (video != null)
+                SetupFps();
         }
 
         internal override void OnShow()

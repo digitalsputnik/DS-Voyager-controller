@@ -29,7 +29,7 @@ namespace VoyagerApp.UI
         {
             if (item is VoyagerItemView voyager)
             {
-                if (!voyager.lamp.updated)
+                if (!voyager.lamp.updated && voyager.lamp.connected)
                 {
                     StopAllCoroutines();
                     StartCoroutine(WaitForAnothers());
@@ -53,7 +53,10 @@ namespace VoyagerApp.UI
                 "Update",
                 "Outdated lamp found from network. " +
                 "Would you like to update your lamp now?",
-                "Ok", "Cancel", () =>
+                "Cancel", "Ok", () =>
+                {
+                    showing = false;
+                }, () =>
                 {
                     container.ShowMenu(updateMenu);
                     WorkspaceSelection.instance.Clear();
@@ -62,9 +65,6 @@ namespace VoyagerApp.UI
                         if (!lamp.lamp.updated)
                             WorkspaceSelection.instance.SelectLamp(lamp);
                     }
-                    showing = false;
-                }, () =>
-                {
                     showing = false;
                 });
         }

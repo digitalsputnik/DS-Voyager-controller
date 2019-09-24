@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using VoyagerApp.Lamps;
 using VoyagerApp.UI.Menus;
@@ -24,8 +25,8 @@ namespace VoyagerApp.UI
         {
             VideoMappingSettings settings = VideoMappingSettings.Load();
 
-            var video = VideoFromHash(settings.video);
             var lamps = LampsFromSerials(settings.lamps);
+            var video = VideoFromHash(settings.video);
 
             SetVideo(video);
             PositionLamps(lamps);
@@ -53,7 +54,7 @@ namespace VoyagerApp.UI
 
         Video VideoFromHash(string hash)
         {
-            return VideoManager.instance.Videos.Find(v => v.hash == hash);
+            return VideoManager.instance.Videos.FirstOrDefault(v => v.hash == hash);
         }
 
         List<Lamp> LampsFromSerials(string[] serials)

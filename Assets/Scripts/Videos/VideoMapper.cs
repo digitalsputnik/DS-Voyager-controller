@@ -44,8 +44,8 @@ namespace VoyagerApp.Videos
             PushPixelsToLamps(frame);
             Destroy(frame);
 
-            //if (TimeUtils.GetFrameOfVideo(video) == 0 && player.isPlaying)
-            //    SetFrame(TimeUtils.GetFrameOfVideo(video));
+            if (TimeUtils.GetFrameOfVideo(video) == 0 && player.isPlaying)
+                SetFrame(TimeUtils.GetFrameOfVideo(video));
 
             if (stopRequested)
             {
@@ -73,9 +73,12 @@ namespace VoyagerApp.Videos
 
             this.video = video;
 
-            SetupRenderTexture();
-            PrepereVideoPlayer();
-            SetupMeshSize();
+            if (video != null)
+            {
+                SetupRenderTexture();
+                PrepereVideoPlayer();
+                SetupMeshSize();
+            }
         }
 
         public void SetFrame(long frame)
@@ -221,9 +224,13 @@ namespace VoyagerApp.Videos
             var mapping = GetLampMapping(item);
             var lamp = item.lamp;
 
-            lamp.SetVideo(video);
+            if (video != null)
+            {
+                lamp.SetVideo(video);
+                lamp.buffer.RecreateBuffer(video.frames);
+            }
+
             lamp.SetMapping(mapping);
-            lamp.buffer.RecreateBuffer(video.frames);
         }
 
         VideoPosition GetLampMapping(LampItemView lamp)

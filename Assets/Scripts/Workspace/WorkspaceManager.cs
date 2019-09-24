@@ -58,6 +58,8 @@ namespace VoyagerApp.Workspace
 
         public void RemoveItem(WorkspaceItemView item)
         {
+            if (item == null) return;
+
             foreach (var child in new List<WorkspaceItemView>(item.children))
             {
                 child.SetParent(null);

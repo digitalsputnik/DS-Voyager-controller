@@ -27,7 +27,7 @@ namespace VoyagerApp.Videos
             List<string> tempLamps = new List<string>();
             lamps.ForEach(l => tempLamps.Add(l.serial));
 
-            this.video = video.hash;
+            this.video = video == null ? "" : video.hash;
             this.lamps = tempLamps.ToArray();
         }
 

@@ -1,4 +1,10 @@
-﻿2.0.59-beta                                                           23.09.2019
+﻿2.0.60-beta                                                           24.09.2019
+- Fix: Update dialog appears only if lamps is connected.
+- Fix: Setting video from video mapping menu.
+- Change: Going to video mapping without video.
+- Change: Splash screen has now logo with alpha.
+
+2.0.59-beta                                                           23.09.2019
 - Add #179: Update prompt, if lamps are out of date.
 - Fix: Zoom disabled through UI.
 
