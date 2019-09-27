@@ -1,4 +1,12 @@
-﻿2.0.69                                                                27.09.2019
+﻿2.0.70                                                                27.09.2019
+- Fix: Default Temperature value is now 5600.
+- Fix: Removed text, that iOS update is disabled.
+- Fix: Selection mode icons order was incorrect.
+- Fix: Inspector menus stayed open sometime.
+- Fix: Setting itshe to white when no video is now sent only once.
+- Add: Going to video mapping selects all lamps at start.
+
+2.0.69                                                                27.09.2019
 - Fix: Moving items on pictures and in video mapping.
 - Fix: Sending video buffer to lamps while loading.
 - Fix: Play, pause and stop. Network protocol refactored to op codes.

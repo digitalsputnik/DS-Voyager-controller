@@ -53,7 +53,8 @@ namespace VoyagerApp.UI
                 var position = GetLampVideoPosition(lamp);
                 var scale = GetLampVideoScale(lamp);
                 var rotation = GetLampVideoRotation(lamp);
-                lamp.AddToWorkspace(position, scale, rotation);
+                var view = lamp.AddToWorkspace(position, scale, rotation);
+                WorkspaceSelection.instance.SelectLamp(view);
             }
         }
 
@@ -107,7 +108,6 @@ namespace VoyagerApp.UI
 
         IEnumerator SetWhiteColor(List<Lamp> lamps)
         {
-            Itshe itshe = new Itshe(Color.white, 1.0f);
             Video video = new Video();
             video.frames = 1;
 
@@ -118,7 +118,7 @@ namespace VoyagerApp.UI
                 var start = video.lastStartTime + NetUtils.VoyagerClient.TimeOffset;
                 var packet = new PacketCollection(
                     new SetVideoPacket(video.frames, start),
-                    new SetItshePacket(itshe)
+                    new SetItshePacket(lamp.itshe)
                 );
                 NetUtils.VoyagerClient.SendPacket(lamp, packet, time);
             }
@@ -127,7 +127,6 @@ namespace VoyagerApp.UI
 
             foreach (var lamp in lamps)
             {
-                lamp.itshe = itshe;
                 byte[] colors = ColorUtils.LampFrameBufferFromColor(lamp, Color.white);
                 var packet = new SetFramePacket(0, colors);
                 NetUtils.VoyagerClient.SendPacketToVideoPort(lamp, packet, time);

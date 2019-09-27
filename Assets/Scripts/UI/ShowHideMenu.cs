@@ -55,7 +55,7 @@ namespace VoyagerApp.UI
             Vector2 startPosition = target.anchoredPosition;
             Vector2 destPosition = open ? openPosition : closedPosition;
 
-            while (Time.time < endTime + 0.1f)
+            while (target.anchoredPosition != destPosition)
             {
                 float passed = Time.time - startTime;
                 float time = passed / speed;

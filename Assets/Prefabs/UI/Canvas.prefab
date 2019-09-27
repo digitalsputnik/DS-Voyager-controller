@@ -1192,9 +1192,9 @@ MonoBehaviour:
   releasedColor: {r: 1, g: 1, b: 1, a: 0.39215687}
   modeImage: {fileID: 2777101937754422202}
   modes:
-  - {fileID: 21300000, guid: 11c59d64d8e0e4c9c91c36d4851a7b0b, type: 3}
   - {fileID: 21300000, guid: 925a8627aeb4d449aab35318bcea8b03, type: 3}
   - {fileID: 21300000, guid: ef000ec970d9a41c8af9c908fa3dd91c, type: 3}
+  - {fileID: 21300000, guid: 11c59d64d8e0e4c9c91c36d4851a7b0b, type: 3}
 --- !u!114 &2777101937754422202
 MonoBehaviour:
   m_ObjectHideFlags: 0
