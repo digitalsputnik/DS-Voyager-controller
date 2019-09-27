@@ -13,7 +13,7 @@ namespace VoyagerApp.Videos
         public Transform MeshTransform => renderMesh.transform;
 
         bool capture;
-        int prevFrame;
+        long prevFrame;
 
         Video video;
         VideoPlayer player;
@@ -46,6 +46,8 @@ namespace VoyagerApp.Videos
 
             if (TimeUtils.GetFrameOfVideo(video) == 0 && player.isPlaying)
                 SetFrame(TimeUtils.GetFrameOfVideo(video));
+
+            prevFrame = player.frame;
 
             if (stopRequested)
             {

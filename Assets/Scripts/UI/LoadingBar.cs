@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,6 +39,7 @@ namespace VoyagerApp.UI.Overlays
 
         public void CancelBtnClicked()
         {
+            activeProcess.Cancel();
             LoadingProcessFinished(activeProcess);
         }
 
@@ -95,11 +97,18 @@ namespace VoyagerApp.UI.Overlays
         public string title { get; private set; }
         internal bool active;
 
+        public Action onCancel;
+
         internal LoadingBarProcess(LoadingBar loadingBar, string title)
         {
             this.loadingBar = loadingBar;
             this.title = title;
             normalized = 0.0f;
+        }
+
+        internal void Cancel()
+        {
+            onCancel.Invoke();
         }
 
         public void UpdateProgress(float normalized)

@@ -14,6 +14,17 @@ namespace VoyagerApp.Videos
         [JsonIgnore]
         public bool ContainsVideo => frames != 0;
 
+        public long ExistingFramesCount
+        {
+            get
+            {
+                long existing = 0;
+                for (int i = 0; i < frames; i++)
+                    if (FrameExists(i)) existing++;
+                return existing;
+            }
+        }
+
         public void RecreateBuffer(long frames)
         {
             this.frames = frames;

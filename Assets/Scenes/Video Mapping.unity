@@ -328,6 +328,7 @@ GameObject:
   - component: {fileID: 417419805}
   - component: {fileID: 417419806}
   - component: {fileID: 417419807}
+  - component: {fileID: 417419808}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -376,6 +377,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42e66a64b375c4627af7d7af16be8dd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &417419808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417419804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcedaede69f244d1693bee72ad896f48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  riskFactor: 0.05
+  requestTime: 1
 --- !u!1001 &432099482
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -966,6 +981,7 @@ MonoBehaviour:
   splitter: {fileID: 131769818}
   selectAllBtn: {fileID: 1365245177}
   deselectAllBtn: {fileID: 488969197}
+  existingFrames: {fileID: 417419808}
 --- !u!225 &687523372
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1659,6 +1675,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4355525102777335308, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: m_Name
+      value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460918169830810463, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: inVideoMapping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460918169830810463, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: mapping
+      value: 
+      objectReference: {fileID: 417419806}
     - target: {fileID: 5239298401100508583, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_AnchorMin.x
@@ -1834,21 +1865,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4355525102777335308, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
-      propertyPath: m_Name
-      value: Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 3460918169830810463, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
-      propertyPath: inVideoMapping
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3460918169830810463, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
-      propertyPath: mapping
-      value: 
-      objectReference: {fileID: 417419806}
     - target: {fileID: 4355525102777335304, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_LocalPosition.x

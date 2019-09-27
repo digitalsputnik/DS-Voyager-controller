@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Networking;
+using VoyagerApp.Networking.Packages.Voyager;
 using VoyagerApp.UI;
 using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
@@ -53,19 +54,20 @@ namespace VoyagerApp.Workspace.Views
 
         void OnPlay(double startTime, bool fromStop)
         {
-            client.SendPlaymode(lamp, VoyagerPlaybackMode.Play);
+            client.SendPacket(lamp,new SetPlayModePacket(PlaybackMode.Play));
             playing = true;
         }
 
         void OnPause()
         {
-            client.SendPlaymode(lamp, VoyagerPlaybackMode.Pause);
+            client.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Pause));
             playing = false;
         }
 
         void OnStop()
         {
-            client.SendPlaymode(lamp, VoyagerPlaybackMode.Stop);
+            client.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Stop));
+
             var buffer = lamp.buffer;
             long frame = buffer.GetClosestIndex(0, 3);
             if (buffer.FrameExists(frame))

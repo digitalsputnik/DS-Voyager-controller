@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Projects;
+using VoyagerApp.Utilities;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -29,6 +30,13 @@ namespace VoyagerApp.UI.Menus
         public void Save()
         {
             Project.Save(filenameField.text);
+            GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+        }
+
+        public void Export()
+        {
+            string path = Project.Export("export");
+            bool success = FileUtils.SaveProject(path, filenameField.text);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
     }

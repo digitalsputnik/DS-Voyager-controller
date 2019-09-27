@@ -9,6 +9,6 @@ namespace VoyagerApp.Lamps
 
         public static string VoyagerAnimationVersion => instance.voyagerAnimVersion;
 
-        [SerializeField] string voyagerAnimVersion;
+        [SerializeField] string voyagerAnimVersion = ""; 
     }
 }

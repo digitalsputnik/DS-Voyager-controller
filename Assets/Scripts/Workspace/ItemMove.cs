@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEngine;
 using VoyagerApp.UI;
+using VoyagerApp.Utilities;
 using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.Workspace
@@ -69,8 +70,17 @@ namespace VoyagerApp.Workspace
             var bounds = GetComponent<BoxCollider2D>().bounds;
             bounds.Expand(Vector3.forward * 100.0f);
 
-            if (!bounds.Contains(CameraMove.pointerPosition) || CameraMove.Used)
+            var hits = Physics2D.RaycastAll(cam.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            bool contains = false;
+            foreach (var hit in hits)
+                if (hit.transform == transform) contains = true;
+
+            if (!contains || CameraMove.Used)
                 return;
+
+            if (WorkspaceUtils.SelectedLamps.Count > 1 &&
+                WorkspaceManager.instance.GetItemsOfType<SelectionControllerView>().Length != 0)
+                if (targetItem is LampItemView) return;
 
             Vector2 pressPosition = CameraMove.pointerPosition;
 
@@ -83,7 +93,11 @@ namespace VoyagerApp.Workspace
             startDistance = Vector2.Distance(objectStartPosition, pressPosition);
             startScale = target.localScale;
 
-            float scaleDistance = transform.lossyScale.x * 0.85f / 2.0f;
+            float longest =
+                transform.lossyScale.x > transform.lossyScale.y ?
+                transform.lossyScale.x : transform.lossyScale.y;
+
+            float scaleDistance = longest * 0.85f / 2.0f;
             moving = startDistance < scaleDistance;
 
             prevUnder.Clear();

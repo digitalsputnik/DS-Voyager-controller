@@ -9,6 +9,9 @@ public class MoveIcon : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     [SerializeField] Color pressedColor = Color.white;
     [SerializeField] Color releasedColor = Color.white;
+    [Space(3)]
+    [SerializeField] Sprite hand = null;
+    [SerializeField] Sprite grab = null;
 
     Image image;
 
@@ -39,12 +42,14 @@ public class MoveIcon : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         image.color = pressedColor;
+        image.sprite = grab;
         pressed = true;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         image.color = releasedColor;
+        image.sprite = hand;
         pressed = false;
     }
 

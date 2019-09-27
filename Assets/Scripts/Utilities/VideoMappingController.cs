@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using VoyagerApp.Lamps;
+using VoyagerApp.Networking.Packages;
+using VoyagerApp.Networking.Packages.Voyager;
 using VoyagerApp.UI.Menus;
 using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
@@ -30,6 +33,8 @@ namespace VoyagerApp.UI
 
             SetVideo(video);
             PositionLamps(lamps);
+
+            if (video == null) StartCoroutine(SetWhiteColor(lamps));
         }
 
         public void SetVideo(Video video)
@@ -98,6 +103,35 @@ namespace VoyagerApp.UI
             Vector2 wEnd   = mapper.MeshTransform.TransformPoint(end);
 
             return VectorUtils.AngleFromTo(wStart, wEnd);
+        }
+
+        IEnumerator SetWhiteColor(List<Lamp> lamps)
+        {
+            Itshe itshe = new Itshe(Color.white, 1.0f);
+            Video video = new Video();
+            video.frames = 1;
+
+            double time = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset;
+
+            foreach (var lamp in lamps)
+            {
+                var start = video.lastStartTime + NetUtils.VoyagerClient.TimeOffset;
+                var packet = new PacketCollection(
+                    new SetVideoPacket(video.frames, start),
+                    new SetItshePacket(itshe)
+                );
+                NetUtils.VoyagerClient.SendPacket(lamp, packet, time);
+            }
+
+            yield return new WaitForSeconds(0.3f);
+
+            foreach (var lamp in lamps)
+            {
+                lamp.itshe = itshe;
+                byte[] colors = ColorUtils.LampFrameBufferFromColor(lamp, Color.white);
+                var packet = new SetFramePacket(0, colors);
+                NetUtils.VoyagerClient.SendPacketToVideoPort(lamp, packet, time);
+            }
         }
     }
 }

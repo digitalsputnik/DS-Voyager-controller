@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Newtonsoft.Json;
 using UnityEngine;
 using VoyagerApp.Lamps;
@@ -152,6 +153,69 @@ namespace VoyagerApp.Projects
         }
         #endregion
 
+        #region Import / Export
+        public static string Export(string save)
+        {
+            Save(save);
+
+            var projectPath = Path.Combine(ProjectDirectory(save), PROJECT_FILE);
+            byte[] projectBytes = File.ReadAllBytes(projectPath);
+
+            string json = File.ReadAllText(projectPath);
+            var settings = JsonSettings();
+            var project = JsonConvert.DeserializeObject<Project>(json, settings);
+
+            byte[][] videosBytes = new byte[project.videos.Count][];
+            for (int i = 0; i < project.videos.Count; i++)
+                videosBytes[i] = File.ReadAllBytes(project.videos[i].path);
+
+            ProjectExport export = new ProjectExport
+            {
+                project = projectBytes,
+                videos = videosBytes
+            };
+
+            json = JsonConvert.SerializeObject(export);
+            byte[] bytes = Encoding.UTF8.GetBytes(json);
+
+            string exportPath = Path.Combine(Application.temporaryCachePath, save + "vcp");
+            File.WriteAllBytes(exportPath, bytes);
+
+            Directory.Delete(ProjectDirectory(save), true);
+            return exportPath;
+        }
+        public static string Import(string file)
+        {
+            string name = Path.GetFileNameWithoutExtension(file);
+
+            byte[] exportBytes = File.ReadAllBytes(file);
+            string exportJson = Encoding.UTF8.GetString(exportBytes);
+
+            var export = JsonConvert.DeserializeObject<ProjectExport>(exportJson);
+
+            string projectJson = Encoding.UTF8.GetString(export.project);
+            var settings = JsonSettings();
+            var project = JsonConvert.DeserializeObject<Project>(projectJson, settings);
+
+            var videosPath = Path.Combine(ProjectDirectory(name), VIDEOS);
+            Directory.CreateDirectory(videosPath);
+
+            for (int i = 0; i < project.videos.Count; i++)
+            {
+                string videoName = Path.GetFileName(project.videos[i].path);
+                string newPath = Path.Combine(videosPath, videoName);
+                File.WriteAllBytes(newPath, export.videos[i]);
+                project.videos[i].path = newPath;
+            }
+
+            var projectPath = Path.Combine(ProjectDirectory(name), PROJECT_FILE);
+            projectJson = JsonConvert.SerializeObject(project, settings);
+            File.WriteAllText(projectPath, projectJson);
+
+            return ProjectDirectory(name);
+        }
+        #endregion
+
         public static JsonSerializerSettings JsonSettings()
         {
             var settings = new JsonSerializerSettings();
@@ -206,5 +270,12 @@ namespace VoyagerApp.Projects
                 }
             }
         }
+    }
+
+    [Serializable]
+    public class ProjectExport
+    {
+        public byte[] project;
+        public byte[][] videos;
     }
 }

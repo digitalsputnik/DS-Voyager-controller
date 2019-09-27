@@ -81,7 +81,39 @@ namespace VoyagerApp.Utilities
         }
 
         public static string ProjectPath => Application.persistentDataPath;
-	}
+
+        public static bool SaveProject(string path, string name)
+        {
+            if (Application.isMobilePlatform)
+            {
+                // TODO: Implement!
+                return false;
+            }
+            else
+            {
+                string documents = DocumentsPath;
+                ExtensionFilter[] extensions = { new ExtensionFilter("Voyager Controller Project", "vcp") };
+                string to = FileBrowser.SaveFile("Save Project", documents, $"{name}.vcp", extensions);
+                File.Copy(path, to);
+                return true;
+            }
+        }
+
+        public static void LoadProject(PathHandler onLoaded)
+        {
+            if (Application.isMobilePlatform)
+            {
+                // TODO: Implement!
+            }
+            else
+            {
+                string documents = DocumentsPath;
+                ExtensionFilter[] extensions = { new ExtensionFilter("Voyager Controller Project", "vcp") };
+                string path = FileBrowser.OpenSingleFile("Open Project", documents, extensions);
+                onLoaded.Invoke(path == "" ? null : path);
+            }
+        }
+    }
 
     public delegate void PathHandler(string path);
 }

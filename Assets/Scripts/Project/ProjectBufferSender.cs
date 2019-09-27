@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using UnityEngine;
 using VoyagerApp.Lamps;
 using VoyagerApp.Networking.Packages;
 using VoyagerApp.Networking.Packages.Voyager;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
+using VoyagerApp.Videos;
 
 namespace VoyagerApp.Projects
 {
@@ -15,18 +17,57 @@ namespace VoyagerApp.Projects
         int startCount;
         int doneCount;
         int finished;
-        Queue<Lamp> lamps;
+        int processing;
+
+        List<Lamp> lamps;
         MonoBehaviour behaviour;
+
+        LoadingBarProcess loading;
+
+        double time;
+        long framesAll;
+        Dictionary<Lamp, long> framesSent = new Dictionary<Lamp, long>();
+
+        long allFramesSent
+        {
+            get
+            {
+                long sent = 0;
+                foreach (var val in framesSent.Values)
+                    sent += val;
+                return sent;
+            }
+        }
 
         public ProjectBufferSender(Lamp[] lamps, MonoBehaviour behaviour)
         {
             startCount = lamps.Length;
-            this.lamps = new Queue<Lamp>(lamps);
+            this.lamps = new List<Lamp>(lamps);
             this.behaviour = behaviour;
         }
 
         public void StartSending()
         {
+            loading = LoadingBar.CreateLoadProcess($"SENDING BUFFER TO LAMPS");
+            loading.onCancel = Cancel;
+            time = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset;
+            foreach (var lamp in lamps)
+            {
+                if (lamp.connected)
+                {
+                    framesAll += lamp.buffer.ExistingFramesCount;
+                    Video video = lamp.video;
+
+                    var start = video.lastStartTime + NetUtils.VoyagerClient.TimeOffset;
+                    var packet = new PacketCollection(
+                        new SetVideoPacket(video.frames, start),
+                        new SetFpsPacket((int)video.fps),
+                        new SetItshePacket(lamp.itshe)
+                    );
+                    NetUtils.VoyagerClient.SendPacket(lamp, packet, time);
+                }
+            }
+
             StartSendingToNextLamp();
         }
 
@@ -34,88 +75,93 @@ namespace VoyagerApp.Projects
         {
             if (lamps.Count > 0)
             {
-                Lamp lamp = lamps.Dequeue();
-                doneCount++;
+                processing++;
+                Lamp lamp = lamps[processing & (lamps.Count - 1)];
                 if (lamp.connected)
                     SendBufferToLamp(lamp);
                 else
-                    SendingToLampFinished();
+                    SendingToLampFinished(lamp);
+            }
+            else
+            {
+                loading.UpdateProgress(1.0f);
+                Cancel();
             }
         }
 
         void SendBufferToLamp(Lamp lamp)
         {
-            var loading = LoadingBar.CreateLoadProcess($"SENDING BUFFER TO {lamp.serial} ({doneCount}/{startCount})");
-
-            List<long> indices = new List<long>();
-            for (long i = 0; i < lamp.buffer.frames; i++)
-            {
-                if (lamp.buffer.FrameExists(i))
-                    indices.Add(i);
-            }
-
-            var frames = new Dictionary<long, byte[]>();
-            foreach (var i in indices)
-                frames.Add(i, lamp.buffer.GetFrame(i));
-
-            lamp.SetVideo(lamp.video);
-            lamp.SetItshe(lamp.itshe);
-
-            behaviour.StartCoroutine(SendFramesToLamp(lamp, frames, loading));
+            behaviour.StartCoroutine(SendFramesToLamp(lamp));
         }
 
-        IEnumerator SendFramesToLamp(Lamp lamp, Dictionary<long, byte[]> frames, LoadingBarProcess loading)
+        IEnumerator SendFramesToLamp(Lamp lamp)
         {
+            Debug.Log($"{lamp.serial} Started sending buffer");
             var client = NetUtils.VoyagerClient;
-            var indices = frames.Keys.ToArray();
-
-            // SEND FRAMES
-            foreach (var i in indices)
-                lamp.PushFrame(frames[i], i);
 
             // REQUEST MISSING FRAMES
-            long[] missing = null;
+            long[] missing = new long[0];
             NetUtils.VoyagerClient.onReceived += OnReceived;
 
+            bool timeout = false;
+            float startTime = Time.time;
             bool responseReceived = false;
-            while (!responseReceived)
-            {
-                var packet = new MissingFramesRequestPacket();
-                client.SendPacket(lamp, packet);
-                yield return new WaitForSeconds(0.3f);
-            }
 
             // RECEIVE MISSING FRAMES
             void OnReceived(object sender, byte[] data)
             {
                 try
                 {
-                    var packet = Packet.Deserialize<MissingFramesResponsePacket>(data);
-                    missing = GetExistingIndices(lamp, packet.indices);
-                    NetUtils.VoyagerClient.onReceived -= OnReceived;
-                    responseReceived = true;
+                    IPEndPoint endpoint = (IPEndPoint)sender;
+                    if (endpoint.Address.ToString() == lamp.address.ToString())
+                    {
+                        var packet = Packet.Deserialize<MissingFramesResponsePacket>(data);
+                        missing = GetExistingIndices(lamp, packet.indices);
+                        responseReceived = true;
+
+                        framesSent[lamp] = lamp.buffer.ExistingFramesCount - missing.Length;
+                        loading.UpdateProgress((float)allFramesSent / framesAll);
+                    }
                 }
                 catch (System.Exception) { }
             }
 
+            var sendPacket = new MissingFramesRequestPacket();
+            client.SendPacket(lamp, sendPacket);
 
-            // PUT TOGETHER MISSING FRAMES
-            var missingFrames = new Dictionary<long, byte[]>();
-            foreach (var i in missing)
-                missingFrames.Add(i, lamp.buffer.GetFrame(i));
+            while(!responseReceived && !timeout)
+            {
+                float passed = Time.time - startTime;
+                timeout = passed >= 3.0f;
+                yield return new WaitForSeconds(0.1f);
+            }
 
-            // SEND MISSING FRAMES AGAIN, IF ANY
-            if (missing.Length == 0)
+            NetUtils.VoyagerClient.onReceived -= OnReceived;
+
+            if (responseReceived)
             {
-                loading.UpdateProgress(1.0f);
-                SendingToLampFinished();
+                Debug.Log($"{lamp.serial} here!");
+
+                long sent = 0;
+
+                foreach (var index in missing)
+                {
+                    var packet = new SetFramePacket(index, lamp.buffer.GetFrame(index));
+                    NetUtils.VoyagerClient.SendPacketToVideoPort(lamp, packet, time);
+                    framesSent[lamp] = lamp.buffer.ExistingFramesCount - missing.Length + sent;
+                    loading.UpdateProgress((float)allFramesSent / framesAll);
+                    yield return new WaitForSeconds(0.01f);
+                    sent++;
+                }
+
+                if (missing.Length == 0)
+                    SendingToLampFinished(lamp);
+
+                yield return new WaitForSeconds(0.1f);
             }
-            else
-            {
-                float process = (float)(lamp.buffer.frames - missingFrames.Count) / lamp.buffer.frames;
-                loading.UpdateProgress(process);
-                behaviour.StartCoroutine(SendFramesToLamp(lamp, missingFrames, loading));
-            }
+
+            // MOVE TO NEXT
+            StartSendingToNextLamp();
         }
 
         long[] GetExistingIndices(Lamp lamp, long[] indices)
@@ -129,9 +175,15 @@ namespace VoyagerApp.Projects
             return existing.ToArray();
         }
 
-        void SendingToLampFinished()
+        void SendingToLampFinished(Lamp lamp)
         {
+            lamps.Remove(lamp);
             StartSendingToNextLamp();
+        }
+
+        public void Cancel()
+        {
+            behaviour.StopAllCoroutines();
         }
     }
 }

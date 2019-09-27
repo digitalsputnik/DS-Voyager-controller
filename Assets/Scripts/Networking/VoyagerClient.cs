@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -29,7 +28,6 @@ namespace VoyagerApp.Networking
 
         RudpClient discovery;
         RudpClient dmx;
-        RudpClient video;
 
         OffsetService offset;
 
@@ -37,7 +35,6 @@ namespace VoyagerApp.Networking
         {
             discovery = new RudpClient(DISCOVERY_PORT);
             dmx = new RudpClient(SETTINGS_PORT);
-            video = new RudpClient(VIDEO_PORT);
 
             offset = new OffsetService();
 
@@ -46,14 +43,6 @@ namespace VoyagerApp.Networking
         }
 
         public double TimeOffset => offset.Offset.TotalSeconds;
-
-        public void SendPlaymode(Lamp lamp, VoyagerPlaybackMode mode)
-        {
-            double time = TimeUtils.Epoch + TimeOffset;
-            var container = new VoyagerPlaybackPackage(mode, time);
-            IPEndPoint endpoint = new IPEndPoint(lamp.address, SETTINGS_PORT);
-            Send(container.ToData(), endpoint);
-        }
 
         public void SendPacket(Lamp lamp, Packet packet)
         {
@@ -109,19 +98,6 @@ namespace VoyagerApp.Networking
             var package = VoyagerNetworkMode.Master(lamp.serial);
             var endpoint = new IPEndPoint(lamp.address, DISCOVERY_PORT);
             Send(package.ToData(), endpoint);
-        }
-
-        public void SendVideoFrameData(Lamp lamp, long frame, Color32[] colors)
-        {
-            var container = VideoFrameData.FromColors(frame, colors);
-            byte[] data = container.ToData();
-            SendVideoFrameData(lamp, data);
-        }
-
-        public void SendVideoFrameData(Lamp lamp, byte[] data)
-        {
-            IPEndPoint endpoint = new IPEndPoint(lamp.address, VIDEO_PORT);
-            Send(data, endpoint);
         }
 
         public override void Send(byte[] data, object info)

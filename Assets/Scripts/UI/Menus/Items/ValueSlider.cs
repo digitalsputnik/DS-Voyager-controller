@@ -14,7 +14,6 @@ namespace VoyagerApp.UI.Menus
         public float timer = 0.6f;
         [Space(3)]
         [SerializeField] Text valueText = null;
-        [SerializeField] Image fillImage = null;
         [SerializeField] RectTransform controlArea = null;
         [SerializeField] InputField field = null;
         public bool isTemperature;
@@ -99,19 +98,6 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
-        //public void OnDrag(PointerEventData eventData)
-        //{
-        //    if (state == SliderState.Click)
-        //        state = SliderState.Slide;
-
-        //    if (state == SliderState.Slide)
-        //    {
-        //        float val = HorizontalValueFromPosition(eventData.position);
-        //        SetValue(val);
-        //    }
-        //}
-
-
         public void textInput()
         {
             value = int.Parse(field.text);
@@ -147,7 +133,6 @@ namespace VoyagerApp.UI.Menus
             {
                 value = val;
                 normalized = (float)(value - min) / (max - min);
-//                field.text = value.ToString();
                 UpdateUI(normalized);
                 var eventData = new ValueSliderEventData(min, max, value, normalized);
                 onChanged.Invoke(eventData);
@@ -156,7 +141,6 @@ namespace VoyagerApp.UI.Menus
 
         public void SetValue(float val)
         {
-            //Different calculation for Temperature
             if (isTemperature)
             {
                 int iVal = (int)((max - min) * val) + min;
@@ -174,7 +158,6 @@ namespace VoyagerApp.UI.Menus
 
         void UpdateUI(float fill)
         {
-            //fillImage.fillAmount = fill;
             valueText.text = value.ToString();
             foreach (GameObject sText in sliderText)
                 sText.GetComponent<Text>().text = value.ToString();

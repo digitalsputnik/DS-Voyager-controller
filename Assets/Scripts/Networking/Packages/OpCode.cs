@@ -35,6 +35,7 @@ namespace VoyagerApp.Networking.Packages
         SetFrame,
         SetEffect,
         MissingFramesRequest,
-        MissingFramesResponse
+        MissingFramesResponse,
+        SetPlayMode
     }
 }

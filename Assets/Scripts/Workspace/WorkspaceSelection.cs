@@ -35,7 +35,7 @@ namespace VoyagerApp.Workspace
         public delegate void SelectionHandler(WorkspaceSelection selection);
         public event SelectionHandler onSelectionChanged;
 
-        [SerializeField] float clickTime                = 0.2f;
+        //[SerializeField] float clickTime                = 0.2f;
         [SerializeField] List<LampItemView> selected    = new List<LampItemView>();
         [SerializeField] bool selectingEnabled;
         [SerializeField] bool showSelection;

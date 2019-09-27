@@ -11,13 +11,10 @@ namespace VoyagerApp.UI.Menus
     public class ClientModeMenu : Menu
     {
         [SerializeField] float ssidPollTimeout      = 10.0f;
-        [SerializeField] Text infoText              = null;
         [SerializeField] Toggle ssidsToggle         = null;
         [SerializeField] Dropdown ssidsDropdown     = null;
-        [SerializeField] Toggle ssidToggle          = null;
         [SerializeField] InputField ssidField       = null;
         [SerializeField] InputField passwordField   = null;
-        [SerializeField] Button setButton           = null;
 
         bool gotSsids;
 

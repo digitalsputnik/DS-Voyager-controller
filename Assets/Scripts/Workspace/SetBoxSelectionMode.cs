@@ -8,8 +8,8 @@ namespace VoyagerApp.UI
     {
         [SerializeField] Color pressedColor = Color.white;
         [SerializeField] Color releasedColor = Color.white;
-        [SerializeField] Text modeText = null;
-        [SerializeField] string[] modes;
+        [SerializeField] Image modeImage = null;
+        [SerializeField] Sprite[] modes = null;
 
         int index = 2;
 
@@ -28,14 +28,14 @@ namespace VoyagerApp.UI
         {
             index++;
             index = index % modes.Length;
-            modeText.color = pressedColor;
+            modeImage.color = pressedColor;
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            modeText.text = $"BOX SELECTION MODE: {modes[index]}";
+            modeImage.sprite = modes[index];
             BoxSelection.mode = (BoxSelectionMode)index;
-            modeText.color = releasedColor;
+            modeImage.color = releasedColor;
         }
     }
 }

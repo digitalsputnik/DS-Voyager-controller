@@ -1,4 +1,18 @@
-﻿2.0.61-beta                                                           24.09.2019
+﻿2.0.69                                                                27.09.2019
+- Fix: Moving items on pictures and in video mapping.
+- Fix: Sending video buffer to lamps while loading.
+- Fix: Play, pause and stop. Network protocol refactored to op codes.
+- Fix: Updating SHOULD work on iOS. UNTESTED!
+- Add: Import / export disabled on mobile platforms. #184
+- Add: Alert int video mapping if full video is not yet rendered. #162
+- Add: Sending white frame, if no video.
+
+2.0.62-beta                                                           25.09.2019
+- Add: Import / Export support.
+- Change: Icons.
+- New: Update bundle.
+
+2.0.61-beta                                                           24.09.2019
 - Change: Lamps default mapping position is on video.
 - Change: Colorwheel fields are same as fps.
 - Change: Slider menu is refactored.

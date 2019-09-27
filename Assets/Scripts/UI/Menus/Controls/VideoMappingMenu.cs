@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using VoyagerApp.Networking.Packages.Voyager;
+using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
@@ -17,6 +18,8 @@ namespace VoyagerApp.UI.Menus
         [Space(4)]
         [SerializeField] GameObject selectAllBtn    = null;
         [SerializeField] GameObject deselectAllBtn  = null;
+        [Space(4)]
+        [SerializeField] CheckForExistingFrames existingFrames = null;
 
         Video video;
         bool hasFpsInitialized;
@@ -83,7 +86,17 @@ namespace VoyagerApp.UI.Menus
 
         public void ReturnToWorkspace()
         {
-            SceneManager.LoadScene(0);
+            if (existingFrames.allRendered)
+                SceneManager.LoadScene(0);
+            else
+            {
+                DialogBox.Show(
+                    "ARE YOU SURE?",
+                    "ALL FRAMES ARE NOT RENDERED, YET.",
+                    "STAY", "EXIT",
+                    () => { }, () => SceneManager.LoadScene(0)
+                );
+            }
         }
 
         void OnDestroy()

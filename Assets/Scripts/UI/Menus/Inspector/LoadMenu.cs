@@ -2,6 +2,7 @@
 using System.IO;
 using UnityEngine;
 using VoyagerApp.Projects;
+using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
 
 namespace VoyagerApp.UI.Menus
@@ -30,17 +31,31 @@ namespace VoyagerApp.UI.Menus
             item.Remove();
         }
 
+        public void Import()
+        {
+            FileUtils.LoadProject(OnImportFile);
+        }
+
+        void OnImportFile(string file)
+        {
+            var path = Project.Import(file);
+            DisplayItem(path);
+        }
+
         void DisplayAllItems()
         {
             var projPath = Project.ProjectsDirectory;
             var projects = Directory.GetDirectories(projPath);
 
             foreach (var project in projects)
-            {
-                LoadMenuItem item = Instantiate(itemPrefab, container);
-                item.SetPath(project);
-                items.Add(item);
-            }
+                DisplayItem(project);
+        }
+
+        void DisplayItem(string project)
+        {
+            LoadMenuItem item = Instantiate(itemPrefab, container);
+            item.SetPath(project);
+            items.Add(item);
         }
     }
 }

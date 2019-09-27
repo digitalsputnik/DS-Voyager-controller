@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------
 
 using UnityEngine;
+using VoyagerApp.Lamps;
 
 namespace VoyagerApp.Utilities
 {
@@ -59,6 +60,14 @@ namespace VoyagerApp.Utilities
                 colors[i] = Color.Lerp(color, videoColor, itshe.e);
             }
             return colors;
+        }
+
+        public static byte[] LampFrameBufferFromColor(Lamp lamp, Color color)
+        {
+            Color32[] colors = new Color32[lamp.pixels];
+            for (int i = 0; i < lamp.pixels; i++)
+                colors[i] = color;
+            return ColorsToBytes(colors);
         }
     }
 
