@@ -108,14 +108,14 @@ namespace VoyagerApp.UI.Overlays
 
         internal void Cancel()
         {
-            onCancel.Invoke();
+            onCancel?.Invoke();
         }
 
         public void UpdateProgress(float normalized)
         {
             this.normalized = normalized;
             if (active) loadingBar.UpdateProgress(normalized);
-            if (normalized >= 1.0f)
+            if (normalized >= 0.99f)
                 loadingBar.LoadingProcessFinished(this);
         }
 

@@ -15,10 +15,17 @@ namespace VoyagerApp.Networking.Packages
 
         protected Packet(OpCode op) => this.op = op;
 
-        public static T Deserialize<T>(byte[] data)
+        public static T Deserialize<T>(byte[] data) where T : Packet
         {
-            string json = Encoding.UTF8.GetString(data);
-            return JsonConvert.DeserializeObject<T>(json);
+            try
+            {
+                string json = Encoding.UTF8.GetString(data);
+                return JsonConvert.DeserializeObject<T>(json);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public byte[] Serialize()

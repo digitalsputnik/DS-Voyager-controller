@@ -21,7 +21,10 @@ public class MainThread : MonoBehaviour
 
     void Update()
     {
-        while (actions.Count > 0)
-            actions.Dequeue().Invoke();
+        lock (actions)
+        {
+            while (actions.Count > 0)
+                actions.Dequeue()?.Invoke();
+        }
     }
 }

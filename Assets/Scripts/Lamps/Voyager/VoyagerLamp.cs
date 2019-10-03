@@ -32,6 +32,7 @@ namespace VoyagerApp.Lamps.Voyager
         public override int pixels => length;
         public override string version => chipVersion == null ? "0.0" : string.Join(".", chipVersion);
         public override bool updated => version == UpdateSettings.VoyagerAnimationVersion;
+        public override double lastTimestamp { get; protected set; }
 
         public VoyagerLamp()
         {
@@ -80,7 +81,7 @@ namespace VoyagerApp.Lamps.Voyager
             return WorkspaceManager.instance.InstantiateItem<VoyagerItemView>(this, position, scale, rotation);
         }
 
-        double last = 0.0f;
+        public double last = 0.0f;
         bool skip = false;
 
         public override void SetVideo(Video video)
@@ -93,9 +94,9 @@ namespace VoyagerApp.Lamps.Voyager
                 new SetFpsPacket((int)video.fps),
                 new SetItshePacket(itshe)
             );
-
             NetUtils.VoyagerClient.SendPacket(this, packet, last);
             buffer.RecreateBuffer(video.frames);
+            lastTimestamp = last;
             skip = true;
         }
 
@@ -127,9 +128,12 @@ namespace VoyagerApp.Lamps.Voyager
                 return;
             }
 
-            base.PushFrame(colors, frame);
-            var packet = new SetFramePacket(frame, colors);
-            NetUtils.VoyagerClient.SendPacketToVideoPort(this, packet, last);
+            if (!buffer.FrameExists(frame))
+            {
+                base.PushFrame(colors, frame);
+                var packet = new SetFramePacket(frame, colors);
+                NetUtils.VoyagerClient.SendPacketToVideoPort(this, packet, last);
+            }
         }
     }
 }

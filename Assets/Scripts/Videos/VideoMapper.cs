@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Video;
 using VoyagerApp.UI;
@@ -33,6 +34,8 @@ namespace VoyagerApp.Videos
             PlayPauseStop.onPlay  += OnPlayClicked;
             PlayPauseStop.onPause += OnPauseClicked;
             PlayPauseStop.onStop  += OnStopClicked;
+
+            StartCoroutine(FpsCorrector());
         }
 
         void Update()
@@ -43,9 +46,6 @@ namespace VoyagerApp.Videos
             Texture2D frame = TextureUtils.RenderTextureToTexture2D(render);
             PushPixelsToLamps(frame);
             Destroy(frame);
-
-            if (TimeUtils.GetFrameOfVideo(video) == 0 && player.isPlaying)
-                SetFrame(TimeUtils.GetFrameOfVideo(video));
 
             prevFrame = player.frame;
 
@@ -63,6 +63,18 @@ namespace VoyagerApp.Videos
             PlayPauseStop.onPlay  -= OnPlayClicked;
             PlayPauseStop.onPause -= OnPauseClicked;
             PlayPauseStop.onStop  -= OnStopClicked;
+        }
+
+        IEnumerator FpsCorrector()
+        {
+            if (capture)
+            {
+                if (TimeUtils.GetFrameOfVideo(video) != player.frame)
+                    SetFrame(TimeUtils.GetFrameOfVideo(video));
+            }
+
+            yield return new WaitForSeconds(Random.Range(0.0f, 60.0f));
+            StartCoroutine(FpsCorrector());
         }
 
         #region Setting video

@@ -1,84 +1,63 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Linq;
 using UnityEngine;
-using VoyagerApp.Lamps;
-using VoyagerApp.Networking.Packages;
-using VoyagerApp.Networking.Packages.Voyager;
+using UnityEngine.UI;
+using VoyagerApp.Projects;
 using VoyagerApp.Utilities;
 
 namespace VoyagerApp.UI
 {
     public class CheckForExistingFrames : MonoBehaviour
     {
-        [SerializeField] float riskFactor = 0.05f;
+        public bool allRendered;
         [SerializeField] float requestTime = 1.0f;
+        [SerializeField] Text progressText = null;
+        [SerializeField] Image fillImage = null;
 
-        Dictionary<Lamp, bool> lampToRendered = new Dictionary<Lamp, bool>();
-        public bool allRendered => lampToRendered.All(p => p.Value == true);
+        ProjectLoadBuffer loading;
+        bool done;
 
         public void Start()
         {
             InvokeRepeating("CheckForFrames", 0.5f, requestTime);
         }
 
-        public void Clear()
-        {
-            foreach (var lamp in lampToRendered.Keys)
-                lampToRendered[lamp] = false;
-        }
-
         void CheckForFrames()
         {
-            foreach (var lamp in WorkspaceUtils.Lamps)
-                StartCoroutine(IEnumCheckForLampFrames(lamp));
-        }
-
-        IEnumerator IEnumCheckForLampFrames(Lamp lamp)
-        {
-            if (lamp.video == null)
+            if (AllBuffered)
             {
-                lampToRendered[lamp] = true;
+                if (loading == null && !done)
+                {
+                    loading = new ProjectLoadBuffer(WorkspaceUtils.Lamps, UpdateFill);
+                    loading.StartSending(false);
+                }
             }
             else
             {
-                var client = NetUtils.VoyagerClient;
-                NetUtils.VoyagerClient.onReceived += OnReceived;
-
-                long[] missing = new long[0];
-                var endPacket = new MissingFramesRequestPacket();
-                client.SendPacket(lamp, endPacket);
-
-                float starttime = Time.time;
-                bool responseReceived = false;
-
-                yield return new WaitUntil(() =>
-                {
-                    float passed = Time.time - starttime;
-                    bool timeout = passed > requestTime;
-                    bool over = timeout || responseReceived;
-                    if (over) NetUtils.VoyagerClient.onReceived -= OnReceived;
-                    return over;
-                });
-
-                void OnReceived(object sender, byte[] data)
-                {
-                    try
-                    {
-                        IPEndPoint endpoint = (IPEndPoint)sender;
-                        if (endpoint.Address.ToString() == lamp.address.ToString())
-                        {
-                            var packet = Packet.Deserialize<MissingFramesResponsePacket>(data);
-                            missing = packet.indices;
-                            responseReceived = true;
-                        }
-                    }
-                    catch (System.Exception) { }
-                }
-
-                lampToRendered[lamp] = missing.Length < lamp.buffer.frames * riskFactor;
+                UpdateFill((float)AllFramesBuffered / AllFrames * 0.9f);
+                if (done) done = false;
+                if (allRendered) allRendered = false;
             }
         }
+
+        void UpdateFill(float value)
+        {
+            if (progressText == null) return;
+            if (System.Math.Abs(value) < 0.01) return;
+
+
+            progressText.text = $"UPLOADING PROGRESS {(int)(value * 100)}%";
+            fillImage.fillAmount = value;
+
+            if (value >= 1.0)
+            {
+                done = true;
+                loading = null;
+                allRendered = true;
+            }
+        }
+
+        bool AllBuffered => WorkspaceUtils.Lamps.All(l => l.buffer.ExistingFramesCount == l.buffer.frames);
+        long AllFrames => WorkspaceUtils.Lamps.Sum(l => l.buffer.frames);
+        long AllFramesBuffered => WorkspaceUtils.Lamps.Sum(l => l.buffer.ExistingFramesCount);
     }
 }

@@ -1,6 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using Crosstales.FB;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace VoyagerApp.Utilities
@@ -94,6 +98,7 @@ namespace VoyagerApp.Utilities
                 string documents = DocumentsPath;
                 ExtensionFilter[] extensions = { new ExtensionFilter("Voyager Controller Project", "vcp") };
                 string to = FileBrowser.SaveFile("Save Project", documents, $"{name}.vcp", extensions);
+                if (to == string.Empty) return false;
                 File.Copy(path, to);
                 return true;
             }
@@ -112,6 +117,33 @@ namespace VoyagerApp.Utilities
                 string path = FileBrowser.OpenSingleFile("Open Project", documents, extensions);
                 onLoaded.Invoke(path == "" ? null : path);
             }
+        }
+
+        public static async Task<string> ReadAllTextAsync(string path)
+        {
+            string result;
+            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
+                result = await reader.ReadToEndAsync();
+            return result;
+        }
+
+        public static bool IsJsonValid(string strInput)
+        {
+            var comp = StringComparison.Ordinal;
+            strInput = strInput.Trim();
+            if ((strInput.StartsWith("{", comp) && strInput.EndsWith("}", comp)) ||
+                (strInput.StartsWith("[", comp) && strInput.EndsWith("]", comp)))
+            {
+                try
+                {
+                    var obj = JToken.Parse(strInput);
+                    return true;
+                }
+                catch { return false; }
+            }
+
+            return false;
         }
     }
 

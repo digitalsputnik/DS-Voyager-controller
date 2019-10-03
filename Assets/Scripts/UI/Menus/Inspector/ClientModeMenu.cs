@@ -12,7 +12,7 @@ namespace VoyagerApp.UI.Menus
     {
         [SerializeField] float ssidPollTimeout      = 10.0f;
         [SerializeField] Toggle ssidsToggle         = null;
-        [SerializeField] Dropdown ssidsDropdown     = null;
+        [SerializeField] ListPicker ssidList   = null;
         [SerializeField] InputField ssidField       = null;
         [SerializeField] InputField passwordField   = null;
 
@@ -32,12 +32,10 @@ namespace VoyagerApp.UI.Menus
 
         void SsidsToggleChanged(bool value)
         {
-            if (value && (!gotSsids || ssidsDropdown.options.Count < 2))
+            if (value && (!gotSsids || ssidList.items.Count < 2))
             {
-                ssidsDropdown.interactable = false;
-                ssidsDropdown.options.Clear();
-                var loading = new List<string>(new string[] { "Loading" });
-                ssidsDropdown.AddOptions(loading);
+                ssidList.interactable = false;
+                ssidList.SetItems("Loading");
                 StartCoroutine(IEnumGetSsidListFromLamps());
             }
         }
@@ -61,7 +59,6 @@ namespace VoyagerApp.UI.Menus
 
             void OnSsidsReceived(string[] ssids)
             {
-                foreach (var ssid in ssids) Debug.Log(ssid);
                 allSsids.Add(ssids.ToList());
                 gathered++;
             }
@@ -99,15 +96,12 @@ namespace VoyagerApp.UI.Menus
             if (ssids.Count > 0)
             {
                 gotSsids = true;
-                ssidsDropdown.ClearOptions();
-                ssidsDropdown.AddOptions(ssids);
-                ssidsDropdown.interactable = ssidsToggle.isOn;
+                ssidList.SetItems(ssids.ToArray());
+                ssidList.interactable = ssidsToggle.isOn;
             }
             else
             {
-                ssidsDropdown.options.Clear();
-                var loading = new List<string>(new string[] { "Not found" });
-                ssidsDropdown.AddOptions(loading);
+                ssidList.SetItems("Not found");
             }
         }
 
@@ -128,7 +122,7 @@ namespace VoyagerApp.UI.Menus
         string GetSsid()
         {
             if (gotSsids && ssidsToggle.isOn)
-                return ssidsDropdown.options[ssidsDropdown.value].text;
+                return ssidList.selected;
 
             return ssidField.text;
         }

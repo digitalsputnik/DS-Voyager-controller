@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 956265330751005176}
   - component: {fileID: 7627344489101607328}
   - component: {fileID: 3973544655850096084}
+  - component: {fileID: 5139091592045789423}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -85,3 +86,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f6494d18e03b47a89205abd030da1ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5139091592045789423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956265330751005178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb1df5edc4081416ca0373d00d5d3cb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  voyagerAnimVersion: 1.23

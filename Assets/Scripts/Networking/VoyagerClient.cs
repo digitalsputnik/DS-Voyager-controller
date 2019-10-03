@@ -17,6 +17,8 @@ namespace VoyagerApp.Networking
 {
     public class VoyagerClient : LampClient
     {
+        public const bool DEBUG = true;
+
         public const int  DISCOVERY_PORT = 30000;
         public const float DISCOVERY_INTERVAL = 1f;
 
@@ -102,6 +104,8 @@ namespace VoyagerApp.Networking
 
         public override void Send(byte[] data, object info)
         {
+            if (DEBUG) Debug.Log(Encoding.UTF8.GetString(data));
+
             IPEndPoint endpoint = (IPEndPoint)info;
             discovery.Send(endpoint, data);
         }
@@ -156,6 +160,7 @@ namespace VoyagerApp.Networking
             {
                 IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
                 byte[] data = client.Receive(ref sender);
+                LampManager.instance.GetLampWithAddress(sender.Address)?.PushData(data);
                 InvokeReceived(sender, data);
             }
         }

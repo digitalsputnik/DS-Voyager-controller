@@ -128,7 +128,7 @@ namespace VoyagerApp.Lamps.Voyager
 
             ssh.RunCommand($"tar -xf {BUNDLE_DEST}/{BUNDLE_FILE} -C /mnt/data/");
 
-            var installationCmd = $"python3 {BUNDLE_DEST}/update3.py";
+            var installationCmd = $"nohup python3 {BUNDLE_DEST}/update3.py";
             var installation = ssh.CreateCommand(installationCmd);
             installation.BeginExecute();
 

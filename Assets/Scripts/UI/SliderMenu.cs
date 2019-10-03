@@ -9,8 +9,8 @@ namespace VoyagerApp.UI.Menus
         void Awake() => instance = this;
 
         public Slider slider;
-        public Text text;
-        public Text valueText;
+        public Text titleText;
+        public InputField valueInputField;
 
         IntField toModify;
 
@@ -23,16 +23,20 @@ namespace VoyagerApp.UI.Menus
             rect.offsetMax = new Vector2(0.0f, 0.0f);
 
             slider.onValueChanged.AddListener(ValueChanged);
+            valueInputField.onValueChanged.AddListener(InputChanged);
+            valueInputField.onEndEdit.AddListener(ExitEdit);
         }
 
         void OnDestroy()
         {
             slider.onValueChanged.RemoveListener(ValueChanged);
+            valueInputField.onValueChanged.RemoveListener(InputChanged);
+            valueInputField.onEndEdit.RemoveListener(ExitEdit);
         }
 
         public void Use(IntField field)
         {
-            text.text = field.gameObject.name.ToUpper();
+            titleText.text = field.gameObject.name.ToUpper();
             toModify = field;
             slider.value = field.normalized;
             Open = true;
@@ -49,7 +53,38 @@ namespace VoyagerApp.UI.Menus
             if (toModify != null)
             {
                 toModify.SetValue(value);
-                valueText.text = toModify.Value.ToString();
+
+                valueInputField.onValueChanged.RemoveListener(InputChanged);
+                valueInputField.text = toModify.Value.ToString();
+                valueInputField.onValueChanged.AddListener(InputChanged);
+            }
+        }
+
+        void InputChanged(string text)
+        {
+            if (text == string.Empty) return;
+
+            if (toModify != null)
+            {
+                int value = int.Parse(text);
+                toModify.SetValue(value);
+                slider.onValueChanged.RemoveListener(ValueChanged);
+                slider.normalizedValue = toModify.normalized;
+                slider.onValueChanged.AddListener(ValueChanged);
+            }
+        }
+
+        void ExitEdit(string text)
+        {
+            if (toModify != null)
+            {
+                int value = int.Parse(text);
+                if (value > toModify.max || value < toModify.min)
+                {
+                    value = Mathf.Clamp(value, toModify.min, toModify.max);
+                    valueInputField.text = value.ToString();
+                    return;
+                }
             }
         }
     }

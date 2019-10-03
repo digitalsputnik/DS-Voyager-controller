@@ -29,9 +29,7 @@ namespace VoyagerApp.Videos
         {
             this.frames = frames;
             framesToBuffer = new byte[frames][];
-
-            for (int f = 0; f < frames; f++)
-                framesToBuffer[f] = new byte[0];
+            ClearBuffer();
         }
 
         public void SetFrame(long frame, byte[] buffer)
@@ -67,6 +65,12 @@ namespace VoyagerApp.Videos
         public byte[] GetFrame(long frame)
         {
             return framesToBuffer[frame];
+        }
+
+        public void ClearBuffer()
+        {
+            for (int f = 0; f < frames; f++)
+                framesToBuffer[f] = new byte[0];
         }
     }
 }

@@ -102,11 +102,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Saturation
       objectReference: {fileID: 0}
-    - target: {fileID: 1418213714327141904, guid: 25fac6f589d484d1fba3a2264c3f4e64,
-        type: 3}
-      propertyPath: m_Text
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1418213714044641569, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -216,6 +211,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Text
       value: SATURATION
+      objectReference: {fileID: 0}
+    - target: {fileID: 1418213714327141904, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: m_Text
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25fac6f589d484d1fba3a2264c3f4e64, type: 3}
@@ -379,11 +379,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Temperature
       objectReference: {fileID: 0}
-    - target: {fileID: 1418213714327141904, guid: 25fac6f589d484d1fba3a2264c3f4e64,
-        type: 3}
-      propertyPath: m_Text
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1418213714044641569, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -509,6 +504,11 @@ PrefabInstance:
       propertyPath: startValue
       value: 5600
       objectReference: {fileID: 0}
+    - target: {fileID: 1418213714327141904, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: m_Text
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25fac6f589d484d1fba3a2264c3f4e64, type: 3}
 --- !u!114 &959105077039010661 stripped
@@ -534,11 +534,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Effect
-      objectReference: {fileID: 0}
-    - target: {fileID: 1418213714327141904, guid: 25fac6f589d484d1fba3a2264c3f4e64,
-        type: 3}
-      propertyPath: m_Text
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1418213714044641569, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
@@ -649,6 +644,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Text
       value: EFFECT
+      objectReference: {fileID: 0}
+    - target: {fileID: 1418213714327141904, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: m_Text
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25fac6f589d484d1fba3a2264c3f4e64, type: 3}
@@ -1021,11 +1021,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Intensity
       objectReference: {fileID: 0}
-    - target: {fileID: 1418213714327141904, guid: 25fac6f589d484d1fba3a2264c3f4e64,
-        type: 3}
-      propertyPath: m_Text
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1418213714044641569, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1108,17 +1103,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1418213714044641569, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1418213714044641569, guid: 25fac6f589d484d1fba3a2264c3f4e64,
-        type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1418213714044641569, guid: 25fac6f589d484d1fba3a2264c3f4e64,
-        type: 3}
-      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1418213714044641569, guid: 25fac6f589d484d1fba3a2264c3f4e64,
@@ -1135,6 +1120,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Text
       value: INTENSITY
+      objectReference: {fileID: 0}
+    - target: {fileID: 1418213714327141904, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: m_Text
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25fac6f589d484d1fba3a2264c3f4e64, type: 3}
@@ -1161,11 +1151,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hue
-      objectReference: {fileID: 0}
-    - target: {fileID: 1418213714327141904, guid: 25fac6f589d484d1fba3a2264c3f4e64,
-        type: 3}
-      propertyPath: m_Text
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1418213714044641569, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
@@ -1285,6 +1270,11 @@ PrefabInstance:
     - target: {fileID: 2402640394965750235, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
       propertyPath: startValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1418213714327141904, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: m_Text
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

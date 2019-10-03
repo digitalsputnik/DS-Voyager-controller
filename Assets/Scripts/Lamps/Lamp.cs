@@ -11,6 +11,8 @@ namespace VoyagerApp.Lamps
     [Serializable]
     public abstract class Lamp
     {
+        public event DataReceivedHandler OnDataReceived;
+
         public const double TIMEOUT = 15.0f;
 
         public string type;
@@ -23,11 +25,17 @@ namespace VoyagerApp.Lamps
         public abstract int pixels { get; }
         public abstract string version { get; }
         public abstract bool updated { get; }
+        public abstract double lastTimestamp { get; protected set; }
 
         public Itshe itshe;
         public Video video;
         public VideoPosition mapping;
         public VideoBuffer buffer;
+
+        internal void PushData(byte[] data)
+        {
+            OnDataReceived?.Invoke(data);
+        }
 
         internal virtual void Update(object data)
         {
@@ -63,4 +71,6 @@ namespace VoyagerApp.Lamps
         public abstract LampItemView AddToWorkspace(Vector2 position, float scale);
         public abstract LampItemView AddToWorkspace(Vector2 position, float scale, float rotation);
     }
+
+    public delegate void DataReceivedHandler(byte[] data);
 }

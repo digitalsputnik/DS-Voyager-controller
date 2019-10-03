@@ -39,6 +39,15 @@ namespace VoyagerApp.Lamps
             AddDataProcessors();
         }
 
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                foreach(var lamp in Lamps)
+                    Debug.Log($"{lamp.serial} - {lamp.address}");
+            }
+        }
+
         public void AddLamp(Lamp lamp)
         {
             if (!Lamps.Any(_ => _.serial == lamp.serial))

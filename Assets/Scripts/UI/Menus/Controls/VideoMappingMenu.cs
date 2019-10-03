@@ -63,7 +63,11 @@ namespace VoyagerApp.UI.Menus
         private void ItsheChanged(Itshe itshe)
         {
             var lamps = WorkspaceUtils.SelectedVoyagerLampItems;
-            lamps.ForEach(_ => _.lamp.SetItshe(itshe));
+            lamps.ForEach(lamp =>
+            {
+                lamp.lamp.SetItshe(itshe);
+                lamp.lamp.buffer.ClearBuffer();
+            });
         }
 
         void SetupFps()

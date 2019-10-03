@@ -57,14 +57,14 @@ namespace VoyagerApp.UI.Overlays
             button1.onClick.RemoveAllListeners();
             button1.GetComponentInChildren<Text>().text = settings.btn1;
             button1.onClick.AddListener(() => {
-                settings.onBtn1.Invoke();
+                settings.onBtn1?.Invoke();
                 DialogObserved();
             });
 
             button2.onClick.RemoveAllListeners();
             button2.GetComponentInChildren<Text>().text = settings.btn2;
             button2.onClick.AddListener(() => {
-                settings.onBtn2.Invoke();
+                settings.onBtn2?.Invoke();
                 DialogObserved();
             });
 
