@@ -29,10 +29,12 @@ ITSH menu - COLORWHEEL
 * Changes the color settings of the lamp.
 * Hue and saturation can be changed from the wheel or sliders on the side menu.
 * Intensity and temperature can be changed from the sliders.
-* Effect slider will change the proportion of effect applied with 0% - only color will be applied, 100% only video will be applied.  **NOT FINISHED**
+* Effect slider will change the proportion of effect applied with 0% - only color will be applied, 100% only video will be applied. 
     
 VIDEO MAPPING
 * Should contain the lamps associated with video.
+* Video is being uploaded to lamp while playing it on the UI.
+* Loading bar indicates the percentage of video buffered and loaded to lamp.
 * Should contain following video controls:
     * FPS - lets you choose the framerate for video.
 * When going back, the workspace state should be the same, before going to
@@ -53,10 +55,10 @@ SET VIDEO MENU
 LAMPS SETTINGS
 * Contains list of different settings, including:
     * NETWORK - Changes network mode on lamps (Master/Router/Client)                                                                   
-    * DMX MODE - Enable and disable DMX mode on lamps
+    * DMX MODE - Enable and disable DMX mode on lamps **NOT ENABLED**
     * FORCE UPDATE - Updates selected lamps
 
-DMX MODE INSPECTOR
+DMX MODE INSPECTOR **NOT INCLUDED**
 * Selection mode is enabled.
 * Only selected lamps have universe (u) and channel (c) shown in workspace.
 * Has different settings, including:
@@ -85,10 +87,12 @@ SAVE
 * The save should be listed to LOAD menu.
 * If saving and a save with the same name already exists, dialogue should
   appear with "REPLACE" and "CANCEL" options.                                   **NOT FINISHED**
+* Project can be exported on Windows and Mac builds.
 
 LOAD
 * Contains all the saved projects made in SAVE menu.
-* Clicking on a save, the saved workspace should appear.
+* Clicking on a save, the saved workspace should appear along with videos.
+* Videos can be uploaded to lamp from loaded project.
 * Removing the saved project should remove it from the list.
 
 NEW PROJECT
