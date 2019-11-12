@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -31,7 +30,7 @@ namespace VoyagerApp.UI.Menus
         void Update()
         {
             Vector2 delta = new Vector2(joystick.Horizontal, joystick.Vertical);
-            if (delta.magnitude > 0.001f)
+            if (delta.magnitude > 0.0001f)
             {
                 delta *= joystickSpeed * Time.deltaTime;
 
@@ -56,8 +55,9 @@ namespace VoyagerApp.UI.Menus
 
         public void OnDrag(PointerEventData eventData)
         {
+            float multiplier = rect.rect.width / ActualSize.x;
             Vector2 point = eventData.position - (Vector2)rect.position;
-            SetCursorToClosestPoint(point);
+            SetCursorToClosestPoint(point * multiplier);
         }
 
         public void OnPointerClick(PointerEventData eventData)

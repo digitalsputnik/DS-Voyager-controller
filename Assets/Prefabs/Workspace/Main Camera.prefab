@@ -97,6 +97,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minSize: 3
-  maxSize: 30
+  maxSize: 60
   mouseZoomSpeed: 5
   touchZoomSpeed: 0.001

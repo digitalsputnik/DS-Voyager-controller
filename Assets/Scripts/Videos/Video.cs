@@ -10,7 +10,7 @@ namespace VoyagerApp.Videos
         public string hash;
         public string path;
         public long frames;
-        public float fps;
+        public int fps;
         public float duraction;
         public Texture2D thumbnail;
         public uint width;

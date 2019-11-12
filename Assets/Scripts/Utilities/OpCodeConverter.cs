@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Newtonsoft.Json;
-using VoyagerApp.Networking.Packages;
+using VoyagerApp.Networking.Voyager;
 
 namespace VoyagerApp.Utilities
 {

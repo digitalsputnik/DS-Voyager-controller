@@ -4,7 +4,6 @@ using UnityEngine;
 using VoyagerApp.Projects;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
-using VoyagerApp.Videos;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -58,29 +57,45 @@ namespace VoyagerApp.UI.Menus
 
         void DisplayItem(string project)
         {
-            LoadMenuItem item = Instantiate(itemPrefab, container);
-            items.Add(item);
-            item.SetPath(project);
+            try
+            {
+                LoadMenuItem item = Instantiate(itemPrefab, container);
+                items.Add(item);
+                item.SetPath(project);
+            } catch { }
         }
 
         public void LoadProject(string project)
         {
+            ItemsInteractable = false;
             Project.Load(project);
             DialogBox.Show(
                 "Send loaded video buffer to lamps?",
-                "Clicking \"Ok\" will send loaded video to lamps, otherwise " +
+                "Clicking \"OK\" will send loaded video to lamps, otherwise " +
                 "Only lamp positions will be loaded, but lamps will still play " +
                 "the video, they have at the moment.",
-                "Cancel", "Ok",
-                null,
+                "CANCEL", "OK",
+                OnSendBufferCancel,
                 OnSendBuffer);
         }
+
+        void OnSendBufferCancel() => ItemsInteractable = true;
 
         void OnSendBuffer()
         {
             var progressBar = LoadingBar.CreateLoadProcess("LOADING BUFFER TO LAMPS");
             var bufferSender = new ProjectLoadBuffer(WorkspaceUtils.Lamps, progressBar.UpdateProgress);
             bufferSender.StartSending();
+            ItemsInteractable = true;
+        }
+
+        bool ItemsInteractable
+        {
+            set
+            {
+                foreach (var item in items)
+                    item.button.interactable = value;
+            }
         }
     }
 }

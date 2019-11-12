@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace VoyagerApp
@@ -51,5 +52,30 @@ namespace VoyagerApp
         public static Itshe white => new Itshe(1.0f, DEFAULT_TEMPERATURE, 0.0f, 0.0f, 1.0f);
 
         public override string ToString() => $"[{i}, {t}, {s}, {h}, {e}]";
+
+        public static bool operator ==(Itshe self, Itshe other)
+        {
+            return
+                math.abs(self.i - other.i) < 0.001f &&
+                math.abs(self.t - other.t) < 0.001f &&
+                math.abs(self.s - other.s) < 0.001f &&
+                math.abs(self.h - other.h) < 0.001f &&
+                math.abs(self.e - other.e) < 0.001f;
+        }
+
+        public static bool operator !=(Itshe self, Itshe other)
+        {
+            return !(self == other);
+        }
+
+        public override bool Equals(object obj) 
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

@@ -10,8 +10,6 @@ namespace VoyagerApp.Workspace
 
         public string guid;
 
-        public ItemMove move { get; private set; }
-
         public Vector2 position => transform.position;
         public float scale => transform.lossyScale.x;
         public float rotation => transform.eulerAngles.z;
@@ -23,7 +21,6 @@ namespace VoyagerApp.Workspace
         {
             Generate();
             guid = Guid.NewGuid().ToString();
-            move = GetComponentInChildren<ItemMove>();
         }
 
         public virtual WorkspaceItemSaveData ToData()
@@ -61,11 +58,9 @@ namespace VoyagerApp.Workspace
         void RemoveChild(WorkspaceItemView item)
         {
             item.parent = null;
-            item.transform.SetParent(WorkspaceManager.instance.transform);
+            item.transform?.SetParent(WorkspaceManager.instance.transform);
             children.Remove(item);
         }
-
-        
 
         protected virtual void Generate() { }
     }

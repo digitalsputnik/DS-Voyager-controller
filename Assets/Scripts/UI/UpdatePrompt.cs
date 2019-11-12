@@ -53,7 +53,7 @@ namespace VoyagerApp.UI
                 "Update",
                 "Outdated lamp found from network. " +
                 "Would you like to update your lamp now?",
-                "Cancel", "Ok", () =>
+                "CANCEL", "OK", () =>
                 {
                     showing = false;
                 }, () =>
@@ -63,7 +63,7 @@ namespace VoyagerApp.UI
                     foreach (var lamp in WorkspaceUtils.LampItems)
                     {
                         if (!lamp.lamp.updated)
-                            WorkspaceSelection.instance.SelectLamp(lamp);
+                            WorkspaceSelection.instance.SelectItem(lamp);
                     }
                     showing = false;
                 });

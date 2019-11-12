@@ -1,189 +1,300 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text;
 using Newtonsoft.Json;
+using Unity.Mathematics;
 using UnityEngine;
 using VoyagerApp.Lamps;
-using VoyagerApp.Networking;
-using VoyagerApp.Utilities;
+using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
+using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.Projects
 {
-    [Serializable]
-    public class Project
+    public static class Project
     {
+        public const string PROJECTS_DIRECTORY = "projects";
         public const string PROJECT_FILE = "project.dsprj";
         public const string VIDEOS = "videos";
 
-        public List<Video> videos;
-        public List<Lamp> lamps;
-        public float camPositionX;
-        public float camPositionY;
-        public float camSize;
-        public List<WorkspaceItemSaveData> items;
-
-        Project WithVideos(List<Video> videos)
-        {
-            this.videos = videos;
-            return this;
-        }
-
-        Project WithLamps(List<Lamp> lamps)
-        {
-            this.lamps = lamps;
-            return this;
-        }
-
-        Project WithItems(List<WorkspaceItemSaveData> items)
-        {
-            this.items = items;
-            return this;
-        }
-
-        Project WithCamera(Camera camera)
-        {
-            camSize = camera.orthographicSize;
-            camPositionX = camera.transform.position.x;
-            camPositionY = camera.transform.position.y;
-            return this;
-        }
-
         #region Save
-        public static void Save(string name)
+
+        public static ProjectSaveData Save(string name) => Save(name, false);
+        public static ProjectSaveData Save(string name, bool keepVideoPaths)
         {
-            var videos = VideoManager.instance.Videos;
-            var lamps = LampManager.instance.Lamps;
-            var items = GetItemsSaveDatas();
-            var camera = Camera.main;
-
-            CopyVideosIfNecessary(name, videos);
-
-            var project = new Project()
-                .WithVideos(videos)
-                .WithLamps(lamps)
-                .WithItems(items)
-                .WithCamera(camera);
-
-            var settings = JsonSettings();
-            string json = JsonConvert.SerializeObject(project, settings);
-
+            var paths = CopyVideosIfNecessary(name);
+            var projectData = ProjectFactory.GetCurrentSaveData();
+            var json = JsonConvert.SerializeObject(projectData, Formatting.Indented);
             var path = Path.Combine(ProjectDirectory(name), PROJECT_FILE);
             File.WriteAllText(path, json);
+
+            if (keepVideoPaths)
+            {
+                for (int i = 0; i < VideoManager.instance.Videos.Count; i++)
+                    VideoManager.instance.Videos[i].path = paths[i];
+            }
+
+            return projectData;
         }
 
-        static List<WorkspaceItemSaveData> GetItemsSaveDatas()
+        public static void SaveWorkspace()
         {
-            int itemsCount = WorkspaceManager.instance.Items.Count;
-            var items = new List<WorkspaceItemSaveData>();
-            for (int i = 0; i < itemsCount; i++)
+            var data = ProjectFactory.GetCurrentWorkspaceData();
+            var json = JsonConvert.SerializeObject(data, Formatting.Indented);
+            PlayerPrefs.SetString("workspace_temp", json);
+        }
+
+        static string[] CopyVideosIfNecessary(string name)
+        {
+            var path = Path.Combine(ProjectDirectory(name), VIDEOS);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            string[] paths = new string[VideoManager.instance.Videos.Count];
+            int i = 0;
+
+            foreach (var video in VideoManager.instance.Videos)
             {
-                var item = WorkspaceManager.instance.Items[i];
-                items.Add(item.ToData());
+                paths[i++] = video.path;
+
+                if (!video.path.StartsWith(path, StringComparison.Ordinal))
+                {
+                    string videoName = Path.GetFileName(video.path);
+                    string newPath = Path.Combine(path, videoName);
+
+                    try
+                    {
+                        if (!File.Exists(newPath))
+                        {
+                            File.Copy(video.path, newPath);
+                            video.path = newPath;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError(ex);
+                    }
+                }
             }
-            return items;
+
+            return paths;
         }
         #endregion
 
         #region Loading
         public static void Load(string name)
         {
-            var path = Path.Combine(ProjectDirectory(name), PROJECT_FILE);
-
-            if (!File.Exists(path))
+            string path = Path.Combine(ProjectsDirectory, name, PROJECT_FILE);
+            if (File.Exists(path))
             {
-                Debug.LogError($"The project {name} could not be found!");
-                return;
+                string json = File.ReadAllText(path);
+                var parser = ProjectFactory.GetParser(json);
+                var data = parser.Parse(json);
+                Load(data);
             }
-
-            string json = File.ReadAllText(path);
-            var settings = JsonSettings();
-            var project = JsonConvert.DeserializeObject<Project>(json, settings);
-
-            LoadVideos(project);
-            LoadLamps(project);
-            LoadItems(project);
-            LoadCamera(project);
         }
 
-        static void LoadVideos(Project project)
+        public static void LoadWorkspace()
+        {
+            if (PlayerPrefs.HasKey("workspace_temp"))
+            {
+                var json = PlayerPrefs.GetString("workspace_temp");
+                var data = WorkspaceDataParser.Parser(json);
+                LoadItems(data.items);
+                LoadCamera(data.camera);
+            }
+        }
+
+        public static ProjectSaveData GetProjectData(string json)
+        {
+            var parser = ProjectFactory.GetParser(json);
+            return parser.Parse(json);
+        }
+
+        static void Load(ProjectSaveData data)
+        {
+            LoadVideos(data.videos);
+            LoadLamps(data.lamps);
+            LoadItems(data.items);
+            LoadCamera(data.camera);
+        }
+
+        static void LoadVideos(Video[] videos)
         {
             VideoManager.instance.Clear();
-            foreach (var video in project.videos)
-                VideoManager.instance.AddLoadedVideo(video);
-        }
-
-        static void LoadLamps(Project project)
-        {
-            LampManager.instance.Clear();
-            foreach (var lamp in project.lamps)
-                LampManager.instance.AddLamp(lamp);
-        }
-
-        static void LoadItems(Project project)
-        {
-            var manager = WorkspaceManager.instance;
-            manager.Clear();
-            foreach (var item in project.items)
-                item.Load();
-            foreach (var item in project.items)
+            foreach (var videoData in videos)
             {
-                if (item.parentguid != "")
+                if (File.Exists(videoData.url))
                 {
-                    var child = manager.GetItem(item.guid);
-                    var parent = manager.GetItem(item.parentguid);
-                    child.SetParent(parent);
+                    VideoManager.instance.LoadVideo(
+                        videoData.url,
+                        videoData.guid,
+                        videoData.frames,
+                        videoData.fps,
+                        null);
                 }
             }
         }
 
-        static void LoadCamera(Project project)
+        static void LoadLamps(Lamp[] lamps)
+        {
+            //LampManager.instance.Clear();
+            foreach (var lampData in lamps)
+            {
+                var buffer = new VideoBuffer();
+
+                if (lampData.buffer != null)
+                {
+                    buffer.RecreateBuffer(lampData.buffer.Length);
+                    buffer.framesToBuffer = lampData.buffer;
+                }
+
+                var itsh = new Itshe(
+                    lampData.itsh[0],
+                    lampData.itsh[1],
+                    lampData.itsh[2],
+                    lampData.itsh[3],
+                    lampData.itsh[4]
+                );
+
+                var mapping = new VideoPosition();
+
+                if (lampData.mapping != null)
+                {
+                    mapping = new VideoPosition(
+                        lampData.mapping[0],
+                        lampData.mapping[1],
+                        lampData.mapping[2],
+                        lampData.mapping[3]
+                    );
+                }
+
+                var lamp = LampManager.instance.GetLampWithSerial(lampData.serial);
+
+                if (lamp == null)
+                {
+                    lamp = new VoyagerLamp
+                    {
+                        serial = lampData.serial,
+                        length = lampData.length,
+                        video = VideoManager.instance.GetWithHash(lampData.video),
+                        address = IPAddress.Parse(lampData.address),
+                        itshe = itsh,
+                        mapping = mapping,
+                        buffer = buffer
+                    };
+
+                    LampManager.instance.AddLamp(lamp);
+                }
+                else
+                {
+                    lamp.video = VideoManager.instance.GetWithHash(lampData.video);
+                    lamp.itshe = itsh;
+                    lamp.mapping = mapping;
+                    lamp.buffer = buffer;
+                }
+            }
+        }
+
+        static void LoadItems(Item[] items)
+        {
+            WorkspaceManager.instance.Clear();
+
+            foreach (var item in items)
+            {
+                if (item is PictureItem pictureData)
+                {
+                    var texture = new Texture2D(pictureData.width, pictureData.height);
+                    texture.LoadImage(pictureData.data);
+                    texture.Apply();
+
+                    var position = new float2(pictureData.position[0], pictureData.position[1]);
+                    var obj = WorkspaceManager.instance.InstantiateItem<PictureItemView>(
+                        texture,
+                        position,
+                        pictureData.scale,
+                        pictureData.rotation
+                    );
+
+                    MainThread.Dispach(() => obj.SetOrder(pictureData.order));
+                }
+
+                if (item is LampItem lampData)
+                {
+                    var position = new float2(lampData.position[0], lampData.position[1]);
+                    var lamp = LampManager.instance.GetLampWithSerial(lampData.serial);
+                    lamp.AddToWorkspace(position, lampData.scale, lampData.rotation);
+                }
+            }
+        }
+
+        static void LoadCamera(float[] camera)
         {
             var cam = Camera.main;
-            float camPositionZ = cam.transform.position.z;
-            var camPosition = new Vector3(
-                project.camPositionX,
-                project.camPositionY,
-                camPositionZ);
 
-            cam.orthographicSize = project.camSize;
-            cam.transform.position = camPosition;
+            var position = new Vector3(
+                camera[0],
+                camera[1],
+                cam.transform.position.z);
+
+            cam.orthographicSize = camera[2];
+            cam.transform.position = position;
         }
+
         #endregion
 
         #region Import / Export
-        public static string Export(string save)
+        public static void Export(string save, Action<bool, string> onPacked)
         {
-            Save(save);
+            const string EXPORT_TEMP = "export";
 
-            var projectPath = Path.Combine(ProjectDirectory(save), PROJECT_FILE);
-            byte[] projectBytes = File.ReadAllBytes(projectPath);
+            string tempPath = ProjectDirectory(EXPORT_TEMP);
+            string projPath = Path.Combine(tempPath, PROJECT_FILE);
+            string exportPath = Path.Combine(Application.temporaryCachePath, save + ".vcp");
 
-            string json = File.ReadAllText(projectPath);
-            var settings = JsonSettings();
-            var project = JsonConvert.DeserializeObject<Project>(json, settings);
+            bool failed = true;
 
-            byte[][] videosBytes = new byte[project.videos.Count][];
-            for (int i = 0; i < project.videos.Count; i++)
-                videosBytes[i] = File.ReadAllBytes(project.videos[i].path);
-
-            ProjectExport export = new ProjectExport
+            try
             {
-                project = projectBytes,
-                videos = videosBytes
-            };
+                var data = Save(EXPORT_TEMP, true);
 
-            json = JsonConvert.SerializeObject(export);
-            byte[] bytes = Encoding.UTF8.GetBytes(json);
+                byte[] project = File.ReadAllBytes(projPath);
+                byte[][] videos = new byte[data.videos.Length][];
+                for (int i = 0; i < videos.Length; i++)
+                    videos[i] = File.ReadAllBytes(data.videos[i].url);
 
-            string exportPath = Path.Combine(Application.temporaryCachePath, save + "vcp");
-            File.WriteAllBytes(exportPath, bytes);
+                ProjectExport export = new ProjectExport
+                {
+                    project = project,
+                    videos = videos
+                };
 
-            Directory.Delete(ProjectDirectory(save), true);
-            return exportPath;
+                string json = JsonConvert.SerializeObject(export, Formatting.Indented);
+                byte[] bytes = Encoding.UTF8.GetBytes(json);
+
+                string path = Path.Combine(Application.temporaryCachePath, save + ".vcp");
+                File.WriteAllBytes(exportPath, bytes);
+
+                failed = false;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(ex);
+            }
+            finally
+            {
+                if (Directory.Exists(tempPath))
+                    Directory.Delete(tempPath, true);
+            }
+
+            if (failed)
+                onPacked?.Invoke(false, null);
+            else
+                onPacked?.Invoke(true, exportPath);
         }
+
         public static string Import(string file)
         {
             string name = Path.GetFileNameWithoutExtension(file);
@@ -194,53 +305,30 @@ namespace VoyagerApp.Projects
             var export = JsonConvert.DeserializeObject<ProjectExport>(exportJson);
 
             string projectJson = Encoding.UTF8.GetString(export.project);
-            var settings = JsonSettings();
-            var project = JsonConvert.DeserializeObject<Project>(projectJson, settings);
+            var parser = ProjectFactory.GetParser(projectJson);
+            var project = parser.Parse(projectJson);
 
-            var videosPath = Path.Combine(ProjectDirectory(name), VIDEOS);
+            string videosPath = Path.Combine(ProjectDirectory(name), VIDEOS);
             Directory.CreateDirectory(videosPath);
 
-            for (int i = 0; i < project.videos.Count; i++)
+            for (int i = 0; i < project.videos.Length; i++)
             {
-                string videoName = Path.GetFileName(project.videos[i].path);
-                string newPath = Path.Combine(videosPath, videoName);
-                File.WriteAllBytes(newPath, export.videos[i]);
-                project.videos[i].path = newPath;
+                var video = project.videos[i];
+                string videoName = Path.GetFileName(video.url);
+                string path = Path.Combine(videosPath, videoName);
+                File.WriteAllBytes(path, export.videos[i]);
+                project.videos[i].url = path;
             }
 
+            project.version = ProjectFactory.VERSION;
             var projectPath = Path.Combine(ProjectDirectory(name), PROJECT_FILE);
-            projectJson = JsonConvert.SerializeObject(project, settings);
+            projectJson = JsonConvert.SerializeObject(project, Formatting.Indented);
             File.WriteAllText(projectPath, projectJson);
+
 
             return ProjectDirectory(name);
         }
         #endregion
-
-        public static JsonSerializerSettings JsonSettings()
-        {
-            var settings = new JsonSerializerSettings();
-            settings.Converters.Add(new IPAddressConverter());
-            settings.Converters.Add(new IPEndPointConverter());
-            settings.Converters.Add(new Texture2DConverter());
-            settings.Formatting = Formatting.Indented;
-            settings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
-            settings.TypeNameHandling = TypeNameHandling.Auto;
-            return settings;
-        }
-
-        public static string ProjectsDirectory
-        {
-            get
-            {
-                string persistant = Application.persistentDataPath;
-                string projects = Path.Combine(persistant, "projects");
-
-                if (!Directory.Exists(projects))
-                    Directory.CreateDirectory(projects);
-
-                return projects;
-            }
-        }
 
         static string ProjectDirectory(string name)
         {
@@ -250,24 +338,17 @@ namespace VoyagerApp.Projects
             return project;
         }
 
-        static void CopyVideosIfNecessary(string name, List<Video> videos)
+        public static string ProjectsDirectory
         {
-            var path = Path.Combine(ProjectDirectory(name), VIDEOS);
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            foreach (var video in videos)
+            get
             {
-                if (!video.path.StartsWith(path, StringComparison.Ordinal))
-                {
-                    string videoName = Path.GetFileName(video.path);
-                    string newPath = Path.Combine(path, videoName);
+                string persistant = Application.persistentDataPath;
+                string projects = Path.Combine(persistant, PROJECTS_DIRECTORY);
 
-                    if (!File.Exists(newPath))
-                        File.Copy(video.path, newPath);
+                if (!Directory.Exists(projects))
+                    Directory.CreateDirectory(projects);
 
-                    video.path = newPath;
-                }
+                return projects;
             }
         }
     }

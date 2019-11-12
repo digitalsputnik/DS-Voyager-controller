@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace VoyagerApp.UI
 {
@@ -17,6 +18,18 @@ namespace VoyagerApp.UI
         {
             showHide.Open = menu != null;
             base.ShowMenu(menu);
+        }
+
+        public void CloseInHided()
+        {
+            if (!showHide.Open)
+                StartCoroutine(CloseInSeconds());
+        }
+
+        IEnumerator CloseInSeconds()
+        {
+            yield return showHide.speed;
+            ShowMenu(null);
         }
     }
 }

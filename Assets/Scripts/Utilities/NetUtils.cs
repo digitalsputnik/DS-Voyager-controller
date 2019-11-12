@@ -9,6 +9,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using UnityEngine;
 using VoyagerApp.Networking;
+using VoyagerApp.Networking.Voyager;
 
 namespace VoyagerApp.Utilities
 {

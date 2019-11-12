@@ -13,7 +13,9 @@ namespace VoyagerApp.Videos
 
         [JsonIgnore]
         public bool ContainsVideo => frames != 0;
-
+        [JsonIgnore]
+        public bool Rendered => frames == ExistingFramesCount;
+        [JsonIgnore]
         public long ExistingFramesCount
         {
             get
@@ -60,6 +62,17 @@ namespace VoyagerApp.Videos
             }
 
             return -1;
+        }
+
+        public byte[] CopyFrameBufferToAnotherFrame(long from, long to)
+        {
+            if (FrameExists(from))
+            {
+                SetFrame(to, GetFrame(from));
+                return GetFrame(to);
+            }
+
+            return null;
         }
 
         public byte[] GetFrame(long frame)

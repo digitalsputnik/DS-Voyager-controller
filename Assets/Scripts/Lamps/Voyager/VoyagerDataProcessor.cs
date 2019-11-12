@@ -1,26 +1,21 @@
 ﻿using System.Net;
 using System.Text;
-using UnityEngine;
-using VoyagerApp.Dmx;
 using VoyagerApp.Networking;
+using VoyagerApp.Networking.Voyager;
 
 namespace VoyagerApp.Lamps.Voyager
 {
     internal class VoyagerDataProcessor : LampDataProcessor
     {
-        VoyagerUpdateUtility updateUtility;
-
         internal VoyagerDataProcessor(LampManager manager) : base(manager)
         {
-            updateUtility = new VoyagerUpdateUtility();
-
             var voyagerClient = new VoyagerClient(NetworkManager.instance);
             voyagerClient.onReceived += VoyagerDataReceived;
             NetworkManager.instance.AddClient(voyagerClient);
         }
 
         bool IsLampInfoResponse(byte[] data) => DataContains(data, "serial_name");
-        bool IsDmxSettingsResponse(byte[] data) => DataContains(data, "DMXmode");
+        bool IsDmxSettingsResponse(byte[] data) => DataContains(data, "dmx_mode_response");
 
         void VoyagerDataReceived(object sender, byte[] data)
         {
@@ -43,10 +38,17 @@ namespace VoyagerApp.Lamps.Voyager
 
         void HandleDmxResponseData(byte[] data, object sender)
         {
-            var settings = DmxSettings.FromData(data);
-            var address = ((IPEndPoint)sender).Address;
-            Lamp lamp = manager.GetLampWithAddress(address);
-            lamp.UpdateDmxSettings(settings);
+            var packet = Packet.Deserialize<DmxModeResponse>(data);
+            if (packet != null)
+            {
+                var address = ((IPEndPoint)sender).Address;
+                Lamp lamp = null;
+                if (string.IsNullOrEmpty(packet.serial))
+                    lamp = manager.GetLampWithAddress(address);
+                else
+                    lamp = manager.GetLampWithSerial(packet.serial);
+                lamp?.Update(packet);
+            }
         }
 
         bool DataContains(byte[] data, string str)

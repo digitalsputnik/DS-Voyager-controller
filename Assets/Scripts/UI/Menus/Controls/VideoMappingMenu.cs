@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using VoyagerApp.Networking.Packages.Voyager;
-using VoyagerApp.UI.Overlays;
+using UnityEngine.UI;
+using VoyagerApp.Networking.Voyager;
 using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
@@ -10,21 +10,16 @@ namespace VoyagerApp.UI.Menus
 {
     public class VideoMappingMenu : Menu
     {
-        [SerializeField] IntField fpsField      = null;
-        [SerializeField] ItshPickView itshePick = null;
-        [SerializeField] VideoMapper mapper     = null;
-        [Space(4)]
-        [SerializeField] GameObject splitter    = null;
-        [Space(4)]
-        [SerializeField] GameObject selectAllBtn    = null;
-        [SerializeField] GameObject deselectAllBtn  = null;
-        [Space(4)]
-        [SerializeField] CheckForExistingFrames existingFrames = null;
+        [SerializeField] VideoMapper mapper         = null;
+        [SerializeField] Text selectDeselectBtnText = null;
+        [SerializeField] IntField fpsField          = null;
+        [SerializeField] GameObject splitter        = null;
+        [SerializeField] GameObject alignmentBtn    = null;
 
         Video video;
         bool hasFpsInitialized;
 
-        public void SetVideo(Video video)
+        public void SetEffect(Video video)
         {
             this.video = video;
 
@@ -35,44 +30,28 @@ namespace VoyagerApp.UI.Menus
                 SetupFps();
         }
 
+        public void SelectDeselect()
+        {
+            if (!WorkspaceUtils.AllLampsSelected)
+                WorkspaceUtils.SelectAll();
+            else
+                WorkspaceUtils.DeselectAll();
+        }
+
         internal override void OnShow()
         {
-            WorkspaceSelection.instance.onSelectionChanged += SelectionChanged;
-            itshePick.onValueChanged.AddListener(ItsheChanged);
-            CheckSelectButtons();
+            WorkspaceSelection.instance.onSelectionChanged += EnableDisableObjects;
+            EnableDisableObjects();
         }
 
         internal override void OnHide()
         {
-            WorkspaceSelection.instance.onSelectionChanged -= SelectionChanged;
-            itshePick.onValueChanged.RemoveListener(ItsheChanged);
-        }
-
-        private void SelectionChanged(WorkspaceSelection selection)
-        {
-            if (selection.Selected.Count == 1)
-            {
-                Itshe itshe = selection.Selected[0].lamp.itshe;
-                if (itshe.Equals(default(Itshe))) itshe = Itshe.white;
-                itshePick.Value = itshe;
-            }
-
-            CheckSelectButtons();
-        }
-
-        private void ItsheChanged(Itshe itshe)
-        {
-            var lamps = WorkspaceUtils.SelectedVoyagerLampItems;
-            lamps.ForEach(lamp =>
-            {
-                lamp.lamp.SetItshe(itshe);
-                lamp.lamp.buffer.ClearBuffer();
-            });
+            WorkspaceSelection.instance.onSelectionChanged -= EnableDisableObjects;
         }
 
         void SetupFps()
         {
-            fpsField.SetValue((int)video.fps);
+            fpsField.SetValue(video.fps);
             fpsField.onChanged += FpsChanged;
             hasFpsInitialized = true;
         }
@@ -83,24 +62,15 @@ namespace VoyagerApp.UI.Menus
             var packet = new SetFpsPacket(value);
 
             foreach (var lamp in WorkspaceUtils.Lamps)
-                NetUtils.VoyagerClient.SendPacket(lamp, packet);
+                NetUtils.VoyagerClient.KeepSendingPacket(lamp, "set_fps", packet, VoyagerClient.PORT_SETTINGS, TimeUtils.Epoch);
 
             mapper.SetFps(value);
         }
 
         public void ReturnToWorkspace()
         {
-            if (existingFrames.allRendered)
-                SceneManager.LoadScene(0);
-            else
-            {
-                DialogBox.Show(
-                    "ARE YOU SURE?",
-                    "ALL FRAMES ARE NOT RENDERED, YET.",
-                    "STAY", "EXIT",
-                    () => { }, () => SceneManager.LoadScene(0)
-                );
-            }
+            PlayerPrefs.SetInt("from_video_mapping", 1);
+            SceneManager.LoadScene(0);
         }
 
         void OnDestroy()
@@ -108,28 +78,14 @@ namespace VoyagerApp.UI.Menus
             fpsField.onChanged -= FpsChanged;
         }
 
-        public void SelectAll()
+        void EnableDisableObjects()
         {
-            foreach (var view in WorkspaceUtils.LampItems)
-                WorkspaceSelection.instance.SelectLamp(view);
+            bool one = WorkspaceUtils.AtLastOneLampSelected;
+            bool all = WorkspaceUtils.AllLampsSelected;
+
+            selectDeselectBtnText.text = all ? "DESELECT ALL" : "SELECT ALL";
+            splitter.SetActive(one);
+            alignmentBtn.SetActive(one);
         }
-
-        public void DeselectAll()
-        {
-            WorkspaceSelection.instance.Clear();
-        }
-
-        void CheckSelectButtons()
-        {
-            selectAllBtn.SetActive(!AllSelected);
-            deselectAllBtn.SetActive(AtLeastOneSelected);
-
-            splitter.SetActive(
-                selectAllBtn.activeInHierarchy ||
-                deselectAllBtn.activeInHierarchy);
-        }
-
-        bool AllSelected => WorkspaceUtils.SelectedLamps.Count == WorkspaceUtils.Lamps.Count;
-        bool AtLeastOneSelected => WorkspaceSelection.instance.Selected.Count > 0;
     }
 }

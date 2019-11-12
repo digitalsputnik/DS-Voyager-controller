@@ -1,12 +1,12 @@
-﻿using System.IO;
-using UnityEngine;
-using VoyagerApp.Utilities;
-using VoyagerApp.Workspace;
+﻿using UnityEngine;
 
 namespace VoyagerApp.UI
 {
     public class MainController : MonoBehaviour
     {
+        [SerializeField] InspectorMenuContainer inspectorMenuContainer = null;
+        [SerializeField] Menu addAllLampsMenu = null;
+
         void Start()
         {
             CheckIfWorkspaceExists();
@@ -14,10 +14,14 @@ namespace VoyagerApp.UI
 
         void CheckIfWorkspaceExists()
         {
-            if (File.Exists(FileUtils.WorkspaceStatePathFull))
+            if (PlayerPrefs.HasKey("from_video_mapping"))
             {
-                WorkspaceSaveLoad.Load(FileUtils.WorkspaceStatePath);
-                File.Delete(FileUtils.WorkspaceStatePathFull);
+                Projects.Project.LoadWorkspace();
+                PlayerPrefs.DeleteKey("from_video_mapping");
+            }
+            else
+            {
+                inspectorMenuContainer.ShowMenu(addAllLampsMenu);
             }
         }
     }

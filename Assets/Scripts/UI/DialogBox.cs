@@ -31,8 +31,9 @@ namespace VoyagerApp.UI.Overlays
         }
 
         public static void Show(
-            string title, string explanation, string btn1,
-            string btn2, Action onBtn1, Action onBtn2)
+            string title, string explanation,
+            string btn1, string btn2,
+            Action onBtn1, Action onBtn2)
         {
             MainThread.Dispach(() =>
             {

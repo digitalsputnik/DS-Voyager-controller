@@ -11,55 +11,30 @@ namespace VoyagerApp.Workspace
         void Awake() => instance = this;
         #endregion
 
-        public List<LampItemView> Selected => selected;
-
-        public bool Enabled
-        {
-            get => selectingEnabled;
-            set => selectingEnabled = value;
-        }
-
-        public bool ShowSelection
-        {
-            get => showSelection;
-            set
-            {
-                showSelection = value;
-                if (value)
-                    selected.ForEach(_ => _.Select());
-                else
-                    selected.ForEach(_ => _.Deselect());
-            }
-        }
-
-        public delegate void SelectionHandler(WorkspaceSelection selection);
+        public delegate void SelectionHandler();
         public event SelectionHandler onSelectionChanged;
 
-        //[SerializeField] float clickTime                = 0.2f;
-        [SerializeField] List<LampItemView> selected    = new List<LampItemView>();
-        [SerializeField] bool selectingEnabled;
-        [SerializeField] bool showSelection;
-        
-        Camera cam;
-        float mouseDownTime;
+        [SerializeField]
+        List<ISelectableItem> selected = new List<ISelectableItem>();
+        public List<ISelectableItem> Selected => selected;
 
-        public void SelectLamp(LampItemView view)
+        public void SelectItem(ISelectableItem selectable)
         {
-            if (!Selected.Contains(view))
+            if (!Selected.Contains(selectable))
             {
-                view.Select();
-                selected.Add(view);
-                onSelectionChanged?.Invoke(this);
+                selectable.Select();
+                selected.Add(selectable);
+                onSelectionChanged?.Invoke();
             }
         }
 
-        public void DeselectLamp(LampItemView view)
+        public void DeselectItem(ISelectableItem selectable)
         {
-            if (Selected.Contains(view))
+            if (Selected.Contains(selectable))
             {
-                view.Deselect();
-                selected.Remove(view);
-                onSelectionChanged?.Invoke(this);
+                selectable.Deselect();
+                selected.Remove(selectable);
+                onSelectionChanged?.Invoke();
             }
         }
 
@@ -67,66 +42,26 @@ namespace VoyagerApp.Workspace
         {
             selected.ForEach(s => s.Deselect());
             selected.Clear();
-            onSelectionChanged?.Invoke(this);
+            onSelectionChanged?.Invoke();
         }
 
         void Start()
         {
-            cam = Camera.main;
-            WorkspaceManager.instance.onItemRemoved += Instance_onItemRemoved;
+            WorkspaceManager.instance.onItemRemoved += ItemRemovedFromWorkspace;
         }
 
-        private void Instance_onItemRemoved(WorkspaceItemView item)
+        void OnDestroy()
         {
-            if (item is LampItemView lampView)
-            {
-                if (selected.Contains(lampView))
-                    selected.Remove(lampView);
-            }
+            WorkspaceManager.instance.onItemRemoved -= ItemRemovedFromWorkspace;
         }
 
-        void Update()
+        private void ItemRemovedFromWorkspace(WorkspaceItemView item)
         {
-            if (!selectingEnabled) return;
-
-            //if (Input.GetMouseButtonDown(0))
-            //    mouseDownTime = Time.time;
-
-            //if (Input.GetMouseButtonUp(0))
-            //{
-            //    if (Time.time - mouseDownTime < clickTime)
-            //        CheckOnLamp();
-            //}
-        }
-
-        bool CheckOnLamp()
-        {
-            Vector2 point = cam.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(point, Vector2.zero);
-            if (hit.collider != null)
+            if (item is ISelectableItem view)
             {
-                var lamp = hit.collider.GetComponentInParent<LampItemView>();
-                if (lamp != null) HandleLampSelection(lamp);
-                return true;
+                if (selected.Contains(view))
+                    selected.Remove(view);
             }
-
-            return false;
-        }
-
-        void HandleLampSelection(LampItemView lamp)
-        {
-            if (lamp.Selected)
-            {
-                lamp.Deselect();
-                selected.Remove(lamp);
-            }
-            else
-            {
-                lamp.Select();
-                selected.Add(lamp);
-            }
-
-            onSelectionChanged?.Invoke(this);
         }
     }
 }

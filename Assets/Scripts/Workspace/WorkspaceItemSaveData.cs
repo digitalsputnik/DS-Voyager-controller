@@ -16,6 +16,6 @@ namespace VoyagerApp.Workspace
         public float rotation;
         public string parentguid;
 
-        public virtual void Load() { }
+        public virtual WorkspaceItemView Load() { return null; }
     }
 }

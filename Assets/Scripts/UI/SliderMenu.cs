@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Unity.Mathematics;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace VoyagerApp.UI.Menus
@@ -8,11 +11,16 @@ namespace VoyagerApp.UI.Menus
         public static SliderMenu instance;
         void Awake() => instance = this;
 
-        public Slider slider;
-        public Text titleText;
-        public InputField valueInputField;
+        public Transform presetsContainer = null;
+        public Button presetButton        = null;
+        public Slider slider              = null;
+        public Text titleText             = null;
+        public InputField valueInputField = null;
 
         IntField toModify;
+
+        List<Button> presets = new List<Button>();
+        List<float> presetValues = new List<float>();
 
         public override void Start()
         {
@@ -39,6 +47,14 @@ namespace VoyagerApp.UI.Menus
             titleText.text = field.gameObject.name.ToUpper();
             toModify = field;
             slider.value = field.normalized;
+            valueInputField.text = field.Value.ToString();
+
+            if (field.presets.Length != 0)
+            {
+                presetValues = field.presets.ToList();
+                DrawPresets();
+            }
+
             Open = true;
         }
 
@@ -46,6 +62,40 @@ namespace VoyagerApp.UI.Menus
         {
             toModify = null;
             Open = false;
+            ClearPresets();
+        }
+
+        void DrawPresets()
+        {
+            int i = 0;
+            foreach (var value in presetValues)
+            {
+                int index = i;
+                int minmax = (int)math.round(value * (toModify.max - toModify.min) + toModify.min);
+                Button preset = Instantiate(presetButton, presetsContainer);
+                preset.GetComponentInChildren<Text>().text = $"{minmax}{toModify.presetSuffix}";
+                preset.GetComponent<RectTransform>().sizeDelta = new float2(300.0f, 120.0f);
+                preset.onClick.AddListener(() => OnPresetClicked(index));
+                presets.Add(preset);
+                i++;
+            }
+            Canvas.ForceUpdateCanvases();
+        }
+
+        void ClearPresets()
+        {
+            foreach (var preset in presets.ToList())
+            {
+                presets.Remove(preset);
+                Destroy(preset.gameObject);
+            }
+        }
+
+        void OnPresetClicked(int index)
+        {
+            Debug.Log(index);
+            float value = presetValues[index];
+            slider.normalizedValue = value;
         }
 
         void ValueChanged(float value)

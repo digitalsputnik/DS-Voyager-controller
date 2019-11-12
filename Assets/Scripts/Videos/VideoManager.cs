@@ -2,7 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.Video;
 using VoyagerApp.Utilities;
 
@@ -18,6 +21,7 @@ namespace VoyagerApp.Videos
             {
                 instance = this;
                 DontDestroyOnLoad(this);
+                LoadPresets();
             }
             else
                 Destroy(this);
@@ -27,6 +31,8 @@ namespace VoyagerApp.Videos
         [SerializeField] float thumbnailTime = 0.5f;
         [SerializeField] float loadTimeout = 5.0f;
         [SerializeField] Vector2Int thumbnailSize;
+        [Space(4)]
+        [SerializeField] string[] effectPresets = null;
 
         public event VideoHandler onVideoAdded;
         public event VideoHandler onVideoRemoved;
@@ -39,15 +45,14 @@ namespace VoyagerApp.Videos
                 RemoveVideo(video);
         }
 
-        public void AddLoadedVideo(Video video)
-        {
-            Videos.Add(video);
-            onVideoAdded?.Invoke(video);
-        }
-
         public void LoadVideo(string path, VideoHandler onLoaded)
         {
-            StartCoroutine(IEnumLoadVideo(path, onLoaded));
+            StartCoroutine(IEnumLoadVideo(path, "", 0, 0, onLoaded));
+        }
+
+        public void LoadVideo(string path, string guid, long frames, int fps, VideoHandler onLoaded)
+        {
+            StartCoroutine(IEnumLoadVideo(path, guid, frames, fps, onLoaded));
         }
 
         public void RemoveVideo(Video video)
@@ -60,9 +65,77 @@ namespace VoyagerApp.Videos
             }
         }
 
-        #region Video Loading
-        IEnumerator IEnumLoadVideo(string path, VideoHandler onLoaded)
+        public Video GetWithName(string name)
         {
+            return Videos.FirstOrDefault(v => v.name == name);
+        }
+
+        public Video GetWithHash(string hash)
+        {
+            return Videos.FirstOrDefault(v => v.hash == hash);
+        }
+
+        #region Video Loading
+        public void LoadPresets()
+        {
+            if (Application.platform != RuntimePlatform.Android)
+            {
+                string prefabsPath = Path.Combine(Application.streamingAssetsPath, "Presets");
+                foreach (var path in Directory.GetFiles(prefabsPath, "*.mp4"))
+                    LoadVideo(path, null);
+            }
+            else
+            {
+                bool firstTime = !PlayerPrefs.HasKey("Opened");
+                if (firstTime)
+                {
+                    StartCoroutine(IEnumSetupAndroidPresets());
+                    PlayerPrefs.SetInt("Opened", 1);
+                }
+                else
+                {
+                    string prefabsPath = Path.Combine(Application.persistentDataPath, "Presets");
+                    foreach (var path in Directory.GetFiles(prefabsPath, "*.mp4"))
+                        LoadVideo(path, null);
+                }
+            }
+        }
+
+        IEnumerator IEnumSetupAndroidPresets()
+        {
+            string presetsDir = Path.Combine(Application.streamingAssetsPath, "Presets");
+            string destDir = Path.Combine(Application.persistentDataPath, "Presets");
+
+            Directory.CreateDirectory(destDir);
+
+            foreach (var effectPreset in effectPresets)
+            {
+                string url = Path.Combine(presetsDir, effectPreset);
+                string dest = Path.Combine(destDir, effectPreset);
+
+                UnityWebRequest load = new UnityWebRequest(url);
+                load.downloadHandler = new DownloadHandlerBuffer();
+                yield return load.SendWebRequest();
+
+                File.WriteAllBytes(dest, load.downloadHandler.data);
+            }
+
+            LoadPresets();
+        }
+
+        IEnumerator IEnumLoadVideo(string path, string guid, long frames, int fps, VideoHandler onLoaded)
+        {
+            Video video = new Video
+            {
+                hash = guid == "" ? Guid.NewGuid().ToString() : guid,
+                fps = fps,
+                frames = frames,
+                lastTimestamp = 0.0,
+                name = Path.GetFileNameWithoutExtension(path)
+            };
+
+            Videos.Add(video);
+
             var player = gameObject.AddComponent<VideoPlayer>();
             var render = SetupVideoPlayer(player, path);
 
@@ -80,9 +153,7 @@ namespace VoyagerApp.Videos
 
                 yield return new WaitForSeconds(thumbnailTime);
 
-                Video video = VideoFromPlayer(player);
-
-                Videos.Add(video);
+                VideoFromPlayer(ref video, player);
                 onLoaded?.Invoke(video);
                 onVideoAdded?.Invoke(video);
             }
@@ -107,25 +178,20 @@ namespace VoyagerApp.Videos
             return render;
         }
 
-        Video VideoFromPlayer(VideoPlayer player)
+        void VideoFromPlayer(ref Video video, VideoPlayer player)
         {
             var url = player.url;
             var render = player.targetTexture;
             var thumbnail = TextureUtils.RenderTextureToTexture2D(render);
 
-            return new Video
-            {
-                name = Path.GetFileNameWithoutExtension(url),
-                hash = Guid.NewGuid().ToString(),
-                path = url,
-                frames = (long)player.frameCount,
-                fps = player.frameRate,
-                duraction = player.frameCount / player.frameRate,
-                thumbnail = thumbnail,
-                width = player.width,
-                height = player.height,
-                lastStartTime = TimeUtils.Epoch
-            };
+            video.path = url;
+            video.frames = (long)player.frameCount;
+            video.fps = video.fps == 0 ? (int)math.round(player.frameRate) : video.fps;
+            video.duraction = player.frameCount / player.frameRate;
+            video.thumbnail = thumbnail;
+            video.width = player.width;
+            video.height = player.height;
+            video.lastStartTime = TimeUtils.Epoch;
         }
 
         bool LoadingTimeout(float startTime)

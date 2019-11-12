@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace VoyagerApp.UI.Menus
@@ -12,6 +13,8 @@ namespace VoyagerApp.UI.Menus
         public int min                      = 0;
         public int max                      = 100;
         [SerializeField] int startValue     = 50;
+        public string presetSuffix          = "";
+        public float[] presets              = null;
 
         public int Value => int.Parse(valueText.text);
         public float normalized => (float)(Value - min) / (max - min);
@@ -33,7 +36,8 @@ namespace VoyagerApp.UI.Menus
 
         public void SetValue(float value)
         {
-            int val = (int)((max - min) * value) + min;
+            float actualValue = ((max - min) * value) + min;
+            int val = (int)math.round(actualValue);
             SetValue(val);
         }
     }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
@@ -10,14 +9,16 @@ namespace VoyagerApp.UI
     {
         SelectionControllerView selectionController;
 
+        public static Bounds bounds;
+
         void Start()
         {
             WorkspaceSelection.instance.onSelectionChanged += SelectionChanged;
         }
 
-        void SelectionChanged(WorkspaceSelection _)
+        void SelectionChanged()
         {
-            if (WorkspaceUtils.SelectedLamps.Count > 1)
+            if (WorkspaceUtils.SelectedItems.Count > 0)
             {
                 if (selectionController != null)
                     UpdateExisting();
@@ -33,20 +34,20 @@ namespace VoyagerApp.UI
 
         void CreateNew()
         {
-            Bounds bounds = new Bounds(
-                WorkspaceUtils.SelectedVoyagerLampItems[0].transform.position,
+            bounds = new Bounds(
+                WorkspaceUtils.SelectedItems[0].SelectPositions[0],
                 Vector3.zero);
 
-            foreach (var item in WorkspaceUtils.SelectedVoyagerLampItems)
-                bounds.Encapsulate(item.renderer.bounds);
+            foreach (var item in WorkspaceUtils.SelectedItems)
+                bounds.Encapsulate(item.Bounds);
 
             bounds.Expand(0.5f);
 
             selectionController = WorkspaceManager.instance.InstantiateItem<SelectionControllerView>(null);
             selectionController.SetBounds(bounds);
 
-            foreach (var item in WorkspaceUtils.SelectedVoyagerLampItems)
-                item.SetParent(selectionController);
+            foreach (var item in WorkspaceUtils.SelectedItems)
+                item.View.SetParent(selectionController);
         }
 
         void UpdateExisting()
@@ -59,9 +60,8 @@ namespace VoyagerApp.UI
         {
             var children = selectionController.children;
             foreach (var item in new List<WorkspaceItemView>(children))
-                item.SetParent(null);
-
-            Destroy(selectionController.gameObject);
+                item.SetParent(selectionController.parent);
+            WorkspaceManager.instance.RemoveItem(selectionController);
         }
 
         void OnDestroy()

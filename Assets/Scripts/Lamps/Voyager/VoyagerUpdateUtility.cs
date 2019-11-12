@@ -68,8 +68,9 @@ namespace VoyagerApp.Lamps.Voyager
 				UploadUpdateToLamp(sftp);
 				onMessage?.Invoke(new VoyagerUpdateMessage(lamp, "Installing update."));
 				InstallUpdateOnLamp(ssh, out bool reboot);
-				onMessage?.Invoke(new VoyagerUpdateMessage(lamp, "Checking if install was successful."));
-				CheckVersionOnLamp(ssh);
+				//This checking is obsolete!
+                //onMessage?.Invoke(new VoyagerUpdateMessage(lamp, "Checking if install was successful."));
+				//CheckVersionOnLamp(ssh);
 				onMessage?.Invoke(new VoyagerUpdateMessage(lamp, "Successfully installed new software on lamp."));
                 success = true;
             }

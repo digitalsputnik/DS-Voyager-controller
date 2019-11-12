@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using VoyagerApp.UI.Overlays;
 using VoyagerApp.Videos;
 
 namespace VoyagerApp.UI.Menus
@@ -38,7 +39,11 @@ namespace VoyagerApp.UI.Menus
 
         public void Remove()
         {
-            VideoManager.instance.RemoveVideo(video);
+            DialogBox.Show(
+                "ARE YOU SURE?",
+                "Are you sure you want to remove this video from project?",
+                "CANCEL", "OK", null,
+                () => { VideoManager.instance.RemoveVideo(video); });
         }
 	}
 }
