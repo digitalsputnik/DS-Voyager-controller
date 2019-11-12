@@ -32,20 +32,15 @@ namespace VoyagerApp.Lamps
         public event LampHandler onLampAdded;
         public event LampHandler onLampRemoved;
 
+        public event LampHandler onLampMappingChanged;
+        public event LampHandler onLampVideoChanged;
+        public event LampHandler onLampItsheChanged;
+
         List<LampDataProcessor> dataProcessors = new List<LampDataProcessor>();
 
         void Start()
         {
             AddDataProcessors();
-        }
-
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                foreach(var lamp in Lamps)
-                    Debug.Log($"{lamp.serial} - {lamp.address}");
-            }
         }
 
         public void AddLamp(Lamp lamp)
@@ -75,7 +70,7 @@ namespace VoyagerApp.Lamps
         public Lamp GetLampWithAddress(IPAddress address)
         {
             string add = address.ToString();
-            return Lamps.FirstOrDefault(_ => _.address.ToString() == add);
+            return Lamps.FirstOrDefault(_ => _.address?.ToString() == add);
         }
 
         public Lamp GetLampWithSerial(string serial)
@@ -97,6 +92,21 @@ namespace VoyagerApp.Lamps
         public List<Lamp> LampsWithVideo(Video video)
         {
             return Lamps.Where(lamp => lamp.video.hash == video.hash).ToList();
+        }
+
+        internal void RaiseLampMappingChangedEvent(Lamp lamp)
+        {
+            onLampMappingChanged?.Invoke(lamp);
+        }
+
+        internal void RaiseLampVideoChangedEvent(Lamp lamp)
+        {
+            onLampVideoChanged?.Invoke(lamp);
+        }
+
+        internal void RaiseLampItsheChangedEvent(Lamp lamp)
+        {
+            onLampItsheChanged?.Invoke(lamp);
         }
     }
 

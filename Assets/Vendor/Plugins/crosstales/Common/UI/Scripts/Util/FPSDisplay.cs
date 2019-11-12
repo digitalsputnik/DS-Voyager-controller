@@ -3,12 +3,9 @@ using UnityEngine.UI;
 
 namespace Crosstales.UI.Util
 {
-    /// <summary>Simple FPS-Counter.</summary>
     public class FPSDisplay : MonoBehaviour
     {
-
         #region Variables
-
         public Text FPS;
 
         private float deltaTime = 0f;
@@ -21,12 +18,9 @@ namespace Crosstales.UI.Util
         private const string red = "<color=#E57373><b>FPS: {0:0.}</b> ({1:0.0} ms)</color>";
         private const string orange = "<color=#FFB74D><b>FPS: {0:0.}</b> ({1:0.0} ms)</color>";
         private const string green = "<color=#81C784><b>FPS: {0:0.}</b> ({1:0.0} ms)</color>";
-
         #endregion
 
-
         #region MonoBehaviour methods
-
         public void Update()
         {
             deltaTime += (Time.deltaTime - deltaTime) * 0.1f;
@@ -58,8 +52,6 @@ namespace Crosstales.UI.Util
                 FPS.text = wait;
             }
         }
-
         #endregion
     }
 }
-// © 2017-2018 crosstales LLC (https://www.crosstales.com)

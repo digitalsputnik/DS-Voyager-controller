@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 
 namespace VoyagerApp.Utilities
 {
@@ -13,6 +14,19 @@ namespace VoyagerApp.Utilities
             texture.Apply();
             RenderTexture.active = active;
             return texture;
+        }
+
+        public static Color32[] CoordsToColors(int2[] coords, Texture2D frame)
+        {
+            Color32[] colors = new Color32[coords.Length];
+            for (int i = 0; i < coords.Length; i++)
+            {
+                if (coords[i].x == -1 && coords[i].y == -1)
+                    colors[i] = Color.black;
+                else
+                    colors[i] = frame.GetPixel(coords[i].x, coords[i].y);
+            }
+            return colors;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Projects;
+using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 
 namespace VoyagerApp.UI.Menus
@@ -35,9 +36,24 @@ namespace VoyagerApp.UI.Menus
 
         public void Export()
         {
-            string path = Project.Export("export");
-            bool success = FileUtils.SaveProject(path, filenameField.text);
-            GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+            Project.Export(filenameField.text, OnExportReady);
+        }
+
+        void OnExportReady(bool success, string path)
+        {
+            if (success)
+            {
+                FileUtils.SaveProject(path, filenameField.text);
+                GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+            }
+            else
+            {
+                DialogBox.Show(
+                    "ERROR",
+                    "Error packing the project to export it.",
+                    "TRY AGAIN", "CANCEL",
+                    Export, null);
+            }
         }
     }
 }

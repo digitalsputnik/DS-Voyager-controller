@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2599882026844819180}
   - component: {fileID: 2599882026844819182}
   - component: {fileID: 3429770946058065589}
+  - component: {fileID: 4807209511274910268}
   m_Layer: 0
   m_Name: Workspace
   m_TagString: Untagged
@@ -62,7 +63,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1094082a928f9447095dcf8aaf1f0e97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clickTime: 0.2
   selected: []
   selectingEnabled: 1
   showSelection: 1
@@ -92,3 +92,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionBox: {fileID: 4173582382354583484, guid: d92b61c4754424a46a6596e61989c383,
     type: 3}
+--- !u!114 &4807209511274910268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2599882026844819153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42e66a64b375c4627af7d7af16be8dd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

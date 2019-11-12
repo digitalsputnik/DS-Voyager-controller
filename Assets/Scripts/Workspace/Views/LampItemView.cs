@@ -1,18 +1,55 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 using VoyagerApp.Lamps;
 
 namespace VoyagerApp.Workspace.Views
 {
-    public class LampItemView : WorkspaceItemView
+    public class LampItemView : WorkspaceItemView, ISelectableItem
     {
-        [SerializeField] protected TextMesh nameText    = null;
-        [SerializeField] Color normalTextColor          = Color.black;
+        public static bool ShowOrder;
+
+        public bool Selected { get; private set; }
+        public Bounds Bounds => GetComponentInChildren<MeshRenderer>().bounds;
+        public WorkspaceItemView View => this;
+
+        public string prefix = "";
+        public string suffix = "";
+
+        [SerializeField] protected TextMesh nameText      = null;
+        [SerializeField] protected TextMesh orderText     = null;
+        [SerializeField] Color normalTextColor            = Color.black;
         [SerializeField] internal Color selectedTextColor = Color.black;
 
+        int order = -1;
+        public int Order
+        {
+            get => order;
+            set
+            {
+                order = value;
+                if (ShowOrder)
+                    SetPrefix(order == -1 ? "" : order.ToString());
+            }
+        }
+
+        public float3[] SelectPositions
+        {
+            get
+            {
+                float3[] positions = new float3[lamp.pixels];
+                Vector2[] pixels = PixelWorldPositions();
+
+                for (int i = 0; i < lamp.pixels; i++)
+                    positions[i] = new float3(pixels[i], 0.0f);
+
+                return positions;
+            }
+        }
+
         public Lamp lamp;
-        string info = "";
         bool prevCon;
 
         void Update()
@@ -24,8 +61,6 @@ namespace VoyagerApp.Workspace.Views
             }
         }
 
-        public bool Selected { get; private set; }
-
         public override void Setup(object data)
         {
             lamp = (Lamp)data;
@@ -35,9 +70,15 @@ namespace VoyagerApp.Workspace.Views
             RedrawText();
         }
 
-        public void SetInfo(string i)
+        public void SetPrefix(string prefix)
         {
-            info = i;
+            this.prefix = prefix;
+            RedrawText();
+        }
+
+        public void SetSuffix(string suffix)
+        {
+            this.suffix = suffix;
             RedrawText();
         }
 
@@ -55,7 +96,12 @@ namespace VoyagerApp.Workspace.Views
 
         public void RedrawText()
         {
-            nameText.text = info == "" ? mainName : $"{mainName}, {info}";
+            List<string> info = new List<string>();
+            info.Add(mainName);
+            if (suffix != "") info.Add(suffix);
+            nameText.text = string.Join(", ", info);
+
+            orderText.text = prefix;
         }
 
         public virtual Vector2[] PixelWorldPositions() { return null; }
@@ -94,7 +140,7 @@ namespace VoyagerApp.Workspace.Views
     {
         public Lamp lamp;
 
-        public override void Load()
+        public override WorkspaceItemView Load()
         {
             LampManager manager = LampManager.instance;
 
@@ -105,6 +151,7 @@ namespace VoyagerApp.Workspace.Views
 
             LampItemView view = lamp.AddToWorkspace(position, scale, rotation);
             view.guid = guid;
+            return view;
         }
     }
 }

@@ -49,7 +49,7 @@ namespace VoyagerApp.Workspace.Views
     {
         public string name;
 
-        public override void Load()
+        public override WorkspaceItemView Load()
         {
             var manager = WorkspaceManager.instance;
             var item = manager.InstantiateItem<GroupItemView>(name,
@@ -57,6 +57,7 @@ namespace VoyagerApp.Workspace.Views
                                                               scale,
                                                               rotation);
             item.guid = guid;
+            return item;
         }
     }
 }

@@ -1,30 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using VoyagerApp.Lamps;
-using VoyagerApp.Networking.Packages;
-using VoyagerApp.Networking.Packages.Voyager;
+using UnityEngine;
+using VoyagerApp.Networking.Voyager;
 using VoyagerApp.Utilities;
-using VoyagerApp.Videos;
 
 namespace VoyagerApp.Projects
 {
     public class ProjectLoadBuffer
     {
-        const float FRAMES_SLEEP = 0.025f;
+        const float FRAMES_SLEEP = 0.02f;
         const double TIMEOUT = 3.0f;
 
-        List<Lamp> lamps;
-        bool overwriteTime;
+        List<Lamps.Lamp> lamps;
         double time;
 
         Action<float> onProgress;
         long totalFrameCount;
         long totalFramesSent;
 
-        public ProjectLoadBuffer(List<Lamp> lamps, Action<float> onProgress)
+        public ProjectLoadBuffer(List<Lamps.Lamp> lamps, Action<float> onProgress)
         {
             this.lamps = lamps;
             this.onProgress = onProgress;
@@ -32,27 +28,17 @@ namespace VoyagerApp.Projects
 
         public void StartSending()
         {
-            StartSending(true);
-        }
-
-        public void StartSending(bool overwriteTime)
-        {
-            this.overwriteTime = overwriteTime;
-            new Thread(() => { Task.Run(StartSendingAsync); }).Start();
+            Task.Run(StartSendingAsync);
+            //new Thread(() => { Task.Run(StartSendingAsync); }).Start();
         }
 
         async Task StartSendingAsync()
         {
-            List<Lamp> connected = FilterConnectedLamps(lamps);
-
-            totalFrameCount = overwriteTime ?
-                GetExistingFrameCount(connected) :
-                GetAllFrameCount(connected);
-
+            List<Lamps.Lamp> connected = FilterConnectedLamps(lamps);
+            totalFrameCount = GetExistingFrameCount(connected);
             time = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset;
 
-            if (overwriteTime)
-                connected.ForEach(SendVideoMetadata);
+            connected.ForEach(SendVideoMetadata);
 
             bool finished = false;
 
@@ -65,37 +51,34 @@ namespace VoyagerApp.Projects
             MainThread.Dispach(() => { onProgress?.Invoke(1.0f); });
         }
 
-        void SendVideoMetadata(Lamp lamp)
+        void SendVideoMetadata(Lamps.Lamp lamp)
         {
-            Video video = lamp.video;
-            if (!overwriteTime) time = video.lastTimestamp;
+            Videos.Video video = lamp.video;
             var start = video.lastStartTime + NetUtils.VoyagerClient.TimeOffset;
             var packet = new PacketCollection(
                 new SetVideoPacket(video.frames, start),
-                new SetFpsPacket((int)video.fps),
+                new SetFpsPacket(video.fps),
                 new SetItshePacket(lamp.itshe)
             );
-            NetUtils.VoyagerClient.SendPacket(lamp, packet, time);
+            for (int i = 0; i < 5; i++)
+                NetUtils.VoyagerClient.SendPacket(lamp, packet, VoyagerClient.PORT_SETTINGS, time);
         }
 
-        void SendFrameToLamp(Lamp lamp, long index)
+        void SendFrameToLamp(Lamps.Lamp lamp, long index)
         {
-            var packet = new SetFramePacket(index, lamp.buffer.GetFrame(index));
-            NetUtils.VoyagerClient.SendPacketToVideoPort(lamp, packet, time);
+            var packet = new SetFramePacket(index, lamp.itshe, lamp.buffer.GetFrame(index));
+            NetUtils.VoyagerClient.SendPacket(lamp, packet, VoyagerClient.PORT_VIDEO, time);
         }
 
         void UpdateProgress(long tempSent)
         {
             long sent = 0;
-            if (overwriteTime)
-                sent = totalFramesSent + (long)(tempSent * 0.7f);
-            else
-                sent = totalFramesSent;
+            sent = totalFramesSent + (long)(tempSent * 0.7f);
             float progress = (float)sent / totalFrameCount;
             MainThread.Dispach(() => { onProgress?.Invoke(progress); });
         }
 
-        async Task<bool> SendMissingFramesAsync(List<Lamp> connected)
+        async Task<bool> SendMissingFramesAsync(List<Lamps.Lamp> connected)
         {
             var missingFramesPerLamp = await FetchMissingFramesAsync(connected);
 
@@ -106,7 +89,6 @@ namespace VoyagerApp.Projects
                 for (int i = 0; i < missingFramesPerLamp.Count;)
                 {
                     var pair = missingFramesPerLamp[i];
-                    if (!overwriteTime) time = pair.Item1.lastTimestamp;
 
                     if (pair.Item2.Count == 0)
                         missingFramesPerLamp.Remove(pair);
@@ -135,21 +117,21 @@ namespace VoyagerApp.Projects
             return missingFramesPerLamp.Count == 0;
         }
 
-        static List<Lamp> FilterConnectedLamps(List<Lamp> lamps)
+        static List<Lamps.Lamp> FilterConnectedLamps(List<Lamps.Lamp> lamps)
         {
-            return lamps.Where(lamp => lamp.connected).ToList();
+            return lamps.Where(lamp => lamp.connected && lamp.video != null).ToList();
         }
 
-        static async Task<List<(Lamp, List<long>)>> FetchMissingFramesAsync(List<Lamp> lamps)
+        static async Task<List<(Lamps.Lamp, List<long>)>> FetchMissingFramesAsync(List<Lamps.Lamp> lamps)
         {
-            List<Task<(Lamp, long[])>> tasks = new List<Task<(Lamp, long[])>>();
+            List<Task<(Lamps.Lamp, long[])>> tasks = new List<Task<(Lamps.Lamp, long[])>>();
 
             foreach (var lamp in lamps)
                 tasks.Add(FetchMissingFramesAsync(lamp));
 
             await Task.WhenAll(tasks);
 
-            List<(Lamp, List<long>)> results = new List<(Lamp, List<long>)>();
+            List<(Lamps.Lamp, List<long>)> results = new List<(Lamps.Lamp, List<long>)>();
 
             foreach (var task in tasks)
             {
@@ -161,35 +143,43 @@ namespace VoyagerApp.Projects
             return results;
         }
 
-        static async Task<(Lamp, long[])> FetchMissingFramesAsync(Lamp lamp)
+        static async Task<(Lamps.Lamp, long[])> FetchMissingFramesAsync(Lamps.Lamp lamp)
         {
             bool received = false;
-            long[] missing = null;
+            long[] missing = missing = new long[0];
 
             lamp.OnDataReceived += DataReceived;
-            NetUtils.VoyagerClient.SendPacket(lamp, new MissingFramesRequestPacket());
+            NetUtils.VoyagerClient.SendPacket(lamp, new MissingFramesRequestPacket(), VoyagerClient.PORT_SETTINGS);
 
             void DataReceived(byte[] data)
             {
                 var packet = Packet.Deserialize<MissingFramesResponsePacket>(data);
-                if (packet != null)
+                if (packet != null && packet.op == OpCode.MissingFramesResponse)
                 {
                     missing = packet.indices;
                     received = true;
-                    lamp.OnDataReceived -= DataReceived;
                 }
             }
 
             double startTime = TimeUtils.Epoch;
 
-            while (!received && (TimeUtils.Epoch - startTime) < TIMEOUT) await Task.Delay(2);
+            while (!received)
+            {
+                if ((TimeUtils.Epoch - startTime) < TIMEOUT)
+                    await Task.Delay(2);
+                else
+                {
+                    Debug.LogError("TIMEOUT from " + lamp.serial);
+                    lamp.OnDataReceived -= DataReceived;
+                    return (lamp, null);
+                }
+            }
 
-            if (missing == null) return (lamp, null);
-
+            lamp.OnDataReceived -= DataReceived;
             return (lamp, FilterMissingFrames(lamp, missing));
         }
 
-        static long GetExistingFrameCount(List<Lamp> lamps)
+        static long GetExistingFrameCount(List<Lamps.Lamp> lamps)
         {
             long available = 0;
             foreach (var lamp in lamps)
@@ -197,7 +187,7 @@ namespace VoyagerApp.Projects
             return available;
         }
 
-        static long GetAllFrameCount(List<Lamp> lamps)
+        static long GetAllFrameCount(List<Lamps.Lamp> lamps)
         {
             long available = 0;
             foreach (var lamp in lamps)
@@ -205,7 +195,7 @@ namespace VoyagerApp.Projects
             return available;
         }
 
-        static long[] FilterMissingFrames(Lamp lamp, long[] indices)
+        static long[] FilterMissingFrames(Lamps.Lamp lamp, long[] indices)
         {
             List<long> existing = new List<long>();
             foreach (var index in indices)

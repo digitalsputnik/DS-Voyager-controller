@@ -2,21 +2,27 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Projects;
+using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
-using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.UI.Menus
 {
     public class LoadMenuItem : MonoBehaviour
     {
+        public Button button;
+
         [SerializeField] Text nameText  = null;
         [SerializeField] Text lampsText = null;
 
         string path;
+
+        void Start()
+        {
+            button = GetComponent<Button>();
+        }
 
         public void SetPath(string path)
         {
@@ -35,29 +41,24 @@ namespace VoyagerApp.UI.Menus
                     throw new Exception();
                 }
 
-                var settings = Project.JsonSettings();
                 var json = await FileUtils.ReadAllTextAsync(file);
 
                 if (!FileUtils.IsJsonValid(json))
                     throw new Exception();
 
+                var data = Project.GetProjectData(json);
+                int lamps = data.items.Where(i => i.type == "voyager_lamp").Count();
+
                 MainThread.Dispach(() =>
                 {
-                    var project = JsonConvert.DeserializeObject<Project>(json, settings);
-
-                    var lampsCount = project
-                        .items
-                        .Where(i => i is LampItemSaveData)
-                        .ToList()
-                        .Count;
-
                     nameText.text = Path.GetFileName(path);
-                    lampsText.text = $"LAMPS: {lampsCount}";
+                    lampsText.text = $"LAMPS: {lamps}";
                     GetComponent<Button>().interactable = true;
                 });
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.LogError(ex);
                 MainThread.Dispach(() =>
                 {
                     GetComponentInParent<LoadMenu>().RemoveItem(this);
@@ -74,8 +75,15 @@ namespace VoyagerApp.UI.Menus
 
         public void Delete()
         {
-            Directory.Delete(path, true);
-            GetComponentInParent<LoadMenu>().RemoveItem(this);
+            DialogBox.Show(
+                "ARE YOU SURE?",
+                "Are you sure you want to delete this project?",
+                "CANCEL", "OK", null,
+                () =>
+                {
+                    Directory.Delete(path, true);
+                    GetComponentInParent<LoadMenu>().RemoveItem(this);
+                });
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerApp.Lamps;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -12,7 +13,9 @@ namespace VoyagerApp.UI.Menus
         internal override void OnShow()
         {
             string version = Application.version;
-            versionText.text = $"VERSION {version}";
+            versionText.text =
+                $"VERSION {version}\n" +
+                $"LAMP VERSION {UpdateSettings.VoyagerAnimationVersion}";
 
             int year = DateTime.Now.Year;
             copyrightText.text = $"© {year} - Digital Sputnik";

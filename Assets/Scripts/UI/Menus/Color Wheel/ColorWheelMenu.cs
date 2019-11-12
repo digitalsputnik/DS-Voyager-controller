@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using VoyagerApp.Workspace;
-using UnityEngine.UI;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -22,7 +20,6 @@ namespace VoyagerApp.UI.Menus
         Itshe itshe;
 
         bool approved;
-        bool selectionEnabled;
 
         public void SetItsh(Itshe itshe)
         {
@@ -60,6 +57,9 @@ namespace VoyagerApp.UI.Menus
             ShowColorWheel();
             SubscribeSliders();
             SubscribeWheel();
+
+            InvokeRepeating("UpdateLoop", 0.0f, 0.2f);
+            ApplicationState.ColorWheelActive.value = true;
         }
 
         internal override void OnHide()
@@ -67,26 +67,40 @@ namespace VoyagerApp.UI.Menus
             HideColorWheel();
             UnsubscribeSliders();
             UnsubscribeWheel();
+
+            StopAllCoroutines();
+            ApplicationState.ColorWheelActive.value = false;
+        }
+
+        Itshe prevItshe;
+
+        void UpdateLoop()
+        {
+            if (itshe != prevItshe)
+            {
+                ColorwheelManager.instance.ValuePicked(itshe);
+                prevItshe = itshe;
+            }
         }
 
         #region Sliders
 
         void SubscribeSliders()
         {
-            itensitySlider.onChanged += SliderChanged;
+            itensitySlider.onChanged    += SliderChanged;
             temperatureSlider.onChanged += SliderChanged;
-            saturationSlider.onChanged += SliderChanged;
-            hueSlider.onChanged += SliderChanged;
-            effectSlider.onChanged += SliderChanged;
+            saturationSlider.onChanged  += SliderChanged;
+            hueSlider.onChanged         += SliderChanged;
+            effectSlider.onChanged      += SliderChanged;
         }
 
         void UnsubscribeSliders()
         {
-            itensitySlider.onChanged -= SliderChanged;
+            itensitySlider.onChanged    -= SliderChanged;
             temperatureSlider.onChanged -= SliderChanged;
-            saturationSlider.onChanged -= SliderChanged;
-            hueSlider.onChanged -= SliderChanged;
-            effectSlider.onChanged -= SliderChanged;
+            saturationSlider.onChanged  -= SliderChanged;
+            hueSlider.onChanged         -= SliderChanged;
+            effectSlider.onChanged      -= SliderChanged;
         }
 
         void SliderChanged(int value)
@@ -98,8 +112,6 @@ namespace VoyagerApp.UI.Menus
             float e = effectSlider.normalized;
 
             itshe = new Itshe(i, t, s, h, e);
-
-            ColorwheelManager.instance.ValuePicked(itshe);
 
             UnsubscribeWheel();
             wheel.SetFromItsh(itshe);
@@ -124,8 +136,6 @@ namespace VoyagerApp.UI.Menus
         {
             itshe.s = saturation;
             itshe.h = hue;
-
-            ColorwheelManager.instance.ValuePicked(itshe);
 
             UnsubscribeSliders();
             saturationSlider.SetValue(saturation);
@@ -155,10 +165,6 @@ namespace VoyagerApp.UI.Menus
             controlsContainer.SetActive(false);
 
             approved = false;
-            selectionEnabled = WorkspaceSelection.instance.Enabled;
-
-            ItemMove.Enabled = false;
-            WorkspaceSelection.instance.Enabled = false;
         }
 
         void HideColorWheel()
@@ -171,9 +177,6 @@ namespace VoyagerApp.UI.Menus
 
             if (!approved)
                 ColorwheelManager.instance.ValuePicked(beginning);
-
-            ItemMove.Enabled = true;
-            WorkspaceSelection.instance.Enabled = selectionEnabled;
         }
     }
 }

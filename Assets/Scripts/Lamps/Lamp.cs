@@ -18,19 +18,18 @@ namespace VoyagerApp.Lamps
         public string type;
         public string serial;
         public IPAddress address;
-        public DmxSettings dmx;
 
-        public bool connected => (TimeUtils.Epoch - lastMessage) < TIMEOUT;
+        public virtual bool connected => (TimeUtils.Epoch - lastMessage) < TIMEOUT;
         public double lastMessage;
         public abstract int pixels { get; }
         public abstract string version { get; }
         public abstract bool updated { get; }
         public abstract double lastTimestamp { get; protected set; }
 
-        public Itshe itshe;
-        public Video video;
-        public VideoPosition mapping;
-        public VideoBuffer buffer;
+        public Itshe itshe = new Itshe();
+        public Video video = null;
+        public VideoPosition mapping = new VideoPosition();
+        public VideoBuffer buffer = new VideoBuffer();
 
         internal void PushData(byte[] data)
         {
@@ -42,15 +41,17 @@ namespace VoyagerApp.Lamps
             lastMessage = TimeUtils.Epoch;
         }
 
-        internal virtual void UpdateDmxSettings(DmxSettings settings)
+        public virtual void SetItshe(Itshe itshe)
         {
-            dmx = settings;
-            lastMessage = TimeUtils.Epoch;
+            this.itshe = itshe;
+            LampManager.instance.RaiseLampItsheChangedEvent(this);
         }
 
-        public virtual void SetItshe(Itshe itshe) => this.itshe = itshe;
-
-        public virtual void SetVideo(Video video) => this.video = video;
+        public virtual void SetVideo(Video video)
+        {
+            this.video = video;
+            LampManager.instance.RaiseLampVideoChangedEvent(this);
+        }
 
         public virtual void PushFrame(Color32[] colors, long frame)
         {
@@ -58,13 +59,11 @@ namespace VoyagerApp.Lamps
                 buffer.SetFrame(frame, ColorUtils.ColorsToBytes(colors));
         }
 
-        public virtual void PushFrame(byte[] colors, long frame)
+        public virtual void SetMapping(VideoPosition mapping)
         {
-            if (!buffer.FrameExists(frame))
-                buffer.SetFrame(frame, colors);
+            this.mapping = mapping;
+            LampManager.instance.RaiseLampMappingChangedEvent(this);
         }
-
-        public virtual void SetMapping(VideoPosition mapping) => this.mapping = mapping;
 
         public abstract LampItemView AddToWorkspace();
         public abstract LampItemView AddToWorkspace(Vector2 position);

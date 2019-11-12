@@ -16,13 +16,15 @@ namespace VoyagerApp.Dmx
         [JsonProperty("Division")]
         public int division;
         [JsonProperty("Protocol")]
-        public string protocol;
+        public DmxProtocol protocol;
+        [JsonProperty("Format")]
+        public DmxFormat format;
     }
 
     [Serializable]
     public class DmxPoll : JsonData<DmxPoll>
     {
         [JsonProperty("poll_dmx")]
-        public bool poll;
+        public bool poll = true;
     }
 }

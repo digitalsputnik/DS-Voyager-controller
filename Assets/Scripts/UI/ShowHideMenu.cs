@@ -8,7 +8,7 @@ namespace VoyagerApp.UI
     {
         [Header("General")]
         [SerializeField] RectTransform target   = null;
-        [SerializeField] float speed            = 0.0f;
+        public float speed            = 0.0f;
         public Vector2 openPosition             = Vector2.zero;
         public Vector2 closedPosition           = Vector2.zero;
         [SerializeField] bool open              = true;

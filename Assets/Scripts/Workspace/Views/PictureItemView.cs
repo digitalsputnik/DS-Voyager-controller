@@ -1,31 +1,100 @@
 ﻿using System;
+using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using VoyagerApp.Utilities;
 
 namespace VoyagerApp.Workspace.Views
 {
-    public class PictureItemView : ItemsContainerView
+    public class PictureItemView : ItemsContainerView, ISelectableItem
     {
+        static List<PictureItemView> orderQueue = new List<PictureItemView>();
+
         [SerializeField] new MeshRenderer renderer = null;
         [SerializeField] float pixelsPerUnit = 20;
+        [SerializeField] Color selectedColor = Color.yellow;
+        [SerializeField] Color deselectedColor = Color.grey;
 
-        Texture2D picture;
+        public Texture2D picture;
+
+        public bool Selected { get; private set; }
+        public Bounds Bounds => renderer.bounds;
+        public WorkspaceItemView View => this;
+
+        public int GetOrder()
+        {
+            return orderQueue.IndexOf(this);
+        }
+
+        public float3[] SelectPositions
+        {
+            get
+            {
+                float3[] positions = new float3[5];
+                positions[0] = transform.position;
+                positions[1] = renderer.transform.TransformPoint(new Vector3(-0.5f,  0.5f, 0.0f));
+                positions[2] = renderer.transform.TransformPoint(new Vector3( 0.5f,  0.5f, 0.0f));
+                positions[3] = renderer.transform.TransformPoint(new Vector3(-0.5f, -0.5f, 0.0f));
+                positions[4] = renderer.transform.TransformPoint(new Vector3( 0.5f, -0.5f, 0.0f));
+                return positions;
+            }
+        }
 
         public override void Setup(object data)
         {
             picture = (Texture2D)data;
+            deselectedColor = outline.GetComponent<MeshRenderer>().material.color;
             base.Setup(data);
+
+            orderQueue.Add(this);
+            OrderQueueChanged();
+
+            WorkspaceSelection.instance.onSelectionChanged += SelectionChanged;
+        }
+
+        void OnDestroy()
+        {
+            orderQueue.Remove(this);
+            OrderQueueChanged();
+            WorkspaceSelection.instance.onSelectionChanged -= SelectionChanged;
+        }
+
+        static void OrderQueueChanged()
+        {
+            for (int i = 0; i < orderQueue.Count; i++)
+            {
+                var view = orderQueue[i];
+                view.renderer.material.renderQueue = 2000 + i;
+            }
+        }
+
+        void SelectionChanged()
+        {
+            foreach (var item in WorkspaceSelection.instance.Selected)
+            {
+                if (item is PictureItemView pictureView)
+                    pictureView.MoveToLast();
+            }
+        }
+
+        void MoveToLast()
+        {
+            orderQueue.Remove(this);
+            orderQueue.Add(this);
+            OrderQueueChanged();
         }
 
         protected override void Generate()
         {
             Vector2 size = new Vector2(picture.width, picture.height) / pixelsPerUnit;
+            size *= renderer.transform.localScale;
             renderer.transform.localScale = size;
 
             Vector2 outlineSize = Vector2.one * outlineThickness;
             outline.transform.localScale = size + outlineSize;
 
-            renderer.material.mainTexture = picture;
+            renderer.material.SetTexture("_BaseMap", picture);
+            //renderer.material.mainTexture = picture;
         }
 
         public void PositionBasedCamera()
@@ -37,6 +106,13 @@ namespace VoyagerApp.Workspace.Views
             pos.x = Camera.main.transform.position.x;
             pos.y = Camera.main.transform.position.y;
             transform.position = pos;
+        }
+
+        public void SetOrder(int index)
+        {
+            orderQueue.Remove(this);
+            orderQueue.Insert(index, this);
+            OrderQueueChanged();
         }
 
         void SetupMeshSize()
@@ -53,7 +129,8 @@ namespace VoyagerApp.Workspace.Views
             else if (videoAspect < maxScaleAspect)
                 s.x = maxScale.x / maxScaleAspect * videoAspect;
 
-            renderer.transform.localScale = s;
+            float diff = renderer.transform.localScale.x / s.x;
+            transform.localScale = transform.localScale / diff;
         }
 
         Vector2 CalculateMeshMaxScale()
@@ -81,8 +158,23 @@ namespace VoyagerApp.Workspace.Views
                 scale = scale,
                 rotation = rotation,
                 parentguid = parent == null ? "" : parent.guid,
-                image = picture
+                image = picture,
+                queueIndex = orderQueue.IndexOf(this)
             };
+        }
+
+        public void Select()
+        {
+            MeshRenderer outRend = outline.GetComponent<MeshRenderer>();
+            outRend.material.color = selectedColor;
+            Selected = true;
+        }
+
+        public void Deselect()
+        {
+            MeshRenderer outRend = outline.GetComponent<MeshRenderer>();
+            outRend.material.color = deselectedColor;
+            Selected = false;
         }
     }
 
@@ -90,8 +182,9 @@ namespace VoyagerApp.Workspace.Views
     public class PictureItemSaveData : WorkspaceItemSaveData
     {
         public Texture2D image;
+        public int queueIndex;
 
-        public override void Load()
+        public override WorkspaceItemView Load()
         {
             var manager = WorkspaceManager.instance;
             var item = manager.InstantiateItem<PictureItemView>(image,
@@ -99,6 +192,7 @@ namespace VoyagerApp.Workspace.Views
                                                                 scale,
                                                                 rotation);
             item.guid = guid;
+            return item;
         }
     }
 }

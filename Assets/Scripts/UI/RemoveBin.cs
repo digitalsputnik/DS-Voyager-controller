@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
+using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.UI
 {
@@ -11,34 +13,36 @@ namespace VoyagerApp.UI
         [SerializeField] Color activeColor  = Color.black;
         [SerializeField] Color normalColor  = Color.black;
 
-        List<ItemMove> itemsMoving = new List<ItemMove>();
-
         void Start()
         {
-            ItemMove.onItemMoveStarted += ItemMoveStarted;
-            ItemMove.onItemMoveEnded += ItemMoveEnded;
-
+            SelectionMove.onSelectionMoveStarted += SelectionMoveStarted;
+            SelectionMove.onSelectionMoveEnded += SelectionMoveEnded;
             gameObject.SetActive(false);
         }
 
-        private void ItemMoveStarted(ItemMove item)
+        private void SelectionMoveStarted()
         {
-            itemsMoving.Add(item);
             gameObject.SetActive(true);
         }
 
-        private void ItemMoveEnded(ItemMove item)
+        private void SelectionMoveEnded()
         {
-            itemsMoving.Remove(item);
-            
             if (ItemOverBin(Input.mousePosition))
             {
-                var view = item.GetComponentInParent<WorkspaceItemView>();
-                WorkspaceManager.instance.RemoveItem(view);
-            }
+                foreach (var selected in new List<ISelectableItem>(WorkspaceUtils.SelectedItems))
+                    if (selected is WorkspaceItemView view)
+                    {
+                        if (view is LampItemView lampView)
+                        {
+                            lampView.lamp.buffer.ClearBuffer();
+                            lampView.lamp.video = null;
+                        }
 
-            if (itemsMoving.Count == 0)
-                gameObject.SetActive(false);
+                        WorkspaceManager.instance.RemoveItem(view);
+                    }
+                WorkspaceSelection.instance.Clear();
+            }
+            gameObject.SetActive(false);
         }
 
         void Update()
@@ -47,7 +51,8 @@ namespace VoyagerApp.UI
                 SetColorActive();
             else
                 SetColorNormal();
-        }
+
+         }
 
         bool ItemOverBin(Vector2 position)
         {
@@ -56,8 +61,8 @@ namespace VoyagerApp.UI
 
         void OnDestroy()
         {
-            ItemMove.onItemMoveStarted -= ItemMoveStarted;
-            ItemMove.onItemMoveEnded -= ItemMoveEnded;
+            SelectionMove.onSelectionMoveStarted -= SelectionMoveStarted;
+            SelectionMove.onSelectionMoveEnded -= SelectionMoveEnded;
         }
 
         void SetColorActive() => image.color = activeColor;

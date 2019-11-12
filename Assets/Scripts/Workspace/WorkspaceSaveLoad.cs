@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using UnityEngine;
 using VoyagerApp.Networking;
+using VoyagerApp.UI;
 using VoyagerApp.Utilities;
 
 namespace VoyagerApp.Workspace
@@ -28,6 +29,8 @@ namespace VoyagerApp.Workspace
 
         public static void Save(string name, WorkspaceItemView[] items)
         {
+            WorkspaceSelection.instance.Clear();
+
             name += ".ws";
 
             WorkspaceSaveData data = CreateData(items);

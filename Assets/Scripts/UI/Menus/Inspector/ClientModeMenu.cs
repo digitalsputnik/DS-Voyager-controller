@@ -11,56 +11,109 @@ namespace VoyagerApp.UI.Menus
     public class ClientModeMenu : Menu
     {
         [SerializeField] float ssidPollTimeout      = 10.0f;
-        [SerializeField] Toggle ssidsToggle         = null;
-        [SerializeField] ListPicker ssidList   = null;
+        [SerializeField] GameObject ssidListObj     = null;
+        [SerializeField] ListPicker ssidList        = null;
+        [SerializeField] Button ssidRefreshBtn      = null;
+        [SerializeField] GameObject ssidFieldObj    = null;
         [SerializeField] InputField ssidField       = null;
         [SerializeField] InputField passwordField   = null;
+        [SerializeField] Button setBtn              = null;
+        [SerializeField] string[] loadingAnim       = null;
+        [SerializeField] float animationSpeed       = 0.6f;
 
-        bool gotSsids;
+        Dictionary<Lamp, List<string>> lampToSsids = new Dictionary<Lamp, List<string>>();
+        bool loading;
+
+        public override void Start()
+        {
+            base.Start();
+            TypeSsidBtnClick();
+        }
 
         internal override void OnShow()
         {
-            ssidsToggle.onValueChanged.AddListener(SsidsToggleChanged);
+            ssidField.onValueChanged.AddListener(SsidFieldTextChanged);
+            if (ssidFieldObj.activeSelf) TypeSsidBtnClick();
         }
 
         internal override void OnHide()
         {
-            StopCoroutine(IEnumGetSsidListFromLamps());
+            ssidField.onValueChanged.RemoveListener(SsidFieldTextChanged);
+            lampToSsids.Clear();
+        }
+
+        public void ScanForSsidsBtnClick()
+        {
+            ssidListObj.gameObject.SetActive(true);
+            ssidFieldObj.gameObject.SetActive(false);
+            StartLoading();
+        }
+
+        public void ReloadSsidList()
+        {
+            StartLoading();
+        }
+
+        public void TypeSsidBtnClick()
+        {
+            ssidListObj.gameObject.SetActive(false);
+            ssidFieldObj.gameObject.SetActive(true);
+            if (WorkspaceUtils.SelectedVoyagerLamps.Count > 0 && string.IsNullOrEmpty(ssidField.text))
+                ssidField.text = WorkspaceUtils.SelectedVoyagerLamps[0].activeSsid;
+        }
+
+        void SsidFieldTextChanged(string text)
+        {
+            setBtn.gameObject.SetActive(ssidField.text.Length >= 8);
         }
 
         #region Lamp SSIDS
 
-        void SsidsToggleChanged(bool value)
+        void StartLoading()
         {
-            if (value && (!gotSsids || ssidList.items.Count < 2))
-            {
-                ssidList.interactable = false;
-                ssidList.SetItems("Loading");
-                StartCoroutine(IEnumGetSsidListFromLamps());
-            }
+            ssidList.index = 0;
+            ssidList.interactable = false;
+            ssidRefreshBtn.interactable = false;
+            lampToSsids.Clear();
+            StartCoroutine(IEnumGetSsidListFromLamps());
+            StartCoroutine(IEnumLoadingAnimation());
         }
 
         IEnumerator IEnumGetSsidListFromLamps()
         {
+            loading = true;
             List<List<string>> allSsids = new List<List<string>>();
-            int count = WorkspaceUtils.SelectedLamps.Count;
+            int count = 0;
             int gathered = 0;
 
             foreach (var lamp in WorkspaceUtils.SelectedLamps)
-                PollSsidsFromLamp(lamp);
+            {
+                if (lamp.connected)
+                {
+                    if (lampToSsids.ContainsKey(lamp))
+                        allSsids.Add(lampToSsids[lamp]);
+                    else
+                        PollSsidsFromLamp(lamp);
+                }
+            }
 
             void PollSsidsFromLamp(Lamp lamp)
             {
+                count++;
                 NetUtils.VoyagerClient.GetSsidListFromLamp(
                     lamp,
                     OnSsidsReceived,
                     ssidPollTimeout);
             }
 
-            void OnSsidsReceived(string[] ssids)
+            void OnSsidsReceived(Lamp lamp, string[] ssids)
             {
-                allSsids.Add(ssids.ToList());
-                gathered++;
+                if (!lampToSsids.ContainsKey(lamp))
+                {
+                    lampToSsids.Add(lamp, ssids.ToList());
+                    allSsids.Add(ssids.ToList());
+                    gathered++;
+                }
             }
 
             double starttime = TimeUtils.Epoch;
@@ -89,15 +142,28 @@ namespace VoyagerApp.UI.Menus
             }
 
             OnSsidListReceived(returnSsids);
+            loading = false;
+        }
+
+        IEnumerator IEnumLoadingAnimation()
+        {
+            int i = 0;
+            while (loading)
+            {
+                ssidList.SetItems(loadingAnim[i]);
+                yield return new WaitForSeconds(animationSpeed);
+                if (++i >= loadingAnim.Length) i = 0;
+            }
         }
 
         void OnSsidListReceived(List<string> ssids)
         {
             if (ssids.Count > 0)
             {
-                gotSsids = true;
                 ssidList.SetItems(ssids.ToArray());
-                ssidList.interactable = ssidsToggle.isOn;
+                ssidList.interactable = true;
+                setBtn.interactable = true;
+                ssidRefreshBtn.interactable = true;
             }
             else
             {
@@ -110,21 +176,13 @@ namespace VoyagerApp.UI.Menus
         public void Set()
         {
             var client = NetUtils.VoyagerClient;
-            var ssid = GetSsid();
+            var ssid = ssidListObj.activeSelf ? ssidList.selected : ssidField.text;
             var password = passwordField.text;
 
             foreach (var lamp in WorkspaceUtils.SelectedLamps)
                 client.TurnToClient(lamp, ssid, password);
 
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
-        }
-
-        string GetSsid()
-        {
-            if (gotSsids && ssidsToggle.isOn)
-                return ssidList.selected;
-
-            return ssidField.text;
         }
     }
 }

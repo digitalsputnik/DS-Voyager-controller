@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
@@ -56,7 +57,7 @@ namespace VoyagerApp.UI.Menus
             var lamps = WorkspaceUtils.Lamps;
             foreach (var lamp in LampManager.instance.Lamps)
             {
-                if (!lamps.Any(l => l.serial == lamp.serial))
+                if (!lamps.Any(l => l.serial == lamp.serial) && lamp.connected)
                     OnLampAdded(lamp);
             }
         }
@@ -64,7 +65,7 @@ namespace VoyagerApp.UI.Menus
         public void AddAllLamps()
         {
             int count = items.Count;
-            Vector2[] points = VectorUtils.ScreenVerticalPositions(count);
+            float2[] points = VectorUtils.ScreenVerticalPositions(count);
             AddLampItem[] itms = items.ToArray();
             for (int i = 0; i < count; i++)
             {
@@ -93,7 +94,7 @@ namespace VoyagerApp.UI.Menus
 
         void OnLampAdded(Lamp lamp)
         {
-            if (!WorkspaceUtils.Lamps.Any(l => l == lamp))
+            if (!WorkspaceUtils.Lamps.Any(l => l == lamp) && lamp.connected && math.abs(NetUtils.VoyagerClient.TimeOffset) > 0.01f)
             {
                 AddLampItem item = Instantiate(prefab, container);
                 item.SetLamp(lamp);

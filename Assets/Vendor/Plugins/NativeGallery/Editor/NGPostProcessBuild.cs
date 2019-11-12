@@ -5,12 +5,12 @@ using System.IO;
 using UnityEditor.iOS.Xcode;
 #endif
 
-public class NGPostProcessBuild 
+public class NGPostProcessBuild
 {
 	private const bool ENABLED = true;
 
-	private const string PHOTO_LIBRARY_USAGE_DESCRIPTION = "Save media to Photos";
-	private const bool MINIMUM_TARGET_8_OR_ABOVE = false;
+	private const string PHOTO_LIBRARY_USAGE_DESCRIPTION = "Videos can be streamed to lamps";
+	private const bool MINIMUM_TARGET_8_OR_ABOVE = true;
 
 #if UNITY_IOS
 #pragma warning disable 0162
@@ -28,8 +28,12 @@ public class NGPostProcessBuild
 			PBXProject pbxProject = new PBXProject();
 			pbxProject.ReadFromFile( pbxProjectPath );
 
+#if UNITY_2019_3_OR_NEWER
+			string targetGUID = pbxProject.GetUnityFrameworkTargetGuid();
+#else
 			string targetGUID = pbxProject.TargetGuidByName( PBXProject.GetUnityTargetName() );
-	
+#endif
+
 			if( MINIMUM_TARGET_8_OR_ABOVE )
 			{
 				pbxProject.AddBuildProperty( targetGUID, "OTHER_LDFLAGS", "-framework Photos" );
@@ -43,11 +47,11 @@ public class NGPostProcessBuild
 				pbxProject.AddBuildProperty( targetGUID, "OTHER_LDFLAGS", "-framework MobileCoreServices" );
 				pbxProject.AddBuildProperty( targetGUID, "OTHER_LDFLAGS", "-framework ImageIO" );
 			}
-	
+
 			pbxProject.RemoveFrameworkFromProject( targetGUID, "Photos.framework" );
 
 			File.WriteAllText( pbxProjectPath, pbxProject.WriteToString() );
-			
+
 			PlistDocument plist = new PlistDocument();
 			plist.ReadFromString( File.ReadAllText( plistPath ) );
 

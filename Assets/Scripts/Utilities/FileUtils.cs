@@ -6,6 +6,7 @@ using Crosstales.FB;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using VoyagerApp.UI.Overlays;
 
 namespace VoyagerApp.Utilities
 {
@@ -16,13 +17,44 @@ namespace VoyagerApp.Utilities
             get => Path.Combine(Application.persistentDataPath, "workspaces");
         }
 
+        public static string TempPath
+        {
+            get => Path.Combine(Application.temporaryCachePath);
+        }
+
         public static void LoadVideoFromDevice(PathHandler onLoaded)
         {
             if (Application.isMobilePlatform)
             {
                 NativeGallery.GetVideoFromGallery((string path) =>
                 {
-                    onLoaded.Invoke(path == "" ? null : path);
+                    if (path == string.Empty || path == null)
+                    {
+                        onLoaded?.Invoke(null);
+                        return;
+                    }
+
+                    if (Application.platform == RuntimePlatform.IPhonePlayer)
+                    {
+                        string name = Path.GetFileName(path);
+                        string newPath = Path.Combine(TempPath, name);
+                        try
+                        {
+                            Copy(path, newPath);
+                            onLoaded?.Invoke(newPath);
+                            return;
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogError(ex);
+                        }
+
+                        onLoaded?.Invoke(path);
+                    }
+                    else
+                    {
+                        onLoaded.Invoke(path);
+                    }
                 }, "", "video/*");
             }
             else
@@ -38,10 +70,31 @@ namespace VoyagerApp.Utilities
         {
             if (Application.isMobilePlatform)
             {
-                NativeGallery.GetImageFromGallery((string path) =>
+                if (Application.platform == RuntimePlatform.IPhonePlayer)
                 {
-                    onLoaded.Invoke(path == "" ? null : path);
-                }, "", "image/*");
+                    DialogBox.Show(
+                        "WARNING",
+                        "On iOS captured photos might not load.",
+                        "CANCEL", "OK",
+                        () =>
+                        {
+                            onLoaded?.Invoke(null);
+                        },
+                        () =>
+                        {
+                            NativeGallery.GetImageFromGallery((string path) =>
+                            {
+                                onLoaded.Invoke(path == "" ? null : path);
+                            }, "", "image/*");
+                        });
+                }
+                else
+                {
+                    NativeGallery.GetImageFromGallery((string path) =>
+                    {
+                        onLoaded.Invoke(path == "" ? null : path);
+                    }, "", "image/*");
+                }
             }
             else
             {
@@ -121,10 +174,18 @@ namespace VoyagerApp.Utilities
 
         public static async Task<string> ReadAllTextAsync(string path)
         {
-            string result;
-            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (var reader = new StreamReader(stream, Encoding.UTF8))
-                result = await reader.ReadToEndAsync();
+            string result = null;
+            try
+            {
+                using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (var reader = new StreamReader(stream, Encoding.UTF8))
+                    result = await reader.ReadToEndAsync();
+            }
+            finally
+            {
+                if (result == null)
+                    result = "";
+            }
             return result;
         }
 
@@ -144,6 +205,24 @@ namespace VoyagerApp.Utilities
             }
 
             return false;
+        }
+
+        public static void Copy(string inputFilePath, string outputFilePath)
+        {
+            int bufferSize = 1024 * 1024;
+
+            using (FileStream writeStream = new FileStream(outputFilePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
+            {
+                using (FileStream readStream = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read))
+                {
+                    writeStream.SetLength(readStream.Length);
+                    int bytesRead = -1;
+                    byte[] bytes = new byte[bufferSize];
+
+                    while ((bytesRead = readStream.Read(bytes, 0, bufferSize)) > 0)
+                        writeStream.Write(bytes, 0, bytesRead);
+                }
+            }
         }
     }
 

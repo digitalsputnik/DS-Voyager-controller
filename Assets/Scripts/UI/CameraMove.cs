@@ -39,7 +39,7 @@ namespace VoyagerApp.UI
 
         void HandleMouse()
         {
-            if (!Input.GetKey(KeyCode.LeftAlt))
+            if (!Input.GetKey(KeyCode.LeftAlt) && !MoveIcon.onHold)
             {
                 if (Input.GetMouseButtonDown(0))
                 {
@@ -105,54 +105,95 @@ namespace VoyagerApp.UI
             }
             else
             {
-                if (Input.touchCount == 2)
+                if (MoveIcon.onHold)
                 {
-                    if (state != CameraMoveState.CameraMove)
+                    if (Input.touchCount == 1)
                     {
-                        var touch = Input.GetTouch(1);
-                        pointerStart = cam.ScreenToWorldPoint(touch.position);
-                        state = CameraMoveState.CameraMove;
+                        if (state != CameraMoveState.CameraMove)
+                        {
+                            var touch = Input.GetTouch(0);
+                            pointerStart = cam.ScreenToWorldPoint(touch.position);
+                            state = CameraMoveState.CameraMove;
+                        }
                     }
-                }
-                else if (Input.touchCount == 3)
-                {
-                    if (state != CameraMoveState.CameraPanAndZoom)
+                    else if (Input.touchCount == 2)
                     {
-                        pointerStart = cam.ScreenToWorldPoint(GetTouchMiddle());
-                        prevTouchDistance = GetTouchDistance();
-                        state = CameraMoveState.CameraPanAndZoom;
+                        if (state != CameraMoveState.CameraPanAndZoom)
+                        {
+                            pointerStart = cam.ScreenToWorldPoint(GetTouchMiddle(0, 1));
+                            prevTouchDistance = GetTouchDistance(0, 1);
+                            state = CameraMoveState.CameraPanAndZoom;
+                        }
                     }
+                    else
+                        state = CameraMoveState.None;
                 }
                 else
-                    state = CameraMoveState.None;
+                {
+                    if (Input.touchCount == 2)
+                    {
+                        if (state != CameraMoveState.CameraMove)
+                        {
+                            var touch = Input.GetTouch(1);
+                            pointerStart = cam.ScreenToWorldPoint(touch.position);
+                            state = CameraMoveState.CameraMove;
+                        }
+                    }
+                    else if (Input.touchCount == 3)
+                    {
+                        if (state != CameraMoveState.CameraPanAndZoom)
+                        {
+                            pointerStart = cam.ScreenToWorldPoint(GetTouchMiddle(1, 2));
+                            prevTouchDistance = GetTouchDistance(1, 2);
+                            state = CameraMoveState.CameraPanAndZoom;
+                        }
+                    }
+                    else
+                        state = CameraMoveState.None;
+                }
             }
 
 			if (state == CameraMoveState.WorkspaceClear || state == CameraMoveState.WorkspaceOverItem)
 				pointerPosition = cam.ScreenToWorldPoint(Input.GetTouch(0).position);
 
 			if (state == CameraMoveState.CameraMove)
-                pointerPosition = cam.ScreenToWorldPoint(Input.GetTouch(1).position);
+            {
+                if (MoveIcon.onHold)
+                    pointerPosition = cam.ScreenToWorldPoint(Input.GetTouch(0).position);
+                else
+                    pointerPosition = cam.ScreenToWorldPoint(Input.GetTouch(1).position);
+            }
 
             if (state == CameraMoveState.CameraPanAndZoom)
             {
-                float distance = GetTouchDistance();
-                touchDistanceDelta = distance - prevTouchDistance;
-                prevTouchDistance = distance;
-                pointerPosition = cam.ScreenToWorldPoint(GetTouchMiddle());
+                if (MoveIcon.onHold)
+                {
+                    float distance = GetTouchDistance(0, 1);
+                    touchDistanceDelta = distance - prevTouchDistance;
+                    prevTouchDistance = distance;
+                    pointerPosition = cam.ScreenToWorldPoint(GetTouchMiddle(0, 1));
+                }
+                else
+                {
+                    float distance = GetTouchDistance(1, 2);
+                    touchDistanceDelta = distance - prevTouchDistance;
+                    prevTouchDistance = distance;
+                    pointerPosition = cam.ScreenToWorldPoint(GetTouchMiddle(1, 2));
+                }
             }
         }
 
-        Vector2 GetTouchMiddle()
+        Vector2 GetTouchMiddle(int first, int second)
         {
-            var touch1 = Input.GetTouch(1).position;
-            var touch2 = Input.GetTouch(2).position;
+            var touch1 = Input.GetTouch(first).position;
+            var touch2 = Input.GetTouch(second).position;
             return touch1 + (touch2 - touch1) / 2.0f;
         }
 
-        float GetTouchDistance()
+        float GetTouchDistance(int first, int second)
         {
-            var touch1 = Input.GetTouch(1).position;
-            var touch2 = Input.GetTouch(2).position;
+            var touch1 = Input.GetTouch(first).position;
+            var touch2 = Input.GetTouch(second).position;
             return Vector2.Distance(touch1, touch2);
         }
 
@@ -199,8 +240,16 @@ namespace VoyagerApp.UI
             if (!Application.isMobilePlatform)
                 return -Input.mouseScrollDelta.y * mouseZoomSpeed;
 
-            if (Input.touchCount == 3)
-                return -touchDistanceDelta * touchZoomSpeed * cam.orthographicSize;
+            if (MoveIcon.onHold)
+            {
+                if (Input.touchCount == 2)
+                    return -touchDistanceDelta * touchZoomSpeed * cam.orthographicSize;
+            }
+            else
+            {
+                if (Input.touchCount == 3)
+                    return -touchDistanceDelta * touchZoomSpeed * cam.orthographicSize;
+            }
 
             return 0.0f;
         }
@@ -210,11 +259,22 @@ namespace VoyagerApp.UI
             if (!Application.isMobilePlatform)
                 return cam.ScreenToWorldPoint(Input.mousePosition);
 
-            if (Input.touchCount == 2)
-                return cam.ScreenToWorldPoint(Input.GetTouch(1).position);
+            if (MoveIcon.onHold)
+            {
+                if (Input.touchCount == 1)
+                    return cam.ScreenToWorldPoint(Input.GetTouch(0).position);
 
-            if (Input.touchCount == 3)
-                return cam.ScreenToWorldPoint(GetTouchMiddle());
+                if (Input.touchCount == 2)
+                    return cam.ScreenToWorldPoint(GetTouchMiddle(0, 1));
+            }
+            else
+            {
+                if (Input.touchCount == 2)
+                    return cam.ScreenToWorldPoint(Input.GetTouch(1).position);
+
+                if (Input.touchCount == 3)
+                    return cam.ScreenToWorldPoint(GetTouchMiddle(1, 2));
+            }
 
             return Vector3.zero;
         }
