@@ -97,7 +97,7 @@ namespace VoyagerApp.UI
             var hit = Physics2D.Raycast(CameraMove.pointerPosition, Vector3.zero);
             if (hit.transform != null)
             {
-                WorkspaceItemView view = hit.transform.GetComponentInParent<WorkspaceItemView>(); 
+                WorkspaceItemView view = hit.transform.GetComponentInParent<WorkspaceItemView>();
                 if (view is ISelectableItem selectable)
                     ApplySelectionToItems(new List<ISelectableItem> { selectable });
             }
@@ -109,19 +109,19 @@ namespace VoyagerApp.UI
 
             switch (ApplicationState.SelectionMode.value)
             {
-                case SelectionState.Set:
+                case SelectionMode.Set:
                     WorkspaceSelection.instance.Clear();
                     foreach (var item in items)
                         WorkspaceSelection.instance.SelectItem(item);
                     break;
-                case SelectionState.Add:
+                case SelectionMode.Add:
                     foreach (var item in items)
                     {
                         if (!selection.Selected.Contains(item))
                             selection.SelectItem(item);
                     }
                     break;
-                case SelectionState.Remove:
+                case SelectionMode.Remove:
                     foreach (var item in items)
                     {
                         if (selection.Selected.Contains(item))
@@ -144,10 +144,10 @@ namespace VoyagerApp.UI
         {
             lampOrder.Clear();
 
-            if (ApplicationState.SelectionMode.value != SelectionState.Set)
+            if (ApplicationState.SelectionMode.value != SelectionMode.Set)
             {
                 WorkspaceUtils.SelectedLampItemsInOrder.ForEach(lampOrder.Add);
-                if (ApplicationState.SelectionMode.value == SelectionState.Remove)
+                if (ApplicationState.SelectionMode.value == SelectionMode.Remove)
                     lampOrderTemp = new List<LampItemView>(WorkspaceUtils.SelectedLampItemsInOrder);
             }
         }
@@ -157,7 +157,7 @@ namespace VoyagerApp.UI
             var items = ItemsUnderSelection;
             var mode = ApplicationState.SelectionMode.value;
 
-            if(mode == SelectionState.Remove)
+            if (mode == SelectionMode.Remove)
             {
                 lampOrder.Clear();
                 foreach (var lamp in lampOrderTemp)
@@ -172,7 +172,7 @@ namespace VoyagerApp.UI
                 {
                     if (item is LampItemView lampItem)
                     {
-                        if (mode == SelectionState.Add || mode == SelectionState.Set)
+                        if (mode == SelectionMode.Add || mode == SelectionMode.Set)
                             if (!lampOrder.Contains(lampItem))
                                 lampOrder.Add(lampItem);
                     }
@@ -180,7 +180,7 @@ namespace VoyagerApp.UI
 
                 foreach (var lamp in lampOrder.ToArray())
                 {
-                    if (mode == SelectionState.Set)
+                    if (mode == SelectionMode.Set)
                         if (!items.Contains(lamp) && lampOrder.Contains(lamp))
                             lampOrder.Remove(lamp);
                 }

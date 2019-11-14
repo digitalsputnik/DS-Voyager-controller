@@ -96,7 +96,7 @@ namespace VoyagerApp.UI.Menus
         void SelectionChanged()
         {
             RecalculateChannelsAndUniverses();
-            CheckIfFirstSelected(WorkspaceUtils.SelectedLampItems);
+            //CheckIfFirstSelected(WorkspaceUtils.SelectedLampItems);
         }
 
         void RecalculateChannelsAndUniverses()

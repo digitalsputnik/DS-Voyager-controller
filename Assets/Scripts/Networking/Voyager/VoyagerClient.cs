@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -64,7 +65,8 @@ namespace VoyagerApp.Networking.Voyager
 
             byte[] data = packet.Serialize();
             IPEndPoint endpoint = new IPEndPoint(lamp.address, port);
-            Send(data, endpoint);
+            if (WorkspaceUtils.Lamps.Contains(lamp) || lamp.connected)
+                Send(data, endpoint);
             return data;
         }
 
@@ -83,7 +85,8 @@ namespace VoyagerApp.Networking.Voyager
             }
             byte[] data = packet.Serialize(timestamp);
             IPEndPoint endpoint = new IPEndPoint(lamp.address, port);
-            Send(data, endpoint);
+            if (WorkspaceUtils.Lamps.Contains(lamp) || lamp.connected)
+                Send(data, endpoint);
             return data;
         }
 
@@ -243,8 +246,14 @@ namespace VoyagerApp.Networking.Voyager
 
         void SendKeepPackets()
         {
-            foreach (var lamp in keepSending.Keys)
+            foreach (var lamp in keepSending.Keys.ToArray())
             {
+                if (!WorkspaceUtils.Lamps.Contains(lamp))
+                {
+                    keepSending.Remove(lamp);
+                    continue;
+                }
+
                 if (lamp.connected)
                 {
                     foreach (var key in keepSending[lamp].Keys)

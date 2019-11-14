@@ -7,9 +7,6 @@ namespace VoyagerApp.UI
 {
     public class MoveIcon : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
-        public static bool pressed;
-        public static bool onHold;
-
         [SerializeField] Color pressedColor = Color.white;
         [SerializeField] Color releasedColor = Color.white;
         [Space(3)]
@@ -18,15 +15,19 @@ namespace VoyagerApp.UI
 
         Image image;
         float time;
+        ControllingMode prevState;
 
         void Start()
         {
             image = GetComponent<Image>();
             image.color = releasedColor;
 
+            ControllingModeChanged(ApplicationState.ControllingMode.value);
+
             SelectionMove.onSelectionMoveStarted += SelectionMoveStarted;
             SelectionMove.onSelectionMoveEnded += SelectionMoveEnded;
             ApplicationState.ColorWheelActive.onChanged += ColorWheelActiveChanged;
+            ApplicationState.ControllingMode.onChanged += ControllingModeChanged;
         }
 
         void ColorWheelActiveChanged(bool value)
@@ -34,21 +35,32 @@ namespace VoyagerApp.UI
             gameObject.SetActive(!value);
         }
 
+        void ControllingModeChanged(ControllingMode value)
+        {
+            if (value == ControllingMode.Items)
+                image.sprite = hand;
+            if (value == ControllingMode.Camera || value == ControllingMode.CameraToggled)
+                image.sprite = grab;
+        }
+
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.LeftAlt))
-                OnPointerDown(null);
+            {
+                prevState = ApplicationState.ControllingMode.value;
+                ApplicationState.ControllingMode.value = ControllingMode.Camera;
+            }
 
             if (Input.GetKeyUp(KeyCode.LeftAlt))
-                OnPointerUp(null);
+                ApplicationState.ControllingMode.value = prevState;
         }
 
-        private void SelectionMoveStarted()
+        void SelectionMoveStarted()
         {
             gameObject.SetActive(false);
         }
 
-        private void SelectionMoveEnded()
+        void SelectionMoveEnded()
         {
             gameObject.SetActive(true);
         }
@@ -56,24 +68,20 @@ namespace VoyagerApp.UI
         public void OnPointerDown(PointerEventData eventData)
         {
             image.color = pressedColor;
-            image.sprite = grab;
-            pressed = true;
             time = Time.time;
+
+            if (ApplicationState.ControllingMode.value == ControllingMode.Items)
+                ApplicationState.ControllingMode.value = ControllingMode.Camera;
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            if (Time.time - time < 0.4f && !onHold)
-            {
-                onHold = true;
-            }
+            if (Time.time - time < 0.4f && ApplicationState.ControllingMode.value != ControllingMode.CameraToggled)
+                ApplicationState.ControllingMode.value = ControllingMode.CameraToggled;
             else
-            {
-                image.color = releasedColor;
-                image.sprite = hand;
-                pressed = false;
-                onHold = false;
-            }
+                ApplicationState.ControllingMode.value = ControllingMode.Items;
+
+            image.color = releasedColor;
         }
 
         void OnDestroy()
@@ -81,6 +89,7 @@ namespace VoyagerApp.UI
             SelectionMove.onSelectionMoveStarted -= SelectionMoveStarted;
             SelectionMove.onSelectionMoveEnded -= SelectionMoveEnded;
             ApplicationState.ColorWheelActive.onChanged -= ColorWheelActiveChanged;
+            ApplicationState.ControllingMode.onChanged -= ControllingModeChanged;
         }
     }
 }

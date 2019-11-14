@@ -39,7 +39,7 @@ namespace VoyagerApp.UI
 
         void HandleMouse()
         {
-            if (!Input.GetKey(KeyCode.LeftAlt) && !MoveIcon.onHold)
+            if (ApplicationState.ControllingMode.value == ControllingMode.Items)
             {
                 if (Input.GetMouseButtonDown(0))
                 {
@@ -59,7 +59,8 @@ namespace VoyagerApp.UI
                 if (Input.GetMouseButtonDown(0))
                 {
                     pointerStart = cam.ScreenToWorldPoint(Input.mousePosition);
-                    state = CameraMoveState.CameraMove;
+                    if (!IsPointerOverUI())
+                        state = CameraMoveState.CameraMove;
                 }
                 else if (Input.GetMouseButtonUp(0))
                     state = CameraMoveState.None;
@@ -82,7 +83,7 @@ namespace VoyagerApp.UI
 
         void HandleTouch()
         {
-            if (!MoveIcon.pressed)
+            if (ApplicationState.ControllingMode.value == ControllingMode.Items)
             {
                 if (Input.touchCount == 1)
                 {
@@ -105,7 +106,7 @@ namespace VoyagerApp.UI
             }
             else
             {
-                if (MoveIcon.onHold)
+                if (ApplicationState.ControllingMode.value == ControllingMode.CameraToggled)
                 {
                     if (Input.touchCount == 1)
                     {
@@ -158,7 +159,7 @@ namespace VoyagerApp.UI
 
 			if (state == CameraMoveState.CameraMove)
             {
-                if (MoveIcon.onHold)
+                if (ApplicationState.ControllingMode.value == ControllingMode.CameraToggled)
                     pointerPosition = cam.ScreenToWorldPoint(Input.GetTouch(0).position);
                 else
                     pointerPosition = cam.ScreenToWorldPoint(Input.GetTouch(1).position);
@@ -166,7 +167,7 @@ namespace VoyagerApp.UI
 
             if (state == CameraMoveState.CameraPanAndZoom)
             {
-                if (MoveIcon.onHold)
+                if (ApplicationState.ControllingMode.value == ControllingMode.CameraToggled)
                 {
                     float distance = GetTouchDistance(0, 1);
                     touchDistanceDelta = distance - prevTouchDistance;
@@ -240,7 +241,7 @@ namespace VoyagerApp.UI
             if (!Application.isMobilePlatform)
                 return -Input.mouseScrollDelta.y * mouseZoomSpeed;
 
-            if (MoveIcon.onHold)
+            if (ApplicationState.ControllingMode.value == ControllingMode.CameraToggled)
             {
                 if (Input.touchCount == 2)
                     return -touchDistanceDelta * touchZoomSpeed * cam.orthographicSize;
@@ -259,7 +260,7 @@ namespace VoyagerApp.UI
             if (!Application.isMobilePlatform)
                 return cam.ScreenToWorldPoint(Input.mousePosition);
 
-            if (MoveIcon.onHold)
+            if (ApplicationState.ControllingMode.value == ControllingMode.CameraToggled)
             {
                 if (Input.touchCount == 1)
                     return cam.ScreenToWorldPoint(Input.GetTouch(0).position);

@@ -25,6 +25,7 @@ public class TextOutline : MonoBehaviour
             outline.transform.parent = transform;
             outline.transform.localScale = new Vector3(1, 1, 1);
             outline.transform.localEulerAngles = Vector3.zero;
+            outline.transform.localPosition = new Vector3(0.0f, 0.0f, 0.01f);
 
             MeshRenderer otherMeshRenderer = outline.GetComponent<MeshRenderer>();
             otherMeshRenderer.material = new Material(meshRenderer.material);
@@ -62,7 +63,7 @@ public class TextOutline : MonoBehaviour
             bool doublePixel = resolutionDependant && (Screen.width > doubleResolution || Screen.height > doubleResolution);
             Vector3 pixelOffset = GetOffset(i) * (doublePixel ? 2.0f * pixelSize : pixelSize);
             Vector3 worldPoint = Camera.main.ScreenToWorldPoint(screenPoint + pixelOffset);
-            other.transform.position = worldPoint;
+            other.transform.position = worldPoint + new Vector3(0.0f, 0.0f, 0.01f);
 
             MeshRenderer otherMeshRenderer = transform.GetChild(i).GetComponent<MeshRenderer>();
             otherMeshRenderer.sortingLayerID = meshRenderer.sortingLayerID;

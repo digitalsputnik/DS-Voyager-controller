@@ -7,7 +7,7 @@ namespace VoyagerApp.Networking
     public class RudpClient
     {
         UdpClient client;
-        int port;
+        readonly int port;
         bool ready;
 
         public bool EnableBroadcast

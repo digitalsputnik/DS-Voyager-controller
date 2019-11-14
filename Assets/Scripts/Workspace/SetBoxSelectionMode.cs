@@ -11,14 +11,14 @@ namespace VoyagerApp.UI
         [SerializeField] Image modeImage = null;
         [SerializeField] Sprite[] modes = null;
 
-        SelectionState addPrev;
-        SelectionState removePrev;
+        SelectionMode addPrev;
+        SelectionMode removePrev;
 
         void Start()
         {
             ApplicationState.ColorWheelActive.onChanged += ColorWheelActiveChanged;
             ApplicationState.SelectionMode.onChanged += SelectionStateChanged;
-            ApplicationState.SelectionMode.value = SelectionState.Set;
+            ApplicationState.SelectionMode.value = SelectionMode.Set;
         }
 
         void ColorWheelActiveChanged(bool value)
@@ -30,12 +30,12 @@ namespace VoyagerApp.UI
         {
             if (!Application.isMobilePlatform)
             {
-                if (!MoveIcon.pressed)
+                if (ApplicationState.ControllingMode.value == ControllingMode.Items)
                 {
                     if (Input.GetKeyDown(KeyCode.LeftShift))
                     {
                         addPrev = ApplicationState.SelectionMode.value;
-                        ApplicationState.SelectionMode.value = SelectionState.Add;
+                        ApplicationState.SelectionMode.value = SelectionMode.Add;
                     }
                     else if (Input.GetKeyUp(KeyCode.LeftShift))
                         ApplicationState.SelectionMode.value = addPrev;
@@ -43,7 +43,7 @@ namespace VoyagerApp.UI
                     if (Input.GetKeyDown(KeyCode.LeftControl))
                     {
                         removePrev = ApplicationState.SelectionMode.value;
-                        ApplicationState.SelectionMode.value = SelectionState.Remove;
+                        ApplicationState.SelectionMode.value = SelectionMode.Remove;
                     }
                     else if (Input.GetKeyUp(KeyCode.LeftControl))
                         ApplicationState.SelectionMode.value = removePrev;
@@ -66,11 +66,11 @@ namespace VoyagerApp.UI
         {
             int index = ((int)ApplicationState.SelectionMode.value) + 1;
             index = index % modes.Length;
-            ApplicationState.SelectionMode.value = (SelectionState)index;
+            ApplicationState.SelectionMode.value = (SelectionMode)index;
             modeImage.color = releasedColor;
         }
 
-        void SelectionStateChanged(SelectionState value)
+        void SelectionStateChanged(SelectionMode value)
         {
             modeImage.sprite = modes[(int)value];
         }
