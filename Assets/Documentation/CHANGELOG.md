@@ -1,4 +1,10 @@
-﻿2.0.70                                                                27.09.2019
+﻿2.1.5                                                                 27.09.2019
+- Fix: Timesync client.
+- Fix: Parsing project.
+- Fix: UI info button held down.
+- Add: Loading menu items have error state.
+
+2.0.70                                                                27.09.2019
 - Fix: Default Temperature value is now 5600.
 - Fix: Removed text, that iOS update is disabled.
 - Fix: Selection mode icons order was incorrect.
