@@ -15685,7 +15685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1df5edc4081416ca0373d00d5d3cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  voyagerAnimVersion: 1.83
+  voyagerAnimVersion: 1.84
 --- !u!1001 &2007194511
 PrefabInstance:
   m_ObjectHideFlags: 0
