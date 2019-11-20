@@ -31,7 +31,9 @@ namespace VoyagerApp.Videos
 
                 if (packet.indices != null)
                 {
-                    Debug.Log(lamp.serial + " - " + string.Join(", ", packet.indices.Length));
+                    if (packet.indices.Length > 0)
+                        Debug.Log(lamp.serial + " - " + string.Join(", ", packet.indices));
+
                     missingFrames[lamp] = packet.indices.Where(lamp.buffer.FrameExists).ToArray();
                 }
             }

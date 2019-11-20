@@ -20,6 +20,8 @@ namespace VoyagerApp.UI
             base.ShowMenu(menu);
         }
 
+        public void HideCurrentMenu() => ShowMenu(null);
+
         public void CloseInHided()
         {
             if (!showHide.Open)

@@ -15,7 +15,6 @@ namespace VoyagerApp.UI.Menus
         [Space(3)]
         [SerializeField] Text overallUpdateInfoText = null;
         [SerializeField] Text updateText            = null;
-        [SerializeField] Text lampInfoText          = null;
 
         int updateLampCount;
         int updateFinished;
@@ -40,7 +39,6 @@ namespace VoyagerApp.UI.Menus
         {
             WorkspaceSelection.instance.onSelectionChanged += OnSelectionChanged;
             EnableDisableObjects();
-            ShowLampInfo();
         }
 
         internal override void OnHide()
@@ -57,7 +55,6 @@ namespace VoyagerApp.UI.Menus
         void OnSelectionChanged()
         {
             EnableDisableObjects();
-            ShowLampInfo();
         }
 
         void EnableDisableObjects()
@@ -120,24 +117,6 @@ namespace VoyagerApp.UI.Menus
                         $"{message.message.ToUpper()}";
                 }
             });
-        }
-
-        void ShowLampInfo()
-        {
-            if (WorkspaceUtils.SelectedVoyagerLamps.Count == 1)
-            {
-                VoyagerLamp lamp = WorkspaceUtils.SelectedVoyagerLamps[0];
-                lampInfoText.text =
-                    $"IP: {lamp.address}\n" +
-                    $"BATTERY: {lamp.battery}%\n" +
-                    $"VERSION: {lamp.version}";
-                lampInfoText.gameObject.SetActive(true);
-            }
-            else
-            {
-                lampInfoText.text = "";
-                lampInfoText.gameObject.SetActive(false);
-            }
         }
     }
 }

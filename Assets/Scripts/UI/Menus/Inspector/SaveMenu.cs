@@ -30,8 +30,8 @@ namespace VoyagerApp.UI.Menus
 
         public void Save()
         {
-            Project.Save(filenameField.text);
-            GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+            if (Project.Save(filenameField.text) != null)
+                GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
         public void Export()

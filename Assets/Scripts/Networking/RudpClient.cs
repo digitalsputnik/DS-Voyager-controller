@@ -6,6 +6,9 @@ namespace VoyagerApp.Networking
 {
     public class RudpClient
     {
+        public delegate void InitializeHandler();
+        public event InitializeHandler onInitialize;
+
         UdpClient client;
         readonly int port;
         bool ready;
@@ -13,7 +16,13 @@ namespace VoyagerApp.Networking
         public bool EnableBroadcast
         {
             get => client.EnableBroadcast;
-            set => client.EnableBroadcast = true;
+            set => client.EnableBroadcast = value;
+        }
+
+        public bool ReuseAddress
+        {
+            get => (bool)client.Client.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress);
+            set => client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, value);
         }
 
         public int Available => client.Available;
@@ -59,12 +68,18 @@ namespace VoyagerApp.Networking
             }
         }
 
+        public void Close()
+        {
+            client.Close();
+        }
+
         void InitializeClient()
         {
             IPAddress address = NetUtils.WifiInterfaceAddress;
             IPEndPoint endpoint = new IPEndPoint(address, port);
             client = new UdpClient(endpoint);
             ready = true;
+            onInitialize?.Invoke();
         }
     }
 }

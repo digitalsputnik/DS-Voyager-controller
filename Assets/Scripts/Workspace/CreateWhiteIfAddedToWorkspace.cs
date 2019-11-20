@@ -29,7 +29,7 @@ namespace VoyagerApp.UI
 
         IEnumerator AddLamp(Lamp lamp)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.3f);
             if (lamp.video == null && !((VoyagerLamp)lamp).dmxEnabled)
             {
                 lamp.SetVideo(VideoManager.instance.Videos.FirstOrDefault(v => v.name == "white"));

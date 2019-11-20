@@ -7,6 +7,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
+using VoyagerApp.UI.Overlays;
 using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
@@ -24,19 +25,36 @@ namespace VoyagerApp.Projects
         public static ProjectSaveData Save(string name) => Save(name, false);
         public static ProjectSaveData Save(string name, bool keepVideoPaths)
         {
-            var paths = CopyVideosIfNecessary(name);
-            var projectData = ProjectFactory.GetCurrentSaveData();
-            var json = JsonConvert.SerializeObject(projectData, Formatting.Indented);
-            var path = Path.Combine(ProjectDirectory(name), PROJECT_FILE);
-            File.WriteAllText(path, json);
-
-            if (keepVideoPaths)
+            try
             {
-                for (int i = 0; i < VideoManager.instance.Videos.Count; i++)
-                    VideoManager.instance.Videos[i].path = paths[i];
-            }
+                var paths = CopyVideosIfNecessary(name);
+                var projectData = ProjectFactory.GetCurrentSaveData();
+                var json = JsonConvert.SerializeObject(projectData, Formatting.Indented);
+                var path = Path.Combine(ProjectDirectory(name), PROJECT_FILE);
+                File.WriteAllText(path, json);
 
-            return projectData;
+                if (keepVideoPaths)
+                {
+                    for (int i = 0; i < VideoManager.instance.Videos.Count; i++)
+                        VideoManager.instance.Videos[i].path = paths[i];
+                }
+
+                return projectData;
+            }
+            catch (Exception ex)
+            {
+                var path = ProjectDirectory(name);
+                if (Directory.Exists(path))
+                    Directory.Delete(path, true);
+                DialogBox.Show(
+                    "ERROR",
+                    $"Unable to save project. Following error occurred:\n{ex.Message}",
+                    "CANCEL",
+                    "OK",
+                    null,
+                    null);
+                return null;
+            }
         }
 
         public static void SaveWorkspace()
@@ -84,7 +102,7 @@ namespace VoyagerApp.Projects
         #endregion
 
         #region Loading
-        public static void Load(string name)
+        public static ProjectSaveData Load(string name)
         {
             string path = Path.Combine(ProjectsDirectory, name, PROJECT_FILE);
             if (File.Exists(path))
@@ -92,8 +110,10 @@ namespace VoyagerApp.Projects
                 string json = File.ReadAllText(path);
                 var parser = ProjectFactory.GetParser(json);
                 var data = parser.Parse(json);
-                Load(data);
+                Load(data, Path.Combine(ProjectsDirectory, name));
+                return data;
             }
+            return null;
         }
 
         public static void LoadWorkspace()
@@ -110,26 +130,41 @@ namespace VoyagerApp.Projects
         public static ProjectSaveData GetProjectData(string json)
         {
             var parser = ProjectFactory.GetParser(json);
+            if (parser == null) return null;
             return parser.Parse(json);
         }
 
-        static void Load(ProjectSaveData data)
+        static void Load(ProjectSaveData data, string path)
         {
-            LoadVideos(data.videos);
+            LoadVideos(data.videos, path);
             LoadLamps(data.lamps);
             LoadItems(data.items);
             LoadCamera(data.camera);
+
+            //MainThread.Dispach(() =>
+            //{
+            //    VideoRenderer.SetState(new DoneState());
+            //    foreach (var lampData in data.lamps)
+            //    {
+            //        var video = VideoManager.instance.GetWithHash(lampData.video);
+            //        var lamp = LampManager.instance.GetLampWithSerial(lampData.serial);
+            //        lamp?.SetVideo(video);
+            //    }
+            //});
         }
 
-        static void LoadVideos(Video[] videos)
+        static void LoadVideos(Video[] videos, string path)
         {
             VideoManager.instance.Clear();
             foreach (var videoData in videos)
             {
-                if (File.Exists(videoData.url))
+                string[] names = Path.GetFileName(videoData.url).Split('\\');
+                string name = names[names.Length - 1];
+                string url = Path.Combine(path, VIDEOS, name);
+                if (File.Exists(url))
                 {
                     VideoManager.instance.LoadVideo(
-                        videoData.url,
+                        url,
                         videoData.guid,
                         videoData.frames,
                         videoData.fps,
@@ -140,17 +175,8 @@ namespace VoyagerApp.Projects
 
         static void LoadLamps(Lamp[] lamps)
         {
-            //LampManager.instance.Clear();
             foreach (var lampData in lamps)
             {
-                var buffer = new VideoBuffer();
-
-                if (lampData.buffer != null)
-                {
-                    buffer.RecreateBuffer(lampData.buffer.Length);
-                    buffer.framesToBuffer = lampData.buffer;
-                }
-
                 var itsh = new Itshe(
                     lampData.itsh[0],
                     lampData.itsh[1],
@@ -179,21 +205,18 @@ namespace VoyagerApp.Projects
                     {
                         serial = lampData.serial,
                         length = lampData.length,
-                        video = VideoManager.instance.GetWithHash(lampData.video),
                         address = IPAddress.Parse(lampData.address),
                         itshe = itsh,
-                        mapping = mapping,
-                        buffer = buffer
+                        mapping = mapping
                     };
+
 
                     LampManager.instance.AddLamp(lamp);
                 }
                 else
                 {
-                    lamp.video = VideoManager.instance.GetWithHash(lampData.video);
                     lamp.itshe = itsh;
                     lamp.mapping = mapping;
-                    lamp.buffer = buffer;
                 }
             }
         }
@@ -259,6 +282,9 @@ namespace VoyagerApp.Projects
             try
             {
                 var data = Save(EXPORT_TEMP, true);
+
+                if (data == null)
+                    throw new Exception("Something went wrong while saving the project");
 
                 byte[] project = File.ReadAllBytes(projPath);
                 byte[][] videos = new byte[data.videos.Length][];

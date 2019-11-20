@@ -30,6 +30,20 @@ namespace VoyagerApp.Utilities
             }
         }
 
+        public static float2 HalfScreenRandomVerticalPosition
+        {
+            get
+            {
+                Camera cam = Camera.main;
+                var upper = new Vector2(Screen.width / 2f, Screen.height * 0.75f);
+                var bottom = new Vector2(Screen.width / 2f, Screen.height * 0.25f);
+                float t = UnityEngine.Random.value;
+                Vector2 point = Vector2.Lerp(upper, bottom, t);
+                Vector3 point3 = cam.ScreenToWorldPoint(point);
+                return new float2(point3.x, point3.y);
+            }
+        }
+
         public static float2[] ScreenVerticalPositions(int count)
         {
             var upper = new float2(Screen.width / 2f, Screen.height);

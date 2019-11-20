@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -60,6 +61,7 @@ namespace VoyagerApp.UI.Menus
 
             InvokeRepeating("UpdateLoop", 0.0f, 0.2f);
             ApplicationState.ColorWheelActive.value = true;
+            showHide.GetComponent<Button>().onClick.AddListener(Approve);
         }
 
         internal override void OnHide()
@@ -70,6 +72,7 @@ namespace VoyagerApp.UI.Menus
 
             StopAllCoroutines();
             ApplicationState.ColorWheelActive.value = false;
+            showHide.GetComponent<Button>().onClick.RemoveListener(Approve);
         }
 
         Itshe prevItshe;

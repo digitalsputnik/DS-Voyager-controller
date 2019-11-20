@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,6 +20,14 @@ public class MainThread : MonoBehaviour
 
     public static void Dispach(Action action) => instance.actions.Enqueue(action);
 
+    public static void DispachInSeconds(float time, Action action)
+    {
+        Dispach(() =>
+        {
+            instance.StartCoroutine(IEnumDispachInSeconds(time, action));
+        });
+    }
+
     void Update()
     {
         lock (actions)
@@ -26,5 +35,11 @@ public class MainThread : MonoBehaviour
             while (actions.Count > 0)
                 actions.Dequeue()?.Invoke();
         }
+    }
+
+    static IEnumerator IEnumDispachInSeconds(float time, Action action)
+    {
+        yield return new WaitForSeconds(time);
+        action?.Invoke();
     }
 }

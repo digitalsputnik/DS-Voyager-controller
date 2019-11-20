@@ -59,7 +59,7 @@ namespace VoyagerApp.UI.Menus
             ssidListObj.gameObject.SetActive(false);
             ssidFieldObj.gameObject.SetActive(true);
             if (WorkspaceUtils.SelectedVoyagerLamps.Count > 0 && string.IsNullOrEmpty(ssidField.text))
-                ssidField.text = WorkspaceUtils.SelectedVoyagerLamps[0].activeSsid;
+                ssidField.text = WorkspaceUtils.SelectedVoyagerLamps[0].activePattern;
         }
 
         void SsidFieldTextChanged(string text)

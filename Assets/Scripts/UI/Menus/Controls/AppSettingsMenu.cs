@@ -15,6 +15,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Toggle dmxUniverseToggle    = null;
         [SerializeField] Toggle dmxChannelToggle     = null;
         [SerializeField] Toggle ipAddressToggle      = null;
+        [SerializeField] Toggle firmwareVersion      = null;
 
         internal override void OnShow()
         {
@@ -44,6 +45,9 @@ namespace VoyagerApp.UI.Menus
 
             ipAddressToggle.isOn = ApplicationSettings.ShowInfoIpAddress;
             ipAddressToggle.onValueChanged.AddListener(OnIpAddressToggleChanged);
+
+            firmwareVersion.isOn = ApplicationSettings.ShowInfoFirmwareVersion;
+            firmwareVersion.onValueChanged.AddListener(OnFirmwareVersionChanged);
         }
 
         internal override void OnHide()
@@ -58,6 +62,7 @@ namespace VoyagerApp.UI.Menus
             dmxUniverseToggle.onValueChanged.RemoveListener(OnDmxUniverseToggleChanged);
             dmxChannelToggle.onValueChanged.RemoveListener(OnDmxChannelToggleChanged);
             ipAddressToggle.onValueChanged.RemoveListener(OnIpAddressToggleChanged);
+            firmwareVersion.onValueChanged.RemoveListener(OnFirmwareVersionChanged);
         }
 
         void OnIdentifyColorPicked(Itshe itshe)
@@ -103,6 +108,11 @@ namespace VoyagerApp.UI.Menus
         void OnIpAddressToggleChanged(bool value)
         {
             ApplicationSettings.ShowInfoIpAddress = value;
+        }
+
+        void OnFirmwareVersionChanged(bool value)
+        {
+            ApplicationSettings.ShowInfoFirmwareVersion = value;
         }
     }
 }

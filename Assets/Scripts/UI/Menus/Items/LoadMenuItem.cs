@@ -36,17 +36,18 @@ namespace VoyagerApp.UI.Menus
             {
                 var file = Path.Combine(path, Project.PROJECT_FILE);
                 if (!File.Exists(file))
-                {
-                    Directory.Delete(path, true);
-                    throw new Exception();
-                }
+                    throw new Exception("Corrupt project");
 
                 var json = await FileUtils.ReadAllTextAsync(file);
 
                 if (!FileUtils.IsJsonValid(json))
-                    throw new Exception();
+                    throw new Exception("Corrupt project");
 
                 var data = Project.GetProjectData(json);
+
+                if (data == null)
+                    throw new Exception("Error on loading");
+
                 int lamps = data.items.Where(i => i.type == "voyager_lamp").Count();
 
                 MainThread.Dispach(() =>
@@ -58,10 +59,10 @@ namespace VoyagerApp.UI.Menus
             }
             catch (Exception ex)
             {
-                Debug.LogError(ex);
                 MainThread.Dispach(() =>
                 {
-                    GetComponentInParent<LoadMenu>().RemoveItem(this);
+                    nameText.text = Path.GetFileName(path);
+                    lampsText.text = ex.Message.ToUpper();
                 });
             }
         }

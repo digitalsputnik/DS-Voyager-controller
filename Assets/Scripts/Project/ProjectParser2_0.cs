@@ -20,6 +20,7 @@ namespace VoyagerApp.Projects
                 video.guid = (string)videoToken["hash"];
                 video.url = (string)videoToken["path"];
                 video.frames = (long)videoToken["frames"];
+                video.fps = (int)videoToken["fps"];
                 videos[i] = video;
             }
 

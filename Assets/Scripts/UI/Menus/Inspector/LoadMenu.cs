@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using VoyagerApp.Lamps;
 using VoyagerApp.Projects;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
+using VoyagerApp.Videos;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -13,6 +15,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Transform container     = null;
 
         List<LoadMenuItem> items = new List<LoadMenuItem>();
+        ProjectSaveData data;
 
         internal override void OnShow()
         {
@@ -68,7 +71,8 @@ namespace VoyagerApp.UI.Menus
         public void LoadProject(string project)
         {
             ItemsInteractable = false;
-            Project.Load(project);
+            data = Project.Load(project);
+            VideoRenderer.SetState(new ConfirmPixelsState());
             DialogBox.Show(
                 "Send loaded video buffer to lamps?",
                 "Clicking \"OK\" will send loaded video to lamps, otherwise " +
@@ -83,10 +87,13 @@ namespace VoyagerApp.UI.Menus
 
         void OnSendBuffer()
         {
-            var progressBar = LoadingBar.CreateLoadProcess("LOADING BUFFER TO LAMPS");
-            var bufferSender = new ProjectLoadBuffer(WorkspaceUtils.Lamps, progressBar.UpdateProgress);
-            bufferSender.StartSending();
-            ItemsInteractable = true;
+            VideoRenderer.SetState(new DoneState());
+            foreach (var lampData in data.lamps)
+            {
+                var video = VideoManager.instance.GetWithHash(lampData.video);
+                var lamp = LampManager.instance.GetLampWithSerial(lampData.serial);
+                lamp?.SetVideo(video);
+            }
         }
 
         bool ItemsInteractable

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using GuerrillaNtp_DS;
@@ -20,7 +19,7 @@ namespace VoyagerApp.Networking
 
         public OffsetService()
         {
-            UpdateInterval = 150000;
+            UpdateInterval = 1000;
             thread = new Thread(MasterFinder);
             thread.Start();
         }
@@ -28,6 +27,7 @@ namespace VoyagerApp.Networking
         public void Dispose()
         {
             thread.Interrupt();
+            thread.Abort();
         }
 
         void MasterFinder()
@@ -59,10 +59,16 @@ namespace VoyagerApp.Networking
                     {
                         if (ntp.GetCorrectionOffset().Equals(TimeSpan.Zero))
                             return LastOffset;
-                        return ntp.GetCorrectionOffset();
+
+                        var value = ntp.GetCorrectionOffset();
+                        LastOffset = value;
+                        return value;
                     }
                 }
-                catch { return TimeSpan.Zero; }
+                catch
+                {
+                    return TimeSpan.Zero;
+                }
             }
         }
 
@@ -84,14 +90,9 @@ namespace VoyagerApp.Networking
                 int port = 51259;
                 IPAddress address = NetUtils.WifiInterfaceAddress;
 
-                var ad = new IPEndPoint(address, port);
-                var listener = new UdpClient(ad);
-
-                listener.Client.SetSocketOption(SocketOptionLevel.Socket,
-                                                SocketOptionName.ReuseAddress,
-                                                true);
-                listener.Client.ReceiveTimeout = timeoutMilliseconds;
-                listener.Client.EnableBroadcast = true;
+                var listener = new RudpClient(port);
+                listener.EnableBroadcast = true;
+                listener.ReuseAddress = true;
 
                 var server = new IPEndPoint(address, port);
                 var sw = new Stopwatch();
@@ -99,14 +100,13 @@ namespace VoyagerApp.Networking
                 var message = new byte[] { 1, 2, 3, 4 };
                 var dest = new IPEndPoint(IPAddress.Broadcast, port);
 
-                listener.Send(message, message.Length, dest);
+                listener.Send(dest, message);
 
                 sw.Start();
 
                 try
                 {
-                    while (timeoutMilliseconds > sw.ElapsedMilliseconds ||
-                           listener.Available > 0)
+                    while (sw.ElapsedMilliseconds < timeoutMilliseconds && listener.Available == 0)
                     {
                         var announce = listener.Receive(ref server);
                         var announceString = Encoding.ASCII.GetString(announce);
@@ -115,7 +115,11 @@ namespace VoyagerApp.Networking
                         return server;
                     }
                 }
-                finally { listener.Close(); }
+                finally
+                {
+                    listener.Close();
+                    listener = null;
+                }
 
                 return null;
             }

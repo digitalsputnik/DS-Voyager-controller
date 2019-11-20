@@ -111,7 +111,8 @@ namespace VoyagerApp.Lamps.Voyager
 
         public override void SetVideo(Video video)
         {
-            base.SetVideo(video);
+            if (video == null) return;
+
             last = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset;
             var start = video.lastStartTime + NetUtils.VoyagerClient.TimeOffset;
             var packet = new PacketCollection(
@@ -123,6 +124,7 @@ namespace VoyagerApp.Lamps.Voyager
             NetUtils.VoyagerClient.KeepSendingPacket(this, "set_video", packet, VoyagerClient.PORT_SETTINGS, last);
             buffer.RecreateBuffer(video.frames);
             lastTimestamp = last;
+            base.SetVideo(video);
         }
 
         public override void SetItshe(Itshe itshe)

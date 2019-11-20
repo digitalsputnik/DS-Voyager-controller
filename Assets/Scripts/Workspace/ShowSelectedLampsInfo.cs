@@ -44,12 +44,11 @@ namespace VoyagerApp.UI
         public void OnPointerDown(PointerEventData eventData)
         {
             image.color = pressedColor;
-
-            prevInfo.Clear();
             foreach (var item in WorkspaceUtils.SelectedVoyagerLampItems)
             {
                 VoyagerLamp lamp = item.lamp;
-                prevInfo.Add(lamp, item.suffix);
+                if (!prevInfo.ContainsKey(lamp))
+                    prevInfo.Add(lamp, item.suffix);
                 item.SetSuffix(InfoOfLamp(lamp));
             }
         }
@@ -63,6 +62,7 @@ namespace VoyagerApp.UI
                 string info = prevInfo[lamp];
                 item.SetSuffix(info);
             }
+            prevInfo.Clear();
         }
 
         string InfoOfLamp(VoyagerLamp lamp)
@@ -85,6 +85,8 @@ namespace VoyagerApp.UI
             }
             if (ApplicationSettings.ShowInfoIpAddress)
                 info.Add($"{lamp.address}");
+            if (ApplicationSettings.ShowInfoFirmwareVersion)
+                info.Add($"{lamp.version}");
             return string.Join(", ", info);
         }
 
@@ -97,7 +99,7 @@ namespace VoyagerApp.UI
                 case "client_mode":
                     return "CLIENT";
                 case "router_mode":
-                    return "ROUNTER";
+                    return "ROUTER";
             }
             return "";
         }

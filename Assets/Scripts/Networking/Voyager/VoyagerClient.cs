@@ -22,6 +22,9 @@ namespace VoyagerApp.Networking.Voyager
 
         public const float POLL_INTERVAL = 1f;
 
+        public delegate void ConnectionHandler();
+        public event ConnectionHandler onConnectionChanged;
+
         public Dictionary<Lamp, Dictionary<string, (int, byte[])>> keepSending = new Dictionary<Lamp, Dictionary<string, (int, byte[])>>();
 
         RudpClient discovery;
@@ -33,8 +36,11 @@ namespace VoyagerApp.Networking.Voyager
         {
             discovery = new RudpClient(PORT_DISCOVERY);
             settings = new RudpClient(PORT_SETTINGS);
+            settings.onInitialize += () => onConnectionChanged?.Invoke();
 
             offset = new OffsetService();
+
+            Application.quitting += offset.Dispose;
 
             behaviour.StartCoroutine(IEnumPollLoop());
         }
@@ -65,7 +71,7 @@ namespace VoyagerApp.Networking.Voyager
 
             byte[] data = packet.Serialize();
             IPEndPoint endpoint = new IPEndPoint(lamp.address, port);
-            if (WorkspaceUtils.Lamps.Contains(lamp) || lamp.connected)
+            if (WorkspaceUtils.Lamps.Contains(lamp) && lamp.connected)
                 Send(data, endpoint);
             return data;
         }
@@ -85,7 +91,7 @@ namespace VoyagerApp.Networking.Voyager
             }
             byte[] data = packet.Serialize(timestamp);
             IPEndPoint endpoint = new IPEndPoint(lamp.address, port);
-            if (WorkspaceUtils.Lamps.Contains(lamp) || lamp.connected)
+            if (WorkspaceUtils.Lamps.Contains(lamp) && lamp.connected)
                 Send(data, endpoint);
             return data;
         }
@@ -134,16 +140,14 @@ namespace VoyagerApp.Networking.Voyager
 
             onReceived += OnReceived;
 
-            Packet packet = new SsidListRequestPacket();
-            for (int i = 0; i < 5; i++)
-                SendPacket(lamp, packet, PORT_DISCOVERY);
-
             bool ssidsReceived = false;
             double starttime = TimeUtils.Epoch;
 
+            Packet packet = new SsidListRequestPacket();
             while (!ssidsReceived && (TimeUtils.Epoch - starttime) < timeout)
             {
-                Thread.Sleep(10);
+                SendPacket(lamp, packet, PORT_DISCOVERY);
+                Thread.Sleep(100);
             }
 
             onReceived -= OnReceived;
@@ -183,17 +187,24 @@ namespace VoyagerApp.Networking.Voyager
                 if (IsValidJson(json))
                 {
                     LampManager manager = LampManager.instance;
-                    JObject obj = JObject.Parse(json);
-                    if (obj["serial"] != null)
+                    try
                     {
-                        string serial = (string)obj["serial"];
-                        if (!string.IsNullOrEmpty(serial))
-                            manager.GetLampWithSerial(serial)?.PushData(data);
+                        JObject obj = JObject.Parse(json);
+                        if (obj["serial"] != null)
+                        {
+                            string serial = (string)obj["serial"];
+                            if (!string.IsNullOrEmpty(serial))
+                                manager.GetLampWithSerial(serial)?.PushData(data);
+                            else
+                                manager.GetLampWithAddress(sender.Address)?.PushData(data);
+                        }
                         else
                             manager.GetLampWithAddress(sender.Address)?.PushData(data);
                     }
-                    else
-                        manager.GetLampWithAddress(sender.Address)?.PushData(data);
+                    catch (Exception ex)
+                    {
+                        Debug.LogWarning(ex);
+                    }
                 }
 
                 InvokeReceived(sender, data);
@@ -272,7 +283,7 @@ namespace VoyagerApp.Networking.Voyager
         {
             strInput = strInput.Trim();
             if ((strInput.StartsWith("{", StringComparison.Ordinal) && strInput.EndsWith("}", StringComparison.Ordinal)) || //For object
-                (strInput.StartsWith("[", StringComparison.Ordinal) && strInput.EndsWith("]", StringComparison.Ordinal))) //For array
+                (strInput.StartsWith("[", StringComparison.Ordinal) && strInput.EndsWith("]", StringComparison.Ordinal)))   //For array
             {
                 try
                 {

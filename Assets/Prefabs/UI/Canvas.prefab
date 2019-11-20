@@ -8123,6 +8123,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2032451777121281409}
     m_Modifications:
+    - target: {fileID: 4743222326405459162, guid: f56d9dc08399445d8a631dad500d9c0b,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 2032451775757572718}
     - target: {fileID: 7405834761440165775, guid: f56d9dc08399445d8a631dad500d9c0b,
         type: 3}
       propertyPath: m_Name
@@ -8372,7 +8377,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2032451775757572718}
     - target: {fileID: 959105077039010661, guid: f56d9dc08399445d8a631dad500d9c0b,
         type: 3}
       propertyPath: presetSuffix

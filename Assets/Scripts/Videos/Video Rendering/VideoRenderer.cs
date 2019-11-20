@@ -52,10 +52,13 @@ namespace VoyagerApp.Videos
 
             state = new DoneState();
 
-            LampManager.instance.onLampVideoChanged   += HandleLampInterupt;
-            LampManager.instance.onLampMappingChanged += HandleLampInterupt;
-            LampManager.instance.onLampItsheChanged   += HandleLampInterupt;
+            LampManager.instance.onLampVideoChanged    += HandleLampInterupt;
+            LampManager.instance.onLampMappingChanged  += HandleLampInterupt;
+            LampManager.instance.onLampItsheChanged    += HandleLampInterupt;
+            NetUtils.VoyagerClient.onConnectionChanged += OnConnectionChanged;
         }
+
+        void OnConnectionChanged() => Interupt();
 
         void Started(VideoPlayer source) => RaiseVideoEvent(VideoRenderEvent.Starting);
         void Prepered(VideoPlayer source) => RaiseVideoEvent(VideoRenderEvent.Prepared);

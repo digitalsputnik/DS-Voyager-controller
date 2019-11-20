@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
@@ -25,15 +26,29 @@ namespace VoyagerApp.UI.Menus
 
             addAllLampsBtn.gameObject.SetActive(false);
             AddLampsToList();
+
+            StartCoroutine(AddLampsAgain());
         }
 
         internal override void OnHide()
         {
             LampManager.instance.onLampAdded -= OnLampAdded;
             WorkspaceManager.instance.onItemRemoved -= ItemRemovedFromWorkspace;
+            WorkspaceManager.instance.onItemAdded -= ItemAddedToWorkspace;
 
             foreach (var lamp in new List<AddLampItem>(items))
                 RemoveLampItem(lamp);
+
+            StopCoroutine(AddLampsAgain());
+        }
+
+        IEnumerator AddLampsAgain()
+        {
+            while(true)
+            {
+                yield return new WaitForSeconds(0.5f);
+                AddLampsToList();
+            }
         }
 
         void ItemRemovedFromWorkspace(WorkspaceItemView item)
@@ -60,6 +75,7 @@ namespace VoyagerApp.UI.Menus
                 if (!lamps.Any(l => l.serial == lamp.serial) && lamp.connected)
                     OnLampAdded(lamp);
             }
+            CheckForAddAllLampsButton();
         }
 
         public void AddAllLamps()
@@ -94,7 +110,7 @@ namespace VoyagerApp.UI.Menus
 
         void OnLampAdded(Lamp lamp)
         {
-            if (!WorkspaceUtils.Lamps.Any(l => l == lamp) && lamp.connected && math.abs(NetUtils.VoyagerClient.TimeOffset) > 0.01f)
+            if (!WorkspaceUtils.Lamps.Any(l => l == lamp) && !items.Any(i => i.lamp == lamp) && lamp.connected && math.abs(NetUtils.VoyagerClient.TimeOffset) > 0.01f)
             {
                 AddLampItem item = Instantiate(prefab, container);
                 item.SetLamp(lamp);
