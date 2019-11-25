@@ -26,11 +26,10 @@ namespace VoyagerApp.Videos
             player = GetComponent<VideoPlayer>();
             renderMesh = GetComponent<MeshRenderer>();
 
-            SelectionMove.onSelectionMoveEnded += SelectionMoved;
+            PlaymodeChanged(ApplicationState.Playmode.value);
 
-            PlayPauseStop.onPlay += OnPlayClicked;
-            PlayPauseStop.onPause += OnPauseClicked;
-            PlayPauseStop.onStop += OnStopClicked;
+            SelectionMove.onSelectionMoveEnded += SelectionMoved;
+            ApplicationState.Playmode.onChanged += PlaymodeChanged;
 
             StartCoroutine(FpsCorrector());
         }
@@ -47,10 +46,7 @@ namespace VoyagerApp.Videos
         private void OnDestroy()
         {
             SelectionMove.onSelectionMoveEnded -= SelectionMoved;
-
-            PlayPauseStop.onPlay -= OnPlayClicked;
-            PlayPauseStop.onPause -= OnPauseClicked;
-            PlayPauseStop.onStop -= OnStopClicked;
+            ApplicationState.Playmode.onChanged -= PlaymodeChanged;
         }
 
         IEnumerator FpsCorrector()
@@ -112,7 +108,6 @@ namespace VoyagerApp.Videos
             render.Create();
 
             renderMesh.material.SetTexture("_BaseMap", render);
-            //renderMesh.material.mainTexture = render;
             player.targetTexture = render;
         }
 
@@ -130,6 +125,14 @@ namespace VoyagerApp.Videos
             player.skipOnDrop = true;
             CorrectFps();
             SetFps(video.fps);
+
+            if (ApplicationState.Playmode.value == GlobalPlaymode.Pause)
+            {
+                SetFrame(TimeUtils.GetFrameOfVideo(video, -(TimeUtils.Epoch - ApplicationState.PlaymodePausedSince.value)));
+                player.seekCompleted += SeekedForPause;
+            }
+            else
+                PlaymodeChanged(ApplicationState.Playmode.value);
         }
 
         void SetupMeshSize()
@@ -204,37 +207,39 @@ namespace VoyagerApp.Videos
         #endregion
 
         #region Play / Pause / Stop
-        private void OnPlayClicked(double pauseTime, bool fromStop)
+        void PlaymodeChanged(GlobalPlaymode value)
         {
-            if (pauseTime > 0.0)
+            switch (value)
             {
-                video.lastStartTime += pauseTime;
-                SetFrame(TimeUtils.GetFrameOfVideo(video));
+                case GlobalPlaymode.Play:
+                    StartCoroutine(SetCorrectFrameAndPlay());
+                    break;
+                case GlobalPlaymode.Pause:
+                    if (video != null)
+                        player.Pause();
+                    break;
+                case GlobalPlaymode.Stop:
+                    if (video != null)
+                    {
+                        player.frame = 0;
+                        stopRequested = true;
+                    }
+                    break;
             }
+        }
 
-            if (fromStop)
-            {
-                video.lastStartTime = TimeUtils.Epoch;
-                SetFrame(TimeUtils.GetFrameOfVideo(video));
-            }
-
+        IEnumerator SetCorrectFrameAndPlay()
+        {
+            yield return new WaitForEndOfFrame();
+            SetFrame(TimeUtils.GetFrameOfVideo(video));
             if (video != null)
                 player.Play();
         }
 
-        private void OnPauseClicked()
+        void SeekedForPause(VideoPlayer source)
         {
-            if (video != null)
-                player.Pause();
-        }
-
-        private void OnStopClicked()
-        {
-            if (video != null)
-            {
-                player.frame = 0;
-                stopRequested = true;
-            }
+            player.Pause();
+            player.seekCompleted -= SeekedForPause;
         }
         #endregion
     }

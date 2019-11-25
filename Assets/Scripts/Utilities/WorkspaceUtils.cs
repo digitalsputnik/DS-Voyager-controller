@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
+using VoyagerApp.Networking.Voyager;
 using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
@@ -178,7 +179,10 @@ namespace VoyagerApp.Utilities
                 {
                     video = VideoManager.instance.GetWithName("white");
                     foreach (var selected in SelectedLamps)
+                    {
                         selected.SetVideo(video);
+                        NetUtils.VoyagerClient.SendPacket(selected, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
+                    }
                 }
             }
 

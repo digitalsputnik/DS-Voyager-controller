@@ -3,6 +3,8 @@ using System.Linq;
 using UnityEngine;
 using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
+using VoyagerApp.Networking.Voyager;
+using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
@@ -34,6 +36,7 @@ namespace VoyagerApp.UI
             {
                 lamp.SetVideo(VideoManager.instance.Videos.FirstOrDefault(v => v.name == "white"));
                 lamp.SetItshe(ApplicationSettings.AddedLampsDefaultColor);
+                NetUtils.VoyagerClient.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
             }
         }
     }

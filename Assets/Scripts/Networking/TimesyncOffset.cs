@@ -67,7 +67,7 @@ namespace VoyagerApp.Networking
                 }
                 catch
                 {
-                    return TimeSpan.Zero;
+                    return LastOffset;
                 }
             }
         }
@@ -106,13 +106,18 @@ namespace VoyagerApp.Networking
 
                 try
                 {
-                    while (sw.ElapsedMilliseconds < timeoutMilliseconds && listener.Available == 0)
+                    while (sw.ElapsedMilliseconds < timeoutMilliseconds)
                     {
-                        var announce = listener.Receive(ref server);
-                        var announceString = Encoding.ASCII.GetString(announce);
-                        if (!ValidateAnnounce(announceString)) continue;
-                        server.Port = 123;
-                        return server;
+                        while (listener.Available > 0)
+                        {
+                            var announce = listener.Receive(ref server);
+                            var announceString = Encoding.ASCII.GetString(announce);
+
+                            if (!ValidateAnnounce(announceString))continue;
+
+                            server.Port = 123;
+                            return server;
+                        }
                     }
                 }
                 finally

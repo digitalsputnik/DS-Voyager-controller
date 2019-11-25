@@ -58,8 +58,11 @@ namespace VoyagerApp.UI.Menus
                             NetUtils.VoyagerClient.SendPacket(lamp, packet, VoyagerClient.PORT_SETTINGS);
                         }
 
-                        foreach (var item in WorkspaceUtils.SelectedLamps)
-                            item.SetVideo(video);
+                        foreach (var lamp in WorkspaceUtils.SelectedLamps)
+                        {
+                            lamp.SetVideo(video);
+                            NetUtils.VoyagerClient.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
+                        }
                         WorkspaceUtils.EnterToVideoMapping();
                     },
                     () =>
@@ -82,6 +85,7 @@ namespace VoyagerApp.UI.Menus
                         {
                             view.lamp.SetMapping(GetLampMapping(view, selectionView.render));
                             view.lamp.SetVideo(video);
+                            NetUtils.VoyagerClient.SendPacket(view.lamp, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
                         }
                         WorkspaceUtils.EnterToVideoMapping();
                     });
@@ -89,7 +93,10 @@ namespace VoyagerApp.UI.Menus
             else
             {
                 foreach (var lamp in WorkspaceUtils.Lamps)
+                {
                     lamp.SetVideo(video);
+                    NetUtils.VoyagerClient.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
+                }
 
                 var lamps = WorkspaceUtils.Lamps;
                 var selection = WorkspaceUtils.SelectedLamps;

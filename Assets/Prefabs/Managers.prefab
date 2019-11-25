@@ -76,7 +76,7 @@ MonoBehaviour:
   effectPresets:
   - white.mp4
   - fire.mp4
-  - grad.mp4
+  - gradient.mp4
   - police.mp4
   - water.mp4
   - h_chase.mp4
@@ -87,6 +87,7 @@ MonoBehaviour:
   - v_chase_background.mp4
   - v_chase_soft.mp4
   - v_chase_soft_background.mp4
+  - softgrad.mp4
 --- !u!114 &3973544655850096084
 MonoBehaviour:
   m_ObjectHideFlags: 0

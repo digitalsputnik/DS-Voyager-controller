@@ -1,14 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class JoystickHandle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class JoystickHandle : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDownHandler
 {
 	Vector2 offset;
 	RectTransform rect;
 
 	[SerializeField] Canvas canvas;
+    bool dragging;
 
 	void Start()
 	{
@@ -17,10 +16,11 @@ public class JoystickHandle : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             canvas = GetComponentInParent<Canvas>();
 	}
 
-	public void OnBeginDrag(PointerEventData eventData)
-	{
-		offset = eventData.position + rect.anchoredPosition * canvas.scaleFactor;
-	}
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        offset = eventData.position;
+        dragging = true;
+    }
 
 	public void OnDrag(PointerEventData eventData)
 	{

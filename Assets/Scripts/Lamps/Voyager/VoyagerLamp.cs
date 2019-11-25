@@ -118,8 +118,7 @@ namespace VoyagerApp.Lamps.Voyager
             var packet = new PacketCollection(
                 new SetVideoPacket(video.frames, start),
                 new SetFpsPacket(video.fps),
-                new SetItshePacket(itshe),
-                new SetPlayModePacket(PlaybackMode.Play)
+                new SetItshePacket(itshe)
             );
             NetUtils.VoyagerClient.KeepSendingPacket(this, "set_video", packet, VoyagerClient.PORT_SETTINGS, last);
             buffer.RecreateBuffer(video.frames);

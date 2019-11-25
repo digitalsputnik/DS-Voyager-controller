@@ -2,6 +2,7 @@
 using System.IO;
 using UnityEngine;
 using VoyagerApp.Lamps;
+using VoyagerApp.Networking.Voyager;
 using VoyagerApp.Projects;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
@@ -92,7 +93,11 @@ namespace VoyagerApp.UI.Menus
             {
                 var video = VideoManager.instance.GetWithHash(lampData.video);
                 var lamp = LampManager.instance.GetLampWithSerial(lampData.serial);
-                lamp?.SetVideo(video);
+                if (lamp != null)
+                {
+                    lamp.SetVideo(video);
+                    NetUtils.VoyagerClient.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
+                }
             }
         }
 

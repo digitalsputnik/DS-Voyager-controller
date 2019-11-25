@@ -10,8 +10,6 @@ namespace VoyagerApp.Workspace.Views
 {
     public class VoyagerItemView : LampItemView
     {
-        public static float PlaybackOffset = 0.0f;
-
         [SerializeField] Transform pixels = null;
         [SerializeField] Vector2 pixelSize = Vector2.zero;
         [Space(3)]
@@ -31,7 +29,7 @@ namespace VoyagerApp.Workspace.Views
         bool playing = true;
         Color outlineColor;
 
-        long prevFrame;
+        public long prevFrame;
 
         bool prevDmxEnabled;
 
@@ -48,44 +46,36 @@ namespace VoyagerApp.Workspace.Views
         {
             lamp = (VoyagerLamp)data;
             client = NetworkManager.instance.GetLampClient<VoyagerClient>();
-
-            PlayPauseStop.onPlay += OnPlay;
-            PlayPauseStop.onPause += OnPause;
-            PlayPauseStop.onStop += OnStop;
-
             base.Setup(data);
-
+            GlobalPlaymdoeChanged(ApplicationState.Playmode.value);
+            ApplicationState.Playmode.onChanged += GlobalPlaymdoeChanged;
             outlineColor = outline.GetComponent<MeshRenderer>().material.color;
         }
 
         void OnDestroy()
         {
-            PlayPauseStop.onPlay -= OnPlay;
-            PlayPauseStop.onPause -= OnPause;
-            PlayPauseStop.onStop -= OnStop;
+            ApplicationState.Playmode.onChanged -= GlobalPlaymdoeChanged;
         }
 
-        void OnPlay(double startTime, bool fromStop)
+        void GlobalPlaymdoeChanged(GlobalPlaymode value)
         {
-            client.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
-            playing = true;
-        }
-
-        void OnPause()
-        {
-            client.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Pause), VoyagerClient.PORT_SETTINGS);
-            playing = false;
-        }
-
-        void OnStop()
-        {
-            client.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Stop), VoyagerClient.PORT_SETTINGS);
-
-            var buffer = lamp.buffer;
-            long frame = buffer.GetClosestIndex(0, 3);
-            if (buffer.FrameExists(frame))
-                DrawBufferFrame(buffer, frame);
-            playing = false;
+            switch (value)
+            {
+                case GlobalPlaymode.Play:
+                    client.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
+                    playing = true;
+                    break;
+                case GlobalPlaymode.Pause:
+                    client.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Pause), VoyagerClient.PORT_SETTINGS);
+                    playing = false;
+                    prevFrame = TimeUtils.GetFrameOfVideo(lamp.video, -(TimeUtils.Epoch - ApplicationState.PlaymodePausedSince.value));
+                    break;
+                case GlobalPlaymode.Stop:
+                    client.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Stop), VoyagerClient.PORT_SETTINGS);
+                    prevFrame = 0;
+                    playing = false;
+                    break;
+            }
         }
 
         protected override void Generate()
@@ -138,23 +128,11 @@ namespace VoyagerApp.Workspace.Views
                 pixelsTexture.Apply();
 
                 renderer.material = normMaterial;
-                //renderer.material.mainTexture = pixelsTexture;
                 renderer.material.SetTexture("_BaseMap", pixelsTexture);
             }
             else
             {
-                //Color[] colors = new Color[lamp.length * 4 * 4];
-                //for (int i = 0; i < colors.Length; i++)
-                //    colors[i] = Color.white * Random.Range(0.3f, 1.0f);
-
-                //pixelsTexture = new Texture2D(lamp.length * 4, 4);
-                //pixelsTexture.filterMode = FilterMode.Point;
-                //pixelsTexture.SetPixels(colors);
-                //pixelsTexture.Apply();
-
                 renderer.material = dmxMaterial;
-                //renderer.material.SetTexture("_BaseMap", pixelsTexture);
-                //renderer.material.mainTexture = pixelsTexture;
             }
 
             prevDmxEnabled = lamp.dmxEnabled;
@@ -168,7 +146,7 @@ namespace VoyagerApp.Workspace.Views
             {
                 if (playing)
                 {
-                    long frame = TimeUtils.GetFrameOfVideo(lamp.video, PlaybackOffset);
+                    long frame = TimeUtils.GetFrameOfVideo(lamp.video);
                     frame = buffer.GetClosestIndex(frame, 3);
                     if (buffer.FrameExists(frame))
                         DrawBufferFrame(buffer, frame);

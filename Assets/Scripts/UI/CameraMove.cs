@@ -113,17 +113,26 @@ namespace VoyagerApp.UI
                         if (state != CameraMoveState.CameraMove)
                         {
                             var touch = Input.GetTouch(0);
-                            pointerStart = cam.ScreenToWorldPoint(touch.position);
-                            state = CameraMoveState.CameraMove;
+                            if (touch.phase == TouchPhase.Began)
+                            {
+                                pointerStart = cam.ScreenToWorldPoint(touch.position);
+                                if (!IsPointerOverUI())
+                                    state = CameraMoveState.CameraMove;
+                            }
+                            else if (touch.phase == TouchPhase.Ended)
+                                state = CameraMoveState.None;
                         }
                     }
                     else if (Input.touchCount == 2)
                     {
                         if (state != CameraMoveState.CameraPanAndZoom)
                         {
-                            pointerStart = cam.ScreenToWorldPoint(GetTouchMiddle(0, 1));
-                            prevTouchDistance = GetTouchDistance(0, 1);
-                            state = CameraMoveState.CameraPanAndZoom;
+                            if (!IsTouchOverUI(0) && !IsTouchOverUI(1))
+                            {
+                                pointerStart = cam.ScreenToWorldPoint(GetTouchMiddle(0, 1));
+                                prevTouchDistance = GetTouchDistance(0, 1);
+                                state = CameraMoveState.CameraPanAndZoom;
+                            }
                         }
                     }
                     else
@@ -136,17 +145,26 @@ namespace VoyagerApp.UI
                         if (state != CameraMoveState.CameraMove)
                         {
                             var touch = Input.GetTouch(1);
-                            pointerStart = cam.ScreenToWorldPoint(touch.position);
-                            state = CameraMoveState.CameraMove;
+                            if (touch.phase == TouchPhase.Began)
+                            {
+                                pointerStart = cam.ScreenToWorldPoint(touch.position);
+                                if (!IsTouchOverUI(1))
+                                    state = CameraMoveState.CameraMove;
+                            }
+                            else if (touch.phase == TouchPhase.Ended)
+                                state = CameraMoveState.None;
                         }
                     }
                     else if (Input.touchCount == 3)
                     {
                         if (state != CameraMoveState.CameraPanAndZoom)
                         {
-                            pointerStart = cam.ScreenToWorldPoint(GetTouchMiddle(1, 2));
-                            prevTouchDistance = GetTouchDistance(1, 2);
-                            state = CameraMoveState.CameraPanAndZoom;
+                            if (!IsTouchOverUI(1) && !IsTouchOverUI(2))
+                            {
+                                pointerStart = cam.ScreenToWorldPoint(GetTouchMiddle(1, 2));
+                                prevTouchDistance = GetTouchDistance(1, 2);
+                                state = CameraMoveState.CameraPanAndZoom;
+                            }
                         }
                     }
                     else
@@ -301,6 +319,12 @@ namespace VoyagerApp.UI
                 return EventSystem.current.IsPointerOverGameObject();
 
             return false;
+        }
+
+        bool IsTouchOverUI(int t)
+        {
+            Touch touch = Input.GetTouch(t);
+            return EventSystem.current.IsPointerOverGameObject(touch.fingerId);
         }
     }
 

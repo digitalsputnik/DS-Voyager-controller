@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using VoyagerApp.Lamps;
+using VoyagerApp.UI;
 using VoyagerApp.Utilities;
+using VoyagerApp.Workspace;
+using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.Videos
 {
@@ -60,12 +63,31 @@ namespace VoyagerApp.Videos
 
             if (type == VideoRenderEvent.Starting)
             {
-                long frame = TimeUtils.GetFrameOfVideo(video, 0.3f);
-                VideoRenderer.Seek(frame);
+                VideoRenderer.Seek(GetStartFrame());
             }
 
             if (type == VideoRenderEvent.Seeked)
                 render = true;
+        }
+
+        long GetStartFrame()
+        {
+            if (ApplicationState.Playmode.value == GlobalPlaymode.Play)
+                return TimeUtils.GetFrameOfVideo(video, 0.3f);
+
+            VoyagerItemView itemView = null;
+
+            foreach (var item in WorkspaceManager.instance.Items)
+            {
+                if (item is VoyagerItemView iw)
+                    if (queue.LampsWithActiveVideo.Contains(iw.lamp))
+                        itemView = iw;
+            }
+
+            long frame = itemView.prevFrame - 3;
+            if (frame < 0)
+                frame += queue.activeVideo.frames;
+            return frame;
         }
     }
 }

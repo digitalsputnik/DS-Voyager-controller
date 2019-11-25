@@ -13,6 +13,7 @@ namespace VoyagerApp.Utilities
         public static long GetFrameOfVideo(Video video, double offset = 0.0f)
         {
             var since = Epoch - video.lastStartTime + offset;
+
             var frames = (long)(since * video.fps);
 
             while (frames < 0)
