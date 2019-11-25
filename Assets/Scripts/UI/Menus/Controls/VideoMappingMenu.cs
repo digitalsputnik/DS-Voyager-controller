@@ -54,16 +54,18 @@ namespace VoyagerApp.UI.Menus
             fpsField.SetValue(video.fps);
             fpsField.onChanged += FpsChanged;
             hasFpsInitialized = true;
+
+            var packet = new SetFpsPacket(video.fps);
+            foreach (var lamp in WorkspaceUtils.LampsWithVideo(video))
+                NetUtils.VoyagerClient.KeepSendingPacket(lamp, "set_fps", packet, VoyagerClient.PORT_SETTINGS, TimeUtils.Epoch);
         }
 
         private void FpsChanged(int value)
         {
             video.fps = value;
             var packet = new SetFpsPacket(value);
-
             foreach (var lamp in WorkspaceUtils.Lamps)
                 NetUtils.VoyagerClient.KeepSendingPacket(lamp, "set_fps", packet, VoyagerClient.PORT_SETTINGS, TimeUtils.Epoch);
-
             mapper.SetFps(value);
         }
 

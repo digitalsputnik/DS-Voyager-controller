@@ -200,6 +200,11 @@ namespace VoyagerApp.Utilities
             }
         }
 
+        public static Lamp[] LampsWithVideo(Video video)
+        {
+            return LampManager.instance.Lamps.Where(l => l.video == video).ToArray();
+        }
+
         public static Bounds SelectedLampsBounds()
         {
             var selected = SelectedItems;

@@ -34,7 +34,7 @@ namespace VoyagerApp.UI
 
         void GlobalDimmerFieldChanged(int value)
         {
-            ApplicationState.GlobalDimmer.value = (float)math.round(value / 100.0);
+            ApplicationState.GlobalDimmer.value = globalDimmerField.normalized;
         }
 
         void GlobalDimmerValueChanged(float value)
