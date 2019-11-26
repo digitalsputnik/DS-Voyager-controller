@@ -7898,7 +7898,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00012207031
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1190523471049793176, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -15679,25 +15679,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
---- !u!1 &2001386448 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 956265330751005178, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
-    type: 3}
-  m_PrefabInstance: {fileID: 956265329312912223}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2001386449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2001386448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb1df5edc4081416ca0373d00d5d3cb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  voyagerAnimVersion: 1.85
 --- !u!1001 &2007194511
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18291,7 +18272,7 @@ PrefabInstance:
     - target: {fileID: 7182056467811065707, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000030517578
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7182056468412620220, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -19102,16 +19083,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 120
-      objectReference: {fileID: 0}
-    - target: {fileID: 222472898434721990, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 61.99997
-      objectReference: {fileID: 0}
-    - target: {fileID: 222472898434721990, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -380.00006
       objectReference: {fileID: 0}
     - target: {fileID: 3460918169509496100, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -20213,16 +20184,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 3184923043728705258}
-    - target: {fileID: 4350337515128984195, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -183.99994
-      objectReference: {fileID: 0}
-    - target: {fileID: 4350337515128984195, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 91.88989
-      objectReference: {fileID: 0}
     - target: {fileID: 6411857496433573025, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
@@ -20282,6 +20243,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2746887554944314799, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: m_Size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089995632255804454, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089995632255804454, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: m_Size
+      value: 0.9930201
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 696c43ec365ed4a45a6c16df774dc048, type: 3}

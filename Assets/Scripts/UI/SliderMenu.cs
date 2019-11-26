@@ -74,7 +74,7 @@ namespace VoyagerApp.UI.Menus
                 int minmax = (int)math.round(value * (toModify.max - toModify.min) + toModify.min);
                 Button preset = Instantiate(presetButton, presetsContainer);
                 preset.GetComponentInChildren<Text>().text = $"{minmax}{toModify.presetSuffix}";
-                preset.GetComponent<RectTransform>().sizeDelta = new float2(300.0f, 120.0f);
+                preset.GetComponent<RectTransform>().sizeDelta = new float2(240.0f, 120.0f);
                 preset.onClick.AddListener(() => OnPresetClicked(index));
                 presets.Add(preset);
                 i++;
