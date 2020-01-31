@@ -3,9 +3,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Crosstales.FB;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using VoyagerApp.UI;
 using VoyagerApp.UI.Overlays;
 
 namespace VoyagerApp.Utilities
@@ -19,7 +19,12 @@ namespace VoyagerApp.Utilities
 
         public static string TempPath
         {
-            get => Path.Combine(Application.temporaryCachePath);
+            get
+            {
+                var path = Path.Combine(Application.persistentDataPath, "temp");
+                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+                return path;
+            }
         }
 
         public static void LoadVideoFromDevice(PathHandler onLoaded)
@@ -36,20 +41,25 @@ namespace VoyagerApp.Utilities
 
                     if (Application.platform == RuntimePlatform.IPhonePlayer)
                     {
-                        string name = Path.GetFileName(path);
-                        string newPath = Path.Combine(TempPath, name);
-                        try
-                        {
-                            Copy(path, newPath);
-                            onLoaded?.Invoke(newPath);
-                            return;
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.LogError(ex);
-                        }
+                        string name = "video_" + Guid.NewGuid().ToString().Substring(0, 4);
 
-                        onLoaded?.Invoke(path);
+                        InputFieldMenu.Show("PICK NAME FOR VIDEO", name,
+                            (string text) =>
+                            {
+                                name = text;
+
+                                string newPath = Path.Combine(TempPath, name + ".MOV");
+                                try
+                                {
+                                    Copy(path, newPath);
+                                    onLoaded?.Invoke(newPath);
+                                    return;
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.LogError(ex);
+                                }
+                            }, 3, false);
                     }
                     else
                     {
@@ -223,6 +233,27 @@ namespace VoyagerApp.Utilities
                         writeStream.Write(bytes, 0, bytesRead);
                 }
             }
+        }
+
+        public static void PickFile(Action<string> onPick)
+        {
+            if (Application.isMobilePlatform)
+            {
+                // TODO: Implement!
+            }
+            else
+            {
+                string documents = DocumentsPath;
+                ExtensionFilter[] extensions = { new ExtensionFilter("File") };
+                string path = FileBrowser.OpenSingleFile("Open File", documents, extensions);
+                onPick?.Invoke(path == "" ? null : path);
+            }
+        }
+
+        public static void ClearCache()
+        {
+            foreach (string file in Directory.GetFiles(TempPath))
+                File.Delete(file);
         }
     }
 

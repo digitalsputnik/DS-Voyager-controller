@@ -1,7 +1,6 @@
 ﻿using Unity.Mathematics;
 using UnityEngine;
 using VoyagerApp.Lamps;
-using VoyagerApp.Workspace;
 
 namespace VoyagerApp.Utilities
 {
@@ -117,13 +116,10 @@ namespace VoyagerApp.Utilities
 
         public static int2[] MapLampToVideoCoords(Lamp lamp, Texture2D frame)
         {
-            if (lamp.mapping == null)
-                lamp.mapping = new Videos.VideoPosition();
-
             int2[] coords = new int2[lamp.pixels];
 
-            float2 p1 = new float2(lamp.mapping.x1, lamp.mapping.y1);
-            float2 p2 = new float2(lamp.mapping.x2, lamp.mapping.y2);
+            float2 p1 = lamp.mapping.p1;
+            float2 p2 = lamp.mapping.p2;
 
             float2 delta = p2 - p1;
             float2 steps = delta / (coords.Length - 1);

@@ -49,7 +49,7 @@ namespace VoyagerApp.Utilities
             }
         }
 
-        static IPAddress LocalIPAddress
+        public static IPAddress LocalIPAddress
         {
             get
             {
@@ -60,6 +60,17 @@ namespace VoyagerApp.Utilities
                         return ip;
                 }
                 return IPAddress.Any;
+            }
+        }
+
+        public static IPAddress[] LocalIPAddresses
+        {
+            get
+            {
+                return Dns.GetHostEntry(Dns.GetHostName())
+                    .AddressList
+                    .Where(a => a.AddressFamily == AddressFamily.InterNetwork)
+                    .ToArray();
             }
         }
 

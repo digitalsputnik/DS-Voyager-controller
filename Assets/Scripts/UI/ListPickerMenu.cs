@@ -23,6 +23,7 @@ namespace VoyagerApp.UI
 
         List<Text> items = new List<Text>();
         Action<int> onPick;
+        int startIndex;
         int index;
 
         float areaHeight;
@@ -42,6 +43,8 @@ namespace VoyagerApp.UI
             this.index = index;
             this.onPick = onPick;
 
+            startIndex = index;
+
             ClearItems();
             AddItems(items);
 
@@ -57,6 +60,14 @@ namespace VoyagerApp.UI
         public void Pick()
         {
             onPick?.Invoke(index);
+            onPick = null;
+            Open = false;
+        }
+
+        public void Cancel()
+        {
+            int val = Mathf.Clamp(startIndex, 0, items.Count);
+            onPick?.Invoke(val);
             onPick = null;
             Open = false;
         }

@@ -2,12 +2,12 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Video;
-using VoyagerApp.UI;
+using VoyagerApp.Effects;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
 
-namespace VoyagerApp.Videos
+namespace VoyagerApp.UI
 {
     public class VideoMapper : MonoBehaviour
     {
@@ -164,8 +164,11 @@ namespace VoyagerApp.Videos
         #region Handling position changed event
         void SelectionMoved()
         {
-            foreach (var selected in WorkspaceUtils.SelectedLampItems)
-                HandleLampMove(selected);
+            if (gameObject.activeInHierarchy)
+            {
+                foreach (var selected in WorkspaceUtils.SelectedLampItems)
+                    HandleLampMove(selected);
+            }
         }
 
         void HandleLampMove(LampItemView item)
@@ -175,14 +178,14 @@ namespace VoyagerApp.Videos
 
             if (video != null)
             {
-                lamp.SetVideo(video);
-                lamp.buffer.RecreateBuffer(video.frames);
+                lamp.SetEffect(video);
+                lamp.buffer.Setup(video.frames);
             }
 
             lamp.SetMapping(mapping);
         }
 
-        VideoPosition GetLampMapping(LampItemView lamp)
+        EffectMapping GetLampMapping(LampItemView lamp)
         {
             var allPixels = lamp.PixelWorldPositions();
             Vector2[] pixels = {
@@ -201,9 +204,8 @@ namespace VoyagerApp.Videos
                 pixels[i] = new Vector2(x, y);
             }
 
-            return new VideoPosition(pixels[0], pixels[1]);
+            return new EffectMapping(pixels[0], pixels[1]);
         }
-
         #endregion
 
         #region Play / Pause / Stop

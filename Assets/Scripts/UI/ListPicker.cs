@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace VoyagerApp.UI
@@ -11,6 +12,10 @@ namespace VoyagerApp.UI
         public string title;
         public int index;
         public List<string> items = new List<string>();
+
+        public UnityEvent onOpen;
+        public UnityEvent onChanged;
+
         public string selected
         {
             get
@@ -35,12 +40,13 @@ namespace VoyagerApp.UI
         public void SetItems(params string[] items)
         {
             this.items = items.ToList();
-            int i = Mathf.Clamp(index, 0, items.Length);
+            int i = Mathf.Clamp(index, 0, items.Length - 1);
             OnIndexChanged(i);
         }
 
         void ChooseItem()
         {
+            onOpen?.Invoke();
             ListPickerMenu.instance.PickValue(
                 title,
                 index,
@@ -53,6 +59,7 @@ namespace VoyagerApp.UI
         {
             index = value;
             GetComponentInChildren<Text>().text = selected;
+            onChanged?.Invoke();
         }
     }
 }

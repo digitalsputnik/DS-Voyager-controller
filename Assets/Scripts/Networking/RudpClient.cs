@@ -78,6 +78,7 @@ namespace VoyagerApp.Networking
             IPAddress address = NetUtils.WifiInterfaceAddress;
             IPEndPoint endpoint = new IPEndPoint(address, port);
             client = new UdpClient(endpoint);
+            client.Client.ReceiveTimeout = 1000;
             ready = true;
             onInitialize?.Invoke();
         }

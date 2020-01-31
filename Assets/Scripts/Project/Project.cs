@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using Newtonsoft.Json;
 using Unity.Mathematics;
 using UnityEngine;
+using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.UI.Overlays;
-using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
 
@@ -21,38 +23,52 @@ namespace VoyagerApp.Projects
         public const string VIDEOS = "videos";
 
         #region Save
-
-        public static ProjectSaveData Save(string name) => Save(name, false);
-        public static ProjectSaveData Save(string name, bool keepVideoPaths)
+        public static ProjectSaveData Save(string name)
         {
+            var projPath = ProjectDirectory(name);
+
             try
             {
-                var paths = CopyVideosIfNecessary(name);
+                var videos = EffectManager
+                    .GetEffectsOfType<Effects.Video>()
+                    .Where(v => !v.preset)
+                    .ToList();
+
+                var vidsPath = Path.Combine(projPath, VIDEOS);
+                if (!Directory.Exists(vidsPath)) Directory.CreateDirectory(vidsPath);
+
+                foreach (var video in videos)
+                {
+                    string vidNewPath = Path.Combine(vidsPath, video.file);
+
+                    if (!File.Exists(vidNewPath))
+                    {
+                        File.Copy(video.path, vidNewPath);
+                        video.path = vidNewPath;
+                    }
+                }
+
                 var projectData = ProjectFactory.GetCurrentSaveData();
                 var json = JsonConvert.SerializeObject(projectData, Formatting.Indented);
-                var path = Path.Combine(ProjectDirectory(name), PROJECT_FILE);
-                File.WriteAllText(path, json);
-
-                if (keepVideoPaths)
-                {
-                    for (int i = 0; i < VideoManager.instance.Videos.Count; i++)
-                        VideoManager.instance.Videos[i].path = paths[i];
-                }
+                var projFilePath = Path.Combine(ProjectDirectory(name), PROJECT_FILE);
+                File.WriteAllText(projFilePath, json);
 
                 return projectData;
             }
             catch (Exception ex)
             {
-                var path = ProjectDirectory(name);
-                if (Directory.Exists(path))
-                    Directory.Delete(path, true);
+                Debug.LogError(ex);
+
+                if (Directory.Exists(projPath))
+                    Directory.Delete(projPath, true);
+
                 DialogBox.Show(
                     "ERROR",
-                    $"Unable to save project. Following error occurred:\n{ex.Message}",
-                    "CANCEL",
-                    "OK",
-                    null,
-                    null);
+                    $"Unable to save project. " +
+                    $"Following error occurred:\n{ex.Message}",
+                    "CANCEL", "OK",
+                    null, null);
+
                 return null;
             }
         }
@@ -64,23 +80,22 @@ namespace VoyagerApp.Projects
             PlayerPrefs.SetString("workspace_temp", json);
         }
 
-        static string[] CopyVideosIfNecessary(string name)
+        static string[] CopyVideosIfNecessary(List<Effects.Video> videos, string name)
         {
             var path = Path.Combine(ProjectDirectory(name), VIDEOS);
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
-            string[] paths = new string[VideoManager.instance.Videos.Count];
+            string[] paths = new string[videos.Count];
             int i = 0;
 
-            foreach (var video in VideoManager.instance.Videos)
+            foreach (var video in videos)
             {
                 paths[i++] = video.path;
 
                 if (!video.path.StartsWith(path, StringComparison.Ordinal))
                 {
-                    string videoName = Path.GetFileName(video.path);
-                    string newPath = Path.Combine(path, videoName);
+                    string newPath = Path.Combine(path, video.file);
 
                     try
                     {
@@ -136,39 +151,43 @@ namespace VoyagerApp.Projects
 
         static void Load(ProjectSaveData data, string path)
         {
-            LoadVideos(data.videos, path);
+            LoadEffects(ref data, path);
             LoadLamps(data.lamps);
             LoadItems(data.items);
             LoadCamera(data.camera);
-
-            //MainThread.Dispach(() =>
-            //{
-            //    VideoRenderer.SetState(new DoneState());
-            //    foreach (var lampData in data.lamps)
-            //    {
-            //        var video = VideoManager.instance.GetWithHash(lampData.video);
-            //        var lamp = LampManager.instance.GetLampWithSerial(lampData.serial);
-            //        lamp?.SetVideo(video);
-            //    }
-            //});
         }
 
-        static void LoadVideos(Video[] videos, string path)
+        static void LoadEffects(ref ProjectSaveData data, string path)
         {
-            VideoManager.instance.Clear();
-            foreach (var videoData in videos)
+            EffectManager.Clear();
+
+            var effects = data.effects;
+
+            foreach (var effectData in effects)
             {
-                string[] names = Path.GetFileName(videoData.url).Split('\\');
-                string name = names[names.Length - 1];
-                string url = Path.Combine(path, VIDEOS, name);
-                if (File.Exists(url))
+                if (effectData is Video videoData)
                 {
-                    VideoManager.instance.LoadVideo(
-                        url,
-                        videoData.guid,
-                        videoData.frames,
-                        videoData.fps,
-                        null);
+                    var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoData.name);
+                    if (existingPreset == null)
+                    {
+                        string vidPath = Path.Combine(path, VIDEOS, videoData.file);
+                        if (File.Exists(vidPath))
+                        {
+                            var vid = VideoEffectLoader.LoadNewVideoFromPath(vidPath);
+                            vid.frames = videoData.frames;
+                            vid.file = videoData.file;
+                            vid.fps = videoData.fps;
+                            vid.id = videoData.id;
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < data.lamps.Length; i++)
+                        {
+                            if (data.lamps[i].effect == videoData.id)
+                                data.lamps[i].effect = existingPreset.id;
+                        }
+                    }
                 }
             }
         }
@@ -185,16 +204,13 @@ namespace VoyagerApp.Projects
                     lampData.itsh[4]
                 );
 
-                var mapping = new VideoPosition();
+                var mapping = EffectMapping.Default;
 
                 if (lampData.mapping != null)
                 {
-                    mapping = new VideoPosition(
-                        lampData.mapping[0],
-                        lampData.mapping[1],
-                        lampData.mapping[2],
-                        lampData.mapping[3]
-                    );
+                    mapping = new EffectMapping(
+                        new float2(lampData.mapping[0], lampData.mapping[1]),
+                        new float2(lampData.mapping[2], lampData.mapping[3]));
                 }
 
                 var lamp = LampManager.instance.GetLampWithSerial(lampData.serial);
@@ -279,22 +295,32 @@ namespace VoyagerApp.Projects
 
             bool failed = true;
 
+            var videos = EffectManager
+                .GetEffectsOfType<Effects.Video>()
+                .Where(v => !v.preset)
+                .ToList();
+
+            string[] videoPaths = new string[videos.Count];
+
+            for (int i = 0; i < videos.Count; i++)
+                videoPaths[i] = videos[i].path;
+
             try
             {
-                var data = Save(EXPORT_TEMP, true);
+                var data = Save(EXPORT_TEMP);
 
                 if (data == null)
                     throw new Exception("Something went wrong while saving the project");
 
                 byte[] project = File.ReadAllBytes(projPath);
-                byte[][] videos = new byte[data.videos.Length][];
-                for (int i = 0; i < videos.Length; i++)
-                    videos[i] = File.ReadAllBytes(data.videos[i].url);
+                byte[][] videoData = new byte[data.effects.Length][];
+                for (int i = 0; i < videoData.Length; i++)
+                    videoData[i] = File.ReadAllBytes(videos[i].path);
 
                 ProjectExport export = new ProjectExport
                 {
                     project = project,
-                    videos = videos
+                    videos = videoData
                 };
 
                 string json = JsonConvert.SerializeObject(export, Formatting.Indented);
@@ -311,6 +337,9 @@ namespace VoyagerApp.Projects
             }
             finally
             {
+                for (int i = 0; i < videos.Count; i++)
+                    videos[i].path = videoPaths[i];
+
                 if (Directory.Exists(tempPath))
                     Directory.Delete(tempPath, true);
             }
@@ -337,14 +366,16 @@ namespace VoyagerApp.Projects
             string videosPath = Path.Combine(ProjectDirectory(name), VIDEOS);
             Directory.CreateDirectory(videosPath);
 
-            for (int i = 0; i < project.videos.Length; i++)
-            {
-                var video = project.videos[i];
-                string videoName = Path.GetFileName(video.url);
-                string path = Path.Combine(videosPath, videoName);
-                File.WriteAllBytes(path, export.videos[i]);
-                project.videos[i].url = path;
-            }
+            //for (int i = 0; i < project.effects.Length; i++)
+            //{
+            //    if (project.effects[i] is Video video)
+            //    {
+            //        var video = project.effects[i];
+            //        string videoName = Path.GetFileName(video.url);
+            //        string path = Path.Combine(videosPath, videoName);
+            //        File.WriteAllBytes(path, export.videos[i]);
+            //    }
+            //}
 
             project.version = ProjectFactory.VERSION;
             var projectPath = Path.Combine(ProjectDirectory(name), PROJECT_FILE);

@@ -154,6 +154,7 @@ namespace VoyagerApp.Networking.Voyager
 
             void OnReceived(object sender, byte[] data)
             {
+
                 endpoint = (IPEndPoint)sender;
                 var deserialized = Packet.Deserialize<SsidListResponseResponse>(data);
 
@@ -178,37 +179,40 @@ namespace VoyagerApp.Networking.Voyager
 
         void ReceiveClient(RudpClient client)
         {
-            while (client.Available > 0)
+            new Thread(() =>
             {
-                IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-                byte[] data = client.Receive(ref sender);
-
-                string json = Encoding.UTF8.GetString(data);
-                if (IsValidJson(json))
+                while (client.Available > 0)
                 {
-                    LampManager manager = LampManager.instance;
-                    try
-                    {
-                        JObject obj = JObject.Parse(json);
-                        if (obj["serial"] != null)
-                        {
-                            string serial = (string)obj["serial"];
-                            if (!string.IsNullOrEmpty(serial))
-                                manager.GetLampWithSerial(serial)?.PushData(data);
-                            else
-                                manager.GetLampWithAddress(sender.Address)?.PushData(data);
-                        }
-                        else
-                            manager.GetLampWithAddress(sender.Address)?.PushData(data);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.LogWarning(ex);
-                    }
-                }
+                    IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
 
-                InvokeReceived(sender, data);
-            }
+                    byte[] data = client.Receive(ref sender);
+                    string json = Encoding.UTF8.GetString(data);
+
+                    if (IsValidJson(json))
+                    {
+                        try
+                        {
+                            JObject obj = JObject.Parse(json);
+                            if (obj["serial"] != null)
+                            {
+                                string serial = (string)obj["serial"];
+                                if (!string.IsNullOrEmpty(serial))
+                                    MainThread.Dispach(() => LampManager.instance.GetLampWithSerial(serial)?.PushData(data));
+                                else
+                                    MainThread.Dispach(() => LampManager.instance.GetLampWithAddress(sender.Address)?.PushData(data));
+                            }
+                            else
+                                MainThread.Dispach(() => LampManager.instance.GetLampWithAddress(sender.Address)?.PushData(data));
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogWarning(ex);
+                        }
+                    }
+                    MainThread.Dispach(() => InvokeReceived(sender, data));
+                }
+            }).Start();
         }
 
         IEnumerator IEnumPollLoop()

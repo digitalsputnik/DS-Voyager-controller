@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -17,8 +18,9 @@ namespace VoyagerApp.Projects
             {
                 var videoToken = jobj["videos"][i];
                 Video video = new Video();
-                video.guid = (string)videoToken["hash"];
-                video.url = (string)videoToken["path"];
+                video.id = (string)videoToken["hash"];
+                video.file = ((string)videoToken["path"]).Split('/', '\\').Last();
+                video.name = Path.GetFileNameWithoutExtension(video.file);
                 video.frames = (long)videoToken["frames"];
                 video.fps = (int)videoToken["fps"];
                 videos[i] = video;
@@ -42,7 +44,7 @@ namespace VoyagerApp.Projects
 
                 if (videoToken.Type != JTokenType.Null)
                 {
-                    lamp.video = (string)((JArray)jobj["videos"])
+                    lamp.effect = (string)((JArray)jobj["videos"])
                         .First(v => (int)v["$id"] == (int)videoToken["$ref"])["hash"];
                 }
 
@@ -126,7 +128,7 @@ namespace VoyagerApp.Projects
             return new ProjectSaveData
             {
                 version = version,
-                videos = videos,
+                effects = videos,
                 lamps = lamps,
                 items = items,
                 camera = camera
