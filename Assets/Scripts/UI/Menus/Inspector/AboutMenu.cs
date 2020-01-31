@@ -20,5 +20,10 @@ namespace VoyagerApp.UI.Menus
             int year = DateTime.Now.Year;
             copyrightText.text = $"© {year} - Digital Sputnik";
         }
+
+        public void OpenHelp()
+        {
+            Application.OpenURL(ApplicationSettings.HELP_URL);
+        }
     }
 }

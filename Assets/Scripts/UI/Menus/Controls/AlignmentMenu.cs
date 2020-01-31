@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 
@@ -7,6 +8,7 @@ namespace VoyagerApp.UI.Menus
     public class AlignmentMenu : Menu
     {
         [SerializeField] GameObject selectText = null;
+        [SerializeField] GameObject selectDeselectBtn = null;
 
         [Header("Alignment")]
         [SerializeField] GameObject alignTitle = null;
@@ -29,6 +31,15 @@ namespace VoyagerApp.UI.Menus
         public void DestributeHorizontally() => WorkspaceUtils.DistributeSelectedLampsHorizontally();
         public void DestributeVertically() => WorkspaceUtils.DistributeSelectedLampsVertically();
 
+
+        public void SelectDeselect()
+        {
+            if (!WorkspaceUtils.AllLampsSelected)
+                WorkspaceUtils.SelectAll();
+            else
+                WorkspaceUtils.DeselectAll();
+        }
+
         internal override void OnShow()
         {
             DisableEnableItems();
@@ -43,6 +54,13 @@ namespace VoyagerApp.UI.Menus
         void DisableEnableItems()
         {
             bool one = WorkspaceUtils.AtLastOneLampSelected;
+            bool all = WorkspaceUtils.AllLampsSelected;
+            bool has = WorkspaceUtils.VoyagerLamps.Count != 0;
+
+            selectDeselectBtn.SetActive(has);
+            selectDeselectBtn
+                .GetComponentInChildren<Text>()
+                .text = all ? "DESELECT ALL" : "SELECT ALL";
 
             selectText.SetActive(!one);
 

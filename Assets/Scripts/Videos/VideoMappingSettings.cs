@@ -2,31 +2,32 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
 using VoyagerApp.Utilities;
 
 namespace VoyagerApp.Videos
 {
     [Serializable]
-    public class VideoMappingSettings
+    public class EffectMappingSettings
     {
-        public string video;
+        public string effect;
         public string[] lamps;
 
         [JsonIgnore]
         static string path => Path.Combine(
             FileUtils.ProjectPath,
-            "to_video_mapping.tmp"
+            "to_effect_mapping.tmp"
         );
 
-        public VideoMappingSettings() { }
+        public EffectMappingSettings() { }
 
-        public VideoMappingSettings(List<Lamp> lamps, Video video)
+        public EffectMappingSettings(List<Lamp> lamps, Effect effect)
         {
             List<string> tempLamps = new List<string>();
             lamps.ForEach(l => tempLamps.Add(l.serial));
 
-            this.video = video == null ? "" : video.hash;
+            this.effect = effect == null ? "" : effect.id;
             this.lamps = tempLamps.ToArray();
         }
 
@@ -36,12 +37,12 @@ namespace VoyagerApp.Videos
             File.WriteAllText(path, json);
         }
 
-        public static VideoMappingSettings Load()
+        public static EffectMappingSettings Load()
         {
             if (!File.Exists(path)) return null;
 
             string json = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<VideoMappingSettings>(json);
+            return JsonConvert.DeserializeObject<EffectMappingSettings>(json);
         }
     }
 }

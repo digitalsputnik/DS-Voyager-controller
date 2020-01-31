@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
 using VoyagerApp.UI.Menus;
 using VoyagerApp.Utilities;
@@ -12,7 +13,7 @@ namespace VoyagerApp.UI
     public class VideoMappingController : MonoBehaviour
     {
         [SerializeField] VideoMapper mapper = null;
-        [SerializeField] VideoMappingMenu menu = null;
+        [SerializeField] EffectMappingMenu menu = null;
 
         void Start()
         {
@@ -21,12 +22,12 @@ namespace VoyagerApp.UI
 
         void LoadVideoMappingMenu()
         {
-            VideoMappingSettings settings = VideoMappingSettings.Load();
+            EffectMappingSettings settings = EffectMappingSettings.Load();
 
             var lamps = LampsFromSerials(settings.lamps);
-            var video = VideoFromHash(settings.video);
+            //var video = VideoFromId(settings.video);
 
-            SetVideo(video);
+            //SetVideo(video);
             PositionLamps(lamps);
         }
 
@@ -40,9 +41,6 @@ namespace VoyagerApp.UI
         {
             foreach (var lamp in lamps)
             {
-                if (lamp.mapping == null)
-                    lamp.SetMapping(new VideoPosition());
-
                 var position = GetLampVideoPosition(lamp);
                 var scale = GetLampVideoScale(lamp);
                 var rotation = GetLampVideoRotation(lamp);
@@ -51,9 +49,9 @@ namespace VoyagerApp.UI
             }
         }
 
-        Video VideoFromHash(string hash)
+        Video VideoFromId(string id)
         {
-            return VideoManager.instance.Videos.FirstOrDefault(v => v.hash == hash);
+            return EffectManager.GetEffectsOfType<Video>().FirstOrDefault(v => v.id == id);
         }
 
         List<Lamp> LampsFromSerials(string[] serials)
@@ -71,15 +69,15 @@ namespace VoyagerApp.UI
 
         Vector2 GetLampVideoPosition(Lamp lamp)
         {
-            float x = (lamp.mapping.x1 + lamp.mapping.x2) / 2.0f - 0.5f;
-            float y = (lamp.mapping.y1 + lamp.mapping.y2) / 2.0f - 0.5f;
+            float x = (lamp.mapping.p1.x + lamp.mapping.p2.x) / 2.0f - 0.5f;
+            float y = (lamp.mapping.p1.y + lamp.mapping.p2.y) / 2.0f - 0.5f;
             return mapper.MeshTransform.TransformPoint(x, y, 0);
         }
 
         float GetLampVideoScale(Lamp lamp)
         {
-            Vector2 start = new Vector2(lamp.mapping.x1, lamp.mapping.y1);
-            Vector2 end = new Vector2(lamp.mapping.x2, lamp.mapping.y2);
+            Vector2 start = lamp.mapping.p1;
+            Vector2 end = lamp.mapping.p2;
 
             Vector2 wStart = mapper.MeshTransform.TransformPoint(start);
             Vector2 wEnd = mapper.MeshTransform.TransformPoint(end);
@@ -90,8 +88,8 @@ namespace VoyagerApp.UI
 
         float GetLampVideoRotation(Lamp lamp)
         {
-            Vector2 start = new Vector2(lamp.mapping.x1, lamp.mapping.y1);
-            Vector2 end = new Vector2(lamp.mapping.x2, lamp.mapping.y2);
+            Vector2 start = lamp.mapping.p1;
+            Vector2 end = lamp.mapping.p2;
 
             Vector2 wStart = mapper.MeshTransform.TransformPoint(start);
             Vector2 wEnd = mapper.MeshTransform.TransformPoint(end);

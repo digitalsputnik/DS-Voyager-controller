@@ -1,5 +1,8 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 using UnityEngine.UI;
+using VoyagerApp.UI.Overlays;
+using VoyagerApp.Utilities;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -113,6 +116,17 @@ namespace VoyagerApp.UI.Menus
         void OnFirmwareVersionChanged(bool value)
         {
             ApplicationSettings.ShowInfoFirmwareVersion = value;
+        }
+
+        public void ClearCache()
+        {
+            DialogBox.Show(
+                "CLEAR CACHE",
+                "ARE YOU SURE?",
+                "CANCEL",
+                "OK",
+                null,
+                FileUtils.ClearCache);
         }
     }
 }

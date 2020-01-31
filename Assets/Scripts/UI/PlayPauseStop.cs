@@ -1,11 +1,12 @@
 ﻿using System.Linq;
-using Unity.Mathematics;
 using UnityEngine;
+using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
 using VoyagerApp.Networking.Voyager;
 using VoyagerApp.UI.Menus;
 using VoyagerApp.Utilities;
-using VoyagerApp.Videos;
+using VoyagerApp.Workspace;
+using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.UI
 {
@@ -23,6 +24,7 @@ namespace VoyagerApp.UI
             globalDimmerField.onChanged += GlobalDimmerFieldChanged;
             ApplicationState.GlobalDimmer.onChanged += GlobalDimmerValueChanged;
             ApplicationState.Playmode.onChanged += GlobalPlaymodeChanged;
+            WorkspaceManager.instance.onItemAdded += ItemAddedAddedToWorkspace;
         }
 
         void OnDestroy()
@@ -30,6 +32,7 @@ namespace VoyagerApp.UI
             globalDimmerField.onChanged -= GlobalDimmerFieldChanged;
             ApplicationState.GlobalDimmer.onChanged -= GlobalDimmerValueChanged;
             ApplicationState.Playmode.onChanged -= GlobalPlaymodeChanged;
+            WorkspaceManager.instance.onItemAdded -= ItemAddedAddedToWorkspace;
         }
 
         void GlobalDimmerFieldChanged(int value)
@@ -39,9 +42,16 @@ namespace VoyagerApp.UI
 
         void GlobalDimmerValueChanged(float value)
         {
+            Debug.LogError(value, this);
             var packet = new SetGlobalIntensityPacket(value);
             foreach (var lamp in LampManager.instance.Lamps.Where(l => l.connected))
                 NetUtils.VoyagerClient.SendPacket(lamp, packet, VoyagerClient.PORT_SETTINGS);
+        }
+
+        void ItemAddedAddedToWorkspace(WorkspaceItemView item)
+        {
+            if (item is VoyagerItemView)
+                GlobalDimmerValueChanged(ApplicationState.GlobalDimmer.value);
         }
 
         void GlobalPlaymodeChanged(GlobalPlaymode value)
@@ -65,20 +75,20 @@ namespace VoyagerApp.UI
             if (ApplicationState.PlaymodePausedSince.value > 0.0)
             {
                 var pauseTime = TimeUtils.Epoch - ApplicationState.PlaymodePausedSince.value;
-                foreach (var video in VideoManager.instance.Videos)
-                    video.lastStartTime += pauseTime;
+                foreach (var video in EffectManager.GetEffectsOfType<Video>())
+                    video.startTime += pauseTime;
             }
             else
             {
-                foreach (var video in VideoManager.instance.Videos)
-                    video.lastStartTime = TimeUtils.Epoch;
+                foreach (var video in EffectManager.GetEffectsOfType<Video>())
+                    video.startTime = TimeUtils.Epoch;
             }
         }
 
         public void Play()
         {
-            ApplicationState.Playmode.value = GlobalPlaymode.Play;
             ModifyVideoStartTime();
+            ApplicationState.Playmode.value = GlobalPlaymode.Play;
         }
         public void Pause()
         {

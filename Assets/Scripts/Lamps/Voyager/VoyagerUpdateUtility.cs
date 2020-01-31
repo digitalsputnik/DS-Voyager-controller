@@ -29,6 +29,11 @@ namespace VoyagerApp.Lamps.Voyager
             PreloadAsset(BUNDLE_FILE);
         }
 
+        public VoyagerUpdateUtility(byte[] update)
+        {
+            assets.Add(BUNDLE_FILE, update);
+        }
+
         public void PreloadAsset(string name)
         {
             TextAsset asset = Resources.Load($"Update/{name}") as TextAsset;

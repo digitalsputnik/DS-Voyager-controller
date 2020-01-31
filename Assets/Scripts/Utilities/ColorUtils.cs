@@ -4,12 +4,48 @@
 // -----------------------------------------------------------------
 
 using UnityEngine;
-using VoyagerApp.Lamps;
 
 namespace VoyagerApp.Utilities
 {
     public static class ColorUtils
     {
+        static Gradient temperatureGradient = null;
+
+        static Gradient GetTemperatureGradient()
+        {
+            if (temperatureGradient == null)
+            {
+                temperatureGradient = new Gradient();
+
+                var warmColor = new Color(0.98f, 0.678f, 0.459f);
+                var midColor  = new Color(1.0f,  1.0f,   1.0f);
+                var coldColor = new Color(0.78f, 0.855f, 1.0f);
+
+                var warmKey = new GradientColorKey(warmColor, 0.0f);
+                var midKey  = new GradientColorKey(midColor,  0.48f);
+                var coldKey = new GradientColorKey(coldColor, 1.0f);
+
+                var keys = new GradientColorKey[] { warmKey, midKey, coldKey };
+
+                temperatureGradient.colorKeys = keys;
+            }
+
+            return temperatureGradient;
+        }
+
+        public static Color32 ApplyTemperature(Color32 color, float temperature)
+        {
+            return color * GetTemperatureGradient().Evaluate(temperature);
+        }
+
+        public static Color32[] ApplyTemperature(Color32[] colors, float temperature)
+        {
+            var cols = new Color32[colors.Length];
+            for (int i = 0; i < colors.Length; i++)
+                cols[i] = ApplyTemperature(colors[i], temperature);
+            return cols;
+        }
+
         public static byte[] ColorsToBytes(Color32[] colors)
         {
             byte[] data = new byte[colors.Length * 3];

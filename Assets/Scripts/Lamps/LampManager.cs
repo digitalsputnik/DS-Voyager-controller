@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using UnityEngine;
+using VoyagerApp.Effects;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Videos;
 
@@ -33,7 +34,7 @@ namespace VoyagerApp.Lamps
         public event LampHandler onLampRemoved;
 
         public event LampHandler onLampMappingChanged;
-        public event LampHandler onLampVideoChanged;
+        public event LampHandler onLampEffectChanged;
         public event LampHandler onLampItsheChanged;
 
         List<LampDataProcessor> dataProcessors = new List<LampDataProcessor>();
@@ -89,9 +90,9 @@ namespace VoyagerApp.Lamps
         }
 
         // TODO: Move to utilities.
-        public List<Lamp> LampsWithVideo(Video video)
+        public List<Lamp> LampsWithEffect(Effect effect)
         {
-            return Lamps.Where(lamp => lamp.video.hash == video.hash).ToList();
+            return Lamps.Where(lamp => lamp.effect != null && lamp.effect.id == effect.id).ToList();
         }
 
         internal void RaiseLampMappingChangedEvent(Lamp lamp)
@@ -99,9 +100,9 @@ namespace VoyagerApp.Lamps
             onLampMappingChanged?.Invoke(lamp);
         }
 
-        internal void RaiseLampVideoChangedEvent(Lamp lamp)
+        internal void RaiseLampEffectChangedEvent(Lamp lamp)
         {
-            onLampVideoChanged?.Invoke(lamp);
+            onLampEffectChanged?.Invoke(lamp);
         }
 
         internal void RaiseLampItsheChangedEvent(Lamp lamp)

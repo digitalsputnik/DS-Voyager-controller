@@ -34,8 +34,8 @@ namespace VoyagerApp.UI
                     {
                         if (view is LampItemView lampView)
                         {
-                            lampView.lamp.buffer.ClearBuffer();
-                            lampView.lamp.video = null;
+                            lampView.lamp.buffer.Clear();
+                            lampView.lamp.effect = null;
                         }
 
                         WorkspaceManager.instance.RemoveItem(view);

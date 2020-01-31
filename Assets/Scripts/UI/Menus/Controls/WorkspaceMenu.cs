@@ -37,10 +37,10 @@ namespace VoyagerApp.UI.Menus
                 WorkspaceUtils.DeselectAll();
         }
 
-        public void SelectWithSameColorFx()
+        public void SelectWithSameEffect()
         {
-            var video = WorkspaceUtils.SelectedLamps[0].video;
-            WorkspaceUtils.SelectLampsWithVideo(video);
+            var effect = WorkspaceUtils.SelectedLamps[0].effect;
+            WorkspaceUtils.SelectLampsWithEffect(effect);
         }
 
         public void EditEffectClick()
@@ -77,7 +77,7 @@ namespace VoyagerApp.UI.Menus
         {
             bool one = WorkspaceUtils.AtLastOneLampSelected;
             bool all = WorkspaceUtils.AllLampsSelected;
-            bool share = WorkspaceUtils.SelectedLampsHaveSameVideo;
+            bool share = WorkspaceUtils.SelectedLampsHaveSameEffect;
             bool has = WorkspaceUtils.VoyagerLamps.Count != 0;
 
             infoText.SetActive(!one);

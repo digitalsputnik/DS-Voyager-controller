@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using VoyagerApp.Effects;
 using VoyagerApp.Networking.Voyager;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
-using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
 
@@ -21,14 +21,15 @@ namespace VoyagerApp.UI.Menus
 
         List<PickVideoItem> items = new List<PickVideoItem>();
 
+        Video loadingVideo;
+
         public void AddNewVideo()
         {
             FileUtils.LoadVideoFromDevice(path =>
             {
                 if (path != "" && path != "Null" && path != null)
                 {
-                    VideoLoadingStarted();
-                    VideoManager.instance.LoadVideo(path, VideoLoadingCompleted);
+                    var video = VideoEffectLoader.LoadNewVideoFromPath(path);
                 }
             });
         }
@@ -55,13 +56,19 @@ namespace VoyagerApp.UI.Menus
                                 lamp.dmxProtocol,
                                 lamp.dmxFormat
                             );
-                            NetUtils.VoyagerClient.SendPacket(lamp, packet, VoyagerClient.PORT_SETTINGS);
+                            NetUtils.VoyagerClient.SendPacket(
+                                lamp,
+                                packet,
+                                VoyagerClient.PORT_SETTINGS);
                         }
 
                         foreach (var lamp in WorkspaceUtils.SelectedLamps)
                         {
-                            lamp.SetVideo(video);
-                            NetUtils.VoyagerClient.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
+                            lamp.SetEffect(video);
+                            NetUtils.VoyagerClient.SendPacket(
+                                lamp,
+                                new SetPlayModePacket(PlaybackMode.Play, video.startTime, 0.0),
+                                VoyagerClient.PORT_SETTINGS);
                         }
                         WorkspaceUtils.EnterToVideoMapping();
                     },
@@ -77,15 +84,25 @@ namespace VoyagerApp.UI.Menus
                                 lamp.dmxProtocol,
                                 lamp.dmxFormat
                             );
-                            NetUtils.VoyagerClient.SendPacket(lamp, packet, VoyagerClient.PORT_SETTINGS);
+                            NetUtils.VoyagerClient.SendPacket(
+                                lamp,
+                                packet,
+                                VoyagerClient.PORT_SETTINGS);
                         }
 
-                        var selectionView = WorkspaceManager.instance.GetItemsOfType<SelectionControllerView>()[0];
+                        var selectionView = WorkspaceManager
+                            .instance
+                            .GetItemsOfType<SelectionControllerView>()[0];
+
                         foreach (var view in WorkspaceUtils.SelectedLampItems)
                         {
                             view.lamp.SetMapping(GetLampMapping(view, selectionView.render));
-                            view.lamp.SetVideo(video);
-                            NetUtils.VoyagerClient.SendPacket(view.lamp, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
+                            view.lamp.SetEffect(video);
+
+                            NetUtils.VoyagerClient.SendPacket(
+                                view.lamp,
+                                new SetPlayModePacket(PlaybackMode.Play, video.startTime, 0.0),
+                                VoyagerClient.PORT_SETTINGS);
                         }
                         WorkspaceUtils.EnterToVideoMapping();
                     });
@@ -94,8 +111,11 @@ namespace VoyagerApp.UI.Menus
             {
                 foreach (var lamp in WorkspaceUtils.Lamps)
                 {
-                    lamp.SetVideo(video);
-                    NetUtils.VoyagerClient.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
+                    lamp.SetEffect(video);
+                    NetUtils.VoyagerClient.SendPacket(
+                        lamp,
+                        new SetPlayModePacket(PlaybackMode.Play, video.startTime, 0.0),
+                        VoyagerClient.PORT_SETTINGS);
                 }
 
                 var lamps = WorkspaceUtils.Lamps;
@@ -114,7 +134,7 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
-        static VideoPosition GetLampMapping(LampItemView lamp, Transform transform)
+        static EffectMapping GetLampMapping(LampItemView lamp, Transform transform)
         {
             var allPixels = lamp.PixelWorldPositions();
             Vector2[] pixels = {
@@ -133,31 +153,32 @@ namespace VoyagerApp.UI.Menus
                 pixels[i] = new Vector2(x, y);
             }
 
-            return new VideoPosition(pixels[0], pixels[1]);
+            return new EffectMapping(pixels[0], pixels[1]);
         }
 
-        internal override void OnShow()
-        {
-            VideoManager.instance.Videos.ForEach(AddVideoItem);
-            VideoManager.instance.onVideoAdded += VideoAdded;
-            VideoManager.instance.onVideoRemoved += VideoRemoved;
-            SortVideoItems();
-        }
+        //internal override void OnShow()
+        //{
+        //    EffectManager.
+        //    VideoManager.instance.Videos.ForEach(AddVideoItem);
+        //    VideoManager.instance.onVideoAdded += VideoAdded;
+        //    VideoManager.instance.onVideoRemoved += VideoRemoved;
+        //    SortVideoItems();
+        //}
 
-        internal override void OnHide()
-        {
-            new List<PickVideoItem>(items).ForEach(RemoveVideoItem);
-            VideoManager.instance.onVideoAdded -= VideoAdded;
-            VideoManager.instance.onVideoRemoved -= VideoRemoved;
-        }
+        //internal override void OnHide()
+        //{
+        //    new List<PickVideoItem>(items).ForEach(RemoveVideoItem);
+        //    VideoManager.instance.onVideoAdded -= VideoAdded;
+        //    VideoManager.instance.onVideoRemoved -= VideoRemoved;
+        //}
 
-        void VideoAdded(Video video)
+        void EffectAdded(Video video)
         {
             AddVideoItem(video);
             SortVideoItems();
         }
 
-        void VideoRemoved(Video video)
+        void EffectRemoved(Video video)
         {
             PickVideoItem item = items.FirstOrDefault(_ => _.video == video);
             if (item != null) RemoveVideoItem(item);
@@ -189,13 +210,16 @@ namespace VoyagerApp.UI.Menus
             Destroy(item.gameObject);
         }
 
-        void VideoLoadingStarted()
+        void VideoLoadingStarted(Video video)
         {
+            loadingVideo = video;
             loadingText.SetActive(true);
+            video.available.onChanged += VideoLoadingComplete;
         }
 
-        void VideoLoadingCompleted(Video video)
+        void VideoLoadingComplete(bool value)
         {
+            loadingVideo.available.onChanged -= VideoLoadingComplete;
             loadingText.SetActive(false);
             SortVideoItems();
         }
@@ -204,7 +228,7 @@ namespace VoyagerApp.UI.Menus
         {
             var sorted = items
                 .OrderByDescending(i => i.video.name == "white")
-                .ThenByDescending(i => WorkspaceUtils.Lamps.Count(l => l.video == i.video))
+                .ThenByDescending(i => WorkspaceUtils.Lamps.Count(l => l.effect == i.video))
                 .ThenByDescending(i => i.name)
                 .ToList();
 

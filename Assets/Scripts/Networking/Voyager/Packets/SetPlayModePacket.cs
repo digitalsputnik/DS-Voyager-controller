@@ -9,10 +9,14 @@ namespace VoyagerApp.Networking.Voyager
     {
         [JsonProperty("mode")]
         public PlaybackMode mode;
+        [JsonProperty("video_start_time")]
+        public double starttime;
 
-        public SetPlayModePacket(PlaybackMode mode) : base(OpCode.SetPlayMode)
+        public SetPlayModePacket(PlaybackMode mode, double starttime, double handle) : base(OpCode.SetPlayMode)
         {
             this.mode = mode;
+            this.handle = handle;
+            this.starttime = starttime + NetUtils.VoyagerClient.TimeOffset;
         }
     }
 
