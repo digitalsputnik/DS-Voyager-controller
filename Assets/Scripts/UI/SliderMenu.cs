@@ -22,8 +22,6 @@ namespace VoyagerApp.UI.Menus
         List<Button> presets = new List<Button>();
         List<float> presetValues = new List<float>();
 
-        int startValue;
-
         public override void Start()
         {
             base.Start();
@@ -51,8 +49,6 @@ namespace VoyagerApp.UI.Menus
             slider.value = field.normalized;
             valueInputField.text = field.Value.ToString();
 
-            startValue = field.Value;
-
             if (field.presets.Length != 0)
             {
                 presetValues = field.presets.ToList();
@@ -69,14 +65,6 @@ namespace VoyagerApp.UI.Menus
             ClearPresets();
         }
 
-        public void Cancel()
-        {
-            toModify.SetValue(startValue);
-            toModify = null;
-            Open = false;
-            ClearPresets();
-        }
-
         void DrawPresets()
         {
             int i = 0;
@@ -86,7 +74,7 @@ namespace VoyagerApp.UI.Menus
                 int minmax = (int)math.round(value * (toModify.max - toModify.min) + toModify.min);
                 Button preset = Instantiate(presetButton, presetsContainer);
                 preset.GetComponentInChildren<Text>().text = $"{minmax}{toModify.presetSuffix}";
-                preset.GetComponent<RectTransform>().sizeDelta = new float2(300.0f, 120.0f);
+                preset.GetComponent<RectTransform>().sizeDelta = new float2(240.0f, 120.0f);
                 preset.onClick.AddListener(() => OnPresetClicked(index));
                 presets.Add(preset);
                 i++;

@@ -1,6 +1,5 @@
 ﻿using System;
-using Unity.Mathematics;
-using VoyagerApp.Effects;
+using VoyagerApp.Videos;
 
 namespace VoyagerApp.Utilities
 {
@@ -13,7 +12,7 @@ namespace VoyagerApp.Utilities
 
         public static long GetFrameOfVideo(Video video, double offset = 0.0f)
         {
-            var since = Epoch - video.startTime + offset;
+            var since = Epoch - video.lastStartTime + offset;
 
             var frames = (long)(since * video.fps);
 
@@ -25,14 +24,7 @@ namespace VoyagerApp.Utilities
 
         public static double GetTimeOfVideo(Video video, double offset = 0.0f)
         {
-            return ((Epoch - video.startTime) % video.duraction) + offset;
-        }
-
-        public static string GetVideoTimecode(Video video)
-        {
-            var time = TimeSpan.FromSeconds(video.duraction);
-            var frames = (int)math.round((float)time.Milliseconds / 1000 * video.fps);
-            return time.ToString(@"hh\:mm\:ss\:") + frames;
+            return ((Epoch - video.lastStartTime) % video.duraction) + offset;
         }
     }
 }

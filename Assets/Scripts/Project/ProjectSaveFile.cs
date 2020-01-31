@@ -6,36 +6,27 @@ namespace VoyagerApp.Projects
     public class ProjectSaveData
     {
         public string version;
-        public Effect[] effects;
+        public Video[] videos;
         public Lamp[] lamps;
         public Item[] items;
         public float[] camera;
     }
 
-    public class Effect
-    {
-        public string id;
-        public string name;
-        public string type;
-    }
-
     [Serializable]
-    public class Video : Effect
+    public class Video
     {
+        public string guid;
         public long frames;
-        public string file;
         public int fps;
+        public string url;
     }
-
-    [Serializable]
-    public class VideoPreset : Effect { }
 
     [Serializable]
     public class Lamp
     {
         public string serial;
         public int length;
-        public string effect;
+        public string video;
         public string address;
         public float[] itsh;
         public float[] mapping;

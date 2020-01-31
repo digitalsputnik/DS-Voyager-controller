@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEngine;
-using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
 using VoyagerApp.Networking.Voyager;
 using VoyagerApp.Projects;
@@ -87,23 +85,18 @@ namespace VoyagerApp.UI.Menus
         }
 
         void OnSendBufferCancel() => ItemsInteractable = true;
-        
+
         void OnSendBuffer()
         {
             VideoRenderer.SetState(new DoneState());
             foreach (var lampData in data.lamps)
             {
-                var video = EffectManager.GetEffectWithId<Effects.Video>(lampData.effect);
+                var video = VideoManager.instance.GetWithHash(lampData.video);
                 var lamp = LampManager.instance.GetLampWithSerial(lampData.serial);
-
-                if (lamp != null && video != null)
+                if (lamp != null)
                 {
-                    lamp.SetEffect(video);
-                    NetUtils.VoyagerClient.SendPacket(
-                        lamp,
-                        new SetPlayModePacket(PlaybackMode.Play, video.startTime, 0.0),
-                        VoyagerClient.PORT_SETTINGS
-                    );
+                    lamp.SetVideo(video);
+                    NetUtils.VoyagerClient.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
                 }
             }
         }

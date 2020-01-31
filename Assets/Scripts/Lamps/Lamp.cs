@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Net;
 using UnityEngine;
-using VoyagerApp.Effects;
+using VoyagerApp.Dmx;
 using VoyagerApp.Utilities;
+using VoyagerApp.Videos;
 using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.Lamps
@@ -10,9 +11,9 @@ namespace VoyagerApp.Lamps
     [Serializable]
     public abstract class Lamp
     {
-        public const double TIMEOUT = 15.0f;
-
         public event DataReceivedHandler OnDataReceived;
+
+        public const double TIMEOUT = 15.0f;
 
         public string type;
         public string serial;
@@ -26,9 +27,9 @@ namespace VoyagerApp.Lamps
         public abstract double lastTimestamp { get; protected set; }
 
         public Itshe itshe = new Itshe();
-        public Effect effect = null;
-        public EffectMapping mapping = EffectMapping.Default;
-        public VideoEffectBuffer buffer = new VideoEffectBuffer();
+        public Video video = null;
+        public VideoPosition mapping = new VideoPosition();
+        public VideoBuffer buffer = new VideoBuffer();
 
         internal void PushData(byte[] data)
         {
@@ -46,10 +47,10 @@ namespace VoyagerApp.Lamps
             LampManager.instance.RaiseLampItsheChangedEvent(this);
         }
 
-        public virtual void SetEffect(Effect effect)
+        public virtual void SetVideo(Video video)
         {
-            this.effect = effect;
-            LampManager.instance.RaiseLampEffectChangedEvent(this);
+            this.video = video;
+            LampManager.instance.RaiseLampVideoChangedEvent(this);
         }
 
         public virtual void PushFrame(Color32[] colors, long frame)
@@ -58,7 +59,7 @@ namespace VoyagerApp.Lamps
                 buffer.SetFrame(frame, ColorUtils.ColorsToBytes(colors));
         }
 
-        public virtual void SetMapping(EffectMapping mapping)
+        public virtual void SetMapping(VideoPosition mapping)
         {
             this.mapping = mapping;
             LampManager.instance.RaiseLampMappingChangedEvent(this);

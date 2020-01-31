@@ -14,8 +14,6 @@ namespace VoyagerApp.Networking.Voyager
         public double timestamp;
         [JsonProperty("serial", Order = -4)]
         public string serial;
-        [JsonProperty("handle_timestamp", Order = -5)]
-        public double handle;
 
         protected Packet(OpCode op) => this.op = op;
 

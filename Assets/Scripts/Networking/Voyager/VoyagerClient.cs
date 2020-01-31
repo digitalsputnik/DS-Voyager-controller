@@ -154,7 +154,6 @@ namespace VoyagerApp.Networking.Voyager
 
             void OnReceived(object sender, byte[] data)
             {
-
                 endpoint = (IPEndPoint)sender;
                 var deserialized = Packet.Deserialize<SsidListResponseResponse>(data);
 
@@ -179,40 +178,37 @@ namespace VoyagerApp.Networking.Voyager
 
         void ReceiveClient(RudpClient client)
         {
-            new Thread(() =>
+            while (client.Available > 0)
             {
-                while (client.Available > 0)
+                IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+                byte[] data = client.Receive(ref sender);
+
+                string json = Encoding.UTF8.GetString(data);
+                if (IsValidJson(json))
                 {
-                    IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-
-                    byte[] data = client.Receive(ref sender);
-                    string json = Encoding.UTF8.GetString(data);
-
-                    if (IsValidJson(json))
+                    LampManager manager = LampManager.instance;
+                    try
                     {
-                        try
+                        JObject obj = JObject.Parse(json);
+                        if (obj["serial"] != null)
                         {
-                            JObject obj = JObject.Parse(json);
-                            if (obj["serial"] != null)
-                            {
-                                string serial = (string)obj["serial"];
-                                if (!string.IsNullOrEmpty(serial))
-                                    MainThread.Dispach(() => LampManager.instance.GetLampWithSerial(serial)?.PushData(data));
-                                else
-                                    MainThread.Dispach(() => LampManager.instance.GetLampWithAddress(sender.Address)?.PushData(data));
-                            }
+                            string serial = (string)obj["serial"];
+                            if (!string.IsNullOrEmpty(serial))
+                                manager.GetLampWithSerial(serial)?.PushData(data);
                             else
-                                MainThread.Dispach(() => LampManager.instance.GetLampWithAddress(sender.Address)?.PushData(data));
-
+                                manager.GetLampWithAddress(sender.Address)?.PushData(data);
                         }
-                        catch (Exception ex)
-                        {
-                            Debug.LogWarning(ex);
-                        }
+                        else
+                            manager.GetLampWithAddress(sender.Address)?.PushData(data);
                     }
-                    MainThread.Dispach(() => InvokeReceived(sender, data));
+                    catch (Exception ex)
+                    {
+                        Debug.LogWarning(ex);
+                    }
                 }
-            }).Start();
+
+                InvokeReceived(sender, data);
+            }
         }
 
         IEnumerator IEnumPollLoop()

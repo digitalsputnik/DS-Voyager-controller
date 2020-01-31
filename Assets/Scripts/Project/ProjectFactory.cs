@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
+using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
 
@@ -11,45 +10,25 @@ namespace VoyagerApp.Projects
 {
     public static class ProjectFactory
     {
-        public const string VERSION = "2.2";
+        public const string VERSION = "2.1";
 
         public static ProjectSaveData GetCurrentSaveData()
         {
-            var effectList = EffectManager.Effects.Where(e => e is Effects.Video).ToList();
-            var effects = new Effect[effectList.Count];
+            var videos = new Video[VideoManager.instance.Videos.Count];
 
-            for (int i = 0; i < effectList.Count; i++)
+            for (int i = 0; i < videos.Length; i++)
             {
-                var effect = effectList[i];
+                var video = VideoManager.instance.Videos[i];
 
-                if (effect is Effects.Video video)
+                var videoData = new Video
                 {
-                    if (effect.preset)
-                    {
-                        var videoData = new VideoPreset
-                        {
-                            id = effect.id,
-                            name = effect.name,
-                            type = "video_preset"
-                        };
+                    guid = video.hash,
+                    frames = video.frames,
+                    fps = video.fps,
+                    url = video.path
+                };
 
-                        effects[i] = videoData;
-                    }
-                    else
-                    {
-                        var videoData = new Video
-                        {
-                            id = video.id,
-                            name = video.name,
-                            type = "video",
-                            file = video.file,
-                            frames = video.frames,
-                            fps = video.fps
-                        };
-
-                        effects[i] = videoData;
-                    }
-                }
+                videos[i] = videoData;
             }
 
             var lamps = new Lamp[LampManager.instance.Lamps.Count];
@@ -57,12 +36,12 @@ namespace VoyagerApp.Projects
             for (int i = 0; i < lamps.Length; i++)
             {
                 var lamp = LampManager.instance.Lamps[i];
-
+                
                 var lampData = new Lamp
                 {
                     serial = lamp.serial,
                     length = lamp.pixels,
-                    effect = lamp.effect == null ? "" : lamp.effect.id,
+                    video = lamp.video == null ? "" : lamp.video.hash,
                     address = lamp.address.ToString(),
                     itsh = new float[]
                     {
@@ -74,12 +53,12 @@ namespace VoyagerApp.Projects
                     },
                     mapping = new float[]
                     {
-                        lamp.mapping.p1.x,
-                        lamp.mapping.p1.y,
-                        lamp.mapping.p2.x,
-                        lamp.mapping.p2.y
+                        lamp.mapping.x1,
+                        lamp.mapping.y1,
+                        lamp.mapping.x2,
+                        lamp.mapping.y2
                     },
-                    buffer = lamp.buffer.frames
+                    buffer = lamp.buffer.framesToBuffer
                 };
 
                 lamps[i] = lampData;
@@ -87,7 +66,7 @@ namespace VoyagerApp.Projects
 
             var items = new List<Item>();
 
-            foreach (var item in WorkspaceManager.instance.Items)
+            foreach(var item in WorkspaceManager.instance.Items)
             {
                 if (item is LampItemView lampItem)
                 {
@@ -140,7 +119,7 @@ namespace VoyagerApp.Projects
             return new ProjectSaveData
             {
                 version = VERSION,
-                effects = effects,
+                videos = videos,
                 lamps = lamps,
                 items = items.ToArray(),
                 camera = cameraData
@@ -215,8 +194,6 @@ namespace VoyagerApp.Projects
 
             switch (version)
             {
-                case "2.2":
-                    return new ProjectParser2_2();
                 case "2.1":
                     return new ProjectParser2_1();
                 case "2.0.95":

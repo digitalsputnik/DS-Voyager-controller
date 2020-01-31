@@ -22,7 +22,6 @@ namespace VoyagerApp.UI
             else
             {
                 inspectorMenuContainer.ShowMenu(addAllLampsMenu);
-                ApplicationState.GlobalDimmer.value = 1.0f;
             }
         }
     }

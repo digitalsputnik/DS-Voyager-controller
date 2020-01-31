@@ -41,8 +41,6 @@ namespace VoyagerApp.Networking.Voyager
         SetDmxMode,
         DmxModeRequest,
         DmxModeResponse,
-        SetGlobalIntensity,
-        SetStream,
-        StreamFrame
+        SetGlobalIntensity
     }
 }

@@ -59,9 +59,6 @@ public class RenderLoadingDisplay : MonoBehaviour
 
         if (state is ConfirmPixelsState)
             infoText.text = "UPLOADING MISSING PIXELS";
-
-        if (state is ResendBufferState)
-            infoText.text = "RESENDING BUFFERS";
     }
 
     void RendererProgressChanged(float progress)

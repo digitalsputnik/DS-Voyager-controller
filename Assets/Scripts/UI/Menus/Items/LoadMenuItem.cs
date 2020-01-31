@@ -61,7 +61,6 @@ namespace VoyagerApp.UI.Menus
             {
                 MainThread.Dispach(() =>
                 {
-                    Debug.LogError(ex);
                     nameText.text = Path.GetFileName(path);
                     lampsText.text = ex.Message.ToUpper();
                 });

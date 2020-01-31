@@ -3,7 +3,6 @@ using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Networking.Voyager;
@@ -159,53 +158,51 @@ namespace VoyagerApp.Utilities
             get => SelectedLamps.Count == Lamps.Count && Lamps.Count > 0;
         }
 
-        public static bool SelectedLampsHaveSameEffect
+        public static bool SelectedLampsHaveSameVideo
         {
             get
             {
                 if (SelectedLamps.Count == 0) return false;
-                Effect video = SelectedLamps[0].effect;
-                return SelectedLamps.All(l => l.effect == video);
+                Video video = SelectedLamps[0].video;
+                return SelectedLamps.All(l => l.video == video);
             }
         }
 
         public static void EnterToVideoMapping()
         {
-            Effect effect = SelectedLamps[0].effect;
+            Video video = null;
 
-            // TODO: Make sure, the code is unnecessary and 
+            if (SelectedLampsHaveSameVideo)
+            {
+                video = SelectedLamps[0].video;
+                if (video == null)
+                {
+                    video = VideoManager.instance.GetWithName("white");
+                    foreach (var selected in SelectedLamps)
+                    {
+                        selected.SetVideo(video);
+                        NetUtils.VoyagerClient.SendPacket(selected, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
+                    }
+                }
+            }
 
-            //if (SelectedLampsHaveSameEffect)
-            //{
-            //    effect = SelectedLamps[0].effect;
-
-            //    if (effect == null)
-            //    {
-            //        var video = EffectManager.GetEffectWithName<Video>("white");
-            //        foreach (var selected in SelectedLamps)
-            //        {
-            //            selected.SetEffect(video);
-            //            NetUtils.VoyagerClient.SendPacket(
-            //                selected,
-            //                new SetPlayModePacket(PlaybackMode.Play),
-            //                VoyagerClient.PORT_SETTINGS);
-            //        }
-            //        effect = video;
-            //    }
-            //}
-
-            new EffectMappingSettings(SelectedLamps, effect).Save();
+            new VideoMappingSettings(SelectedLamps, video).Save();
             Projects.Project.SaveWorkspace();
-            SceneManager.LoadScene("Effect Mapping");
+            SceneManager.LoadScene("Video Mapping");
         }
 
-        public static void SelectLampsWithEffect(Effect effect)
+        public static void SelectLampsWithVideo(Video video)
         {
             foreach (var lampItem in LampItems)
             {
-                if (lampItem.lamp.effect == effect)
+                if (lampItem.lamp.video == video)
                     WorkspaceSelection.instance.SelectItem(lampItem);
             }
+        }
+
+        public static Lamp[] LampsWithVideo(Video video)
+        {
+            return LampManager.instance.Lamps.Where(l => l.video == video).ToArray();
         }
 
         public static Bounds SelectedLampsBounds()
@@ -228,7 +225,7 @@ namespace VoyagerApp.Utilities
             //float start = bounds.center.x - bounds.size.x / 2.0f;
             float start = SelectedLampItems.Min(l => l.position.x);
             float max = SelectedLampItems.Max(l => l.position.x);
-            float step = count > 1 ? (max - start) / (count - 1) : 0;
+            float step = count > 1? (max - start) / (count - 1): 0;
             float y = bounds.center.y;
 
             for (int i = 0; i < count; i++)
@@ -258,7 +255,7 @@ namespace VoyagerApp.Utilities
 
         public static void AlignSelectedLampsHorizontally()
         {
-            var rotations = new List<float> { 0.0f, 180.0f, 360.0f };
+            var rotations = new List<float> { 0.0f, 180.0f , 360.0f};
             AlignSelectedLampsToRotations(rotations);
         }
 
@@ -290,8 +287,8 @@ namespace VoyagerApp.Utilities
             foreach (var lampItem in SelectedLampItems)
             {
                 float2 position = lampItem.position;
-                float rotation = lampItem.rotation + 180.0f;
-                float scale = lampItem.scale;
+                float rotation  = lampItem.rotation + 180.0f;
+                float scale     = lampItem.scale;
 
                 Lamp lamp = lampItem.lamp;
 

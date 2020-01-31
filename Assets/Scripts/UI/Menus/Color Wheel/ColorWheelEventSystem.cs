@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using VoyagerApp.Utilities;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -14,7 +12,6 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Vector2[] snappingPoints   = null;
         [SerializeField] Joystick joystick          = null;
         [SerializeField] float joystickSpeed        = 0.0f;
-        [SerializeField] Image wheelImage           = null;
 
         RectTransform rect;
 
@@ -54,7 +51,6 @@ namespace VoyagerApp.UI.Menus
             position.x = 1 * Mathf.Cos(angle * Mathf.PI / 180) * dist;
             position.y = 1 * Mathf.Sin(angle * Mathf.PI / 180) * dist;
             cursor.localPosition = position;
-            wheelImage.color = ColorUtils.ApplyTemperature(Color.white, itshe.t);
         }
 
         public void OnDrag(PointerEventData eventData)

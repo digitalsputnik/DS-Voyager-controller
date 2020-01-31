@@ -99,10 +99,9 @@ namespace VoyagerApp.UI.Menus
             //CheckIfFirstSelected(WorkspaceUtils.SelectedLampItems);
         }
 
-        void RecalculateChannelsAndUniverses(bool updateViewInfo = true)
+        void RecalculateChannelsAndUniverses()
         {
-            if (updateViewInfo)
-                WorkspaceUtils.LampItems.ForEach(view => view.SetSuffix(""));
+            WorkspaceUtils.LampItems.ForEach(view => view.SetSuffix(""));
 
             lampToSettings.Clear();
 
@@ -134,10 +133,7 @@ namespace VoyagerApp.UI.Menus
                 };
 
                 lampToSettings.Add(lamp, settings);
-
-                if (updateViewInfo)
-                    SetLampInfo(view, settings);
-
+                SetLampInfo(view, settings);
                 channel += stack;
             }
         }
@@ -179,7 +175,7 @@ namespace VoyagerApp.UI.Menus
         {
             var packet = Packet.Deserialize<DmxModeResponse>(data);
             if (packet != null && packet.op == OpCode.DmxModeResponse)
-                RecalculateChannelsAndUniverses(false);
+                RecalculateChannelsAndUniverses();
         }
 
         int StackSizeOfLamp(Lamp lamp)

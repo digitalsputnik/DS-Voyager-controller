@@ -1,20 +1,12 @@
-﻿using UnityEngine;
-using VoyagerApp.Effects;
-using VoyagerApp.Lamps;
+﻿using VoyagerApp.Lamps;
 using VoyagerApp.UI.Overlays;
+using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
 
 namespace VoyagerApp.UI.Menus
 {
     public class SetupMenu : Menu
     {
-        [SerializeField] GameObject developmentBtn = null;
-
-        internal override void OnShow()
-        {
-            developmentBtn.SetActive(ApplicationState.DeveloperMode);
-        }
-
         public void NewProject()
         {
             DialogBox.Show(
@@ -26,14 +18,9 @@ namespace VoyagerApp.UI.Menus
                     WorkspaceSelection.instance.Clear();
                     WorkspaceManager.instance.Clear();
                     LampManager.instance.Clear();
-                    EffectManager.Clear();
-                    ApplicationState.RaiseNewProject();
+                    VideoManager.instance.Clear();
+                    VideoManager.instance.LoadPresets();
                 });
-        }
-
-        public void OpenHelp()
-        {
-            Application.OpenURL(ApplicationSettings.HELP_URL);
         }
     }
 }

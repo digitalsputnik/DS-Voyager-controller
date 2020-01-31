@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using VoyagerApp.Effects;
 using VoyagerApp.UI.Overlays;
+using VoyagerApp.Videos;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -43,7 +43,7 @@ namespace VoyagerApp.UI.Menus
                 "ARE YOU SURE?",
                 "Are you sure you want to remove this video from project?",
                 "CANCEL", "OK", null,
-                () => { EffectManager.RemoveEffect(video); });
+                () => { VideoManager.instance.RemoveVideo(video); });
         }
 	}
 }

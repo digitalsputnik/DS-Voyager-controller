@@ -11,10 +11,8 @@ GameObject:
   - component: {fileID: 956265330751005177}
   - component: {fileID: 956265330751005175}
   - component: {fileID: 956265330751005176}
+  - component: {fileID: 7627344489101607328}
   - component: {fileID: 3973544655850096084}
-  - component: {fileID: 8455935338822375204}
-  - component: {fileID: 4099646543211210977}
-  - component: {fileID: 4155129993798555352}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -60,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89b0db6dec33c416db4901639d8d611e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3973544655850096084
+--- !u!114 &7627344489101607328
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -69,35 +67,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 956265330751005178}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f6494d18e03b47a89205abd030da1ff, type: 3}
+  m_Script: {fileID: 11500000, guid: e2b39a236826741d08f74887f7a52f69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8455935338822375204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 956265330751005178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb1df5edc4081416ca0373d00d5d3cb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  voyagerAnimVersion: 1.99
---- !u!114 &4099646543211210977
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 956265330751005178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f18811d812194a5ea316d843007f06b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  videoPresets:
+  thumbnailTime: 0.5
+  loadTimeout: 5
+  thumbnailSize: {x: 480, y: 270}
+  effectPresets:
   - white.mp4
   - fire.mp4
   - gradient.mp4
@@ -112,7 +88,7 @@ MonoBehaviour:
   - v_chase_soft.mp4
   - v_chase_soft_background.mp4
   - softgrad.mp4
---- !u!114 &4155129993798555352
+--- !u!114 &3973544655850096084
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,6 +97,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 956265330751005178}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02068057dab76472d8555c20cc8393d0, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f6494d18e03b47a89205abd030da1ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -23,10 +23,7 @@ namespace VoyagerApp.Networking
 
         List<LampClient> lampClients = new List<LampClient>();
 
-        void Update()
-        {
-            lampClients.ForEach(_ => _.Receive());
-        }
+        void Update() => lampClients.ForEach(_ => _.Receive());
 
         public T GetLampClient<T>() where T : LampClient
         {

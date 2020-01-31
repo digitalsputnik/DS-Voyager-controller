@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
-using VoyagerApp.Effects;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Networking;
 using VoyagerApp.Networking.Voyager;
 using VoyagerApp.UI;
 using VoyagerApp.Utilities;
+using VoyagerApp.Videos;
 
 namespace VoyagerApp.Workspace.Views
 {
@@ -59,27 +59,22 @@ namespace VoyagerApp.Workspace.Views
 
         void GlobalPlaymdoeChanged(GlobalPlaymode value)
         {
-            if (lamp.effect is Video video)
+            switch (value)
             {
-                var handle = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset + ApplicationSettings.PLAYBACK_OFFSET;
-
-                switch (value)
-                {
-                    case GlobalPlaymode.Play:
-                        client.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Play, video.startTime, handle), VoyagerClient.PORT_SETTINGS);
-                        playing = true;
-                        break;
-                    case GlobalPlaymode.Pause:
-                        client.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Pause, video.startTime, handle), VoyagerClient.PORT_SETTINGS);
-                        playing = false;
-                        prevFrame = TimeUtils.GetFrameOfVideo(video, -(TimeUtils.Epoch - ApplicationState.PlaymodePausedSince.value));
-                        break;
-                    case GlobalPlaymode.Stop:
-                        client.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Stop, video.startTime, handle), VoyagerClient.PORT_SETTINGS);
-                        prevFrame = 0;
-                        playing = false;
-                        break;
-                }
+                case GlobalPlaymode.Play:
+                    client.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
+                    playing = true;
+                    break;
+                case GlobalPlaymode.Pause:
+                    client.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Pause), VoyagerClient.PORT_SETTINGS);
+                    playing = false;
+                    prevFrame = TimeUtils.GetFrameOfVideo(lamp.video, -(TimeUtils.Epoch - ApplicationState.PlaymodePausedSince.value));
+                    break;
+                case GlobalPlaymode.Stop:
+                    client.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Stop), VoyagerClient.PORT_SETTINGS);
+                    prevFrame = 0;
+                    playing = false;
+                    break;
             }
         }
 
@@ -145,44 +140,30 @@ namespace VoyagerApp.Workspace.Views
 
         void RenderPixels()
         {
-            if (lamp.effect is Video video)
-            {
-                VideoEffectBuffer buffer = lamp.buffer;
+            VideoBuffer buffer = lamp.buffer;
 
-                if (buffer.contains && lamp.effect != null)
+            if (buffer.ContainsVideo && lamp.video != null)
+            {
+                if (playing)
                 {
-                    if (playing)
-                    {
-                        long frame = TimeUtils.GetFrameOfVideo(video);
-                        frame = buffer.GetClosestIndex(frame, 3);
-                        if (buffer.FrameExists(frame))
-                            DrawBufferFrame(buffer, frame);
-                        prevFrame = frame;
-                    }
-                    else
-                    {
-                        var frame = buffer.GetClosestIndex(prevFrame, 3);
-                        if (buffer.FrameExists(frame))
-                            DrawBufferFrame(buffer, frame);
-                    }
+                    long frame = TimeUtils.GetFrameOfVideo(lamp.video);
+                    frame = buffer.GetClosestIndex(frame, 3);
+                    if (buffer.FrameExists(frame))
+                        DrawBufferFrame(buffer, frame);
+                    prevFrame = frame;
                 }
                 else
-                    DrawItshFrame();
-            }
-            else if (lamp.effect is SyphonStream || lamp.effect is SpoutStream)
-            {
-                if (lamp.prevStream != null)
                 {
-                    var colors = ColorUtils.BytesToColors(lamp.prevStream);
-                    var mix = ColorUtils.MixColorsToItshe(colors, lamp.itshe);
-                    PushToPixels(mix);
+                    var frame = buffer.GetClosestIndex(prevFrame, 3);
+                    if (buffer.FrameExists(frame))
+                        DrawBufferFrame(buffer, frame);
                 }
             }
             else
                 DrawItshFrame();
         }
 
-        void DrawBufferFrame(VideoEffectBuffer buffer, long frame)
+        void DrawBufferFrame(VideoBuffer buffer, long frame)
         {
             byte[] bytes = buffer.GetFrame(frame);
             Color32[] colors = ColorUtils.BytesToColors(bytes);
@@ -204,7 +185,6 @@ namespace VoyagerApp.Workspace.Views
         {
             if (colors.Length == lamp.pixels)
             {
-                colors = ColorUtils.ApplyTemperature(colors, lamp.itshe.t);
                 pixelsTexture.SetPixels32(colors);
                 pixelsTexture.Apply();
             }

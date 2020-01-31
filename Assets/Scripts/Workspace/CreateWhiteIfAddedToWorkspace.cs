@@ -1,10 +1,11 @@
 ﻿using System.Collections;
+using System.Linq;
 using UnityEngine;
-using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Networking.Voyager;
 using VoyagerApp.Utilities;
+using VoyagerApp.Videos;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
 
@@ -31,20 +32,11 @@ namespace VoyagerApp.UI
         IEnumerator AddLamp(Lamp lamp)
         {
             yield return new WaitForSeconds(0.3f);
-            Video video = EffectManager.GetEffectWithName<Video>("white");
-            if (lamp.effect == null && !((VoyagerLamp)lamp).dmxEnabled)
+            if (lamp.video == null && !((VoyagerLamp)lamp).dmxEnabled)
             {
-                yield return new WaitUntil(() => video.available.value);
-
-                lamp.SetEffect(video);
+                lamp.SetVideo(VideoManager.instance.Videos.FirstOrDefault(v => v.name == "white"));
                 lamp.SetItshe(ApplicationSettings.AddedLampsDefaultColor);
-
-                var handle = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset + 0.3;
-
-                NetUtils.VoyagerClient.SendPacket(
-                    lamp,
-                    new SetPlayModePacket(PlaybackMode.Play,  video.startTime, handle),
-                    VoyagerClient.PORT_SETTINGS);
+                NetUtils.VoyagerClient.SendPacket(lamp, new SetPlayModePacket(PlaybackMode.Play), VoyagerClient.PORT_SETTINGS);
             }
         }
     }
