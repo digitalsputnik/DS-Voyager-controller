@@ -1626,7 +1626,7 @@ MonoBehaviour:
   _appName: 
   _serverName: 
   _targetTexture: {fileID: 0}
-  _targetRenderer: {fileID: 0}
+  _targetRenderer: {fileID: 974192091}
   _targetMaterialProperty: _BaseMap
   _nullTexture: {fileID: 2800000, guid: 4d452f854bc6b43488690d49f3cd2e9c, type: 3}
 --- !u!114 &974192090
@@ -1641,7 +1641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e16318a90bf544d1db503686dff813d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshRenderer: {fileID: 0}
+  meshRenderer: {fileID: 974192091}
 --- !u!23 &974192091
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1703,8 +1703,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sourceName: 
   _targetTexture: {fileID: 0}
-  _targetRenderer: {fileID: 0}
-  _targetMaterialProperty: 
+  _targetRenderer: {fileID: 974192091}
+  _targetMaterialProperty: _BaseMap
 --- !u!1001 &994294328
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1920,6 +1920,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 29ad6dfbfad414887a989819be983741, type: 3}
+--- !u!1 &1240933270 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2360283045475741101, guid: 29ad6dfbfad414887a989819be983741,
+    type: 3}
+  m_PrefabInstance: {fileID: 1240933269}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1240933271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240933270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_CameraOutput: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!1001 &1361817636
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2557,7 +2594,7 @@ PrefabInstance:
     - target: {fileID: 1286658109726386051, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1356288592634258726, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -3872,7 +3909,7 @@ PrefabInstance:
     - target: {fileID: 6581223516276813700, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 6762338397898156540, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -4012,7 +4049,7 @@ PrefabInstance:
     - target: {fileID: 7232175718337222049, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7399524057685991068, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}

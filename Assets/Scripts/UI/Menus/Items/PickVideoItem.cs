@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Effects;
 using VoyagerApp.UI.Overlays;
@@ -43,9 +42,8 @@ namespace VoyagerApp.UI.Menus
             DialogBox.Show(
                 "ARE YOU SURE?",
                 "Are you sure you want to remove this video from project?",
-                new string[] { "CANCEL", "OK" },
-                new Action[] { null, () => { EffectManager.RemoveEffect(video); }}
-                );
+                "CANCEL", "OK", null,
+                () => { EffectManager.RemoveEffect(video); });
         }
 	}
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
@@ -54,25 +53,20 @@ namespace VoyagerApp.UI
                 "Update",
                 "Outdated lamp found from network. " +
                 "Would you like to update your lamp now?",
-                new string[] { "CANCEL", "OK" },
-                new Action[] {
-                    () =>
+                "CANCEL", "OK", () =>
+                {
+                    showing = false;
+                }, () =>
+                {
+                    container.ShowMenu(updateMenu);
+                    WorkspaceSelection.instance.Clear();
+                    foreach (var lamp in WorkspaceUtils.LampItems)
                     {
-                        showing = false;
-                    }, 
-                    () =>
-                    {
-                        container.ShowMenu(updateMenu);
-                        WorkspaceSelection.instance.Clear();
-                        foreach (var lamp in WorkspaceUtils.LampItems)
-                        {
-                            if (!lamp.lamp.updated)
-                                WorkspaceSelection.instance.SelectItem(lamp);
-                        }
-                        showing = false;
+                        if (!lamp.lamp.updated)
+                            WorkspaceSelection.instance.SelectItem(lamp);
                     }
-                }
-            );
+                    showing = false;
+                });
         }
     }
 }

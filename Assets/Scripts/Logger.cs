@@ -23,18 +23,18 @@ public class Logger : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(this.gameObject);
+            DontDestroyOnLoad(gameObject);
 
             var dire = Path.Combine(Application.persistentDataPath, "logs");
             if (Directory.Exists(dire) == false)
                 Directory.CreateDirectory(dire);
 
-            _path = DateTime.UtcNow.ToString("dd_MM_yy H_mm") + ".txt";
+            _path = DateTime.UtcNow.ToString("yyyy-M-dd HH-mm-ss") + ".txt";
             _path = Path.Combine(dire, _path);
         }
         else
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -53,9 +53,7 @@ public class Logger : MonoBehaviour
         {
             while (_writeQueue.Count > 0)
             {
-                var message = _writeQueue.Dequeue();
-                Debug.Log("should log: {message}");
-                writer.WriteLine(message);
+                writer.WriteLine(_writeQueue.Dequeue());
             }
         }
         _writing = false;
@@ -63,6 +61,6 @@ public class Logger : MonoBehaviour
 
     static string AddDateToString(string message)
     {
-        return $"[{DateTime.UtcNow.ToShortDateString()} {DateTime.UtcNow.ToLongTimeString()}] {message}";
+        return $"[{DateTime.UtcNow.ToString("yyyy.M.dd HH:mm:ss.fff")}]\n{message}\n";
     }
 }

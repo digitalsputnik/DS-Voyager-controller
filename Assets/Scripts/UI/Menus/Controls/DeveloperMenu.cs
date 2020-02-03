@@ -35,9 +35,7 @@ namespace VoyagerApp.UI.Menus
                     DialogBox.Show(
                         "ERROR UPLOADING UPDATE",
                         ex.Message,
-                        new string[] { "OK" },
-                        new Action[] { null }
-                    );
+                        "", "ok", null, null);
                 }
             }
         }
@@ -57,8 +55,7 @@ namespace VoyagerApp.UI.Menus
                 DialogBox.Show(
                     response.success ? "SUCCESS" : "FAILED",
                     $"Lamp {response.lamp.serial} finished update process. {response.error}",
-                    new string[] { "OK" },
-                    new Action[] { null });
+                    "", "ok", null, null);
             });
         }
     }

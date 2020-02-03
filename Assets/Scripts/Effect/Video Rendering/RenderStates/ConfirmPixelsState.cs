@@ -31,7 +31,7 @@ namespace VoyagerApp.Videos
                 var address = ((IPEndPoint)sender).Address;
                 var lamp = (VoyagerLamp)LampManager.instance.GetLampWithAddress(address);
 
-                if (packet.indices != null)
+                if (packet.indices != null && lamp.lastTimestamp == packet.videoTimestamp)
                 {
                     if (packet.indices.Length > 0)
                         Debug.Log(lamp.serial + " - " + string.Join(", ", packet.indices));
@@ -96,11 +96,13 @@ namespace VoyagerApp.Videos
 
         void SendMissingFramesRequestToLamps()
         {
-            var packet = new MissingFramesRequestPacket();
             var lamps = WorkspaceUtils.Lamps.Where(l => l.connected).ToArray();
 
             foreach (var lamp in lamps)
+            {
+                var packet = new MissingFramesRequestPacket(lamp.lastTimestamp);
                 NetUtils.VoyagerClient.SendPacket(lamp, packet, VoyagerClient.PORT_SETTINGS);
+            }
         }
 
         void SendMissingFramesToLamps()

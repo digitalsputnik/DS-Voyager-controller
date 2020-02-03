@@ -121,11 +121,17 @@ namespace VoyagerApp.Networking.Voyager
         {
             IPEndPoint endpoint = (IPEndPoint)info;
             discovery.Send(endpoint, data);
+            new Thread(() => LogSentPackage(data, endpoint.Address)).Start();
+        }
 
-            new Thread(() => {
-                string decoded = Encoding.UTF8.GetString(data);
-                Logger.Info(decoded);
-            });
+        void LogSentPackage(byte[] data, IPAddress address)
+        {
+            var lamp = LampManager.instance.GetLampWithAddress(address);
+            var decoded = Encoding.UTF8.GetString(data);
+            if (lamp == null)
+                Logger.Info($"Sent to {address}: {decoded}");
+            else
+                Logger.Info($"Sent to {lamp.serial}: {decoded}");
         }
 
         public override void Receive()
@@ -216,6 +222,12 @@ namespace VoyagerApp.Networking.Voyager
                         }
                     }
                     MainThread.Dispach(() => InvokeReceived(sender, data));
+
+                    var lamp = LampManager.instance.GetLampWithAddress(sender.Address);
+                    if (lamp == null)
+                        Logger.Info($"Received from {sender.Address}: {json}");
+                    else
+                        Logger.Info($"Received from {lamp.serial}: {json}");
                 }
             }).Start();
         }
