@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -81,9 +82,8 @@ namespace VoyagerApp.UI.Menus
                 "Clicking \"OK\" will send loaded video to lamps, otherwise " +
                 "Only lamp positions will be loaded, but lamps will still play " +
                 "the video, they have at the moment.",
-                "CANCEL", "OK",
-                OnSendBufferCancel,
-                OnSendBuffer);
+                new string[] { "CANCEL", "OK" },
+                new Action[] { OnSendBufferCancel, OnSendBuffer });
         }
 
         void OnSendBufferCancel() => ItemsInteractable = true;

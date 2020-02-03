@@ -42,7 +42,6 @@ namespace VoyagerApp.UI
 
         void GlobalDimmerValueChanged(float value)
         {
-            Debug.LogError(value, this);
             var packet = new SetGlobalIntensityPacket(value);
             foreach (var lamp in LampManager.instance.Lamps.Where(l => l.connected))
                 NetUtils.VoyagerClient.SendPacket(lamp, packet, VoyagerClient.PORT_SETTINGS);

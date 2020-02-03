@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Projects;
 using VoyagerApp.UI.Overlays;
@@ -14,7 +15,7 @@ namespace VoyagerApp.UI.Menus
         internal override void OnShow()
         {
             filenameField.onValueChanged.AddListener(FilenameFieldChanged);
-            filenameField.text = $"save_{Random.Range(0, 1000)}";
+            filenameField.text = $"save_{UnityEngine.Random.Range(0, 1000)}";
             FilenameFieldChanged(filenameField.text);
         }
 
@@ -51,8 +52,8 @@ namespace VoyagerApp.UI.Menus
                 DialogBox.Show(
                     "ERROR",
                     "Error packing the project to export it.",
-                    "TRY AGAIN", "CANCEL",
-                    Export, null);
+                    new string[] { "TRY AGAIN", "CANCEL" },
+                    new Action[] { Export, null });
             }
         }
     }

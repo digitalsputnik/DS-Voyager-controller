@@ -66,8 +66,8 @@ namespace VoyagerApp.Projects
                     "ERROR",
                     $"Unable to save project. " +
                     $"Following error occurred:\n{ex.Message}",
-                    "CANCEL", "OK",
-                    null, null);
+                    new string[] { "CANCEL", "OK" },
+                    new Action[] { null, null });
 
                 return null;
             }

@@ -121,6 +121,11 @@ namespace VoyagerApp.Networking.Voyager
         {
             IPEndPoint endpoint = (IPEndPoint)info;
             discovery.Send(endpoint, data);
+
+            new Thread(() => {
+                string decoded = Encoding.UTF8.GetString(data);
+                Logger.Info(decoded);
+            });
         }
 
         public override void Receive()

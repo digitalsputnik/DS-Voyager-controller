@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VoyagerApp.Effects;
@@ -100,11 +101,14 @@ namespace VoyagerApp.UI.Menus
         {
             DialogBox.Show(
                 "COPY LAMP POSITIONS?",
-                "Click \"OK\" to copy lamp positions from workspace to FX mapping.",
-                "CANCEL",
-                "OK",
-                () => SelectFromWorkspaceWithoutMapping(effect),
-                () => SelectFromWorkspaceWithMapping(effect));
+                "Do you want to copy lamp positions from workspace to FX mapping?",
+                new string[] { "YES", "NO", "CANCEL" },
+                new Action[] { 
+                    () => SelectFromWorkspaceWithMapping(effect),
+                    () => SelectFromWorkspaceWithoutMapping(effect),
+                    null
+                }
+            );
         }
 
         void SelectFromWorkspaceWithMapping(Effect effect)

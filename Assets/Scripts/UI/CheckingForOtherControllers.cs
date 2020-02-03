@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using UnityEngine;
@@ -78,7 +79,8 @@ namespace VoyagerApp.UI
                 "ALERT!",
                 "Another DS Voyager Controller is detected from network. " +
                 "We do not support multicontrolling.",
-                "EXIT", "OK", ExitClicked, OkClicked
+                new string[] { "EXIT", "OK" },
+                new Action[] { ExitClicked, OkClicked }
             );
         }
 
