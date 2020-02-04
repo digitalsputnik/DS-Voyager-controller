@@ -16,7 +16,7 @@ namespace VoyagerApp.UI
         [SerializeField] VideoMapper videoMapper = null;
         [SerializeField] StreamMapper streamMapper = null;
 
-        [SerializeField] Button[] playPauseStopBtns = null;
+        [SerializeField] Button[] playPauseStopBtns;
 
         void Start() => LoadCorrectEffect();
 
@@ -59,13 +59,13 @@ namespace VoyagerApp.UI
             {
                 videoMapper.SetVideo(video);
                 foreach (var button in playPauseStopBtns)
-                    button.interactable = true;
+                    if (button != null) button.interactable = true;
             }
             else
             {
                 streamMapper.SetEffect(effect);
                 foreach (var button in playPauseStopBtns)
-                    button.interactable = false;
+                    if (button != null) button.interactable = false;
             }
 
             menu.SetEffect(effect);
