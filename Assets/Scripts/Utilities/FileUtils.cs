@@ -84,7 +84,7 @@ namespace VoyagerApp.Utilities
                 {
                     DialogBox.Show(
                         "WARNING",
-                        "On iOS captured photos might not load.",
+                        "Photos captured with iOS camera might not load.",
                         "CANCEL", "OK",
                         () =>
                         {

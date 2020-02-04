@@ -313,7 +313,8 @@ namespace VoyagerApp.Projects
                     throw new Exception("Something went wrong while saving the project");
 
                 byte[] project = File.ReadAllBytes(projPath);
-                byte[][] videoData = new byte[data.effects.Length][];
+                byte[][] videoData = new byte[videoPaths.Length][];
+
                 for (int i = 0; i < videoData.Length; i++)
                     videoData[i] = File.ReadAllBytes(videos[i].path);
 
@@ -381,7 +382,6 @@ namespace VoyagerApp.Projects
             var projectPath = Path.Combine(ProjectDirectory(name), PROJECT_FILE);
             projectJson = JsonConvert.SerializeObject(project, Formatting.Indented);
             File.WriteAllText(projectPath, projectJson);
-
 
             return ProjectDirectory(name);
         }

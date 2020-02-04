@@ -85,7 +85,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1df5edc4081416ca0373d00d5d3cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  voyagerAnimVersion: 1.207
+  voyagerAnimVersion: 1.210
 --- !u!114 &4099646543211210977
 MonoBehaviour:
   m_ObjectHideFlags: 0
