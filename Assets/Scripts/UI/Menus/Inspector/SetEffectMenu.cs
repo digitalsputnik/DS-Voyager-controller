@@ -55,6 +55,7 @@ namespace VoyagerApp.UI.Menus
 
             EffectManager.onEffectAdded += OnEffectAdded;
             EffectManager.onEffectRemoved += OnEffectRemoved;
+            WorkspaceSelection.instance.onSelectionChanged += OnSelectionChanged;
         }
 
         internal override void OnHide()
@@ -64,6 +65,13 @@ namespace VoyagerApp.UI.Menus
 
             EffectManager.onEffectAdded -= OnEffectAdded;
             EffectManager.onEffectRemoved -= OnEffectRemoved;
+            WorkspaceSelection.instance.onSelectionChanged -= OnSelectionChanged;
+        }
+
+        void OnSelectionChanged()
+        {
+            if (WorkspaceSelection.instance.Selected.Count == 0)
+                GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
         void OnEffectAdded(Effect effect)
@@ -71,7 +79,6 @@ namespace VoyagerApp.UI.Menus
             AddEffectItem(effect);
             OrderEffects();
         }
-
 
         void OnEffectRemoved(Effect effect)
         {
