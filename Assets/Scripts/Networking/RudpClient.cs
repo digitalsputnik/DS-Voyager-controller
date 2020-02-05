@@ -1,5 +1,7 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
+using UnityEngine;
 using VoyagerApp.Utilities;
 
 namespace VoyagerApp.Networking
@@ -41,8 +43,9 @@ namespace VoyagerApp.Networking
             {
                 client.Send(data, data.Length, endpoint);
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.LogError(ex);
                 ready = false;
                 client.Dispose();
                 client = null;
@@ -58,8 +61,9 @@ namespace VoyagerApp.Networking
             {
                 return client.Receive(ref endpoint);
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.LogError(ex);
                 ready = false;
                 client.Dispose();
                 client = null;
