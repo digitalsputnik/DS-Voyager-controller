@@ -180,13 +180,14 @@ namespace VoyagerApp.Projects
                             vid.id = videoData.id;
                         }
                     }
-                    else
+                }
+                else if(effectData is VideoPreset videoPresetData)
+                {
+                    var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoPresetData.name);
+                    for (int i = 0; i < data.lamps.Length; i++)
                     {
-                        for (int i = 0; i < data.lamps.Length; i++)
-                        {
-                            if (data.lamps[i].effect == videoData.id)
-                                data.lamps[i].effect = existingPreset.id;
-                        }
+                        if (data.lamps[i].effect == videoPresetData.id)
+                            data.lamps[i].effect = existingPreset.id;
                     }
                 }
             }

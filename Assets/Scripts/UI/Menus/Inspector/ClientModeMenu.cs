@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
 using VoyagerApp.Utilities;
+using VoyagerApp.UI.Overlays;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -32,13 +34,13 @@ namespace VoyagerApp.UI.Menus
 
         internal override void OnShow()
         {
-            ssidField.onValueChanged.AddListener(SsidFieldTextChanged);
+            //ssidField.onValueChanged.AddListener(SsidFieldTextChanged);
             if (ssidFieldObj.activeSelf) TypeSsidBtnClick();
         }
 
         internal override void OnHide()
         {
-            ssidField.onValueChanged.RemoveListener(SsidFieldTextChanged);
+            //ssidField.onValueChanged.RemoveListener(SsidFieldTextChanged);
             lampToSsids.Clear();
         }
 
@@ -64,7 +66,7 @@ namespace VoyagerApp.UI.Menus
 
         void SsidFieldTextChanged(string text)
         {
-            setBtn.gameObject.SetActive(ssidField.text.Length >= 8);
+            setBtn.gameObject.SetActive(ssidField.text.Length > 0);
         }
 
         #region Lamp SSIDS
@@ -175,14 +177,35 @@ namespace VoyagerApp.UI.Menus
 
         public void Set()
         {
-            var client = NetUtils.VoyagerClient;
-            var ssid = ssidListObj.activeSelf ? ssidList.selected : ssidField.text;
-            var password = passwordField.text;
+            if(passwordField.text.Length >= 8 || passwordField.text.Length == 0 && ssidField.text.Length != 0)
+            {
+                var client = NetUtils.VoyagerClient;
+                var ssid = ssidListObj.activeSelf ? ssidList.selected : ssidField.text;
+                var password = passwordField.text;
 
-            foreach (var lamp in WorkspaceUtils.SelectedLamps)
-                client.TurnToClient(lamp, ssid, password);
+                foreach (var lamp in WorkspaceUtils.SelectedLamps)
+                    client.TurnToClient(lamp, ssid, password);
 
-            GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+                GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+            }
+            else if(ssidField.text.Length == 0)
+            {
+                DialogBox.Show(
+                    "INVALID SSID",
+                    "SSID cannot be empty.",
+                    new string[] { "OK" },
+                    new Action[] { null }
+                );
+            }
+            else
+            {
+                DialogBox.Show( 
+                    "INVALID PASSWORD", 
+                    "Password length must be at least 8 characters or empty for public WiFi networks.",
+                    new string[] { "OK" }, 
+                    new Action[] { null }
+                );
+            }
         }
     }
 }

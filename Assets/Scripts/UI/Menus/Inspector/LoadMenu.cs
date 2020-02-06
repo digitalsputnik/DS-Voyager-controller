@@ -74,16 +74,30 @@ namespace VoyagerApp.UI.Menus
 
         public void LoadProject(string project)
         {
-            ItemsInteractable = false;
-            data = Project.Load(project);
-            VideoRenderer.SetState(new ConfirmPixelsState());
             DialogBox.Show(
                 "Send loaded video buffer to lamps?",
-                "Clicking \"OK\" will send loaded video to lamps, otherwise " +
-                "Only lamp positions will be loaded, but lamps will still play " +
+                "Clicking \"YES\" will send loaded video to lamps, otherwise " +
+                "only lamp positions will be loaded, but lamps will still play " +
                 "the video, they have at the moment.",
-                new string[] { "CANCEL", "OK" },
-                new Action[] { OnSendBufferCancel, OnSendBuffer });
+                new string[] { "YES", "NO", "CANCEL" },
+                new Action[] {
+                    () =>
+                    {
+                        ItemsInteractable = false;
+                        data = Project.Load(project);
+                        VideoRenderer.SetState(new ConfirmPixelsState());
+                        OnSendBuffer();
+                    },
+                    () =>
+                    {
+                        ItemsInteractable = false;
+                        data = Project.Load(project);
+                        VideoRenderer.SetState(new ConfirmPixelsState());
+                        OnSendBufferCancel();
+                    },
+                    null
+                }
+            );
         }
 
         void OnSendBufferCancel() => ItemsInteractable = true;

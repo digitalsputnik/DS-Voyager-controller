@@ -14,8 +14,8 @@ namespace VoyagerApp.UI.Overlays
 
         [SerializeField] Text titleText = null;
         [SerializeField] Text explanationText = null;
-        [SerializeField] GameObject buttonPrefab;
-        [SerializeField] RectTransform buttonContainer;
+        [SerializeField] GameObject buttonPrefab = null;
+        [SerializeField] RectTransform buttonContainer = null;
 
         List<Button> buttons = new List<Button>();
 
