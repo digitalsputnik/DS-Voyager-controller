@@ -113,6 +113,7 @@ namespace VoyagerApp.UI.Menus
 
         void SelectFromWorkspaceWithMapping(Effect effect)
         {
+            WorkspaceSelection.instance.ReselectItem();
             var selectionView = WorkspaceManager.instance
                 .GetItemsOfType<SelectionControllerView>()[0];
 

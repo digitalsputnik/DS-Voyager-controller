@@ -28,6 +28,11 @@ namespace VoyagerApp.Workspace
             }
         }
 
+        public void ReselectItem()
+        {
+            onSelectionChanged?.Invoke();
+        }
+
         public void DeselectItem(ISelectableItem selectable)
         {
             if (Selected.Contains(selectable))
