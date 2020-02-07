@@ -165,7 +165,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: com.digitalsputnik.voyagercontroller
-    Standalone: com.digitalsputnik.voyagercontroller
+    Standalone: com.digitalsputnik.voyagercontrollermac
     Tizen: com.DS.LightGrade
     iPhone: com.digitalsputnik.voyagercontroller
     tvOS: com.DS.LightGrade
