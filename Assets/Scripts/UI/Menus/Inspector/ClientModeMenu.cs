@@ -58,10 +58,13 @@ namespace VoyagerApp.UI.Menus
 
         public void TypeSsidBtnClick()
         {
-            ssidListObj.gameObject.SetActive(false);
-            ssidFieldObj.gameObject.SetActive(true);
-            if (WorkspaceUtils.SelectedVoyagerLamps.Count > 0 && string.IsNullOrEmpty(ssidField.text))
-                ssidField.text = WorkspaceUtils.SelectedVoyagerLamps[0].activePattern;
+            if (!loading)
+            {
+                ssidListObj.gameObject.SetActive(false);
+                ssidFieldObj.gameObject.SetActive(true);
+                if (WorkspaceUtils.SelectedVoyagerLamps.Count > 0 && string.IsNullOrEmpty(ssidField.text))
+                    ssidField.text = WorkspaceUtils.SelectedVoyagerLamps[0].activePattern;
+            }
         }
 
         void SsidFieldTextChanged(string text)
@@ -177,18 +180,19 @@ namespace VoyagerApp.UI.Menus
 
         public void Set()
         {
-            if(passwordField.text.Length >= 8 || passwordField.text.Length == 0 && ssidField.text.Length != 0)
+            var ssid = ssidListObj.activeSelf ? ssidList.selected : ssidField.text;
+            var password = passwordField.text;
+
+            if (password.Length >= 8 && ssid.Length != 0 || password.Length == 0 && ssid.Length != 0)
             {
                 var client = NetUtils.VoyagerClient;
-                var ssid = ssidListObj.activeSelf ? ssidList.selected : ssidField.text;
-                var password = passwordField.text;
 
                 foreach (var lamp in WorkspaceUtils.SelectedLamps)
                     client.TurnToClient(lamp, ssid, password);
 
                 GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
             }
-            else if(ssidField.text.Length == 0)
+            else if(ssid.Length == 0)
             {
                 DialogBox.Show(
                     "INVALID SSID",
