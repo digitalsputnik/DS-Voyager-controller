@@ -65,6 +65,13 @@ namespace VoyagerApp.UI
                 SetFrame(lampFrame);
         }
 
+        public void UpdateEffectSettings()
+        {
+            renderMesh.sharedMaterial.SetFloat("_Lift", (video.lift * 2.0f) - 1.0f);
+            renderMesh.sharedMaterial.SetFloat("_Contrast", (video.contrast * 2.0f) - 1.0f);
+            renderMesh.sharedMaterial.SetFloat("_Saturation", video.saturation * 2.0f);
+        }
+
         #region Setting video
         public void SetVideo(Video video)
         {

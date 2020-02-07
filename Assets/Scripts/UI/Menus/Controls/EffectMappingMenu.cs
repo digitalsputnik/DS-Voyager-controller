@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using VoyagerApp.Effects;
-using VoyagerApp.Networking.Voyager;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 
@@ -17,7 +16,6 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] VideoMapper videoMapper = null;
         [SerializeField] StreamMapper streamMapper = null;
         [SerializeField] Text selectDeselectBtnText = null;
-        [SerializeField] IntField fpsField = null;
         [SerializeField] ListPicker syphonSource = null;
         [SerializeField] ListPicker spoutSource = null;
         [SerializeField] IntField streamDelayField = null;
@@ -26,7 +24,6 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] GameObject alignmentBtn = null;
 
         Effect effect;
-        bool hasFpsInitialized;
         bool hasSyphonInitialized;
         bool hasSpoutInitialized;
 
@@ -39,10 +36,8 @@ namespace VoyagerApp.UI.Menus
 
             this.effect = effect;
 
-            if (effect is Video video)
+            if (effect is Video)
             {
-                SetupFps(video);
-                fpsField.gameObject.SetActive(true);
                 syphonSource.transform.parent.gameObject.SetActive(false);
                 spoutSource.transform.parent.gameObject.SetActive(false);
                 streamDelayField.gameObject.SetActive(false);
@@ -51,7 +46,6 @@ namespace VoyagerApp.UI.Menus
             else if (effect is SyphonStream syphon)
             {
                 SetupSyphon(syphon);
-                fpsField.gameObject.SetActive(false);
                 syphonSource.transform.parent.gameObject.SetActive(true);
                 spoutSource.transform.parent.gameObject.SetActive(false);
                 streamDelayField.gameObject.SetActive(true);
@@ -60,7 +54,6 @@ namespace VoyagerApp.UI.Menus
             else if (effect is SpoutStream spout)
             {
                 SetupSpout(spout);
-                fpsField.gameObject.SetActive(false);
                 syphonSource.transform.parent.gameObject.SetActive(false);
                 spoutSource.transform.parent.gameObject.SetActive(true);
                 streamDelayField.gameObject.SetActive(true);
@@ -260,36 +253,10 @@ namespace VoyagerApp.UI.Menus
             streamMapper.Fps = streamFpsField.Value;
         }
 
-        void SetupFps(Video video)
-        {
-            if (hasFpsInitialized)
-                fpsField.onChanged -= FpsChanged;
-
-            fpsField.SetValue(video.fps);
-            fpsField.onChanged += FpsChanged;
-            hasFpsInitialized = true;
-        }
-
-        private void FpsChanged(int value)
-        {
-            ((Video)effect).fps = value;
-            var packet = new SetFpsPacket(value);
-
-            foreach (var lamp in WorkspaceUtils.Lamps)
-                NetUtils.VoyagerClient.KeepSendingPacket(lamp, "set_fps", packet, VoyagerClient.PORT_SETTINGS, TimeUtils.Epoch);
-
-            videoMapper.SetFps(value);
-        }
-
         public void ReturnToWorkspace()
         {
             PlayerPrefs.SetInt("from_video_mapping", 1);
             SceneManager.LoadScene(0);
-        }
-
-        void OnDestroy()
-        {
-            fpsField.onChanged -= FpsChanged;
         }
 
         void EnableDisableObjects()
