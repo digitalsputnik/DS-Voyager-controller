@@ -62,13 +62,14 @@ namespace VoyagerApp.UI
                     }, 
                     () =>
                     {
-                        container.ShowMenu(updateMenu);
                         WorkspaceSelection.instance.Clear();
                         foreach (var lamp in WorkspaceUtils.LampItems)
                         {
                             if (!lamp.lamp.updated)
                                 WorkspaceSelection.instance.SelectItem(lamp);
                         }
+                        Menus.LampSettingsMenu.isFromUpdatePrompt = true;
+                        container.ShowMenu(updateMenu);
                         showing = false;
                     }
                 }
