@@ -208,17 +208,19 @@ namespace VoyagerApp.Videos
             {
                 var effect = instance.currentVideo;
                 var material = instance.renderMaterial;
-                var render = RenderTexture.GetTemporary(instance.renderTexture.descriptor);
+                var render = new RenderTexture(instance.renderTexture.descriptor);
 
                 material.SetFloat("_Lift", (effect.lift * 2.0f) - 1.0f);
                 material.SetFloat("_Contrast", (effect.contrast * 2.0f) - 1.0f);
                 material.SetFloat("_Saturation", effect.saturation * 2.0f);
 
+                var prevActive = RenderTexture.active;
                 Graphics.Blit(instance.renderTexture, render, material);
+                RenderTexture.active = prevActive;
 
                 var texture = TextureUtils.RenderTextureToTexture2D(render);
 
-                RenderTexture.ReleaseTemporary(render);
+                Destroy(render);
 
                 return texture;
             }
