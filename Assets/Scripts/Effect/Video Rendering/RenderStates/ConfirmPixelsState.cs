@@ -31,20 +31,17 @@ namespace VoyagerApp.Videos
                 var address = ((IPEndPoint)sender).Address;
                 var lamp = (VoyagerLamp)LampManager.instance.GetLampWithAddress(address);
 
-                if (packet.indices != null && lamp.lastTimestamp == packet.videoTimestamp)
+                if (packet.indices.Length > 0)
+                    Debug.Log(lamp.serial + " - " + string.Join(", ", packet.indices));
+
+                if (packet.indices.Length > lamp.buffer.count / 2)
                 {
-                    if (packet.indices.Length > 0)
-                        Debug.Log(lamp.serial + " - " + string.Join(", ", packet.indices));
-
-                    if (packet.indices.Length > lamp.buffer.count / 2)
-                    {
-                        lamp.buffer.Clear();
-                        _abort = true;
-                        return;
-                    }
-
-                    missingFrames[lamp] = packet.indices.Where(lamp.buffer.FrameExists).ToArray();
+                    lamp.buffer.Clear();
+                    _abort = true;
+                    return;
                 }
+
+                missingFrames[lamp] = packet.indices.Where(lamp.buffer.FrameExists).ToArray();
             }
         }
 

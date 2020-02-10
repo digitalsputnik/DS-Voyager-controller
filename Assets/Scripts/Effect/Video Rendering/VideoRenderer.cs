@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Video;
@@ -39,6 +40,7 @@ namespace VoyagerApp.Videos
 
         float prevProgress = 1.0f;
         bool lampEventsSubscribed;
+        Video currentVideo;
 
         public static void SetState(RenderState state)
         {
@@ -69,6 +71,7 @@ namespace VoyagerApp.Videos
                 LampManager.instance.onLampEffectChanged += HandleLampInterupt;
                 LampManager.instance.onLampMappingChanged += HandleLampInterupt;
                 LampManager.instance.onLampItsheChanged += HandleLampItsheInterupt;
+                EffectManager.instance.onEffectModified += OnEffectModified;
                 lampEventsSubscribed = true;
             }
         }
@@ -80,6 +83,7 @@ namespace VoyagerApp.Videos
                 LampManager.instance.onLampEffectChanged -= HandleLampInterupt;
                 LampManager.instance.onLampMappingChanged -= HandleLampInterupt;
                 LampManager.instance.onLampItsheChanged -= HandleLampItsheInterupt;
+                EffectManager.instance.onEffectModified -= OnEffectModified;
                 lampEventsSubscribed = false;
             }
         }
@@ -131,6 +135,11 @@ namespace VoyagerApp.Videos
                 Interupt();
         }
 
+        void OnEffectModified(Effect effect)
+        {
+            Interupt();
+        }
+
         void Interupt()
         {
             Clear();
@@ -140,7 +149,6 @@ namespace VoyagerApp.Videos
 
         #region Internal Controls
 
-        internal static RenderTexture VideoTexture => instance.renderTexture;
         internal static long CurrentFrameIndex => instance.videoPlayer.frame;
         internal static long FrameCount => (long)instance.videoPlayer.frameCount;
 
@@ -155,6 +163,8 @@ namespace VoyagerApp.Videos
             instance.videoPlayer.url = video.path;
             instance.videoPlayer.targetTexture = instance.renderTexture;
             instance.videoPlayer.Prepare();
+
+            instance.currentVideo = video;
         }
 
         internal static void Play()
@@ -190,6 +200,23 @@ namespace VoyagerApp.Videos
         internal static void Clear()
         {
             instance.videoPlayer.Stop();
+        }
+
+        internal static Texture2D VideoTexture
+        {
+            get
+            {
+                var effect = instance.currentVideo;
+                var material = instance.renderMaterial;
+                var render = new RenderTexture(instance.renderTexture);
+
+                material.SetFloat("_Lift", (effect.lift * 2.0f) - 1.0f);
+                material.SetFloat("_Contrast", (effect.contrast * 2.0f) - 1.0f);
+                material.SetFloat("_Saturation", effect.saturation * 2.0f);
+
+                Graphics.Blit(instance.renderTexture, render, material);
+                return TextureUtils.RenderTextureToTexture2D(render);
+            }
         }
 
         #endregion

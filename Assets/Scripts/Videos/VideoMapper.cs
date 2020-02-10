@@ -114,7 +114,7 @@ namespace VoyagerApp.UI
             render = new RenderTexture((int)video.width, (int)video.height, 32);
             render.Create();
 
-            renderMesh.material.SetTexture("_BaseMap", render);
+            renderMesh.material.SetTexture("_MainTex", render);
             player.targetTexture = render;
         }
 

@@ -41,7 +41,7 @@ namespace VoyagerApp.Videos
 
                 if (missingFrames.Any(i => i == index))
                 {
-                    Texture2D frame = TextureUtils.RenderTextureToTexture2D(VideoRenderer.VideoTexture);
+                    Texture2D frame = VideoRenderer.VideoTexture;
 
                     foreach (var lamp in queue.LampsWithActiveVideo)
                         RenderFrameToLamp(lamp, frame, index);

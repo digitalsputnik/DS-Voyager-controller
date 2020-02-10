@@ -65,18 +65,31 @@ namespace VoyagerApp.UI.Menus
         {
             _effect.lift = _liftField.normalized;
             _videoMapper.UpdateEffectSettings();
+            ReRender();
         }
 
         void ContrastChanged(int value)
         {
             _effect.contrast = _contrastField.normalized;
             _videoMapper.UpdateEffectSettings();
+            ReRender();
         }
 
         void SaturationChanged(int value)
         {
             _effect.saturation = _saturationField.normalized;
             _videoMapper.UpdateEffectSettings();
+            ReRender();
+        }
+
+        void ReRender()
+        {
+            EffectManager.instance.InvokeEffectChange(_effect);
+            foreach (var lamp in WorkspaceUtils.VoyagerLamps)
+            {
+                lamp.effect = null;
+                lamp.SetEffect(_effect);
+            }
         }
 
         void FpsChanged(int value)
