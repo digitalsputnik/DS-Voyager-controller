@@ -74,9 +74,6 @@ namespace VoyagerApp.UI.Menus
 
         public void LoadProject(string project)
         {
-            ItemsInteractable = false;
-            data = Project.Load(project);
-            VideoRenderer.SetState(new ConfirmPixelsState());
             DialogBox.Show(
                 "Send loaded video buffer to lamps?",
                 "Clicking \"YES\" will send loaded video to lamps, otherwise " +
