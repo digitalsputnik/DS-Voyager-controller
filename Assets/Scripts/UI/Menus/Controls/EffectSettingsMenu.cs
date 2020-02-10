@@ -9,6 +9,7 @@ namespace VoyagerApp.UI.Menus
     public class EffectSettingsMenu : Menu
     {
         [SerializeField] VideoMapper _videoMapper;
+        [SerializeField] StreamMapper _streamMapper;
 
         [SerializeField] IntField _fpsField;
         [SerializeField] IntField _liftField;
@@ -42,7 +43,9 @@ namespace VoyagerApp.UI.Menus
 
             SubscribeFields();
             _fieldsInitialized = true;
-            _videoMapper.UpdateEffectSettings();
+
+            if (_effect is Video)
+                _videoMapper.UpdateEffectSettings();
         }
 
         void SubscribeFields()
@@ -64,31 +67,37 @@ namespace VoyagerApp.UI.Menus
         void LiftChanged(int value)
         {
             _effect.lift = _liftField.normalized;
-            _videoMapper.UpdateEffectSettings();
-            ReRender();
+            AfterEffectChanged();
         }
 
         void ContrastChanged(int value)
         {
             _effect.contrast = _contrastField.normalized;
-            _videoMapper.UpdateEffectSettings();
-            ReRender();
+            AfterEffectChanged();
         }
 
         void SaturationChanged(int value)
         {
             _effect.saturation = _saturationField.normalized;
-            _videoMapper.UpdateEffectSettings();
-            ReRender();
+            AfterEffectChanged();
         }
 
-        void ReRender()
+        void AfterEffectChanged()
         {
             EffectManager.instance.InvokeEffectChange(_effect);
-            foreach (var lamp in WorkspaceUtils.VoyagerLamps)
+            
+            if (_effect is Video)
             {
-                lamp.effect = null;
-                lamp.SetEffect(_effect);
+                _videoMapper.UpdateEffectSettings();
+                foreach (var lamp in WorkspaceUtils.VoyagerLamps)
+                {
+                    lamp.effect = null;
+                    lamp.SetEffect(_effect);
+                }
+            }
+            else
+            {
+                _streamMapper.UpdateEffectSettings();
             }
         }
 

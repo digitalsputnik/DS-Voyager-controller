@@ -2260,6 +2260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 974192091}
+  renderMaterial: {fileID: 2100000, guid: d991e984ca85f43ab9627a25c6975a3a, type: 2}
 --- !u!23 &974192091
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2890,6 +2891,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _videoMapper: {fileID: 599089774}
+  _streamMapper: {fileID: 974192090}
   _fpsField: {fileID: 1585831662}
   _liftField: {fileID: 1895169721}
   _contrastField: {fileID: 133362076}
