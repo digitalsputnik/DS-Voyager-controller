@@ -17,6 +17,9 @@ namespace VoyagerApp.Projects
         public string id;
         public string name;
         public string type;
+        public float lift = 0.5f;
+        public float contrast = 1.0f;
+        public float saturation = 0.5f;
     }
 
     [Serializable]
@@ -26,6 +29,8 @@ namespace VoyagerApp.Projects
         public string file;
         public int fps;
     }
+
+    public class Stream : Effect { }
 
     [Serializable]
     public class VideoPreset : Effect { }

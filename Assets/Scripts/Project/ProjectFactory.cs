@@ -11,11 +11,11 @@ namespace VoyagerApp.Projects
 {
     public static class ProjectFactory
     {
-        public const string VERSION = "2.2";
+        public const string VERSION = "2.2.2";
 
         public static ProjectSaveData GetCurrentSaveData()
         {
-            var effectList = EffectManager.Effects.Where(e => e is Effects.Video).ToList();
+            var effectList = EffectManager.Effects.Where(e => e is Effects.Video || e is SyphonStream || e is SpoutStream).ToList();
             var effects = new Effect[effectList.Count];
 
             for (int i = 0; i < effectList.Count; i++)
@@ -30,7 +30,10 @@ namespace VoyagerApp.Projects
                         {
                             id = effect.id,
                             name = effect.name,
-                            type = "video_preset"
+                            type = "video_preset",
+                            lift = effect.lift,
+                            contrast = effect.contrast,
+                            saturation = effect.saturation
                         };
 
                         effects[i] = videoData;
@@ -44,11 +47,27 @@ namespace VoyagerApp.Projects
                             type = "video",
                             file = video.file,
                             frames = video.frames,
-                            fps = video.fps
+                            fps = video.fps,
+                            lift = effect.lift,
+                            contrast = effect.contrast,
+                            saturation = effect.saturation
                         };
 
                         effects[i] = videoData;
                     }
+                }
+                else if (effect is SpoutStream || effect is SyphonStream)
+                {
+                    var streamData = new Stream
+                    {
+                        id = effect.id,
+                        type = "stream",
+                        lift = effect.lift,
+                        contrast = effect.contrast,
+                        saturation = effect.saturation
+                    };
+
+                    effects[i] = streamData;
                 }
             }
 
@@ -215,6 +234,8 @@ namespace VoyagerApp.Projects
 
             switch (version)
             {
+                case "2.2.2":
+                    return new ProjectParser2_2_2(); // HOT FIX VERSION
                 case "2.2":
                     return new ProjectParser2_2();
                 case "2.1":
