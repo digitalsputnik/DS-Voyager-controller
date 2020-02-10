@@ -86,8 +86,12 @@ namespace VoyagerApp.Videos
             get
             {
                 long all = WorkspaceUtils.Lamps.Sum(l => l.buffer.count);
-                long done = WorkspaceUtils.Lamps.Sum(l => l.buffer.existing);
-                return (float)done / all;
+                long missing = 0;
+
+                foreach (var lamp in missingFrames.Keys)
+                    missing += missingFrames[lamp].Count();
+
+                return (float)(all - missing) / all;
             }
         }
 

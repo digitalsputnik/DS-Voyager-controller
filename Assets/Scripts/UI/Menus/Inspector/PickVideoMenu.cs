@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VoyagerApp.Effects;
@@ -43,69 +44,72 @@ namespace VoyagerApp.UI.Menus
                 DialogBox.Show(
                     "COPY LAMP POSITIONS?",
                     "Click \"OK\" to copy lamp positions from workspace to FX mapping.",
-                    "CANCEL", "OK",
-                    () =>
-                    {
-                        foreach (var lamp in WorkspaceUtils.SelectedVoyagerLamps)
+                    new string[] { "CANCEL", "OK" },
+                    new Action[] {
+                        () =>
                         {
-                            var packet = new SetDmxModePacket(
-                                false,
-                                lamp.dmxUniverse,
-                                lamp.dmxChannel,
-                                lamp.dmxDivision,
-                                lamp.dmxProtocol,
-                                lamp.dmxFormat
-                            );
-                            NetUtils.VoyagerClient.SendPacket(
-                                lamp,
-                                packet,
-                                VoyagerClient.PORT_SETTINGS);
-                        }
+                            foreach (var lamp in WorkspaceUtils.SelectedVoyagerLamps)
+                            {
+                                var packet = new SetDmxModePacket(
+                                    false,
+                                    lamp.dmxUniverse,
+                                    lamp.dmxChannel,
+                                    lamp.dmxDivision,
+                                    lamp.dmxProtocol,
+                                    lamp.dmxFormat
+                                );
+                                NetUtils.VoyagerClient.SendPacket(
+                                    lamp,
+                                    packet,
+                                    VoyagerClient.PORT_SETTINGS);
+                            }
 
-                        foreach (var lamp in WorkspaceUtils.SelectedLamps)
+                            foreach (var lamp in WorkspaceUtils.SelectedLamps)
+                            {
+                                lamp.SetEffect(video);
+                                NetUtils.VoyagerClient.SendPacket(
+                                    lamp,
+                                    new SetPlayModePacket(PlaybackMode.Play, video.startTime, 0.0),
+                                    VoyagerClient.PORT_SETTINGS);
+                            }
+                            WorkspaceUtils.EnterToVideoMapping();
+                        },
+                        () =>
                         {
-                            lamp.SetEffect(video);
-                            NetUtils.VoyagerClient.SendPacket(
-                                lamp,
-                                new SetPlayModePacket(PlaybackMode.Play, video.startTime, 0.0),
-                                VoyagerClient.PORT_SETTINGS);
-                        }
-                        WorkspaceUtils.EnterToVideoMapping();
-                    },
-                    () =>
-                    {
-                        foreach (var lamp in WorkspaceUtils.SelectedVoyagerLamps)
-                        {
-                            var packet = new SetDmxModePacket(
-                                false,
-                                lamp.dmxUniverse,
-                                lamp.dmxChannel,
-                                lamp.dmxDivision,
-                                lamp.dmxProtocol,
-                                lamp.dmxFormat
-                            );
-                            NetUtils.VoyagerClient.SendPacket(
-                                lamp,
-                                packet,
-                                VoyagerClient.PORT_SETTINGS);
-                        }
+                            foreach (var lamp in WorkspaceUtils.SelectedVoyagerLamps)
+                            {
+                                var packet = new SetDmxModePacket(
+                                    false,
+                                    lamp.dmxUniverse,
+                                    lamp.dmxChannel,
+                                    lamp.dmxDivision,
+                                    lamp.dmxProtocol,
+                                    lamp.dmxFormat
+                                );
+                                NetUtils.VoyagerClient.SendPacket(
+                                    lamp,
+                                    packet,
+                                    VoyagerClient.PORT_SETTINGS);
+                            }
 
-                        var selectionView = WorkspaceManager
-                            .instance
-                            .GetItemsOfType<SelectionControllerView>()[0];
+                            var selectionView = WorkspaceManager
+                                .instance
+                                .GetItemsOfType<SelectionControllerView>()[0];
 
-                        foreach (var view in WorkspaceUtils.SelectedLampItems)
-                        {
-                            view.lamp.SetMapping(GetLampMapping(view, selectionView.render));
-                            view.lamp.SetEffect(video);
+                            foreach (var view in WorkspaceUtils.SelectedLampItems)
+                            {
+                                view.lamp.SetMapping(GetLampMapping(view, selectionView.render));
+                                view.lamp.SetEffect(video);
 
-                            NetUtils.VoyagerClient.SendPacket(
-                                view.lamp,
-                                new SetPlayModePacket(PlaybackMode.Play, video.startTime, 0.0),
-                                VoyagerClient.PORT_SETTINGS);
+                                NetUtils.VoyagerClient.SendPacket(
+                                    view.lamp,
+                                    new SetPlayModePacket(PlaybackMode.Play, video.startTime, 0.0),
+                                    VoyagerClient.PORT_SETTINGS);
+                            }
+                            WorkspaceUtils.EnterToVideoMapping();
                         }
-                        WorkspaceUtils.EnterToVideoMapping();
-                    });
+                    }
+                );
             }
             else
             {
@@ -198,8 +202,9 @@ namespace VoyagerApp.UI.Menus
                         "WARNING",
                         $"Video {video.name} is bigger than 640x360 and might not " +
                         $"play correctly",
-                        "DELETE", "OK",
-                        item.Remove, null);
+                        new string[] { "DELETE", "OK" },
+                        new Action[] { item.Remove, null }
+                    );
                 }
             }
         }

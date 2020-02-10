@@ -19,6 +19,7 @@ namespace VoyagerApp.UI.Menus
         int updateLampCount;
         int updateFinished;
         bool updatesFinished = true;
+        public static bool isFromUpdatePrompt = false;
 
         public void SelectDeselect()
         {
@@ -39,6 +40,12 @@ namespace VoyagerApp.UI.Menus
         {
             WorkspaceSelection.instance.onSelectionChanged += OnSelectionChanged;
             EnableDisableObjects();
+
+            if (isFromUpdatePrompt && !Debug.isDebugBuild)
+            {
+                isFromUpdatePrompt = false;
+                UpdateSelected();
+            }
         }
 
         internal override void OnHide()

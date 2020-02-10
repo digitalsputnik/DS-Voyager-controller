@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
 using VoyagerApp.UI.Overlays;
@@ -20,15 +21,18 @@ namespace VoyagerApp.UI.Menus
             DialogBox.Show(
                 "NEW PROJECT",
                 "All unsaved project changes will be discarded",
-                "CANCEL", "OK", null,
-                () =>
-                {
-                    WorkspaceSelection.instance.Clear();
-                    WorkspaceManager.instance.Clear();
-                    LampManager.instance.Clear();
-                    EffectManager.Clear();
-                    ApplicationState.RaiseNewProject();
-                });
+                new string[] { "CANCEL", "OK" },
+                new Action[] { null,
+                    () =>
+                    {
+                        WorkspaceSelection.instance.Clear();
+                        WorkspaceManager.instance.Clear();
+                        LampManager.instance.Clear();
+                        EffectManager.Clear();
+                        ApplicationState.RaiseNewProject();
+                    }
+                }
+            );
         }
 
         public void OpenHelp()

@@ -14,8 +14,10 @@ namespace VoyagerApp.UI.Overlays
 
         [SerializeField] Text titleText = null;
         [SerializeField] Text explanationText = null;
-        [SerializeField] Button button1 = null;
-        [SerializeField] Button button2 = null;
+        [SerializeField] GameObject buttonPrefab = null;
+        [SerializeField] RectTransform buttonContainer = null;
+
+        List<Button> buttons = new List<Button>();
 
         CanvasGroup canvas;
         Queue<DialogBoxSettings> dialogues = new Queue<DialogBoxSettings>();
@@ -32,13 +34,12 @@ namespace VoyagerApp.UI.Overlays
 
         public static void Show(
             string title, string explanation,
-            string btn1, string btn2,
-            Action onBtn1, Action onBtn2)
+            string[] btns, Action[] onBtns)
         {
             MainThread.Dispach(() =>
             {
                 DialogBoxSettings settings = new DialogBoxSettings(
-                    title, explanation, btn1, btn2, onBtn1, onBtn2);
+                    title, explanation, btns, onBtns);
                 instance.dialogues.Enqueue(settings);
                 instance.ShowNextDialogue();
             });
@@ -55,26 +56,36 @@ namespace VoyagerApp.UI.Overlays
             titleText.text = settings.title;
             explanationText.text = settings.explanation;
 
-            button1.onClick.RemoveAllListeners();
-            button1.GetComponentInChildren<Text>().text = settings.btn1;
-            button1.onClick.AddListener(() => {
-                settings.onBtn1?.Invoke();
-                DialogObserved();
-            });
-
-            button2.onClick.RemoveAllListeners();
-            button2.GetComponentInChildren<Text>().text = settings.btn2;
-            button2.onClick.AddListener(() => {
-                settings.onBtn2?.Invoke();
-                DialogObserved();
-            });
+            for (int i = 0; i < settings.btns.Length; i++)
+            {
+                int copy = i;//Closure problem
+                GameObject buttonObject = Instantiate(buttonPrefab, buttonContainer);
+                Button button = buttonObject.GetComponent<Button>();
+                button.GetComponentInChildren<Text>().text = settings.btns[i];
+                button.onClick.AddListener(() => {
+                    settings.onBtns[copy]?.Invoke();
+                    DialogObserved();
+                });
+                buttons.Add(button);
+            }
 
             Show();
+        }
+
+        void RemoveDialogBoxButtons()
+        {
+            foreach (var button in buttons)
+            {
+                button.onClick.RemoveAllListeners();
+                Destroy(button.gameObject);
+            }
+            buttons = new List<Button>();
         }
 
         void DialogObserved()
         {
             Hide();
+            RemoveDialogBoxButtons();
             ShowNextDialogue();
         }
 
@@ -96,21 +107,17 @@ namespace VoyagerApp.UI.Overlays
         {
             public string title;
             public string explanation;
-            public string btn1;
-            public string btn2;
-            public Action onBtn1;
-            public Action onBtn2;
+            public string[] btns;
+            public Action[] onBtns;
 
             public DialogBoxSettings(
-                string title, string explanation, string btn1,
-                string btn2, Action onBtn1, Action onBtn2)
+                string title, string explanation, 
+                string[] btns, Action[] onBtns)
             {
                 this.title = title;
                 this.explanation = explanation;
-                this.btn1 = btn1;
-                this.btn2 = btn2;
-                this.onBtn1 = onBtn1;
-                this.onBtn2 = onBtn2;
+                this.btns = btns;
+                this.onBtns = onBtns;
             }
         }
     }

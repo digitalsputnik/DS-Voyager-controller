@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.UI.Overlays;
@@ -123,10 +124,8 @@ namespace VoyagerApp.UI.Menus
             DialogBox.Show(
                 "CLEAR CACHE",
                 "ARE YOU SURE?",
-                "CANCEL",
-                "OK",
-                null,
-                FileUtils.ClearCache);
+                new string[] { "CANCEL", "OK" },
+                new Action[] { null, FileUtils.ClearCache });
         }
     }
 }

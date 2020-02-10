@@ -17,10 +17,12 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Image wheelImage           = null;
 
         RectTransform rect;
+        Vector2 previousRectDimensions;
 
         void Start()
         {
             rect = GetComponent<RectTransform>();
+            previousRectDimensions = new Vector2(rect.rect.width, rect.rect.height);
             StartCoroutine(LateStart());
         }
 
@@ -43,6 +45,19 @@ namespace VoyagerApp.UI.Menus
                 cursor.localPosition = pos;
 
                 CalculateHueAndSaturation();
+            }
+            CheckResize();
+        }
+
+        void CheckResize()
+        {
+            if (previousRectDimensions.x != rect.rect.width || previousRectDimensions.y != rect.rect.height)
+            {
+                SetupSnappingPoints();
+                float marginX = rect.rect.width / previousRectDimensions.x;
+                float marginY = rect.rect.height / previousRectDimensions.y;
+                cursor.localPosition = new Vector2(cursor.localPosition.x * marginX, cursor.localPosition.y * marginY);
+                previousRectDimensions = new Vector2(rect.rect.width, rect.rect.height);
             }
         }
 

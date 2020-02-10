@@ -80,12 +80,15 @@ namespace VoyagerApp.UI.Menus
             DialogBox.Show(
                 "ARE YOU SURE?",
                 "Are you sure you want to delete this project?",
-                "CANCEL", "OK", null,
-                () =>
-                {
-                    Directory.Delete(path, true);
-                    GetComponentInParent<LoadMenu>().RemoveItem(this);
-                });
+                new string[] { "CANCEL", "OK" },
+                new Action[] {  null,
+                    () =>
+                    {
+                        Directory.Delete(path, true);
+                        GetComponentInParent<LoadMenu>().RemoveItem(this);
+                    }
+                }
+            );
         }
     }
 }

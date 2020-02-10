@@ -66,8 +66,8 @@ namespace VoyagerApp.Projects
                     "ERROR",
                     $"Unable to save project. " +
                     $"Following error occurred:\n{ex.Message}",
-                    "CANCEL", "OK",
-                    null, null);
+                    new string[] { "CANCEL", "OK" },
+                    new Action[] { null, null });
 
                 return null;
             }
@@ -180,13 +180,14 @@ namespace VoyagerApp.Projects
                             vid.id = videoData.id;
                         }
                     }
-                    else
+                }
+                else if (effectData is VideoPreset videoPresetData)
+                {
+                    var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoPresetData.name);
+                    for (int i = 0; i < data.lamps.Length; i++)
                     {
-                        for (int i = 0; i < data.lamps.Length; i++)
-                        {
-                            if (data.lamps[i].effect == videoData.id)
-                                data.lamps[i].effect = existingPreset.id;
-                        }
+                        if (data.lamps[i].effect == videoPresetData.id)
+                            data.lamps[i].effect = existingPreset.id;
                     }
                 }
             }

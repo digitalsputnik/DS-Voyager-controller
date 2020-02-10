@@ -85,18 +85,21 @@ namespace VoyagerApp.Utilities
                     DialogBox.Show(
                         "WARNING",
                         "Photos captured with iOS camera might not load.",
-                        "CANCEL", "OK",
-                        () =>
-                        {
-                            onLoaded?.Invoke(null);
-                        },
-                        () =>
-                        {
-                            NativeGallery.GetImageFromGallery((string path) =>
+                        new string[] { "CANCEL", "OK" },
+                        new Action[] {
+                            () =>
                             {
-                                onLoaded.Invoke(path == "" ? null : path);
-                            }, "", "image/*");
-                        });
+                                onLoaded?.Invoke(null);
+                            },
+                            () =>
+                            {
+                            NativeGallery.GetImageFromGallery((string path) =>
+                                {
+                                    onLoaded.Invoke(path == "" ? null : path);
+                                }, "", "image/*");
+                            }
+                        }
+                    );
                 }
                 else
                 {

@@ -11309,6 +11309,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1335493426}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &1342342844 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3460918171478188068, guid: 696c43ec365ed4a45a6c16df774dc048,
+    type: 3}
+  m_PrefabInstance: {fileID: 3460918171069029508}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1348052979
 GameObject:
   m_ObjectHideFlags: 0
@@ -20513,6 +20519,17 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3460918170928807398, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: buttonPrefab
+      value: 
+      objectReference: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
+    - target: {fileID: 3460918170928807398, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: buttonContainer
+      value: 
+      objectReference: {fileID: 1342342844}
     - target: {fileID: 3460918170971012104, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_AnchorMin.y
