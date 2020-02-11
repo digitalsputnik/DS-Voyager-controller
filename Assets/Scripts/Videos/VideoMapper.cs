@@ -70,6 +70,16 @@ namespace VoyagerApp.UI
             renderMesh.sharedMaterial.SetFloat("_Lift", (video.lift * 2.0f) - 1.0f);
             renderMesh.sharedMaterial.SetFloat("_Contrast", (video.contrast * 2.0f) - 1.0f);
             renderMesh.sharedMaterial.SetFloat("_Saturation", video.saturation * 2.0f);
+
+            if (video.blur > float.Epsilon)
+            {
+                renderMesh.sharedMaterial.SetFloat("_BlurSize", video.blur * 0.4f);
+                renderMesh.sharedMaterial.SetFloat("_StandardDeviation", 0.1f);
+            }
+            else
+            {
+                renderMesh.sharedMaterial.SetFloat("_StandardDeviation", 0.0f);
+            }
         }
 
         #region Setting video

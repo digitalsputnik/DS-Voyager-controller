@@ -22,6 +22,7 @@ namespace VoyagerApp.Projects
                 var lift = (float)effectToken["lift"];
                 var contrast = (float)effectToken["contrast"];
                 var saturation = (float)effectToken["saturation"];
+                var blur = (float)effectToken["blur"];
 
                 switch (type)
                 {
@@ -36,6 +37,7 @@ namespace VoyagerApp.Projects
                         video.lift = lift;
                         video.contrast = contrast;
                         video.saturation = saturation;
+                        video.blur = blur;
                         effects[i] = video;
                         break;
                     case "video_preset":
@@ -46,6 +48,7 @@ namespace VoyagerApp.Projects
                         preset.lift = lift;
                         preset.contrast = contrast;
                         preset.saturation = saturation;
+                        preset.blur = blur;
                         effects[i] = preset;
                         break;
                 }

@@ -33,7 +33,8 @@ namespace VoyagerApp.Projects
                             type = "video_preset",
                             lift = effect.lift,
                             contrast = effect.contrast,
-                            saturation = effect.saturation
+                            saturation = effect.saturation,
+                            blur = effect.blur
                         };
 
                         effects[i] = videoData;
@@ -50,7 +51,8 @@ namespace VoyagerApp.Projects
                             fps = video.fps,
                             lift = effect.lift,
                             contrast = effect.contrast,
-                            saturation = effect.saturation
+                            saturation = effect.saturation,
+                            blur = effect.blur
                         };
 
                         effects[i] = videoData;

@@ -186,6 +186,7 @@ namespace VoyagerApp.Projects
                     existingPreset.lift = videoData.lift;
                     existingPreset.contrast = videoData.contrast;
                     existingPreset.saturation = videoData.saturation;
+                    existingPreset.blur = videoData.blur;
                 }
                 else if (effectData is VideoPreset videoPresetData)
                 {
@@ -194,6 +195,7 @@ namespace VoyagerApp.Projects
                     existingPreset.lift = videoPresetData.lift;
                     existingPreset.contrast = videoPresetData.contrast;
                     existingPreset.saturation = videoPresetData.saturation;
+                    existingPreset.blur = videoPresetData.blur;
 
                     for (int i = 0; i < data.lamps.Length; i++)
                     {

@@ -48,8 +48,8 @@ namespace VoyagerApp.UI.Menus
                 SetupSyphon(syphon);
                 syphonSource.transform.parent.gameObject.SetActive(true);
                 spoutSource.transform.parent.gameObject.SetActive(false);
-                streamDelayField.gameObject.SetActive(true);
-                streamFpsField.gameObject.SetActive(true);
+                streamDelayField.gameObject.SetActive(ApplicationState.DeveloperMode);
+                streamFpsField.gameObject.SetActive(ApplicationState.DeveloperMode);
                 splitter.SetActive(true);
             }
             else if (effect is SpoutStream spout)
@@ -57,8 +57,8 @@ namespace VoyagerApp.UI.Menus
                 SetupSpout(spout);
                 syphonSource.transform.parent.gameObject.SetActive(false);
                 spoutSource.transform.parent.gameObject.SetActive(true);
-                streamDelayField.gameObject.SetActive(true);
-                streamFpsField.gameObject.SetActive(true);
+                streamDelayField.gameObject.SetActive(ApplicationState.DeveloperMode);
+                streamFpsField.gameObject.SetActive(ApplicationState.DeveloperMode);
                 splitter.SetActive(true);
             }
         }
@@ -80,8 +80,8 @@ namespace VoyagerApp.UI.Menus
             streamDelayField.onChanged += StreamDelayChanged;
             streamFpsField.onChanged += StreamFpsChanged;
 
-            streamDelayField.gameObject.SetActive(ApplicationState.DeveloperMode);
-            streamFpsField.gameObject.SetActive(ApplicationState.DeveloperMode);
+            streamDelayField.gameObject.SetActive(ApplicationState.DeveloperMode && !(effect is Video));
+            streamFpsField.gameObject.SetActive(ApplicationState.DeveloperMode && !(effect is Video));
 
             EnableDisableObjects();
         }

@@ -73,6 +73,16 @@ namespace VoyagerApp.Effects
             meshRenderer.sharedMaterial.SetFloat("_Lift", (effect.lift * 2.0f) - 1.0f);
             meshRenderer.sharedMaterial.SetFloat("_Contrast", (effect.contrast * 2.0f) - 1.0f);
             meshRenderer.sharedMaterial.SetFloat("_Saturation", effect.saturation * 2.0f);
+
+            if (effect.blur > float.Epsilon)
+            {
+                meshRenderer.sharedMaterial.SetFloat("_BlurSize", effect.blur * 0.4f);
+                meshRenderer.sharedMaterial.SetFloat("_StandardDeviation", 0.1f);
+            }
+            else
+            {
+                meshRenderer.sharedMaterial.SetFloat("_StandardDeviation", 0.0f);
+            }
         }
 
         float prevRenderTime = 0;

@@ -15,6 +15,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] IntField _liftField = null;
         [SerializeField] IntField _contrastField = null;
         [SerializeField] IntField _saturationField = null;
+        [SerializeField] IntField _blurField = null;
 
         Effect _effect;
         bool _fieldsInitialized;
@@ -36,9 +37,12 @@ namespace VoyagerApp.UI.Menus
                 _fpsField.gameObject.SetActive(false);
             }
 
+            _blurField.gameObject.SetActive(!Application.isMobilePlatform);
+
             _liftField.SetValue(effect.lift);
             _contrastField.SetValue(effect.contrast);
             _saturationField.SetValue(effect.saturation);
+            _blurField.SetValue(effect.blur);
 
             SubscribeFields();
             _fieldsInitialized = true;
@@ -53,6 +57,7 @@ namespace VoyagerApp.UI.Menus
             _liftField.onChanged += LiftChanged;
             _contrastField.onChanged += ContrastChanged;
             _saturationField.onChanged += SaturationChanged;
+            _blurField.onChanged += BlurChanged;
         }
 
         void UnsubscribeFields()
@@ -61,6 +66,7 @@ namespace VoyagerApp.UI.Menus
             _liftField.onChanged -= LiftChanged;
             _contrastField.onChanged -= ContrastChanged;
             _saturationField.onChanged -= SaturationChanged;
+            _blurField.onChanged -= BlurChanged;
         }
 
         void LiftChanged(int value)
@@ -78,6 +84,12 @@ namespace VoyagerApp.UI.Menus
         void SaturationChanged(int value)
         {
             _effect.saturation = _saturationField.normalized;
+            AfterEffectChanged();
+        }
+
+        void BlurChanged(int value)
+        {
+            _effect.blur = _blurField.normalized;
             AfterEffectChanged();
         }
 
