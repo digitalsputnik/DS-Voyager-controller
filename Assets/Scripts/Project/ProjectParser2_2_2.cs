@@ -1,11 +1,10 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace VoyagerApp.Projects
 {
-    public class ProjectParser2_2 : IProjectParser
+    public class ProjectParser2_2_2 : IProjectParser
     {
         public ProjectSaveData Parse(string json)
         {
@@ -20,6 +19,10 @@ namespace VoyagerApp.Projects
                 var effectToken = jobj["effects"][i];
                 var type = (string)effectToken["type"];
 
+                var lift = (float)effectToken["lift"];
+                var contrast = (float)effectToken["contrast"];
+                var saturation = (float)effectToken["saturation"];
+
                 switch (type)
                 {
                     case "video":
@@ -30,6 +33,9 @@ namespace VoyagerApp.Projects
                         video.frames = (long)effectToken["frames"];
                         video.fps = (int)effectToken["fps"];
                         video.type = type;
+                        video.lift = lift;
+                        video.contrast = contrast;
+                        video.saturation = saturation;
                         effects[i] = video;
                         break;
                     case "video_preset":
@@ -37,6 +43,9 @@ namespace VoyagerApp.Projects
                         preset.id = (string)effectToken["id"];
                         preset.name = (string)effectToken["name"];
                         preset.type = type;
+                        preset.lift = lift;
+                        preset.contrast = contrast;
+                        preset.saturation = saturation;
                         effects[i] = preset;
                         break;
                 }

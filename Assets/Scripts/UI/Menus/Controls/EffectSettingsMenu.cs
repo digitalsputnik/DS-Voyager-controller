@@ -8,14 +8,13 @@ namespace VoyagerApp.UI.Menus
 {
     public class EffectSettingsMenu : Menu
     {
-        [SerializeField] VideoMapper _videoMapper;
-        [SerializeField] StreamMapper _streamMapper;
+        [SerializeField] VideoMapper _videoMapper = null;
+        [SerializeField] StreamMapper _streamMapper = null;
 
-        [SerializeField] IntField _fpsField;
-        [SerializeField] IntField _liftField;
-        [SerializeField] IntField _contrastField;
-        [SerializeField] IntField _saturationField;
-        [SerializeField] IntField _blurField;
+        [SerializeField] IntField _fpsField = null;
+        [SerializeField] IntField _liftField = null;
+        [SerializeField] IntField _contrastField = null;
+        [SerializeField] IntField _saturationField = null;
 
         Effect _effect;
         bool _fieldsInitialized;

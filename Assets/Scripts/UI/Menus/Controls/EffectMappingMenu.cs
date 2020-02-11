@@ -13,7 +13,6 @@ namespace VoyagerApp.UI.Menus
 {
     public class EffectMappingMenu : Menu
     {
-        [SerializeField] VideoMapper videoMapper = null;
         [SerializeField] StreamMapper streamMapper = null;
         [SerializeField] Text selectDeselectBtnText = null;
         [SerializeField] ListPicker syphonSource = null;
@@ -42,6 +41,7 @@ namespace VoyagerApp.UI.Menus
                 spoutSource.transform.parent.gameObject.SetActive(false);
                 streamDelayField.gameObject.SetActive(false);
                 streamFpsField.gameObject.SetActive(false);
+                splitter.SetActive(false);
             }
             else if (effect is SyphonStream syphon)
             {
@@ -50,6 +50,7 @@ namespace VoyagerApp.UI.Menus
                 spoutSource.transform.parent.gameObject.SetActive(false);
                 streamDelayField.gameObject.SetActive(true);
                 streamFpsField.gameObject.SetActive(true);
+                splitter.SetActive(true);
             }
             else if (effect is SpoutStream spout)
             {
@@ -58,6 +59,7 @@ namespace VoyagerApp.UI.Menus
                 spoutSource.transform.parent.gameObject.SetActive(true);
                 streamDelayField.gameObject.SetActive(true);
                 streamFpsField.gameObject.SetActive(true);
+                splitter.SetActive(true);
             }
         }
 
@@ -265,7 +267,6 @@ namespace VoyagerApp.UI.Menus
             bool all = WorkspaceUtils.AllLampsSelected;
 
             selectDeselectBtnText.text = all ? "DESELECT ALL" : "SELECT ALL";
-            splitter.SetActive(one);
             alignmentBtn.SetActive(one);
         }
     }

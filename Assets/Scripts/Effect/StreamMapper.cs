@@ -13,8 +13,8 @@ namespace VoyagerApp.Effects
 {
     public class StreamMapper : MonoBehaviour
     {
-        [SerializeField] MeshRenderer meshRenderer;
-        [SerializeField] Material renderMaterial;
+        [SerializeField] MeshRenderer meshRenderer = null;
+        [SerializeField] Material renderMaterial = null;
         SyphonClient syphon = null;
         SpoutReceiver spout = null;
         RenderTexture render;

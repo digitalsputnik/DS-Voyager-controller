@@ -168,6 +168,7 @@ namespace VoyagerApp.Projects
                 if (effectData is Video videoData)
                 {
                     var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoData.name);
+
                     if (existingPreset == null)
                     {
                         string vidPath = Path.Combine(path, VIDEOS, videoData.file);
@@ -178,12 +179,22 @@ namespace VoyagerApp.Projects
                             vid.file = videoData.file;
                             vid.fps = videoData.fps;
                             vid.id = videoData.id;
+                            existingPreset = vid;
                         }
                     }
+
+                    existingPreset.lift = videoData.lift;
+                    existingPreset.contrast = videoData.contrast;
+                    existingPreset.saturation = videoData.saturation;
                 }
                 else if (effectData is VideoPreset videoPresetData)
                 {
                     var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoPresetData.name);
+
+                    existingPreset.lift = videoPresetData.lift;
+                    existingPreset.contrast = videoPresetData.contrast;
+                    existingPreset.saturation = videoPresetData.saturation;
+
                     for (int i = 0; i < data.lamps.Length; i++)
                     {
                         if (data.lamps[i].effect == videoPresetData.id)

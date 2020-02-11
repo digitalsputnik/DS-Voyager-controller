@@ -17,7 +17,7 @@ namespace VoyagerApp.UI
         [SerializeField] VideoMapper _videoMapper = null;
         [SerializeField] StreamMapper _streamMapper = null;
 
-        [SerializeField] Button[] _playPauseStopBtns;
+        [SerializeField] Button[] _playPauseStopBtns = new Button[0];
 
         void Start() => LoadCorrectEffect();
 

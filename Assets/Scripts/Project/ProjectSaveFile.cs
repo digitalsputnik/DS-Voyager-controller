@@ -30,8 +30,6 @@ namespace VoyagerApp.Projects
         public int fps;
     }
 
-    public class Stream : Effect { }
-
     [Serializable]
     public class VideoPreset : Effect { }
 

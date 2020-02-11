@@ -675,18 +675,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25fac6f589d484d1fba3a2264c3f4e64, type: 3}
---- !u!114 &243867578 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2402640394965750235, guid: 25fac6f589d484d1fba3a2264c3f4e64,
-    type: 3}
-  m_PrefabInstance: {fileID: 243867577}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa6270a2c5abe4cc7939e5e9aba15240, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &281472562
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -737,7 +725,7 @@ PrefabInstance:
     - target: {fileID: 607525355096227415, guid: f3e791d2adedf461895caf841a975397,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 607525355096227415, guid: f3e791d2adedf461895caf841a975397,
         type: 3}
@@ -806,12 +794,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3e791d2adedf461895caf841a975397, type: 3}
---- !u!1 &281472563 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 607525355096227414, guid: f3e791d2adedf461895caf841a975397,
-    type: 3}
-  m_PrefabInstance: {fileID: 281472562}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &299042339
 GameObject:
   m_ObjectHideFlags: 0
@@ -1005,7 +987,7 @@ PrefabInstance:
     - target: {fileID: 607525355096227415, guid: f3e791d2adedf461895caf841a975397,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 607525355096227415, guid: f3e791d2adedf461895caf841a975397,
         type: 3}
@@ -1807,14 +1789,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 906a6ef9a45d842289b4c4cfafaed8bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  videoMapper: {fileID: 599089774}
   streamMapper: {fileID: 974192090}
   selectDeselectBtnText: {fileID: 1365245176}
   syphonSource: {fileID: 189770083}
   spoutSource: {fileID: 994294329}
   streamDelayField: {fileID: 639149912}
   streamFpsField: {fileID: 1663543783}
-  splitter: {fileID: 281472563}
+  splitter: {fileID: 1078708691}
   alignmentBtn: {fileID: 1401332468}
 --- !u!225 &687523372
 CanvasGroup:
@@ -2470,6 +2451,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3e416335cd464da5b93607201cb715b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1078708691 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 607525355096227414, guid: f3e791d2adedf461895caf841a975397,
+    type: 3}
+  m_PrefabInstance: {fileID: 425737024}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1240933269
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2896,7 +2883,6 @@ MonoBehaviour:
   _liftField: {fileID: 1895169721}
   _contrastField: {fileID: 133362076}
   _saturationField: {fileID: 1547562579}
-  _blurField: {fileID: 243867578}
 --- !u!225 &1390560490
 CanvasGroup:
   m_ObjectHideFlags: 0
