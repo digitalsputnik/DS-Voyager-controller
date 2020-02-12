@@ -55,6 +55,9 @@ MonoBehaviour:
   outlineThickness: 0.1
   renderer: {fileID: 2071389814058521448}
   pixelsPerUnit: 50
+  selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  deselectedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  picture: {fileID: 0}
 --- !u!1 &2071389814058521455
 GameObject:
   m_ObjectHideFlags: 0
@@ -110,10 +113,11 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 99f9d6ad8d61746efa5209d879fde324, type: 2}
+  - {fileID: 2100000, guid: 7156a3040fa044765a20df9f5e518620, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -214,6 +218,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

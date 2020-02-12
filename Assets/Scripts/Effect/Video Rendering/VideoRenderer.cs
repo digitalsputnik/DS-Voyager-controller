@@ -226,9 +226,8 @@ namespace VoyagerApp.Videos
 
                 var prevActive = RenderTexture.active;
                 Graphics.Blit(instance.renderTexture, render, material);
-                RenderTexture.active = prevActive;
-
                 var texture = TextureUtils.RenderTextureToTexture2D(render);
+                RenderTexture.active = prevActive;
 
                 Destroy(render);
 

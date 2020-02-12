@@ -14,6 +14,8 @@ namespace VoyagerApp.Effects
         public float contrast = 1.0f;
         public float saturation = 0.5f;
         public float blur = 0.0f;
+
+        public double timestamp = 0.0;
     }
 
     public class Video : Effect

@@ -13,6 +13,7 @@ namespace VoyagerApp.UI.Menus
     public class LoadMenuItem : MonoBehaviour
     {
         public Button button;
+        public string fileName => Path.GetFileName(path);
 
         [SerializeField] Text nameText  = null;
         [SerializeField] Text lampsText = null;
@@ -52,7 +53,7 @@ namespace VoyagerApp.UI.Menus
 
                 MainThread.Dispach(() =>
                 {
-                    nameText.text = Path.GetFileName(path);
+                    nameText.text = fileName;
                     lampsText.text = $"LAMPS: {lamps}";
                     GetComponent<Button>().interactable = true;
                 });
@@ -75,7 +76,7 @@ namespace VoyagerApp.UI.Menus
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
-        public void Delete()
+        public void Delete(Action onDeleted = null)
         {
             DialogBox.Show(
                 "ARE YOU SURE?",
@@ -86,6 +87,7 @@ namespace VoyagerApp.UI.Menus
                     {
                         Directory.Delete(path, true);
                         GetComponentInParent<LoadMenu>().RemoveItem(this);
+                        onDeleted?.Invoke();
                     }
                 }
             );
