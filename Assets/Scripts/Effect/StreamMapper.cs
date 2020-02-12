@@ -130,6 +130,16 @@ namespace VoyagerApp.Effects
             material.SetFloat("_Contrast", (effect.contrast * 2.0f) - 1.0f);
             material.SetFloat("_Saturation", effect.saturation * 2.0f);
 
+            if (effect.blur > float.Epsilon)
+            {
+                meshRenderer.sharedMaterial.SetFloat("_BlurSize", effect.blur * 0.4f);
+                meshRenderer.sharedMaterial.SetFloat("_StandardDeviation", 0.1f);
+            }
+            else
+            {
+                meshRenderer.sharedMaterial.SetFloat("_StandardDeviation", 0.0f);
+            }
+
             Graphics.Blit(render, temp, material);
 
             var texture = TextureUtils.RenderTextureToTexture2D(temp);

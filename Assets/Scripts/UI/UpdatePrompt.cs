@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
@@ -15,6 +16,7 @@ namespace VoyagerApp.UI
         [SerializeField] float waitTime = 5.0f;
 
         bool showing;
+        List<string> promptedSerials = new List<string>();
 
         void Start()
         {
@@ -30,8 +32,9 @@ namespace VoyagerApp.UI
         {
             if (item is VoyagerItemView voyager)
             {
-                if (!voyager.lamp.updated && voyager.lamp.connected)
+                if (!voyager.lamp.updated && voyager.lamp.connected && !promptedSerials.Contains(voyager.lamp.serial))
                 {
+                    promptedSerials.Add(voyager.lamp.serial);
                     StopAllCoroutines();
                     StartCoroutine(WaitForAnothers());
                 }

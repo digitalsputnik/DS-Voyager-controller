@@ -15,6 +15,7 @@ namespace VoyagerApp.Effects
         public float saturation = 0.5f;
         public float blur = 0.0f;
 
+        // Metadata for effects list
         public double timestamp = 0.0;
     }
 

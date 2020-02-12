@@ -305,9 +305,27 @@ namespace VoyagerApp.Utilities
 
         public static void ScaleSelectedLampsBasedOnBiggest()
         {
-            float scale = SelectedLampItems
-                .OrderByDescending(l => l.scale)
-                .FirstOrDefault().scale;
+            var longest = SelectedLampItems
+                .OrderByDescending(l => l.GetComponentInChildren<MeshRenderer>().transform.lossyScale.x)
+                .FirstOrDefault();
+
+            var scale = longest.scale / longest.lamp.pixels;
+
+            var shortScale = scale;
+            var longScale = scale;
+
+            Debug.Log($"longest: {longest.lamp.serial}");
+
+            if (longest.lamp.pixels > 50)
+            {
+                shortScale = longest.scale * (83.0f / 42.0f);
+                longScale = longest.scale;
+            }
+            else
+            {
+                shortScale = longest.scale;
+                longScale = longest.scale * (42.0f / 83.0f);
+            }
 
             foreach (var lampItem in SelectedLampItems)
             {
@@ -317,8 +335,17 @@ namespace VoyagerApp.Utilities
                 Lamp lamp = lampItem.lamp;
 
                 WorkspaceManager.instance.RemoveItem(lampItem);
-                var newItem = lamp.AddToWorkspace(position, scale, rotation);
-                WorkspaceSelection.instance.SelectItem(newItem);
+
+                if (lamp.pixels > 50)
+                {
+                    var newItem = lamp.AddToWorkspace(position, longScale, rotation);
+                    WorkspaceSelection.instance.SelectItem(newItem);
+                }
+                else
+                {
+                    var newItem = lamp.AddToWorkspace(position, shortScale, rotation);
+                    WorkspaceSelection.instance.SelectItem(newItem);
+                }
             }
 
             SelectionMove.RaiseMovedEvent();
