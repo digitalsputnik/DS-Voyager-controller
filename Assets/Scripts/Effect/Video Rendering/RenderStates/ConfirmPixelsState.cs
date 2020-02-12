@@ -17,10 +17,12 @@ namespace VoyagerApp.Videos
         Dictionary<VoyagerLamp, long[]> missingFrames = new Dictionary<VoyagerLamp, long[]>();
 
         bool _abort = false;
+        double _startTime;
 
         public ConfirmPixelsState()
         {
             NetUtils.VoyagerClient.onReceived += OnReceivedFromLamp;
+            _startTime = TimeUtils.Epoch;
         }
 
         void OnReceivedFromLamp(object sender, byte[] data)
@@ -76,7 +78,8 @@ namespace VoyagerApp.Videos
 
             SendMissingFramesToLamps();
 
-            VideoRenderer.UpdateProgress(Progress);
+            if (TimeUtils.Epoch - _startTime > 0.5f)
+                VideoRenderer.UpdateProgress(Progress);
 
             return this;
         }
