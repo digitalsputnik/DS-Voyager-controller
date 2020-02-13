@@ -1,6 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps.Voyager;
+using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 
@@ -78,19 +81,37 @@ namespace VoyagerApp.UI.Menus
 
         public void UpdateSelected()
         {
-            var lamps = WorkspaceUtils.SelectedVoyagerLamps;
-            VoyagerUpdateUtility utility = new VoyagerUpdateUtility();
-            lamps.ForEach(lamp => utility.UpdateLamp(lamp,
-                                                     OnUpdateFinished,
-                                                     OnUpdateMessage));
+            var lampsNotUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery < 30.0).ToList();
+            var lampsUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery >= 30.0f).ToList();
 
-            updateLampCount = lamps.Count;
-            updateFinished = 0;
-            UpdateInfoText();
-            updatesFinished = false;
+            if (lampsUpdateable.Count > 0)
+            {
+                VoyagerUpdateUtility utility = new VoyagerUpdateUtility();
+                lampsUpdateable.ForEach(lamp => utility.UpdateLamp(lamp,
+                                                         OnUpdateFinished,
+                                                         OnUpdateMessage));
 
-            overallUpdateInfoText.gameObject.SetActive(true);
-            updateText.gameObject.SetActive(true);
+                updateLampCount = lampsUpdateable.Count;
+                updateFinished = 0;
+                UpdateInfoText();
+                updatesFinished = false;
+
+                overallUpdateInfoText.gameObject.SetActive(true);
+                updateText.gameObject.SetActive(true);
+            }
+
+            if (lampsNotUpdateable.Count > 0)
+            {
+                string[] serials = new string[lampsNotUpdateable.Count];
+                for (int i = 0; i < lampsNotUpdateable.Count; i++)
+                    serials[i] = lampsNotUpdateable[i].serial;
+
+                DialogBox.Show(
+                    "NOTICE",
+                    $"Some lamps will not be updated due to low battery (below 30%): {string.Join(", ", serials)}",
+                    new string[] { "OK" },
+                    new Action[] { null });
+            }
         }
 
         private void OnUpdateFinished(VoyagerUpdateResponse response)

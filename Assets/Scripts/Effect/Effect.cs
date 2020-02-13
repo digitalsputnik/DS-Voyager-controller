@@ -11,7 +11,7 @@ namespace VoyagerApp.Effects
         public EventValue<bool> available = new EventValue<bool>(false);
 
         public float lift = 0.5f;
-        public float contrast = 1.0f;
+        public float contrast = 0.5f;
         public float saturation = 0.5f;
         public float blur = 0.0f;
 

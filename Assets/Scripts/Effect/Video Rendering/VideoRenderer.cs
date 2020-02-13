@@ -210,19 +210,7 @@ namespace VoyagerApp.Videos
                 var material = instance.renderMaterial;
                 var render = new RenderTexture(instance.renderTexture.descriptor);
 
-                material.SetFloat("_Lift", (effect.lift * 2.0f) - 1.0f);
-                material.SetFloat("_Contrast", (effect.contrast * 2.0f) - 1.0f);
-                material.SetFloat("_Saturation", effect.saturation * 2.0f);
-
-                if (effect.blur > float.Epsilon)
-                {
-                    material.SetFloat("_BlurSize", effect.blur * 0.4f);
-                    material.SetFloat("_StandardDeviation", 0.1f);
-                }
-                else
-                {
-                    material.SetFloat("_StandardDeviation", 0.0f);
-                }
+                ShaderUtils.ApplyEffectToMaterial(material, effect);
 
                 var prevActive = RenderTexture.active;
                 Graphics.Blit(instance.renderTexture, render, material);

@@ -18,7 +18,7 @@ namespace VoyagerApp.Projects
         public string name;
         public string type;
         public float lift = 0.5f;
-        public float contrast = 1.0f;
+        public float contrast = 0.5f;
         public float saturation = 0.5f;
         public float blur = 0.0f;
     }
