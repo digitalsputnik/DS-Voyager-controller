@@ -5,7 +5,7 @@ namespace VoyagerApp.UI
 {
     public static class ApplicationSettings
     {
-        public const string HELP_URL = @"https://cdn.shopify.com/s/files/1/0190/9260/2980/files/VOYAGER_manual_web_2019_update.pdf?1413";
+        public const string HELP_URL = @"https://global.digitalsputnik.com/pages/support_global";
         public const double PLAYBACK_OFFSET = 0.15;
 
         const string ITSH_IDENTIFICATION  = "identify_itsh";

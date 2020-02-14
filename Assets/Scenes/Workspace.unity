@@ -3274,7 +3274,7 @@ PrefabInstance:
     - target: {fileID: 802620914053610848, guid: 0c2615ce77e7f493a9998d23cd0e9155,
         type: 3}
       propertyPath: m_Text
-      value: USER MANUAL
+      value: SUPPORT
       objectReference: {fileID: 0}
     - target: {fileID: 802620914053610848, guid: 0c2615ce77e7f493a9998d23cd0e9155,
         type: 3}
