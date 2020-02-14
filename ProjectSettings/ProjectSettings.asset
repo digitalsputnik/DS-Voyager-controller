@@ -173,7 +173,7 @@ PlayerSettings:
     Standalone: 167
     iPhone: 2.2.27
   AndroidBundleVersionCode: 167
-  AndroidMinSdkVersion: 19
+  AndroidMinSdkVersion: 28
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 
