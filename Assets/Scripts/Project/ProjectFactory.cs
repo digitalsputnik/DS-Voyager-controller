@@ -229,12 +229,9 @@ namespace VoyagerApp.Projects
                     return new ProjectParser2_2();
                 case "2.1":
                     return new ProjectParser2_1();
-                case "2.0.95":
-                case "2.0.96":
+                default:
                     return new ProjectParser2_0();
             }
-
-            return null;
         }
     }
 }

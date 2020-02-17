@@ -183,10 +183,13 @@ namespace VoyagerApp.Projects
                         }
                     }
 
-                    existingPreset.lift = videoData.lift;
-                    existingPreset.contrast = videoData.contrast;
-                    existingPreset.saturation = videoData.saturation;
-                    existingPreset.blur = videoData.blur;
+                    if (existingPreset != null)
+                    {
+                        existingPreset.lift = videoData.lift;
+                        existingPreset.contrast = videoData.contrast;
+                        existingPreset.saturation = videoData.saturation;
+                        existingPreset.blur = videoData.blur;
+                    }
                 }
                 else if (effectData is VideoPreset videoPresetData)
                 {

@@ -49,7 +49,7 @@ namespace VoyagerApp.UI.Menus
                 if (data == null)
                     throw new Exception("Error on loading");
 
-                int lamps = data.items.Where(i => i.type == "voyager_lamp").Count();
+                int lamps = data.items.Where(i => i != null && i.type == "voyager_lamp").Count();
 
                 MainThread.Dispach(() =>
                 {
