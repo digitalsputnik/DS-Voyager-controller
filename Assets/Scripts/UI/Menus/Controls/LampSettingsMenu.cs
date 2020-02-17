@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps.Voyager;
-using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 
@@ -11,6 +11,8 @@ namespace VoyagerApp.UI.Menus
 {
     public class LampSettingsMenu : Menu
     {
+        public static bool isFromUpdatePrompt = false;
+
         [SerializeField] Text selectDeselectBtnText     = null;
         [SerializeField] GameObject infoTextObj         = null;
         [SerializeField] GameObject networkSettingsBtn  = null;
@@ -18,11 +20,12 @@ namespace VoyagerApp.UI.Menus
         [Space(3)]
         [SerializeField] Text overallUpdateInfoText = null;
         [SerializeField] Text updateText            = null;
+        [SerializeField] UpdateDialog updateDialog  = null;
 
         int updateLampCount;
-        int updateFinished;
         bool updatesFinished = true;
-        public static bool isFromUpdatePrompt = false;
+        List<VoyagerLamp> lampsUpdating = null;
+        VoyagerUpdateUtility utility = null;
 
         public void SelectDeselect()
         {
@@ -81,42 +84,44 @@ namespace VoyagerApp.UI.Menus
 
         public void UpdateSelected()
         {
-            var lampsNotUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery < 30.0).ToList();
-            var lampsUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery >= 30.0).ToList();
+            lampsUpdating = null;
+
+            var lampsNotUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery < 30.0 && !l.charging).ToList();
+            var lampsUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery >= 30.0 || l.charging).ToList();
 
             if (lampsUpdateable.Count > 0)
             {
-                VoyagerUpdateUtility utility = new VoyagerUpdateUtility();
+                utility = new VoyagerUpdateUtility();
                 lampsUpdateable.ForEach(lamp => utility.UpdateLamp(lamp,
                                                          OnUpdateFinished,
                                                          OnUpdateMessage));
-
-                updateLampCount = lampsUpdateable.Count;
-                updateFinished = 0;
-                UpdateInfoText();
-                updatesFinished = false;
-
-                overallUpdateInfoText.gameObject.SetActive(true);
-                updateText.gameObject.SetActive(true);
+                lampsUpdating = lampsUpdateable;
+                UpdateUpdateUI();
             }
 
             if (lampsNotUpdateable.Count > 0)
             {
-                string[] serials = new string[lampsNotUpdateable.Count];
-                for (int i = 0; i < lampsNotUpdateable.Count; i++)
-                    serials[i] = lampsNotUpdateable[i].serial;
-
-                DialogBox.Show(
-                    "NOTICE",
-                    $"Some lamps will not be updated due to low battery (below 30%): {string.Join(", ", serials)}",
-                    new string[] { "OK" },
-                    new Action[] { null });
+                updateDialog.Show(lampsNotUpdateable,(lamp) =>
+                {
+                    utility.UpdateLamp(lamp, OnUpdateFinished, OnUpdateMessage);
+                    lampsUpdating.Add(lamp);
+                    UpdateUpdateUI();
+                });
             }
+        }
+
+        void UpdateUpdateUI()
+        {
+            updateLampCount = lampsUpdating.Count;
+            UpdateInfoText();
+            updatesFinished = false;
+
+            overallUpdateInfoText.gameObject.SetActive(true);
+            updateText.gameObject.SetActive(true);
         }
 
         void OnUpdateFinished(VoyagerUpdateResponse response)
         {
-            updateFinished++;
             UpdateInfoText();
         }
 
@@ -128,7 +133,7 @@ namespace VoyagerApp.UI.Menus
                 {
                     overallUpdateInfoText.text =
                         $"UPDATED:" +
-                        $"{updateFinished}/" +
+                        $"{utility.finishedCount}/" +
                         $"{updateLampCount}";
                 }
             });

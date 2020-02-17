@@ -24,6 +24,8 @@ namespace VoyagerApp.Lamps.Voyager
 
         Dictionary<string, byte[]> assets = new Dictionary<string, byte[]>();
 
+        public int finishedCount = 0;
+
         public VoyagerUpdateUtility()
         {
             PreloadAsset(BUNDLE_FILE);
@@ -91,6 +93,7 @@ namespace VoyagerApp.Lamps.Voyager
             }
 
             onDone?.Invoke(new VoyagerUpdateResponse(success, error, lamp));
+            finishedCount++;
 //#endif
         }
 
