@@ -14,6 +14,7 @@ namespace VoyagerApp.UI
         [SerializeField] MenuContainer container = null;
         [SerializeField] Menu updateMenu = null;
         [SerializeField] float waitTime = 5.0f;
+        [SerializeField] Menu colorwheelMenu = null; 
 
         bool showing;
         List<string> promptedSerials = new List<string>();
@@ -50,6 +51,8 @@ namespace VoyagerApp.UI
         void OnLampsOutdated()
         {
             if (container.current == updateMenu || showing) return;
+
+            if (colorwheelMenu.Open) return;
 
             showing = true;
 

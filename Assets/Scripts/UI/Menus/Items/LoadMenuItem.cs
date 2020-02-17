@@ -76,6 +76,11 @@ namespace VoyagerApp.UI.Menus
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
+        public void Delete()
+        {
+            Delete(null);
+        }
+
         public void Delete(Action onDeleted = null)
         {
             DialogBox.Show(

@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -2721,6 +2721,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 272520386}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &280838443 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3460918169366693357, guid: 696c43ec365ed4a45a6c16df774dc048,
+    type: 3}
+  m_PrefabInstance: {fileID: 3460918171069029508}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddc970f98d54d4576a1708b5bc66b779, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &281236153 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
@@ -12265,6 +12277,7 @@ MonoBehaviour:
   container: {fileID: 7372718238239525712}
   updateMenu: {fileID: 57028725}
   waitTime: 5
+  colorwheelMenu: {fileID: 280838443}
 --- !u!114 &1502510714
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -93,9 +93,9 @@ namespace VoyagerApp.Utilities
                             },
                             () =>
                             {
-                            NativeGallery.GetImageFromGallery((string path) =>
+                                NativeGallery.GetImageFromGallery((string path) =>
                                 {
-                                    onLoaded.Invoke(path == "" ? null : path);
+                                    onLoaded?.Invoke(string.IsNullOrEmpty(path) ? null : path);
                                 }, "", "image/*");
                             }
                         }

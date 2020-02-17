@@ -82,7 +82,7 @@ namespace VoyagerApp.UI.Menus
         public void UpdateSelected()
         {
             var lampsNotUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery < 30.0).ToList();
-            var lampsUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery >= 30.0f).ToList();
+            var lampsUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery >= 30.0).ToList();
 
             if (lampsUpdateable.Count > 0)
             {
@@ -114,7 +114,7 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
-        private void OnUpdateFinished(VoyagerUpdateResponse response)
+        void OnUpdateFinished(VoyagerUpdateResponse response)
         {
             updateFinished++;
             UpdateInfoText();
