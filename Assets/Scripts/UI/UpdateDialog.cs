@@ -9,7 +9,7 @@ using VoyagerApp.Utilities;
 
 public class UpdateDialog : Menu
 {
-    const string EXPLENTAION_TEXT = "Some lamps battery level is under 30%. Please connect the lamps to a chargers to start updating: ";
+    const string EXPLENTAION_TEXT = "Some lamps battery level is under 30%. Please connect the lamps to chargers to start updating: ";
 
     [SerializeField] Text _explenationText;
 
