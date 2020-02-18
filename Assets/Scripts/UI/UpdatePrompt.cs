@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
@@ -14,7 +15,8 @@ namespace VoyagerApp.UI
         [SerializeField] MenuContainer container = null;
         [SerializeField] Menu updateMenu = null;
         [SerializeField] float waitTime = 5.0f;
-        [SerializeField] Menu colorwheelMenu = null; 
+        [SerializeField] Menu colorwheelMenu = null;
+        [SerializeField] Button updateButton = null;
 
         bool showing;
         List<string> promptedSerials = new List<string>();
@@ -77,6 +79,7 @@ namespace VoyagerApp.UI
                         Menus.LampSettingsMenu.isFromUpdatePrompt = true;
                         container.ShowMenu(updateMenu);
                         showing = false;
+                        updateButton.onClick.Invoke();
                     }
                 }
             );

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Networking.Voyager;
 using VoyagerApp.UI;
 using VoyagerApp.Utilities;
+using VoyagerApp.Workspace;
 
 public class UpdateDialog : Menu
 {
@@ -68,8 +70,16 @@ public class UpdateDialog : Menu
     public void OnIdentifyDown() => _identifyPressed = true;
     public void OnIdentifyUp() => _identifyPressed = false;
 
-    public void Cancel()
+    public void Remove()
     {
+        WorkspaceSelection.instance.Clear();
+
+        foreach (var lamp in _lamps)
+        {
+            var item = WorkspaceUtils.VoyagerItems.FirstOrDefault(v => v.lamp == lamp);
+            WorkspaceManager.instance.RemoveItem(item);
+        }
+
         Open = false;
     }
 }

@@ -4375,6 +4375,18 @@ MonoBehaviour:
   android: 1
   ios: 1
   desktop: 1
+--- !u!114 &402482845 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 402482840}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 402482842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &424965758
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12443,6 +12455,7 @@ MonoBehaviour:
   updateMenu: {fileID: 57028725}
   waitTime: 5
   colorwheelMenu: {fileID: 280838443}
+  updateButton: {fileID: 402482845}
 --- !u!114 &1502510714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17135,7 +17148,7 @@ PrefabInstance:
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Cancel
+      value: Remove
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -17250,12 +17263,12 @@ PrefabInstance:
     - target: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_Name
-      value: Cancel
+      value: Remove
       objectReference: {fileID: 0}
     - target: {fileID: 8269508053611200199, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_Text
-      value: CANCEL
+      value: REMOVE
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
