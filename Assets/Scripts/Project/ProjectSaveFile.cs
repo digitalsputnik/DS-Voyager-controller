@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace VoyagerApp.Projects
 {
@@ -6,6 +7,8 @@ namespace VoyagerApp.Projects
     public class ProjectSaveData
     {
         public string version;
+        [JsonProperty("app_version")]
+        public string appVersion;
         public Effect[] effects;
         public Lamp[] lamps;
         public Item[] items;

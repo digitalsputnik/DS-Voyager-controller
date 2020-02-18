@@ -117,7 +117,7 @@ namespace VoyagerApp.Projects
         #endregion
 
         #region Loading
-        public static ProjectSaveData Load(string name)
+        public static ProjectSaveData Load(string name, bool positionsOnly = false)
         {
             string path = Path.Combine(ProjectsDirectory, name, PROJECT_FILE);
             if (File.Exists(path))
@@ -125,7 +125,7 @@ namespace VoyagerApp.Projects
                 string json = File.ReadAllText(path);
                 var parser = ProjectFactory.GetParser(json);
                 var data = parser.Parse(json);
-                Load(data, Path.Combine(ProjectsDirectory, name));
+                Load(data, Path.Combine(ProjectsDirectory, name), positionsOnly);
                 return data;
             }
             return null;
@@ -149,10 +149,10 @@ namespace VoyagerApp.Projects
             return parser.Parse(json);
         }
 
-        static void Load(ProjectSaveData data, string path)
+        static void Load(ProjectSaveData data, string path, bool positionsOnly)
         {
             LoadEffects(ref data, path);
-            LoadLamps(data.lamps);
+            LoadLamps(data.lamps, positionsOnly);
             LoadItems(data.items);
             LoadCamera(data.camera);
         }
@@ -209,7 +209,7 @@ namespace VoyagerApp.Projects
             }
         }
 
-        static void LoadLamps(Lamp[] lamps)
+        static void LoadLamps(Lamp[] lamps, bool positionsOnly)
         {
             foreach (var lampData in lamps)
             {
@@ -238,18 +238,24 @@ namespace VoyagerApp.Projects
                     {
                         serial = lampData.serial,
                         length = lampData.length,
-                        address = IPAddress.Parse(lampData.address),
-                        itshe = itsh,
-                        mapping = mapping
+                        address = IPAddress.Parse(lampData.address)
                     };
 
+                    if (!positionsOnly)
+                    {
+                        lamp.itshe = itsh;
+                        lamp.mapping = mapping;
+                    }
 
                     LampManager.instance.AddLamp(lamp);
                 }
                 else
                 {
-                    lamp.itshe = itsh;
-                    lamp.mapping = mapping;
+                    if (!positionsOnly)
+                    {
+                        lamp.itshe = itsh;
+                        lamp.mapping = mapping;
+                    }
                 }
             }
         }

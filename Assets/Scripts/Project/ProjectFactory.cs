@@ -148,6 +148,7 @@ namespace VoyagerApp.Projects
             return new ProjectSaveData
             {
                 version = VERSION,
+                appVersion = Application.version,
                 effects = effects,
                 lamps = lamps,
                 items = items.ToArray(),
