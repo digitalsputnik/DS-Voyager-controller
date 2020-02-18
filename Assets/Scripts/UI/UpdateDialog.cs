@@ -22,6 +22,7 @@ public class UpdateDialog : Menu
     {
         _lamps = lamps;
         _onLampAdded = onLampAdded;
+        Open = true;
     }
 
     void Update()
