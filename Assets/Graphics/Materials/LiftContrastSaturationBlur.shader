@@ -85,8 +85,8 @@
 				    col = col / sum;
                 }
 
-                col = ((1.0 - col) * _Lift) + col;
                 col = (col - 0.5) * (_Contrast) + 0.5;
+                col = ((1.0 - col) * _Lift) + col;
                 float greyscale = dot(col.rgb, fixed3(.222, .707, .071));
                 col.rgb = lerp(float3(greyscale, greyscale, greyscale), col.rgb, _Saturation);
 
