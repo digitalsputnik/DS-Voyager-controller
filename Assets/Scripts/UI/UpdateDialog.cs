@@ -63,7 +63,7 @@ public class UpdateDialog : Menu
     {
         var itshe = ApplicationSettings.IdentificationColor;
         var packet = new PixelOverridePacket(itshe, 0.3f);
-        foreach (var lamp in WorkspaceUtils.SelectedLamps)
+        foreach (var lamp in WorkspaceUtils.VoyagerLamps.Where(l => l.battery < 30.0 && !l.charging && !l.updated))
             NetUtils.VoyagerClient.SendPacket(lamp, packet, VoyagerClient.PORT_SETTINGS);
     }
 
