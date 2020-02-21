@@ -31,7 +31,7 @@ public class UpdateDialog : Menu
     {
         if (Open)
         {
-            CheckIfOkey();
+            CheckIfOkay();
 
             if (_lamps.Count != _prevCount) UpdateUI();
             if (_lamps.Count == 0) Open = false;
@@ -39,14 +39,14 @@ public class UpdateDialog : Menu
         }
     }
 
-    void CheckIfOkey()
+    void CheckIfOkay()
     {
         foreach (var lamp in _lamps.ToArray())
         {
             if (lamp.charging || lamp.battery >= 30.0f)
             {
-                _lamps.Remove(lamp);
                 _onLampAdded?.Invoke(lamp);
+                _lamps.Remove(lamp);
             }
         }
     }

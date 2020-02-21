@@ -22,6 +22,8 @@ namespace VoyagerApp.UI.Overlays
         CanvasGroup canvas;
         Queue<DialogBoxSettings> dialogues = new Queue<DialogBoxSettings>();
 
+        static bool onPause = false;
+
         void Start()
         {
             RectTransform rect = GetComponent<RectTransform>();
@@ -41,8 +43,22 @@ namespace VoyagerApp.UI.Overlays
                 DialogBoxSettings settings = new DialogBoxSettings(
                     title, explanation, btns, onBtns);
                 instance.dialogues.Enqueue(settings);
-                instance.ShowNextDialogue();
+                Debug.Log(title);
+                
+                if(!onPause)
+                    instance.ShowNextDialogue();
             });
+        }
+
+        public static void PauseDialogues()
+        {
+            onPause = true;
+        }
+
+        public static void ResumeDialogues()
+        {
+            onPause = false;
+            instance.ShowNextDialogue();
         }
 
         void ShowNextDialogue()

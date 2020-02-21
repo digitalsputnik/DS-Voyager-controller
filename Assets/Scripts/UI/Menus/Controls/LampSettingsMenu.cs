@@ -89,9 +89,10 @@ namespace VoyagerApp.UI.Menus
             var lampsNotUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery < 30.0 && !l.charging).ToList();
             var lampsUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery >= 30.0 || l.charging).ToList();
 
+            utility = new VoyagerUpdateUtility();
+
             if (lampsUpdateable.Count > 0)
             {
-                utility = new VoyagerUpdateUtility();
                 lampsUpdateable.ForEach(lamp => utility.UpdateLamp(lamp,
                                                          OnUpdateFinished,
                                                          OnUpdateMessage));
@@ -101,6 +102,9 @@ namespace VoyagerApp.UI.Menus
 
             if (lampsNotUpdateable.Count > 0)
             {
+                if (lampsUpdateable.Count == 0)
+                    lampsUpdating = new List<VoyagerLamp>();
+
                 updateDialog.Show(lampsNotUpdateable,(lamp) =>
                 {
                     utility.UpdateLamp(lamp, OnUpdateFinished, OnUpdateMessage);

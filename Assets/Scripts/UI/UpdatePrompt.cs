@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.UI.Overlays;
@@ -15,7 +16,6 @@ namespace VoyagerApp.UI
         [SerializeField] MenuContainer container = null;
         [SerializeField] Menu updateMenu = null;
         [SerializeField] float waitTime = 5.0f;
-        [SerializeField] Menu colorwheelMenu = null;
         [SerializeField] Button updateButton = null;
 
         bool showing;
@@ -35,9 +35,9 @@ namespace VoyagerApp.UI
         {
             if (item is VoyagerItemView voyager)
             {
-                if (!voyager.lamp.updated && voyager.lamp.connected && !promptedSerials.Contains(voyager.lamp.serial))
+                if (!voyager.lamp.updated && voyager.lamp.connected)
                 {
-                    promptedSerials.Add(voyager.lamp.serial);
+                    //promptedSerials.Add(voyager.lamp.serial);
                     StopAllCoroutines();
                     StartCoroutine(WaitForAnothers());
                 }
@@ -54,18 +54,18 @@ namespace VoyagerApp.UI
         {
             if (container.current == updateMenu || showing) return;
 
-            if (colorwheelMenu.Open) return;
-
             showing = true;
 
             DialogBox.Show(
                 "Update",
                 "Outdated lamp found from network. " +
                 "Would you like to update your lamp now?",
-                new string[] { "CANCEL", "OK" },
+                new string[] { "REMOVE", "OK" },
                 new Action[] {
                     () =>
                     {
+                        RemoveNotUpdatedLamps();
+                        
                         showing = false;
                     },
                     () =>
@@ -83,6 +83,19 @@ namespace VoyagerApp.UI
                     }
                 }
             );
+        }
+
+        void RemoveNotUpdatedLamps()
+        {
+            var lampsNotUpdated = WorkspaceUtils.VoyagerLamps.Where(l => l.updated == false).ToList();
+
+            WorkspaceSelection.instance.Clear();
+
+            foreach (var lamp in lampsNotUpdated)
+            {
+                var item = WorkspaceUtils.VoyagerItems.FirstOrDefault(v => v.lamp == lamp);
+                WorkspaceManager.instance.RemoveItem(item);
+            }
         }
     }
 }
