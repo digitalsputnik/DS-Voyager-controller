@@ -79,7 +79,6 @@ namespace VoyagerApp.UI
                         Menus.LampSettingsMenu.isFromUpdatePrompt = true;
                         container.ShowMenu(updateMenu);
                         showing = false;
-                        updateButton.onClick.Invoke();
                     }
                 }
             );
