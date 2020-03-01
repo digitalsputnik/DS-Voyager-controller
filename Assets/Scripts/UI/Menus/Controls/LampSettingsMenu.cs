@@ -26,6 +26,7 @@ namespace VoyagerApp.UI.Menus
         bool updatesFinished = true;
         List<VoyagerLamp> lampsUpdating = null;
         VoyagerUpdateUtility utility = null;
+        public static bool isFromUpdatePrompt = false;
 
         public void SelectDeselect()
         {
