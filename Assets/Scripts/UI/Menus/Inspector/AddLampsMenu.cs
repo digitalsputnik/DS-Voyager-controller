@@ -120,6 +120,7 @@ namespace VoyagerApp.UI.Menus
             addAllLampsBtn.gameObject.GetComponentInChildren<Text>().text = "CONNECT LAMPS";
             addAllLampsBtn.onClick.RemoveAllListeners();
             addAllLampsBtn.onClick.AddListener(AddAllBleLamps);
+            BluetoothTest.instance.StartScanningBleLamps();
         }
 
         public void OpenWifiList()
@@ -128,6 +129,8 @@ namespace VoyagerApp.UI.Menus
             wifiContainer.parent.gameObject.SetActive(true);
             addAllLampsBtn.gameObject.GetComponentInChildren<Text>().text = "ADD ALL LAMPS";
             addAllLampsBtn.onClick.RemoveAllListeners();
+            addAllLampsBtn.onClick.AddListener(AddAllLamps);
+            BluetoothTest.instance.StopScanningBleLamps();
         }
 
         public void RemoveLampItem(AddLampItem item)

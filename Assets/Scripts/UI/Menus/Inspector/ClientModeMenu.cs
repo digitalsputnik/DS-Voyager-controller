@@ -211,6 +211,10 @@ namespace VoyagerApp.UI.Menus
                     }
                 }
             }
+
+            setBtn.onClick.RemoveAllListeners();
+            connections = null;
+            setBtn.onClick.AddListener(Set);
         }
 
         public void Set()

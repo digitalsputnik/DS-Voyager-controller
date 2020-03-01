@@ -46,8 +46,16 @@ public class BluetoothTest : MonoBehaviour
     void OnInitialized()
     {
         Debug.Log("initialized bluetooth");
+    }
 
+    public void StartScanningBleLamps()
+    {
         BluetoothHelper.StartScanningForLamps(OnScanned);
+    }
+
+    public void StopScanningBleLamps()
+    {
+        BluetoothHelper.StopScanningForLamps();
     }
 
     void OnScanned(PeripheralInfo peripheral)
@@ -88,7 +96,7 @@ public class BluetoothTest : MonoBehaviour
         {
             inspector.ShowMenu(clientMenu);
             clientMenu.SetupBluetooth(connected);
-            BluetoothHelper.StopScanningForLamps();
+            StopScanningBleLamps();
         }
         
         connection.Write(new PollRequestPacket().Serialize());
