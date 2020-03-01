@@ -7,7 +7,6 @@ using UnityEngine.UI;
 using VoyagerApp.Lamps;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
-using VoyagerApp.UI.Overlays;
 
 namespace VoyagerApp.UI.Menus
 {
