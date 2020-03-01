@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using VoyagerApp.UI.Menus;
 
 namespace DigitalSputnik.Bluetooth
 {
@@ -19,7 +20,6 @@ namespace DigitalSputnik.Bluetooth
         PeripheralAccess _connectedPeripheral;
 
         bool _scanning;
-        bool _isConnected;
 
         PeripheralHandler _onPeripheralScanned;
         PeripheralConnectionHandler _onPeripheralConnected;
@@ -75,16 +75,13 @@ namespace DigitalSputnik.Bluetooth
         {
             if (IsInitialized)
             {
-                if (!_instance._isConnected)
-                    _instance.InternalConnect(peripheral, onConnect, onFail, onDisconnect);
-                else
-                    Debug.LogError("Bluetooth allready connected.");
+               _instance.InternalConnect(peripheral, onConnect, onFail, onDisconnect);
             }
         }
 
         public static void Disconnect(string peripheral)
         {
-            if (IsInitialized && _instance._isConnected)
+            if (IsInitialized)
             {
                 _instance.InternalDisconnect(peripheral);
             }
@@ -137,28 +134,29 @@ namespace DigitalSputnik.Bluetooth
             _onPeripheralConnectionFailed = onFail;
             _onPeripheralDisconnected = onDisconnect;
             _interface.Connect(id, OnConnect, OnConnectFail, OnDisconnect);
-            _isConnected = true;
         }
 
         private void OnConnect(string id)
         {
+            BLEItem bleItem = BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id) as BLEItem;
             PeripheralAccess access = new PeripheralAccess(id, _interface);
             _onPeripheralConnected?.Invoke(access);
-            _connectedPeripheral = access;
+            bleItem.peripheralAccess = access;
+            bleItem.connected = true;
         }
 
         private void OnConnectFail(string id, string error)
         {
-            _isConnected = false;
-            var peripheral = _scannedPeripherals.FirstOrDefault(p => p.id == id);
-            _onPeripheralConnectionFailed?.Invoke(peripheral, error);
+            BLEItem bleItem = BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id) as BLEItem;
+            bleItem.connected = false;
+            _onPeripheralConnectionFailed?.Invoke(bleItem.peripheral, error);
         }
 
         private void OnDisconnect(string id, string error)
         {
-            _isConnected = false;
-            var peripheral = _scannedPeripherals.FirstOrDefault(p => p.id == id);
-            _onPeripheralDisconnected?.Invoke(peripheral, error);
+            BLEItem bleItem = BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id) as BLEItem;
+            bleItem.connected = false;
+            _onPeripheralDisconnected?.Invoke(bleItem.peripheral, error);
         }
 
         void InternalDisconnect(string id)

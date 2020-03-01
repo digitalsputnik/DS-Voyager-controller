@@ -56,6 +56,7 @@ namespace DigitalSputnik.Bluetooth
 
         public void StartScanning(string[] services, InternalPeripheralScanHandler callback)
         {
+            Debug.Log("startscan");
             if (!_scanning)
             {   
                 if (services == null)
@@ -89,35 +90,43 @@ namespace DigitalSputnik.Bluetooth
 
         public void Connect(string id, InternalPeripheralConnectHandler onConnect, InternalPeripheralConnectFailHandler onFail, InternalPeripheralDisconnectHandler onDisconnect)
         {
-            _attemptingToConnectMac = id;
-            _connecting = true;
+            AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+            AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
 
             _onConnect = onConnect;
             _onConnectFail = onFail;
             _onDisconnect = onDisconnect;
 
-            AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-            AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
+            foreach (var lamp in BluetoothTest.instance.bleItems)
+            {
+                if (lamp.id == id.ToString())
+                {
+                    _connecting = true;
+                    _attemptingToConnectMac = id;
+                    lamp.device = _pluginObject.Call<AndroidJavaObject>("getDevice", context, id);
+                    var onConnectionChanged = new AndroidConnectionChangedCallback();
+                    _connectedDevice = lamp.device;
+                    onConnectionChanged._callback = PeripheralConnectionStateChanged;
+                    lamp.device.Call("setOnConnectChanged", onConnectionChanged);
+                    lamp.device.Call("startConnecting");
 
-            var onConnectionChanged = new AndroidConnectionChangedCallback();
-            onConnectionChanged._callback = PeripheralConnectionStateChanged;
-
-            _connectedDevice = _pluginObject.Call<AndroidJavaObject>("getDevice", context, id);
-            _connectedDevice.Call("setOnConnectChanged", onConnectionChanged);
-            _connectedDevice.Call("startConnecting");
-
-            Debug.Log($"should connect to {id}");
+                    Debug.Log($"should connect to {id}");
+                }
+            }
         }
 
         public void Disconnect(string id)
         {
-            if (_connectedDevice != null)
+            foreach(var lamp in BluetoothTest.instance.bleItems)
             {
-                if (_connecting)
-                    _connectedDevice.Call("stopConnecting");
-                else
-                    _connectedDevice.Call("disconnect");
+                if(lamp.device != null)
+                {
+                    if (_connecting)
+                        lamp.device.Call("stopConnecting");
+                    else
+                        lamp.device.Call("disconnect");
+                }
             }
         }
 

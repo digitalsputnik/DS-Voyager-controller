@@ -2,9 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
+using VoyagerApp.Lamps.Voyager;
+using VoyagerApp.Networking.Voyager;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 
@@ -22,6 +25,8 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Button setBtn              = null;
         [SerializeField] string[] loadingAnim       = null;
         [SerializeField] float animationSpeed       = 0.6f;
+
+        List<BluetoothConnection> connections = new List<BluetoothConnection>();
 
         Dictionary<Lamp, List<string>> lampToSsids = new Dictionary<Lamp, List<string>>();
         bool loading;
@@ -177,6 +182,36 @@ namespace VoyagerApp.UI.Menus
         }
 
         #endregion
+
+        public void SetupBluetooth(List<BluetoothConnection> _connections)
+        {
+            setBtn.onClick.RemoveAllListeners();
+            connections = _connections;
+            setBtn.onClick.AddListener(SetBluetooth);
+        }
+
+        public void SetBluetooth()
+        {
+            var ssid = ssidListObj.activeSelf ? ssidList.selected : ssidField.text;
+            var password = passwordField.text;
+
+            foreach (var lamp in BluetoothTest.instance.bleItems)
+            {
+                foreach (var connection in connections)
+                {
+                    if (lamp.id == connection.ID)
+                    {
+                        var package = VoyagerNetworkMode.Client(ssid, password, lamp.serial).ToData();
+
+                        string withoutOpCode = Encoding.UTF8.GetString(package, 0, package.Length);
+                        string withOpCode = @"{""op_code"": ""network_mode_request"", " + withoutOpCode.Substring(1);
+
+                        byte[] data = Encoding.UTF8.GetBytes(withOpCode);
+                        lamp.device.Call("write", data);
+                    }
+                }
+            }
+        }
 
         public void Set()
         {

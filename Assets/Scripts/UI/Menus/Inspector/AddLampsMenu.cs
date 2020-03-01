@@ -13,7 +13,8 @@ namespace VoyagerApp.UI.Menus
 {
     public class AddLampsMenu : Menu
     {
-        [SerializeField] Transform container    = null;
+        [SerializeField] Transform wifiContainer    = null;
+        [SerializeField] Transform bleContainer = null;
         [SerializeField] AddLampItem prefab     = null;
         [SerializeField] Button addAllLampsBtn  = null;
         List<AddLampItem> items = new List<AddLampItem>();
@@ -26,6 +27,7 @@ namespace VoyagerApp.UI.Menus
             ApplicationState.OnNewProject += NewProject;
 
             addAllLampsBtn.gameObject.SetActive(false);
+            OpenWifiList();
             AddLampsToList();
 
             StartCoroutine(AddLampsAgain());
@@ -105,6 +107,29 @@ namespace VoyagerApp.UI.Menus
                 RemoveLampItem(items[0]);
         }
 
+        public void AddAllBleLamps()
+        {
+            Debug.Log("Connecting to lamps: ");
+            BluetoothTest.instance.ConnectToLamps();
+        }
+
+        public void OpenBluetoothList()
+        {
+            wifiContainer.parent.gameObject.SetActive(false);
+            bleContainer.parent.gameObject.SetActive(true);
+            addAllLampsBtn.gameObject.GetComponentInChildren<Text>().text = "CONNECT LAMPS";
+            addAllLampsBtn.onClick.RemoveAllListeners();
+            addAllLampsBtn.onClick.AddListener(AddAllBleLamps);
+        }
+
+        public void OpenWifiList()
+        {
+            bleContainer.parent.gameObject.SetActive(false);
+            wifiContainer.parent.gameObject.SetActive(true);
+            addAllLampsBtn.gameObject.GetComponentInChildren<Text>().text = "ADD ALL LAMPS";
+            addAllLampsBtn.onClick.RemoveAllListeners();
+        }
+
         public void RemoveLampItem(AddLampItem item)
         {
             if (items.Contains(item))
@@ -123,7 +148,7 @@ namespace VoyagerApp.UI.Menus
         {
             if (!WorkspaceUtils.Lamps.Any(l => l == lamp) && !items.Any(i => i.lamp == lamp) && lamp.connected && math.abs(NetUtils.VoyagerClient.TimeOffset) > 0.01f)
             {
-                AddLampItem item = Instantiate(prefab, container);
+                AddLampItem item = Instantiate(prefab, wifiContainer);
                 item.SetLamp(lamp);
                 items.Add(item);
 
@@ -133,7 +158,10 @@ namespace VoyagerApp.UI.Menus
 
         void CheckForAddAllLampsButton()
         {
-            addAllLampsBtn.gameObject.SetActive(items.Count > 1);
+            if(wifiContainer.parent.gameObject.activeSelf)
+                addAllLampsBtn.gameObject.SetActive(items.Count > 1);
+            if (bleContainer.parent.gameObject.activeSelf)
+                addAllLampsBtn.gameObject.SetActive(BluetoothTest.instance.bleItems.Where(l => l.selected == true).Count() > 0);
         }
     }
 }

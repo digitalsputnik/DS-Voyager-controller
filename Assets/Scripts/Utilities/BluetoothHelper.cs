@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using DigitalSputnik.Bluetooth;
 using UnityEngine;
+using VoyagerApp.UI.Menus;
 
 public static class BluetoothHelper
 {
     public const string SERVICE_UID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
 
     static BluetoothConnectedHandler _onConnect;
-    static Action _onFail;
-    static Action _onDisconnect;
+    static Action<string> _onFail;
+    static Action<string> _onDisconnect;
 
-    static BluetoothConnection _connection;
+    static bool connecting = false;
 
     public static void Initialize(MonoBehaviour behaviour, Action onInitialized)
     {
@@ -39,35 +42,52 @@ public static class BluetoothHelper
         BluetoothAccess.StopScanning();
     }
 
-    public static void ConnectToPeripheral(PeripheralInfo peripheral, BluetoothConnectedHandler onConnected, Action onFail, Action onDisconnect)
+    static IEnumerator ConnectToPeripheral(List<BLEItem> lamps)
+    {
+        foreach (var item in lamps.Where(l => l.selected == true && l.connected == false))
+        {
+            BluetoothAccess.Connect(item.id, OnConnect, OnFailed, OnDisconnect);
+            connecting = true;
+            yield return new WaitUntil(() => connecting == false);
+        }
+    }
+
+    public static void ConnectToPeripherals(MonoBehaviour behaviour, List<BLEItem> lamps, BluetoothConnectedHandler onConnected, Action<string> onFail, Action<string> onDisconnect)
     {
         _onConnect = onConnected;
         _onFail = onFail;
         _onDisconnect = onDisconnect;
 
-        BluetoothAccess.Connect(peripheral.id, OnConnect, OnFailed, OnDisconnect);
+        behaviour.StartCoroutine(ConnectToPeripheral(lamps));
     }
 
     static void OnConnect(PeripheralAccess access)
     {
-        _connection = new BluetoothConnection(access);
-        _onConnect?.Invoke(_connection);
+        BLEItem bleItem = BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == access.ID) as BLEItem;
+        bleItem.connection = new BluetoothConnection(access);
+
+        _onConnect?.Invoke(bleItem.connection);
+
+        connecting = false;
     }
 
     static void OnFailed(PeripheralInfo peripheral, string error)
     {
-        _onFail?.Invoke();
+        BLEItem bleItem = BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == peripheral.id) as BLEItem;
+        _onFail?.Invoke(peripheral.id);
     }
 
     static void OnDisconnect(PeripheralInfo peripheral, string error)
     {
-        if (_connection != null)
+        BLEItem bleItem = BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == peripheral.id) as BLEItem;
+
+        if (bleItem.connection != null)
         {
-            _connection.HandleDisconnection();
-            _connection = null;
+            bleItem.connection.HandleDisconnection();
+            bleItem.connection = null;
         }
 
-        _onDisconnect?.Invoke();
+        _onDisconnect?.Invoke(peripheral.id);
     }
 }
 
@@ -77,7 +97,7 @@ public class BluetoothConnection
 {
     const string CHARACTERISTICS = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
 
-    public Action<byte[]> OnData;
+    public Action<string, byte[]> OnData;
     public string ID => _access.ID;
 
     PeripheralAccess _access;
@@ -100,6 +120,6 @@ public class BluetoothConnection
 
     void OnDataUpdate(PeripheralAccess access, string service, string characteristic, byte[] data)
     {
-        OnData?.Invoke(data);
+        OnData?.Invoke(access.ID, data);
     }
 }
