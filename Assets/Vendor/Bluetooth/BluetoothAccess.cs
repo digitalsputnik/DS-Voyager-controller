@@ -55,7 +55,7 @@ namespace DigitalSputnik.Bluetooth
             }
             else
             {
-                Debug.LogError("Bluetooth access is allready initialized.");
+                Debug.LogError("BluetoothLog: Bluetooth access is allready initialized.");
             }
         }
 

@@ -207,10 +207,14 @@ namespace VoyagerApp.UI.Menus
                         string withOpCode = @"{""op_code"": ""network_mode_request"", " + withoutOpCode.Substring(1);
 
                         byte[] data = Encoding.UTF8.GetBytes(withOpCode);
-                        lamp.device.Call("write", data);
+                        lamp.androidDevice.Call("write", data);
                     }
                 }
             }
+
+            BluetoothTest.instance.inspector.ShowMenu(null);
+
+            //BluetoothTest.instance.ResetValues();
 
             setBtn.onClick.RemoveAllListeners();
             connections = null;

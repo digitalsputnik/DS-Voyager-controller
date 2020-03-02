@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using DigitalSputnik.Bluetooth;
 using UnityEngine;
+using UnityEngine.UI;
 using VoyagerApp.Networking.Voyager;
 using VoyagerApp.UI;
 using VoyagerApp.UI.Menus;
@@ -27,14 +28,15 @@ public class BluetoothTest : MonoBehaviour
 
     public List<BLEItem> bleItems = new List<BLEItem>();
 
+    public Text infoText = null;
+
+    public InspectorMenuContainer inspector = null;
+
     [SerializeField] Transform bleContainer = null;
     [SerializeField] BLEItem prefab = null;
-    [SerializeField] InspectorMenuContainer inspector = null;
     [SerializeField] ClientModeMenu clientMenu = null;
 
     public List<BluetoothConnection> connected = new List<BluetoothConnection>();
-
-    public string connecting;
 
     public int connectedCount = 0;
 
@@ -45,7 +47,7 @@ public class BluetoothTest : MonoBehaviour
 
     void OnInitialized()
     {
-        Debug.Log("initialized bluetooth");
+        Debug.Log("BluetoothLog: initialized bluetooth");
     }
 
     public void StartScanningBleLamps()
@@ -66,7 +68,12 @@ public class BluetoothTest : MonoBehaviour
 
             InstantiateBleItem(peripheral);
 
-            Debug.Log($"scanned {peripheral.id}");
+            Debug.Log($"BluetoothLog: scanned {peripheral.id}");
+        }
+        else if(bleItems.Any(l => l.id == peripheral.id))
+        {
+            BLEItem item = bleItems.FirstOrDefault(l => l.id == peripheral.id);
+            item.UpdateRssi(peripheral.rssi.ToString());
         }
     }
 
@@ -84,7 +91,7 @@ public class BluetoothTest : MonoBehaviour
 
     void OnConnected(BluetoothConnection connection)
     {
-        Debug.Log($"Connected to {connection.ID}");
+        Debug.Log($"BluetoothLog: Connected to {connection.ID}");
 
         BLEItem bleItem = instance.bleItems.FirstOrDefault(l => l.id == connection.ID) as BLEItem;
         bleItem.connected = true;
@@ -94,6 +101,7 @@ public class BluetoothTest : MonoBehaviour
 
         if(connectedCount == bleItems.Where(l => l.selected == true).Count())
         {
+            infoText.text = "Select lamps you wish to connect";
             inspector.ShowMenu(clientMenu);
             clientMenu.SetupBluetooth(connected);
             StopScanningBleLamps();
@@ -102,18 +110,38 @@ public class BluetoothTest : MonoBehaviour
         connection.Write(new PollRequestPacket().Serialize());
     }
 
+    public void ResetValues()
+    {
+        bleItems = new List<BLEItem>();
+        scannedItems = new List<PeripheralInfo>();
+        connected = new List<BluetoothConnection>();
+        connectedCount = 0;
+    }
+
     void OnData(string id, byte[] data)
     {
-        Debug.Log($"Reveived from {id}: {Encoding.UTF8.GetString(data)}");
+        Debug.Log($"BluetoothLog: Received from {id}: {Encoding.UTF8.GetString(data)}");
     }
 
     void OnFailed(string id)
     {
-        Debug.Log($"Faild to connect {id}");
+        Debug.Log($"BluetoothLog: Faild to connect {id}");
     }
 
     void OnDisconnected(string id)
     {
-        Debug.Log($"Disconnected from {id}");
+        Debug.Log($"BluetoothLog: Disconnected from {id}");
+        var scannedItem = scannedItems.FirstOrDefault(l => l.id == id);
+        var bleItem = bleItems.FirstOrDefault(l => l.id == id);
+        var connection = connected.FirstOrDefault(l => l.ID == id);
+        if (scannedItem != null)
+        {
+            connectedCount--;
+            scannedItems.Remove(scannedItem);
+            bleItems.Remove(bleItem);
+            Destroy(bleItem.gameObject);
+            if (connection != null)
+                connected.Remove(connection);
+        }
     }
 }

@@ -111,6 +111,7 @@ namespace VoyagerApp.UI.Menus
         {
             Debug.Log("Connecting to lamps: ");
             BluetoothTest.instance.ConnectToLamps();
+            addAllLampsBtn.onClick.RemoveAllListeners();
         }
 
         public void OpenBluetoothList()
@@ -130,6 +131,7 @@ namespace VoyagerApp.UI.Menus
             addAllLampsBtn.gameObject.GetComponentInChildren<Text>().text = "ADD ALL LAMPS";
             addAllLampsBtn.onClick.RemoveAllListeners();
             addAllLampsBtn.onClick.AddListener(AddAllLamps);
+            //BluetoothTest.instance.ResetValues();
             BluetoothTest.instance.StopScanningBleLamps();
         }
 

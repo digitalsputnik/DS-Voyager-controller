@@ -20,7 +20,7 @@ namespace VoyagerApp.UI.Menus
         public PeripheralInfo peripheral;
         public PeripheralAccess peripheralAccess;
         public BluetoothConnection connection;
-        public AndroidJavaObject device;
+        public AndroidJavaObject androidDevice;
 
         public void SetPeripheral(PeripheralInfo peripheral)
         {
@@ -51,6 +51,11 @@ namespace VoyagerApp.UI.Menus
             }
 
             btn.colors = btnColor;
+        }
+
+        public void UpdateRssi(string rssi)
+        {
+            signalText.text = rssi;
         }
     }
 }

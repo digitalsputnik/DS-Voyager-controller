@@ -56,7 +56,6 @@ namespace DigitalSputnik.Bluetooth
 
         public void StartScanning(string[] services, InternalPeripheralScanHandler callback)
         {
-            Debug.Log("startscan");
             if (!_scanning)
             {   
                 if (services == null)
@@ -80,12 +79,12 @@ namespace DigitalSputnik.Bluetooth
 
         public void EnableBluetooth()
         {
-            Debug.LogError("[Bluetooth Android] EnableBluetooth not yet implemented!");
+            Debug.LogError("BluetoothLog: [Bluetooth Android] EnableBluetooth not yet implemented!");
         }
 
         public void DisableBluetooth()
         {
-            Debug.LogError("[Bluetooth Android] DisableBluetooth not yet implemented!");
+            Debug.LogError("BluetoothLog: [Bluetooth Android] DisableBluetooth not yet implemented!");
         }
 
         public void Connect(string id, InternalPeripheralConnectHandler onConnect, InternalPeripheralConnectFailHandler onFail, InternalPeripheralDisconnectHandler onDisconnect)
@@ -98,20 +97,44 @@ namespace DigitalSputnik.Bluetooth
             _onConnectFail = onFail;
             _onDisconnect = onDisconnect;
 
+            _connecting = true;
+            _attemptingToConnectMac = id;
+
+            foreach (var lamp in BluetoothTest.instance.bleItems)
+            {
+                if (lamp.id == id.ToString())
+                {
+                    lamp.androidDevice = _pluginObject.Call<AndroidJavaObject>("getDevice", context, id);
+                    var onConnectionChanged = new AndroidConnectionChangedCallback();
+                    _connectedDevice = lamp.androidDevice;
+                    onConnectionChanged._callback = PeripheralConnectionStateChanged;
+                    lamp.androidDevice.Call("setOnConnectChanged", onConnectionChanged);
+                    lamp.androidDevice.Call("startConnecting");
+
+                    Debug.Log($"BluetoothLog: should connect to {id}");
+                }
+            }
+        }
+
+        public void Reconnect(string id)
+        {
+            AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+            AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
+
             foreach (var lamp in BluetoothTest.instance.bleItems)
             {
                 if (lamp.id == id.ToString())
                 {
                     _connecting = true;
-                    _attemptingToConnectMac = id;
-                    lamp.device = _pluginObject.Call<AndroidJavaObject>("getDevice", context, id);
+                    lamp.androidDevice = _pluginObject.Call<AndroidJavaObject>("getDevice", context, id);
                     var onConnectionChanged = new AndroidConnectionChangedCallback();
-                    _connectedDevice = lamp.device;
+                    _connectedDevice = lamp.androidDevice;
                     onConnectionChanged._callback = PeripheralConnectionStateChanged;
-                    lamp.device.Call("setOnConnectChanged", onConnectionChanged);
-                    lamp.device.Call("startConnecting");
+                    lamp.androidDevice.Call("setOnConnectChanged", onConnectionChanged);
+                    lamp.androidDevice.Call("startConnecting");
 
-                    Debug.Log($"should connect to {id}");
+                    Debug.Log($"BluetoothLog: should connect to {id}");
                 }
             }
         }
@@ -120,24 +143,24 @@ namespace DigitalSputnik.Bluetooth
         {
             foreach(var lamp in BluetoothTest.instance.bleItems)
             {
-                if(lamp.device != null)
+                if(lamp.androidDevice != null)
                 {
                     if (_connecting)
-                        lamp.device.Call("stopConnecting");
+                        lamp.androidDevice.Call("stopConnecting");
                     else
-                        lamp.device.Call("disconnect");
+                        lamp.androidDevice.Call("disconnect");
                 }
             }
         }
 
         public void GetServices(InternalServicesHandler callback)
         {
-            Debug.LogError("[Bluetooth Android] GetServices not yet implemented!");
+            Debug.LogError("BluetoothLog: [Bluetooth Android] GetServices not yet implemented!");
         }
 
         public void GetCharacteristics(string service, InternalCharacteristicHandler callback)
         {
-            Debug.LogError("[Bluetooth Android] GetCharacteristics not yet implemented!");
+            Debug.LogError("BluetoothLog: [Bluetooth Android] GetCharacteristics not yet implemented!");
         }
 
         public void SetCharacteristicsUpdateCallback(InternalCharacteristicUpdateHandler callback)
@@ -169,7 +192,7 @@ namespace DigitalSputnik.Bluetooth
         void PeripheralConnectionStateChanged(bool connected)
         {
             _listener.Dispach(() => {
-                Debug.Log($"Connection state changed on {_attemptingToConnectMac} to {connected}");
+                Debug.Log($"BluetoothLog: Connection state changed on {_attemptingToConnectMac} to {connected}");
 
                 if (connected)
                 {
@@ -180,19 +203,30 @@ namespace DigitalSputnik.Bluetooth
 
                         var messageCallback = new AndroidMessageCallback();
                         messageCallback._callback = OnBluetoothMessage;
-                        _connectedDevice.Call("setOnMessageCallback", messageCallback);
+                        _connectedDevice.Call("setOnMessageCallback", messageCallback); 
                     }
+
+                    _connecting = false;
                 }
                 else
                 {
                     if (_onDisconnect != null)
                     {
-                        _onDisconnect.Invoke(_attemptingToConnectMac, "");
-                        _onDisconnect = null;
+                        if (!_connecting)
+                        {
+                            _onDisconnect.Invoke(_attemptingToConnectMac, "");
+                            _onDisconnect = null;
+                            _connecting = false;
+                        }
+                        else
+                        {
+                            Disconnect(_attemptingToConnectMac);
+                            Reconnect(_attemptingToConnectMac);
+                        }
                     }
+                    else
+                        _connecting = false;
                 }
-
-                _connecting = false;
             });
         }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik.Bluetooth;
 using UnityEngine;
+using UnityEngine.UI;
 using VoyagerApp.UI.Menus;
 
 public static class BluetoothHelper
@@ -13,6 +14,7 @@ public static class BluetoothHelper
     static BluetoothConnectedHandler _onConnect;
     static Action<string> _onFail;
     static Action<string> _onDisconnect;
+    static MonoBehaviour _behaviour;
 
     static bool connecting = false;
 
@@ -44,10 +46,15 @@ public static class BluetoothHelper
 
     static IEnumerator ConnectToPeripheral(List<BLEItem> lamps)
     {
+        Text info = BluetoothTest.instance.infoText;
+        int count = 0;
+
         foreach (var item in lamps.Where(l => l.selected == true && l.connected == false))
         {
             BluetoothAccess.Connect(item.id, OnConnect, OnFailed, OnDisconnect);
             connecting = true;
+            count++;
+            info.text = $"Connecting to lamp number {count}";
             yield return new WaitUntil(() => connecting == false);
         }
     }
@@ -57,6 +64,7 @@ public static class BluetoothHelper
         _onConnect = onConnected;
         _onFail = onFail;
         _onDisconnect = onDisconnect;
+        _behaviour = behaviour;
 
         behaviour.StartCoroutine(ConnectToPeripheral(lamps));
     }
@@ -86,7 +94,7 @@ public static class BluetoothHelper
             bleItem.connection.HandleDisconnection();
             bleItem.connection = null;
         }
-
+            
         _onDisconnect?.Invoke(peripheral.id);
     }
 }
