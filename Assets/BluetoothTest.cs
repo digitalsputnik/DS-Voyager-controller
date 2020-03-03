@@ -39,6 +39,7 @@ public class BluetoothTest : MonoBehaviour
 
     int idleTime = 30;
     public bool scanning = false;
+    public bool connecting = false;
     public bool settingClient = false;
 
     void Start()
@@ -71,6 +72,7 @@ public class BluetoothTest : MonoBehaviour
 
     public void ConnectToLamps()
     {
+        connecting = true;
         BluetoothHelper.ConnectToPeripherals(this, instance.bleItems, OnConnected, OnFailed, OnDisconnected);
     }
 
@@ -108,6 +110,12 @@ public class BluetoothTest : MonoBehaviour
 
     void OnScanned(PeripheralInfo peripheral)
     {
+        if (peripheral.name.Contains("-"))
+        {
+            string[] withArrow = peripheral.name.Split('-');
+            peripheral.name = withArrow[0];
+        }
+
         if (!instance.scannedItems.Any(i => i.id == peripheral.id) || instance.scannedItems.Count == 0)
         {
             AddItem(peripheral);
@@ -138,6 +146,7 @@ public class BluetoothTest : MonoBehaviour
     void OnAllSelectedLampsConnected()
     {
         settingClient = true;
+        connecting = false;
         inspector.ShowMenu(clientMenu);
         clientMenu.SetupBluetooth(connected);
         StopScanningBleLamps();
@@ -158,7 +167,7 @@ public class BluetoothTest : MonoBehaviour
     void OnDisconnected(string id)
     {
         Debug.Log($"BluetoothLog: Disconnected from {id}");
-        RemoveItem(id);
+        if(!connecting) RemoveItem(id);
     }
 
     void RemoveItem(string id)
