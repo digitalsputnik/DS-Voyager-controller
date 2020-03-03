@@ -46,6 +46,14 @@ namespace VoyagerApp.UI.Menus
         internal override void OnHide()
         {
             //ssidField.onValueChanged.RemoveListener(SsidFieldTextChanged);
+            if (connections != null)
+            {
+                BluetoothTest.instance.DisconnectFromAllLamps();
+                setBtn.onClick.RemoveAllListeners();
+                connections = null;
+                setBtn.onClick.AddListener(Set);
+            }
+
             lampToSsids.Clear();
         }
 
@@ -212,9 +220,8 @@ namespace VoyagerApp.UI.Menus
                 }
             }
 
+            BluetoothTest.instance.settingClient = false;
             BluetoothTest.instance.inspector.ShowMenu(null);
-
-            //BluetoothTest.instance.ResetValues();
 
             setBtn.onClick.RemoveAllListeners();
             connections = null;

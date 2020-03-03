@@ -118,6 +118,8 @@ namespace DigitalSputnik.Bluetooth
 
         public void Reconnect(string id)
         {
+            BluetoothTest.UpdateInfoText($"Failed. Reconnecting.. ");
+
             AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
             AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
             AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");

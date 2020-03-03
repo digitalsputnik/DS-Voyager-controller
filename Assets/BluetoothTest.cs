@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DigitalSputnik.Bluetooth;
@@ -24,21 +26,20 @@ public class BluetoothTest : MonoBehaviour
     }
     #endregion
 
+    public List<BluetoothConnection> connected = new List<BluetoothConnection>();
     public List<PeripheralInfo> scannedItems = new List<PeripheralInfo>();
-
     public List<BLEItem> bleItems = new List<BLEItem>();
-
-    public Text infoText = null;
 
     public InspectorMenuContainer inspector = null;
 
+    [SerializeField] Text infoText = null;
     [SerializeField] Transform bleContainer = null;
     [SerializeField] BLEItem prefab = null;
     [SerializeField] ClientModeMenu clientMenu = null;
 
-    public List<BluetoothConnection> connected = new List<BluetoothConnection>();
-
-    public int connectedCount = 0;
+    int idleTime = 30;
+    public bool scanning = false;
+    public bool settingClient = false;
 
     void Start()
     {
@@ -50,38 +51,22 @@ public class BluetoothTest : MonoBehaviour
         Debug.Log("BluetoothLog: initialized bluetooth");
     }
 
+    public static void UpdateInfoText(string text)
+    {
+        instance.infoText.text = text;
+    }
+
     public void StartScanningBleLamps()
     {
+        scanning = true;
         BluetoothHelper.StartScanningForLamps(OnScanned);
+        StartCoroutine(LampsCheck());
     }
 
     public void StopScanningBleLamps()
     {
+        scanning = false;
         BluetoothHelper.StopScanningForLamps();
-    }
-
-    void OnScanned(PeripheralInfo peripheral)
-    {
-        if (!instance.scannedItems.Any(i => i.id == peripheral.id) || instance.scannedItems.Count == 0)
-        {
-            instance.scannedItems.Add(peripheral);
-
-            InstantiateBleItem(peripheral);
-
-            Debug.Log($"BluetoothLog: scanned {peripheral.id}");
-        }
-        else if(bleItems.Any(l => l.id == peripheral.id))
-        {
-            BLEItem item = bleItems.FirstOrDefault(l => l.id == peripheral.id);
-            item.UpdateRssi(peripheral.rssi.ToString());
-        }
-    }
-
-    void InstantiateBleItem(PeripheralInfo info)
-    {
-        BLEItem item = Instantiate(prefab, bleContainer);
-        item.SetPeripheral(info);
-        instance.bleItems.Add(item);
     }
 
     public void ConnectToLamps()
@@ -89,33 +74,75 @@ public class BluetoothTest : MonoBehaviour
         BluetoothHelper.ConnectToPeripherals(this, instance.bleItems, OnConnected, OnFailed, OnDisconnected);
     }
 
+    public void DisconnectFromAllLamps()
+    {
+        foreach (var item in bleItems.Where(l => l.connected).ToList())
+            BluetoothAccess.Disconnect(item.id);
+    }
+
+    public void RemoveNotConnectedLamps()
+    {
+        foreach (var item in bleItems.Where(l => !l.connected).ToList())
+        {
+            RemoveItem(item.id);
+        }
+    }
+
+    IEnumerator LampsCheck()
+    {
+        while (scanning)
+        {
+            yield return new WaitForSeconds(1);
+            CheckForLamps();
+        }
+    }
+
+    void CheckForLamps()
+    {
+        foreach (var item in bleItems.Where(l => !l.connected && !l.selected).ToList())
+        {
+            if (DateTime.Now.Subtract(item.lastScan).Seconds > idleTime)
+                RemoveItem(item.id);
+        }
+    }
+
+    void OnScanned(PeripheralInfo peripheral)
+    {
+        if (!instance.scannedItems.Any(i => i.id == peripheral.id) || instance.scannedItems.Count == 0)
+        {
+            AddItem(peripheral);
+            Debug.Log($"BluetoothLog: scanned {peripheral.id}");
+        }
+        else if (bleItems.Any(l => l.id == peripheral.id))
+        {
+            UpdateItem(peripheral);
+            Debug.Log($"BluetoothLog: updated {peripheral.id}");
+        }
+    }
+
     void OnConnected(BluetoothConnection connection)
     {
-        Debug.Log($"BluetoothLog: Connected to {connection.ID}");
-
         BLEItem bleItem = instance.bleItems.FirstOrDefault(l => l.id == connection.ID) as BLEItem;
         bleItem.connected = true;
         connection.OnData = OnData;
         instance.connected.Add(connection);
-        connectedCount++;
 
-        if(connectedCount == bleItems.Where(l => l.selected == true).Count())
+        if(connected.Count == bleItems.Where(l => l.selected == true).Count() && connected.Count != 0)
         {
-            infoText.text = "Select lamps you wish to connect";
-            inspector.ShowMenu(clientMenu);
-            clientMenu.SetupBluetooth(connected);
-            StopScanningBleLamps();
+            OnAllSelectedLampsConnected();
         }
-        
-        connection.Write(new PollRequestPacket().Serialize());
+
+        Debug.Log($"BluetoothLog: Connected to {connection.ID}");
     }
 
-    public void ResetValues()
+    void OnAllSelectedLampsConnected()
     {
-        bleItems = new List<BLEItem>();
-        scannedItems = new List<PeripheralInfo>();
-        connected = new List<BluetoothConnection>();
-        connectedCount = 0;
+        settingClient = true;
+        inspector.ShowMenu(clientMenu);
+        clientMenu.SetupBluetooth(connected);
+        StopScanningBleLamps();
+        RemoveNotConnectedLamps();
+        infoText.text = "Select lamps you wish to connect";
     }
 
     void OnData(string id, byte[] data)
@@ -131,17 +158,38 @@ public class BluetoothTest : MonoBehaviour
     void OnDisconnected(string id)
     {
         Debug.Log($"BluetoothLog: Disconnected from {id}");
+        RemoveItem(id);
+    }
+
+    void RemoveItem(string id)
+    {
         var scannedItem = scannedItems.FirstOrDefault(l => l.id == id);
         var bleItem = bleItems.FirstOrDefault(l => l.id == id);
         var connection = connected.FirstOrDefault(l => l.ID == id);
+
         if (scannedItem != null)
         {
-            connectedCount--;
             scannedItems.Remove(scannedItem);
             bleItems.Remove(bleItem);
             Destroy(bleItem.gameObject);
             if (connection != null)
                 connected.Remove(connection);
         }
+    }
+
+    void AddItem(PeripheralInfo peripheral)
+    {
+        instance.scannedItems.Add(peripheral);
+
+        BLEItem item = Instantiate(prefab, bleContainer);
+        item.SetPeripheral(peripheral);
+        instance.bleItems.Add(item);
+    }
+
+    void UpdateItem(PeripheralInfo peripheral)
+    {
+        BLEItem item = bleItems.FirstOrDefault(l => l.id == peripheral.id);
+        item.UpdateRssi(peripheral.rssi.ToString());
+        item.lastScan = DateTime.Now;
     }
 }

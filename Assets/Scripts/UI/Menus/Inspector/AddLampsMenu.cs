@@ -40,6 +40,11 @@ namespace VoyagerApp.UI.Menus
             WorkspaceManager.instance.onItemAdded -= ItemAddedToWorkspace;
             ApplicationState.OnNewProject -= NewProject;
 
+            BluetoothTest.instance.StopScanningBleLamps();
+            BluetoothTest.instance.RemoveNotConnectedLamps();
+
+            BluetoothTest.UpdateInfoText("Select lamps you wish to connect");
+
             foreach (var lamp in new List<AddLampItem>(items))
                 RemoveLampItem(lamp);
 
@@ -131,8 +136,8 @@ namespace VoyagerApp.UI.Menus
             addAllLampsBtn.gameObject.GetComponentInChildren<Text>().text = "ADD ALL LAMPS";
             addAllLampsBtn.onClick.RemoveAllListeners();
             addAllLampsBtn.onClick.AddListener(AddAllLamps);
-            //BluetoothTest.instance.ResetValues();
             BluetoothTest.instance.StopScanningBleLamps();
+            BluetoothTest.instance.RemoveNotConnectedLamps();
         }
 
         public void RemoveLampItem(AddLampItem item)

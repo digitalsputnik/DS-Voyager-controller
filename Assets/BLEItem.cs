@@ -1,4 +1,5 @@
 ﻿using DigitalSputnik.Bluetooth;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,8 @@ namespace VoyagerApp.UI.Menus
     {
         [SerializeField] Text serialText = null;
         [SerializeField] Text signalText = null;
+
+        public DateTime lastScan;
 
         public string id;
         public string serial;
@@ -30,6 +33,7 @@ namespace VoyagerApp.UI.Menus
             serial = peripheral.name;
             serialText.text = serial;
             signalText.text = rssi;
+            lastScan = DateTime.Now;
         }
 
         public void OnClick()
