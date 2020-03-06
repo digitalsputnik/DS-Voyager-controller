@@ -1,27 +1,25 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Crosstales.Common.Util
 {
-    /// <summary>Enables or disable game objects on Android or iOS in the background.</summary>
-    //[HelpURL("https://www.crosstales.com/media/data/assets/radio/api/class_crosstales_1_1_radio_1_1_demo_1_1_util_1_1_platform_controller.html")] 
-    public class BackgroundController : MonoBehaviour
-    {
+   /// <summary>Enables or disable game objects on Android or iOS in the background.</summary>
+   //[HelpURL("https://www.crosstales.com/media/data/assets/rtvoice/api/class_crosstales_1_1_common_1_1_util_1_1_background_controller.html")]
+   public class BackgroundController : MonoBehaviour
+   {
+      #region Variables
 
-        #region Variables
+      ///<summary>Selected objects to disable in the background for the controller.</summary>
+      [Tooltip("Selected objects to disable in the background for the controller.")] public GameObject[] Objects;
 
-        ///<summary>Selected objects for the controller.</summary>
-        [Tooltip("Selected objects for the controller.")]
-        public GameObject[] Objects;
+      private bool isFocused;
 
-        private bool isFocused;
-
-        #endregion
+      #endregion
 
 
-        #region MonoBehaviour methods
+      #region MonoBehaviour methods
 
-#if UNITY_2017 || UNITY_2018
-#if UNITY_ANDROID || UNITY_IOS
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR //|| CT_DEVELOP
         public void Start()
         {
             isFocused = Application.isFocused;
@@ -35,29 +33,19 @@ namespace Crosstales.Common.Util
 
                 if ((BaseHelper.isAndroidPlatform || BaseHelper.isIOSPlatform) && !TouchScreenKeyboard.visible)
                 {
-                    foreach (GameObject go in Objects)
+                    foreach (var go in Objects.Where(go => go != null))
                     {
-                        if (go != null)
-                        {
-                            go.SetActive(isFocused);
-                        }
+                        go.SetActive(isFocused);
                     }
 
-                    Debug.Log("Application.isFocused: " + isFocused);
+                    if (BaseConstants.DEV_DEBUG)
+                        Debug.Log("Application.isFocused: " + isFocused);
                 }
             }
         }
 #endif
-#else
-        public void Start()
-        {
-            Debug.LogWarning("'BackgroundController' needs Unity 2017 or newer to work!");
-        }
 
-#endif
-
-        #endregion
-
-    }
+      #endregion
+   }
 }
-// © 2018 crosstales LLC (https://www.crosstales.com)
+// © 2018-2020 crosstales LLC (https://www.crosstales.com)

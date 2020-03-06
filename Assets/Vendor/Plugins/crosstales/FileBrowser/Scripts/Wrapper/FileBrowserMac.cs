@@ -1,137 +1,182 @@
-﻿#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
+﻿#if UNITY_STANDALONE_OSX || CT_DEVELOP
 using System;
-using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace Crosstales.FB.Wrapper
 {
-    /// <summary>File browser implementation for macOS.</summary>
-    public class FileBrowserMac : FileBrowserBase
-    {
-        #region Variables
-        private static Action<string[]> _openFileCb;
-        private static Action<string[]> _openFolderCb;
-        private static Action<string> _saveFileCb;
+   /// <summary>File browser implementation for macOS.</summary>
+   public class FileBrowserMac : FileBrowserBase
+   {
+      #region Variables
 
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate void AsyncCallback(string path);
+      private static Action<string[]> _openFileCb;
+      private static Action<string[]> _openFolderCb;
+      private static Action<string> _saveFileCb;
 
-        [DllImport("FileBrowser")]
-        private static extern IntPtr DialogOpenFilePanel(string title, string directory, string extension, bool multiselect);
+      private const char splitChar = (char)28;
 
-        [DllImport("FileBrowser")]
-        private static extern IntPtr DialogOpenFolderPanel(string title, string directory, bool multiselect);
-
-        [DllImport("FileBrowser")]
-        private static extern IntPtr DialogSaveFilePanel(string title, string directory, string defaultName, string extension);
-
-        [DllImport("FileBrowser")]
-        private static extern void DialogOpenFilePanelAsync(string title, string directory, string extension, bool multiselect, AsyncCallback callback);
-
-        [DllImport("FileBrowser")]
-        private static extern void DialogOpenFolderPanelAsync(string title, string directory, bool multiselect, AsyncCallback callback);
-
-        [DllImport("FileBrowser")]
-        private static extern void DialogSaveFilePanelAsync(string title, string directory, string defaultName, string extension, AsyncCallback callback);
-
-        private const char splitChar = (char)28;
-
-        #endregion
+      #endregion
 
 
-        #region Implemented methods
+      #region Implemented methods
 
-        public override string[] OpenFiles(string title, string directory, ExtensionFilter[] extensions, bool multiselect)
-        {
-            string paths = cleanPath(Marshal.PtrToStringAnsi(DialogOpenFilePanel(title, directory, getFilterFromFileExtensionList(extensions), multiselect)));
-            return paths.Split(splitChar);
-        }
+      public override bool canOpenMultipleFiles
+      {
+         get { return true; }
+      }
 
-        public override string[] OpenFolders(string title, string directory, bool multiselect)
-        {
-            string paths = cleanPath(Marshal.PtrToStringAnsi(DialogOpenFolderPanel(title, directory, multiselect)));
-            return paths.Split(splitChar);
-        }
+      public override bool canOpenMultipleFolders
+      {
+         get { return true; }
+      }
 
-        public override string SaveFile(string title, string directory, string defaultName, ExtensionFilter[] extensions)
-        {
-            return cleanPath(Marshal.PtrToStringAnsi(DialogSaveFilePanel(title, directory, defaultName, getFilterFromFileExtensionList(extensions))));
-        }
+      public override bool isPlatformSupported
+      {
+         get
+         {
+            return Util.Helper.isMacOSPlatform; // || Util.Helper.isLinuxEditor;
+         }
+      }
 
-        public override void OpenFilesAsync(string title, string directory, ExtensionFilter[] extensions, bool multiselect, Action<string[]> cb)
-        {
-            _openFileCb = cb;
-            DialogOpenFilePanelAsync(
-                title,
-                directory,
-                getFilterFromFileExtensionList(extensions),
-                multiselect,
-                (string result) => { _openFileCb.Invoke(cleanPath(result).Split(splitChar)); });
-        }
+      public override string[] OpenFiles(string title, string directory, ExtensionFilter[] extensions, bool multiselect)
+      {
+         string paths = System.Runtime.InteropServices.Marshal.PtrToStringAnsi(Mac.NativeMethods.DialogOpenFilePanel(title, directory, getFilterFromFileExtensionList(extensions), multiselect));
+         return paths != null ? paths.Split(splitChar) : null;
+      }
 
-        public override void OpenFoldersAsync(string title, string directory, bool multiselect, Action<string[]> cb)
-        {
-            _openFolderCb = cb;
-            DialogOpenFolderPanelAsync(
-                title,
-                directory,
-                multiselect,
-                (string result) => { _openFolderCb.Invoke(cleanPath(result).Split(splitChar)); });
-        }
+      public override string[] OpenFolders(string title, string directory, bool multiselect)
+      {
+         string paths = System.Runtime.InteropServices.Marshal.PtrToStringAnsi(Mac.NativeMethods.DialogOpenFolderPanel(title, directory, multiselect));
+         return paths != null ? paths.Split(splitChar) : null;
+      }
 
-        public override void SaveFileAsync(string title, string directory, string defaultName, ExtensionFilter[] extensions, Action<string> cb)
-        {
-            _saveFileCb = cb;
-            DialogSaveFilePanelAsync(
-                title,
-                directory,
-                defaultName,
-                getFilterFromFileExtensionList(extensions),
-                (string result) => { _saveFileCb.Invoke(cleanPath(result)); });
-        }
+      public override string SaveFile(string title, string directory, string defaultName, ExtensionFilter[] extensions)
+      {
+         return System.Runtime.InteropServices.Marshal.PtrToStringAnsi(Mac.NativeMethods.DialogSaveFilePanel(title, directory, defaultName, getFilterFromFileExtensionList(extensions)));
+      }
 
-        #endregion
+      public override void OpenFilesAsync(string title, string directory, ExtensionFilter[] extensions, bool multiselect, Action<string[]> cb)
+      {
+         _openFileCb = cb;
+         Mac.NativeMethods.DialogOpenFilePanelAsync(
+            title,
+            directory,
+            getFilterFromFileExtensionList(extensions),
+            multiselect,
+            openFileCb);
+         //(string result) => { _openFileCb.Invoke(result.Split(splitChar)); });
+      }
+
+      public override void OpenFoldersAsync(string title, string directory, bool multiselect, Action<string[]> cb)
+      {
+         _openFolderCb = cb;
+         Mac.NativeMethods.DialogOpenFolderPanelAsync(
+            title,
+            directory,
+            multiselect,
+            openFolderCb);
+         //(string result) => { _openFolderCb.Invoke(result.Split(splitChar)); });
+      }
+
+      public override void SaveFileAsync(string title, string directory, string defaultName, ExtensionFilter[] extensions, Action<string> cb)
+      {
+         _saveFileCb = cb;
+         Mac.NativeMethods.DialogSaveFilePanelAsync(
+            title,
+            directory,
+            defaultName,
+            getFilterFromFileExtensionList(extensions),
+            saveFileCb);
+         //(string result) => { _saveFileCb.Invoke(result); });
+      }
+
+      #endregion
 
 
-        #region Private methods
+      #region Private methods
 
-        private static string cleanPath(string path)
-        {
-            if (string.IsNullOrEmpty(path))
+      [AOT.MonoPInvokeCallback(typeof(AsyncCallback))]
+      private static void openFileCb(string result)
+      {
+         _openFileCb.Invoke(result.Split(splitChar));
+      }
+
+      [AOT.MonoPInvokeCallback(typeof(AsyncCallback))]
+      private static void openFolderCb(string result)
+      {
+         _openFolderCb.Invoke(result.Split(splitChar));
+      }
+
+      [AOT.MonoPInvokeCallback(typeof(AsyncCallback))]
+      private static void saveFileCb(string result)
+      {
+         _saveFileCb.Invoke(result);
+      }
+
+      private static string getFilterFromFileExtensionList(ExtensionFilter[] extensions)
+      {
+         if (extensions != null && extensions.Length > 0)
+         {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            for (int xx = 0; xx < extensions.Length; xx++)
             {
-                return string.Empty;
+               var filter = extensions[xx];
+
+               sb.Append(filter.Name);
+               sb.Append(";");
+
+               for (int ii = 0; ii < filter.Extensions.Length; ii++)
+               {
+                  sb.Append(filter.Extensions[ii]);
+
+                  if (ii + 1 < filter.Extensions.Length)
+                     sb.Append(",");
+               }
+
+               if (xx + 1 < extensions.Length)
+                  sb.Append("|");
             }
 
-            return path.Replace("file://", string.Empty).Replace("%20", " ");
-        }
+            if (Util.Config.DEBUG)
+               Debug.Log("getFilterFromFileExtensionList: " + sb);
 
-        private static string getFilterFromFileExtensionList(ExtensionFilter[] extensions)
-        {
-            if (extensions == null)
-            {
-                return string.Empty;
-            }
+            return sb.ToString();
+         }
 
-            string filterString = string.Empty;
+         return string.Empty;
+      }
 
-            foreach (ExtensionFilter filter in extensions)
-            {
-                filterString += filter.Name + ";";
+      #endregion
+   }
+}
 
-                foreach (string ext in filter.Extensions)
-                {
-                    filterString += ext + ",";
-                }
+namespace Crosstales.FB.Wrapper.Mac
+{
+   /// <summary>Native methods (bridge to macOS).</summary>
+   internal static class NativeMethods
+   {
+      [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.StdCall)]
+      public delegate void AsyncCallback(string path);
 
-                filterString = filterString.Remove(filterString.Length - 1);
-                filterString += "|";
-            }
+      [System.Runtime.InteropServices.DllImport("FileBrowser")]
+      internal static extern IntPtr DialogOpenFilePanel(string title, string directory, string extension, bool multiselect);
 
-            filterString = filterString.Remove(filterString.Length - 1);
-            return filterString;
-        }
+      [System.Runtime.InteropServices.DllImport("FileBrowser")]
+      internal static extern IntPtr DialogOpenFolderPanel(string title, string directory, bool multiselect);
 
-        #endregion
-    }
+      [System.Runtime.InteropServices.DllImport("FileBrowser")]
+      internal static extern IntPtr DialogSaveFilePanel(string title, string directory, string defaultName, string extension);
+
+      [System.Runtime.InteropServices.DllImport("FileBrowser")]
+      internal static extern void DialogOpenFilePanelAsync(string title, string directory, string extension, bool multiselect, AsyncCallback callback);
+
+      [System.Runtime.InteropServices.DllImport("FileBrowser")]
+      internal static extern void DialogOpenFolderPanelAsync(string title, string directory, bool multiselect, AsyncCallback callback);
+
+      [System.Runtime.InteropServices.DllImport("FileBrowser")]
+      internal static extern void DialogSaveFilePanelAsync(string title, string directory, string defaultName, string extension, AsyncCallback callback);
+   }
 }
 #endif
-// © 2017-2018 crosstales LLC (https://www.crosstales.com)
+// © 2017-2020 crosstales LLC (https://www.crosstales.com)

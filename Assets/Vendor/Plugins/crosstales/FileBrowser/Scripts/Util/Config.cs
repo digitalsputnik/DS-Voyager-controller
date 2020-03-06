@@ -1,48 +1,79 @@
 ﻿namespace Crosstales.FB.Util
 {
-    /// <summary>Configuration for the asset.</summary>
-    public static class Config
-    {
+   /// <summary>Configuration for the asset.</summary>
+   public static class Config
+   {
+      #region Changable variables
 
-        #region Changable variables
+      /// <summary>Path to the asset inside the Unity project.</summary>
+      public static string ASSET_PATH = "/Plugins/crosstales/FileBrowser/";
 
-        /// <summary>Enable or disable debug logging for the asset.</summary>
-        public static bool DEBUG = Constants.DEFAULT_DEBUG;
+      /// <summary>Enable or disable debug logging for the asset.</summary>
+      public static bool DEBUG = Constants.DEFAULT_DEBUG || Constants.DEV_DEBUG;
 
-        /// <summary>Is the configuration loaded?</summary>
-        public static bool isLoaded = false;
+      /// <summary>Enable or disable native file browser inside the Unity Editor.</summary>
+      public static bool NATIVE_WINDOWS = Constants.DEFAULT_NATIVE_WINDOWS;
 
-        #endregion
+      /// <summary>Is the configuration loaded?</summary>
+      public static bool isLoaded = false;
 
+      #endregion
 
-        #region Public static methods
+#if UNITY_EDITOR
 
-        /// <summary>Resets all changable variables to their default value.</summary>
-        public static void Reset()
-        {
+      #region Public static methods
+
+      /// <summary>Resets all changeable variables to their default value.</summary>
+      public static void Reset()
+      {
+         if (!Constants.DEV_DEBUG)
             DEBUG = Constants.DEFAULT_DEBUG;
-        }
 
-        /// <summary>Loads the all changable variables.</summary>
-        public static void Load()
-        {
+         NATIVE_WINDOWS = Constants.DEFAULT_NATIVE_WINDOWS;
+      }
+
+      /// <summary>Loads the all changeable variables.</summary>
+      public static void Load()
+      {
+         if (Common.Util.CTPlayerPrefs.HasKey(Constants.KEY_ASSET_PATH))
+         {
+            ASSET_PATH = Common.Util.CTPlayerPrefs.GetString(Constants.KEY_ASSET_PATH);
+         }
+
+         if (!Constants.DEV_DEBUG)
+         {
             if (Common.Util.CTPlayerPrefs.HasKey(Constants.KEY_DEBUG))
             {
-                DEBUG = Common.Util.CTPlayerPrefs.GetBool(Constants.KEY_DEBUG);
+               DEBUG = Common.Util.CTPlayerPrefs.GetBool(Constants.KEY_DEBUG);
             }
+         }
+         else
+         {
+            DEBUG = Constants.DEV_DEBUG;
+         }
 
-            isLoaded = true;
-        }
+         if (Common.Util.CTPlayerPrefs.HasKey(Constants.KEY_NATIVE_WINDOWS))
+         {
+            NATIVE_WINDOWS = Common.Util.CTPlayerPrefs.GetBool(Constants.KEY_NATIVE_WINDOWS);
+         }
 
-        /// <summary>Saves the all changable variables.</summary>
-        public static void Save()
-        {
+         isLoaded = true;
+      }
+
+      /// <summary>Saves the all changeable variables.</summary>
+      public static void Save()
+      {
+         if (!Constants.DEV_DEBUG)
             Common.Util.CTPlayerPrefs.SetBool(Constants.KEY_DEBUG, DEBUG);
 
-            Common.Util.CTPlayerPrefs.Save();
-        }
+         Common.Util.CTPlayerPrefs.SetBool(Constants.KEY_NATIVE_WINDOWS, NATIVE_WINDOWS);
 
-        #endregion
-    }
+         Common.Util.CTPlayerPrefs.Save();
+      }
+
+      #endregion
+
+#endif
+   }
 }
-// © 2017-2018 crosstales LLC (https://www.crosstales.com)
+// © 2017-2020 crosstales LLC (https://www.crosstales.com)

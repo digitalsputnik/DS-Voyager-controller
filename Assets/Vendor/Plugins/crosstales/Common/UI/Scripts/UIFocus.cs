@@ -3,48 +3,54 @@ using UnityEngine.UI;
 
 namespace Crosstales.UI
 {
-    /// <summary>Change the Focus on from a Window.</summary>
-    public class UIFocus : MonoBehaviour
-    {
-        #region Variables
+   /// <summary>Change the Focus on from a Window.</summary>
+   public class UIFocus : MonoBehaviour
+   {
+      #region Variables
 
-        public string CanvasName = "Canvas";
+      /// <summary>Name of the gameobject containing the UIWindowManager.</summary>
+      [Tooltip("Name of the gameobject containing the UIWindowManager.")] public string ManagerName = "Canvas";
 
-        private UIWindowManager manager;
-        private Image image;
+      private UIWindowManager manager;
+      private Image image;
 
-        #endregion
+      private Transform tf;
 
-
-        #region MonoBehaviour methods
-
-        public void Start()
-        {
-            manager = GameObject.Find(CanvasName).GetComponent<UIWindowManager>();
-
-            image = transform.Find("Panel/Header").GetComponent<Image>();
-        }
-
-        #endregion
+      #endregion
 
 
-        #region Public methods
+      #region MonoBehaviour methods
 
-        public void OnPanelEnter()
-        {
-            manager.ChangeState(gameObject);
+      public void Start()
+      {
+         tf = transform;
 
-            Color c = image.color;
-            c.a = 255;
-            image.color = c;
+         manager = GameObject.Find(ManagerName).GetComponent<UIWindowManager>();
 
-            transform.SetAsLastSibling(); //move to the front (on parent)
-            transform.SetAsFirstSibling(); //move to the back (on parent)
-            transform.SetSiblingIndex(-1); //move to position, whereas 0 is the backmost, transform.parent.childCount -1 is the frontmost position 
-            transform.GetSiblingIndex(); //get the position in the hierarchy (on parent)
-        }
+         image = tf.Find("Panel/Header").GetComponent<Image>();
+      }
 
-        #endregion
-    }
+      #endregion
+
+
+      #region Public methods
+
+      ///<summary>Panel entered.</summary>
+      public void OnPanelEnter()
+      {
+         manager.ChangeState(gameObject);
+
+         Color c = image.color;
+         c.a = 255;
+         image.color = c;
+
+         tf.SetAsLastSibling(); //move to the front (on parent)
+         tf.SetAsFirstSibling(); //move to the back (on parent)
+         tf.SetSiblingIndex(-1); //move to position, whereas 0 is the backmost, transform.parent.childCount -1 is the frontmost position 
+         tf.GetSiblingIndex(); //get the position in the hierarchy (on parent)
+      }
+
+      #endregion
+   }
 }
-// © 2017-2018 crosstales LLC (https://www.crosstales.com)
+// © 2017-2020 crosstales LLC (https://www.crosstales.com)

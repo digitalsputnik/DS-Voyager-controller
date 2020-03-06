@@ -5,12 +5,12 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 224: {fileID: 22448062}
-  - 222: {fileID: 22279734}
-  - 114: {fileID: 11423582}
-  - 114: {fileID: 11447564}
+  - component: {fileID: 22448062}
+  - component: {fileID: 22279734}
+  - component: {fileID: 11423582}
+  - component: {fileID: 11447564}
   m_Layer: 5
   m_Name: Resize
   m_TagString: Untagged
@@ -56,8 +56,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 336aa0e56bff18c4da3bd489055cc23f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minSize: {x: 300, y: 160}
-  maxSize: {x: 800, y: 600}
+  MinSize: {x: 300, y: 160}
+  MaxSize: {x: 800, y: 600}
 --- !u!222 &22279734
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -73,10 +73,10 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -40, y: 40}
