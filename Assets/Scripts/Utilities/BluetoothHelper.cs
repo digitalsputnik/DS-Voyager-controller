@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik.Bluetooth;
 using UnityEngine;
@@ -13,8 +12,6 @@ public static class BluetoothHelper
     static BluetoothConnectedHandler _onConnect;
     static Action<string> _onFail;
     static Action<string> _onDisconnect;
-
-    static bool connecting = false;
 
     public static void Initialize(MonoBehaviour behaviour, Action onInitialized)
     {
@@ -42,24 +39,13 @@ public static class BluetoothHelper
         BluetoothAccess.StopScanning();
     }
 
-    static IEnumerator ConnectToPeripheral(List<BLEItem> lamps)
-    {
-        foreach (var item in lamps.Where(l => l.selected == true && l.connected == false).ToList())
-        {
-            connecting = true;
-            BluetoothAccess.Connect(item.id, OnConnect, OnFailed, OnDisconnect);
-            BluetoothTest.UpdateInfoText($"Connecting to lamp {item.serial}");
-            yield return new WaitUntil(() => connecting == false);
-        }
-    }
-
-    public static void ConnectToPeripherals(MonoBehaviour behaviour, List<BLEItem> lamps, BluetoothConnectedHandler onConnected, Action<string> onFail, Action<string> onDisconnect)
+    public static void ConnectToPeripheral(BLEItem item, BluetoothConnectedHandler onConnected, Action<string> onFail, Action<string> onDisconnect)
     {
         _onConnect = onConnected;
         _onFail = onFail;
         _onDisconnect = onDisconnect;
 
-        behaviour.StartCoroutine(ConnectToPeripheral(lamps));
+        BluetoothAccess.Connect(item.id, OnConnect, OnFailed, OnDisconnect);
     }
 
     static void OnConnect(PeripheralAccess access)
@@ -68,8 +54,6 @@ public static class BluetoothHelper
         bleItem.connection = new BluetoothConnection(access);
 
         _onConnect?.Invoke(bleItem.connection);
-
-        connecting = false;
     }
 
     static void OnFailed(PeripheralInfo peripheral, string error)

@@ -40,8 +40,11 @@ namespace VoyagerApp.UI.Menus
             WorkspaceManager.instance.onItemAdded -= ItemAddedToWorkspace;
             ApplicationState.OnNewProject -= NewProject;
 
-            BluetoothTest.instance.StopScanningBleLamps();
-            BluetoothTest.instance.RemoveNotConnectedLamps();
+            if (!BluetoothTest.instance.settingClient)
+            {
+                BluetoothTest.instance.StopScanningBleLamps();
+                BluetoothTest.instance.DisconnectAndRemoveAllLamps();
+            }
 
             BluetoothTest.UpdateInfoText("Select lamps you wish to connect");
 
@@ -114,8 +117,7 @@ namespace VoyagerApp.UI.Menus
 
         public void AddAllBleLamps()
         {
-            Debug.Log("Connecting to lamps: ");
-            BluetoothTest.instance.ConnectToLamps();
+            BluetoothTest.instance.OnAllSelectedLampsConnected();
             addAllLampsBtn.onClick.RemoveAllListeners();
         }
 
@@ -126,7 +128,8 @@ namespace VoyagerApp.UI.Menus
             addAllLampsBtn.gameObject.GetComponentInChildren<Text>().text = "CONNECT LAMPS";
             addAllLampsBtn.onClick.RemoveAllListeners();
             addAllLampsBtn.onClick.AddListener(AddAllBleLamps);
-            BluetoothTest.instance.StartScanningBleLamps();
+            if(!BluetoothTest.instance.scanning)
+                BluetoothTest.instance.StartScanningBleLamps();
         }
 
         public void OpenWifiList()
@@ -136,8 +139,6 @@ namespace VoyagerApp.UI.Menus
             addAllLampsBtn.gameObject.GetComponentInChildren<Text>().text = "ADD ALL LAMPS";
             addAllLampsBtn.onClick.RemoveAllListeners();
             addAllLampsBtn.onClick.AddListener(AddAllLamps);
-            BluetoothTest.instance.StopScanningBleLamps();
-            BluetoothTest.instance.RemoveNotConnectedLamps();
         }
 
         public void RemoveLampItem(AddLampItem item)

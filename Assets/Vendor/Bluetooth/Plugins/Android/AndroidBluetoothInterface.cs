@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Android;
@@ -22,7 +23,6 @@ namespace DigitalSputnik.Bluetooth
         InternalCharacteristicUpdateHandler _onCharacteristicUpdate;
 
         bool _scanning;
-        string _attemptingToConnectMac;
         bool _connecting;
 
         public void Initialize()
@@ -93,52 +93,26 @@ namespace DigitalSputnik.Bluetooth
             AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
             AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
 
-            _onConnect = onConnect;
-            _onConnectFail = onFail;
-            _onDisconnect = onDisconnect;
+            if (_onConnect == null || _onConnectFail == null || _onDisconnect == null)
+            {
+                _onConnect = onConnect;
+                _onConnectFail = onFail;
+                _onDisconnect = onDisconnect;
+            }
 
             _connecting = true;
-            _attemptingToConnectMac = id;
 
-            foreach (var lamp in BluetoothTest.instance.bleItems)
-            {
-                if (lamp.id == id.ToString())
-                {
-                    lamp.androidDevice = _pluginObject.Call<AndroidJavaObject>("getDevice", context, id);
-                    var onConnectionChanged = new AndroidConnectionChangedCallback();
-                    _connectedDevice = lamp.androidDevice;
-                    onConnectionChanged._callback = PeripheralConnectionStateChanged;
-                    lamp.androidDevice.Call("setOnConnectChanged", onConnectionChanged);
-                    lamp.androidDevice.Call("startConnecting");
+            var lamp = BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id);
+            var onConnectionChanged = new AndroidConnectionChangedCallback();
+            onConnectionChanged._callback = PeripheralConnectionStateChanged;
 
-                    Debug.Log($"BluetoothLog: should connect to {id}");
-                }
-            }
-        }
+            lamp.androidDevice = _pluginObject.Call<AndroidJavaObject>("getDevice", context, id);
+            lamp.androidDevice.Call("setOnConnectChanged", onConnectionChanged);
+            lamp.androidDevice.Call("startConnecting");
 
-        public void Reconnect(string id)
-        {
-            BluetoothTest.UpdateInfoText($"Failed. Reconnecting.. ");
+            _connectedDevice = lamp.androidDevice;
 
-            AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-            AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
-
-            foreach (var lamp in BluetoothTest.instance.bleItems)
-            {
-                if (lamp.id == id.ToString())
-                {
-                    _connecting = true;
-                    lamp.androidDevice = _pluginObject.Call<AndroidJavaObject>("getDevice", context, id);
-                    var onConnectionChanged = new AndroidConnectionChangedCallback();
-                    _connectedDevice = lamp.androidDevice;
-                    onConnectionChanged._callback = PeripheralConnectionStateChanged;
-                    lamp.androidDevice.Call("setOnConnectChanged", onConnectionChanged);
-                    lamp.androidDevice.Call("startConnecting");
-
-                    Debug.Log($"BluetoothLog: should connect to {id}");
-                }
-            }
+            Debug.Log($"BluetoothLog: should connect to {id}");
         }
 
         public void Disconnect(string id)
@@ -191,21 +165,23 @@ namespace DigitalSputnik.Bluetooth
             }
         }
 
-        void PeripheralConnectionStateChanged(bool connected)
+        void PeripheralConnectionStateChanged(bool connected, AndroidJavaObject device)
         {
             _listener.Dispach(() => {
-                Debug.Log($"BluetoothLog: Connection state changed on {_attemptingToConnectMac} to {connected}");
+
+                string mac = device.Call<string>("getMac");
+                Debug.Log($"BluetoothLog: Connection state changed on {mac} to {connected}");
 
                 if (connected)
                 {
                     if (_onConnect != null)
                     {
-                        _onConnect.Invoke(_attemptingToConnectMac);
+                        _onConnect.Invoke(mac);
                         _onConnect = null;
 
                         var messageCallback = new AndroidMessageCallback();
                         messageCallback._callback = OnBluetoothMessage;
-                        _connectedDevice.Call("setOnMessageCallback", messageCallback); 
+                        device.Call("setOnMessageCallback", messageCallback);
                     }
 
                     _connecting = false;
@@ -216,14 +192,14 @@ namespace DigitalSputnik.Bluetooth
                     {
                         if (!_connecting)
                         {
-                            _onDisconnect.Invoke(_attemptingToConnectMac, "");
+                            _onDisconnect.Invoke(mac, "");
                             _onDisconnect = null;
                             _connecting = false;
                         }
                         else
                         {
-                            Disconnect(_attemptingToConnectMac);
-                            Reconnect(_attemptingToConnectMac);
+                            //Disconnect(mac);
+                            Connect(mac, null, null, null);
                         }
                     }
                     else
@@ -232,10 +208,10 @@ namespace DigitalSputnik.Bluetooth
             });
         }
 
-        void OnBluetoothMessage(string message)
+        void OnBluetoothMessage(string message, AndroidJavaObject device)
         {
             Debug.Log(message);
-            _onCharacteristicUpdate?.Invoke(_attemptingToConnectMac, "", "", Encoding.UTF8.GetBytes(message));
+            _onCharacteristicUpdate?.Invoke(device.Call<string>("getMac"), "", "", Encoding.UTF8.GetBytes(message));
         }
 
         public class AndroidScanResultCallback : AndroidJavaProxy
@@ -252,25 +228,25 @@ namespace DigitalSputnik.Bluetooth
 
         public class AndroidConnectionChangedCallback : AndroidJavaProxy
         {
-            internal Action<bool> _callback;
+            internal Action<bool, AndroidJavaObject> _callback;
 
             public AndroidConnectionChangedCallback() : base("com.digitalsputnik.dsblecito.IConnectChangeCallback") { }
 
-            public void call(bool connected)
+            public void call(bool connected, AndroidJavaObject device)
             {
-                _callback?.Invoke(connected);
+                _callback?.Invoke(connected, device);
             }
         }
 
         public class AndroidMessageCallback : AndroidJavaProxy
         {
-            internal Action<string> _callback;
+            internal Action<string, AndroidJavaObject> _callback;
 
             public AndroidMessageCallback() : base("com.digitalsputnik.dsblecito.IMessageCallback") { }
 
-            public void call(string message)
+            public void call(string message, AndroidJavaObject device)
             {
-                _callback?.Invoke(message);
+                _callback?.Invoke(message, device);
             }
         }
     }

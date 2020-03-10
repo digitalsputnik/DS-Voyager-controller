@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
-using VoyagerApp.Networking.Voyager;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 
@@ -22,11 +22,12 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] GameObject ssidFieldObj    = null;
         [SerializeField] InputField ssidField       = null;
         [SerializeField] InputField passwordField   = null;
+        [SerializeField] GameObject status          = null;
         [SerializeField] Button setBtn              = null;
         [SerializeField] string[] loadingAnim       = null;
         [SerializeField] float animationSpeed       = 0.6f;
 
-        List<BluetoothConnection> connections = new List<BluetoothConnection>();
+        public List<string> foundSsidList = new List<string>();
 
         Dictionary<Lamp, List<string>> lampToSsids = new Dictionary<Lamp, List<string>>();
         bool loading;
@@ -41,19 +42,16 @@ namespace VoyagerApp.UI.Menus
         {
             //ssidField.onValueChanged.AddListener(SsidFieldTextChanged);
             if (ssidFieldObj.activeSelf) TypeSsidBtnClick();
+            status.SetActive(false);
         }
 
         internal override void OnHide()
         {
             //ssidField.onValueChanged.RemoveListener(SsidFieldTextChanged);
-            if (connections != null)
-            {
-                BluetoothTest.instance.DisconnectFromAllLamps();
-                setBtn.onClick.RemoveAllListeners();
-                connections = null;
-                setBtn.onClick.AddListener(Set);
-            }
-
+            setBtn.onClick.RemoveAllListeners();
+            setBtn.onClick.AddListener(Set);
+            BluetoothTest.instance.StopScanningBleLamps();
+            BluetoothTest.instance.DisconnectAndRemoveAllLamps();
             lampToSsids.Clear();
         }
 
@@ -92,8 +90,16 @@ namespace VoyagerApp.UI.Menus
             ssidList.index = 0;
             ssidList.interactable = false;
             ssidRefreshBtn.interactable = false;
-            lampToSsids.Clear();
-            StartCoroutine(IEnumGetSsidListFromLamps());
+            if(BluetoothTest.instance.settingClient != true)
+            {
+                lampToSsids.Clear();
+                StartCoroutine(IEnumGetSsidListFromLamps());
+            }
+            else
+            {
+                foundSsidList.Clear();
+                StartCoroutine(AndroidSsidTest());
+            }
             StartCoroutine(IEnumLoadingAnimation());
         }
 
@@ -191,42 +197,98 @@ namespace VoyagerApp.UI.Menus
 
         #endregion
 
-        public void SetupBluetooth(List<BluetoothConnection> _connections)
+        #region AndroidBleLampsTest
+
+        public void SetupBluetooth()
         {
             setBtn.onClick.RemoveAllListeners();
-            connections = _connections;
             setBtn.onClick.AddListener(SetBluetooth);
+        }
+
+        bool AndroidPremissions()
+        {
+            if (!Permission.HasUserAuthorizedPermission(Permission.CoarseLocation))
+                return false;
+            else if (!Permission.HasUserAuthorizedPermission(Permission.FineLocation))
+                return false;
+            else if (!Permission.HasUserAuthorizedPermission("android.permission.CHANGE_WIFI_STATE"))
+                return false;
+            else if (!Permission.HasUserAuthorizedPermission("android.permission.ACCESS_WIFI_STATE"))
+                return false;
+            else return true;
+        }
+
+        IEnumerator AndroidSsidTest()
+        {
+            if (!Permission.HasUserAuthorizedPermission(Permission.CoarseLocation))
+                Permission.RequestUserPermission(Permission.CoarseLocation);
+            if (!Permission.HasUserAuthorizedPermission(Permission.FineLocation))
+                Permission.RequestUserPermission(Permission.FineLocation);
+            if (!Permission.HasUserAuthorizedPermission("android.permission.CHANGE_WIFI_STATE"))
+                Permission.RequestUserPermission("android.permission.CHANGE_WIFI_STATE");
+            if (!Permission.HasUserAuthorizedPermission("android.permission.ACCESS_WIFI_STATE"))
+                Permission.RequestUserPermission("android.permission.ACCESS_WIFI_STATE");
+
+            yield return new WaitUntil(() => AndroidPremissions());
+
+            AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+            AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
+            AndroidJavaObject wifiPlugin = new AndroidJavaObject("com.example.wifiplugin.WifiScanner");
+
+            var callback = new AndroidPluginCallBack();
+            callback._callback = OnSsidScanned;
+
+            object[] parameters = new object[2];
+            parameters[0] = context;
+            parameters[1] = callback;
+
+            wifiPlugin.Call("startScanning", parameters);
+        }
+
+        public void OnSsidScanned(string ssid)
+        {
+            if (!foundSsidList.Contains(ssid) && ssid.Length > 0)
+            {
+                foundSsidList.Add(ssid);
+                Debug.Log($"SSIDList: Scanned Ssid : {ssid}");
+            }
+
+            ssidList.SetItems(foundSsidList.ToArray());
+            ssidList.onOpen?.Invoke();
+            ssidList.interactable = true;
+            setBtn.interactable = true;
         }
 
         public void SetBluetooth()
         {
+            status.SetActive(true);
+            StartCoroutine(SetClient());
+        }
+
+        IEnumerator SetClient()
+        {
+            yield return new WaitUntil(() => BluetoothTest.instance.AllLampsConnnected());
+
             var ssid = ssidListObj.activeSelf ? ssidList.selected : ssidField.text;
             var password = passwordField.text;
 
-            foreach (var lamp in BluetoothTest.instance.bleItems)
+            foreach (var lamp in BluetoothTest.instance.bleItems.Where(l => l.connected))
             {
-                foreach (var connection in connections)
-                {
-                    if (lamp.id == connection.ID)
-                    {
-                        var package = VoyagerNetworkMode.Client(ssid, password, lamp.serial).ToData();
+                var package = VoyagerNetworkMode.Client(ssid, password, lamp.serial).ToData();
 
-                        string withoutOpCode = Encoding.UTF8.GetString(package, 0, package.Length);
-                        string withOpCode = @"{""op_code"": ""network_mode_request"", " + withoutOpCode.Substring(1);
+                string withoutOpCode = Encoding.UTF8.GetString(package, 0, package.Length);
+                string withOpCode = @"{""op_code"": ""network_mode_request"", " + withoutOpCode.Substring(1);
 
-                        byte[] data = Encoding.UTF8.GetBytes(withOpCode);
-                        lamp.androidDevice.Call("write", data);
-                    }
-                }
+                byte[] data = Encoding.UTF8.GetBytes(withOpCode);
+                lamp.androidDevice.Call("write", data);
             }
 
             BluetoothTest.instance.settingClient = false;
             BluetoothTest.instance.inspector.ShowMenu(null);
-
-            setBtn.onClick.RemoveAllListeners();
-            connections = null;
-            setBtn.onClick.AddListener(Set);
         }
+
+        #endregion
 
         public void Set()
         {
@@ -260,6 +322,21 @@ namespace VoyagerApp.UI.Menus
                     new Action[] { null }
                 );
             }
+        }
+    }
+    class AndroidPluginCallBack : AndroidJavaProxy
+    {
+        internal Action<string> _callback;
+        public AndroidPluginCallBack() : base("com.example.wifiplugin.PluginCallBack") { }
+
+        public void onSuccess(string ssid)
+        {
+            _callback?.Invoke(ssid);
+        }
+
+        public void onError(string error)
+        {
+            Debug.Log($"SSIDList: Error : {error}");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DigitalSputnik.Bluetooth;
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +18,7 @@ namespace VoyagerApp.UI.Menus
         public string rssi;
 
         public bool selected = false;
-
+        public bool isConnecting = false;
         public bool connected = false;
 
         public PeripheralInfo peripheral;
@@ -38,28 +39,33 @@ namespace VoyagerApp.UI.Menus
 
         public void OnClick()
         {
-            selected = !selected;
-
-            var btn = GetComponent<Button>();
-            ColorBlock btnColor = btn.colors;
-
-            if (selected)
+            if(BluetoothTest.instance.bleItems.Where(l => l.selected).Count() < 5)
             {
-                btnColor.selectedColor = new Color(0.8f, 0.8f, 0.8f, 1f);
-                btnColor.normalColor = new Color(0.8f, 0.8f, 0.8f, 1f);
-            }
-            else
-            {
-                btnColor.selectedColor = Color.white;
-                btnColor.normalColor = Color.white;
-            }
+                selected = !selected;
 
-            btn.colors = btnColor;
+                var btn = GetComponent<Button>();
+                ColorBlock btnColor = btn.colors;
+
+                if (selected)
+                {
+                    btnColor.selectedColor = new Color(0.8f, 0.8f, 0.8f, 1f);
+                    btnColor.normalColor = new Color(0.8f, 0.8f, 0.8f, 1f);
+                }
+                else
+                {
+                    btnColor.selectedColor = Color.white;
+                    btnColor.normalColor = Color.white;
+                }
+
+                btn.colors = btnColor;
+            }
         }
 
-        public void UpdateRssi(string rssi)
+        public void UpdateInfo(PeripheralInfo peripheral)
         {
+            rssi = peripheral.rssi.ToString();
             signalText.text = rssi;
+            lastScan = DateTime.Now;
         }
     }
 }
