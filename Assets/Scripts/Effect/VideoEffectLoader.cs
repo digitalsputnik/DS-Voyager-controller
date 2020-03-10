@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -31,7 +32,8 @@ namespace VoyagerApp.Effects
                 id = Guid.NewGuid().ToString(),
                 file = Path.GetFileName(path),
                 name = Path.GetFileNameWithoutExtension(path),
-                path = path
+                path = path,
+                preset = EffectManager.instance.videoPresets.Any(p => p == Path.GetFileName(path))
             };
 
             EffectManager.instance.StartCoroutine(
@@ -151,10 +153,7 @@ namespace VoyagerApp.Effects
         static void LoadPresetsFrom(string path)
         {
             foreach (var p in Directory.GetFiles(path, "*.mp4"))
-            {
-                var video = LoadNewVideoFromPath(p);
-                video.preset = true;
-            }
+                LoadNewVideoFromPath(p);
         }
     }
 }

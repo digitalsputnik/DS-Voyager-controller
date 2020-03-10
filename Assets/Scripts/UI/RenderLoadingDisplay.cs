@@ -32,7 +32,7 @@ public class RenderLoadingDisplay : MonoBehaviour
 
     void RendererStateChanged(RenderState state)
     {
-        if (state is DoneState)
+        if (state is DoneState || state is ConfirmPixelsState)
         {
             if (gameObject.activeInHierarchy)
                 gameObject.SetActive(false);
@@ -68,5 +68,8 @@ public class RenderLoadingDisplay : MonoBehaviour
     {
         loadingBarImage.fillAmount = progress;
         progressText.text = ((int)(progress * 100)).ToString() + "%";
+
+        if (!gameObject.activeInHierarchy)
+            gameObject.SetActive(true);
     }
 }

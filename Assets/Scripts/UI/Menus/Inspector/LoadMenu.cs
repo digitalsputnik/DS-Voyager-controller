@@ -46,8 +46,31 @@ namespace VoyagerApp.UI.Menus
 
         void OnImportFile(string file)
         {
-            var path = Project.Import(file);
-            DisplayItem(path);
+            string name = Path.GetFileNameWithoutExtension(file);
+
+            if (items.Any(i => i.fileName == name))
+            {
+                DialogBox.Show(
+                    "ALERT",
+                    $"A project with name {name} already exists.",
+                    new string[] { "OVERWRITE", "CANCEL" },
+                    new Action[] {
+                    () =>
+                    {
+                        items.FirstOrDefault(i => i.fileName == name)?.Delete(() =>
+                        {
+                            var path = Project.Import(file);
+                            DisplayItem(path);
+                        });
+                    },
+                        null
+                    });
+            }
+            else
+            {
+                var path = Project.Import(file);
+                DisplayItem(path);
+            }
         }
 
         void DisplayAllItems()
@@ -85,15 +108,15 @@ namespace VoyagerApp.UI.Menus
                     {
                         ItemsInteractable = false;
                         data = Project.Load(project);
-                        VideoRenderer.SetState(new ConfirmPixelsState());
                         OnSendBuffer();
+                        VideoRenderer.SetState(new ConfirmPixelsState());
                     },
                     () =>
                     {
                         ItemsInteractable = false;
-                        data = Project.Load(project);
-                        VideoRenderer.SetState(new ConfirmPixelsState());
+                        data = Project.Load(project, true);
                         OnSendBufferCancel();
+                        VideoRenderer.SetState(new ConfirmPixelsState());
                     },
                     null
                 }
@@ -112,6 +135,7 @@ namespace VoyagerApp.UI.Menus
 
                 if (lamp != null && video != null)
                 {
+                    lamp.effect = null;
                     lamp.SetEffect(video);
                     NetUtils.VoyagerClient.SendPacket(
                         lamp,

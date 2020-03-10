@@ -9,6 +9,14 @@ namespace VoyagerApp.Effects
         public string id;
         public Texture2D thumbnail;
         public EventValue<bool> available = new EventValue<bool>(false);
+
+        public float lift = 0.5f;
+        public float contrast = 0.5f;
+        public float saturation = 0.5f;
+        public float blur = 0.0f;
+
+        // Metadata for effects list
+        public double timestamp = 0.0;
     }
 
     public class Video : Effect

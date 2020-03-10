@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 
@@ -44,6 +45,7 @@ namespace VoyagerApp.UI
 
         void OnClick()
         {
+            DialogBox.PauseDialogues();
             ColorwheelManager.instance.OpenColorwheel(currentItshe, ItsheChanged);
         }
 

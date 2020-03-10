@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using VoyagerApp.UI.Overlays;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -73,6 +74,7 @@ namespace VoyagerApp.UI.Menus
             StopAllCoroutines();
             ApplicationState.ColorWheelActive.value = false;
             showHide.GetComponent<Button>().onClick.RemoveListener(Approve);
+            DialogBox.ResumeDialogues();
         }
 
         Itshe prevItshe;

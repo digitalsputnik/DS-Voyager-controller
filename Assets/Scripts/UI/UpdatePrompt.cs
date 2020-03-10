@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
@@ -13,8 +16,10 @@ namespace VoyagerApp.UI
         [SerializeField] MenuContainer container = null;
         [SerializeField] Menu updateMenu = null;
         [SerializeField] float waitTime = 5.0f;
+        [SerializeField] Button updateButton = null;
 
         bool showing;
+        List<string> promptedSerials = new List<string>();
 
         void Start()
         {
@@ -32,6 +37,7 @@ namespace VoyagerApp.UI
             {
                 if (!voyager.lamp.updated && voyager.lamp.connected)
                 {
+                    //promptedSerials.Add(voyager.lamp.serial);
                     StopAllCoroutines();
                     StartCoroutine(WaitForAnothers());
                 }
@@ -54,12 +60,14 @@ namespace VoyagerApp.UI
                 "Update",
                 "Outdated lamp found from network. " +
                 "Would you like to update your lamp now?",
-                new string[] { "CANCEL", "OK" },
+                new string[] { "REMOVE", "OK" },
                 new Action[] {
                     () =>
                     {
+                        RemoveNotUpdatedLamps();
+                        
                         showing = false;
-                    }, 
+                    },
                     () =>
                     {
                         WorkspaceSelection.instance.Clear();
@@ -74,6 +82,19 @@ namespace VoyagerApp.UI
                     }
                 }
             );
+        }
+
+        void RemoveNotUpdatedLamps()
+        {
+            var lampsNotUpdated = WorkspaceUtils.VoyagerLamps.Where(l => l.updated == false).ToList();
+
+            WorkspaceSelection.instance.Clear();
+
+            foreach (var lamp in lampsNotUpdated)
+            {
+                var item = WorkspaceUtils.VoyagerItems.FirstOrDefault(v => v.lamp == lamp);
+                WorkspaceManager.instance.RemoveItem(item);
+            }
         }
     }
 }

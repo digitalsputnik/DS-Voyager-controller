@@ -44,7 +44,7 @@ namespace VoyagerApp.UI.Menus
                 "ARE YOU SURE?",
                 "Are you sure you want to remove this video from project?",
                 new string[] { "CANCEL", "OK" },
-                new Action[] { null, () => { EffectManager.RemoveEffect(video); }}
+                new Action[] { null, () => { EffectManager.RemoveEffect(video); } }
                 );
         }
 	}

@@ -3,6 +3,7 @@
 // Copyright: © Digital Sputnik OÜ
 // -----------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -67,10 +68,18 @@ namespace VoyagerApp.Utilities
         {
             get
             {
-                return Dns.GetHostEntry(Dns.GetHostName())
-                    .AddressList
-                    .Where(a => a.AddressFamily == AddressFamily.InterNetwork)
-                    .ToArray();
+                List<IPAddress> addresses = new List<IPAddress>();
+                foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+                {
+                    foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                    {
+                        if (!ip.IsDnsEligible)
+                            continue;
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                            addresses.Add(ip.Address);
+                    }
+                }
+                return addresses.ToArray();
             }
         }
 

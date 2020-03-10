@@ -11,15 +11,17 @@ namespace VoyagerApp.Videos
 {
     public class ConfirmPixelsState : RenderState
     {
-        const double requestFrequency = 0.5f;
+        const double _requestFrequency = 0.5f;
 
-        double lastRequestTime;
-        Dictionary<VoyagerLamp, long[]> missingFrames = new Dictionary<VoyagerLamp, long[]>();
+        double _lastRequestTime;
+        Dictionary<VoyagerLamp, long[]> _missingFrames = new Dictionary<VoyagerLamp, long[]>();
 
         bool _abort = false;
+        double _startTime;
 
         public ConfirmPixelsState()
         {
+            _startTime = TimeUtils.Epoch;
             NetUtils.VoyagerClient.onReceived += OnReceivedFromLamp;
         }
 
@@ -31,20 +33,17 @@ namespace VoyagerApp.Videos
                 var address = ((IPEndPoint)sender).Address;
                 var lamp = (VoyagerLamp)LampManager.instance.GetLampWithAddress(address);
 
-                if (packet.indices != null)
+                if (packet.indices.Length > 0)
+                    Debug.Log(lamp.serial + " - " + string.Join(", ", packet.indices));
+
+                if (packet.indices.Length > lamp.buffer.count / 2)
                 {
-                    if (packet.indices.Length > 0)
-                        Debug.Log(lamp.serial + " - " + string.Join(", ", packet.indices));
-
-                    if (packet.indices.Length > lamp.buffer.count / 2)
-                    {
-                        lamp.buffer.Clear();
-                        _abort = true;
-                        return;
-                    }
-
-                    missingFrames[lamp] = packet.indices.Where(lamp.buffer.FrameExists).ToArray();
+                    lamp.buffer.Clear();
+                    _abort = true;
+                    return;
                 }
+
+                _missingFrames[lamp] = packet.indices.Where(lamp.buffer.FrameExists).ToArray();
             }
         }
 
@@ -56,21 +55,21 @@ namespace VoyagerApp.Videos
                 return new PrepereQueueState();
             }
 
-            foreach (var lamp in missingFrames.Keys.ToArray())
+            foreach (var lamp in _missingFrames.Keys.ToArray())
             {
                 if (!WorkspaceUtils.Lamps.Contains(lamp) || !lamp.connected || lamp.dmxEnabled)
-                    missingFrames.Remove(lamp);
+                    _missingFrames.Remove(lamp);
             }
 
-            if ((TimeUtils.Epoch - lastRequestTime) > requestFrequency)
+            if ((TimeUtils.Epoch - _lastRequestTime) > _requestFrequency)
             {
                 SendMissingFramesRequestToLamps();
-                lastRequestTime = TimeUtils.Epoch;
+                _lastRequestTime = TimeUtils.Epoch;
             }
 
-            if (missingFrames.Count == WorkspaceUtils.VoyagerLamps.Where(l => l.connected && !l.dmxEnabled).Count())
+            if (_missingFrames.Count == WorkspaceUtils.VoyagerLamps.Where(l => l.connected && !l.dmxEnabled).Count())
             {
-                if (missingFrames.All(f => f.Value.Length == 0))
+                if (_missingFrames.All(f => f.Value.Length == 0))
                 {
                     NetUtils.VoyagerClient.onReceived -= OnReceivedFromLamp;
                     return new DoneState();
@@ -79,7 +78,8 @@ namespace VoyagerApp.Videos
 
             SendMissingFramesToLamps();
 
-            VideoRenderer.UpdateProgress(Progress);
+            if (TimeUtils.Epoch - _startTime > 0.5)
+                VideoRenderer.UpdateProgress(Progress);
 
             return this;
         }
@@ -90,9 +90,9 @@ namespace VoyagerApp.Videos
             {
                 long all = WorkspaceUtils.Lamps.Sum(l => l.buffer.count);
                 long missing = 0;
-
-                foreach (var lamp in missingFrames.Keys)
-                    missing += missingFrames[lamp].Count();
+                
+                foreach (var lamp in _missingFrames.Keys)
+                    missing += _missingFrames[lamp].Count();
 
                 return (float)(all - missing) / all;
             }
@@ -100,19 +100,21 @@ namespace VoyagerApp.Videos
 
         void SendMissingFramesRequestToLamps()
         {
-            var packet = new MissingFramesRequestPacket();
             var lamps = WorkspaceUtils.Lamps.Where(l => l.connected).ToArray();
 
             foreach (var lamp in lamps)
+            {
+                var packet = new MissingFramesRequestPacket(lamp.lastTimestamp);
                 NetUtils.VoyagerClient.SendPacket(lamp, packet, VoyagerClient.PORT_SETTINGS);
+            }
         }
 
         void SendMissingFramesToLamps()
         {
-            foreach (var lamp in missingFrames.Keys)
+            foreach (var lamp in _missingFrames.Keys)
             {
                 double time = lamp.lastTimestamp;
-                foreach (var index in missingFrames[lamp])
+                foreach (var index in _missingFrames[lamp])
                 {
                     var frame = lamp.buffer.GetFrame(index);
                     var packet = new SetFramePacket(index, lamp.itshe, frame);

@@ -122,10 +122,10 @@ namespace VoyagerApp.UI.Menus
         public void ClearCache()
         {
             DialogBox.Show(
-            "CLEAR CACHE",
-            "ARE YOU SURE?",
-            new string[] { "CANCEL", "OK" },
-            new Action[] { null, FileUtils.ClearCache });
+                "CLEAR CACHE",
+                "ARE YOU SURE?",
+                new string[] { "CANCEL", "OK" },
+                new Action[] { null, FileUtils.ClearCache });
         }
     }
 }

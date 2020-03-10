@@ -117,7 +117,7 @@ namespace VoyagerApp.Projects
         #endregion
 
         #region Loading
-        public static ProjectSaveData Load(string name)
+        public static ProjectSaveData Load(string name, bool positionsOnly = false)
         {
             string path = Path.Combine(ProjectsDirectory, name, PROJECT_FILE);
             if (File.Exists(path))
@@ -125,7 +125,7 @@ namespace VoyagerApp.Projects
                 string json = File.ReadAllText(path);
                 var parser = ProjectFactory.GetParser(json);
                 var data = parser.Parse(json);
-                Load(data, Path.Combine(ProjectsDirectory, name));
+                Load(data, Path.Combine(ProjectsDirectory, name), positionsOnly);
                 return data;
             }
             return null;
@@ -149,10 +149,10 @@ namespace VoyagerApp.Projects
             return parser.Parse(json);
         }
 
-        static void Load(ProjectSaveData data, string path)
+        static void Load(ProjectSaveData data, string path, bool positionsOnly)
         {
             LoadEffects(ref data, path);
-            LoadLamps(data.lamps);
+            LoadLamps(data.lamps, positionsOnly);
             LoadItems(data.items);
             LoadCamera(data.camera);
         }
@@ -168,6 +168,7 @@ namespace VoyagerApp.Projects
                 if (effectData is Video videoData)
                 {
                     var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoData.name);
+
                     if (existingPreset == null)
                     {
                         string vidPath = Path.Combine(path, VIDEOS, videoData.file);
@@ -178,12 +179,27 @@ namespace VoyagerApp.Projects
                             vid.file = videoData.file;
                             vid.fps = videoData.fps;
                             vid.id = videoData.id;
+                            existingPreset = vid;
                         }
                     }
+
+                    if (existingPreset != null)
+                    {
+                        existingPreset.lift = videoData.lift;
+                        existingPreset.contrast = videoData.contrast;
+                        existingPreset.saturation = videoData.saturation;
+                        existingPreset.blur = videoData.blur;
+                    }
                 }
-                else if(effectData is VideoPreset videoPresetData)
+                else if (effectData is VideoPreset videoPresetData)
                 {
                     var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoPresetData.name);
+
+                    existingPreset.lift = videoPresetData.lift;
+                    existingPreset.contrast = videoPresetData.contrast;
+                    existingPreset.saturation = videoPresetData.saturation;
+                    existingPreset.blur = videoPresetData.blur;
+
                     for (int i = 0; i < data.lamps.Length; i++)
                     {
                         if (data.lamps[i].effect == videoPresetData.id)
@@ -193,7 +209,7 @@ namespace VoyagerApp.Projects
             }
         }
 
-        static void LoadLamps(Lamp[] lamps)
+        static void LoadLamps(Lamp[] lamps, bool positionsOnly)
         {
             foreach (var lampData in lamps)
             {
@@ -222,18 +238,24 @@ namespace VoyagerApp.Projects
                     {
                         serial = lampData.serial,
                         length = lampData.length,
-                        address = IPAddress.Parse(lampData.address),
-                        itshe = itsh,
-                        mapping = mapping
+                        address = IPAddress.Parse(lampData.address)
                     };
 
+                    if (!positionsOnly)
+                    {
+                        lamp.itshe = itsh;
+                        lamp.mapping = mapping;
+                    }
 
                     LampManager.instance.AddLamp(lamp);
                 }
                 else
                 {
-                    lamp.itshe = itsh;
-                    lamp.mapping = mapping;
+                    if (!positionsOnly)
+                    {
+                        lamp.itshe = itsh;
+                        lamp.mapping = mapping;
+                    }
                 }
             }
         }
@@ -314,7 +336,8 @@ namespace VoyagerApp.Projects
                     throw new Exception("Something went wrong while saving the project");
 
                 byte[] project = File.ReadAllBytes(projPath);
-                byte[][] videoData = new byte[data.effects.Length][];
+                byte[][] videoData = new byte[videoPaths.Length][];
+
                 for (int i = 0; i < videoData.Length; i++)
                     videoData[i] = File.ReadAllBytes(videos[i].path);
 
@@ -382,7 +405,6 @@ namespace VoyagerApp.Projects
             var projectPath = Path.Combine(ProjectDirectory(name), PROJECT_FILE);
             projectJson = JsonConvert.SerializeObject(project, Formatting.Indented);
             File.WriteAllText(projectPath, projectJson);
-
 
             return ProjectDirectory(name);
         }

@@ -27,7 +27,9 @@ namespace VoyagerApp.UI.Menus
             {
                 if (path != "" && path != "Null" && path != null)
                 {
-                    VideoEffectLoader.LoadNewVideoFromPath(path);
+                    Video video = VideoEffectLoader.LoadNewVideoFromPath(path);
+                    video.timestamp = TimeUtils.Epoch;
+                    OrderEffects();
                 }
             });
         }
@@ -56,6 +58,7 @@ namespace VoyagerApp.UI.Menus
 
             EffectManager.onEffectAdded += OnEffectAdded;
             EffectManager.onEffectRemoved += OnEffectRemoved;
+            WorkspaceSelection.instance.onSelectionChanged += OnSelectionChanged;
         }
 
         internal override void OnHide()
@@ -65,6 +68,13 @@ namespace VoyagerApp.UI.Menus
 
             EffectManager.onEffectAdded -= OnEffectAdded;
             EffectManager.onEffectRemoved -= OnEffectRemoved;
+            WorkspaceSelection.instance.onSelectionChanged -= OnSelectionChanged;
+        }
+
+        void OnSelectionChanged()
+        {
+            if (WorkspaceSelection.instance.Selected.Count == 0)
+                GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
         void OnEffectAdded(Effect effect)
@@ -72,7 +82,6 @@ namespace VoyagerApp.UI.Menus
             AddEffectItem(effect);
             OrderEffects();
         }
-
 
         void OnEffectRemoved(Effect effect)
         {
@@ -103,7 +112,7 @@ namespace VoyagerApp.UI.Menus
                 "COPY LAMP POSITIONS?",
                 "Do you want to copy lamp positions from workspace to FX mapping?",
                 new string[] { "YES", "NO", "CANCEL" },
-                new Action[] { 
+                new Action[] {
                     () => SelectFromWorkspaceWithMapping(effect),
                     () => SelectFromWorkspaceWithoutMapping(effect),
                     null
@@ -123,6 +132,7 @@ namespace VoyagerApp.UI.Menus
             SetEffectToLamps(WorkspaceUtils.SelectedLamps, effect);
             ApplicationState.Playmode.value = GlobalPlaymode.Play;
             WorkspaceUtils.EnterToVideoMapping();
+            effect.timestamp = TimeUtils.Epoch;
         }
 
         void SelectFromWorkspaceWithoutMapping(Effect effect)
@@ -130,18 +140,21 @@ namespace VoyagerApp.UI.Menus
             SetEffectToLamps(WorkspaceUtils.SelectedLamps, effect);
             ApplicationState.Playmode.value = GlobalPlaymode.Play;
             WorkspaceUtils.EnterToVideoMapping();
+            effect.timestamp = TimeUtils.Epoch;
         }
 
         void SelectEffectFromMapping(Effect effect)
         {
             SetEffectToLamps(WorkspaceUtils.Lamps, effect);
             ApplicationState.Playmode.value = GlobalPlaymode.Play;
+            effect.timestamp = TimeUtils.Epoch;
         }
 
         void OrderEffects()
         {
             var order = items
-                .OrderByDescending(i => i.effect.name == "white")
+                .OrderByDescending(i => i.effect.timestamp)
+                .ThenByDescending(i => i.effect.name == "white")
                 .ThenByDescending(i => i.effect is SpoutStream || i.effect is SyphonStream)
                 .ThenByDescending(i => LampManager.instance.LampsWithEffect(i.effect).Count)
                 .ToList();

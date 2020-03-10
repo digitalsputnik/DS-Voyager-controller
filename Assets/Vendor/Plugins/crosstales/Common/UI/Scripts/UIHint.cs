@@ -3,62 +3,94 @@ using UnityEngine;
 
 namespace Crosstales.UI
 {
-    /// <summary>Controls a UI group (hint).</summary>
-    public class UIHint : MonoBehaviour
-    {
+   /// <summary>Controls a UI group (hint).</summary>
+   public class UIHint : MonoBehaviour
+   {
+      #region Variables
 
-        #region Variables
+      /// <summary>Group to fade.</summary>
+      [Tooltip("Group to fade.")] public CanvasGroup Group;
 
-        /// <summary>Group to fade.</summary>
-        [Tooltip("Group to fade.")]
-        public CanvasGroup Group;
+      /// <summary>Delay in seconds before fading (default: 2).</summary>
+      [Tooltip("Delay in seconds before fading (default: 2).")] public float Delay = 2f;
 
-        /// <summary>Delay in seconds before fading (default: 2).</summary>
-        [Tooltip("Delay in seconds before fading (default: 2).")]
-        public float Delay = 2f;
+      /// <summary>Fade time in seconds (default: 2).</summary>
+      [Tooltip("Fade time in seconds (default: 2).")] public float FadeTime = 2f;
 
-        /// <summary>Fade time in seconds (default: 2).</summary>
-        [Tooltip("Fade time in seconds (default: 2).")]
-        public float FadeTime = 2f;
+      /// <summary>Disable UI element after the fade (default: true).</summary>
+      [Tooltip("Disable UI element after the fade (default: true).")] public bool Disable = true;
 
-        /// <summary>Destroy UI element after the fade (default: true).</summary>
-        [Tooltip("Destroy UI element after the fade (default: true).")]
-        public bool DestroyWhenFinished = true;
+      /// <summary>Fade at Start (default: true).</summary>
+      [Tooltip("Fade at Start (default: true).")] public bool FadeAtStart = true;
 
-        #endregion
+      #endregion
 
 
-        #region MonoBehaviour methods
+      #region MonoBehaviour methods
 
-        public void Start()
-        {
-            StartCoroutine(fadeTo(0f, Delay, FadeTime, DestroyWhenFinished));
-        }
+      public void Start()
+      {
+         if (FadeAtStart)
+            FadeDown();
+      }
 
-        #endregion
+      #endregion
 
 
-        #region Private methods
+      #region Public methods
 
-        private IEnumerator fadeTo(float aValue, float delay, float aTime, bool destroy)
-        {
-            yield return new WaitForSeconds(delay);
+      public void FadeUp()
+      {
+         StartCoroutine(lerpAlphaUp(0f, 1f, FadeTime, Delay, Group));
+      }
 
-            float alpha = Group.alpha;
+      public void FadeDown()
+      {
+         StartCoroutine(lerpAlphaDown(1f, 0f, FadeTime, Delay, Group));
+      }
 
-            for (float t = 0f; t < 1f; t += Time.deltaTime / aTime)
-            {
-                //Debug.Log(Group.alpha + " - " + t);
+      #endregion
 
-                Group.alpha = Mathf.Lerp(alpha, aValue, t);
-                yield return null;
-            }
 
-            if (destroy)
-                Destroy(gameObject, .5f);
-        }
+      #region Private methods
 
-        #endregion
-    }
+      private IEnumerator lerpAlphaDown(float startAlphaValue, float endAlphaValue, float time, float delay, Component gameObjectToFade)
+      {
+         gameObjectToFade.gameObject.SetActive(true);
+
+         Group.alpha = Mathf.Clamp01(startAlphaValue);
+         endAlphaValue = Mathf.Clamp01(endAlphaValue);
+
+         yield return new WaitForSeconds(delay);
+
+         while (Group.alpha >= endAlphaValue + 0.01f)
+         {
+            Group.alpha -= (1f - endAlphaValue) / time * Time.deltaTime;
+            yield return null;
+         }
+
+         gameObjectToFade.gameObject.SetActive(!Disable);
+      }
+
+      private IEnumerator lerpAlphaUp(float startAlphaValue, float endAlphaValue, float time, float delay, Component gameObjectToFade)
+      {
+         gameObjectToFade.gameObject.SetActive(true);
+
+         Group.alpha = Mathf.Clamp01(startAlphaValue);
+         endAlphaValue = Mathf.Clamp01(endAlphaValue);
+
+         yield return new WaitForSeconds(delay);
+
+         while (Group.alpha <= endAlphaValue - 0.01f)
+         {
+            Group.alpha += endAlphaValue / time * Time.deltaTime;
+            yield return null;
+         }
+
+         gameObjectToFade.gameObject.SetActive(!Disable);
+      }
+
+      #endregion
+   }
 }
-// © 2018 crosstales LLC (https://www.crosstales.com)
+// © 2018-2020 crosstales LLC (https://www.crosstales.com)

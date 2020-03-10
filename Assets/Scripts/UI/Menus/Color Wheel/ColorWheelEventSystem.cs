@@ -56,7 +56,7 @@ namespace VoyagerApp.UI.Menus
                 SetupSnappingPoints();
                 float marginX = rect.rect.width / previousRectDimensions.x;
                 float marginY = rect.rect.height / previousRectDimensions.y;
-                cursor.localPosition = new Vector2(cursor.localPosition.x * marginX, cursor.localPosition.y * marginY); 
+                cursor.localPosition = new Vector2(cursor.localPosition.x * marginX, cursor.localPosition.y * marginY);
                 previousRectDimensions = new Vector2(rect.rect.width, rect.rect.height);
             }
         }

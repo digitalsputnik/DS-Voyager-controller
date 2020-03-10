@@ -23,6 +23,7 @@ namespace VoyagerApp.UI.Menus
             LampManager.instance.onLampAdded += OnLampAdded;
             WorkspaceManager.instance.onItemRemoved += ItemRemovedFromWorkspace;
             WorkspaceManager.instance.onItemAdded += ItemAddedToWorkspace;
+            ApplicationState.OnNewProject += NewProject;
 
             addAllLampsBtn.gameObject.SetActive(false);
             AddLampsToList();
@@ -35,11 +36,21 @@ namespace VoyagerApp.UI.Menus
             LampManager.instance.onLampAdded -= OnLampAdded;
             WorkspaceManager.instance.onItemRemoved -= ItemRemovedFromWorkspace;
             WorkspaceManager.instance.onItemAdded -= ItemAddedToWorkspace;
+            ApplicationState.OnNewProject -= NewProject;
 
             foreach (var lamp in new List<AddLampItem>(items))
                 RemoveLampItem(lamp);
 
             StopCoroutine(AddLampsAgain());
+        }
+
+        void NewProject()
+        {
+            foreach (var item in items.ToArray())
+            {
+                items.Remove(item);
+                Destroy(item);
+            }
         }
 
         IEnumerator AddLampsAgain()
@@ -72,7 +83,7 @@ namespace VoyagerApp.UI.Menus
             var lamps = WorkspaceUtils.Lamps;
             foreach (var lamp in LampManager.instance.Lamps)
             {
-                if (!lamps.Any(l => l.serial == lamp.serial) && lamp.connected)
+                if (!items.Any(i => i.lamp.serial == lamp.serial) && !lamps.Any(l => l.serial == lamp.serial) && lamp.connected)
                     OnLampAdded(lamp);
             }
             CheckForAddAllLampsButton();

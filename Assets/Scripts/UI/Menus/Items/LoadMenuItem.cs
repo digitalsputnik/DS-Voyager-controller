@@ -13,6 +13,7 @@ namespace VoyagerApp.UI.Menus
     public class LoadMenuItem : MonoBehaviour
     {
         public Button button;
+        public string fileName => Path.GetFileName(path);
 
         [SerializeField] Text nameText  = null;
         [SerializeField] Text lampsText = null;
@@ -48,11 +49,11 @@ namespace VoyagerApp.UI.Menus
                 if (data == null)
                     throw new Exception("Error on loading");
 
-                int lamps = data.items.Where(i => i.type == "voyager_lamp").Count();
+                int lamps = data.items.Where(i => i != null && i.type == "voyager_lamp").Count();
 
                 MainThread.Dispach(() =>
                 {
-                    nameText.text = Path.GetFileName(path);
+                    nameText.text = fileName;
                     lampsText.text = $"LAMPS: {lamps}";
                     GetComponent<Button>().interactable = true;
                 });
@@ -77,6 +78,11 @@ namespace VoyagerApp.UI.Menus
 
         public void Delete()
         {
+            Delete(null);
+        }
+
+        public void Delete(Action onDeleted = null)
+        {
             DialogBox.Show(
                 "ARE YOU SURE?",
                 "Are you sure you want to delete this project?",
@@ -86,7 +92,8 @@ namespace VoyagerApp.UI.Menus
                     {
                         Directory.Delete(path, true);
                         GetComponentInParent<LoadMenu>().RemoveItem(this);
-                    } 
+                        onDeleted?.Invoke();
+                    }
                 }
             );
         }

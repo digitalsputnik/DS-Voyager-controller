@@ -11,7 +11,7 @@ namespace VoyagerApp.Projects
 {
     public static class ProjectFactory
     {
-        public const string VERSION = "2.2";
+        public const string VERSION = "2.2.2";
 
         public static ProjectSaveData GetCurrentSaveData()
         {
@@ -30,7 +30,11 @@ namespace VoyagerApp.Projects
                         {
                             id = effect.id,
                             name = effect.name,
-                            type = "video_preset"
+                            type = "video_preset",
+                            lift = effect.lift,
+                            contrast = effect.contrast,
+                            saturation = effect.saturation,
+                            blur = effect.blur
                         };
 
                         effects[i] = videoData;
@@ -44,7 +48,11 @@ namespace VoyagerApp.Projects
                             type = "video",
                             file = video.file,
                             frames = video.frames,
-                            fps = video.fps
+                            fps = video.fps,
+                            lift = effect.lift,
+                            contrast = effect.contrast,
+                            saturation = effect.saturation,
+                            blur = effect.blur
                         };
 
                         effects[i] = videoData;
@@ -140,6 +148,7 @@ namespace VoyagerApp.Projects
             return new ProjectSaveData
             {
                 version = VERSION,
+                appVersion = Application.version,
                 effects = effects,
                 lamps = lamps,
                 items = items.ToArray(),
@@ -215,16 +224,15 @@ namespace VoyagerApp.Projects
 
             switch (version)
             {
+                case "2.2.2":
+                    return new ProjectParser2_2_2(); // HOT FIX VERSION
                 case "2.2":
                     return new ProjectParser2_2();
                 case "2.1":
                     return new ProjectParser2_1();
-                case "2.0.95":
-                case "2.0.96":
+                default:
                     return new ProjectParser2_0();
             }
-
-            return null;
         }
     }
 }

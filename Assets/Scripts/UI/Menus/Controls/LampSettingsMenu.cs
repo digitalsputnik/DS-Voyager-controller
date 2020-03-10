@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Utilities;
@@ -8,6 +11,8 @@ namespace VoyagerApp.UI.Menus
 {
     public class LampSettingsMenu : Menu
     {
+        public static bool isFromUpdatePrompt = false;
+
         [SerializeField] Text selectDeselectBtnText     = null;
         [SerializeField] GameObject infoTextObj         = null;
         [SerializeField] GameObject networkSettingsBtn  = null;
@@ -15,11 +20,12 @@ namespace VoyagerApp.UI.Menus
         [Space(3)]
         [SerializeField] Text overallUpdateInfoText = null;
         [SerializeField] Text updateText            = null;
+        [SerializeField] UpdateDialog updateDialog  = null;
 
         int updateLampCount;
-        int updateFinished;
         bool updatesFinished = true;
-        public static bool isFromUpdatePrompt = false;
+        List<VoyagerLamp> lampsUpdating = null;
+        VoyagerUpdateUtility utility = null;
 
         public void SelectDeselect()
         {
@@ -78,14 +84,39 @@ namespace VoyagerApp.UI.Menus
 
         public void UpdateSelected()
         {
-            var lamps = WorkspaceUtils.SelectedVoyagerLamps;
-            VoyagerUpdateUtility utility = new VoyagerUpdateUtility();
-            lamps.ForEach(lamp => utility.UpdateLamp(lamp,
-                                                     OnUpdateFinished,
-                                                     OnUpdateMessage));
+            lampsUpdating = null;
 
-            updateLampCount = lamps.Count;
-            updateFinished = 0;
+            var lampsNotUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery < 30.0 && !l.charging).ToList();
+            var lampsUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery >= 30.0 || l.charging).ToList();
+
+            utility = new VoyagerUpdateUtility();
+
+            if (lampsUpdateable.Count > 0)
+            {
+                lampsUpdateable.ForEach(lamp => utility.UpdateLamp(lamp,
+                                                         OnUpdateFinished,
+                                                         OnUpdateMessage));
+                lampsUpdating = lampsUpdateable;
+                UpdateUpdateUI();
+            }
+
+            if (lampsNotUpdateable.Count > 0)
+            {
+                if (lampsUpdateable.Count == 0)
+                    lampsUpdating = new List<VoyagerLamp>();
+
+                updateDialog.Show(lampsNotUpdateable,(lamp) =>
+                {
+                    utility.UpdateLamp(lamp, OnUpdateFinished, OnUpdateMessage);
+                    lampsUpdating.Add(lamp);
+                    UpdateUpdateUI();
+                });
+            }
+        }
+
+        void UpdateUpdateUI()
+        {
+            updateLampCount = lampsUpdating.Count;
             UpdateInfoText();
             updatesFinished = false;
 
@@ -93,9 +124,8 @@ namespace VoyagerApp.UI.Menus
             updateText.gameObject.SetActive(true);
         }
 
-        private void OnUpdateFinished(VoyagerUpdateResponse response)
+        void OnUpdateFinished(VoyagerUpdateResponse response)
         {
-            updateFinished++;
             UpdateInfoText();
         }
 
@@ -107,7 +137,7 @@ namespace VoyagerApp.UI.Menus
                 {
                     overallUpdateInfoText.text =
                         $"UPDATED:" +
-                        $"{updateFinished}/" +
+                        $"{utility.finishedCount}/" +
                         $"{updateLampCount}";
                 }
             });

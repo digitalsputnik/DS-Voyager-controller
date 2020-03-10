@@ -13,7 +13,8 @@ namespace VoyagerApp.Effects
 {
     public class StreamMapper : MonoBehaviour
     {
-        [SerializeField] MeshRenderer meshRenderer;
+        [SerializeField] MeshRenderer meshRenderer = null;
+        [SerializeField] Material renderMaterial = null;
         SyphonClient syphon = null;
         SpoutReceiver spout = null;
         RenderTexture render;
@@ -35,7 +36,7 @@ namespace VoyagerApp.Effects
             render = new RenderTexture(1280, 720, 24);
             syphon.targetTexture = render;
             spout.targetTexture = render;
-            meshRenderer.material.SetTexture("_BaseMap", render);
+            meshRenderer.material.SetTexture("_MainTex", render);
 
             SelectionMove.onSelectionMoveEnded += SelectionMoved;
         }
@@ -65,6 +66,11 @@ namespace VoyagerApp.Effects
                 StopAllCoroutines();
                 StartCoroutine(RevokeSpoutStream());
             }
+        }
+
+        public void UpdateEffectSettings()
+        {
+            ShaderUtils.ApplyEffectToMaterial(meshRenderer.sharedMaterial, effect);
         }
 
         float prevRenderTime = 0;
@@ -105,8 +111,17 @@ namespace VoyagerApp.Effects
 
         void RenderFrame()
         {
-            Texture2D texture = TextureUtils.RenderTextureToTexture2D(render);
+            var material = renderMaterial;
+            var temp = RenderTexture.GetTemporary(render.descriptor);
+
+            ShaderUtils.ApplyEffectToMaterial(material, effect);
+
+            Graphics.Blit(render, temp, material);
+
+            var texture = TextureUtils.RenderTextureToTexture2D(temp);
             StoreFrameBuffer(texture);
+
+            RenderTexture.ReleaseTemporary(temp);
             Destroy(texture);
         }
 

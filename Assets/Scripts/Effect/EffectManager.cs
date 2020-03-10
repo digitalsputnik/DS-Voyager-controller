@@ -25,6 +25,8 @@ namespace VoyagerApp.Effects
         public static EffectHandler onEffectAdded;
         public static EffectHandler onEffectRemoved;
 
+        public event EffectHandler onEffectModified;
+
         [SerializeField] internal string[] videoPresets = null;
 
         List<Effect> effects = new List<Effect>();
@@ -87,6 +89,11 @@ namespace VoyagerApp.Effects
                 if (!effect.preset)
                     instance.effects.Remove(effect);
             }
+        }
+
+        public void InvokeEffectChange(Effect effect)
+        {
+            onEffectModified?.Invoke(effect);
         }
 
         void LoadPresets()

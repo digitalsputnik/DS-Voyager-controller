@@ -204,7 +204,7 @@ namespace VoyagerApp.UI.Menus
                         $"play correctly",
                         new string[] { "DELETE", "OK" },
                         new Action[] { item.Remove, null }
-                        );
+                    );
                 }
             }
         }

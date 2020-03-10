@@ -12,16 +12,17 @@ namespace VoyagerApp.UI
 {
     public class EffectMappingController : MonoBehaviour
     {
-        [SerializeField] EffectMappingMenu menu = null;
-        [SerializeField] VideoMapper videoMapper = null;
-        [SerializeField] StreamMapper streamMapper = null;
+        [SerializeField] EffectMappingMenu _mappingMenu = null;
+        [SerializeField] EffectSettingsMenu _settingsMenu = null;
+        [SerializeField] VideoMapper _videoMapper = null;
+        [SerializeField] StreamMapper _streamMapper = null;
 
-        [SerializeField] Button[] playPauseStopBtns = null;
+        [SerializeField] Button[] _playPauseStopBtns = new Button[0];
 
         void Start() => LoadCorrectEffect();
 
-        Lamp keepLamp;
-        Effect prevEffect;
+        Lamp _keepLamp;
+        Effect _prevEffect;
 
         void LoadCorrectEffect()
         {
@@ -33,7 +34,7 @@ namespace VoyagerApp.UI
             SetEffect(effect);
             PositionLampsBasedOnEffect(effect, lamps);
 
-            keepLamp = lamps[0];
+            _keepLamp = lamps[0];
             LampManager.instance.onLampEffectChanged += LampEffectChanged;
         }
 
@@ -44,7 +45,7 @@ namespace VoyagerApp.UI
 
         void LampEffectChanged(Lamp lamp)
         {
-            if (lamp == keepLamp && lamp.effect != prevEffect)
+            if (lamp == _keepLamp && lamp.effect != _prevEffect)
             {
                 var lamps = WorkspaceUtils.Lamps;
                 WorkspaceManager.instance.Clear();
@@ -57,34 +58,35 @@ namespace VoyagerApp.UI
         {
             if (effect is Video video)
             {
-                videoMapper.SetVideo(video);
-                foreach (var button in playPauseStopBtns)
-                    button.interactable = true;
+                _videoMapper.SetVideo(video);
+                foreach (var button in _playPauseStopBtns)
+                    if (button != null) button.interactable = true;
             }
             else
             {
-                streamMapper.SetEffect(effect);
-                foreach (var button in playPauseStopBtns)
-                    button.interactable = false;
+                _streamMapper.SetEffect(effect);
+                foreach (var button in _playPauseStopBtns)
+                    if (button != null) button.interactable = false;
             }
 
-            menu.SetEffect(effect);
-            prevEffect = effect;
+            _mappingMenu.SetEffect(effect);
+            _settingsMenu.SetEffect(effect);
+            _prevEffect = effect;
         }
 
         void PositionLampsBasedOnEffect(Effect effect, List<Lamp> lamps)
         {
             if (effect is Video)
             {
-                PositionLamps(lamps, videoMapper.transform);
-                videoMapper.gameObject.SetActive(true);
-                streamMapper.gameObject.SetActive(false);
+                PositionLamps(lamps, _videoMapper.transform);
+                _videoMapper.gameObject.SetActive(true);
+                _streamMapper.gameObject.SetActive(false);
             }
             if (effect is SyphonStream || effect is SpoutStream)
             {
-                PositionLamps(lamps, streamMapper.transform);
-                videoMapper.gameObject.SetActive(false);
-                streamMapper.gameObject.SetActive(true);
+                PositionLamps(lamps, _streamMapper.transform);
+                _videoMapper.gameObject.SetActive(false);
+                _streamMapper.gameObject.SetActive(true);
             }
         }
 

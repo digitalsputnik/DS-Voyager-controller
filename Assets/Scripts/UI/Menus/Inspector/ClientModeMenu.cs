@@ -5,8 +5,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
-using VoyagerApp.Utilities;
 using VoyagerApp.UI.Overlays;
+using VoyagerApp.Utilities;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -192,7 +192,7 @@ namespace VoyagerApp.UI.Menus
 
                 GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
             }
-            else if(ssid.Length == 0)
+            else if (ssid.Length == 0)
             {
                 DialogBox.Show(
                     "INVALID SSID",
@@ -203,10 +203,10 @@ namespace VoyagerApp.UI.Menus
             }
             else
             {
-                DialogBox.Show( 
-                    "INVALID PASSWORD", 
+                DialogBox.Show(
+                    "INVALID PASSWORD",
                     "Password length must be at least 8 characters or empty for public WiFi networks.",
-                    new string[] { "OK" }, 
+                    new string[] { "OK" },
                     new Action[] { null }
                 );
             }

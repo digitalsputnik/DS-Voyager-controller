@@ -10,7 +10,6 @@ using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.Lamps.Voyager
 {
-    [Serializable]
     public class VoyagerLamp : Lamp
     {
         public int length;

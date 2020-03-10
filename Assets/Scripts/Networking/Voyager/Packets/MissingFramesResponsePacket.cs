@@ -6,6 +6,8 @@ namespace VoyagerApp.Networking.Voyager
     {
         [JsonProperty("indices")]
         public long[] indices;
+        [JsonProperty("video_uid")]
+        public double videoTimestamp;
 
         public MissingFramesResponsePacket() : base(OpCode.MissingFramesResponse) { }
 

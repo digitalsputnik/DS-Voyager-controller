@@ -1,231 +1,423 @@
-﻿using System;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Crosstales.FB
 {
-    /// <summary>Native file browser various actions like open file, open folder and save file.</summary>
-    public class FileBrowser
-    {
-        #region Variables
+   /// <summary>Native file browser various actions like open file, open folder and save file.</summary>
+   public static class FileBrowser //: MonoBehaviour
+   {
+      #region Variables
 
-        private static Wrapper.IFileBrowser platformWrapper;
+      private static readonly Wrapper.IFileBrowser platformWrapper;
 
-        #endregion
+      #endregion
 
 
-        #region Constructor
+      #region Constructor
 
-        static FileBrowser()
-        {
+      static FileBrowser()
+      {
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+         if (Util.Helper.isEditor && !Util.Config.NATIVE_WINDOWS)
+#else
             if (Util.Helper.isEditor)
-            {
-                //Debug.Log("FileBrowserEditor");
-#if UNITY_EDITOR
-                platformWrapper = new Wrapper.FileBrowserEditor();
 #endif
-            }
-            else if (Util.Helper.isMacOSPlatform)
-            {
-                //Debug.Log("FileBrowserMac");
-#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
+         {
+#if UNITY_EDITOR
+            platformWrapper = new Wrapper.FileBrowserEditor();
+#endif
+         }
+         else if (Util.Helper.isMacOSPlatform)
+         {
+#if UNITY_STANDALONE_OSX
                 platformWrapper = new Wrapper.FileBrowserMac();
 #endif
-            }
-            else if (Util.Helper.isWindowsPlatform)
-            {
-                //Debug.Log("FileBrowserWindows");
-#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
-                platformWrapper = new Wrapper.FileBrowserWindows();
+         }
+         else if (Util.Helper.isWindowsPlatform || Util.Helper.isWindowsEditor)
+         {
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+            platformWrapper = new Wrapper.FileBrowserWindows();
 #endif
-            }
-            else
+         }
+         else if (Util.Helper.isLinuxPlatform)
+         {
+#if UNITY_STANDALONE_LINUX
+                platformWrapper = new Wrapper.FileBrowserLinux();
+#endif
+         }
+         else if (Util.Helper.isWSAPlatform)
+         {
+#if UNITY_WSA && !UNITY_EDITOR
+                platformWrapper = new Wrapper.FileBrowserWSA();
+#endif
+         }
+         else
+         {
+            platformWrapper = new Wrapper.FileBrowserGeneric();
+         }
+
+         if (Util.Config.DEBUG)
+            Debug.Log(platformWrapper);
+      }
+
+      #endregion
+
+
+      #region Properties
+
+      /// <summary>Indicates if this wrapper can open multiple files.</summary>
+      /// <returns>Wrapper can open multiple files.</returns>
+      public static bool canOpenMultipleFiles
+      {
+         get { return platformWrapper.canOpenMultipleFiles; }
+      }
+
+      /// <summary>Indicates if this wrapper can open multiple folders.</summary>
+      /// <returns>Wrapper can open multiple folders.</returns>
+      public static bool canOpenMultipleFolders
+      {
+         get { return platformWrapper.canOpenMultipleFolders; }
+      }
+
+      /// <summary>Indicates if this wrapper is supporting the current platform.</summary>
+      /// <returns>True if this wrapper supports current platform.</returns>
+      public static bool isPlatformSupported
+      {
+         get { return platformWrapper.isPlatformSupported; }
+      }
+
+      #endregion
+
+
+      #region Public methods
+
+      /// <summary>Open native file browser for a single file.</summary>
+      /// <param name="extension">Allowed extension, e.g. "png" (optional)</param>
+      /// <returns>Returns a string of the chosen file. Empty string when cancelled</returns>
+      public static string OpenSingleFile(string extension = "*")
+      {
+         return OpenSingleFile(Util.Constants.TEXT_OPEN_FILE, string.Empty, getFilter(extension));
+      }
+
+      /// <summary>
+      /// Open native file browser for a single file.
+      /// </summary>
+      /// <param name="title">Dialog title</param>
+      /// <param name="directory">Root directory</param>
+      /// <param name="extensions">Allowed extensions, e.g. "png" (optional)</param>
+      /// <returns>Returns a string of the chosen file. Empty string when cancelled</returns>
+      public static string OpenSingleFile(string title, string directory, params string[] extensions)
+      {
+         return OpenSingleFile(title, directory, getFilter(extensions));
+      }
+
+      /// <summary>
+      /// Open native file browser for a single file.
+      /// </summary>
+      /// <param name="title">Dialog title</param>
+      /// <param name="directory">Root directory</param>
+      /// <param name="extensions">List of extension filters (optional)</param>
+      /// <returns>Returns a string of the chosen file. Empty string when cancelled</returns>
+      public static string OpenSingleFile(string title, string directory, params ExtensionFilter[] extensions)
+      {
+         return platformWrapper.OpenSingleFile(title, directory, extensions);
+      }
+
+      /// <summary>Open native file browser for multiple files.</summary>
+      /// <param name="extension">Allowed extension, e.g. "png" (optional)</param>
+      /// <returns>Returns a string of the chosen file. Empty string when cancelled</returns>
+      public static string[] OpenFiles(string extension = "*")
+      {
+         return OpenFiles(Util.Constants.TEXT_OPEN_FILES, string.Empty, getFilter(extension));
+      }
+
+      /// <summary>
+      /// Open native file browser for multiple files.
+      /// </summary>
+      /// <param name="title">Dialog title</param>
+      /// <param name="directory">Root directory</param>
+      /// <param name="extensions">Allowed extensions, e.g. "png" (optional)</param>
+      /// <returns>Returns array of chosen files. Zero length array when cancelled</returns>
+      public static string[] OpenFiles(string title, string directory, params string[] extensions)
+      {
+         return OpenFiles(title, directory, getFilter(extensions));
+      }
+
+      /// <summary>
+      /// Open native file browser for multiple files.
+      /// </summary>
+      /// <param name="title">Dialog title</param>
+      /// <param name="directory">Root directory</param>
+      /// <param name="extensions">List of extension filters (optional)</param>
+      /// <returns>Returns array of chosen files. Zero length array when cancelled</returns>
+      public static string[] OpenFiles(string title, string directory, params ExtensionFilter[] extensions)
+      {
+         return platformWrapper.OpenFiles(title, directory, extensions, true);
+      }
+
+      /// <summary>Open native folder browser for a single folder.</summary>
+      /// <returns>Returns a string of the chosen folder. Empty string when cancelled</returns>
+      public static string OpenSingleFolder()
+      {
+         return OpenSingleFolder(Util.Constants.TEXT_OPEN_FOLDER);
+      }
+
+      /// <summary>
+      /// Open native folder browser for a single folder.
+      /// NOTE: Title is not supported under Windows and UWP (WSA)!
+      /// </summary>
+      /// <param name="title">Dialog title</param>
+      /// <param name="directory">Root directory (default: current, optional)</param>
+      /// <returns>Returns a string of the chosen folder. Empty string when cancelled</returns>
+      public static string OpenSingleFolder(string title, string directory = "")
+      {
+         return platformWrapper.OpenSingleFolder(title, directory);
+      }
+
+      /// <summary>
+      /// Open native folder browser for multiple folders.
+      /// NOTE: Title and multiple folder selection are not supported under Windows and UWP (WSA)!
+      /// </summary>
+      /// <returns>Returns array of chosen folders. Zero length array when cancelled</returns>
+      public static string[] OpenFolders()
+      {
+         return OpenFolders(Util.Constants.TEXT_OPEN_FOLDERS);
+      }
+
+      /// <summary>
+      /// Open native folder browser for multiple folders.
+      /// NOTE: Title and multiple folder selection are not supported under Windows and UWP (WSA)!
+      /// </summary>
+      /// <param name="title">Dialog title</param>
+      /// <param name="directory">Root directory (default: current, optional)</param>
+      /// <returns>Returns array of chosen folders. Zero length array when cancelled</returns>
+      public static string[] OpenFolders(string title, string directory = "")
+      {
+         return platformWrapper.OpenFolders(title, directory, true);
+      }
+
+      /// <summary>Open native save file browser</summary>
+      /// <param name="defaultName">Default file name (optional)</param>
+      /// <param name="extension">File extensions, e.g. "png" (optional)</param>
+      /// <returns>Returns chosen file. Empty string when cancelled</returns>
+      public static string SaveFile(string defaultName = "", string extension = "*")
+      {
+         return SaveFile(Util.Constants.TEXT_SAVE_FILE, string.Empty, defaultName, getFilter(extension));
+      }
+
+      /// <summary>Open native save file browser</summary>
+      /// <param name="title">Dialog title</param>
+      /// <param name="directory">Root directory</param>
+      /// <param name="defaultName">Default file name</param>
+      /// <param name="extensions">File extensions, e.g. "png" (optional)</param>
+      /// <returns>Returns chosen file. Empty string when cancelled</returns>
+      public static string SaveFile(string title, string directory, string defaultName, params string[] extensions)
+      {
+         return SaveFile(title, directory, defaultName, getFilter(extensions));
+      }
+
+      /// <summary>Open native save file browser</summary>
+      /// <param name="title">Dialog title</param>
+      /// <param name="directory">Root directory</param>
+      /// <param name="defaultName">Default file name</param>
+      /// <param name="extensions">List of extension filters (optional)</param>
+      /// <returns>Returns chosen file. Empty string when cancelled</returns>
+      public static string SaveFile(string title, string directory, string defaultName, params ExtensionFilter[] extensions)
+      {
+         return platformWrapper.SaveFile(title, directory, string.IsNullOrEmpty(defaultName) ? Util.Constants.TEXT_SAVE_FILE_NAME : defaultName, extensions);
+      }
+
+      /// <summary>Open native file browser for multiple files.</summary>
+      /// <param name="cb">Callback for the async operation.</param>
+      /// <param name="multiselect">Allow multiple file selection (default: true, optional)</param>
+      /// <param name="extensions">Allowed extensions, e.g. "png" (optional)</param>
+      /// <returns>Returns array of chosen files. Zero length array when cancelled</returns>
+      public static void OpenFilesAsync(System.Action<string[]> cb, bool multiselect = true, params string[] extensions)
+      {
+         OpenFilesAsync(cb, multiselect ? Util.Constants.TEXT_OPEN_FILES : Util.Constants.TEXT_OPEN_FILE, string.Empty, multiselect, getFilter(extensions));
+      }
+
+      /// <summary>Open native file browser for multiple files.</summary>
+      /// <param name="cb">Callback for the async operation.</param>
+      /// <param name="title">Dialog title</param>
+      /// <param name="directory">Root directory</param>
+      /// <param name="multiselect">Allow multiple file selection (default: true, optional)</param>
+      /// <param name="extensions">Allowed extensions, e.g. "png" (optional)</param>
+      /// <returns>Returns array of chosen files. Zero length array when cancelled</returns>
+      public static void OpenFilesAsync(System.Action<string[]> cb, string title, string directory, bool multiselect = true, params string[] extensions)
+      {
+         OpenFilesAsync(cb, title, directory, multiselect, getFilter(extensions));
+      }
+
+      /// <summary>Open native file browser for multiple files (async).</summary>
+      /// <param name="cb">Callback for the async operation.</param>
+      /// <param name="title">Dialog title</param>
+      /// <param name="directory">Root directory</param>
+      /// <param name="multiselect">Allow multiple file selection (default: true, optional)</param>
+      /// <param name="extensions">List of extension filters (optional)</param>
+      /// <returns>Returns array of chosen files. Zero length array when cancelled</returns>
+      public static void OpenFilesAsync(System.Action<string[]> cb, string title, string directory, bool multiselect = true, params ExtensionFilter[] extensions)
+      {
+         platformWrapper.OpenFilesAsync(title, directory, extensions, multiselect, cb);
+      }
+
+      /// <summary>Open native folder browser for multiple folders (async).</summary>
+      /// <param name="cb">Callback for the async operation.</param>
+      /// <param name="multiselect">Allow multiple folder selection (default: true, optional)</param>
+      /// <returns>Returns array of chosen folders. Zero length array when cancelled</returns>
+      public static void OpenFoldersAsync(System.Action<string[]> cb, bool multiselect = true)
+      {
+         OpenFoldersAsync(cb, Util.Constants.TEXT_OPEN_FOLDERS, string.Empty, multiselect);
+      }
+
+      /// <summary>Open native folder browser for multiple folders (async).</summary>
+      /// <param name="cb">Callback for the async operation.</param>
+      /// <param name="title">Dialog title</param>
+      /// <param name="directory">Root directory (default: current, optional)</param>
+      /// <param name="multiselect">Allow multiple folder selection (default: true, optional)</param>
+      /// <returns>Returns array of chosen folders. Zero length array when cancelled</returns>
+      public static void OpenFoldersAsync(System.Action<string[]> cb, string title, string directory = "", bool multiselect = true)
+      {
+         platformWrapper.OpenFoldersAsync(title, directory, multiselect, cb);
+      }
+
+      /// <summary>Open native save file browser</summary>
+      /// <param name="cb">Callback for the async operation.</param>
+      /// <param name="defaultName">Default file name (optional)</param>
+      /// <param name="extension">File extension, e.g. "png" (optional)</param>
+      /// <returns>Returns chosen file. Empty string when cancelled</returns>
+      public static void SaveFileAsync(System.Action<string> cb, string defaultName = "", string extension = "*")
+      {
+         SaveFileAsync(cb, Util.Constants.TEXT_SAVE_FILE, string.Empty, defaultName, getFilter(extension));
+      }
+
+      /// <summary>Open native save file browser</summary>
+      /// <param name="cb">Callback for the async operation.</param>
+      /// <param name="title">Dialog title</param>
+      /// <param name="directory">Root directory</param>
+      /// <param name="defaultName">Default file name</param>
+      /// <param name="extensions">File extensions, e.g. "png" (optional)</param>
+      /// <returns>Returns chosen file. Empty string when cancelled</returns>
+      public static void SaveFileAsync(System.Action<string> cb, string title, string directory, string defaultName, params string[] extensions)
+      {
+         SaveFileAsync(cb, title, directory, defaultName, getFilter(extensions));
+      }
+
+      /// <summary>Open native save file browser (async).</summary>
+      /// <param name="cb">Callback for the async operation.</param>
+      /// <param name="title">Dialog title</param>
+      /// <param name="directory">Root directory</param>
+      /// <param name="defaultName">Default file name</param>
+      /// <param name="extensions">List of extension filters (optional)</param>
+      /// <returns>Returns chosen file. Empty string when cancelled</returns>
+      public static void SaveFileAsync(System.Action<string> cb, string title, string directory, string defaultName, params ExtensionFilter[] extensions)
+      {
+         platformWrapper.SaveFileAsync(title, directory, string.IsNullOrEmpty(defaultName) ? Util.Constants.TEXT_SAVE_FILE_NAME : defaultName, extensions, cb);
+      }
+
+      /// <summary>
+      /// Find files inside a path.
+      /// </summary>
+      /// <param name="path">Path to find the files</param>
+      /// <param name="isRecursive">Recursive search (default: false, optional)</param>
+      /// <param name="extensions">Extensions for the file search, e.g. "png" (optional)</param>
+      /// <returns>Returns array of the found files inside the path (alphabetically ordered). Zero length array when an error occured.</returns>
+      public static string[] GetFiles(string path, bool isRecursive = false, params string[] extensions)
+      {
+         return Util.Helper.GetFiles(path, isRecursive, extensions);
+      }
+
+      /// <summary>
+      /// Find files inside a path.
+      /// </summary>
+      /// <param name="path">Path to find the files</param>
+      /// <param name="isRecursive">Recursive search</param>
+      /// <param name="extensions">List of extension filters for the search (optional)</param>
+      /// <returns>Returns array of the found files inside the path. Zero length array when an error occured.</returns>
+      public static string[] GetFiles(string path, bool isRecursive, params ExtensionFilter[] extensions)
+      {
+         return GetFiles(path, isRecursive, extensions.SelectMany(extensionFilter => extensionFilter.Extensions).ToArray());
+      }
+
+      /// <summary>
+      /// Find directories inside.
+      /// </summary>
+      /// <param name="path">Path to find the directories</param>
+      /// <param name="isRecursive">Recursive search (default: false, optional)</param>
+      /// <returns>Returns array of the found directories inside the path. Zero length array when an error occured.</returns>
+      public static string[] GetDirectories(string path, bool isRecursive = false)
+      {
+         return Util.Helper.GetDirectories(path, isRecursive);
+      }
+
+      #endregion
+
+
+      #region Private methods
+
+      private static ExtensionFilter[] getFilter(params string[] extensions)
+      {
+         if (extensions != null && extensions.Length > 0)
+         {
+            ExtensionFilter[] filter = new ExtensionFilter[extensions.Length];
+
+            for (int ii = 0; ii < extensions.Length; ii++)
             {
-                //Debug.Log("FileBrowserGeneric");
-                platformWrapper = new Wrapper.FileBrowserGeneric();
+               var extension = string.IsNullOrEmpty(extensions[ii]) ? "*" : extensions[ii];
+
+               if (extension.Equals("*"))
+               {
+                  filter[ii] = new ExtensionFilter(Util.Constants.TEXT_ALL_FILES, Util.Helper.isMacOSEditor ? string.Empty : extension);
+               }
+               else
+               {
+                  filter[ii] = new ExtensionFilter(extension, extension);
+               }
             }
 
-            //Debug.Log(platformWrapper);
-        }
+            if (Util.Config.DEBUG)
+               Debug.Log("getFilter: " + filter.CTDump());
 
-        #endregion
+            return filter;
+         }
 
+         return null;
+      }
 
-        #region Public methods
+      #endregion
+   }
 
-        /// <summary>Open native file browser for a single file.</summary>
-        /// <param name="title">Dialog title</param>
-        /// <param name="directory">Root directory</param>
-        /// <param name="extension">Allowed extension</param>
-        /// <returns>Returns a string of the chosen file. Empty string when cancelled</returns>
-        public static string OpenSingleFile(string title, string directory, string extension)
-        {
-            return OpenSingleFile(title, directory, getFilter(extension));
-        }
+   /// <summary>Filter for extensions.</summary>
+   public struct ExtensionFilter
+   {
+      public string Name;
+      public string[] Extensions;
 
-        /// <summary>Open native file browser for a single file.</summary>
-        /// <param name="title">Dialog title</param>
-        /// <param name="directory">Root directory</param>
-        /// <param name="extensions">List of extension filters. Filter Example: new ExtensionFilter("Image Files", "jpg", "png")</param>
-        /// <returns>Returns a string of the chosen file. Empty string when cancelled</returns>
-        public static string OpenSingleFile(string title, string directory, ExtensionFilter[] extensions)
-        {
-            return platformWrapper.OpenSingleFile(title, directory, extensions);
-        }
+      public ExtensionFilter(string filterName, params string[] filterExtensions)
+      {
+         Name = filterName;
+         Extensions = filterExtensions;
+      }
 
-        /// <summary>Open native file browser for multiple files.</summary>
-        /// <param name="title">Dialog title</param>
-        /// <param name="directory">Root directory</param>
-        /// <param name="extension">Allowed extension</param>
-        /// <param name="multiselect">Allow multiple file selection</param>
-        /// <returns>Returns array of chosen files. Zero length array when cancelled</returns>
-        public static string[] OpenFiles(string title, string directory, string extension, bool multiselect)
-        {
-            return OpenFiles(title, directory, getFilter(extension), multiselect);
-        }
+      public override string ToString()
+      {
+         System.Text.StringBuilder result = new System.Text.StringBuilder();
 
-        /// <summary>Open native file browser for multiple files.</summary>
-        /// <param name="title">Dialog title</param>
-        /// <param name="directory">Root directory</param>
-        /// <param name="extensions">List of extension filters. Filter Example: new ExtensionFilter("Image Files", "jpg", "png")</param>
-        /// <param name="multiselect">Allow multiple file selection</param>
-        /// <returns>Returns array of chosen files. Zero length array when cancelled</returns>
-        public static string[] OpenFiles(string title, string directory, ExtensionFilter[] extensions, bool multiselect)
-        {
-            return platformWrapper.OpenFiles(title, directory, extensions, multiselect);
-        }
+         result.Append(GetType().Name);
+         result.Append(Util.Constants.TEXT_TOSTRING_START);
 
-        /// <summary>Open native folder browser for a single folder.</summary>
-        /// <param name="title">Dialog title</param>
-        /// <param name="directory">Root directory</param>
-        /// <returns>Returns a string of the chosen folder. Empty string when cancelled</returns>
-        public static string OpenSingleFolder(string title, string directory = "")
-        {
-            return platformWrapper.OpenSingleFolder(title, directory);
-        }
+         result.Append("Name='");
+         result.Append(Name);
+         result.Append(Util.Constants.TEXT_TOSTRING_DELIMITER);
 
-        /// <summary>
-        /// Open native folder browser for multiple folders.
-        /// NOTE: Multiple folder selection isnt't supported on Windows!
-        /// </summary>
-        /// <param name="title">Dialog title</param>
-        /// <param name="directory">Root directory</param>
-        /// <param name="multiselect">Allow multiple folder selection</param>
-        /// <returns>Returns array of chosen folders. Zero length array when cancelled</returns>
-        public static string[] OpenFolders(string title, string directory = "", bool multiselect = true)
-        {
-            return platformWrapper.OpenFolders(title, directory, multiselect);
-        }
+         result.Append("Extensions='");
+         result.Append(Extensions.CTDump());
+         result.Append(Util.Constants.TEXT_TOSTRING_DELIMITER_END);
 
-        /// <summary>Open native save file browser</summary>
-        /// <param name="title">Dialog title</param>
-        /// <param name="directory">Root directory</param>
-        /// <param name="defaultName">Default file name</param>
-        /// <param name="extension">File extension</param>
-        /// <returns>Returns chosen file. Empty string when cancelled</returns>
-        public static string SaveFile(string title, string directory, string defaultName, string extension)
-        {
-            return SaveFile(title, directory, defaultName, getFilter(extension));
-        }
+         result.Append(Util.Constants.TEXT_TOSTRING_END);
 
-        /// <summary>Open native save file browser</summary>
-        /// <param name="title">Dialog title</param>
-        /// <param name="directory">Root directory</param>
-        /// <param name="defaultName">Default file name</param>
-        /// <param name="extensions">List of extension filters. Filter Example: new ExtensionFilter("Image Files", "jpg", "png")</param>
-        /// <returns>Returns chosen file. Empty string when cancelled</returns>
-        public static string SaveFile(string title, string directory, string defaultName, ExtensionFilter[] extensions)
-        {
-            return platformWrapper.SaveFile(title, directory, defaultName, extensions);
-        }
-
-        /// <summary>Open native file browser for multiple files.</summary>
-        /// <param name="title">Dialog title</param>
-        /// <param name="directory">Root directory</param>
-        /// <param name="extension">Allowed extension</param>
-        /// <param name="multiselect">Allow multiple file selection</param>
-        /// <param name="cb">Callback for the async operation.</param>
-        /// <returns>Returns array of chosen files. Zero length array when cancelled</returns>
-        public static void OpenFilesAsync(string title, string directory, string extension, bool multiselect, Action<string[]> cb)
-        {
-            OpenFilesAsync(title, directory, getFilter(extension), multiselect, cb);
-        }
-
-        /// <summary>Open native file browser for multiple files (async).</summary>
-        /// <param name="title">Dialog title</param>
-        /// <param name="directory">Root directory</param>
-        /// <param name="extensions">List of extension filters. Filter Example: new ExtensionFilter("Image Files", "jpg", "png")</param>
-        /// <param name="multiselect">Allow multiple file selection</param>
-        /// <param name="cb">Callback for the async operation.</param>
-        /// <returns>Returns array of chosen files. Zero length array when cancelled</returns>
-        public static void OpenFilesAsync(string title, string directory, ExtensionFilter[] extensions, bool multiselect, Action<string[]> cb)
-        {
-            //System.Threading.Thread worker = new System.Threading.Thread(() => platformWrapper.OpenFilesAsync(title, directory, extensions, multiselect, cb));
-            //worker.Start();
-            platformWrapper.OpenFilesAsync(title, directory, extensions, multiselect, cb);
-        }
-
-        /// <summary>Open native folder browser for multiple folders (async).</summary>
-        /// <param name="title">Dialog title</param>
-        /// <param name="directory">Root directory</param>
-        /// <param name="multiselect"></param>
-        /// <param name="cb">Callback for the async operation.</param>
-        /// <returns>Returns array of chosen folders. Zero length array when cancelled</returns>
-        public static void OpenFoldersAsync(string title, string directory, bool multiselect, Action<string[]> cb)
-        {
-            //System.Threading.Thread worker = new System.Threading.Thread(() => platformWrapper.OpenFoldersAsync(title, directory, multiselect, cb));
-            //worker.Start();
-            platformWrapper.OpenFoldersAsync(title, directory, multiselect, cb);
-        }
-
-        /// <summary>Open native save file browser</summary>
-        /// <param name="title">Dialog title</param>
-        /// <param name="directory">Root directory</param>
-        /// <param name="defaultName">Default file name</param>
-        /// <param name="extension">File extension</param>
-        /// <param name="cb">Callback for the async operation.</param>
-        /// <returns>Returns chosen file. Empty string when cancelled</returns>
-        public static void SaveFileAsync(string title, string directory, string defaultName, string extension, Action<string> cb)
-        {
-            SaveFileAsync(title, directory, defaultName, getFilter(extension), cb);
-        }
-
-        /// <summary>Open native save file browser (async).</summary>
-        /// <param name="title">Dialog title</param>
-        /// <param name="directory">Root directory</param>
-        /// <param name="defaultName">Default file name</param>
-        /// <param name="extensions">List of extension filters. Filter Example: new ExtensionFilter("Image Files", "jpg", "png")</param>
-        /// <param name="cb">Callback for the async operation.</param>
-        /// <returns>Returns chosen file. Empty string when cancelled</returns>
-        public static void SaveFileAsync(string title, string directory, string defaultName, ExtensionFilter[] extensions, Action<string> cb)
-        {
-            //System.Threading.Thread worker = new System.Threading.Thread(() => platformWrapper.SaveFileAsync(title, directory, defaultName, extensions, cb));
-            //worker.Start();
-            platformWrapper.SaveFileAsync(title, directory, defaultName, extensions, cb);
-        }
-
-        #endregion
-
-
-        #region Private methods
-
-        private static ExtensionFilter[] getFilter(string extension)
-        {
-            return string.IsNullOrEmpty(extension) ? null : new[] { new ExtensionFilter(string.Empty, extension) };
-        }
-
-        #endregion
-    }
-
-    /// <summary>Filter for extensions.</summary>
-    public struct ExtensionFilter
-    {
-        public string Name;
-        public string[] Extensions;
-
-        public ExtensionFilter(string filterName, params string[] filterExtensions)
-        {
-            Name = filterName;
-            Extensions = filterExtensions;
-        }
-    }
+         return result.ToString();
+      }
+   }
 }
-// © 2017-2018 crosstales LLC (https://www.crosstales.com)
+// © 2017-2020 crosstales LLC (https://www.crosstales.com)

@@ -34,7 +34,7 @@ namespace VoyagerApp.Videos
                 if (rendered >= queue.activeVideo.frames)
                     return new FramesRenderState(queue);
 
-                Texture2D frame = TextureUtils.RenderTextureToTexture2D(VideoRenderer.VideoTexture);
+                Texture2D frame = VideoRenderer.VideoTexture;
 
                 foreach (var lamp in queue.LampsWithActiveVideo)
                     RenderFrameToLamp(lamp, frame, index);
