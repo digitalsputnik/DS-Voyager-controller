@@ -11,7 +11,7 @@ Please fill the template as precisely as possible to ensure that it will be take
 If there is a label "for testing" on an issue, the issue should be fixed in the latest version for testing. See "<> Code" and "Releases" for latest pre-release.
 ## Issue lifecycle
 1. Issue is created;
-2. Issue is reviewed by project manager if it will be taken into development, which means issue is assigned a milestone and a developer;
+2. Issue is reviewed by project manager if it will be **taken into development = issue is assigned a milestone and a developer**;
 3. When issue is taken into development, it should be put a label "in development".
 4. When issue is fixed by developer in pre-release version, it should be assigned a stage "in testing".
 5. If tester cannot recreate an issue/confirms that feature request is working -> "fixed" state.
