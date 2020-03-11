@@ -5,7 +5,7 @@ Currently issues have 2 templates:
 * Bug report
 * Feature requests
 
-Please fill the template as precisely as possible to ensure that it will be taken into development.
+Please fill the template as precisely as possible to ensure that it will be taken into development. If you currently don't have all the information but would like to inform the development team, assign a "draft" label to the issue.
 
 ## For testers
 If there is a label "for testing" on an issue, the issue should be fixed in the latest version for testing. See "<> Code" and "Releases" for latest pre-release.
