@@ -1,4 +1,4 @@
-﻿using DigitalSputnik.Bluetooth;
+﻿/*using DigitalSputnik.Bluetooth;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -37,7 +37,7 @@ namespace VoyagerApp.UI.Menus
             lastScan = DateTime.Now;
         }
 
-        public void OnClick()
+        /*public void OnClick()
         {
             if(BluetoothTest.instance.bleItems.Where(l => l.selected).Count() < 5)
             {
@@ -68,4 +68,4 @@ namespace VoyagerApp.UI.Menus
             lastScan = DateTime.Now;
         }
     }
-}
+}*/

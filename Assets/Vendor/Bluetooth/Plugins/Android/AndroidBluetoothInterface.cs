@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,7 +102,7 @@ namespace DigitalSputnik.Bluetooth
 
             _connecting = true;
 
-            var lamp = BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id);
+            var lamp = null;//BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id);
             var onConnectionChanged = new AndroidConnectionChangedCallback();
             onConnectionChanged._callback = PeripheralConnectionStateChanged;
 
@@ -269,4 +269,4 @@ namespace DigitalSputnik.Bluetooth
             }
         }
     }
-}
+}*/

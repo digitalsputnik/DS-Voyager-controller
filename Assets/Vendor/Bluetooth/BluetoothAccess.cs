@@ -3,7 +3,7 @@
 // Copyright: © Digital Sputnik OÜ
 // -----------------------------------------------------------------
 
-using System.Collections.Generic;
+/*using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VoyagerApp.UI.Menus;
@@ -151,7 +151,7 @@ namespace DigitalSputnik.Bluetooth
 
         private BLEItem GetBleItemById(string id)
         {
-            return BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id) as BLEItem;
+            return null; //BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id) as BLEItem;
         }
 
         void InternalDisconnect(string id)
@@ -258,4 +258,4 @@ namespace DigitalSputnik.Bluetooth
             }
         }
     }
-}
+}*/

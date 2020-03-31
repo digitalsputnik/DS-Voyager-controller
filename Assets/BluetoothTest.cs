@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿/*using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik.Bluetooth;
@@ -221,6 +221,6 @@ public class BluetoothTest : MonoBehaviour
     {
         instance.infoText.text = text;
     }
-}
+}*/
 
 

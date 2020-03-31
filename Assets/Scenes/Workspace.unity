@@ -13053,7 +13053,7 @@ GameObject:
   - component: {fileID: 1502510712}
   - component: {fileID: 1502510713}
   - component: {fileID: 1502510714}
-  - component: {fileID: 1502510715}
+  - component: {fileID: 1502510716}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -13116,7 +13116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8135bb15d8af45a5aae7b4a934959fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1502510715
+--- !u!114 &1502510716
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13125,19 +13125,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1502510710}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 431810be76ab140c89a778e5c190bd26, type: 3}
+  m_Script: {fileID: 11500000, guid: ef3ca41b5ef0ec84f9db1b56c0b8ba6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bleItems: []
-  inspector: {fileID: 3184923043728705258}
-  infoText: {fileID: 183962900}
-  bleContainer: {fileID: 56656821}
-  prefab: {fileID: 8685777877286954254, guid: 97e1419c80d2a9842a6212dc3d853b3c, type: 3}
-  clientMenu: {fileID: 1348052981}
-  scanning: 0
-  connecting: 0
-  settingClient: 0
-  reconnectNearest: 0
 --- !u!1001 &1523417870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13302,7 +13292,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000061035156
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8440753726352283367, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -18852,10 +18842,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8bb32caf952c478a949de19b7165029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvasGroup: {fileID: 0}
   wifiContainer: {fileID: 1665760183}
   bleContainer: {fileID: 56656821}
   prefab: {fileID: -6405898369269562798, guid: d29b1fa6ad7644da297bc16e81bbcaed, type: 3}
   addAllLampsBtn: {fileID: 960163899}
+  items: []
 --- !u!225 &2072530007
 CanvasGroup:
   m_ObjectHideFlags: 0

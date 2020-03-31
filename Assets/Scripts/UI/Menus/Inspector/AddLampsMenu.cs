@@ -40,13 +40,13 @@ namespace VoyagerApp.UI.Menus
             WorkspaceManager.instance.onItemAdded -= ItemAddedToWorkspace;
             ApplicationState.OnNewProject -= NewProject;
 
-            if (!BluetoothTest.instance.settingClient)
+            /*if (!BluetoothTest.instance.settingClient)
             {
                 BluetoothTest.instance.StopScanningBleLamps();
                 BluetoothTest.instance.DisconnectAndRemoveAllLamps();
             }
 
-            BluetoothTest.UpdateInfoText("Select lamps you wish to connect");
+            BluetoothTest.UpdateInfoText("Select lamps you wish to connect");*/
 
             foreach (var lamp in new List<AddLampItem>(items))
                 RemoveLampItem(lamp);
@@ -117,7 +117,7 @@ namespace VoyagerApp.UI.Menus
 
         public void AddAllBleLamps()
         {
-            BluetoothTest.instance.OnAllSelectedLampsConnected();
+            //BluetoothTest.instance.OnAllSelectedLampsConnected();
             addAllLampsBtn.onClick.RemoveAllListeners();
         }
 
@@ -128,8 +128,8 @@ namespace VoyagerApp.UI.Menus
             addAllLampsBtn.gameObject.GetComponentInChildren<Text>().text = "CONNECT LAMPS";
             addAllLampsBtn.onClick.RemoveAllListeners();
             addAllLampsBtn.onClick.AddListener(AddAllBleLamps);
-            if(!BluetoothTest.instance.scanning)
-                BluetoothTest.instance.StartScanningBleLamps();
+            /*if(!BluetoothTest.instance.scanning)
+                BluetoothTest.instance.StartScanningBleLamps();*/
         }
 
         public void OpenWifiList()
@@ -171,8 +171,8 @@ namespace VoyagerApp.UI.Menus
         {
             if(wifiContainer.parent.gameObject.activeSelf)
                 addAllLampsBtn.gameObject.SetActive(items.Count > 1);
-            if (bleContainer.parent.gameObject.activeSelf)
-                addAllLampsBtn.gameObject.SetActive(BluetoothTest.instance.bleItems.Where(l => l.selected == true).Count() > 0);
+            /*if (bleContainer.parent.gameObject.activeSelf)
+                addAllLampsBtn.gameObject.SetActive(BluetoothTest.instance.bleItems.Where(l => l.selected == true).Count() > 0);*/
         }
     }
 }

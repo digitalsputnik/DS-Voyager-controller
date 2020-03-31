@@ -50,8 +50,8 @@ namespace VoyagerApp.UI.Menus
             //ssidField.onValueChanged.RemoveListener(SsidFieldTextChanged);
             setBtn.onClick.RemoveAllListeners();
             setBtn.onClick.AddListener(Set);
-            BluetoothTest.instance.StopScanningBleLamps();
-            BluetoothTest.instance.DisconnectAndRemoveAllLamps();
+            //BluetoothTest.instance.StopScanningBleLamps();
+            //BluetoothTest.instance.DisconnectAndRemoveAllLamps();
             lampToSsids.Clear();
         }
 
@@ -90,7 +90,7 @@ namespace VoyagerApp.UI.Menus
             ssidList.index = 0;
             ssidList.interactable = false;
             ssidRefreshBtn.interactable = false;
-            if(BluetoothTest.instance.settingClient != true)
+            /*if(BluetoothTest.instance.settingClient != true)
             {
                 lampToSsids.Clear();
                 StartCoroutine(IEnumGetSsidListFromLamps());
@@ -99,7 +99,7 @@ namespace VoyagerApp.UI.Menus
             {
                 foundSsidList.Clear();
                 StartCoroutine(AndroidSsidTest());
-            }
+            }*/
             StartCoroutine(IEnumLoadingAnimation());
         }
 
@@ -197,7 +197,7 @@ namespace VoyagerApp.UI.Menus
 
         #endregion
 
-        #region AndroidBleLampsTest
+       /* #region AndroidBleLampsTest
 
         public void SetupBluetooth()
         {
@@ -288,7 +288,7 @@ namespace VoyagerApp.UI.Menus
             BluetoothTest.instance.inspector.ShowMenu(null);
         }
 
-        #endregion
+        #endregion*/
 
         public void Set()
         {

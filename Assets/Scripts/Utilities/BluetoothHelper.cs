@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections;
 using System.Linq;
 using DigitalSputnik.Bluetooth;
@@ -77,7 +77,7 @@ public static class BluetoothHelper
 
     private static BLEItem GetBleItemByID(string id)
     {
-        return BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id) as BLEItem;
+        return null;//BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id) as BLEItem;
     }
 }
 
@@ -112,4 +112,4 @@ public class BluetoothConnection
     {
         OnData?.Invoke(access.ID, data);
     }
-}
+}*/
