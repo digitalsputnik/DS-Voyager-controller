@@ -8,59 +8,16 @@ namespace DigitalSputnik.Bluetooth
         public string name;
         public int rssi;
 
-        public object device;
-        public object gatt;
-        public List<Characteristic> characteristics = new List<Characteristic>();
-        public List<Service> services = new List<Service>();
+        public List<string> characteristics = new List<string>();
+        public List<string> services = new List<string>();
 
-        public BluetoothDevice(string _id, string _name, int _rssi, object _device)
+        public bool connected;
+
+        public BluetoothDevice(string _id, string _name, int _rssi)
         {
             id = _id;
             name = _name;
             rssi = _rssi;
-            device = _device;
-        }
-    }
-
-    public class Characteristic
-    {
-        public string characteristicUuid;
-        public object characteristic;
-
-        public Characteristic(string _characteristicUuid, object _characteristic)
-        {
-            characteristicUuid = _characteristicUuid;
-            characteristic = _characteristic;
-        }
-
-        public string GetCharacteristicUuid()
-        {
-            return characteristicUuid;
-        }
-        public object GetCharacteristic()
-        {
-            return characteristic;
-        }
-    }
-
-    public class Service
-    {
-        public string serviceUuid;
-        public object service;
-
-        public Service(string _serviceUuid, object _service)
-        {
-            serviceUuid = _serviceUuid;
-            service = _service;
-        }
-
-        public string GetServiceUuid()
-        {
-            return serviceUuid;
-        }
-        public object GetService()
-        {
-            return service;
         }
     }
 }

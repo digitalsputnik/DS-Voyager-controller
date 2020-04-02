@@ -11,14 +11,14 @@ public class BluetoothAndroidTest : MonoBehaviour
 {
     IBluetoothInterfaceTest _interface;
 
-    List<BluetoothDevice> devices = new List<BluetoothDevice>();
-
     public static string UART_SERVICE_UID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
     public static string UART_RX_CHARACTERISTIC_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
     public static string UART_TX_CHARACTERISTIC_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
     public string ssid = "";
     public string password = "";
+
+    List<BluetoothDevice> devices = new List<BluetoothDevice>(); 
 
     void Start()
     {
@@ -47,41 +47,41 @@ public class BluetoothAndroidTest : MonoBehaviour
         _interface.StopScanning();
     }
 
-    void Connect(object device)
+    void Connect(string id)
     {
         Debug.Log($"BluetoothLog: Connecting to lamp");
 
         SetCharacteristicsUpdateCallback();
 
-        _interface.Connect(device, OnConnect, OnFail, OnDisconnect);
+        _interface.Connect(id, OnConnect, OnFail, OnDisconnect);
     }
 
-    void Disconnect(object gatt)
+    void Disconnect(string id)
     {
         Debug.Log($"BluetoothLog: Disconnecting from lamp");
 
-        _interface.Disconnect(gatt);
+        _interface.Disconnect(id);
     }
 
-    void GetServices(object gatt)
+    void GetServices(string id)
     {
         Debug.Log($"BluetoothLog: Getting Services");
 
-        _interface.GetServices(gatt, OnService);
+        _interface.GetServices(id, OnService);
     }
 
-    void GetCharacteristic(string id, object service, string uuid)
+    void GetCharacteristic(string id, string service, string uuid)
     {
         Debug.Log($"BluetoothLog: Getting Characteristics for ID: {id} UUID: {uuid}");
 
         _interface.GetCharacteristic(id, service, uuid, OnCharacteristic);
     }
 
-    void SubscribeToCharacteristic(object gatt, object characteristic)
+    void SubscribeToCharacteristic(string id, string characteristic)
     {
         Debug.Log($"BluetoothLog: Subscribing to characteristic");
 
-        _interface.SubscribeToCharacteristicUpdate(gatt, characteristic);
+        _interface.SubscribeToCharacteristicUpdate(id, characteristic);
     }
 
     void SetCharacteristicsUpdateCallback()
@@ -91,68 +91,75 @@ public class BluetoothAndroidTest : MonoBehaviour
         _interface.SetCharacteristicsUpdateCallback(OnMessage);
     }
 
-    void WriteToCharacteristic(object gatt, object characteristic, byte[] data)
+    void WriteToCharacteristic(string id, string characteristic, byte[] data)
     {
         Debug.Log($"BluetoothLog: Writing to characteristic");
 
-        _interface.WriteToCharacteristic(gatt, characteristic, data);
+        _interface.WriteToCharacteristic(id, characteristic, data);
     }
 
-    void OnScanned(string id, string name, int rssi, object device)
+    void OnScanned(string id, string name, int rssi)
     {
         Debug.Log($"BluetoothLog: Lamp Scanned - ID: {id} Name: {name} Rssi {rssi}");
 
+        BluetoothDevice device = new BluetoothDevice(id, name, rssi);
+        devices.Add(device);
+
         StopScanningLamps();
-        BluetoothDevice newDevice = new BluetoothDevice(id, name, rssi, device);
-        devices.Add(newDevice);
-        Connect(device);
+        Connect(id);
     }
 
-    void OnConnect(string id, object gatt)
+    void OnConnect(string id)
     {
         Debug.Log($"BluetoothLog: Lamp Connected - ID: {id}");
 
-        BluetoothDevice currentDevice = devices.FirstOrDefault(l => l.id == id);
-        currentDevice.gatt = gatt;
-        GetServices(gatt);
+        var currentDevice = devices.FirstOrDefault(l => l.id == id);
+        currentDevice.connected = true;
+
+        GetServices(id);
     }
 
     void OnDisconnect(string id, string error)
     {
         Debug.Log($"BluetoothLog: Lamp Disconnected - ID: {id}");
+
+        var currentDevice = devices.FirstOrDefault(l => l.id == id);
+        currentDevice.connected = false;
     }
 
     void OnFail(string id, string error)
     {
-        Debug.Log($"BluetoothLog: Lamp Disconnected - ID: {id}");
+        Debug.Log($"BluetoothLog: Lamp Connection Failed - ID: {id}");
+
+        var currentDevice = devices.FirstOrDefault(l => l.id == id);
+        currentDevice.connected = false;
     }
 
-    void OnService(string id, string serviceUuid, object service)
+    void OnService(string id, string service)
     {
-        Debug.Log($"BluetoothLog: Service Found - ID: {id} Service: {serviceUuid}");
+        Debug.Log($"BluetoothLog: Service Found - ID: {id} Service: {service}");
 
-        BluetoothDevice currentDevice = devices.FirstOrDefault(l => l.id == id);
-        Service newService = new Service(serviceUuid, service);
-        currentDevice.services.Add(newService);
+        var currentDevice = devices.FirstOrDefault(l => l.id == id);
+        currentDevice.services.Add(service);
+
         GetCharacteristic(id, service, UART_TX_CHARACTERISTIC_UUID);
         GetCharacteristic(id, service, UART_RX_CHARACTERISTIC_UUID);
     }
 
-    void OnCharacteristic(string id, string characteristicUuid, object characteristic)
+    void OnCharacteristic(string id, string characteristic)
     {
-        Debug.Log($"BluetoothLog: Characteristic Found - ID: {id} characteristic: {characteristicUuid}");
+        Debug.Log($"BluetoothLog: Characteristic Found - ID: {id} characteristic: {characteristic}");
 
-        BluetoothDevice currentDevice = devices.FirstOrDefault(l => l.id == id);
-        Characteristic newCharacteristic = new Characteristic(characteristicUuid, characteristic); 
-        currentDevice.characteristics.Add(newCharacteristic);
+        var currentDevice = devices.FirstOrDefault(l => l.id == id);
+        currentDevice.characteristics.Add(characteristic);
 
-        if (characteristicUuid == UART_TX_CHARACTERISTIC_UUID)
-            SubscribeToCharacteristic(currentDevice.gatt, characteristic);
+        if (characteristic == UART_TX_CHARACTERISTIC_UUID)
+            SubscribeToCharacteristic(id, characteristic);
 
         StartCoroutine(write());
     }
 
-    void OnMessage(string id, object characteristic, int status, string message)
+    void OnMessage(string id, int status, string message)
     {
         Debug.Log($"BluetoothLog: New Message - ID: {id} Message: {message}");
     }
@@ -170,13 +177,13 @@ public class BluetoothAndroidTest : MonoBehaviour
 
         foreach(var characteristic in devices[0].characteristics)
         {
-            if(characteristic.characteristicUuid == UART_RX_CHARACTERISTIC_UUID)
+            if(characteristic == UART_RX_CHARACTERISTIC_UUID)
             {
-                Debug.Log($"BluetoothLog: Writing to Characteristic - Characteristic: {characteristic.GetCharacteristicUuid()}");
+                Debug.Log($"BluetoothLog: Writing to Characteristic - Characteristic: {characteristic}");
 
                 //WriteToCharacteristic(devices[0].gatt, characteristic.GetCharacteristicObject(), data); missing active mode from request?
 
-                WriteToCharacteristic(devices[0].gatt, characteristic.GetCharacteristic(), new PollRequestPacket().Serialize());
+                WriteToCharacteristic(devices[0].id, characteristic, new PollRequestPacket().Serialize());
             }
         }
     }

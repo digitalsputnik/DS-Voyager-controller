@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Android;
 
@@ -21,6 +22,8 @@ namespace DigitalSputnik.Bluetooth
         InternalServicesHandlerTest onService;
         InternalCharacteristicHandlerTest onCharacteristics;
         InternalCharacteristicUpdateHandlerTest onMessage;
+
+        List<AndroidBluetoothDevice> devices = new List<AndroidBluetoothDevice>();
 
         public void Initialize()
         {
@@ -82,8 +85,10 @@ namespace DigitalSputnik.Bluetooth
             //Not implemented
         }
 
-        public void Connect(object device, InternalPeripheralConnectHandlerTest onConnect, InternalPeripheralConnectFailHandlerTest onFail, InternalPeripheralDisconnectHandlerTest onDisconnect)
+        public void Connect(string id, InternalPeripheralConnectHandlerTest onConnect, InternalPeripheralConnectFailHandlerTest onFail, InternalPeripheralDisconnectHandlerTest onDisconnect)
         {
+            var currentDevice = devices.FirstOrDefault(l => l.id == id);
+
             this.onConnect = onConnect;
             this.onDisconnect = onDisconnect;
             this.onFail = onFail;
@@ -91,30 +96,37 @@ namespace DigitalSputnik.Bluetooth
             var onConnectionChangedCallback = new AndroidConnectionChangedCallbackTest();
             onConnectionChangedCallback._callback = OnConnectionStateChanged;
 
-            object[] parameters = { device, onConnectionChangedCallback };
+            object[] parameters = { currentDevice.device, onConnectionChangedCallback };
 
             _pluginObject.Call("connect", parameters);
         }
 
-        public void Disconnect(object gatt)
+        public void Disconnect(string id)
         {
-            _pluginObject.Call("disconnect", gatt);
+            var currentDevice = devices.FirstOrDefault(l => l.id == id);
+
+            _pluginObject.Call("disconnect", currentDevice.gatt);
         }
 
-        public void GetServices(object gatt, InternalServicesHandlerTest callback)
+        public void GetServices(string id, InternalServicesHandlerTest callback)
         {
+            var currentDevice = devices.FirstOrDefault(l => l.id == id);
+
             var onServices = new AndroidServiceCallbackTest();
             onServices._callback = OnService;
 
             onService = callback;
 
-            object[] parameters = { gatt, onServices };
+            object[] parameters = { currentDevice.gatt, onServices };
 
             _pluginObject.Call("getServices", parameters);
         }
 
-        public void GetCharacteristic(string id, object service, string uuid, InternalCharacteristicHandlerTest callback)
+        public void GetCharacteristic(string id, string service, string uuid, InternalCharacteristicHandlerTest callback)
         {
+            var currentDevice = devices.FirstOrDefault(l => l.id == id);
+            var currentService = currentDevice.services[service];
+
             var getCharacteristicsCallback = new AndroidCharacteristicCallbackTest();
             getCharacteristicsCallback._callback = OnCharacteristic;
 
@@ -122,7 +134,7 @@ namespace DigitalSputnik.Bluetooth
 
             onCharacteristics = callback;
 
-            object[] parameters = { id, service, uuid };
+            object[] parameters = { id, currentService, uuid };
 
             _pluginObject.Call("getCharacteristic", parameters);
         }
@@ -139,50 +151,71 @@ namespace DigitalSputnik.Bluetooth
             _pluginObject.Call("setOnMessageCallback", parameters);
         }
 
-        public void SubscribeToCharacteristicUpdate(object gatt, object characteristic)
+        public void SubscribeToCharacteristicUpdate(string id, string characteristic)
         {
-            object[] parameters = { gatt, characteristic };
+            var currentDevice = devices.FirstOrDefault(l => l.id == id);
+            var currentCharacteristic = currentDevice.characteristics[characteristic];
+
+            object[] parameters = { currentDevice.gatt, currentCharacteristic };
 
             _pluginObject.Call("subscribeToCharacteristicUpdate", parameters);
         }
 
-        public void WriteToCharacteristic(object gatt, object characteristic, byte[] data)
+        public void WriteToCharacteristic(string id, string characteristic, byte[] data)
         {
-            object[] parameters = { gatt, characteristic, data };
+            var currentDevice = devices.FirstOrDefault(l => l.id == id);
+            var currentCharacteristic = currentDevice.characteristics[characteristic];
+
+            object[] parameters = { currentDevice.gatt, currentCharacteristic, data };
 
             _pluginObject.Call("writeToCharacteristic", parameters);
         }
 
         void OnPeripheralScanned(string name, string mac, int rssi, AndroidJavaObject device)
         {
-            onScanned?.Invoke(mac, name, rssi, device);
+            var newDevice = new AndroidBluetoothDevice(mac, name, rssi, device);
+            devices.Add(newDevice);
+
+            onScanned?.Invoke(mac, name, rssi);
         }
 
         void OnConnectionStateChanged(string id, AndroidJavaObject gatt, int status, int newState)
         {
             if(newState == 2)
             {
-                onConnect?.Invoke(id, gatt);
+                var currentDevice = devices.FirstOrDefault(l => l.id == id);
+                currentDevice.gatt = gatt;
+
+                onConnect?.Invoke(id);
             }
             else
             {
+                var currentDevice = devices.FirstOrDefault(l => l.id == id);
+                currentDevice.gatt = null;
+
                 onDisconnect?.Invoke(id, "Disconnected");
             }
         }
 
-        void OnService(string id, string serviceUuid, object service)
+        void OnService(string id, string serviceUuid, AndroidJavaObject service)
         {
-            onService?.Invoke(id, serviceUuid, service);
+            var currentDevice = devices.FirstOrDefault(l => l.id == id);
+            currentDevice.services.Add(serviceUuid, service);
+
+            onService?.Invoke(id, serviceUuid);
         }
 
-        void OnCharacteristic(string id, string characteristicUuid, object characteristic)
+        void OnCharacteristic(string id, string characteristicUuid, AndroidJavaObject characteristic)
         {
-            onCharacteristics?.Invoke(id, characteristicUuid, characteristic);
+            var currentDevice = devices.FirstOrDefault(l => l.id == id);
+            currentDevice.characteristics.Add(characteristicUuid, characteristic);
+
+            onCharacteristics?.Invoke(id, characteristicUuid);
         }
 
-        void OnBluetoothMessage(string id, object characteristic, int status, string message)
+        void OnBluetoothMessage(string id, int status, string message)
         {
-            onMessage?.Invoke(id, characteristic, status, message);
+            onMessage?.Invoke(id, status, message);
         }
 
         public class AndroidScanResultCallbackTest : AndroidJavaProxy
@@ -211,22 +244,22 @@ namespace DigitalSputnik.Bluetooth
 
         public class AndroidServiceCallbackTest : AndroidJavaProxy
         {
-            internal Action<string, string, object> _callback;
+            internal Action<string, string, AndroidJavaObject> _callback;
 
             public AndroidServiceCallbackTest() : base("com.example.bleplugin.BLEServicesCallback") { }
 
-            public void call(string id, string serviceUuid, object service)
+            public void call(string id, string serviceUuid, AndroidJavaObject service)
             {
                 _callback?.Invoke(id, serviceUuid, service);
             }
         }
         public class AndroidCharacteristicCallbackTest : AndroidJavaProxy
         {
-            internal Action<string, string, object> _callback;
+            internal Action<string, string, AndroidJavaObject> _callback;
 
             public AndroidCharacteristicCallbackTest() : base("com.example.bleplugin.BLEGetCharacteristicsCallback") { }
 
-            public void call(string id, string characteristicUuid, object characteristic)
+            public void call(string id, string characteristicUuid, AndroidJavaObject characteristic)
             {
                 _callback?.Invoke(id, characteristicUuid, characteristic);
             }
@@ -234,13 +267,33 @@ namespace DigitalSputnik.Bluetooth
 
         public class AndroidMessageCallbackTest : AndroidJavaProxy
         {
-            internal Action<string, object, int, string> _callback;
+            internal Action<string, int, string> _callback;
 
             public AndroidMessageCallbackTest() : base("com.example.bleplugin.BLECharacteristicRead") { }
 
-            public void call(string id, object characteristic, int status, string message)
+            public void call(string id, int status, string message)
             {
-                _callback?.Invoke(id, characteristic, status, message);
+                _callback?.Invoke(id, status, message);
+            }
+        }
+
+        class AndroidBluetoothDevice
+        {
+            public string id;
+            public string name;
+            public int rssi;
+
+            public object device;
+            public object gatt;
+            public Dictionary<string, AndroidJavaObject> characteristics = new Dictionary<string, AndroidJavaObject>();
+            public Dictionary<string, AndroidJavaObject> services = new Dictionary<string, AndroidJavaObject>();
+
+            public AndroidBluetoothDevice(string _id, string _name, int _rssi, object _device)
+            {
+                id = _id;
+                name = _name;
+                rssi = _rssi;
+                device = _device;
             }
         }
     }
