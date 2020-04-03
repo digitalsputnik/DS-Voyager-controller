@@ -1,4 +1,9 @@
-﻿namespace DigitalSputnik.Bluetooth
+﻿
+
+
+
+
+namespace DigitalSputnik.Bluetooth
 {
     internal interface IBluetoothInterfaceTest
     {

@@ -1,4 +1,6 @@
-﻿/*using System;
+﻿#if UNITY_ANDROID && !UNITY_EDITOR
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +16,21 @@ namespace DigitalSputnik.Bluetooth
 
         AndroidJavaObject _pluginObject;
         AndroidBluetoothListener _listener;
-        AndroidJavaObject _connectedDevice;
+        ScannedAndroidDevice _connectedDevice;
 
         InternalPeripheralScanHandler _onPeripheralScanned;
         InternalPeripheralConnectHandler _onConnect;
         InternalPeripheralConnectFailHandler _onConnectFail;
         InternalPeripheralDisconnectHandler _onDisconnect;
+        InternalServicesHandler _onServices;
+        InternalCharacteristicHandler _onCharacteristics;
         InternalCharacteristicUpdateHandler _onCharacteristicUpdate;
 
         bool _scanning;
         bool _connecting;
+        bool _connected;
+
+        List<ScannedAndroidDevice> _scannedDevices = new List<ScannedAndroidDevice>();
 
         public void Initialize()
         {
@@ -46,11 +53,11 @@ namespace DigitalSputnik.Bluetooth
             AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
             AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
 
-            var scanResultsCallback = new AndroidScanResultCallback();
-            scanResultsCallback._callback = OnPeripheralScanned;
+            //var scanResultsCallback = new AndroidScanResultCallback();
+            //scanResultsCallback._callback = OnPeripheralScanned;
+            //_pluginObject.Call("setOnScanResultCallback", scanResultsCallback);
 
-            _pluginObject = new AndroidJavaObject(LIBRARY_NAME + ".BLEScanner", context);
-            _pluginObject.Call("setOnScanResultCallback", scanResultsCallback);
+            _pluginObject = new AndroidJavaObject(LIBRARY_NAME + ".BLEObject", context);
             _listener._plugin = _pluginObject;
         }
 
@@ -61,7 +68,11 @@ namespace DigitalSputnik.Bluetooth
                 if (services == null)
                     services = new string[0];
 
-                _pluginObject.Call("startScanning", services);
+                var scanCallback = new AndroidScanResultCallback(OnPeripheralScanned);
+                var parameters = new object[] { services, scanCallback };
+
+                _scannedDevices.Clear();
+                _pluginObject.Call("startScanning", parameters);
                 _onPeripheralScanned = callback;
                 _scanning = true;
             }
@@ -87,166 +98,304 @@ namespace DigitalSputnik.Bluetooth
             Debug.LogError("BluetoothLog: [Bluetooth Android] DisableBluetooth not yet implemented!");
         }
 
-        public void Connect(string id, InternalPeripheralConnectHandler onConnect, InternalPeripheralConnectFailHandler onFail, InternalPeripheralDisconnectHandler onDisconnect)
+        public void Connect(string mac, InternalPeripheralConnectHandler onConnect, InternalPeripheralConnectFailHandler onFail, InternalPeripheralDisconnectHandler onDisconnect)
         {
-            AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-            AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
+            var device = _scannedDevices.FirstOrDefault(d => d.mac == mac);
 
-            if (_onConnect == null || _onConnectFail == null || _onDisconnect == null)
+            if (device != null)
             {
                 _onConnect = onConnect;
                 _onConnectFail = onFail;
                 _onDisconnect = onDisconnect;
+                _connecting = true;
+
+                var onConnectionChanged = new AndroidConnectionChangedCallback(PeripheralConnectionStateChanged);
+                var parameters = new object[] { device.device, onConnectionChanged };
+
+                _pluginObject.Call("connect", parameters);
+
+                _connectedDevice = device;
+
+                Debug.Log($"BluetoothLog: should connect to {mac}");
             }
-
-            _connecting = true;
-
-            var lamp = null;//BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id);
-            var onConnectionChanged = new AndroidConnectionChangedCallback();
-            onConnectionChanged._callback = PeripheralConnectionStateChanged;
-
-            lamp.androidDevice = _pluginObject.Call<AndroidJavaObject>("getDevice", context, id);
-            lamp.androidDevice.Call("setOnConnectChanged", onConnectionChanged);
-            lamp.androidDevice.Call("startConnecting");
-
-            _connectedDevice = lamp.androidDevice;
-
-            Debug.Log($"BluetoothLog: should connect to {id}");
+            else
+            {
+                Debug.LogError($"BluetoothLog: [Bluetooth Android] Unknown device {mac}");
+            }
         }
 
-        public void Disconnect(string id)
+        public void Disconnect(string mac)
         {
-            foreach(var lamp in BluetoothTest.instance.bleItems)
+            if (_connectedDevice != null)
             {
-                if(lamp.androidDevice != null)
-                {
-                    if (_connecting)
-                        lamp.androidDevice.Call("stopConnecting");
-                    else
-                        lamp.androidDevice.Call("disconnect");
-                }
+                _pluginObject.Call("disconnect", _connectedDevice.gatt);
             }
         }
 
         public void GetServices(InternalServicesHandler callback)
         {
-            Debug.LogError("BluetoothLog: [Bluetooth Android] GetServices not yet implemented!");
+            if (_connectedDevice != null && _connected)
+            {
+                var onServices = new AndroidServiceCallback(OnServices);
+                var parameters = new object[] { _connectedDevice.gatt, onServices };
+
+                _pluginObject.Call("getServices", parameters);
+                _onServices = callback;
+            }
         }
 
         public void GetCharacteristics(string service, InternalCharacteristicHandler callback)
         {
-            Debug.LogError("BluetoothLog: [Bluetooth Android] GetCharacteristics not yet implemented!");
+            if (_connectedDevice != null && _connected)
+            {
+                if (_connectedDevice.services.ContainsKey(service))
+                {
+                    _onCharacteristics = callback;
+
+                    var serviceObject = _connectedDevice.services[service];
+                    var onCharacteristics = new AndroidCharacteristicCallback(OnCharacteristics);
+                    var parameters = new object[] { _connectedDevice.mac, serviceObject, service };
+
+                    _pluginObject.Call("setCharacteristicCallback", onCharacteristics);
+                    _pluginObject.Call("getCharacteristic", parameters);
+                }
+                else
+                {
+                    Debug.LogError($"BluetoothLog: [Bluetooth Android] Unknown service {service}");
+                }
+            }
         }
 
         public void SetCharacteristicsUpdateCallback(InternalCharacteristicUpdateHandler callback)
         {
-            _onCharacteristicUpdate = callback;
+            if (_connectedDevice != null && _connected)
+            {
+                _onCharacteristicUpdate = callback;
+                var onCharacteristicsUpdate = new AndroidCharacteristicUpdateCallback(OnCharacteristicUpdate);
+                _pluginObject.Call("setOnMessageCallback", onCharacteristicsUpdate);
+            }
         }
 
         public void SubscribeToCharacteristicUpdate(string service, string characteristic)
         {
-
+            if (_connectedDevice != null && _connected)
+            {
+                var characObject = _connectedDevice.characteristics[characteristic];
+                var parameters = new object[] { _connectedDevice.gatt, characObject };
+                _pluginObject.Call("subscribeToCharacteristicUpdate", parameters);
+            }
         }
 
         public void WriterToCharacteristic(string service, string characteristic, byte[] data)
         {
-            var sData = Array.ConvertAll(data, b => unchecked((sbyte)b));
-            _connectedDevice.Call("write", sData);
+            if (_connectedDevice != null && _connected)
+            {
+                var characObject = _connectedDevice.characteristics[characteristic];
+                var parameters = new object[] { _connectedDevice.gatt, characObject, data };
+                _pluginObject.Call("writeToCharacteristic", parameters);
+            }
         }
 
-        void OnPeripheralScanned(string name, string mac, int rssi)
+        void OnPeripheralScanned(string name, string mac, int rssi, AndroidJavaObject device)
         {
             if (_scanning)
             {
+                if (_scannedDevices.Any(s => s.mac == mac))
+                {
+                    var scanned = _scannedDevices.FirstOrDefault(s => s.mac == mac);
+                    scanned.rssi = rssi;
+                    scanned.name = name;
+                }
+                else
+                {
+                    _scannedDevices.Add(new ScannedAndroidDevice(mac, name, rssi, device));
+                }
+
                 _listener.Dispach(() => {
                     _onPeripheralScanned?.Invoke(mac, name, rssi);
                 });
             }
         }
 
-        void PeripheralConnectionStateChanged(bool connected, AndroidJavaObject device)
+        void PeripheralConnectionStateChanged(string mac, AndroidJavaObject gatt, int status, int state)
         {
-            _listener.Dispach(() => {
-
-                string mac = device.Call<string>("getMac");
-                Debug.Log($"BluetoothLog: Connection state changed on {mac} to {connected}");
-
-                if (connected)
+            _listener.Dispach(() =>
+            {
+                if (state == 2)
                 {
-                    if (_onConnect != null)
+                    if (_connectedDevice != null)
                     {
-                        _onConnect.Invoke(mac);
-                        _onConnect = null;
-
-                        var messageCallback = new AndroidMessageCallback();
-                        messageCallback._callback = OnBluetoothMessage;
-                        device.Call("setOnMessageCallback", messageCallback);
+                        _connectedDevice.gatt = gatt;
+                        _onConnect?.Invoke(mac);
+                        _connected = true;
                     }
-
-                    _connecting = false;
+                    else
+                        _onConnectFail?.Invoke(mac, "Unknown device connected");
                 }
                 else
                 {
-                    if (_onDisconnect != null)
+                    if (_connectedDevice != null)
                     {
-                        if (!_connecting)
-                        {
-                            _onDisconnect.Invoke(mac, "");
-                            _onDisconnect = null;
-                            _connecting = false;
-                        }
+                        _connectedDevice.gatt = null;
+                        _connectedDevice = null;
+                        _connected = false;
+
+                        if (_connecting)
+                            _onConnectFail?.Invoke(mac, "Something went wrong...");
                         else
-                        {
-                            //Disconnect(mac);
-                            Connect(mac, null, null, null);
-                        }
+                            _onDisconnect?.Invoke(mac, "Disconnected");
                     }
                     else
-                        _connecting = false;
+                        _onConnectFail?.Invoke(mac, "Unknown device disconnected");
                 }
+
+                _connecting = false;
             });
         }
 
-        void OnBluetoothMessage(string message, AndroidJavaObject device)
+        void OnServices(string mac, string serviceUuid, AndroidJavaObject service)
         {
-            Debug.Log(message);
-            _onCharacteristicUpdate?.Invoke(device.Call<string>("getMac"), "", "", Encoding.UTF8.GetBytes(message));
+            if(_connectedDevice != null && _connected)
+            {
+                if (_connectedDevice.mac != mac) return;
+
+                _connectedDevice.services[serviceUuid] = service;
+                var services = _connectedDevice.services.Keys.ToArray();
+                _onServices?.Invoke(_connectedDevice.mac, services);
+            }
+        }
+
+        // TODO: Get correct service
+        void OnCharacteristics(string mac, string characteristicUuid, AndroidJavaObject characteristic)
+        {
+            if (_connectedDevice != null && _connected)
+            {
+                if (_connectedDevice.mac != mac) return;
+
+                _connectedDevice.characteristics[characteristicUuid] = characteristic;
+
+                //var service = _connectedDevice.services[""];
+                var characteristics = _connectedDevice.characteristics.Keys.ToArray();
+                _onCharacteristics?.Invoke(mac, "", characteristics);
+            }
+        }
+
+        // TODO: Get service & characteristic with message
+        void OnCharacteristicUpdate(string mac, int status, string message)
+        {
+            if (_connectedDevice != null && _connected)
+            {
+                if (_connectedDevice.mac != mac) return;
+
+                var service = "?";
+                var characteristic = "?";
+                var data = Encoding.UTF8.GetBytes(message);
+                _onCharacteristicUpdate?.Invoke(mac, service, characteristic, data);
+            }
         }
 
         public class AndroidScanResultCallback : AndroidJavaProxy
         {
-            internal Action<string, string, int> _callback;
+            internal Action<string, string, int, AndroidJavaObject> _callback;
 
-            public AndroidScanResultCallback() : base("com.digitalsputnik.dsblecito.IBLEScanCallback") { }
+            public AndroidScanResultCallback() : base("com.example.bleplugin.BLEScanCallback") { }
 
-            public void call(string name, string mac, int dbm)
+            public AndroidScanResultCallback(Action<string, string, int, AndroidJavaObject> callback) : this()
             {
-                _callback?.Invoke(name, mac, dbm);
+                _callback = callback;
+            }
+
+            public void call(string name, string mac, int rssi, AndroidJavaObject device)
+            {
+                _callback?.Invoke(name, mac, rssi, device);
             }
         }
 
         public class AndroidConnectionChangedCallback : AndroidJavaProxy
         {
-            internal Action<bool, AndroidJavaObject> _callback;
+            internal Action<string, AndroidJavaObject, int, int> _callback;
 
-            public AndroidConnectionChangedCallback() : base("com.digitalsputnik.dsblecito.IConnectChangeCallback") { }
+            public AndroidConnectionChangedCallback() : base("com.example.bleplugin.BLEConnectionChangedCallback") { }
 
-            public void call(bool connected, AndroidJavaObject device)
+            public AndroidConnectionChangedCallback(Action<string, AndroidJavaObject, int, int> callback) : this()
             {
-                _callback?.Invoke(connected, device);
+                _callback = callback;
+            }
+
+            public void call(string mac, AndroidJavaObject gatt, int status, int state)
+            {
+                _callback?.Invoke(mac, gatt, status, state);
             }
         }
 
-        public class AndroidMessageCallback : AndroidJavaProxy
+        public class AndroidServiceCallback : AndroidJavaProxy
         {
-            internal Action<string, AndroidJavaObject> _callback;
+            internal Action<string, string, AndroidJavaObject> _callback;
 
-            public AndroidMessageCallback() : base("com.digitalsputnik.dsblecito.IMessageCallback") { }
+            public AndroidServiceCallback() : base("com.example.bleplugin.BLEServicesCallback") { }
 
-            public void call(string message, AndroidJavaObject device)
+            public AndroidServiceCallback(Action<string, string, AndroidJavaObject> callback) : this()
             {
-                _callback?.Invoke(message, device);
+                _callback = callback;
+            }
+
+            public void call(string mac, string serviceUuid, AndroidJavaObject service)
+            {
+                _callback?.Invoke(mac, serviceUuid, service);
+            }
+        }
+
+        public class AndroidCharacteristicCallback : AndroidJavaProxy
+        {
+            internal Action<string, string, AndroidJavaObject> _callback;
+
+            public AndroidCharacteristicCallback() : base("com.example.bleplugin.BLEGetCharacteristicsCallback") { }
+
+            public AndroidCharacteristicCallback(Action<string, string, AndroidJavaObject> callback) : this()
+            {
+                _callback = callback;
+            }
+
+            public void call(string mac, string characteristicUuid, AndroidJavaObject characteristic)
+            {
+                _callback?.Invoke(mac, characteristicUuid, characteristic);
+            }
+        }
+
+        public class AndroidCharacteristicUpdateCallback : AndroidJavaProxy
+        {
+            internal Action<string, int, string> _callback;
+
+            public AndroidCharacteristicUpdateCallback() : base("com.example.bleplugin.BLECharacteristicRead") { }
+
+            public AndroidCharacteristicUpdateCallback(Action<string, int, string> callback) : this()
+            {
+                _callback = callback;
+            }
+
+            public void call(string mac, int status, string message)
+            {
+                _callback?.Invoke(mac, status, message);
+            }
+        }
+
+        class ScannedAndroidDevice
+        {
+            public string mac;
+            public string name;
+            public int rssi;
+
+            public AndroidJavaObject device;
+            public AndroidJavaObject gatt;
+            public Dictionary<string, AndroidJavaObject> characteristics = new Dictionary<string, AndroidJavaObject>();
+            public Dictionary<string, AndroidJavaObject> services = new Dictionary<string, AndroidJavaObject>();
+
+            public ScannedAndroidDevice(string mac, string name, int rssi, AndroidJavaObject device)
+            {
+                this.mac = mac;
+                this.name = name;
+                this.rssi = rssi;
+                this.device = device;
             }
         }
     }
@@ -254,19 +403,19 @@ namespace DigitalSputnik.Bluetooth
     internal class AndroidBluetoothListener : MonoBehaviour
     {
         internal AndroidJavaObject _plugin;
-        Queue<Action> actions = new Queue<Action>();
+        readonly Queue<Action> _actions = new Queue<Action>();
 
         internal void Dispach(Action action)
         {
-            actions.Enqueue(action);
+            _actions.Enqueue(action);
         }
 
         void Update()
         {
-            while (actions.Count > 0)
-            {
-                actions.Dequeue()?.Invoke();
-            }
+            while (_actions.Count > 0)
+                _actions.Dequeue()?.Invoke();
         }
     }
-}*/
+}
+
+#endif

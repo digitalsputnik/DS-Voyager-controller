@@ -19,7 +19,7 @@ namespace DigitalSputnik.Bluetooth
         InternalCharacteristicHandler _onCharacteristics;
         InternalCharacteristicUpdateHandler _onCharacteristicUpdate;
 
-        #region Bindings
+#region Bindings
         [DllImport("__Internal")]
         private static extern void _iOSInitialize();
 
@@ -46,9 +46,9 @@ namespace DigitalSputnik.Bluetooth
 
         [DllImport("__Internal")]
         private static extern void _iOSWriteToCharacteristic(string service, string characteristic, IntPtr data, int length);
-        #endregion
+#endregion
 
-        #region Interface Implementation
+#region Interface Implementation
         public void Initialize()
         {
             if (!_initialized)
@@ -146,9 +146,9 @@ namespace DigitalSputnik.Bluetooth
 
         // On iOS bluetooth cannot be disabled if allready initialized.
         public void DisableBluetooth() { }
-        #endregion
+#endregion
 
-        #region Event Handling
+#region Event Handling
         void OnPeripheralScanned(string id, string name, int rssi)
         {
             _onPeripheralScanned?.Invoke(id, name, rssi);
@@ -224,7 +224,7 @@ namespace DigitalSputnik.Bluetooth
                     Debug.LogError($"[IOS Bluetooth error] {error}");
             }
         }
-        #endregion
+#endregion
     }
 }
 #endif

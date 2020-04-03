@@ -3,10 +3,9 @@
 // Copyright: © Digital Sputnik OÜ
 // -----------------------------------------------------------------
 
-/*using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using VoyagerApp.UI.Menus;
 
 namespace DigitalSputnik.Bluetooth
 {
@@ -88,7 +87,9 @@ namespace DigitalSputnik.Bluetooth
 #elif UNITY_ANDROID && !UNITY_EDITOR
             _interface = new AndroidBluetoothInterface();
 #endif
-            _interface.Initialize();
+
+            if (_interface != null)
+                _interface.Initialize();
         }
 
         void InternalStartScanning(PeripheralHandler onScanned, string[] services)
@@ -258,4 +259,4 @@ namespace DigitalSputnik.Bluetooth
             }
         }
     }
-}*/
+}
