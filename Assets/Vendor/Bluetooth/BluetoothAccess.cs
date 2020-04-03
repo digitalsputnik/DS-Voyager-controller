@@ -129,31 +129,31 @@ namespace DigitalSputnik.Bluetooth
 
         private void OnConnect(string id)
         {
-            BLEItem bleItem = GetBleItemById(id);
+            //BLEItem bleItem = GetBleItemById(id);
             PeripheralAccess access = new PeripheralAccess(id, _interface);
             _onPeripheralConnected?.Invoke(access);
-            bleItem.peripheralAccess = access;
-            bleItem.connected = true;
+            //bleItem.peripheralAccess = access;
+            //bleItem.connected = true;
         }
 
         private void OnConnectFail(string id, string error)
         {
-            BLEItem bleItem = GetBleItemById(id);
-            bleItem.connected = false;
-            _onPeripheralConnectionFailed?.Invoke(bleItem.peripheral, error);
+            //BLEItem bleItem = GetBleItemById(id);
+            //bleItem.connected = false;
+            //_onPeripheralConnectionFailed?.Invoke(bleItem.peripheral, error);
         }
 
         private void OnDisconnect(string id, string error)
         {
-            BLEItem bleItem = GetBleItemById(id);
-            bleItem.connected = false;
-            _onPeripheralDisconnected?.Invoke(bleItem.peripheral, error);
+            //BLEItem bleItem = GetBleItemById(id);
+            //bleItem.connected = false;
+            //_onPeripheralDisconnected?.Invoke(bleItem.peripheral, error);
         }
 
-        private BLEItem GetBleItemById(string id)
-        {
-            return null; //BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id) as BLEItem;
-        }
+        //private BLEItem GetBleItemById(string id)
+        //{
+        //    return null; //BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id) as BLEItem;
+        //}
 
         void InternalDisconnect(string id)
         {
