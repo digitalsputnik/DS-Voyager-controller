@@ -142,16 +142,16 @@ public class BluetoothAndroidTest : MonoBehaviour
         var currentDevice = devices.FirstOrDefault(l => l.id == id);
         currentDevice.services.Add(service);
 
-        GetCharacteristic(id, service, UART_TX_CHARACTERISTIC_UUID);
         GetCharacteristic(id, service, UART_RX_CHARACTERISTIC_UUID);
+        GetCharacteristic(id, service, UART_TX_CHARACTERISTIC_UUID);
     }
 
-    void OnCharacteristic(string id, string characteristic)
+    void OnCharacteristic(string id, string service, string characteristic)
     {
-        Debug.Log($"BluetoothLog: Characteristic Found - ID: {id} characteristic: {characteristic}");
+        Debug.Log($"BluetoothLog: Characteristic Found - ID: {id} Service: {service} Characteristic: {characteristic}");
 
         var currentDevice = devices.FirstOrDefault(l => l.id == id);
-        currentDevice.characteristics.Add(characteristic);
+        currentDevice.characteristics.Add(characteristic, service);
 
         if (characteristic == UART_TX_CHARACTERISTIC_UUID)
             SubscribeToCharacteristic(id, characteristic);
@@ -159,9 +159,9 @@ public class BluetoothAndroidTest : MonoBehaviour
         StartCoroutine(write());
     }
 
-    void OnMessage(string id, int status, string message)
+    void OnMessage(string id, string characteristic, int status, string message)
     {
-        Debug.Log($"BluetoothLog: New Message - ID: {id} Message: {message}");
+        Debug.Log($"BluetoothLog: New Message - ID: {id} Characteristic: {characteristic} Message: {message}");
     }
 
     IEnumerator write()
@@ -177,13 +177,13 @@ public class BluetoothAndroidTest : MonoBehaviour
 
         foreach(var characteristic in devices[0].characteristics)
         {
-            if(characteristic == UART_RX_CHARACTERISTIC_UUID)
+            if(characteristic.Key == UART_RX_CHARACTERISTIC_UUID)
             {
-                Debug.Log($"BluetoothLog: Writing to Characteristic - Characteristic: {characteristic}");
+                Debug.Log($"BluetoothLog: Writing to Characteristic - Characteristic: {characteristic.Key}");
 
                 //WriteToCharacteristic(devices[0].gatt, characteristic.GetCharacteristicObject(), data); missing active mode from request?
 
-                WriteToCharacteristic(devices[0].id, characteristic, new PollRequestPacket().Serialize());
+                WriteToCharacteristic(devices[0].id, characteristic.Key, new PollRequestPacket().Serialize());
             }
         }
     }

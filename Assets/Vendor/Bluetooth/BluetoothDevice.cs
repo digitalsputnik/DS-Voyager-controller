@@ -8,8 +8,8 @@ namespace DigitalSputnik.Bluetooth
         public string name;
         public int rssi;
 
-        public List<string> characteristics = new List<string>();
         public List<string> services = new List<string>();
+        public Dictionary<string, string> characteristics = new Dictionary<string, string>();
 
         public bool connected;
 

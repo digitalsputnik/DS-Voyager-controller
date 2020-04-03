@@ -205,17 +205,17 @@ namespace DigitalSputnik.Bluetooth
             onService?.Invoke(id, serviceUuid);
         }
 
-        void OnCharacteristic(string id, string characteristicUuid, AndroidJavaObject characteristic)
+        void OnCharacteristic(string id, string serviceUuid, string characteristicUuid, AndroidJavaObject characteristic)
         {
             var currentDevice = devices.FirstOrDefault(l => l.id == id);
             currentDevice.characteristics.Add(characteristicUuid, characteristic);
 
-            onCharacteristics?.Invoke(id, characteristicUuid);
+            onCharacteristics?.Invoke(id, serviceUuid, characteristicUuid);
         }
 
-        void OnBluetoothMessage(string id, int status, string message)
+        void OnBluetoothMessage(string id, string characteristic, int status, string message)
         {
-            onMessage?.Invoke(id, status, message);
+            onMessage?.Invoke(id, characteristic, status, message);
         }
 
         public class AndroidScanResultCallbackTest : AndroidJavaProxy
@@ -255,25 +255,25 @@ namespace DigitalSputnik.Bluetooth
         }
         public class AndroidCharacteristicCallbackTest : AndroidJavaProxy
         {
-            internal Action<string, string, AndroidJavaObject> _callback;
+            internal Action<string, string, string, AndroidJavaObject> _callback;
 
             public AndroidCharacteristicCallbackTest() : base("com.example.bleplugin.BLEGetCharacteristicsCallback") { }
 
-            public void call(string id, string characteristicUuid, AndroidJavaObject characteristic)
+            public void call(string id, string serviceUuid, string characteristicUuid, AndroidJavaObject characteristic)
             {
-                _callback?.Invoke(id, characteristicUuid, characteristic);
+                _callback?.Invoke(id, serviceUuid, characteristicUuid, characteristic);
             }
         }
 
         public class AndroidMessageCallbackTest : AndroidJavaProxy
         {
-            internal Action<string, int, string> _callback;
+            internal Action<string, string, int, string> _callback;
 
             public AndroidMessageCallbackTest() : base("com.example.bleplugin.BLECharacteristicRead") { }
 
-            public void call(string id, int status, string message)
+            public void call(string id, string characteristic, int status, string message)
             {
-                _callback?.Invoke(id, status, message);
+                _callback?.Invoke(id, characteristic, status, message);
             }
         }
 

@@ -31,7 +31,7 @@ namespace DigitalSputnik.Bluetooth
 
     internal delegate void InternalServicesHandlerTest(string id, string service);
 
-    internal delegate void InternalCharacteristicHandlerTest(string id, string characteristic);
+    internal delegate void InternalCharacteristicHandlerTest(string id, string service, string characteristic);
 
-    internal delegate void InternalCharacteristicUpdateHandlerTest(string id, int status, string message);
+    internal delegate void InternalCharacteristicUpdateHandlerTest(string id, string characteristic, int status, string message);
 }
