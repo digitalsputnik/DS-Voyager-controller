@@ -17,8 +17,8 @@ namespace DigitalSputnik.Bluetooth
         void GetServices(string id, InternalServicesHandler callback);
         void GetCharacteristics(string id, string service, InternalCharacteristicHandler callback);
         void SetCharacteristicsUpdateCallback(string id, InternalCharacteristicUpdateHandler callback);
-        void SubscribeToCharacteristicUpdate(string id, string service, string characteristic);
-        void WriteToCharacteristic(string id, string service, string characteristic, byte[] data);
+        void SubscribeToCharacteristicUpdate(string id, string characteristic);
+        void WriteToCharacteristic(string id, string characteristic, byte[] data);
     }
 
     internal delegate void InternalPeripheralScanHandler(string id, string name, int rssi);

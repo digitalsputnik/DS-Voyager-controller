@@ -11,7 +11,7 @@
 @interface BluetoothInterface : NSObject <CBCentralManagerDelegate, CBPeripheralDelegate>
     @property (strong, nonatomic) CBCentralManager *centralManager;
     @property (strong, nonatomic) NSMutableArray *peripheralsList;
-    @property (strong, nonatomic) CBPeripheral *connectedPeripheral;
+    @property (strong, nonatomic) NSMutableArray *connectedPeripherals;
 @end
 
 @implementation BluetoothInterface
@@ -72,51 +72,78 @@
         }
     }
 
-    - (void)discoverCharacteristics:(NSString *)service
+    - (CBPeripheral*)peripheralWithId:(NSString *)uid
     {
-        for (CBService* serv in _connectedPeripheral.services)
+        for (CBPeripheral* peri in _connectedPeripherals)
         {
-            if ([serv.UUID.description isEqualToString:service])
+            if ([peri.identifier.description isEqualToString:uid])
             {
-                [_connectedPeripheral discoverCharacteristics:nil forService:serv];
-                return;
+                return peri;
+            }
+        }
+        
+        return nullptr;
+    }
+
+    - (void)getServices:(NSString *)uid
+    {
+        CBPeripheral* peripheral = [self peripheralWithId:uid];
+        
+        if (peripheral != nullptr)
+        {
+            [peripheral discoverServices:nil];
+        }
+    }
+
+    - (void)discoverCharacteristics:(NSString*) uid :(NSString *)service
+    {
+        CBPeripheral* peripheral = [self peripheralWithId:uid];
+        
+        if (peripheral != nullptr)
+        {
+            for (CBService* serv in peripheral.services)
+            {
+                if ([serv.UUID.description isEqualToString:service])
+                {
+                    [peripheral discoverCharacteristics:nil forService:serv];
+                    return;
+                }
             }
         }
     }
 
-    - (void)getServices
+    - (void)subscribeToCharacteristic:(NSString *)uid :(NSString *)characteristic
     {
-        [_connectedPeripheral discoverServices:nil];
-    }
-
-    - (void)subscribeToCharacteristic:(NSString *)service :(NSString *)characteristic
-    {
-        for (CBService* serv in _connectedPeripheral.services)
+        CBPeripheral* peripheral = [self peripheralWithId:uid];
+        
+        if (peripheral != nullptr)
         {
-            if ([serv.UUID.description isEqualToString:service])
+            for (CBService* serv in peripheral.services)
             {
                 for (CBCharacteristic* charac in serv.characteristics)
                 {
                     if ([charac.UUID.description isEqualToString:characteristic])
                     {
-                        [_connectedPeripheral setNotifyValue:true forCharacteristic:charac];
+                        [peripheral setNotifyValue:true forCharacteristic:charac];
                     }
                 }
             }
         }
     }
 
-    - (void)writeToCharacteristic:(NSString *)service :(NSString *)characteristic :(NSData *)data
+    - (void)writeToCharacteristic:(NSString *)uid :(NSString *)characteristic :(NSData *)data
     {
-        for (CBService* serv in _connectedPeripheral.services)
+        CBPeripheral* peripheral = [self peripheralWithId:uid];
+        
+        if (peripheral != nullptr)
         {
-            if ([serv.UUID.description isEqualToString:service])
+            for (CBService* serv in peripheral.services)
             {
                 for (CBCharacteristic* charac in serv.characteristics)
                 {
                     if ([charac.UUID.description isEqualToString:characteristic])
                     {
-                        [_connectedPeripheral writeValue:data forCharacteristic:charac type:CBCharacteristicWriteWithResponse];
+                        [peripheral writeValue:data forCharacteristic:charac type:CBCharacteristicWriteWithResponse];
                     }
                 }
             }
@@ -127,6 +154,7 @@
     {
         _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
         _peripheralsList = [[NSMutableArray alloc] init];
+        _connectedPeripherals = [[NSMutableArray alloc] init];
         NSLog(@"BluetoothInterface initialized.");
     }
 
@@ -164,21 +192,23 @@
         [self callUnityObject:"iOS Bluetooth Listener" Method:"PeripheralScanned" Parameter:[data  UTF8String]];
     }
 
-    - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
-        NSLog(@"Connecting to %@ was successful!", [peripheral identifier]);
-        NSString *data = [NSString stringWithFormat:@"%@", [peripheral identifier]];
-        [self callUnityObject:"iOS Bluetooth Listener" Method:"ConnectionSuccessful" Parameter:[data  UTF8String]];
-        
-        _connectedPeripheral = peripheral;
-        _connectedPeripheral.delegate = self;
+    - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral
+    {
+        peripheral.delegate = self;
+        [_connectedPeripherals addObject: peripheral];
         
         if (@available(iOS 11.0, *))
         {
-            [_connectedPeripheral canSendWriteWithoutResponse];
+            [peripheral canSendWriteWithoutResponse];
         }
+        
+        NSLog(@"Connecting to %@ was successful!", [peripheral identifier]);
+        NSString *data = [NSString stringWithFormat:@"%@", [peripheral identifier]];
+        [self callUnityObject:"iOS Bluetooth Listener" Method:"ConnectionSuccessful" Parameter:[data  UTF8String]];
     }
 
-    - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
+    - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
+    {
         NSLog(@"Connecting to %@ was failed: %@", [peripheral identifier], error);
         NSString *data = [NSString stringWithFormat:@"%@|%@", [peripheral identifier], error];
         [self callUnityObject:"iOS Bluetooth Listener" Method:"ConnectionFailed" Parameter:[data  UTF8String]];
@@ -186,9 +216,13 @@
 
     - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
     {
-        NSLog(@"Disconnecting from %@ : %@", [peripheral identifier], error);
-        NSString *data = [NSString stringWithFormat:@"%@|%@", [peripheral identifier], error];
-        [self callUnityObject:"iOS Bluetooth Listener" Method:"Disconnect" Parameter:[data  UTF8String]];
+        if ([_connectedPeripherals containsObject: peripheral])
+        {
+            [_connectedPeripherals removeObject: peripheral];
+            NSLog(@"Disconnecting from %@ : %@", [peripheral identifier], error);
+            NSString *data = [NSString stringWithFormat:@"%@|%@", [peripheral identifier], error];
+            [self callUnityObject:"iOS Bluetooth Listener" Method:"Disconnect" Parameter:[data  UTF8String]];
+        }
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
@@ -261,29 +295,31 @@ extern "C" {
         [[BluetoothInterface shared] cancelConnection:uidConv];
     }
 
-    void _iOSGetServices()
+    void _iOSGetServices( const char* uid )
     {
-        [[BluetoothInterface shared] getServices];
+        NSString* uidConv = [[NSString alloc] initWithUTF8String:uid];
+        [[BluetoothInterface shared] getServices: uidConv];
     }
 
-    void _iOSGetCharacteristics( const char* service )
+    void _iOSGetCharacteristics( const char* uid, const char* service )
     {
+        NSString* uidConv = [[NSString alloc] initWithUTF8String:uid];
         NSString* serviceConv = [[NSString alloc] initWithUTF8String:service];
-        [[BluetoothInterface shared] discoverCharacteristics:serviceConv];
+        [[BluetoothInterface shared] discoverCharacteristics:uidConv :serviceConv];
     }
 
-    void _iOSSubscribeToCharacteristic( const char* service, const char* characteristic )
+    void _iOSSubscribeToCharacteristic( const char* uid, const char* characteristic )
     {
-        NSString* serviceConv = [[NSString alloc] initWithUTF8String:service];
+        NSString* uidConv = [[NSString alloc] initWithUTF8String:uid];
         NSString* charConv = [[NSString alloc] initWithUTF8String:characteristic];
-        [[BluetoothInterface shared] subscribeToCharacteristic:serviceConv :charConv];
+        [[BluetoothInterface shared] subscribeToCharacteristic:uidConv :charConv];
     }
 
-    void _iOSWriteToCharacteristic( const char* service, const char* characteristic, const Byte* data, const int length )
+    void _iOSWriteToCharacteristic( const char* uid, const char* characteristic, const Byte* data, const int length )
     {
-        NSString* serviceConv = [[NSString alloc] initWithUTF8String:service];
+        NSString* uidConv = [[NSString alloc] initWithUTF8String:uid];
         NSString* charConv = [[NSString alloc] initWithUTF8String:characteristic];
         NSData* dataConv = [[NSData alloc] initWithBytes:data length:length];
-        [[BluetoothInterface shared] writeToCharacteristic:serviceConv :charConv :dataConv];
+        [[BluetoothInterface shared] writeToCharacteristic:uidConv :charConv :dataConv];
     }
 }

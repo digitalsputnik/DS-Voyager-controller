@@ -1,4 +1,4 @@
-﻿#if UNITY_ANDROID && !UNITY_EDITOR
+﻿#if UNITY_ANDROID
 
 using System;
 using System.Collections;
@@ -185,7 +185,7 @@ namespace DigitalSputnik.Bluetooth
             }
         }
 
-        public void SubscribeToCharacteristicUpdate(string mac, string service, string characteristic)
+        public void SubscribeToCharacteristicUpdate(string mac, string characteristic)
         {
             var device = _connectedDevices.FirstOrDefault(d => d.mac == mac);
 
@@ -197,7 +197,7 @@ namespace DigitalSputnik.Bluetooth
             }
         }
 
-        public void WriteToCharacteristic(string mac, string service, string characteristic, byte[] data)
+        public void WriteToCharacteristic(string mac, string characteristic, byte[] data)
         {
             var device = _connectedDevices.FirstOrDefault(d => d.mac == mac);
 

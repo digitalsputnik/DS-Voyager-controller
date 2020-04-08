@@ -210,13 +210,13 @@ namespace DigitalSputnik.Bluetooth
             if (!_characteristicUpdateDelegates[service].ContainsKey(characteristic))
             {
                 _characteristicUpdateDelegates[service].Add(characteristic, onDataUpdate);
-                _interface.SubscribeToCharacteristicUpdate(_id, service, characteristic);
+                _interface.SubscribeToCharacteristicUpdate(_id, characteristic);
             }
         }
 
         public void WriteToCharacteristic(string service, string characteristic, byte[] data)
         {
-            _interface.WriteToCharacteristic(_id, service, characteristic, data);
+            _interface.WriteToCharacteristic(_id, characteristic, data);
         }
 
         void OnServicesScanned(string id, string[] services)

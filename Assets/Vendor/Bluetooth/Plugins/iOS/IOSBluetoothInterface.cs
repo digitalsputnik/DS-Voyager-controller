@@ -1,4 +1,4 @@
-﻿#if UNITY_IOS && !UNITY_EDITOR
+﻿#if UNITY_IOS
 using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -36,16 +36,16 @@ namespace DigitalSputnik.Bluetooth
         private static extern void _iOSCancelConnection(string uid);
 
         [DllImport("__Internal")]
-        private static extern void _iOSGetServices();
+        private static extern void _iOSGetServices(string uid);
 
         [DllImport("__Internal")]
-        private static extern void _iOSGetCharacteristics(string service);
+        private static extern void _iOSGetCharacteristics(string uid, string service);
 
         [DllImport("__Internal")]
-        private static extern void _iOSSubscribeToCharacteristic(string service, string characteristic);
+        private static extern void _iOSSubscribeToCharacteristic(string uid, string characteristic);
 
         [DllImport("__Internal")]
-        private static extern void _iOSWriteToCharacteristic(string service, string characteristic, IntPtr data, int length);
+        private static extern void _iOSWriteToCharacteristic(string uid, string characteristic, IntPtr data, int length);
 #endregion
 
 #region Interface Implementation
@@ -115,13 +115,13 @@ namespace DigitalSputnik.Bluetooth
         public void GetServices(string id, InternalServicesHandler callback)
         {
             _onServices = callback;
-            _iOSGetServices();
+            _iOSGetServices(id);
         }
 
         public void GetCharacteristics(string id, string service, InternalCharacteristicHandler callback)
         {
             _onCharacteristics = callback;
-            _iOSGetCharacteristics(service);
+            _iOSGetCharacteristics(id, service);
         }
 
         public void SetCharacteristicsUpdateCallback(string id, InternalCharacteristicUpdateHandler callback)
@@ -129,15 +129,15 @@ namespace DigitalSputnik.Bluetooth
             _onCharacteristicUpdate = callback;
         }
 
-        public void SubscribeToCharacteristicUpdate(string id, string service, string characteristic)
+        public void SubscribeToCharacteristicUpdate(string id, string characteristic)
         {
-            _iOSSubscribeToCharacteristic(service, characteristic);
+            _iOSSubscribeToCharacteristic(id, characteristic);
         }
 
-        public void WriteToCharacteristic(string id, string service, string characteristic, byte[] data)
+        public void WriteToCharacteristic(string id, string characteristic, byte[] data)
         {
             GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
-            _iOSWriteToCharacteristic(service, characteristic, handle.AddrOfPinnedObject(), data.Length);
+            _iOSWriteToCharacteristic(id, characteristic, handle.AddrOfPinnedObject(), data.Length);
             handle.Free();
         }
 
