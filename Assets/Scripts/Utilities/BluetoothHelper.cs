@@ -1,4 +1,4 @@
-﻿/*using System;
+﻿using System;
 using System.Collections;
 using System.Linq;
 using DigitalSputnik.Bluetooth;
@@ -39,45 +39,33 @@ public static class BluetoothHelper
         BluetoothAccess.StopScanning();
     }
 
-    public static void ConnectToPeripheral(BLEItem item, BluetoothConnectedHandler onConnected, Action<string> onFail, Action<string> onDisconnect)
+    public static void ConnectToPeripheral(string id, BluetoothConnectedHandler onConnected, Action<string> onFail, Action<string> onDisconnect)
     {
         _onConnect = onConnected;
         _onFail = onFail;
         _onDisconnect = onDisconnect;
 
-        BluetoothAccess.Connect(item.id, OnConnect, OnFailed, OnDisconnect);
+        BluetoothAccess.Connect(id, OnConnect, OnFailed, OnDisconnect);
+    }
+
+    public static void DisconnectFromPeripheral(string id)
+    {
+        BluetoothAccess.Disconnect(id);
     }
 
     static void OnConnect(PeripheralAccess access)
     {
-        BLEItem bleItem = GetBleItemByID(access.ID);
-        bleItem.connection = new BluetoothConnection(access);
-
-        _onConnect?.Invoke(bleItem.connection);
+        _onConnect?.Invoke(new BluetoothConnection(access));
     }
 
     static void OnFailed(PeripheralInfo peripheral, string error)
     {
-        BLEItem bleItem = GetBleItemByID(peripheral.id);
         _onFail?.Invoke(peripheral.id);
     }
 
     static void OnDisconnect(PeripheralInfo peripheral, string error)
     {
-        BLEItem bleItem = GetBleItemByID(peripheral.id);
-
-        if (bleItem.connection != null)
-        {
-            bleItem.connection.HandleDisconnection();
-            bleItem.connection = null;
-        }
-            
         _onDisconnect?.Invoke(peripheral.id);
-    }
-
-    private static BLEItem GetBleItemByID(string id)
-    {
-        return null;//BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id) as BLEItem;
     }
 }
 
@@ -85,22 +73,36 @@ public delegate void BluetoothConnectedHandler(BluetoothConnection connection);
 
 public class BluetoothConnection
 {
-    const string CHARACTERISTICS = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
-
+    public Action<string, string[]> OnServices;
+    public Action<string, string, string[]> OnCharacteristics;
     public Action<string, byte[]> OnData;
     public string ID => _access.ID;
 
-    PeripheralAccess _access;
+    public PeripheralAccess _access;
 
     public BluetoothConnection(PeripheralAccess access)
     {
         _access = access;
-        _access.SubscrubeToCharacteristic(BluetoothHelper.SERVICE_UID, CHARACTERISTICS, OnDataUpdate);
     }
 
-    public void Write(byte[] data)
+    public void GetServices()
     {
-        _access.WriteToCharacteristic(BluetoothHelper.SERVICE_UID, CHARACTERISTICS, data);
+        _access.ScanServices(OnServicesUpdate);
+    }
+
+    public void GetCharacteristics(string service)
+    {
+        _access.ScanServiceCharacteristics(service, OnCharacteristicsUpdate);
+    }
+
+    public void SubscribeToCharacteristicUpdate(string service, string characteristic)
+    {
+        _access.SubscribeToCharacteristic(service, characteristic, OnDataUpdate);
+    }
+
+    public void Write(string service, string characteristic, byte[] data)
+    {
+        _access.WriteToCharacteristic(service, characteristic, data);
     }
 
     public void HandleDisconnection()
@@ -112,4 +114,14 @@ public class BluetoothConnection
     {
         OnData?.Invoke(access.ID, data);
     }
-}*/
+
+    void OnServicesUpdate(PeripheralAccess access, string[] services)
+    {
+        OnServices?.Invoke(access.ID, services);
+    }
+
+    void OnCharacteristicsUpdate(PeripheralAccess access, string service, string[] characteristics)
+    {
+        OnCharacteristics?.Invoke(access.ID, service, characteristics);
+    }
+}

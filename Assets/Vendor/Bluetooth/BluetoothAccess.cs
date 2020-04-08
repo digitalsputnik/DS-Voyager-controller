@@ -66,16 +66,16 @@ namespace DigitalSputnik.Bluetooth
                 _instance.InternalStopScanning();
         }
 
-        public static void Connect(string peripheral, PeripheralConnectionHandler onConnect, PeripheralErrorHandler onFail, PeripheralErrorHandler onDisconnect)
+        public static void Connect(string id, PeripheralConnectionHandler onConnect, PeripheralErrorHandler onFail, PeripheralErrorHandler onDisconnect)
         {
             if (IsInitialized)
-               _instance.InternalConnect(peripheral, onConnect, onFail, onDisconnect);
+               _instance.InternalConnect(id, onConnect, onFail, onDisconnect);
         }
 
-        public static void Disconnect(string peripheral)
+        public static void Disconnect(string id)
         {
             if (IsInitialized)
-                _instance.InternalDisconnect(peripheral);
+                _instance.InternalDisconnect(id);
         }
         #endregion
 
@@ -129,31 +129,21 @@ namespace DigitalSputnik.Bluetooth
 
         private void OnConnect(string id)
         {
-            //BLEItem bleItem = GetBleItemById(id);
             PeripheralAccess access = new PeripheralAccess(id, _interface);
             _onPeripheralConnected?.Invoke(access);
-            //bleItem.peripheralAccess = access;
-            //bleItem.connected = true;
         }
 
         private void OnConnectFail(string id, string error)
         {
-            //BLEItem bleItem = GetBleItemById(id);
-            //bleItem.connected = false;
-            //_onPeripheralConnectionFailed?.Invoke(bleItem.peripheral, error);
+            var peripheral = _scannedPeripherals.FirstOrDefault(p => p.id == id);
+            _onPeripheralConnectionFailed?.Invoke(peripheral, error);
         }
 
         private void OnDisconnect(string id, string error)
         {
-            //BLEItem bleItem = GetBleItemById(id);
-            //bleItem.connected = false;
-            //_onPeripheralDisconnected?.Invoke(bleItem.peripheral, error);
+            var peripheral = _scannedPeripherals.FirstOrDefault(p => p.id == id);
+            _onPeripheralDisconnected?.Invoke(peripheral, error);
         }
-
-        //private BLEItem GetBleItemById(string id)
-        //{
-        //    return null; //BluetoothTest.instance.bleItems.FirstOrDefault(l => l.id == id) as BLEItem;
-        //}
 
         void InternalDisconnect(string id)
         {
@@ -196,23 +186,23 @@ namespace DigitalSputnik.Bluetooth
         {
             _id = id;
             _interface = bluetoothInterface;
-            _interface.SetCharacteristicsUpdateCallback(OnCharacteristicUpdate);
+            _interface.SetCharacteristicsUpdateCallback(id, OnCharacteristicUpdate);
             _characteristicUpdateDelegates = new Dictionary<string, Dictionary<string, PeripheralCharacteristicUpdate>>();
         }
 
         public void ScanServices(PeripheralServicesHandler onScanned)
         {
             _onServicesScanned = onScanned;
-            _interface.GetServices(OnServicesScanned);
+            _interface.GetServices(_id, OnServicesScanned);
         }
 
         public void ScanServiceCharacteristics(string service, PeripheralServiceCharacteristicsHandler onScanned)
         {
             _onServiceCharacteristicsScanned = onScanned;
-            _interface.GetCharacteristics(service, OnServiceCharacteristicsScanned);
+            _interface.GetCharacteristics(_id, service, OnServiceCharacteristicsScanned);
         }
 
-        public void SubscrubeToCharacteristic(string service, string characteristic, PeripheralCharacteristicUpdate onDataUpdate)
+        public void SubscribeToCharacteristic(string service, string characteristic, PeripheralCharacteristicUpdate onDataUpdate)
         {
             if (!_characteristicUpdateDelegates.ContainsKey(service))
                 _characteristicUpdateDelegates.Add(service, new Dictionary<string, PeripheralCharacteristicUpdate>());
@@ -220,13 +210,13 @@ namespace DigitalSputnik.Bluetooth
             if (!_characteristicUpdateDelegates[service].ContainsKey(characteristic))
             {
                 _characteristicUpdateDelegates[service].Add(characteristic, onDataUpdate);
-                _interface.SubscribeToCharacteristicUpdate(service, characteristic);
+                _interface.SubscribeToCharacteristicUpdate(_id, service, characteristic);
             }
         }
 
         public void WriteToCharacteristic(string service, string characteristic, byte[] data)
         {
-            _interface.WriterToCharacteristic(service, characteristic, data);
+            _interface.WriteToCharacteristic(_id, service, characteristic, data);
         }
 
         void OnServicesScanned(string id, string[] services)

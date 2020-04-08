@@ -345,9 +345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serialText: {fileID: 6489993469669929924}
-  signalText: {fileID: 4517010405637363391}
-  id: 
+  rssiText: {fileID: 4517010405637363391}
+  mac: 
   serial: 
   rssi: 
-  selected: 0
-  isConnected: 0
