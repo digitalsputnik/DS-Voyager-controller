@@ -53,6 +53,20 @@ namespace DigitalSputnik.Bluetooth
 
             _pluginObject = new AndroidJavaObject(LIBRARY_NAME + ".BLEObject", context);
             _listener._plugin = _pluginObject;
+
+            SetCallbacks();
+        }
+
+        public void SetCallbacks()
+        {
+            var scanCallback = new AndroidScanResultCallback(OnPeripheralScanned);
+            var onConnectionChanged = new AndroidConnectionChangedCallback(PeripheralConnectionStateChanged);
+            var onServices = new AndroidServiceCallback(OnServices);
+            var onCharacteristics = new AndroidCharacteristicCallback(OnCharacteristics);
+            var onCharacteristicsUpdate = new AndroidCharacteristicUpdateCallback(OnCharacteristicUpdate);
+
+            object[] parameters = { scanCallback, onCharacteristics, onCharacteristicsUpdate, onConnectionChanged, onServices };
+            _pluginObject.Call("setCallbacks", parameters);
         }
 
         public void StartScanning(string[] services, InternalPeripheralScanHandler callback)
@@ -62,11 +76,8 @@ namespace DigitalSputnik.Bluetooth
                 if (services == null)
                     services = new string[0];
 
-                var scanCallback = new AndroidScanResultCallback(OnPeripheralScanned);
-                var parameters = new object[] { services, scanCallback };
-
                 _scannedDevices.Clear();
-                _pluginObject.Call("startScanning", parameters);
+                _pluginObject.Call("startScanning", services);
                 _onPeripheralScanned = callback;
                 _scanning = true;
             }
@@ -98,15 +109,15 @@ namespace DigitalSputnik.Bluetooth
 
             if (device != null)
             {
+                _onConnect = null;
+                _onConnectFail = null;
+                _onDisconnect = null;
                 _onConnect = onConnect;
                 _onConnectFail = onFail;
                 _onDisconnect = onDisconnect;
                 device.connecting = true;
 
-                var onConnectionChanged = new AndroidConnectionChangedCallback(PeripheralConnectionStateChanged);
-                var parameters = new object[] { device.device, onConnectionChanged };
-
-                _pluginObject.Call("connect", parameters);
+                _pluginObject.Call("connect", device.device);
 
                 _connectedDevices.Add(device);
 
@@ -134,10 +145,8 @@ namespace DigitalSputnik.Bluetooth
 
             if (device != null && device.connected)
             {
-                var onServices = new AndroidServiceCallback(OnServices);
-                var parameters = new object[] { device.gatt, onServices };
-
-                _pluginObject.Call("getServices", parameters);
+                _pluginObject.Call("getServices", device.gatt);
+                _onServices = null;
                 _onServices = callback;
             }
         }
@@ -150,13 +159,12 @@ namespace DigitalSputnik.Bluetooth
             {
                 if (device.services.ContainsKey(service))
                 {
+                    _onCharacteristics = null;
                     _onCharacteristics = callback;
 
                     var serviceObject = device.services[service];
-                    var onCharacteristics = new AndroidCharacteristicCallback(OnCharacteristics);
                     var parameters = new object[] { device.mac, serviceObject };
 
-                    _pluginObject.Call("setCharacteristicCallback", onCharacteristics);
                     _pluginObject.Call("getCharacteristics", parameters);
                 }
                 else
@@ -172,9 +180,8 @@ namespace DigitalSputnik.Bluetooth
 
             if (device != null && device.connected)
             {
+                _onCharacteristicUpdate = null;
                 _onCharacteristicUpdate = callback;
-                var onCharacteristicsUpdate = new AndroidCharacteristicUpdateCallback(OnCharacteristicUpdate);
-                _pluginObject.Call("setOnMessageCallback", onCharacteristicsUpdate);
             }
         }
 

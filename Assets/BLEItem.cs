@@ -23,10 +23,12 @@ namespace VoyagerApp.UI.Menus
         public bool connecting = false;
         public bool connected = false;
 
-        public void SetPeripheral(PeripheralInfo _peripheral)
-        {
+        BluetoothTest instance;
 
+        public void SetPeripheral(PeripheralInfo _peripheral, BluetoothTest _instance)
+        {
             peripheral = _peripheral;
+            instance = _instance;
 
             serialText.text = peripheral.name;
             rssiText.text = peripheral.rssi.ToString();
@@ -54,17 +56,39 @@ namespace VoyagerApp.UI.Menus
 
             if (selected)
             {
+                instance.ResetAllItems();
                 Connect();
             }
             else
             {
                 Disconnect();
+                device.connection.HandleDisconnection();
             }
+        }
+
+        public void ResetItem()
+        {
+            Disconnect();
+            device.connection.HandleDisconnection();
+
+            selected = false;
+            connecting = false;
+            connected = false;
+
+            var btn = GetComponent<Button>();
+            ColorBlock btnColor = btn.colors;
+
+            btnColor.selectedColor = Color.white;
+            btnColor.normalColor = Color.white;
+
+            btn.colors = btnColor;
         }
 
         void Connect()
         {
-            BluetoothTest.instance.statusText.text = $"Connecting to lamp {peripheral.id}";
+            device = null;
+            Debug.Log($"Connecting to lamp {peripheral.id}");
+            instance.statusText.text = $"Connecting to lamp {peripheral.id}";
             connecting = true;
             BluetoothHelper.ConnectToPeripheral(peripheral.id, OnConnected, OnFailed, OnDisconnected);
         }
@@ -78,26 +102,30 @@ namespace VoyagerApp.UI.Menus
         {
             device.connection.GetServices();
 
-            BluetoothTest.instance.statusText.text = $"Getting Services for {peripheral.id}";
+            Debug.Log($"Getting Services for {peripheral.id}");
+            instance.statusText.text = $"Getting Services for {peripheral.id}";
         }
 
         void GetCharacteristics(string service)
         {
             device.connection.GetCharacteristics(service);
 
-            BluetoothTest.instance.statusText.text = $"Getting Characteristics for {peripheral.id} {service}";
+            Debug.Log($"Getting Characteristics for {peripheral.id} {service}");
+            instance.statusText.text = $"Getting Characteristics for {peripheral.id} {service}";
         }
 
         void SubscribeToCharacteristicUpdate(string service, string characteristic)
         {
             device.connection.SubscribeToCharacteristicUpdate(service, characteristic);
 
-            BluetoothTest.instance.statusText.text = $"Subscribing to {characteristic}";
+            Debug.Log($"Subscribing to {characteristic}");
+            instance.statusText.text = $"Subscribing to {characteristic}";
         }
 
         void OnConnected(BluetoothConnection connection)
         {
-            BluetoothTest.instance.statusText.text = $"Connected to {connection.ID}";
+            Debug.Log($"Connected to {connection.ID}");
+            instance.statusText.text = $"Connected to {connection.ID}";
 
             connected = true;
             connecting = false;
@@ -105,19 +133,21 @@ namespace VoyagerApp.UI.Menus
             connection.OnData = OnData;
             connection.OnServices = OnServices;
             connection.OnCharacteristics = OnCharacteristics;
-            device = new BluetoothDevice(device.id, device.name, device.rssi, connection);
+            device = new BluetoothDevice(peripheral.id, peripheral.name, peripheral.rssi, connection);
 
             GetServices();
         }
 
         void OnData(string id, byte[] data)
         {
-            BluetoothTest.instance.statusText.text = Encoding.UTF8.GetString(data);
+            Debug.Log(Encoding.UTF8.GetString(data));
+            instance.statusText.text = Encoding.UTF8.GetString(data);
         }
 
         void OnFailed(string id)
         {
-            BluetoothTest.instance.statusText.text = $"Faild to connect {id}";
+            Debug.Log($"Faild to connect {id}");
+            instance.statusText.text = $"Faild to connect {id}";
 
             connecting = false;
             connected = false;
@@ -125,7 +155,8 @@ namespace VoyagerApp.UI.Menus
 
         void OnDisconnected(string id)
         {
-            BluetoothTest.instance.statusText.text = $"Disconnected from {id}";
+            Debug.Log($"Disconnected from {id}");
+            instance.statusText.text = $"Disconnected from {id}";
 
             connecting = false;
             connected = false;
@@ -137,7 +168,8 @@ namespace VoyagerApp.UI.Menus
 
             foreach (var service in services)
             {
-                BluetoothTest.instance.statusText.text = $"Service found - {service}";
+                Debug.Log($"Service found - {service}");
+                instance.statusText.text = $"Service found - {service}";
 
                 if (service == SERVICE_UID)
                     GetCharacteristics(service);
@@ -148,7 +180,8 @@ namespace VoyagerApp.UI.Menus
         {
             foreach (var characteristic in characteristics)
             {
-                BluetoothTest.instance.statusText.text = $"Characteristic found - {characteristic}";
+                Debug.Log($"Characteristic found - {characteristic}");
+                instance.statusText.text = $"Characteristic found - {characteristic}";
 
                 device.characteristics.Add(characteristic, service);
 
@@ -167,7 +200,8 @@ namespace VoyagerApp.UI.Menus
 
             device.connection.Write(SERVICE_UID, UART_RX_CHARACTERISTIC_UUID, new PollRequestPacket().Serialize());
 
-            BluetoothTest.instance.statusText.text = $"Polling Data";
+            Debug.Log($"Polling Data");
+            instance.statusText.text = $"Polling Data";
         }
     }
 }

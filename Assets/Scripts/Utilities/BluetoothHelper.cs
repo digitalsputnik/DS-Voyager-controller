@@ -108,6 +108,8 @@ public class BluetoothConnection
     public void HandleDisconnection()
     {
         OnData = null;
+        OnCharacteristics = null;
+        OnServices = null;
     }
 
     void OnDataUpdate(PeripheralAccess access, string service, string characteristic, byte[] data)

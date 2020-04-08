@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DigitalSputnik.Bluetooth;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,8 +7,6 @@ using VoyagerApp.UI.Menus;
 
 public class BluetoothTest : MonoBehaviour
 {
-    public static BluetoothTest instance;
-
     [SerializeField] public BLEItem prefab;
     [SerializeField] public Transform container;
     [SerializeField] public Text statusText;
@@ -25,8 +24,6 @@ public class BluetoothTest : MonoBehaviour
     {
         Debug.Log("BluetoothLog: initialized bluetooth");
 
-        instance = this;
-
         StartScanningBleLamps();
     }
 
@@ -42,15 +39,31 @@ public class BluetoothTest : MonoBehaviour
         BluetoothHelper.StopScanningForLamps();
     }
 
+    public void ResetAllItems()
+    {
+        foreach (var item in items)
+        {
+            if (item.connected)
+            {
+                item.ResetItem();
+            }
+        }
+    }
+
     void OnScanned(PeripheralInfo peripheral)
     {
         Debug.Log($"BluetoothLog: Scanned Lamp - {peripheral.id} {peripheral.name} {peripheral.rssi}");
 
-        BLEItem item = Instantiate(prefab, container);
-        item.SetPeripheral(peripheral);
-        items.Add(item);
-
-        StopScanningBleLamps();
+        if(items.Any(i => i.peripheral.id == peripheral.id))
+        {
+            items.FirstOrDefault(i => i.peripheral.id == peripheral.id).SetPeripheral(peripheral, this);
+        }
+        else
+        {
+            BLEItem item = Instantiate(prefab, container);
+            item.SetPeripheral(peripheral, this);
+            items.Add(item);
+        }
     }
 }
 
