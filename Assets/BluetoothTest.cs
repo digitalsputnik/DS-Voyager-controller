@@ -39,17 +39,6 @@ public class BluetoothTest : MonoBehaviour
         BluetoothHelper.StopScanningForLamps();
     }
 
-    public void ResetAllItems()
-    {
-        foreach (var item in items)
-        {
-            if (item.connected)
-            {
-                item.ResetItem();
-            }
-        }
-    }
-
     void OnScanned(PeripheralInfo peripheral)
     {
         Debug.Log($"BluetoothLog: Scanned Lamp - {peripheral.id} {peripheral.name} {peripheral.rssi}");

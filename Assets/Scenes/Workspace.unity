@@ -13128,8 +13128,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431810be76ab140c89a778e5c190bd26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
-  container: {fileID: 56656820}
+  prefab: {fileID: 8685777877286954254, guid: 97e1419c80d2a9842a6212dc3d853b3c, type: 3}
+  container: {fileID: 56656821}
   statusText: {fileID: 183962900}
   items: []
 --- !u!1001 &1523417870
@@ -19927,7 +19927,7 @@ PrefabInstance:
     - target: {fileID: 8455935338822375204, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
         type: 3}
       propertyPath: voyagerAnimVersion
-      value: 1.303
+      value: 1.304
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7627344489101607328, guid: 5a5e02a9e8076452585ceb20c6b05f0a, type: 3}

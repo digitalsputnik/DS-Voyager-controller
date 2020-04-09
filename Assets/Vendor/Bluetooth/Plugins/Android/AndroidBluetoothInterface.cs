@@ -25,7 +25,7 @@ namespace DigitalSputnik.Bluetooth
         InternalCharacteristicHandler _onCharacteristics;
         InternalCharacteristicUpdateHandler _onCharacteristicUpdate;
 
-        bool _scanning;
+        bool _scanning = false;
 
         List<ScannedAndroidDevice> _scannedDevices = new List<ScannedAndroidDevice>();
         List<ScannedAndroidDevice> _connectedDevices = new List<ScannedAndroidDevice>();
@@ -76,7 +76,7 @@ namespace DigitalSputnik.Bluetooth
                 if (services == null)
                     services = new string[0];
 
-                _scannedDevices.Clear();
+                //_scannedDevices.Clear();
                 _pluginObject.Call("startScanning", services);
                 _onPeripheralScanned = callback;
                 _scanning = true;
@@ -109,9 +109,6 @@ namespace DigitalSputnik.Bluetooth
 
             if (device != null)
             {
-                _onConnect = null;
-                _onConnectFail = null;
-                _onDisconnect = null;
                 _onConnect = onConnect;
                 _onConnectFail = onFail;
                 _onDisconnect = onDisconnect;
@@ -146,7 +143,6 @@ namespace DigitalSputnik.Bluetooth
             if (device != null && device.connected)
             {
                 _pluginObject.Call("getServices", device.gatt);
-                _onServices = null;
                 _onServices = callback;
             }
         }
@@ -159,7 +155,6 @@ namespace DigitalSputnik.Bluetooth
             {
                 if (device.services.ContainsKey(service))
                 {
-                    _onCharacteristics = null;
                     _onCharacteristics = callback;
 
                     var serviceObject = device.services[service];
@@ -180,7 +175,6 @@ namespace DigitalSputnik.Bluetooth
 
             if (device != null && device.connected)
             {
-                _onCharacteristicUpdate = null;
                 _onCharacteristicUpdate = callback;
             }
         }
