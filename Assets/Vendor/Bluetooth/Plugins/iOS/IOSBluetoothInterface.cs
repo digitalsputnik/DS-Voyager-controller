@@ -24,7 +24,7 @@ namespace DigitalSputnik.Bluetooth
         private static extern void _iOSInitialize();
 
         [DllImport("__Internal")]
-        private static extern void _iOSStartScanning();
+        private static extern void _iOSStartScanning(string[] services, int count);
 
         [DllImport("__Internal")]
         private static extern void _iOSStopScanning();
@@ -80,7 +80,10 @@ namespace DigitalSputnik.Bluetooth
             if (!_scanning)
             {
                 _onPeripheralScanned = callback;
-                _iOSStartScanning();
+                if (services != null)
+                    _iOSStartScanning(services, services.Length);
+                else
+                    _iOSStartScanning(null, 0);
                 _scanning = true;
             }
             else

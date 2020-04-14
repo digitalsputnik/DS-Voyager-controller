@@ -28,11 +28,11 @@
         [instance initializeBluetooth];
     }
 
-    - (void)startScanning
+    - (void)startScanning:(NSArray *)services
     {
         [_peripheralsList removeAllObjects];
         NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], CBCentralManagerScanOptionAllowDuplicatesKey, nil];
-        [_centralManager scanForPeripheralsWithServices:nil options:options];
+        [_centralManager scanForPeripheralsWithServices:services options:options];
     }
 
     - (void)stopScanning
@@ -273,9 +273,18 @@ extern "C" {
         [BluetoothInterface initialize];
     }
 
-    void _iOSStartScanning()
+    void _iOSStartScanning(const char* services[], int count)
     {
-        [[BluetoothInterface shared] startScanning];
+        if (count > 0) {
+            NSMutableArray* servicesArray = [[NSMutableArray alloc] init];
+            for (int i = 0; i < count; i++) {
+                NSString* service = [[NSString alloc] initWithUTF8String:services[i]];
+                [servicesArray addObject:service];
+            }
+            [[BluetoothInterface shared] startScanning:servicesArray];
+        } else {
+            [[BluetoothInterface shared] startScanning:nil];
+        }
     }
 
     void _iOSStopScanning()

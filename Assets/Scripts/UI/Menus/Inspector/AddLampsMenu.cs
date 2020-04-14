@@ -64,6 +64,12 @@ namespace VoyagerApp.UI.Menus
         {
             Debug.Log("BluetoothLog: Initialized Bluetooth");
             initialized = true;
+            StartCoroutine(WaitInternalBluetoothInitialize());
+        }
+
+        IEnumerator WaitInternalBluetoothInitialize()
+        {
+            yield return new WaitForSeconds(0.3f);
             StartScanning();
         }
 

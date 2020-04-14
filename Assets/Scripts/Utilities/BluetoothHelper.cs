@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using DigitalSputnik.Bluetooth;
 using UnityEngine;
-using VoyagerApp.UI.Menus;
 
 public static class BluetoothHelper
 {
