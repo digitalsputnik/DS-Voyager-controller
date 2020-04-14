@@ -18,12 +18,12 @@ namespace DigitalSputnik.Bluetooth
         AndroidBluetoothListener _listener;
 
         InternalPeripheralScanHandler _onPeripheralScanned;
-        InternalPeripheralConnectHandler _onConnect;
-        InternalPeripheralConnectFailHandler _onConnectFail;
-        InternalPeripheralDisconnectHandler _onDisconnect;
-        InternalServicesHandler _onServices;
-        InternalCharacteristicHandler _onCharacteristics;
-        InternalCharacteristicUpdateHandler _onCharacteristicUpdate;
+        Dictionary<string, InternalPeripheralConnectHandler> _onConnect = new Dictionary<string, InternalPeripheralConnectHandler>();
+        Dictionary<string, InternalPeripheralConnectFailHandler> _onConnectFail = new Dictionary<string, InternalPeripheralConnectFailHandler>();
+        Dictionary<string, InternalPeripheralDisconnectHandler> _onDisconnect = new Dictionary<string, InternalPeripheralDisconnectHandler>();
+        Dictionary<string, InternalServicesHandler> _onServices = new Dictionary<string, InternalServicesHandler>(); 
+        Dictionary<string, InternalCharacteristicHandler> _onCharacteristics = new Dictionary<string, InternalCharacteristicHandler>();
+        Dictionary<string, InternalCharacteristicUpdateHandler> _onCharacteristicUpdate = new Dictionary<string, InternalCharacteristicUpdateHandler>();
 
         bool _scanning = false;
 
@@ -76,9 +76,12 @@ namespace DigitalSputnik.Bluetooth
                 if (services == null)
                     services = new string[0];
 
-                //_scannedDevices.Clear();
+                _scannedDevices.Clear();
                 _pluginObject.Call("startScanning", services);
-                _onPeripheralScanned = callback;
+
+                if(_onPeripheralScanned == null)
+                    _onPeripheralScanned = callback;
+
                 _scanning = true;
             }
         }
@@ -109,9 +112,9 @@ namespace DigitalSputnik.Bluetooth
 
             if (device != null)
             {
-                _onConnect = onConnect;
-                _onConnectFail = onFail;
-                _onDisconnect = onDisconnect;
+                _onConnect[mac] = onConnect;
+                _onConnectFail[mac] = onFail;
+                _onDisconnect[mac] = onDisconnect;
                 device.connecting = true;
 
                 _pluginObject.Call("connect", device.device);
@@ -143,7 +146,7 @@ namespace DigitalSputnik.Bluetooth
             if (device != null && device.connected)
             {
                 _pluginObject.Call("getServices", device.gatt);
-                _onServices = callback;
+                    _onServices[mac] = callback;
             }
         }
 
@@ -155,7 +158,7 @@ namespace DigitalSputnik.Bluetooth
             {
                 if (device.services.ContainsKey(service))
                 {
-                    _onCharacteristics = callback;
+                    _onCharacteristics[mac] = callback;
 
                     var serviceObject = device.services[service];
                     var parameters = new object[] { device.mac, serviceObject };
@@ -175,7 +178,7 @@ namespace DigitalSputnik.Bluetooth
 
             if (device != null && device.connected)
             {
-                _onCharacteristicUpdate = callback;
+                    _onCharacteristicUpdate[mac] = callback;
             }
         }
 
@@ -237,24 +240,28 @@ namespace DigitalSputnik.Bluetooth
                         device.gatt = gatt;
                         device.connected = true;
                         device.connecting = false;
-                        _onConnect?.Invoke(mac);
+                        _onConnect[mac]?.Invoke(mac);
                     }
                     else
-                        _onConnectFail?.Invoke(mac, "Unknown device connected");
+                        _onConnectFail[mac]?.Invoke(mac, "Unknown device connected");
                 }
-                else
+                else if (state == 0)
                 {
                     if (device != null)
                     {
                         if (device.connecting)
-                            _onConnectFail?.Invoke(mac, "Something went wrong...");
+                            _onConnectFail[mac]?.Invoke(mac, "Something went wrong...");
                         else
-                            _onDisconnect?.Invoke(mac, "Disconnected");
+                            _onDisconnect[mac]?.Invoke(mac, "Disconnected");
 
                         _connectedDevices.Remove(device);
                     }
                     else
-                        _onConnectFail?.Invoke(mac, "Unknown device disconnected");
+                        _onConnectFail[mac]?.Invoke(mac, "Unknown device disconnected");         
+                }
+                else
+                {
+                    Debug.Log($"New Connection State {state}");
                 }
             });
         }
@@ -270,7 +277,7 @@ namespace DigitalSputnik.Bluetooth
                 device.services[serviceUuid] = service;
 
                 if(device.services.Count == servicesSize)
-                    _onServices?.Invoke(device.mac, device.services.Keys.ToArray());
+                    _onServices[mac]?.Invoke(device.mac, device.services.Keys.ToArray());
             }
         }
 
@@ -288,7 +295,7 @@ namespace DigitalSputnik.Bluetooth
                 {
                     var service = device.services[serviceUuid];
                     var characteristics = device.characteristics.Keys.ToArray();
-                    _onCharacteristics?.Invoke(mac, serviceUuid, characteristics);
+                    _onCharacteristics[mac]?.Invoke(mac, serviceUuid, characteristics);
                 }
             }
         }
@@ -297,15 +304,14 @@ namespace DigitalSputnik.Bluetooth
         {
             var device = _connectedDevices.FirstOrDefault(d => d.mac == mac);
 
-            if (device != null && device.connected)
+            if (device != null)
             {
                 if (device.mac != mac) return;
 
                 var service = device.services[serviceUuid];
                 var characteristic = device.characteristics[characteristicUuid];
                 var data = Encoding.UTF8.GetBytes(message);
-                _onCharacteristicUpdate?.Invoke(mac, serviceUuid, characteristicUuid, data);
-
+                _onCharacteristicUpdate[mac]?.Invoke(mac, serviceUuid, characteristicUuid, data);
             }
         }
 

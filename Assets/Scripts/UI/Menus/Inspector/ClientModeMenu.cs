@@ -8,6 +8,7 @@ using UnityEngine.Android;
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
+using VoyagerApp.Networking.Voyager;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 
@@ -28,9 +29,11 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] float animationSpeed       = 0.6f;
 
         public List<string> foundSsidList = new List<string>();
+        List<BLEItem> selectedLamps;
 
         Dictionary<Lamp, List<string>> lampToSsids = new Dictionary<Lamp, List<string>>();
         bool loading;
+        bool settingBleLamps = false;
 
         public override void Start()
         {
@@ -40,19 +43,16 @@ namespace VoyagerApp.UI.Menus
 
         internal override void OnShow()
         {
-            //ssidField.onValueChanged.AddListener(SsidFieldTextChanged);
             if (ssidFieldObj.activeSelf) TypeSsidBtnClick();
             status.SetActive(false);
         }
 
         internal override void OnHide()
         {
-            //ssidField.onValueChanged.RemoveListener(SsidFieldTextChanged);
             setBtn.onClick.RemoveAllListeners();
             setBtn.onClick.AddListener(Set);
-            //BluetoothTest.instance.StopScanningBleLamps();
-            //BluetoothTest.instance.DisconnectAndRemoveAllLamps();
             lampToSsids.Clear();
+            settingBleLamps = false;
         }
 
         public void ScanForSsidsBtnClick()
@@ -90,7 +90,7 @@ namespace VoyagerApp.UI.Menus
             ssidList.index = 0;
             ssidList.interactable = false;
             ssidRefreshBtn.interactable = false;
-            /*if(BluetoothTest.instance.settingClient != true)
+            if(settingBleLamps != true)
             {
                 lampToSsids.Clear();
                 StartCoroutine(IEnumGetSsidListFromLamps());
@@ -99,7 +99,7 @@ namespace VoyagerApp.UI.Menus
             {
                 foundSsidList.Clear();
                 StartCoroutine(AndroidSsidTest());
-            }*/
+            }
             StartCoroutine(IEnumLoadingAnimation());
         }
 
@@ -197,12 +197,26 @@ namespace VoyagerApp.UI.Menus
 
         #endregion
 
-       /* #region AndroidBleLampsTest
+        #region AndroidBleLampsTest
 
-        public void SetupBluetooth()
+        public void SetupBluetooth(List<BLEItem> _selectedLamps)
         {
+            settingBleLamps = true;
+            selectedLamps = null;
+            selectedLamps = _selectedLamps;
             setBtn.onClick.RemoveAllListeners();
             setBtn.onClick.AddListener(SetBluetooth);
+            StartCoroutine(ConnectLamps());
+        }
+
+        IEnumerator ConnectLamps()
+        {
+            foreach (var lamp in selectedLamps)
+            {
+                lamp.settingClient = true;
+                lamp.Connect();
+                yield return new WaitUntil(() => lamp.connected);
+            }
         }
 
         bool AndroidPremissions()
@@ -268,27 +282,28 @@ namespace VoyagerApp.UI.Menus
 
         IEnumerator SetClient()
         {
-            yield return new WaitUntil(() => BluetoothTest.instance.AllLampsConnnected());
-
+            yield return new WaitUntil(() => selectedLamps.Where(i => i.selected).Count() == selectedLamps.Where(i => i.connected).Count());
+            
             var ssid = ssidListObj.activeSelf ? ssidList.selected : ssidField.text;
             var password = passwordField.text;
 
-            foreach (var lamp in BluetoothTest.instance.bleItems.Where(l => l.connected))
+            foreach (var lamp in selectedLamps.Where(l => l.connected))
             {
-                var package = VoyagerNetworkMode.Client(ssid, password, lamp.serial).ToData();
+                var package = VoyagerNetworkMode.Client(ssid, password, lamp.peripheral.name);
 
-                string withoutOpCode = Encoding.UTF8.GetString(package, 0, package.Length);
-                string withOpCode = @"{""op_code"": ""network_mode_request"", " + withoutOpCode.Substring(1);
+                while (!selectedLamps.FirstOrDefault(l => l.peripheral.id == lamp.peripheral.id).writeReceived)
+                {
+                    lamp.Write(package.ToData());
+                    yield return new WaitForSeconds(2);
+                }
 
-                byte[] data = Encoding.UTF8.GetBytes(withOpCode);
-                lamp.androidDevice.Call("write", data);
+                lamp.settingClient = false;
             }
 
-            BluetoothTest.instance.settingClient = false;
-            BluetoothTest.instance.inspector.ShowMenu(null);
+            GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
-        #endregion*/
+        #endregion
 
         public void Set()
         {

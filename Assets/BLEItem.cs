@@ -1,10 +1,9 @@
 ﻿using DigitalSputnik.Bluetooth;
-using System.Collections;
+using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
-using VoyagerApp.Lamps.Voyager;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -23,10 +22,12 @@ namespace VoyagerApp.UI.Menus
         public bool selected = false;
         public bool connecting = false;
         public bool connected = false;
+        public bool writeReceived = false;
+        public bool settingClient = false;
 
-        BluetoothTest instance;
+        AddLampsMenu instance;
 
-        public void SetPeripheral(PeripheralInfo _peripheral, BluetoothTest _instance)
+        public void SetPeripheral(PeripheralInfo _peripheral, AddLampsMenu _instance)
         {
             peripheral = _peripheral;
             instance = _instance;
@@ -37,7 +38,7 @@ namespace VoyagerApp.UI.Menus
 
         public void OnClick()
         {
-            if(instance.items.Where(i => i.connected == true).Count() < 5)
+            if(instance.scannedLamps.Where(i => i.selected == true).Count() < 5)
             {
                 selected = !selected;
 
@@ -48,161 +49,168 @@ namespace VoyagerApp.UI.Menus
                 {
                     btnColor.selectedColor = new Color(0.8f, 0.8f, 0.8f, 1f);
                     btnColor.normalColor = new Color(0.8f, 0.8f, 0.8f, 1f);
-                    Connect();
                 }
                 else
                 {
                     btnColor.selectedColor = Color.white;
                     btnColor.normalColor = Color.white;
-                    Disconnect();
                 }
 
                 btn.colors = btnColor;
             }
         }
 
-        void Connect()
+        public void Connect()
         {
-            Log($"Connecting to lamp {peripheral.id}");
-            connecting = true;
-            BluetoothHelper.ConnectToPeripheral(peripheral.id, OnConnected, OnFailed, OnDisconnected);
+            if (!connected)
+            {
+                Debug.Log($"Connecting to lamp {peripheral.id}");
+                connecting = true;
+                BluetoothHelper.ConnectToPeripheral(peripheral.id, OnConnected, OnFailed, OnDisconnected);
+            }
         }
 
-        void Disconnect()
+        public void Disconnect()
         {
-            BluetoothHelper.DisconnectFromPeripheral(peripheral.id);
+            if (connected)
+            {
+                Debug.Log($"Disconnecting to lamp {peripheral.id}");
+
+                BluetoothHelper.DisconnectFromPeripheral(peripheral.id);
+            }
         }
 
         void GetServices()
         {
-            device.connection.GetServices();
+            Debug.Log($"Getting Services for {peripheral.id}");
 
-            Log($"Getting Services for {peripheral.id}");
+            device.connection.GetServices();
         }
 
         void GetCharacteristics(string service)
         {
-            device.connection.GetCharacteristics(service);
+            Debug.Log($"Getting Characteristics for {peripheral.id} {service}");
 
-            Log($"Getting Characteristics for {peripheral.id} {service}");
+            device.connection.GetCharacteristics(service);
         }
 
         void SubscribeToCharacteristicUpdate(string service, string characteristic)
         {
-            device.connection.SubscribeToCharacteristicUpdate(service, characteristic);
+            Debug.Log($"Subscribing to {characteristic}");
 
-            Log($"Subscribing to {characteristic}");
+            device.connection.SubscribeToCharacteristicUpdate(service, characteristic);
         }
 
         void OnConnected(BluetoothConnection connection)
         {
-            Log($"Connected to {connection.ID}");
+            if (!connected)
+            {
+                Debug.Log($"Connected to {connection.ID}");
 
-            connected = true;
-            connecting = false;
+                if (connection.ID == peripheral.id)
+                {
 
-            connection.OnData = OnData;
-            connection.OnServices = OnServices;
-            connection.OnCharacteristics = OnCharacteristics;
-            device = new BluetoothDevice(peripheral.id, peripheral.name, peripheral.rssi, connection);
+                    connection.OnData = OnData;
+                    connection.OnServices = OnServices;
+                    connection.OnCharacteristics = OnCharacteristics;
+                    device = new BluetoothDevice(peripheral.id, peripheral.name, peripheral.rssi, connection);
 
-            GetServices();
-        }
-
-        void OnData(string id, byte[] data)
-        {
-            Log(Encoding.UTF8.GetString(data));
+                    GetServices();
+                }
+            }
         }
 
         void OnFailed(string id)
         {
-            Log($"Faild to connect {id}");
+            Debug.Log($"Failed to connect {id}");
 
             connecting = false;
             connected = false;
+
+            if (settingClient)
+            {
+                Connect();
+            }
         }
 
         void OnDisconnected(string id)
         {
-            Log($"Disconnected from {id}");
+            Debug.Log($"Disconnected from {id}");
 
             connecting = false;
             connected = false;
 
-            selected = false;
-
-            var btn = GetComponent<Button>();
-            ColorBlock btnColor = btn.colors;
-
-            btnColor.selectedColor = Color.white;
-            btnColor.normalColor = Color.white;
-
-            btn.colors = btnColor;
-        }
-
-        void OnServices(string id, string[] services)
-        {
-            device.services = services;
-
-            foreach (var service in services)
+            if (settingClient)
             {
-                Log($"Service found - {service}");
-
-                if (service == SERVICE_UID)
-                    GetCharacteristics(service);
-            }
-        }
-
-        void OnCharacteristics(string id, string service, string[] characteristics)
-        {
-            foreach (var characteristic in characteristics)
-            {
-                Log($"Characteristic found - {characteristic}");
-
-                if (!device.characteristics.ContainsKey(characteristic))
-                {
-                    device.characteristics.Add(characteristic, service);
-                }
-
-                if (characteristic == UART_TX_CHARACTERISTIC_UUID)
-                {
-                    SubscribeToCharacteristicUpdate(service, characteristic);
-                }
-            }
-
-            StartCoroutine(SetMaster());
-        }
-
-        IEnumerator SetMaster()
-        {
-            yield return new WaitForSeconds(5);
-
-            VoyagerNetworkMode package;
-
-            if (peripheral.name.Contains("-"))
-            {
-                string[] split = peripheral.name.Split('-');
-                package = VoyagerNetworkMode.Master(split[0]);
+                Connect();
             }
             else
             {
-                package = VoyagerNetworkMode.Master(peripheral.name);
-            }
-
-            if (package != null)
-            {
-                var json = package.ToData();
-
-                device.connection.Write(SERVICE_UID, UART_RX_CHARACTERISTIC_UUID, json);
-
-                Log($"Polling Data");
+                device.connection.HandleDisconnection();
             }
         }
 
-        void Log(string log)
+        void OnServices(string[] services)
         {
-            Debug.Log(log);
-            instance.statusText.text = log;
+            if(device.services == null)
+            {
+                device.services = services;
+
+                foreach (var service in services)
+                {
+                    Debug.Log($"Service found - {service}");
+
+                    if (service == SERVICE_UID)
+                        GetCharacteristics(service);
+                }
+            }
+        }
+
+        void OnCharacteristics(string service, string[] characteristics)
+        {
+            if (!device.characteristics.ContainsValue(service))
+            {
+                foreach (var characteristic in characteristics)
+                {
+                    Debug.Log($"Characteristic found - {characteristic}");
+
+                    if (!device.characteristics.ContainsKey(characteristic))
+                    {
+                        device.characteristics.Add(characteristic, service);
+                    }
+
+                    if (characteristic == UART_TX_CHARACTERISTIC_UUID)
+                    {
+                        SubscribeToCharacteristicUpdate(service, characteristic);
+                    }
+
+                    if (device.characteristics.ContainsKey(UART_TX_CHARACTERISTIC_UUID) && device.characteristics.ContainsKey(UART_RX_CHARACTERISTIC_UUID))
+                    {
+                        connected = true;
+                        connecting = false;
+                        Debug.Log($"Fully Connected - {peripheral.id}");
+                    }
+                }
+            }
+        }
+
+        void OnData(byte[] data)
+        {
+            Debug.Log(Encoding.UTF8.GetString(data));
+
+            if (Encoding.UTF8.GetString(data) == @"{""op_code"": ""ble_ack""}")
+            {
+                writeReceived = true;
+            }
+        }
+
+        public void Write(byte[] data)
+        {
+            writeReceived = false;
+
+            device.connection.Write(SERVICE_UID, UART_RX_CHARACTERISTIC_UUID, data);
+
+            Debug.Log($"Writing Data");
         }
     }
 }

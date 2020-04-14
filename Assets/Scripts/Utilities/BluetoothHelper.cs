@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik.Bluetooth;
 using UnityEngine;
@@ -9,9 +10,9 @@ public static class BluetoothHelper
 {
     public const string SERVICE_UID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
 
-    static BluetoothConnectedHandler _onConnect;
-    static Action<string> _onFail;
-    static Action<string> _onDisconnect;
+    static Dictionary<string, BluetoothConnectedHandler> _onConnect = new Dictionary<string, BluetoothConnectedHandler>();
+    static Dictionary<string, Action<string>> _onFail = new Dictionary<string, Action<string>>();
+    static Dictionary<string, Action<string>> _onDisconnect = new Dictionary<string, Action<string>>();
 
     public static void Initialize(MonoBehaviour behaviour, Action onInitialized)
     {
@@ -41,9 +42,9 @@ public static class BluetoothHelper
 
     public static void ConnectToPeripheral(string id, BluetoothConnectedHandler onConnected, Action<string> onFail, Action<string> onDisconnect)
     {
-        _onConnect = onConnected;
-        _onFail = onFail;
-        _onDisconnect = onDisconnect;
+        _onConnect[id] = onConnected;
+        _onFail[id] = onFail;
+        _onDisconnect[id] = onDisconnect;
 
         BluetoothAccess.Connect(id, OnConnect, OnFailed, OnDisconnect);
     }
@@ -55,17 +56,17 @@ public static class BluetoothHelper
 
     static void OnConnect(PeripheralAccess access)
     {
-        _onConnect?.Invoke(new BluetoothConnection(access));
+        _onConnect[access.ID]?.Invoke(new BluetoothConnection(access));
     }
 
     static void OnFailed(PeripheralInfo peripheral, string error)
     {
-        _onFail?.Invoke(peripheral.id);
+        _onFail[peripheral.id]?.Invoke(peripheral.id);
     }
 
     static void OnDisconnect(PeripheralInfo peripheral, string error)
     {
-        _onDisconnect?.Invoke(peripheral.id);
+        _onDisconnect[peripheral.id]?.Invoke(peripheral.id);
     }
 }
 
@@ -73,9 +74,9 @@ public delegate void BluetoothConnectedHandler(BluetoothConnection connection);
 
 public class BluetoothConnection
 {
-    public Action<string, string[]> OnServices;
-    public Action<string, string, string[]> OnCharacteristics;
-    public Action<string, byte[]> OnData;
+    public Action<string[]> OnServices;
+    public Action<string, string[]> OnCharacteristics;
+    public Action<byte[]> OnData;
     public string ID => _access.ID;
 
     public PeripheralAccess _access;
@@ -108,22 +109,22 @@ public class BluetoothConnection
     public void HandleDisconnection()
     {
         OnData = null;
-        OnCharacteristics = null;
         OnServices = null;
+        OnCharacteristics = null;
     }
 
     void OnDataUpdate(PeripheralAccess access, string service, string characteristic, byte[] data)
     {
-        OnData?.Invoke(access.ID, data);
+        OnData?.Invoke(data);
     }
 
     void OnServicesUpdate(PeripheralAccess access, string[] services)
     {
-        OnServices?.Invoke(access.ID, services);
+        OnServices?.Invoke(services);
     }
 
     void OnCharacteristicsUpdate(PeripheralAccess access, string service, string[] characteristics)
     {
-        OnCharacteristics?.Invoke(access.ID, service, characteristics);
+        OnCharacteristics?.Invoke(service, characteristics);
     }
 }

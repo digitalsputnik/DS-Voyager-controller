@@ -18846,10 +18846,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8bb32caf952c478a949de19b7165029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menu: {fileID: 1348052981}
   wifiContainer: {fileID: 1665760183}
   bleContainer: {fileID: 56656821}
   prefab: {fileID: -6405898369269562798, guid: d29b1fa6ad7644da297bc16e81bbcaed, type: 3}
+  blePrefab: {fileID: 8685777877286954254, guid: 97e1419c80d2a9842a6212dc3d853b3c,
+    type: 3}
   addAllLampsBtn: {fileID: 960163899}
+  scannedLamps: []
 --- !u!225 &2072530007
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -19927,7 +19931,7 @@ PrefabInstance:
     - target: {fileID: 8455935338822375204, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
         type: 3}
       propertyPath: voyagerAnimVersion
-      value: 1.304
+      value: 1.310
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7627344489101607328, guid: 5a5e02a9e8076452585ceb20c6b05f0a, type: 3}

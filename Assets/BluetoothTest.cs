@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik.Bluetooth;
 using UnityEngine;
@@ -15,9 +16,12 @@ public class BluetoothTest : MonoBehaviour
 
     public List<PeripheralInfo> scannedDevices = new List<PeripheralInfo>();
 
+    bool anyLampsSelected = false;
+    bool scanning = false;
+
     void Start()
     {
-        BluetoothHelper.Initialize(this, OnInitialized);
+        //BluetoothHelper.Initialize(this, OnInitialized);
     }
 
     void OnInitialized()
@@ -30,12 +34,13 @@ public class BluetoothTest : MonoBehaviour
     public void StartScanningBleLamps()
     {
         Debug.Log($"BluetoothLog: Scanning Lamps");
-
+        scanning = true;
         BluetoothHelper.StartScanningForLamps(OnScanned);
     }
 
     public void StopScanningBleLamps()
     {
+        scanning = false;
         BluetoothHelper.StopScanningForLamps();
     }
 
@@ -45,12 +50,12 @@ public class BluetoothTest : MonoBehaviour
 
         if(items.Any(i => i.peripheral.id == peripheral.id))
         {
-            items.FirstOrDefault(i => i.peripheral.id == peripheral.id).SetPeripheral(peripheral, this);
+            //items.FirstOrDefault(i => i.peripheral.id == peripheral.id).SetPeripheral(peripheral, this);
         }
         else
         {
             BLEItem item = Instantiate(prefab, container);
-            item.SetPeripheral(peripheral, this);
+            //item.SetPeripheral(peripheral, this);
             items.Add(item);
         }
     }
