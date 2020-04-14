@@ -15,6 +15,7 @@ A clear and concise description of what the bug is.
  - OS: [e.g. iOS, OSX, Windows, Android]
  - Router: [e.g. Ubiquiti, Voyager AP]
  - External controller: [e.g. GrandMA]
+ - Versions: [e.g. Lamp firmware=1.31, UI=2.3.0]
 
 **To Reproduce**
 Steps to reproduce the behavior:
