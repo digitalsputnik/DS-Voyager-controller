@@ -279,7 +279,8 @@ extern "C" {
             NSMutableArray* servicesArray = [[NSMutableArray alloc] init];
             for (int i = 0; i < count; i++) {
                 NSString* service = [[NSString alloc] initWithUTF8String:services[i]];
-                [servicesArray addObject:service];
+                CBUUID* uuid = [CBUUID UUIDWithString:service];
+                [servicesArray addObject:uuid];
             }
             [[BluetoothInterface shared] startScanning:servicesArray];
         } else {

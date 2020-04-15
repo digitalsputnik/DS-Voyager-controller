@@ -98,7 +98,8 @@ namespace VoyagerApp.UI.Menus
             else
             {
                 foundSsidList.Clear();
-                StartCoroutine(AndroidSsidTest());
+                if (Application.platform == RuntimePlatform.Android)
+                    StartCoroutine(AndroidSsidTest());
             }
             StartCoroutine(IEnumLoadingAnimation());
         }
