@@ -109,7 +109,6 @@ namespace VoyagerApp.UI.Menus
 
                 if (connection.ID == peripheral.id)
                 {
-
                     connection.OnData = OnData;
                     connection.OnServices = OnServices;
                     connection.OnCharacteristics = OnCharacteristics;
@@ -160,7 +159,7 @@ namespace VoyagerApp.UI.Menus
                 {
                     Debug.Log($"Service found - {service}");
 
-                    if (service == SERVICE_UID)
+                    if (service.ToLower() == SERVICE_UID)
                         GetCharacteristics(service);
                 }
             }
@@ -170,8 +169,10 @@ namespace VoyagerApp.UI.Menus
         {
             if (!device.characteristics.ContainsValue(service))
             {
-                foreach (var characteristic in characteristics)
+                foreach (var charac in characteristics)
                 {
+                    var characteristic = charac.ToLower();
+
                     Debug.Log($"Characteristic found - {characteristic}");
 
                     if (!device.characteristics.ContainsKey(characteristic))

@@ -284,13 +284,14 @@ namespace VoyagerApp.UI.Menus
         IEnumerator SetClient()
         {
             yield return new WaitUntil(() => selectedLamps.Where(i => i.selected).Count() == selectedLamps.Where(i => i.connected).Count());
-            
+
             var ssid = ssidListObj.activeSelf ? ssidList.selected : ssidField.text;
             var password = passwordField.text;
 
             foreach (var lamp in selectedLamps.Where(l => l.connected))
             {
                 var package = VoyagerNetworkMode.Client(ssid, password, lamp.peripheral.name);
+                Debug.Log("json: " + Encoding.UTF8.GetString(package.ToData()));
 
                 while (!selectedLamps.FirstOrDefault(l => l.peripheral.id == lamp.peripheral.id).writeReceived)
                 {

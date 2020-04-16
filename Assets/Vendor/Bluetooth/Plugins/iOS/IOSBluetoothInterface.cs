@@ -107,24 +107,24 @@ namespace DigitalSputnik.Bluetooth
             _onConnected = onConnect;
             _onConnectFailed = onFail;
             _onDisconnect = onDisconnect;
-            _iOSConnect(id);
+            _iOSConnect(id.ToUpper());
         }
 
         public void Disconnect(string id)
         {
-            _iOSCancelConnection(id);
+            _iOSCancelConnection(id.ToUpper());
         }
 
         public void GetServices(string id, InternalServicesHandler callback)
         {
             _onServices = callback;
-            _iOSGetServices(id);
+            _iOSGetServices(id.ToUpper());
         }
 
         public void GetCharacteristics(string id, string service, InternalCharacteristicHandler callback)
         {
             _onCharacteristics = callback;
-            _iOSGetCharacteristics(id, service);
+            _iOSGetCharacteristics(id.ToUpper(), service.ToUpper());
         }
 
         public void SetCharacteristicsUpdateCallback(string id, InternalCharacteristicUpdateHandler callback)
@@ -134,13 +134,13 @@ namespace DigitalSputnik.Bluetooth
 
         public void SubscribeToCharacteristicUpdate(string id, string characteristic)
         {
-            _iOSSubscribeToCharacteristic(id, characteristic);
+            _iOSSubscribeToCharacteristic(id.ToUpper(), characteristic.ToUpper());
         }
 
         public void WriteToCharacteristic(string id, string characteristic, byte[] data)
         {
             GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
-            _iOSWriteToCharacteristic(id, characteristic, handle.AddrOfPinnedObject(), data.Length);
+            _iOSWriteToCharacteristic(id.ToUpper(), characteristic.ToUpper(), handle.AddrOfPinnedObject(), data.Length);
             handle.Free();
         }
 

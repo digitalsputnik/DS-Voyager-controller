@@ -125,6 +125,7 @@
                     if ([charac.UUID.description isEqualToString:characteristic])
                     {
                         [peripheral setNotifyValue:true forCharacteristic:charac];
+                        NSLog(@"subscribed to %@ - %@", uid, charac.UUID.description);
                     }
                 }
             }
@@ -144,6 +145,7 @@
                     if ([charac.UUID.description isEqualToString:characteristic])
                     {
                         [peripheral writeValue:data forCharacteristic:charac type:CBCharacteristicWriteWithResponse];
+                        NSLog(@"writing to %@ - %@: %@", uid, characteristic, data);
                     }
                 }
             }
@@ -259,6 +261,7 @@
     {
         NSString *data = [NSString stringWithFormat:@"%@|%@|%@|%@|%@", [peripheral identifier], characteristic.service.UUID.description, characteristic.UUID.description, error, [characteristic.value base64EncodedStringWithOptions:NSUTF8StringEncoding]];
         [self callUnityObject:"iOS Bluetooth Listener" Method:"UpdateCharacteristic" Parameter:[data  UTF8String]];
+        NSLog(@"reading from %@ - %@: %@", [peripheral identifier], [characteristic UUID], [characteristic value]);
     }
 
     - (void)callUnityObject:(const char*)object Method:(const char*)method Parameter:(const char*)parameter
@@ -325,7 +328,7 @@ extern "C" {
         [[BluetoothInterface shared] subscribeToCharacteristic:uidConv :charConv];
     }
 
-    void _iOSWriteToCharacteristic( const char* uid, const char* characteristic, const Byte* data, const int length )
+    void _iOSWriteToCharacteristic( const char* uid, const char* characteristic, const void* data, const int length )
     {
         NSString* uidConv = [[NSString alloc] initWithUTF8String:uid];
         NSString* charConv = [[NSString alloc] initWithUTF8String:characteristic];
