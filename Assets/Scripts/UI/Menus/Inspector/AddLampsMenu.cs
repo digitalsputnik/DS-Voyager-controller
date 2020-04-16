@@ -1,4 +1,5 @@
 ﻿using DigitalSputnik.Bluetooth;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +21,13 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] AddLampItem prefab     = null;
         [SerializeField] BLEItem blePrefab = null;
         [SerializeField] Button addAllLampsBtn  = null;
+        [SerializeField] Button addByBleBtn = null;
         List<AddLampItem> items = new List<AddLampItem>();
 
         public List<BLEItem> scannedLamps = new List<BLEItem>();
 
         bool initialized = false;
+        bool scanning = false;
 
         internal override void OnShow()
         {
@@ -33,10 +36,13 @@ namespace VoyagerApp.UI.Menus
             WorkspaceManager.instance.onItemAdded += ItemAddedToWorkspace;
             ApplicationState.OnNewProject += NewProject;
 
-            if (!initialized)
-                BluetoothHelper.Initialize(this, OnInitialized);
-            else
-                StartScanning();
+            if (!scanning)
+            {
+                if (!initialized)
+                    BluetoothHelper.Initialize(this, OnInitialized);
+                else
+                    StartScanning();
+            }
 
             addAllLampsBtn.gameObject.SetActive(false);
             OpenWifiList();
@@ -56,8 +62,6 @@ namespace VoyagerApp.UI.Menus
                 RemoveLampItem(lamp);
 
             StopCoroutine(AddLampsAgain());
-            StopScanning();
-            ClearCache();
         }
 
         void OnInitialized()
@@ -76,15 +80,34 @@ namespace VoyagerApp.UI.Menus
         void StartScanning()
         {
             Debug.Log($"BluetoothLog: Scanning lamps");
-            
+            scanning = true;
+            StartCoroutine(CheckLamps());
             BluetoothHelper.StartScanningForLamps(OnScanned);
         }
 
         void StopScanning()
         {
             Debug.Log($"BluetoothLog: Stopped scanning lamps");
-            
+            scanning = false;
+            StopCoroutine(CheckLamps());
             BluetoothHelper.StopScanningForLamps();
+        }
+
+        IEnumerator CheckLamps()
+        {
+            while (scanning)
+            {
+                foreach (var lamp in scannedLamps.ToList())
+                {
+                    if (lamp.lastScan.AddSeconds(10) < DateTime.Now)
+                    {
+                        scannedLamps.Remove(lamp);
+                        Destroy(lamp.gameObject);
+                    }
+                }
+
+                yield return new WaitForSeconds(1);
+            }
         }
 
         void OnScanned(PeripheralInfo peripheral)
@@ -165,24 +188,15 @@ namespace VoyagerApp.UI.Menus
 
         public void AddAllBleLamps()
         {
-            menu.SetupBluetooth(scannedLamps.Where(l => l.selected).ToList());
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(menu);
-            addAllLampsBtn.onClick.RemoveAllListeners();
-        }
-
-        public void ClearCache()
-        {
-            for (int i = 0; i < scannedLamps.Count; i++)
-                Destroy(scannedLamps[i].gameObject);
-
-            scannedLamps.Clear();
+            menu.SetupBluetooth(scannedLamps.Where(l => l.selected).ToList());
         }
 
         public void OpenBluetoothList()
         {
             wifiContainer.parent.gameObject.SetActive(false);
             bleContainer.parent.gameObject.SetActive(true);
-            addAllLampsBtn.gameObject.GetComponentInChildren<Text>().text = "CONNECT LAMPS";
+            addAllLampsBtn.gameObject.GetComponentInChildren<Text>().text = "CONNECT";
             addAllLampsBtn.onClick.RemoveAllListeners();
             addAllLampsBtn.onClick.AddListener(AddAllBleLamps);
         }
@@ -205,7 +219,10 @@ namespace VoyagerApp.UI.Menus
             }
 
             if (items.Count == 0)
-                GetComponentInParent<MenuContainer>().ShowMenu(null);
+            {
+                if (wifiContainer.parent.gameObject.activeSelf)
+                    GetComponentInParent<MenuContainer>().ShowMenu(null);
+            }
 
             CheckForAddAllLampsButton();
         }
@@ -224,10 +241,17 @@ namespace VoyagerApp.UI.Menus
 
         void CheckForAddAllLampsButton()
         {
-            if(wifiContainer.parent.gameObject.activeSelf)
+            if (wifiContainer.parent.gameObject.activeSelf)
+            {
                 addAllLampsBtn.gameObject.SetActive(items.Count > 1);
+
+                if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+                    addByBleBtn.gameObject.SetActive(scannedLamps.Count > 0);
+            }
             if (bleContainer.parent.gameObject.activeSelf)
+            {
                 addAllLampsBtn.gameObject.SetActive(scannedLamps.Where(i => i.selected).Count() > 0);
+            }
         }
     }
 }

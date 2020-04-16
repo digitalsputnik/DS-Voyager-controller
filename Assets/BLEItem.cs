@@ -1,5 +1,6 @@
 ﻿using DigitalSputnik.Bluetooth;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -25,6 +26,8 @@ namespace VoyagerApp.UI.Menus
         public bool writeReceived = false;
         public bool settingClient = false;
 
+        public DateTime lastScan;
+
         AddLampsMenu instance;
 
         public void SetPeripheral(PeripheralInfo _peripheral, AddLampsMenu _instance)
@@ -34,6 +37,8 @@ namespace VoyagerApp.UI.Menus
 
             serialText.text = peripheral.name;
             rssiText.text = peripheral.rssi.ToString();
+
+            lastScan = DateTime.Now;
         }
 
         public void OnClick()
@@ -103,20 +108,14 @@ namespace VoyagerApp.UI.Menus
 
         void OnConnected(BluetoothConnection connection)
         {
-            if (!connected)
-            {
-                Debug.Log($"Connected to {connection.ID}");
+            Debug.Log($"Connected to {connection.ID}");
 
-                if (connection.ID == peripheral.id)
-                {
-                    connection.OnData = OnData;
-                    connection.OnServices = OnServices;
-                    connection.OnCharacteristics = OnCharacteristics;
-                    device = new BluetoothDevice(peripheral.id, peripheral.name, peripheral.rssi, connection);
+            connection.OnData = OnData;
+            connection.OnServices = OnServices;
+            connection.OnCharacteristics = OnCharacteristics;
+            device = new BluetoothDevice(peripheral.id, peripheral.name, peripheral.rssi, connection);
 
-                    GetServices();
-                }
-            }
+            GetServices();
         }
 
         void OnFailed(string id)

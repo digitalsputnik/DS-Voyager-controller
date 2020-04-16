@@ -45,14 +45,15 @@ namespace VoyagerApp.UI.Menus
         {
             if (ssidFieldObj.activeSelf) TypeSsidBtnClick();
             status.SetActive(false);
+            setBtn.onClick.RemoveAllListeners();
+            setBtn.onClick.AddListener(Set);
         }
 
         internal override void OnHide()
         {
-            setBtn.onClick.RemoveAllListeners();
-            setBtn.onClick.AddListener(Set);
             lampToSsids.Clear();
             settingBleLamps = false;
+            StartCoroutine(DisconnectBleLamps());
         }
 
         public void ScanForSsidsBtnClick()
@@ -78,11 +79,6 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
-        void SsidFieldTextChanged(string text)
-        {
-            setBtn.gameObject.SetActive(ssidField.text.Length > 0);
-        }
-
         #region Lamp SSIDS
 
         void StartLoading()
@@ -90,6 +86,7 @@ namespace VoyagerApp.UI.Menus
             ssidList.index = 0;
             ssidList.interactable = false;
             ssidRefreshBtn.interactable = false;
+
             if(settingBleLamps != true)
             {
                 lampToSsids.Clear();
@@ -99,8 +96,12 @@ namespace VoyagerApp.UI.Menus
             {
                 foundSsidList.Clear();
                 if (Application.platform == RuntimePlatform.Android)
+                {
+                    loading = true;
                     StartCoroutine(AndroidSsidTest());
+                }
             }
+
             StartCoroutine(IEnumLoadingAnimation());
         }
 
@@ -220,6 +221,26 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
+        IEnumerator DisconnectBleLamps()
+        {
+            foreach (var lamp in selectedLamps)
+            {
+                if (lamp.connected)
+                {
+                    lamp.settingClient = false;
+                    lamp.Disconnect();
+                    yield return new WaitUntil(() => lamp.connected == false);
+                }
+                else if (lamp.connecting)
+                {
+                    yield return new WaitUntil(() => lamp.connected == true);
+                    lamp.settingClient = false;
+                    lamp.Disconnect();
+                    yield return new WaitUntil(() => lamp.connected == false);
+                }
+            }
+        }
+
         bool AndroidPremissions()
         {
             if (!Permission.HasUserAuthorizedPermission(Permission.CoarseLocation))
@@ -263,6 +284,8 @@ namespace VoyagerApp.UI.Menus
 
         public void OnSsidScanned(string ssid)
         {
+            loading = false;
+
             if (!foundSsidList.Contains(ssid) && ssid.Length > 0)
             {
                 foundSsidList.Add(ssid);
