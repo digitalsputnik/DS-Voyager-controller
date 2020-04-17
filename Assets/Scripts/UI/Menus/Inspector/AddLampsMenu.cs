@@ -48,6 +48,9 @@ namespace VoyagerApp.UI.Menus
             OpenWifiList();
             AddLampsToList();
 
+            foreach (var lamp in scannedLamps)
+                lamp.Deselect();
+
             StartCoroutine(AddLampsAgain());
         }
 

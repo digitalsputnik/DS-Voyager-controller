@@ -65,6 +65,19 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
+        public void Deselect()
+        {
+            selected = false;
+
+            var btn = GetComponent<Button>();
+            ColorBlock btnColor = btn.colors;
+
+            btnColor.selectedColor = Color.white;
+            btnColor.normalColor = Color.white;
+
+            btn.colors = btnColor;
+        }
+
         public void Connect()
         {
             if (!connected)
