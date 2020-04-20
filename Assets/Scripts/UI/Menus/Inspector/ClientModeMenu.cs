@@ -24,6 +24,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] InputField ssidField       = null;
         [SerializeField] InputField passwordField   = null;
         [SerializeField] GameObject status          = null;
+        [SerializeField] GameObject bleInfo         = null;
         [SerializeField] Button setBtn              = null;
         [SerializeField] string[] loadingAnim       = null;
         [SerializeField] float animationSpeed       = 0.6f;
@@ -47,6 +48,8 @@ namespace VoyagerApp.UI.Menus
             status.SetActive(false);
             setBtn.onClick.RemoveAllListeners();
             setBtn.onClick.AddListener(Set);
+            if (Application.platform == RuntimePlatform.Android)
+                bleInfo.SetActive(true);
         }
 
         internal override void OnHide()
@@ -54,6 +57,8 @@ namespace VoyagerApp.UI.Menus
             lampToSsids.Clear();
             settingBleLamps = false;
             StartCoroutine(DisconnectBleLamps());
+            if (Application.platform == RuntimePlatform.Android)
+                bleInfo.SetActive(false);
         }
 
         public void ScanForSsidsBtnClick()

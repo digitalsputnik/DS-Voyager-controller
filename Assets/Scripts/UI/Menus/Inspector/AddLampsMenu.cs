@@ -22,6 +22,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] BLEItem blePrefab = null;
         [SerializeField] Button addAllLampsBtn  = null;
         [SerializeField] Button addByBleBtn = null;
+        [SerializeField] GameObject bleInfo = null;
         List<AddLampItem> items = new List<AddLampItem>();
 
         public List<BLEItem> scannedLamps = new List<BLEItem>();
@@ -52,6 +53,9 @@ namespace VoyagerApp.UI.Menus
                 lamp.Deselect();
 
             StartCoroutine(AddLampsAgain());
+
+            if(Application.platform == RuntimePlatform.Android)
+                bleInfo.SetActive(true);
         }
 
         internal override void OnHide()
@@ -65,6 +69,9 @@ namespace VoyagerApp.UI.Menus
                 RemoveLampItem(lamp);
 
             StopCoroutine(AddLampsAgain());
+
+            if (Application.platform == RuntimePlatform.Android)
+                bleInfo.SetActive(false);
         }
 
         void OnInitialized()
