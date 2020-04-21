@@ -5,5 +5,6 @@ namespace VoyagerApp.Projects
     public interface IProjectParser
     {
         ProjectSaveData Parse(string json);
+        string VersionString { get; }
     }
 }

@@ -21,8 +21,8 @@ namespace VoyagerApp.UI.Menus
         {
             Vector2 position = VectorUtils.HalfScreenRandomVerticalPosition;
             lamp.AddToWorkspace(position);
-            AddLampsMenu menu = GetComponentInParent<AddLampsMenu>();
-            menu.RemoveLampItem(this);
+            //AddLampsMenu menu = GetComponentInParent<AddLampsMenu>();
+            //menu.RemoveLampItem(this);
         }
     }
 }
