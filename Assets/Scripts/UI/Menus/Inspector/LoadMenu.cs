@@ -114,7 +114,7 @@ namespace VoyagerApp.UI.Menus
                     () =>
                     {
                         ItemsInteractable = false;
-                        data = Project.Load(project);
+                        data = Project.Load(project, true);
                         OnSendBufferCancel();
                         VideoRenderer.SetState(new ConfirmPixelsState());
                     },

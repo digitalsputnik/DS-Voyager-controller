@@ -3,189 +3,171 @@ using UnityEngine.UI;
 
 namespace Crosstales.FB.Demo
 {
-    /// <summary>Examples for all methods.</summary>
-    [HelpURL("https://www.crosstales.com/media/data/assets/FileBrowser/api/class_crosstales_1_1_f_b_1_1_demo_1_1_examples.html")]
-    public class Examples : MonoBehaviour
-    {
-        #region Variables
+   /// <summary>Examples for all methods.</summary>
+   [HelpURL("https://www.crosstales.com/media/data/assets/FileBrowser/api/class_crosstales_1_1_f_b_1_1_demo_1_1_examples.html")]
+   public class Examples : MonoBehaviour
+   {
+      #region Variables
 
-        public GameObject TextPrefab;
+      public GameObject TextPrefab;
 
-        public GameObject ScrollView;
-        
-        public Text Error;
-         
-        #endregion
+      public GameObject ScrollView;
+
+      public Button OpenFilesBtn;
+      public Button OpenFoldersBtn;
+
+      public Text Error;
+
+      //private string testPath = @"D:\slaubenberger\git";
+      //private string testPath = @"C:\tmp";
+      //private string testPath = null;
+      //private string testPath = @"C:";
+
+      private string[] paths;
+
+      #endregion
 
 
-        #region Public methods
+      #region MonoBehaviour methods
 
-        public void OpenSingleFile() {
-            //Debug.Log("OpenSingleFile");
-            
-            /*
-            var extensions = new[] {
-                new ExtensionFilter("Image Files", "png", "jpg", "jpeg" ),
-                new ExtensionFilter("Sound Files", "mp3", "wav" ),
-                new ExtensionFilter("All Files", "*" ),
-            };
-            */
-            
-            string extensions = "";
-            
-            string path = FileBrowser.OpenSingleFile("Open File", "", extensions);
+      public void Start()
+      {
+         //Util.Config.DEBUG = true;
 
-            //Debug.Log("Selected file: " + path);
-            
-            rebuildList(path);
-        }
-        
-        public void OpenFiles() {
-            //Debug.Log("OpenFiles");
-            
-            /*
-            var extensions = new[] {
-                new ExtensionFilter("Image Files", "png", "jpg", "jpeg" ),
-                new ExtensionFilter("Sound Files", "mp3", "wav" ),
-                new ExtensionFilter("All Files", "*" ),
-            };
-            */
-            
-            string extensions = "";
-            
-            string[] paths = FileBrowser.OpenFiles("Open Files", "", extensions, true);
+         if (OpenFilesBtn != null)
+            OpenFilesBtn.interactable = FileBrowser.canOpenMultipleFiles;
 
-            /*
-            foreach (string path in paths)
-            {
-                Debug.Log("Selected file: " + path);
-            }
-            */
-            
+         if (OpenFoldersBtn != null)
+            OpenFoldersBtn.interactable = FileBrowser.canOpenMultipleFolders;
+
+         //Debug.Log("GetDirectories: " + FileBrowser.GetDirectories(testPath, true).CTDump());
+         //Debug.Log("GetFiles: " + FileBrowser.GetFiles(testPath, true, "*").CTDump());
+      }
+
+      public void Update()
+      {
+         //Debug.Log("Alive!");
+
+         if ((Util.Helper.isWindowsPlatform || Util.Helper.isWindowsEditor) && Util.Config.NATIVE_WINDOWS && paths != null)
+         {
             rebuildList(paths);
-        }
-        
-        public void OpenSingleFolder() {
-            //Debug.Log("OpenSingleFolder");
-            
-            string path = FileBrowser.OpenSingleFolder("Open Folder");
+         }
+      }
 
-            //Debug.Log("Selected folder: " + path);
-            
-            rebuildList(path);
-        }
-        
-        public void OpenFolders() {
-            //Debug.Log("OpenFolders");
-            
-            //string[] paths = FileBrowser.OpenFolders("Open Files", "", true);
-            string[] paths = FileBrowser.OpenFolders("Open Folders");
+      #endregion
 
-            /*
-            foreach (string path in paths)
-            {
-                Debug.Log("Selected folder: " + path);
-            }
-            */
-            
+
+      #region Public methods
+
+      public void OpenSingleFile()
+      {
+         //string path = FileBrowser.OpenSingleFile("Open single file", testPath, new ExtensionFilter("Image Files", "png", "jpg", "jpeg"), new ExtensionFilter("Sound Files", "mp3", "wav"), new ExtensionFilter(Util.Constants.TEXT_ALL_FILES, "*"));
+         //string path = FileBrowser.OpenSingleFile("Open single file", testPath, "txt", "jpg", "pdf");
+         //string path = FileBrowser.OpenSingleFile("txt");
+         string path = FileBrowser.OpenSingleFile();
+
+         rebuildList(path);
+      }
+
+      public void OpenFiles()
+      {
+         //string[] paths = FileBrowser.OpenFiles("Open files", testPath, new ExtensionFilter("Image Files", "png", "jpg", "jpeg"), new ExtensionFilter("Sound Files", "mp3", "wav"), new ExtensionFilter(Util.Constants.TEXT_ALL_FILES, "*"));
+         //string[] paths = FileBrowser.OpenFiles("txt", "jpg", "pdf");
+         //string[] paths = FileBrowser.OpenFiles("txt");
+         string[] paths = FileBrowser.OpenFiles();
+
+         rebuildList(paths);
+      }
+
+      public void OpenSingleFolder()
+      {
+         //string path = FileBrowser.OpenSingleFolder("Open folder", testPath);
+         string path = FileBrowser.OpenSingleFolder();
+
+         rebuildList(path);
+      }
+
+      public void OpenFolders()
+      {
+         //string[] paths = FileBrowser.OpenFolders("Open folders", testPath);
+         string[] paths = FileBrowser.OpenFolders();
+
+         rebuildList(paths);
+      }
+
+      public void SaveFile()
+      {
+         //string path = FileBrowser.SaveFile("Save file", testPath, "MySaveFile", new ExtensionFilter("Binary", "bin"), new ExtensionFilter("Text", "txt", "md"), new ExtensionFilter("C#", "cs"));
+         //string path = FileBrowser.SaveFile("Save file", testPath, "MySaveFile", "bin", "txt", "cs");
+         string path = FileBrowser.SaveFile("MySaveFile", "txt");
+         //string path = FileBrowser.SaveFile();
+
+         rebuildList(path);
+      }
+
+      public void OpenFilesAsync()
+      {
+         //FileBrowser.OpenFilesAsync((string[] paths) => { writePaths(paths); }, "Open files", testPath, true, new ExtensionFilter("Image Files", "png", "jpg", "jpeg"), new ExtensionFilter("Sound Files", "mp3", "wav"), new ExtensionFilter(Util.Constants.TEXT_ALL_FILES, "*"));
+         //FileBrowser.OpenFilesAsync((string[] paths) => { writePaths(paths); }, "Open files", testPath, true, "txt", "png");
+         //FileBrowser.OpenFilesAsync((string[] paths) => { writePaths(paths); }, true, "txt");
+         FileBrowser.OpenFilesAsync(paths => { writePaths(paths); });
+      }
+
+      public void OpenFoldersAsync()
+      {
+         //FileBrowser.OpenFoldersAsync((string[] paths) => { writePaths(paths); }, "Open folders", testPath, true);
+         FileBrowser.OpenFoldersAsync(paths => { writePaths(paths); });
+      }
+
+      public void SaveFileAsync()
+      {
+         //FileBrowser.SaveFileAsync((string paths) => { writePaths(paths); }, "Save File", testPath, "MySaveFile", new ExtensionFilter("Binary", "bin"), new ExtensionFilter("Text", "txt"), new ExtensionFilter("C#", "cs"));
+         //FileBrowser.SaveFileAsync((string paths) => { writePaths(paths); }, "Save file", testPath, "MySaveFile", "txt", "cs");
+         FileBrowser.SaveFileAsync(paths => { writePaths(paths); }, "MySaveFile", "txt");
+         //FileBrowser.SaveFileAsync(paths => { writePaths(paths); });
+      }
+
+      private void writePaths(params string[] paths)
+      {
+         if ((Util.Helper.isWindowsPlatform || Util.Helper.isWindowsEditor) && Util.Config.NATIVE_WINDOWS)
+         {
+            this.paths = paths;
+         }
+         else
+         {
             rebuildList(paths);
-        }
-        
-        public void SaveFile() {
-            //Debug.Log("SaveFile");
-            
-            /*
-            var extensions = new[] {
-                        new ExtensionFilter("Binary", "bin"),
-                        new ExtensionFilter("Text", "txt"),
-                        new ExtensionFilter("C#", "cs"),
-                    };
-            */
-            
-            string extensions = "txt";
-            
-            string path = FileBrowser.SaveFile("Save File", "", "MySaveFile", extensions);
-            
-            //Debug.Log("Save file: " + path);
-            
-            rebuildList(path);
-        }
+         }
+      }
 
-        public void OpenFilesAsync() {
-            //Debug.Log("OpenFilesAsync");
-            
-            /*
-            var extensions = new[] {
-                new ExtensionFilter("Image Files", "png", "jpg", "jpeg" ),
-                new ExtensionFilter("Sound Files", "mp3", "wav" ),
-                new ExtensionFilter("All Files", "*" ),
-            };
-            */
-            
-            string extensions = "";
-            
-            FileBrowser.OpenFilesAsync("Open Files", "", extensions, true, (string[] paths) => { writePaths(paths); });
-        }
-        
-        public void OpenFoldersAsync() {
-            //Debug.Log("OpenFoldersAsync");
-            
-            FileBrowser.OpenFoldersAsync("Open Folders", "", true, (string[] paths) => { writePaths(paths); });
-        }
-        
-        public void SaveFileAsync() {
-            //Debug.Log("SaveFileAsync");
-            
-            /*
-            var extensions = new[] {
-                        new ExtensionFilter("Binary", "bin"),
-                        new ExtensionFilter("Text", "txt"),
-                        new ExtensionFilter("C#", "cs"),
-                    };
-            */
-            
-            string extensions = "txt";
-            
-            FileBrowser.SaveFileAsync("Save File", "", "MySaveFile", extensions, (string paths) => { writePaths(paths); });
-        }
-        
-        private void writePaths(params string[] paths) {
-            /*
-            foreach (string path in paths)
-            {
-                Debug.Log("Selected path: " + path);
-            }
-            */
-            
-            rebuildList(paths);
-        }
+      #endregion
 
-        #endregion
 
-        private void rebuildList(params string[] e)
-        {
-            for (int ii = ScrollView.transform.childCount - 1; ii >= 0; ii--)
-            {
-                Transform child = ScrollView.transform.GetChild(ii);
-                child.SetParent(null);
-                Destroy(child.gameObject);
-            }
+      #region Private methods
 
-            ScrollView.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 80 * e.Length);
+      private void rebuildList(params string[] e)
+      {
+         for (int ii = ScrollView.transform.childCount - 1; ii >= 0; ii--)
+         {
+            Transform child = ScrollView.transform.GetChild(ii);
+            child.SetParent(null);
+            Destroy(child.gameObject);
+         }
 
-            for (int ii = 0; ii < e.Length; ii++)
-            {
-                //if (Config.DEBUG)
-                //    Debug.Log(e[ii]);
+         ScrollView.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 80 * e.Length);
 
-                GameObject go = Instantiate(TextPrefab);
+         for (int ii = 0; ii < e.Length; ii++)
+         {
+            GameObject go = Instantiate(TextPrefab, ScrollView.transform, true);
 
-                go.transform.SetParent(ScrollView.transform);
-                go.transform.localScale = Vector3.one;
-                go.transform.localPosition = new Vector3(10, -80 * ii, 0);
-                go.GetComponent<Text>().text = e[ii].ToString();
-            }
-        }
-    }
+            go.transform.localScale = Vector3.one;
+            go.transform.localPosition = new Vector3(10, -80 * ii, 0);
+            go.GetComponent<Text>().text = e[ii];
+         }
+
+         paths = null;
+      }
+
+      #endregion
+   }
 }
-// © 2017-2018 crosstales LLC (https://www.crosstales.com)
+// © 2017-2020 crosstales LLC (https://www.crosstales.com)

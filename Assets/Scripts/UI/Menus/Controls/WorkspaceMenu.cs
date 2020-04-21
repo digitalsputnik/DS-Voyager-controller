@@ -103,8 +103,17 @@ namespace VoyagerApp.UI.Menus
             if (path == null || path == "Null" || path == "") return;
 
             byte[] data = File.ReadAllBytes(path);
-            Texture2D texture = new Texture2D(2, 2);
-            texture.LoadImage(data);
+
+            Texture2D texture;
+
+            if (Application.isMobilePlatform)
+                texture = NativeGallery.LoadImageAtPath(path, - 1, false);
+            else
+            {
+                texture = new Texture2D(2, 2);
+                texture.LoadImage(data);
+            }
+
             texture.Apply();
 
             WorkspaceManager.instance

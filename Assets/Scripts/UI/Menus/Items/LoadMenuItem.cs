@@ -48,7 +48,7 @@ namespace VoyagerApp.UI.Menus
 
                 if (data == null)
                     throw new Exception("Error on loading");
-
+                    
                 var lamps = data.items.Where(i => i != null && i.type != null && i.type == "voyager_lamp").ToList();
 
                 if (lamps == null)
@@ -77,6 +77,11 @@ namespace VoyagerApp.UI.Menus
             string project = Path.GetFileName(path);
             GetComponentInParent<LoadMenu>().LoadProject(project);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+        }
+
+        public void Delete()
+        {
+            Delete(null);
         }
 
         public void Delete(Action onDeleted = null)

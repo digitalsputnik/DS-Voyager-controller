@@ -24,6 +24,8 @@ namespace VoyagerApp.Lamps.Voyager
 
         Dictionary<string, byte[]> assets = new Dictionary<string, byte[]>();
 
+        public int finishedCount = 0;
+
         public VoyagerUpdateUtility()
         {
             PreloadAsset(BUNDLE_FILE);
@@ -91,6 +93,7 @@ namespace VoyagerApp.Lamps.Voyager
             }
 
             onDone?.Invoke(new VoyagerUpdateResponse(success, error, lamp));
+            finishedCount++;
 //#endif
         }
 
@@ -134,7 +137,7 @@ namespace VoyagerApp.Lamps.Voyager
 
             ssh.RunCommand($"tar -xf {BUNDLE_DEST}/{BUNDLE_FILE} -C /mnt/data/");
 
-            var installationCmd = $"nohup python3 {BUNDLE_DEST}/update3.py";
+            var installationCmd = $"setsid python3 {BUNDLE_DEST}/update3.py &";
             var installation = ssh.CreateCommand(installationCmd);
             installation.BeginExecute();
 

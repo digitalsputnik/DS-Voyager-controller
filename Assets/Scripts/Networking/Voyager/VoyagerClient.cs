@@ -121,17 +121,6 @@ namespace VoyagerApp.Networking.Voyager
         {
             IPEndPoint endpoint = (IPEndPoint)info;
             discovery.Send(endpoint, data);
-            new Thread(() => LogSentPackage(data, endpoint.Address)).Start();
-        }
-
-        void LogSentPackage(byte[] data, IPAddress address)
-        {
-            var lamp = LampManager.instance.GetLampWithAddress(address);
-            var decoded = Encoding.UTF8.GetString(data);
-            if (lamp == null)
-                Logger.Info($"Sent to {address}: {decoded}");
-            else
-                Logger.Info($"Sent to {lamp.serial}: {decoded}");
         }
 
         public override void Receive()
@@ -190,46 +179,38 @@ namespace VoyagerApp.Networking.Voyager
 
         void ReceiveClient(RudpClient client)
         {
-            new Thread(() =>
+            while (client.Available > 0)
             {
-                while (client.Available > 0)
-                {
-                    IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+                IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
 
-                    byte[] data = client.Receive(ref sender);
-                    string json = Encoding.UTF8.GetString(data);
+                byte[] data = client.Receive(ref sender);
+                string json = Encoding.UTF8.GetString(data);
 
-                    if (IsValidJson(json))
+                if (IsValidJson(json))
+                { 
+                    LampManager manager = LampManager.instance;
+                    try
                     {
-                        try
+                        JObject obj = JObject.Parse(json);
+                        if (obj["serial"] != null)
                         {
-                            JObject obj = JObject.Parse(json);
-                            if (obj["serial"] != null)
-                            {
-                                string serial = (string)obj["serial"];
-                                if (!string.IsNullOrEmpty(serial))
-                                    MainThread.Dispach(() => LampManager.instance.GetLampWithSerial(serial)?.PushData(data));
-                                else
-                                    MainThread.Dispach(() => LampManager.instance.GetLampWithAddress(sender.Address)?.PushData(data));
-                            }
+                            string serial = (string)obj["serial"];
+                            if (!string.IsNullOrEmpty(serial))
+                                manager.GetLampWithSerial(serial)?.PushData(data);
                             else
-                                MainThread.Dispach(() => LampManager.instance.GetLampWithAddress(sender.Address)?.PushData(data));
+                                manager.GetLampWithAddress(sender.Address)?.PushData(data);
+                        }
+                        else
+                            manager.GetLampWithAddress(sender.Address)?.PushData(data);
 
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.LogWarning(ex);
-                        }
                     }
-                    MainThread.Dispach(() => InvokeReceived(sender, data));
-
-                    var lamp = LampManager.instance.GetLampWithAddress(sender.Address);
-                    if (lamp == null)
-                        Logger.Info($"Received from {sender.Address}: {json}");
-                    else
-                        Logger.Info($"Received from {lamp.serial}: {json}");
+                    catch (Exception ex)
+                    {
+                        Debug.LogWarning(ex);
+                    }
                 }
-            }).Start();
+                InvokeReceived(sender, data);
+            }
         }
 
         IEnumerator IEnumPollLoop()
