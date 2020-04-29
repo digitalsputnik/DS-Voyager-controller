@@ -328,7 +328,7 @@ extern "C" {
         [[BluetoothInterface shared] subscribeToCharacteristic:uidConv :charConv];
     }
 
-    void _iOSWriteToCharacteristic( const char* uid, const char* characteristic, const void* data, const int length )
+    void _iOSWriteToCharacteristic( const char* uid, const char* characteristic, const Byte* data, const int length )
     {
         NSString* uidConv = [[NSString alloc] initWithUTF8String:uid];
         NSString* charConv = [[NSString alloc] initWithUTF8String:characteristic];

@@ -1,6 +1,7 @@
 ﻿#if UNITY_IOS
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 using UnityEngine;
 
 namespace DigitalSputnik.Bluetooth
@@ -139,6 +140,9 @@ namespace DigitalSputnik.Bluetooth
 
         public void WriteToCharacteristic(string id, string characteristic, byte[] data)
         {
+            string encoded = Convert.ToBase64String(data);
+            data = Encoding.UTF8.GetBytes(encoded);
+
             GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
             _iOSWriteToCharacteristic(id.ToUpper(), characteristic.ToUpper(), handle.AddrOfPinnedObject(), data.Length);
             handle.Free();
