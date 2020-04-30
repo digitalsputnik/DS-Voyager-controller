@@ -6,7 +6,7 @@ PluginImporter:
   iconMap: {}
   executionOrder: {}
   defineConstraints: []
-  isPreloaded: 0
+  isPreloaded: 1
   isOverridable: 0
   isExplicitlyReferenced: 0
   validateReferences: 1
@@ -71,10 +71,10 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        AddToEmbeddedBinaries: true
+        AddToEmbeddedBinaries: false
         CPU: AnyCPU
         CompileFlags: 
-        FrameworkDependencies: CoreBluetooth;
+        FrameworkDependencies: CoreFoundation;CoreBluetooth;
   userData: 
   assetBundleName: 
   assetBundleVariant: 
