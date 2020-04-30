@@ -7,59 +7,39 @@ using UnityEditor.iOS.Xcode;
 
 public class NGPostProcessBuild
 {
-	private const bool ENABLED = true;
-
 	private const string PHOTO_LIBRARY_USAGE_DESCRIPTION = "Save media to Photos";
-	private const bool MINIMUM_TARGET_8_OR_ABOVE = false;
 
 #if UNITY_IOS
 #pragma warning disable 0162
 	[PostProcessBuild]
 	public static void OnPostprocessBuild( BuildTarget target, string buildPath )
 	{
-		if( !ENABLED )
-			return;
-
-		if( target == BuildTarget.iOS )
+		if (target == BuildTarget.iOS)
 		{
-			string pbxProjectPath = PBXProject.GetPBXProjectPath( buildPath );
-			string plistPath = Path.Combine( buildPath, "Info.plist" );
+			string pbxProjectPath = PBXProject.GetPBXProjectPath(buildPath);
+			string plistPath = Path.Combine(buildPath, "Info.plist");
 
 			PBXProject pbxProject = new PBXProject();
-			pbxProject.ReadFromFile( pbxProjectPath );
+			pbxProject.ReadFromFile(pbxProjectPath);
 
-#if UNITY_2019_3_OR_NEWER
 			string targetGUID = pbxProject.GetUnityFrameworkTargetGuid();
-#else
-			string targetGUID = pbxProject.TargetGuidByName( PBXProject.GetUnityTargetName() );
-#endif
 
-			if( MINIMUM_TARGET_8_OR_ABOVE )
-			{
-				pbxProject.AddBuildProperty( targetGUID, "OTHER_LDFLAGS", "-framework Photos" );
-				pbxProject.AddBuildProperty( targetGUID, "OTHER_LDFLAGS", "-framework MobileCoreServices" );
-				pbxProject.AddBuildProperty( targetGUID, "OTHER_LDFLAGS", "-framework ImageIO" );
-			}
-			else
-			{
-				pbxProject.AddBuildProperty( targetGUID, "OTHER_LDFLAGS", "-weak_framework Photos" );
-				pbxProject.AddBuildProperty( targetGUID, "OTHER_LDFLAGS", "-framework AssetsLibrary" );
-				pbxProject.AddBuildProperty( targetGUID, "OTHER_LDFLAGS", "-framework MobileCoreServices" );
-				pbxProject.AddBuildProperty( targetGUID, "OTHER_LDFLAGS", "-framework ImageIO" );
-			}
+			pbxProject.AddBuildProperty(targetGUID, "OTHER_LDFLAGS", "-framework Photos");
+			pbxProject.AddBuildProperty(targetGUID, "OTHER_LDFLAGS", "-framework MobileCoreServices");
+			pbxProject.AddBuildProperty(targetGUID, "OTHER_LDFLAGS", "-framework ImageIO");
 
-			pbxProject.RemoveFrameworkFromProject( targetGUID, "Photos.framework" );
+			pbxProject.RemoveFrameworkFromProject(targetGUID, "Photos.framework");
 
-			File.WriteAllText( pbxProjectPath, pbxProject.WriteToString() );
+			File.WriteAllText(pbxProjectPath, pbxProject.WriteToString());
 
 			PlistDocument plist = new PlistDocument();
-			plist.ReadFromString( File.ReadAllText( plistPath ) );
+			plist.ReadFromString(File.ReadAllText(plistPath));
 
 			PlistElementDict rootDict = plist.root;
-			rootDict.SetString( "NSPhotoLibraryUsageDescription", PHOTO_LIBRARY_USAGE_DESCRIPTION );
-			rootDict.SetString( "NSPhotoLibraryAddUsageDescription", PHOTO_LIBRARY_USAGE_DESCRIPTION );
+			rootDict.SetString("NSPhotoLibraryUsageDescription", PHOTO_LIBRARY_USAGE_DESCRIPTION);
+			rootDict.SetString("NSPhotoLibraryAddUsageDescription", PHOTO_LIBRARY_USAGE_DESCRIPTION);
 
-			File.WriteAllText( plistPath, plist.WriteToString() );
+			File.WriteAllText(plistPath, plist.WriteToString());
 		}
 	}
 #pragma warning restore 0162
