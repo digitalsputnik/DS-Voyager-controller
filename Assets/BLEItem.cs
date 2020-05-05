@@ -1,7 +1,5 @@
 ﻿using DigitalSputnik.Bluetooth;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,26 +41,26 @@ namespace VoyagerApp.UI.Menus
 
         public void OnClick()
         {
-            if(instance.scannedLamps.Where(i => i.selected == true).Count() < 5)
-            {
-                selected = !selected;
+            //if(instance.scannedLamps.Where(i => i.selected == true).Count() < 5)
+            //{
+            //    selected = !selected;
 
-                var btn = GetComponent<Button>();
-                ColorBlock btnColor = btn.colors;
+            //    var btn = GetComponent<Button>();
+            //    ColorBlock btnColor = btn.colors;
 
-                if (selected)
-                {
-                    btnColor.selectedColor = new Color(0.8f, 0.8f, 0.8f, 1f);
-                    btnColor.normalColor = new Color(0.8f, 0.8f, 0.8f, 1f);
-                }
-                else
-                {
-                    btnColor.selectedColor = Color.white;
-                    btnColor.normalColor = Color.white;
-                }
+            //    if (selected)
+            //    {
+            //        btnColor.selectedColor = new Color(0.8f, 0.8f, 0.8f, 1f);
+            //        btnColor.normalColor = new Color(0.8f, 0.8f, 0.8f, 1f);
+            //    }
+            //    else
+            //    {
+            //        btnColor.selectedColor = Color.white;
+            //        btnColor.normalColor = Color.white;
+            //    }
 
-                btn.colors = btnColor;
-            }
+            //    btn.colors = btnColor;
+            //}
         }
 
         public void Deselect()

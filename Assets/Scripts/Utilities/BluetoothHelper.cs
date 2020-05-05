@@ -12,6 +12,8 @@ public static class BluetoothHelper
     static Dictionary<string, Action<string>> _onFail = new Dictionary<string, Action<string>>();
     static Dictionary<string, Action<string>> _onDisconnect = new Dictionary<string, Action<string>>();
 
+    public static bool IsInitialized => BluetoothAccess.IsInitialized;
+
     public static void Initialize(MonoBehaviour behaviour, Action onInitialized)
     {
         if (Application.isMobilePlatform && !BluetoothAccess.IsInitialized)
@@ -24,6 +26,9 @@ public static class BluetoothHelper
     static IEnumerator CoroutineWaitUntilBluetoothInitialized(Action onInitialized)
     {
         yield return new WaitUntil(() => BluetoothAccess.IsInitialized);
+        // Bluetooth access should check the initialization from OS,
+        // but does not do it at the moment. That's why we wait.
+        yield return new WaitForSeconds(0.5f);
         onInitialized?.Invoke();
     }
 

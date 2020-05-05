@@ -23,20 +23,7 @@ namespace DigitalSputnik.Bluetooth
 
         #region Public Properties
         public static List<PeripheralInfo> ScannedPeripherals => _instance._scannedPeripherals;
-
-        public static bool IsInitialized
-        {
-            get
-            {
-                if (_instance != null)
-                {
-                    return true;
-                }
-
-                Debug.LogError("Bluetooth access is not initialized.");
-                return false;
-            }
-        }
+        public static bool IsInitialized => _instance != null;
         #endregion
 
         #region Public Variables

@@ -20,6 +20,8 @@ namespace VoyagerApp.UI
         const string INFO_IP_ADDRESS       = "info_ip_address";
         const string INFO_FIRMWARE_VERSION = "info_firmware_version";
 
+        const string SETT_IOS_BLE_WIFISSiD = "sett_ios_ble_wifissid";
+
         public static Itshe IdentificationColor
         {
             get
@@ -115,6 +117,12 @@ namespace VoyagerApp.UI
             set => SetBool(INFO_FIRMWARE_VERSION, value);
         }
 
+        public static string IOSBluetoothWifiSsid
+        {
+            get => GetString(SETT_IOS_BLE_WIFISSiD, "VoyagerRouter");
+            set => SetString(SETT_IOS_BLE_WIFISSiD, value);
+        }
+
         static void SetBool(string key, bool value)
         {
             PlayerPrefs.SetInt(key, value ? 1 : 0);
@@ -125,6 +133,18 @@ namespace VoyagerApp.UI
             if (!PlayerPrefs.HasKey(key))
                 return defaultValue;
             return PlayerPrefs.GetInt(key) == 1;
+        }
+
+        static void SetString(string key, string value)
+        {
+            PlayerPrefs.SetString(key, value);
+        }
+
+        static string GetString(string key, string defaultValue)
+        {
+            if (!PlayerPrefs.HasKey(key))
+                return defaultValue;
+            return PlayerPrefs.GetString(key);
         }
     }
 }
