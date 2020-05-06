@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DigitalSputnik.Bluetooth;
 using UnityEngine;
 
 public static class BluetoothHelper
 {
-    public const string SERVICE_UID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+    public const string SERVICE_UID                 = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+    public const string UART_RX_CHARACTERISTIC_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+    public const string UART_TX_CHARACTERISTIC_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
     static Dictionary<string, BluetoothConnectedHandler> _onConnect = new Dictionary<string, BluetoothConnectedHandler>();
     static Dictionary<string, Action<string>> _onFail = new Dictionary<string, Action<string>>();
@@ -34,7 +37,7 @@ public static class BluetoothHelper
 
     public static void StartScanningForLamps(PeripheralHandler onScanned)
     {
-        var services = new string[] { "6e400001-b5a3-f393-e0a9-e50e24dcca9e" };
+        var services = new string[] { SERVICE_UID };
         BluetoothAccess.StartScanning(onScanned, services);
     }
 
@@ -81,6 +84,15 @@ public class BluetoothConnection
     public Action<string, string[]> OnCharacteristics;
     public Action<byte[]> OnData;
     public string ID => _access.ID;
+
+    public string Name
+    {
+        get
+        {
+            var info = BluetoothAccess.ScannedPeripherals.FirstOrDefault(p => p.id == ID);
+            return (info == null) ? "" : info.name;
+        }
+    }
 
     public PeripheralAccess _access;
 

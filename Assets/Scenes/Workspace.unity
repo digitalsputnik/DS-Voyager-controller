@@ -6614,6 +6614,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 542429649}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &551743001 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1600377077810749397, guid: e1b3e21f182104ec7b64b744018691a9,
+    type: 3}
+  m_PrefabInstance: {fileID: 465410841}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d199490a83bb2b844b9695cbf13b01ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &558817685
 GameObject:
   m_ObjectHideFlags: 0
@@ -11034,16 +11046,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1646406810}
+      objectReference: {fileID: 1646406812}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: Set
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: 
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -16779,7 +16791,7 @@ GameObject:
   - component: {fileID: 1646406813}
   - component: {fileID: 1646406812}
   m_Layer: 5
-  m_Name: Client Bluetooth Mode
+  m_Name: Bluetooth Client Mode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16825,6 +16837,7 @@ MonoBehaviour:
   _ssidFieldObj: {fileID: 215030074}
   _ssidField: {fileID: 438193063}
   _setSsidScan: {fileID: 143271251}
+  _passwordField: {fileID: 551743001}
   _setBtn: {fileID: 984979040}
   _loadingAnim:
   - Loading
@@ -21571,7 +21584,7 @@ GameObject:
   - component: {fileID: 2045009753}
   - component: {fileID: 2045009752}
   m_Layer: 5
-  m_Name: Add Bluetooth Lamps Menu
+  m_Name: Bluetooth Add Lamps Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -80,7 +80,7 @@ namespace VoyagerApp.UI.Menus
                 .Where(i => i.Toggled)
                 .ToList()
                 .ForEach(i => ids.Add(i.BluetoothId));
-            _clientMenu.SetBluetoothIds(ids.ToArray());
+            _clientMenu.ConnectToLamps(ids.ToArray());
             GetComponentInParent<InspectorMenuContainer>()?.ShowMenu(_clientMenu);
         }
     }
