@@ -19,7 +19,7 @@ namespace VoyagerApp.UI
         [SerializeField] float waitTime = 5.0f;
 
         bool showing;
-        List<string> promptedSerials = new List<string>();
+        //List<string> promptedSerials = new List<string>();
 
         void Start()
         {
