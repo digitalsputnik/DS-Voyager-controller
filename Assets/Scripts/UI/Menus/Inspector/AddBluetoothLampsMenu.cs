@@ -2,6 +2,7 @@
 using System.Linq;
 using DigitalSputnik.Bluetooth;
 using UnityEngine;
+using UnityEngine.UI;
 using VoyagerApp.Lamps;
 
 namespace VoyagerApp.UI.Menus
@@ -11,6 +12,8 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Transform _itemsContainer = null;
         [SerializeField] BluetoothLampItem _itemPrefab = null;
         [SerializeField] BluetoothClientModeMenu _clientMenu = null;
+        [SerializeField] Button _selectAllBtn = null;
+        [SerializeField] Button _continueBtn = null;
 
         List<BluetoothLampItem> _items = new List<BluetoothLampItem>();
 
@@ -27,6 +30,12 @@ namespace VoyagerApp.UI.Menus
         {
             LampManager.instance.onLampAdded += OnLampAdded;
             BluetoothHelper.StopScanningForLamps();
+        }
+
+        void Update()
+        {
+            _selectAllBtn.interactable = _items.Count > 0 && !_items.TrueForAll(i => i.Toggled);
+            _continueBtn.interactable = _items.Any(i => i.Toggled);
         }
 
         void OnLampAdded(Lamp lamp)

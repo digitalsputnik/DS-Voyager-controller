@@ -44,6 +44,8 @@ namespace VoyagerApp.UI.Menus
 
             _connections.ForEach(c => BluetoothHelper.DisconnectFromPeripheral(c.ID));
             _connections.Clear();
+
+            StopAllCoroutines();
         }
 
         public void ShowScanSsids()

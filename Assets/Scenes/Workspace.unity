@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -4202,6 +4202,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 355743839}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &355743842 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 355743839}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 355743841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &355743843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6901,6 +6913,18 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &585339813 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 585339809}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585339811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &586985385
 GameObject:
   m_ObjectHideFlags: 0
@@ -21630,6 +21654,8 @@ MonoBehaviour:
   _itemPrefab: {fileID: 6557401266224488773, guid: 8099f9df026ae4bcca285e166475798d,
     type: 3}
   _clientMenu: {fileID: 1646406812}
+  _selectAllBtn: {fileID: 355743842}
+  _continueBtn: {fileID: 585339813}
 --- !u!225 &2045009753
 CanvasGroup:
   m_ObjectHideFlags: 0
