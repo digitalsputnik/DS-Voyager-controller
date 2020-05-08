@@ -10888,7 +10888,7 @@ PrefabInstance:
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -12868,7 +12868,7 @@ PrefabInstance:
     - target: {fileID: 8269508053611200199, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_Text
-      value: ADD BLE LAMP
+      value: ADD BY BLE
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
@@ -15007,8 +15007,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   container: {fileID: 7372718238239525712}
   updateMenu: {fileID: 57028725}
-  waitTime: 1
   updateButton: {fileID: 402482845}
+  waitTime: 1
 --- !u!114 &1502510714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16863,6 +16863,7 @@ MonoBehaviour:
   _setSsidScan: {fileID: 143271251}
   _passwordField: {fileID: 551743001}
   _setBtn: {fileID: 984979040}
+  _statusText: {fileID: 1447892005}
   _loadingAnim:
   - Loading
   - Loading.

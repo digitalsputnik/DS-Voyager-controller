@@ -13,11 +13,15 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] GameObject _ssidListObj = null;
         [SerializeField] ListPicker _ssidList = null;
         [SerializeField] Button _ssidRefreshBtn = null;
+        [Space(3)]
         [SerializeField] GameObject _ssidFieldObj = null;
         [SerializeField] InputField _ssidField = null;
         [SerializeField] Button _setSsidScan = null;
+        [Space(3)]
         [SerializeField] InputField _passwordField = null;
         [SerializeField] Button _setBtn = null;
+        [SerializeField] GameObject _statusText = null;
+        [Space(3)]
         [SerializeField] string[] _loadingAnim = null;
         [SerializeField] float _animationSpeed = 0.6f;
 
@@ -26,9 +30,11 @@ namespace VoyagerApp.UI.Menus
 
         internal override void OnShow()
         {
+            _statusText.SetActive(false);
+
             if (Application.platform == RuntimePlatform.IPhonePlayer)
             {
-                SetUpIOS();
+                SetupIOS();
                 ShowTypeSsid();
             }
             else if (Application.platform == RuntimePlatform.Android)
@@ -125,6 +131,8 @@ namespace VoyagerApp.UI.Menus
 
         IEnumerator IEnumSetWifiSettings()
         {
+            _statusText.SetActive(true);
+
             const string JSON = @"{""op_code"": ""ble_ack""}";
             const string SERVICE = BluetoothHelper.SERVICE_UID;
             const string CHARAC = BluetoothHelper.UART_RX_CHARACTERISTIC_UUID;
@@ -165,7 +173,7 @@ namespace VoyagerApp.UI.Menus
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
-        void SetUpIOS()
+        void SetupIOS()
         {
 #if UNITY_IOS
             string ssid = IOSNetworkHelpers.GetCurrentSsidName();
