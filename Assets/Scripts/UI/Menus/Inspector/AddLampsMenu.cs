@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik.Bluetooth;
@@ -65,12 +64,20 @@ namespace VoyagerApp.UI.Menus
 
         void LampScanned(PeripheralInfo peripheral)
         {
-            if (!LampManager.instance.Lamps.Any(l => l.serial == peripheral.name))
+            if (ValidateBluetoothPeripheral(peripheral.name))
             {
                 BluetoothHelper.StopScanningForLamps();
                 itemsHeader.SetActive(true);
                 bluetoothBtn.SetActive(true);
             }
+        }
+
+        bool ValidateBluetoothPeripheral(string name)
+        {
+            return !LampManager.instance.Lamps.Any(l =>
+            {
+                return l.serial == name && l.connected;
+            });
         }
 
         void NewProject()
