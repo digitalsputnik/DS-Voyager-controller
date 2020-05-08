@@ -51,7 +51,7 @@ namespace VoyagerApp.UI.Menus
             ApplicationState.OnNewProject -= NewProject;
 
             foreach (var lamp in new List<AddLampItem>(items))
-                RemoveLampItem(lamp);
+                RemoveLampItem(lamp, false);
 
             BluetoothHelper.StopScanningForLamps();
 
@@ -103,7 +103,7 @@ namespace VoyagerApp.UI.Menus
             {
                 var addItem = items.FirstOrDefault(v => v.lamp == view.lamp);
                 if (addItem != null)
-                    RemoveLampItem(addItem);
+                    RemoveLampItem(addItem, true);
             }
         }
 
@@ -133,10 +133,10 @@ namespace VoyagerApp.UI.Menus
             }
 
             while (items.Count > 0)
-                RemoveLampItem(items[0]);
+                RemoveLampItem(items[0], true);
         }
 
-        public void RemoveLampItem(AddLampItem item)
+        public void RemoveLampItem(AddLampItem item, bool closeMenuOnEmpty)
         {
             if (items.Contains(item))
             {
@@ -144,7 +144,7 @@ namespace VoyagerApp.UI.Menus
                 Destroy(item.gameObject);
             }
 
-            if (items.Count == 0)
+            if (items.Count == 0 && closeMenuOnEmpty)
                 GetComponentInParent<MenuContainer>().ShowMenu(null);
 
             CheckForAddAllLampsButton();
