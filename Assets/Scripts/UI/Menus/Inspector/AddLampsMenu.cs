@@ -16,7 +16,6 @@ namespace VoyagerApp.UI.Menus
     {
         [SerializeField] Transform container = null;
         [SerializeField] GameObject bluetoothBtn = null;
-        [SerializeField] GameObject itemsHeader = null;
         [SerializeField] AddLampItem prefab = null;
         [SerializeField] Button addAllLampsBtn = null;
         List<AddLampItem> items = new List<AddLampItem>();
@@ -32,7 +31,6 @@ namespace VoyagerApp.UI.Menus
             AddLampsToList();
 
             bluetoothBtn.SetActive(false);
-            itemsHeader.SetActive(false);
 
             if (!BluetoothHelper.IsInitialized)
                 BluetoothHelper.Initialize(this, ScanBluetooth);
@@ -67,7 +65,6 @@ namespace VoyagerApp.UI.Menus
             if (ValidateBluetoothPeripheral(peripheral.name))
             {
                 BluetoothHelper.StopScanningForLamps();
-                itemsHeader.SetActive(true);
                 bluetoothBtn.SetActive(true);
             }
         }
