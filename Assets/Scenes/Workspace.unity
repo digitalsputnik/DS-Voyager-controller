@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -21894,7 +21894,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   container: {fileID: 781892440}
   bluetoothBtn: {fileID: 241909077}
-  itemsHeader: {fileID: 239710329}
   prefab: {fileID: -6405898369269562798, guid: d29b1fa6ad7644da297bc16e81bbcaed, type: 3}
   addAllLampsBtn: {fileID: 960163899}
 --- !u!225 &2072530007

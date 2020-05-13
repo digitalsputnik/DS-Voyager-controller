@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,7 +18,6 @@ namespace VoyagerApp.UI
         [SerializeField] float waitTime = 5.0f;
 
         bool showing;
-        //List<string> promptedSerials = new List<string>();
 
         void Start()
         {
