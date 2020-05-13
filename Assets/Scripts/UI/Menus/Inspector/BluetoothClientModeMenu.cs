@@ -135,7 +135,8 @@ namespace VoyagerApp.UI.Menus
 
             const string JSON = @"{""op_code"": ""ble_ack""}";
             const string SERVICE = BluetoothHelper.SERVICE_UID;
-            const string CHARAC = BluetoothHelper.UART_RX_CHARACTERISTIC_UUID;
+            const string READCHARAC = BluetoothHelper.UART_TX_CHARACTERISTIC_UUID;
+            const string WRITECHARAC = BluetoothHelper.UART_RX_CHARACTERISTIC_UUID;
 
             var ssid = _ssidListObj.activeSelf ? _ssidList.selected : _ssidField.text;
             var password = _passwordField.text;
@@ -144,7 +145,7 @@ namespace VoyagerApp.UI.Menus
 
             _connections.ForEach(c =>
             {
-                c.SubscribeToCharacteristicUpdate(SERVICE, CHARAC);
+                c.SubscribeToCharacteristicUpdate(SERVICE, READCHARAC);
                 c.OnData += (data) =>
                 {
                     if (Encoding.UTF8.GetString(data) == JSON)
@@ -163,7 +164,7 @@ namespace VoyagerApp.UI.Menus
                     if (!approvedConnections.Contains(c.ID))
                     {
                         var package = VoyagerNetworkMode.Client(ssid, password, c.Name);
-                        c.Write(SERVICE, CHARAC, package.ToData());
+                        c.Write(SERVICE, WRITECHARAC, package.ToData());
                     }
                 });
 
@@ -190,7 +191,7 @@ namespace VoyagerApp.UI.Menus
             _ssidRefreshBtn.interactable = false;
 
 #if UNITY_ANDROID
-            AndroidNetworkHelpers.ScanForSsids(this, 5.0f, OnSsidListReceived);
+            AndroidNetworkHelpers.ScanForSsids(this, 10.0f, OnSsidListReceived);
 #endif
 
             _loading = true;
