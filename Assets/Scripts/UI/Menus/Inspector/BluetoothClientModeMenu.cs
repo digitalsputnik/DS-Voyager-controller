@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps.Voyager;
+using VoyagerApp.UI.Overlays;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -83,7 +85,31 @@ namespace VoyagerApp.UI.Menus
 
         public void Set()
         {
-            StartCoroutine(IEnumSetWifiSettings());
+            var ssid = _ssidListObj.activeSelf ? _ssidList.selected : _ssidField.text;
+            var password = _passwordField.text;
+
+            if (password.Length >= 8 && ssid.Length != 0 || password.Length == 0 && ssid.Length != 0)
+            {
+                StartCoroutine(IEnumSetWifiSettings(ssid, password));
+            }
+            else if (ssid.Length == 0)
+            {
+                DialogBox.Show(
+                    "INVALID SSID",
+                    "SSID cannot be empty.",
+                    new string[] { "OK" },
+                    new Action[] { null }
+                );
+            }
+            else
+            {
+                DialogBox.Show(
+                    "INVALID PASSWORD",
+                    "Password length must be at least 8 characters or empty for public WiFi networks.",
+                    new string[] { "OK" },
+                    new Action[] { null }
+                );
+            }
         }
 
         void OnConnectedToLamp(BluetoothConnection connection)
@@ -129,7 +155,7 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
-        IEnumerator IEnumSetWifiSettings()
+        IEnumerator IEnumSetWifiSettings(string ssid, string password)
         {
             _statusText.SetActive(true);
 
@@ -137,9 +163,6 @@ namespace VoyagerApp.UI.Menus
             const string SERVICE = BluetoothHelper.SERVICE_UID;
             const string READCHARAC = BluetoothHelper.UART_TX_CHARACTERISTIC_UUID;
             const string WRITECHARAC = BluetoothHelper.UART_RX_CHARACTERISTIC_UUID;
-
-            var ssid = _ssidListObj.activeSelf ? _ssidList.selected : _ssidField.text;
-            var password = _passwordField.text;
 
             List<string> approvedConnections = new List<string>();
 
