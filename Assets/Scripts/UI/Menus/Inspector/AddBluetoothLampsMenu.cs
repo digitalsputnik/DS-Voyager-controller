@@ -68,7 +68,10 @@ namespace VoyagerApp.UI.Menus
 
         bool LampExists(string name)
         {
-            return LampManager.instance.Lamps.Any(l => l.serial == name);
+            return LampManager.instance.Lamps.Any(l =>
+            {
+                return l.serial == name && l.connected;
+            });
         }
 
         void DestroyItem(BluetoothLampItem item)
