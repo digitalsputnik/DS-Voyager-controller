@@ -191,6 +191,9 @@ namespace DigitalSputnik.Bluetooth
 
         public void SubscribeToCharacteristic(string service, string characteristic, PeripheralCharacteristicUpdate onDataUpdate)
         {
+            service = service.ToUpper();
+            characteristic = characteristic.ToUpper();
+
             if (!_characteristicUpdateDelegates.ContainsKey(service))
                 _characteristicUpdateDelegates.Add(service, new Dictionary<string, PeripheralCharacteristicUpdate>());
 
@@ -224,7 +227,10 @@ namespace DigitalSputnik.Bluetooth
 
         void OnCharacteristicUpdate(string id, string service, string characteristic, byte[] data)
         {
-            if (id == _id)
+            service = service.ToUpper();
+            characteristic = characteristic.ToUpper();
+
+            if (id.ToUpper() == _id.ToUpper())
             {
                 if (_characteristicUpdateDelegates.ContainsKey(service))
                 {

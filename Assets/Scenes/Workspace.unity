@@ -16870,6 +16870,7 @@ MonoBehaviour:
   - Loading..
   - Loading...
   _animationSpeed: 0.6
+  _timeout: 10
 --- !u!225 &1646406813
 CanvasGroup:
   m_ObjectHideFlags: 0

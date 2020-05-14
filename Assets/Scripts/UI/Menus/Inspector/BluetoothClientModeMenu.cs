@@ -26,9 +26,11 @@ namespace VoyagerApp.UI.Menus
         [Space(3)]
         [SerializeField] string[] _loadingAnim = null;
         [SerializeField] float _animationSpeed = 0.6f;
+        [SerializeField] float _timeout = 10.0f;
 
-        List<BluetoothConnection> _connections = new List<BluetoothConnection>();
         bool _loading;
+        string[] _ids;
+        List<BluetoothConnection> _connections = new List<BluetoothConnection>();
 
         internal override void OnShow()
         {
@@ -50,8 +52,8 @@ namespace VoyagerApp.UI.Menus
             if (Application.platform == RuntimePlatform.IPhonePlayer)
                 ApplicationSettings.IOSBluetoothWifiSsid = _ssidField.text;
 
-            _connections.ForEach(c => BluetoothHelper.DisconnectFromPeripheral(c.ID));
-            _connections.Clear();
+            foreach (var connection in _connections)
+                BluetoothHelper.DisconnectFromPeripheral(connection.ID);
 
             StopAllCoroutines();
         }
@@ -79,8 +81,7 @@ namespace VoyagerApp.UI.Menus
 
         public void ConnectToLamps(string[] ids)
         {
-            foreach (var id in ids)
-                BluetoothHelper.ConnectToPeripheral(id, OnConnectedToLamp, null, (_) => OnLampDisconnected(id));
+            _ids = ids;
         }
 
         public void Set()
@@ -112,48 +113,48 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
-        void OnConnectedToLamp(BluetoothConnection connection)
-        {
-            connection.OnServices += (services) => OnServices(connection, services);
-            connection.GetServices();
-        }
+        //void OnConnectedToLamp(BluetoothConnection connection)
+        //{
+        //    connection.OnServices += (services) => OnServices(connection, services);
+        //    connection.GetServices();
+        //}
 
-        void OnServices(BluetoothConnection connection, string[] services)
-        {
-            if (services.Any(s => s.ToLower() == BluetoothHelper.SERVICE_UID))
-            {
-                connection.OnCharacteristics += (service, characs) => OnCharacteristics(connection, service, characs);
-                connection.GetCharacteristics(BluetoothHelper.SERVICE_UID);
-            }
-            else
-            {
-                BluetoothHelper.DisconnectFromPeripheral(connection.ID);
-            }
-        }
+        //void OnServices(BluetoothConnection connection, string[] services)
+        //{
+        //    if (services.Any(s => s.ToLower() == BluetoothHelper.SERVICE_UID))
+        //    {
+        //        connection.OnCharacteristics += (service, characs) => OnCharacteristics(connection, service, characs);
+        //        connection.GetCharacteristics(BluetoothHelper.SERVICE_UID);
+        //    }
+        //    else
+        //    {
+        //        BluetoothHelper.DisconnectFromPeripheral(connection.ID);
+        //    }
+        //}
 
-        void OnLampDisconnected(string id)
-        {
-            var connection = _connections.FirstOrDefault(c => c.ID == id);
-            if (connection != null) _connections.Remove(connection);
-        }
+        //void OnLampDisconnected(string id)
+        //{
+        //    var connection = _connections.FirstOrDefault(c => c.ID == id);
+        //    if (connection != null) _connections.Remove(connection);
+        //}
 
-        void OnCharacteristics(BluetoothConnection connection, string service, string[] characs)
-        {
-            if (service.ToLower() == BluetoothHelper.SERVICE_UID)
-            {
-                const string READ_CHAR = BluetoothHelper.UART_RX_CHARACTERISTIC_UUID;
-                const string WRITE_CHAR = BluetoothHelper.UART_TX_CHARACTERISTIC_UUID;
+        //void OnCharacteristics(BluetoothConnection connection, string service, string[] characs)
+        //{
+        //    if (service.ToLower() == BluetoothHelper.SERVICE_UID)
+        //    {
+        //        const string READ_CHAR = BluetoothHelper.UART_RX_CHARACTERISTIC_UUID;
+        //        const string WRITE_CHAR = BluetoothHelper.UART_TX_CHARACTERISTIC_UUID;
 
-                if (characs.Any(c => c.ToLower() == READ_CHAR) && characs.Any(c => c.ToLower() == WRITE_CHAR))
-                {
-                    _connections.Add(connection);
-                }
-                else
-                {
-                    BluetoothHelper.DisconnectFromPeripheral(connection.ID);
-                }
-            }
-        }
+        //        if (characs.Any(c => c.ToLower() == READ_CHAR) && characs.Any(c => c.ToLower() == WRITE_CHAR))
+        //        {
+        //            _connections.Add(connection);
+        //        }
+        //        else
+        //        {
+        //            BluetoothHelper.DisconnectFromPeripheral(connection.ID);
+        //        }
+        //    }
+        //}
 
         IEnumerator IEnumSetWifiSettings(string ssid, string password)
         {
@@ -161,38 +162,178 @@ namespace VoyagerApp.UI.Menus
 
             const string JSON = @"{""op_code"": ""ble_ack""}";
             const string SERVICE = BluetoothHelper.SERVICE_UID;
-            const string READCHARAC = BluetoothHelper.UART_TX_CHARACTERISTIC_UUID;
-            const string WRITECHARAC = BluetoothHelper.UART_RX_CHARACTERISTIC_UUID;
+            const string READ_CHAR = BluetoothHelper.UART_TX_CHARACTERISTIC_UUID;
+            const string WRITE_CHAR = BluetoothHelper.UART_RX_CHARACTERISTIC_UUID;
 
-            List<string> approvedConnections = new List<string>();
-
-            _connections.ForEach(c =>
+            foreach (var id in _ids)
             {
-                c.SubscribeToCharacteristicUpdate(SERVICE, READCHARAC);
-                c.OnData += (data) =>
-                {
-                    if (Encoding.UTF8.GetString(data) == JSON)
-                    {
-                        if (!approvedConnections.Contains(c.ID))
-                            approvedConnections.Add(c.ID);
-                    }
-                };
-            });
+                bool done = false;
+                bool hadError = false;
+                string errorMessage = null;
+                BluetoothConnection active = null;
 
-            // TODO: There should be a timeout here!
-            while (approvedConnections.Count != _connections.Count)
-            {
-                _connections.ForEach(c =>
-                {
-                    if (!approvedConnections.Contains(c.ID))
+                BluetoothHelper.ConnectToPeripheral(id, (connection) =>
                     {
-                        var package = VoyagerNetworkMode.Client(ssid, password, c.Name);
-                        c.Write(SERVICE, WRITECHARAC, package.ToData());
-                    }
-                });
+                        _connections.Add(connection);
 
-                yield return new WaitForSeconds(1.0f);
+                        connection.OnServices += (services) =>
+                        {
+                            if (services.Any(s => s.ToLower() == SERVICE))
+                            {
+                                connection.OnCharacteristics += (service, characs) =>
+                                {
+                                    if (service.ToLower() == SERVICE)
+                                    {
+                                        if (characs.Any(c => c.ToLower() == READ_CHAR) && characs.Any(c => c.ToLower() == WRITE_CHAR))
+                                        {
+                                            active = connection;
+                                            connection.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
+                                            connection.OnData += (data) =>
+                                            {
+                                                if (Encoding.UTF8.GetString(data) == JSON)
+                                                    BluetoothHelper.DisconnectFromPeripheral(connection.ID);
+                                            };
+                                        }
+                                        else
+                                        {
+                                            hadError = true;
+                                            errorMessage = $"No correct characteristic found from lamp {connection.Name}.";
+                                            BluetoothHelper.DisconnectFromPeripheral(connection.ID);
+                                        }
+                                    }
+                                };
+                                connection.GetCharacteristics(BluetoothHelper.SERVICE_UID);
+                            }
+                            else
+                            {
+                                hadError = true;
+                                errorMessage = $"No correct service found from lamp {connection.Name}.";
+                                BluetoothHelper.DisconnectFromPeripheral(connection.ID);
+                            }
+                        };
+                        connection.GetServices();
+                    },
+                    (error) =>
+                    {
+                        hadError = true;
+                        errorMessage = $"Failed to connect to device {id}";
+                        done = true;
+                    },
+                    (_) =>
+                    {
+                        done = true;
+                        _connections.Remove(_connections.FirstOrDefault(c => c.ID == id));
+                    }
+                );
+
+                var startTime = Time.time;
+
+                while (!done)
+                {
+                    if ((Time.time - startTime) >= _timeout)
+                    {
+                        hadError = true;
+                        string name = active != null ? active.Name : id;
+                        errorMessage = $"Timeout setting {name}.";
+                        break;
+                    }
+
+                    if (active != null)
+                    {
+                        var package = VoyagerNetworkMode.Client(ssid, password, active.Name);
+                        active.Write(SERVICE, WRITE_CHAR, package.ToData());
+                    }
+
+                    yield return new WaitForSeconds(0.2f);
+                }
+
+                if (hadError)
+                    DialogBox.Show("BLE Error", errorMessage, new string[] { "OK" }, new Action[] { null });
             }
+
+            //List<BluetoothConnection> connections = new List<BluetoothConnection>();
+            //List<string> approvedConnections = new List<string>();
+            //int waitCount = _ids.Length;
+
+            //foreach (var id in _ids)
+            //{
+            //    BluetoothHelper.ConnectToPeripheral(id,
+            //        (connection) =>
+            //        {
+            //            connection.OnServices += (services) =>
+            //            {
+            //                if (services.Any(s => s.ToLower() == SERVICE))
+            //                {
+            //                    connection.OnCharacteristics += (service, characs) =>
+            //                    {
+            //                        if (service.ToLower() == SERVICE)
+            //                        {
+            //                            if (characs.Any(c => c.ToLower() == READ_CHAR) && characs.Any(c => c.ToLower() == WRITE_CHAR))
+            //                            {
+            //                                connections.Add(connection);
+            //                                connection.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
+            //                                connection.OnData += (data) =>
+            //                                {
+            //                                    if (Encoding.UTF8.GetString(data) == JSON)
+            //                                    {
+            //                                        if (!approvedConnections.Contains(id))
+            //                                            approvedConnections.Add(id);
+            //                                    }
+            //                                };
+            //                            }
+            //                            else
+            //                                BluetoothHelper.DisconnectFromPeripheral(connection.ID);
+            //                        }
+            //                    };
+            //                    connection.GetCharacteristics(BluetoothHelper.SERVICE_UID);
+            //                }
+            //                else
+            //                {
+            //                    BluetoothHelper.DisconnectFromPeripheral(connection.ID);
+            //                }
+            //            };
+            //            connection.GetServices();
+            //        },
+            //        (error) =>
+            //        {
+            //            Debug.Log($"Failed to connect to {id}");
+            //            waitCount--;
+            //        },
+            //        (id) =>
+            //        {
+            //            Debug.Log($"Disconnected from {id}");
+            //            waitCount--;
+            //        }
+            //    );
+            //}
+
+            //_connections.ForEach(c =>
+            //{
+            //    c.SubscribeToCharacteristicUpdate(SERVICE, READCHARAC);
+            //    c.OnData += (data) =>
+            //    {
+            //        if (Encoding.UTF8.GetString(data) == JSON)
+            //        {
+            //            if (!approvedConnections.Contains(c.ID))
+            //                approvedConnections.Add(c.ID);
+            //        }
+            //    };
+            //});
+
+            //// TODO: There should be a timeout here!
+            //while (approvedConnections.Count != _connections.Count)
+            //{
+            //    _connections.ForEach(c =>
+            //    {
+            //        if (!approvedConnections.Contains(c.ID))
+            //        {
+            //            var package = VoyagerNetworkMode.Client(ssid, password, c.Name);
+            //            c.Write(SERVICE, WRITECHARAC, package.ToData());
+            //        }
+            //    });
+
+            //    yield return new WaitForSeconds(1.0f);
+            //}
 
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
