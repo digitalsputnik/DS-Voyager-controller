@@ -12,16 +12,16 @@ namespace VoyagerApp.UI.Menus
 {
     public class ClientModeMenu : Menu
     {
-        [SerializeField] float ssidPollTimeout      = 10.0f;
-        [SerializeField] GameObject ssidListObj     = null;
-        [SerializeField] ListPicker ssidList        = null;
-        [SerializeField] Button ssidRefreshBtn      = null;
-        [SerializeField] GameObject ssidFieldObj    = null;
-        [SerializeField] InputField ssidField       = null;
-        [SerializeField] InputField passwordField   = null;
-        [SerializeField] Button setBtn              = null;
-        [SerializeField] string[] loadingAnim       = null;
-        [SerializeField] float animationSpeed       = 0.6f;
+        [SerializeField] float ssidPollTimeout = 10.0f;
+        [SerializeField] GameObject ssidListObj = null;
+        [SerializeField] ListPicker ssidList = null;
+        [SerializeField] Button ssidRefreshBtn = null;
+        [SerializeField] GameObject ssidFieldObj = null;
+        [SerializeField] InputField ssidField = null;
+        [SerializeField] InputField passwordField = null;
+        [SerializeField] Button setBtn = null;
+        [SerializeField] string[] loadingAnim = null;
+        [SerializeField] float animationSpeed = 0.6f;
 
         Dictionary<Lamp, List<string>> lampToSsids = new Dictionary<Lamp, List<string>>();
         bool loading;
@@ -34,13 +34,11 @@ namespace VoyagerApp.UI.Menus
 
         internal override void OnShow()
         {
-            //ssidField.onValueChanged.AddListener(SsidFieldTextChanged);
             if (ssidFieldObj.activeSelf) TypeSsidBtnClick();
         }
 
         internal override void OnHide()
         {
-            //ssidField.onValueChanged.RemoveListener(SsidFieldTextChanged);
             lampToSsids.Clear();
         }
 
@@ -65,11 +63,6 @@ namespace VoyagerApp.UI.Menus
                 if (WorkspaceUtils.SelectedVoyagerLamps.Count > 0 && string.IsNullOrEmpty(ssidField.text))
                     ssidField.text = WorkspaceUtils.SelectedVoyagerLamps[0].activePattern;
             }
-        }
-
-        void SsidFieldTextChanged(string text)
-        {
-            setBtn.gameObject.SetActive(ssidField.text.Length > 0);
         }
 
         #region Lamp SSIDS

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,11 +14,10 @@ namespace VoyagerApp.UI
     {
         [SerializeField] MenuContainer container = null;
         [SerializeField] Menu updateMenu = null;
-        [SerializeField] float waitTime = 5.0f;
         [SerializeField] Button updateButton = null;
+        [SerializeField] float waitTime = 5.0f;
 
         bool showing;
-        List<string> promptedSerials = new List<string>();
 
         void Start()
         {
@@ -37,7 +35,6 @@ namespace VoyagerApp.UI
             {
                 if (!voyager.lamp.updated && voyager.lamp.connected)
                 {
-                    //promptedSerials.Add(voyager.lamp.serial);
                     StopAllCoroutines();
                     StartCoroutine(WaitForAnothers());
                 }
@@ -65,7 +62,6 @@ namespace VoyagerApp.UI
                     () =>
                     {
                         RemoveNotUpdatedLamps();
-                        
                         showing = false;
                     },
                     () =>
@@ -76,8 +72,8 @@ namespace VoyagerApp.UI
                             if (!lamp.lamp.updated)
                                 WorkspaceSelection.instance.SelectItem(lamp);
                         }
-                        Menus.LampSettingsMenu.isFromUpdatePrompt = true;
                         container.ShowMenu(updateMenu);
+                        updateButton.onClick.Invoke();
                         showing = false;
                     }
                 }

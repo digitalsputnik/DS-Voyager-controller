@@ -48,13 +48,16 @@ namespace VoyagerApp.UI.Menus
 
                 if (data == null)
                     throw new Exception("Error on loading");
+                    
+                var lamps = data.items.Where(i => i != null && i.type != null && i.type == "voyager_lamp").ToList();
 
-                int lamps = data.items.Where(i => i != null && i.type == "voyager_lamp").Count();
+                if (lamps == null)
+                    Debug.Log("lamps are null " + path);
 
                 MainThread.Dispach(() =>
                 {
                     nameText.text = fileName;
-                    lampsText.text = $"LAMPS: {lamps}";
+                    lampsText.text = $"LAMPS: {lamps.Count}";
                     GetComponent<Button>().interactable = true;
                 });
             }
@@ -62,7 +65,7 @@ namespace VoyagerApp.UI.Menus
             {
                 MainThread.Dispach(() =>
                 {
-                    Debug.LogError(ex);
+                    Debug.LogError(path + " - " + ex, this);
                     nameText.text = Path.GetFileName(path);
                     lampsText.text = ex.Message.ToUpper();
                 });

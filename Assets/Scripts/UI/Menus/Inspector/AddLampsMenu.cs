@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DigitalSputnik.Bluetooth;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,9 +14,10 @@ namespace VoyagerApp.UI.Menus
 {
     public class AddLampsMenu : Menu
     {
-        [SerializeField] Transform container    = null;
-        [SerializeField] AddLampItem prefab     = null;
-        [SerializeField] Button addAllLampsBtn  = null;
+        [SerializeField] Transform container = null;
+        [SerializeField] GameObject bluetoothBtn = null;
+        [SerializeField] AddLampItem prefab = null;
+        [SerializeField] Button addAllLampsBtn = null;
         List<AddLampItem> items = new List<AddLampItem>();
 
         internal override void OnShow()
@@ -28,6 +30,13 @@ namespace VoyagerApp.UI.Menus
             addAllLampsBtn.gameObject.SetActive(false);
             AddLampsToList();
 
+            bluetoothBtn.SetActive(false);
+
+            if (!BluetoothHelper.IsInitialized)
+                BluetoothHelper.Initialize(this, ScanBluetooth);
+            else
+                ScanBluetooth();
+
             StartCoroutine(AddLampsAgain());
         }
 
@@ -39,9 +48,33 @@ namespace VoyagerApp.UI.Menus
             ApplicationState.OnNewProject -= NewProject;
 
             foreach (var lamp in new List<AddLampItem>(items))
-                RemoveLampItem(lamp);
+                RemoveLampItem(lamp, false);
+
+            BluetoothHelper.StopScanningForLamps();
 
             StopCoroutine(AddLampsAgain());
+        }
+
+        void ScanBluetooth()
+        {
+            BluetoothHelper.StartScanningForLamps(LampScanned);
+        }
+
+        void LampScanned(PeripheralInfo peripheral)
+        {
+            if (ValidateBluetoothPeripheral(peripheral.name))
+            {
+                BluetoothHelper.StopScanningForLamps();
+                bluetoothBtn.SetActive(true);
+            }
+        }
+
+        bool ValidateBluetoothPeripheral(string name)
+        {
+            return !LampManager.instance.Lamps.Any(l =>
+            {
+                return l.serial == name && l.connected;
+            });
         }
 
         void NewProject()
@@ -55,7 +88,7 @@ namespace VoyagerApp.UI.Menus
 
         IEnumerator AddLampsAgain()
         {
-            while(true)
+            while (true)
             {
                 yield return new WaitForSeconds(0.5f);
                 AddLampsToList();
@@ -74,7 +107,7 @@ namespace VoyagerApp.UI.Menus
             {
                 var addItem = items.FirstOrDefault(v => v.lamp == view.lamp);
                 if (addItem != null)
-                    RemoveLampItem(addItem);
+                    RemoveLampItem(addItem, true);
             }
         }
 
@@ -83,7 +116,9 @@ namespace VoyagerApp.UI.Menus
             var lamps = WorkspaceUtils.Lamps;
             foreach (var lamp in LampManager.instance.Lamps)
             {
-                if (!items.Any(i => i.lamp.serial == lamp.serial) && !lamps.Any(l => l.serial == lamp.serial) && lamp.connected)
+                if (!items.Any(i => i.lamp.serial == lamp.serial) &&
+                    !lamps.Any(l => l.serial == lamp.serial) &&
+                    lamp.connected)
                     OnLampAdded(lamp);
             }
             CheckForAddAllLampsButton();
@@ -102,10 +137,10 @@ namespace VoyagerApp.UI.Menus
             }
 
             while (items.Count > 0)
-                RemoveLampItem(items[0]);
+                RemoveLampItem(items[0], true);
         }
 
-        public void RemoveLampItem(AddLampItem item)
+        public void RemoveLampItem(AddLampItem item, bool closeMenuOnEmpty)
         {
             if (items.Contains(item))
             {
@@ -113,7 +148,7 @@ namespace VoyagerApp.UI.Menus
                 Destroy(item.gameObject);
             }
 
-            if (items.Count == 0)
+            if (items.Count == 0 && closeMenuOnEmpty)
                 GetComponentInParent<MenuContainer>().ShowMenu(null);
 
             CheckForAddAllLampsButton();
@@ -121,12 +156,14 @@ namespace VoyagerApp.UI.Menus
 
         void OnLampAdded(Lamp lamp)
         {
-            if (!WorkspaceUtils.Lamps.Any(l => l == lamp) && !items.Any(i => i.lamp == lamp) && lamp.connected && math.abs(NetUtils.VoyagerClient.TimeOffset) > 0.01f)
+            if (!WorkspaceUtils.Lamps.Any(l => l == lamp) &&
+                !items.Any(i => i.lamp == lamp) &&
+                lamp.connected &&
+                math.abs(NetUtils.VoyagerClient.TimeOffset) > 0.01f)
             {
                 AddLampItem item = Instantiate(prefab, container);
                 item.SetLamp(lamp);
                 items.Add(item);
-
                 CheckForAddAllLampsButton();
             }
         }

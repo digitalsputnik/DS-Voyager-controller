@@ -7,6 +7,8 @@ namespace VoyagerApp.Lamps.Voyager
     [Serializable]
     public class VoyagerNetworkMode : JsonData<VoyagerNetworkMode>
     {
+        [JsonProperty("op_code")]
+        public string opcode = "network_mode_request";
         [JsonProperty("network_mode")]
 		public string mode;
         [JsonProperty("set_pattern")]

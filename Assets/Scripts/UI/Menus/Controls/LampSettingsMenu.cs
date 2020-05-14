@@ -11,8 +11,6 @@ namespace VoyagerApp.UI.Menus
 {
     public class LampSettingsMenu : Menu
     {
-        public static bool isFromUpdatePrompt = false;
-
         [SerializeField] Text selectDeselectBtnText     = null;
         [SerializeField] GameObject infoTextObj         = null;
         [SerializeField] GameObject networkSettingsBtn  = null;
@@ -46,12 +44,6 @@ namespace VoyagerApp.UI.Menus
         {
             WorkspaceSelection.instance.onSelectionChanged += OnSelectionChanged;
             EnableDisableObjects();
-
-            if (isFromUpdatePrompt && !Debug.isDebugBuild)
-            {
-                isFromUpdatePrompt = false;
-                UpdateSelected();
-            }
         }
 
         internal override void OnHide()

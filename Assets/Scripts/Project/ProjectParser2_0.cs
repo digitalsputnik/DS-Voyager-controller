@@ -2,11 +2,14 @@
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace VoyagerApp.Projects
 {
     public class ProjectParser2_0 : IProjectParser
     {
+        public string VersionString => "2.0";
+
         public ProjectSaveData Parse(string json)
         {
             JObject jobj = JObject.Parse(json);

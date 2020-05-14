@@ -7,6 +7,8 @@ namespace VoyagerApp.Projects
 {
     public class ProjectParser2_2 : IProjectParser
     {
+        public string VersionString => "2.2";
+
         public ProjectSaveData Parse(string json)
         {
             JObject jobj = JObject.Parse(json);

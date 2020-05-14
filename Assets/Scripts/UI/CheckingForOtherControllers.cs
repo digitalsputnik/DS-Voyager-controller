@@ -51,8 +51,13 @@ namespace VoyagerApp.UI
             var senderIpStr = sender.Address.ToString();
             var selfAddresses = NetUtils.LocalIPAddresses;
 
-            if (Application.platform == RuntimePlatform.IPhonePlayer && alertedControllers.Count == 0)
+            if (Application.platform == RuntimePlatform.IPhonePlayer &&
+                alertedControllers.Count == 0)
                 alertedControllers.Add(senderIpStr);
+
+            if (Application.platform == RuntimePlatform.IPhonePlayer &&
+                sender.Address.ToString() == NetUtils.LocalIPAddress.ToString())
+                alertedControllers.Add(NetUtils.LocalIPAddress.ToString());
 
             foreach (var address in selfAddresses)
                 RememberSelfAddress(address.ToString());
