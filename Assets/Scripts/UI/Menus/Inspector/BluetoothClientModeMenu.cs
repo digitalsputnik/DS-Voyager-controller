@@ -23,6 +23,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] InputField _passwordField = null;
         [SerializeField] Button _setBtn = null;
         [SerializeField] GameObject _statusText = null;
+        [SerializeField] GameObject _bleInfoText = null;
         [Space(3)]
         [SerializeField] string[] _loadingAnim = null;
         [SerializeField] float _animationSpeed = 0.6f;
@@ -40,10 +41,12 @@ namespace VoyagerApp.UI.Menus
             {
                 SetupIOS();
                 ShowTypeSsid();
+                _bleInfoText.SetActive(true);
             }
             else if (Application.platform == RuntimePlatform.Android)
             {
                 ShowScanSsids();
+                _bleInfoText.SetActive(true);
             }
         }
 
