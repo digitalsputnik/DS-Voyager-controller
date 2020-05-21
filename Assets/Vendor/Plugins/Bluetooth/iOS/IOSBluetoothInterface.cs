@@ -50,6 +50,11 @@ namespace DigitalSputnik.Bluetooth
 #endregion
 
 #region Interface Implementation
+        public bool IsInitialized()
+        {
+            return _initialized;
+        }
+        
         public void Initialize()
         {
             if (!_initialized)

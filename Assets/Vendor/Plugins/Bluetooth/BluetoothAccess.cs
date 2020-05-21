@@ -13,7 +13,7 @@ namespace DigitalSputnik.Bluetooth
     {
         static BluetoothAccess _instance;
 
-        IBluetoothInterface _interface;
+        static IBluetoothInterface _interface;
         List<PeripheralInfo> _scannedPeripherals;
 
         PeripheralHandler _onPeripheralScanned;
@@ -23,7 +23,16 @@ namespace DigitalSputnik.Bluetooth
 
         #region Public Properties
         public static List<PeripheralInfo> ScannedPeripherals => _instance._scannedPeripherals;
-        public static bool IsInitialized => _instance != null;
+        public static bool IsInitialized 
+        {
+            get 
+            { 
+                if (_interface == null)
+                    return false;
+                else
+                    return _interface.IsInitialized();
+            }
+        }
         #endregion
 
         #region Public Variables
