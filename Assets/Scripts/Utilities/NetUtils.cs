@@ -30,7 +30,7 @@ namespace VoyagerApp.Utilities
                     Application.platform == RuntimePlatform.OSXPlayer ||
                     Application.platform == RuntimePlatform.OSXEditor )
                 {
-                    var wireless = WirelessInterface;
+                    var wireless = NetworkInterface;
                     if (wireless != null)
                         return InterfaceToAddress(wireless);
                 }
@@ -98,7 +98,7 @@ namespace VoyagerApp.Utilities
             }
         }
 
-        static NetworkInterface WirelessInterface
+        static NetworkInterface NetworkInterface
         {
             get
             {
@@ -108,7 +108,20 @@ namespace VoyagerApp.Utilities
                     _.OperationalStatus == OperationalStatus.Up &&
                     _.GetIPProperties().GetIPv4Properties() != null &&
                     _.NetworkInterfaceType == NetworkInterfaceType.Wireless80211);
-                return wireless;
+                
+                if (wireless == null)
+                {
+                    var wired = adapters.FirstOrDefault(_ =>
+                    _.SupportsMulticast &&
+                    _.OperationalStatus == OperationalStatus.Up &&
+                    _.GetIPProperties().GetIPv4Properties() != null &&
+                    _.NetworkInterfaceType == NetworkInterfaceType.Ethernet);
+                    return wired;
+                }
+                else
+                {
+                    return wireless;
+                }
             }
         }
 
