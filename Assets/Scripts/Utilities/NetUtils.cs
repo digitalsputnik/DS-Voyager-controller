@@ -103,13 +103,20 @@ namespace VoyagerApp.Utilities
             get
             {
                 var adapters = NetworkInterface.GetAllNetworkInterfaces();
-                var wireless = adapters.FirstOrDefault(_ =>
+
+                bool wirelessExists = adapters.Any(_ => _.NetworkInterfaceType == NetworkInterfaceType.Wireless80211);
+                bool wiredExists = adapters.Any(_ => _.NetworkInterfaceType == NetworkInterfaceType.Ethernet);
+
+                if (wirelessExists)
+                {
+                    var wireless = adapters.FirstOrDefault(_ =>
                     _.SupportsMulticast &&
                     _.OperationalStatus == OperationalStatus.Up &&
                     _.GetIPProperties().GetIPv4Properties() != null &&
                     _.NetworkInterfaceType == NetworkInterfaceType.Wireless80211);
-                
-                if (wireless == null)
+                    return wireless;
+                }
+                else if (wiredExists)
                 {
                     var wired = adapters.FirstOrDefault(_ =>
                     _.SupportsMulticast &&
@@ -120,7 +127,8 @@ namespace VoyagerApp.Utilities
                 }
                 else
                 {
-                    return wireless;
+                    Debug.Log("No Supported Interface Found");
+                    return null;
                 }
             }
         }

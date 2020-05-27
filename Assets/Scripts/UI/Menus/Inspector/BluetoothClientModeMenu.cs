@@ -47,7 +47,7 @@ namespace VoyagerApp.UI.Menus
             }
             else if (Application.platform == RuntimePlatform.Android)
             {
-                ShowScanSsids();
+                ShowTypeSsid();
                 _bleInfoText.SetActive(true);
             }
         }
@@ -96,7 +96,7 @@ namespace VoyagerApp.UI.Menus
 
             if (password.Length >= 8 && ssid.Length != 0 || password.Length == 0 && ssid.Length != 0)
             {
-                StartCoroutine(IEnumSetWifiSettings(ssid, WPA_PSK(ssid, password).ToLower()));
+                StartCoroutine(IEnumSetWifiSettings(ssid, password));
             }
             else if (ssid.Length == 0)
             {
