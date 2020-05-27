@@ -114,6 +114,7 @@ namespace VoyagerApp.Utilities
                     _.OperationalStatus == OperationalStatus.Up &&
                     _.GetIPProperties().GetIPv4Properties() != null &&
                     _.NetworkInterfaceType == NetworkInterfaceType.Wireless80211);
+                    Debug.Log(string.Format("Wireless Interface Found: {0}", wireless.Description));
                     return wireless;
                 }
                 else if (wiredExists)
@@ -123,6 +124,7 @@ namespace VoyagerApp.Utilities
                     _.OperationalStatus == OperationalStatus.Up &&
                     _.GetIPProperties().GetIPv4Properties() != null &&
                     _.NetworkInterfaceType == NetworkInterfaceType.Ethernet);
+                    Debug.Log(string.Format("Wired Interface Found: {0}", wired.Description));
                     return wired;
                 }
                 else
