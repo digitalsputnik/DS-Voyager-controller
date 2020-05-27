@@ -104,6 +104,9 @@ namespace VoyagerApp.Utilities
             {
                 var adapters = NetworkInterface.GetAllNetworkInterfaces();
 
+                if (adapters == null)
+                    Debug.Log("Adapters is null");
+
                 bool wirelessExists = adapters.Any(_ => _.NetworkInterfaceType == NetworkInterfaceType.Wireless80211);
                 bool wiredExists = adapters.Any(_ => _.NetworkInterfaceType == NetworkInterfaceType.Ethernet);
 
