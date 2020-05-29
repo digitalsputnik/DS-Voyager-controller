@@ -245,7 +245,7 @@ namespace VoyagerApp.UI.Menus
 
                     if (active != null)
                     {
-                        var package = VoyagerNetworkMode.Client(ssid, WPA_PSK(ssid, password).ToLower(), active.Name);
+                        var package = VoyagerNetworkMode.Client(ssid, password, active.Name);
                         active.Write(SERVICE, WRITE_CHAR, package.ToData());
                     }
 

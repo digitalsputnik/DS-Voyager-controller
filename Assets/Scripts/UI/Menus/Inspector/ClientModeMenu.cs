@@ -212,7 +212,7 @@ namespace VoyagerApp.UI.Menus
                 var client = NetUtils.VoyagerClient;
 
                 foreach (var lamp in WorkspaceUtils.SelectedLamps)
-                    client.TurnToClient(lamp, ssid, WPA_PSK(ssid, password).ToLower());
+                    client.TurnToClient(lamp, ssid, password);
 
                 GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
             }
