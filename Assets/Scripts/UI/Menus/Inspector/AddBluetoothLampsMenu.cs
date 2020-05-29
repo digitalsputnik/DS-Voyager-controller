@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DigitalSputnik.Bluetooth;
-using UnityEditor.PackageManager;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
-using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Networking.Voyager;
 
 namespace VoyagerApp.UI.Menus
@@ -64,6 +63,7 @@ namespace VoyagerApp.UI.Menus
                     item = Instantiate(_itemPrefab, _itemsContainer);
                     item.BluetoothId = peripheral.id;
                     item.Toggled = false;
+                    //StartCoroutine(GetLampName(peripheral.id));
                     _items.Add(item);
                 }
 
