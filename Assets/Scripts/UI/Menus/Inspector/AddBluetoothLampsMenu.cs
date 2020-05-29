@@ -63,8 +63,8 @@ namespace VoyagerApp.UI.Menus
                     item = Instantiate(_itemPrefab, _itemsContainer);
                     item.BluetoothId = peripheral.id;
                     item.Toggled = false;
-                    //StartCoroutine(GetLampName(peripheral.id));
                     _items.Add(item);
+                    //StartCoroutine(GetLampName(peripheral.id));
                 }
 
                 item.Name = peripheral.name;
