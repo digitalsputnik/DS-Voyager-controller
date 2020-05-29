@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using DigitalSputnik.Bluetooth;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
+using VoyagerApp.Lamps.Voyager;
+using VoyagerApp.Networking.Voyager;
 
 namespace VoyagerApp.UI.Menus
 {
