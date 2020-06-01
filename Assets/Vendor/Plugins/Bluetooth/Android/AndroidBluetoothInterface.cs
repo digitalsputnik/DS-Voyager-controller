@@ -226,7 +226,7 @@ namespace DigitalSputnik.Bluetooth
 
             if (device != null && device.connected)
             {
-                var characObject = device.characteristics[characteristic];
+                var characObject = device.characteristics[characteristic.ToLower()];
                 var parameters = new object[] { device.gatt, characObject };
                 _pluginObject.Call("subscribeToCharacteristicUpdate", parameters);
             }

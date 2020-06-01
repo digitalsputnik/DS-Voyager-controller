@@ -71,6 +71,8 @@ namespace VoyagerApp.UI.Menus
 
         public void ShowTypeSsid()
         {
+            _setBtn.interactable = false;
+
             if (!_loading)
             {
                 _ssidListObj.gameObject.SetActive(false);
@@ -264,20 +266,16 @@ namespace VoyagerApp.UI.Menus
                 {
                     _connections.Add(conn);
 
-                    var packet = new SsidListRequestPacket();
-                    var sendData = packet.Serialize();
-                    conn.Write(SERVICE, WRITE_CHAR, sendData);
-
                     conn.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
                     conn.OnData += (data) =>
                     {
-                        var deserialized = Packet.Deserialize<SsidListResponseResponse>(data);
-                        if (deserialized != null && deserialized.op == OpCode.SsidListResponse)
-                        {
-                            ssids = deserialized.ssids;
-                            finished = true;
-                        }
+                        ssids = Encoding.UTF8.GetString(data).Split(',');
+                        finished = true;
                     };
+
+                    var packet = new SsidListRequestPacket();
+                    var sendData = packet.Serialize();
+                    conn.Write(SERVICE, WRITE_CHAR, sendData);
                 },
                 (err) =>
                 {
