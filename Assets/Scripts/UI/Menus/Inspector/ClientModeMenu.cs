@@ -152,6 +152,8 @@ namespace VoyagerApp.UI.Menus
                 (gathered != count) && ((TimeUtils.Epoch - starttime) < timeout)
             );
 
+
+
             List<string> returnSsids = new List<string>();
 
             if (allSsids.Count != 0)

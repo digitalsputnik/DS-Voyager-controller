@@ -104,40 +104,25 @@ namespace VoyagerApp.Utilities
             get
             {
                 var adapters = NetworkInterface.GetAllNetworkInterfaces();
+                var wireless = adapters.FirstOrDefault(_ =>
+                    _.SupportsMulticast &&
+                    _.OperationalStatus == OperationalStatus.Up &&
+                    _.GetIPProperties().GetIPv4Properties() != null &&
+                    _.NetworkInterfaceType == NetworkInterfaceType.Wireless80211);
 
-                bool wirelessExists = adapters.Any(_ => _.NetworkInterfaceType == NetworkInterfaceType.Wireless80211);
-                bool wiredExists = adapters.Any(_ => _.NetworkInterfaceType == NetworkInterfaceType.Ethernet);
-
-                Debug.LogWarning($"Wireless interface found - {wirelessExists}, Wired interface found - {wiredExists}");
-
-                var networkInterface = adapters.FirstOrDefault(_ =>
-                _.SupportsMulticast &&
-                _.OperationalStatus == OperationalStatus.Up &&
-                _.Description != "Npcap Loopback Adapter" &&
-                (_.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || _.NetworkInterfaceType == NetworkInterfaceType.Ethernet));
-
-                try
+                if (wireless == null)
                 {
-                    if (networkInterface.GetIPProperties().GetIPv4Properties() != null)
-                        Debug.LogWarning("IPv4 found on interface");
+                    var wired = adapters.FirstOrDefault(_ =>
+                    _.SupportsMulticast &&
+                    _.OperationalStatus == OperationalStatus.Up &&
+                    _.GetIPProperties().GetIPv4Properties() != null &&
+                    _.NetworkInterfaceType == NetworkInterfaceType.Ethernet);
+                    return wired;
                 }
-                catch(NullReferenceException ex)
+                else
                 {
-                    Debug.LogWarning($"IPv4 not found on interface, exception - {ex}");
-
-                    try
-                    {
-                        if (networkInterface.GetIPProperties().GetIPv6Properties() != null)
-                            Debug.LogWarning("IPv6 found on interface");
-                    }
-                    catch(NullReferenceException exept)
-                    {
-                        Debug.LogWarning($"IPv6 not found on interface, exception - {exept}");
-                    }
+                    return wireless;
                 }
-
-                Debug.Log($"Interface Found: {networkInterface.Description}");
-                return networkInterface;
             }
         }
 

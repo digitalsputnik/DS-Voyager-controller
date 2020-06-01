@@ -46,6 +46,64 @@ public static class BluetoothHelper
         BluetoothAccess.StopScanning();
     }
 
+    public static void ConnectAndValidate(string id, BluetoothConnectedHandler onConnected, Action<string> onFail, Action<string> onDisconnect)
+    {
+        var error = ValidationError.None;
+
+        ConnectToPeripheral(id,
+            (connection) =>
+            {
+                connection.OnServices += (services) =>
+                {
+                    if (services.Any(s => s.ToLower() == SERVICE_UID))
+                    {
+                        connection.OnCharacteristics += (service, characs) =>
+                        {
+                            if (service.ToLower() == SERVICE_UID)
+                            {
+                                if (characs.Any(c => c.ToLower() == UART_RX_CHARACTERISTIC_UUID) &&
+                                    characs.Any(c => c.ToLower() == UART_TX_CHARACTERISTIC_UUID))
+                                {
+                                    onConnected(connection);
+                                }
+                                else
+                                {
+                                    error = ValidationError.MissingCharacteristics;
+                                    DisconnectFromPeripheral(id);
+                                }
+                            }
+                        };
+                        connection.GetCharacteristics(SERVICE_UID);
+                    }
+                    else
+                    {
+                        error = ValidationError.MissingService;
+                        DisconnectFromPeripheral(id);
+                    }
+                };
+                connection.GetServices();
+            },
+            (err) =>
+            {
+                onFail(err);
+            },
+            (err) =>
+            {
+                if (error == ValidationError.None)
+                {
+                    onDisconnect(err);
+                }
+            });
+    }
+
+    enum ValidationError
+    {
+        MissingService,
+        MissingCharacteristics,
+        Unknown,
+        None
+    }
+
     public static void ConnectToPeripheral(string id, BluetoothConnectedHandler onConnected, Action<string> onFail, Action<string> onDisconnect)
     {
         _onConnect[id] = onConnected;
