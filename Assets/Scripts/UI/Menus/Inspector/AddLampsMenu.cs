@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Crosstales.Common.Model.Enum;
 using DigitalSputnik.Bluetooth;
 using Unity.Mathematics;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace VoyagerApp.UI.Menus
     {
         [SerializeField] Transform container = null;
         [SerializeField] GameObject bluetoothBtn = null;
+        [SerializeField] GameObject bleInfoText = null;
         [SerializeField] AddLampItem prefab = null;
         [SerializeField] Button addAllLampsBtn = null;
         List<AddLampItem> items = new List<AddLampItem>();
@@ -36,6 +38,9 @@ namespace VoyagerApp.UI.Menus
                 BluetoothHelper.Initialize(this, ScanBluetooth);
             else
                 ScanBluetooth();
+
+            if (Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.Android)
+                bleInfoText.SetActive(true);
 
             StartCoroutine(AddLampsAgain());
         }

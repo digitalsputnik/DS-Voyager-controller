@@ -223,10 +223,15 @@ namespace DigitalSputnik.Bluetooth
 
         void OnCharacteristicUpdate(string peripheral, string service, string characteristic, string error, byte[] data)
         {
+
             if (_onCharacteristicUpdate != null)
             {
                 if (string.IsNullOrEmpty(error))
-                    _onCharacteristicUpdate.Invoke(peripheral, service, characteristic, data);
+                {
+                    var base64 = Encoding.UTF8.GetString(data);
+                    var decoded = Convert.FromBase64String(base64);
+                    _onCharacteristicUpdate.Invoke(peripheral, service, characteristic, decoded);
+                }
                 else
                     Debug.LogError($"[IOS Bluetooth error] {error}");
             }
