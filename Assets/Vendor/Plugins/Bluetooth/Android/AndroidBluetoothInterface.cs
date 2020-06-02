@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Android;
@@ -107,6 +106,9 @@ namespace DigitalSputnik.Bluetooth
                 if (services == null)
                     services = new string[0];
 
+                for (int i = 0; i < services.Length; i++)
+                    services[i] = services[i].ToLower();
+
                 _scannedDevices.Clear();
                 _pluginObject.Call("startScanning", services);
 
@@ -192,6 +194,8 @@ namespace DigitalSputnik.Bluetooth
         {
             var device = _connectedDevices.FirstOrDefault(d => d.mac == mac);
 
+            service = service.ToLower();
+
             if (device != null && device.connected)
             {
                 if (device.services.ContainsKey(service))
@@ -224,6 +228,8 @@ namespace DigitalSputnik.Bluetooth
         {
             var device = _connectedDevices.FirstOrDefault(d => d.mac == mac);
 
+            characteristic = characteristic.ToLower();
+
             if (device != null && device.connected)
             {
                 var characObject = device.characteristics[characteristic.ToLower()];
@@ -235,6 +241,8 @@ namespace DigitalSputnik.Bluetooth
         public void WriteToCharacteristic(string mac, string characteristic, byte[] data)
         {
             var device = _connectedDevices.FirstOrDefault(d => d.mac == mac);
+
+            characteristic = characteristic.ToLower();
 
             if (device != null && device.connected)
             {

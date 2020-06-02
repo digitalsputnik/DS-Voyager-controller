@@ -61,8 +61,8 @@ public static class BluetoothHelper
                         {
                             if (service.ToLower() == SERVICE_UID)
                             {
-                                if (characs.Any(c => c.ToLower() == UART_RX_CHARACTERISTIC_UUID) &&
-                                    characs.Any(c => c.ToLower() == UART_TX_CHARACTERISTIC_UUID))
+                                if (characs.Any(c => c.ToLower() == UART_TX_CHARACTERISTIC_UUID) &&
+                                    characs.Any(c => c.ToLower() == UART_RX_CHARACTERISTIC_UUID))
                                 {
                                     onConnected(connection);
                                 }
@@ -174,9 +174,9 @@ public class BluetoothConnection
         _access.SubscribeToCharacteristic(service, characteristic, OnDataUpdate);
     }
 
-    public void Write(string service, string characteristic, byte[] data)
+    public void Write(string characteristic, byte[] data)
     {
-        _access.WriteToCharacteristic(service, characteristic, data);
+        _access.WriteToCharacteristic(characteristic, data);
     }
 
     public void HandleDisconnection()

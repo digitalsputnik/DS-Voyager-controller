@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -71,7 +69,7 @@ namespace VoyagerApp.UI.Menus
 
         public void ShowTypeSsid()
         {
-            _setBtn.interactable = false;
+            _setBtn.interactable = true;
 
             if (!_loading)
             {
@@ -182,7 +180,7 @@ namespace VoyagerApp.UI.Menus
                     if (active != null)
                     {
                         var package = VoyagerNetworkMode.Client(ssid, password, active.Name);
-                        active.Write(SERVICE, WRITE_CHAR, package.ToData());
+                        active.Write(WRITE_CHAR, package.ToData());
                     }
 
                     yield return new WaitForSeconds(0.2f);
@@ -261,21 +259,22 @@ namespace VoyagerApp.UI.Menus
             bool finished = false;
             string[] ssids = new string[0];
 
+            BluetoothConnection connection = null;
+
             BluetoothHelper.ConnectAndValidate(id,
                 (conn) =>
                 {
+                    connection = conn;
+
                     _connections.Add(conn);
 
-                    conn.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
                     conn.OnData += (data) =>
                     {
                         ssids = Encoding.UTF8.GetString(data).Split(',');
                         finished = true;
                     };
 
-                    var packet = new SsidListRequestPacket();
-                    var sendData = packet.Serialize();
-                    conn.Write(SERVICE, WRITE_CHAR, sendData);
+                    conn.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
                 },
                 (err) =>
                 {
@@ -293,6 +292,17 @@ namespace VoyagerApp.UI.Menus
             while (Time.time < endTime && !finished)
             {
                 yield return new WaitForSeconds(0.5f);
+
+                if (connection != null)
+                {
+                    var packet = new SsidListRequestPacket();
+                    var sendData = packet.Serialize();
+                    connection.Write(WRITE_CHAR, sendData);
+
+                    var poll = new PollRequestPacket();
+                    sendData = poll.Serialize();
+                    connection.Write(WRITE_CHAR, sendData);
+                }
             }
 
             callback(ssids);
