@@ -252,7 +252,7 @@ namespace VoyagerApp.UI.Menus
         IEnumerator GetSsidFromId(string id, Action<string[]> callback)
         {
             bool finished = false;
-            string[] ssids = new string[0];
+            List<string> ssids = new List<string>();
 
             const string BEGIN_JSON = "{\"op_code\": \"ack_ssid_list_request\"}";
             const string END_JSON = "{\"op_code\": \"ack_ssid_list_complete\"}";
@@ -268,9 +268,15 @@ namespace VoyagerApp.UI.Menus
 
                         if (decoded != BEGIN_JSON && decoded != END_JSON)
                         {
-                            ssids = decoded.Split(',');
-                            finished = true;
+                            foreach (var ssid in decoded.Split(','))
+                            {
+                                if (!ssids.Contains(ssid))
+                                    ssids.Add(ssid);
+                            }
                         }
+
+                        if (decoded == END_JSON)
+                            finished = true;
                     };
 
                     conn.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
@@ -296,7 +302,7 @@ namespace VoyagerApp.UI.Menus
             while (Time.time < endTime && !finished)
                 yield return new WaitForSeconds(0.5f);
 
-            callback(ssids);
+            callback(ssids.ToArray());
         }
 
         IEnumerator IEnumLoadingAnimation()
