@@ -139,12 +139,18 @@ namespace VoyagerApp.UI.Menus
                         active = connection;
                         _connections.Add(connection);
 
-                        connection.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
                         connection.OnData += (data) =>
                         {
                             if (Encoding.UTF8.GetString(data) == JSON)
                                 BluetoothHelper.DisconnectFromPeripheral(connection.ID);
                         };
+
+                        connection.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
+
+                        var package = VoyagerNetworkMode.Client(ssid, password, active.Name);
+
+                        for (int i = 0; i < 3; i++)
+                            active.Write(WRITE_CHAR, package.ToData());
                     },
                     (err) =>
                     {
@@ -165,11 +171,11 @@ namespace VoyagerApp.UI.Menus
                     }
                 );
 
-                var startTime = Time.time;
+                var endtime = Time.time + _timeout;
 
                 while (!done)
                 {
-                    if ((Time.time - startTime) >= _timeout)
+                    if (Time.time >= endtime)
                     {
                         hadError = true;
                         string name = active != null ? active.Name : id;
@@ -177,13 +183,7 @@ namespace VoyagerApp.UI.Menus
                         break;
                     }
 
-                    if (active != null)
-                    {
-                        var package = VoyagerNetworkMode.Client(ssid, password, active.Name);
-                        active.Write(WRITE_CHAR, package.ToData());
-                    }
-
-                    yield return new WaitForSeconds(0.2f);
+                    yield return new WaitForSeconds(0.5f);
                 }
 
                 if (hadError)
@@ -207,10 +207,8 @@ namespace VoyagerApp.UI.Menus
 
         IEnumerator PollSsidsFromBluetooth()
         {
-            const float TIMEOUT = 10.0f;
-
             List<string[]> all = new List<string[]>();
-            float endTime = Time.time + TIMEOUT;
+
             int finished = 0;
 
             for (int i = 0; i < 4; i++)
@@ -225,10 +223,9 @@ namespace VoyagerApp.UI.Menus
                 }
             }
 
+            float endTime = Time.time + _timeout;
             while (Time.time < endTime && finished < _ids.Length)
-            {
                 yield return new WaitForSeconds(0.5f);
-            }
 
             foreach (var connection in _connections)
                 BluetoothHelper.DisconnectFromPeripheral(connection.ID);
@@ -254,27 +251,35 @@ namespace VoyagerApp.UI.Menus
 
         IEnumerator GetSsidFromId(string id, Action<string[]> callback)
         {
-            const float TIMEOUT = 10.0f;
-
             bool finished = false;
             string[] ssids = new string[0];
 
-            BluetoothConnection connection = null;
+            const string BEGIN_JSON = "{\"op_code\": \"ack_ssid_list_request\"}";
+            const string END_JSON = "{\"op_code\": \"ack_ssid_list_complete\"}";
 
             BluetoothHelper.ConnectAndValidate(id,
                 (conn) =>
                 {
-                    connection = conn;
-
                     _connections.Add(conn);
 
                     conn.OnData += (data) =>
                     {
-                        ssids = Encoding.UTF8.GetString(data).Split(',');
-                        finished = true;
+                        string decoded = Encoding.UTF8.GetString(data);
+
+                        if (decoded != BEGIN_JSON && decoded != END_JSON)
+                        {
+                            ssids = decoded.Split(',');
+                            finished = true;
+                        }
                     };
 
                     conn.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
+
+                    var packet = new SsidListRequestPacket();
+                    var sendData = packet.Serialize();
+
+                    for (int i = 0; i < 3; i++)
+                        conn.Write(WRITE_CHAR, sendData);
                 },
                 (err) =>
                 {
@@ -287,23 +292,9 @@ namespace VoyagerApp.UI.Menus
                 });
 
 
-            float endTime = Time.time + TIMEOUT;
-
+            float endTime = Time.time + _timeout;
             while (Time.time < endTime && !finished)
-            {
                 yield return new WaitForSeconds(0.5f);
-
-                if (connection != null)
-                {
-                    var packet = new SsidListRequestPacket();
-                    var sendData = packet.Serialize();
-                    connection.Write(WRITE_CHAR, sendData);
-
-                    var poll = new PollRequestPacket();
-                    sendData = poll.Serialize();
-                    connection.Write(WRITE_CHAR, sendData);
-                }
-            }
 
             callback(ssids);
         }
