@@ -98,7 +98,7 @@ namespace VoyagerApp.Networking.Voyager
 
         public void TurnToClient(Lamp lamp, string ssid, string password)
         {
-            var package = VoyagerNetworkMode.Client(ssid, password, lamp.serial);
+            var package = VoyagerNetworkMode.SecureClient(ssid, password, lamp.serial);
             var endpoint = new IPEndPoint(lamp.address, PORT_DISCOVERY);
             Send(package.ToData(), endpoint);
         }

@@ -147,7 +147,7 @@ namespace VoyagerApp.UI.Menus
 
                         connection.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
 
-                        var package = VoyagerNetworkMode.Client(ssid, password, active.Name);
+                        var package = VoyagerNetworkMode.SecureClient(ssid, password, active.Name);
 
                         for (int i = 0; i < 3; i++)
                             active.Write(WRITE_CHAR, package.ToData());

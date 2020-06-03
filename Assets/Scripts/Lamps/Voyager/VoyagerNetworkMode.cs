@@ -29,6 +29,17 @@ namespace VoyagerApp.Lamps.Voyager
             };
         }
 
+        public static VoyagerNetworkMode SecureClient(string ssid, string pw, string serial)
+        {
+            return new VoyagerNetworkMode
+            {
+                mode = "client_mode_psk",
+                ssid = ssid,
+                password = (pw.Length == 0) ? "" : SecurityUtility.WPA_PSK(ssid, pw),
+                serial = serial
+            };
+        }
+
         public static VoyagerNetworkMode Router(string serial)
         {
             return new VoyagerNetworkMode
