@@ -105,40 +105,57 @@ namespace VoyagerApp.Utilities
             {
                 var adapters = NetworkInterface.GetAllNetworkInterfaces();
 
-                bool wirelessExists = adapters.Any(_ => _.NetworkInterfaceType == NetworkInterfaceType.Wireless80211);
-                bool wiredExists = adapters.Any(_ => _.NetworkInterfaceType == NetworkInterfaceType.Ethernet);
-
-                Debug.LogWarning($"Wireless interface found - {wirelessExists}, Wired interface found - {wiredExists}");
-
-                var networkInterface = adapters.FirstOrDefault(_ =>
+                var networkInterfaces = adapters.Where(_ =>
                 _.SupportsMulticast &&
                 _.OperationalStatus == OperationalStatus.Up &&
                 _.Description != "Npcap Loopback Adapter" &&
                 (_.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || _.NetworkInterfaceType == NetworkInterfaceType.Ethernet));
 
+                var wirelessInterface = networkInterfaces.FirstOrDefault(_ => _.NetworkInterfaceType == NetworkInterfaceType.Wireless80211);
+                var wiredInterface = networkInterfaces.FirstOrDefault(_ => _.NetworkInterfaceType == NetworkInterfaceType.Ethernet);
+
+                if (wirelessInterface != null)
+                {
+                    if (GetProperties(wirelessInterface))
+                        return wirelessInterface;
+                }
+                else if (wiredInterface != null)
+                {
+                    if (GetProperties(wiredInterface))
+                        return wiredInterface;
+                }
+
+                return null;
+            }
+        }
+
+        static bool GetProperties(NetworkInterface networkInterface)
+        {
+            bool interfaceFound = false;
+
+            try
+            {
+                if (networkInterface.GetIPProperties().GetIPv4Properties() != null)
+                {
+                    interfaceFound = true;
+                }
+            }
+            catch (NullReferenceException ex)
+            {
                 try
                 {
-                    if (networkInterface.GetIPProperties().GetIPv4Properties() != null)
-                        Debug.LogWarning("IPv4 found on interface");
+                    if (networkInterface.GetIPProperties().GetIPv6Properties() != null)
+                    {
+                        interfaceFound = true;
+                    }
                 }
-                catch (NullReferenceException ex)
+                catch (NullReferenceException exept)
                 {
-                    Debug.LogWarning($"IPv4 not found on interface, exception - {ex}");
-
-                    try
-                    {
-                        if (networkInterface.GetIPProperties().GetIPv6Properties() != null)
-                            Debug.LogWarning("IPv6 found on interface");
-                    }
-                    catch (NullReferenceException exept)
-                    {
-                        Debug.LogWarning($"IPv6 not found on interface, exception - {exept}");
-                    }
+                        interfaceFound = false;
                 }
-
-                Debug.Log($"Interface Found: {networkInterface.Description}");
-                return networkInterface;
             }
+
+            return interfaceFound;
         }
 
         static IPAddress InterfaceToAddress(NetworkInterface _interface)

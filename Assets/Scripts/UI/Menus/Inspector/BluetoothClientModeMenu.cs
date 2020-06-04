@@ -130,6 +130,8 @@ namespace VoyagerApp.UI.Menus
             {
                 bool done = false;
                 bool hadError = false;
+                bool started = false;
+                bool connected = false;
                 string errorMessage = null;
                 BluetoothConnection active = null;
 
@@ -137,20 +139,20 @@ namespace VoyagerApp.UI.Menus
                     (connection) =>
                     {
                         active = connection;
-                        _connections.Add(connection);
+                        _connections.Add(active);
 
-                        connection.OnData += (data) =>
+                        active.OnData += (data) =>
                         {
                             if (Encoding.UTF8.GetString(data) == JSON)
-                                BluetoothHelper.DisconnectFromPeripheral(connection.ID);
+                            {
+                                started = true;
+                                BluetoothHelper.DisconnectFromPeripheral(active.ID);
+                            }
                         };
 
-                        connection.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
+                        active.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
 
-                        var package = VoyagerNetworkMode.SecureClient(ssid, password, active.Name);
-
-                        for (int i = 0; i < 3; i++)
-                            active.Write(WRITE_CHAR, package.ToData());
+                        connected = true;
                     },
                     (err) =>
                     {
@@ -181,6 +183,12 @@ namespace VoyagerApp.UI.Menus
                         string name = active != null ? active.Name : id;
                         errorMessage = $"Timeout setting {name}.";
                         break;
+                    }
+
+                    if (connected && !started && active != null)
+                    {
+                        var package = VoyagerNetworkMode.SecureClient(ssid, password, active.Name);
+                        active.Write(WRITE_CHAR, package.ToData());
                     }
 
                     yield return new WaitForSeconds(0.5f);
@@ -251,18 +259,22 @@ namespace VoyagerApp.UI.Menus
 
         IEnumerator GetSsidFromId(string id, Action<string[]> callback)
         {
+            bool started = false;
             bool finished = false;
             List<string> ssids = new List<string>();
 
             const string BEGIN_JSON = "{\"op_code\": \"ack_ssid_list_request\"}";
             const string END_JSON = "{\"op_code\": \"ack_ssid_list_complete\"}";
 
+            BluetoothConnection active = null;
+
             BluetoothHelper.ConnectAndValidate(id,
                 (conn) =>
                 {
-                    _connections.Add(conn);
+                    active = conn;
+                    _connections.Add(active);
 
-                    conn.OnData += (data) =>
+                    active.OnData += (data) =>
                     {
                         string decoded = Encoding.UTF8.GetString(data);
 
@@ -275,17 +287,14 @@ namespace VoyagerApp.UI.Menus
                             }
                         }
 
+                        if (decoded == BEGIN_JSON)
+                            started = true;
+
                         if (decoded == END_JSON)
                             finished = true;
                     };
 
-                    conn.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
-
-                    var packet = new SsidListRequestPacket();
-                    var sendData = packet.Serialize();
-
-                    for (int i = 0; i < 3; i++)
-                        conn.Write(WRITE_CHAR, sendData);
+                    active.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
                 },
                 (err) =>
                 {
@@ -299,8 +308,18 @@ namespace VoyagerApp.UI.Menus
 
 
             float endTime = Time.time + _timeout;
+
             while (Time.time < endTime && !finished)
+            {
+                if (!started && active != null)
+                {
+                    var packet = new SsidListRequestPacket();
+                    var sendData = packet.Serialize();
+                    active.Write(WRITE_CHAR, sendData);
+                }
+
                 yield return new WaitForSeconds(0.5f);
+            }
 
             callback(ssids.ToArray());
         }
