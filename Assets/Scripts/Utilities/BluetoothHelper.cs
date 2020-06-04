@@ -125,12 +125,12 @@ public static class BluetoothHelper
 
     static void OnFailed(PeripheralInfo peripheral, string error)
     {
-        _onFail[peripheral.id]?.Invoke(peripheral.id);
+        _onFail[peripheral.id]?.Invoke(error);
     }
 
     static void OnDisconnect(PeripheralInfo peripheral, string error)
     {
-        _onDisconnect[peripheral.id]?.Invoke(peripheral.id);
+        _onDisconnect[peripheral.id]?.Invoke(error);
     }
 }
 
