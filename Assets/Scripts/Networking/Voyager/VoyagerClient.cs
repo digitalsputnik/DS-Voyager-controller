@@ -147,7 +147,7 @@ namespace VoyagerApp.Networking.Voyager
             while (!ssidsReceived && (TimeUtils.Epoch - starttime) < timeout)
             {
                 SendPacket(lamp, packet, PORT_DISCOVERY);
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
             }
 
             onReceived -= OnReceived;
