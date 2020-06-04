@@ -4,7 +4,6 @@ using System.Net;
 using UnityEngine;
 using VoyagerApp.Effects;
 using VoyagerApp.Lamps.Voyager;
-using VoyagerApp.Videos;
 
 namespace VoyagerApp.Lamps
 {

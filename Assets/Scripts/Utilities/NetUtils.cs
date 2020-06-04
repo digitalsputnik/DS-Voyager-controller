@@ -144,10 +144,15 @@ namespace VoyagerApp.Utilities
         static IPAddress InterfaceToAddress(NetworkInterface _interface)
         {
             var addresses = _interface.GetIPProperties().UnicastAddresses;
-            var info = addresses.First(_ =>
-                _.Address.AddressFamily == AddressFamily.InterNetwork);
-            byte[] address = info.Address.GetAddressBytes();
-            return new IPAddress(address);
+            var info = addresses.FirstOrDefault(addr => addr.Address.AddressFamily == AddressFamily.InterNetwork);
+
+            if (info != null)
+            {
+                byte[] address = info.Address.GetAddressBytes();
+                return new IPAddress(address);
+            }
+
+            return IPAddress.Any;
         }
     }
 }
