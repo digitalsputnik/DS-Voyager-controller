@@ -55,12 +55,17 @@ namespace VoyagerApp.Utilities
         {
             get
             {
+                //if (Application.isMobilePlatform)
+                //    return IPAddress.Any;
+
                 var host = Dns.GetHostEntry(Dns.GetHostName());
+
                 foreach (var ip in host.AddressList)
                 {
                     if (ip.AddressFamily == AddressFamily.InterNetwork)
                         return ip;
                 }
+
                 return IPAddress.Any;
             }
         }
