@@ -30,12 +30,16 @@ namespace VoyagerApp.UI
         void Start()
         {
             NetUtils.VoyagerClient.onReceived += VoyagerClientMessageReceived;
+            NetUtils.VoyagerClient.onConnectionChanged += ConnectionChanged;
         }
 
         void OnDestroy()
         {
             NetUtils.VoyagerClient.onReceived -= VoyagerClientMessageReceived;
+            NetUtils.VoyagerClient.onConnectionChanged -= ConnectionChanged;
         }
+
+        void ConnectionChanged() => alertedControllers.Clear();
 
         void VoyagerClientMessageReceived(object sender, byte[] data)
         {
@@ -54,10 +58,6 @@ namespace VoyagerApp.UI
             if (Application.platform == RuntimePlatform.IPhonePlayer &&
                 alertedControllers.Count == 0)
                 alertedControllers.Add(senderIpStr);
-
-            if (Application.platform == RuntimePlatform.IPhonePlayer &&
-                sender.Address.ToString() == NetUtils.LocalIPAddress.ToString())
-                alertedControllers.Add(NetUtils.LocalIPAddress.ToString());
 
             foreach (var address in selfAddresses)
                 RememberSelfAddress(address.ToString());
