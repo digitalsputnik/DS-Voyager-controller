@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace VoyagerApp.UI.Menus
         [Space(3)]
         [SerializeField] string[] _loadingAnim = null;
         [SerializeField] float _animationSpeed = 0.6f;
-        [SerializeField] float _timeout = 10.0f;
+        [SerializeField] float _timeout = 30.0f;
 
         bool _loading;
         string[] _ids;
@@ -58,6 +59,8 @@ namespace VoyagerApp.UI.Menus
                 BluetoothHelper.DisconnectFromPeripheral(connection.ID);
 
             StopAllCoroutines();
+
+            _loading = false;
         }
 
         public void ShowScanSsids()
@@ -143,7 +146,21 @@ namespace VoyagerApp.UI.Menus
 
                         active.OnData += (data) =>
                         {
-                            if (Encoding.UTF8.GetString(data) == JSON)
+                            string decoded = Encoding.UTF8.GetString(data);
+
+                            if (decoded.Contains("poll_reply"))
+                            {
+                                if (decoded.Contains("CHIP_version"))
+                                {
+                                    JObject obj = JObject.Parse(decoded);
+                                    int lampVersion = Convert.ToInt32((string)obj["CHIP_version"][1]);
+                                    active.lampVersion = lampVersion;
+                                }
+                                else
+                                    active.lampVersion = 400;
+                            }
+
+                            if (decoded == JSON)
                             {
                                 started = true;
                                 BluetoothHelper.DisconnectFromPeripheral(active.ID);
@@ -187,11 +204,15 @@ namespace VoyagerApp.UI.Menus
 
                     if (connected && !started && active != null)
                     {
-                        var package = VoyagerNetworkMode.SecureClient(ssid, password, active.Name);
-                        active.Write(WRITE_CHAR, package.ToData());
+                        if (active.lampVersion == 0)
+                            active.Write(WRITE_CHAR, new PollRequestPacket().Serialize());
+                        else if (active.lampVersion < 500)
+                            active.Write(WRITE_CHAR, VoyagerNetworkMode.Client(ssid, password, active.Name).ToData());
+                        else
+                            active.Write(WRITE_CHAR, VoyagerNetworkMode.SecureClient(ssid, password, active.Name).ToData());
                     }
 
-                    yield return new WaitForSeconds(0.5f);
+                    yield return new WaitForSeconds(1f);
                 }
 
                 if (hadError)
@@ -215,15 +236,89 @@ namespace VoyagerApp.UI.Menus
 
         IEnumerator PollSsidsFromBluetooth()
         {
+            List<string> supportedLamps = new List<string>();
+            List<string> unsupportedLamps = new List<string>();
+
+            foreach (var lamp in _ids)
+            {
+                bool done = false;
+                bool connected = false;
+                bool versionPolled = false;
+                string errorMessage = "";
+                BluetoothConnection active = null;
+
+                BluetoothHelper.ConnectAndValidate(lamp,
+                        (connection) =>
+                        {
+                            active = connection;
+
+                            active.OnData += (data) =>
+                            {
+                                string decoded = Encoding.UTF8.GetString(data);
+
+                                if (decoded.Contains("poll_reply") && !versionPolled)
+                                {
+                                    versionPolled = true;
+
+                                    if (decoded.Contains("CHIP_version"))
+                                    {
+                                        JObject obj = JObject.Parse(decoded);
+                                        int lampVersion = Convert.ToInt32((string)obj["CHIP_version"][1]);
+                                        supportedLamps.Add(lamp);
+                                        BluetoothHelper.DisconnectFromPeripheral(active.ID);
+                                        done = true;
+                                    }
+                                    else
+                                    {
+                                        unsupportedLamps.Add(lamp);
+                                        BluetoothHelper.DisconnectFromPeripheral(active.ID);
+                                        done = true;
+                                    }
+                                }
+                            };
+
+                            active.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
+
+                            connected = true;
+                        },
+                        (err) => { errorMessage = "Error: failed - " + err; },
+                        (err) => { errorMessage = "Disconnected - " + err; }
+                    );
+
+                float endtime = Time.time + _timeout;
+
+                while (Time.time < endtime && !done)
+                {
+                    if (connected)
+                        active.Write(WRITE_CHAR, new PollRequestPacket().Serialize());
+
+                    yield return new WaitForSeconds(1.0f);
+                }
+
+                if (errorMessage != "")
+                    Debug.Log(errorMessage);
+            }
+
+            yield return new WaitUntil(() => unsupportedLamps.Count() + supportedLamps.Count() == _ids.Count());
+
+            string[] ssids = new string[0];
+
+            if (supportedLamps.Count() == 0)
+            {
+                DialogBox.Show("BLE Error", "Scanning SSID's is not supported by any of the lamps firmware that are currently connected. Please update lamps or type SSID manually.", new string[] { "OK" }, new Action[] { null });
+                OnSsidListReceived(ssids);
+                yield break;
+            }
+
             List<string[]> all = new List<string[]>();
 
             int finished = 0;
 
             for (int i = 0; i < 4; i++)
             {
-                if (i < _ids.Length)
+                if (i < supportedLamps.Count())
                 {
-                    StartCoroutine(GetSsidFromId(_ids[i], (result) =>
+                    StartCoroutine(GetSsidFromId(supportedLamps[i], (result) =>
                     {
                         all.Add(result);
                         finished++;
@@ -237,8 +332,6 @@ namespace VoyagerApp.UI.Menus
 
             foreach (var connection in _connections)
                 BluetoothHelper.DisconnectFromPeripheral(connection.ID);
-
-            string[] ssids = new string[0];
 
             if (all.Count != 0)
             {

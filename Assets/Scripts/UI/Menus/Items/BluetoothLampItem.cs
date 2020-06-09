@@ -10,6 +10,8 @@ namespace VoyagerApp.UI.Menus
 
         public string BluetoothId { get; set; }
 
+        public bool NamePolled { get; set; }
+
         public bool Toggled
         {
             get => _toggle.isOn;

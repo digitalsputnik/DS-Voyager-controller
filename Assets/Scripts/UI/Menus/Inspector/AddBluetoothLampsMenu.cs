@@ -38,6 +38,8 @@ namespace VoyagerApp.UI.Menus
             LampManager.instance.onLampAdded += OnLampAdded;
             BluetoothHelper.StopScanningForLamps();
             StopCoroutine(GetLampNames());
+            foreach (var con in _connections)
+                BluetoothHelper.DisconnectFromPeripheral(con.ID);
         }
 
         void Update()
@@ -66,12 +68,13 @@ namespace VoyagerApp.UI.Menus
                 {
                     item = Instantiate(_itemPrefab, _itemsContainer);
                     item.BluetoothId = peripheral.id;
-                    item.Toggled = false; 
+                    item.Toggled = false;
+                    item.NamePolled = false;
                     _items.Add(item);
 
                     //if (peripheral.name == "")
                     //{
-                        item.Name = "Loading..";
+                        StartCoroutine(LampLoadingAnimation(item));
                         _namelessItems.Enqueue(item);
                     //}
                     //else
@@ -107,8 +110,13 @@ namespace VoyagerApp.UI.Menus
 
                             active.OnData += (data) =>
                             {
+                                lamp.NamePolled = true;
+
+                                string decoded = Encoding.UTF8.GetString(data);
+
                                 JObject obj = JObject.Parse(Encoding.UTF8.GetString(data));
-                                MainThread.Dispach(() => _items.FirstOrDefault(i => i.BluetoothId == lamp.BluetoothId).Name = (string)obj["active_ssid"]);
+                                MainThread.Dispach(() => lamp.Name = decoded.Contains("serial_name") ? (string)obj["serial_name"] : lamp.BluetoothId);
+
                                 BluetoothHelper.DisconnectFromPeripheral(lamp.BluetoothId);
                             };
 
@@ -121,6 +129,7 @@ namespace VoyagerApp.UI.Menus
                             errorMessage = $"Failed to connect to device {lamp.BluetoothId}";
                             done = true;
                             _connections.Remove(_connections.FirstOrDefault(c => c.ID == lamp.BluetoothId));
+                            _namelessItems.Enqueue(lamp);
     
                         },
                         (err) =>
@@ -159,6 +168,20 @@ namespace VoyagerApp.UI.Menus
                 }
 
                 yield return new WaitUntil(() => _namelessItems.Count > 0);
+            }
+        }
+
+        IEnumerator LampLoadingAnimation(BluetoothLampItem lamp)
+        {
+            string[] _loadingAnimation = { "Loading.", "Loading..", "Loading..." };
+
+            int i = 0;
+            while (!lamp.NamePolled && lamp != null)
+            {
+                MainThread.Dispach(() => lamp.Name = _loadingAnimation[i]);
+                yield return new WaitForSeconds(0.6f);
+                if (++i >= _loadingAnimation.Length)
+                   i = 0;
             }
         }
 

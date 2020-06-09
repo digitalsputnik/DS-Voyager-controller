@@ -143,6 +143,8 @@ public class BluetoothConnection
     public Action<byte[]> OnData;
     public string ID => _access.ID;
 
+    public int lampVersion = 0;
+
     public string Name
     {
         get
