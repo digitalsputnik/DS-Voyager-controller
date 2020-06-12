@@ -301,12 +301,12 @@ namespace VoyagerApp.UI.Menus
 
             yield return new WaitUntil(() => unsupportedLamps.Count() + supportedLamps.Count() == _ids.Count());
 
-            string[] ssids = new string[0];
+            var ssids = new List<string>();
 
             if (supportedLamps.Count() == 0)
             {
                 DialogBox.Show("BLE Error", "Scanning SSID's is not supported by any of the lamps firmware that are currently connected. Please update lamps or type SSID manually.", new string[] { "OK" }, new Action[] { null });
-                OnSsidListReceived(ssids);
+                OnSsidListReceived(ssids.ToArray());
                 yield break;
             }
 
@@ -335,19 +335,17 @@ namespace VoyagerApp.UI.Menus
 
             if (all.Count != 0)
             {
-                ssids = all
-                    .Skip(1)
-                    .Aggregate(new HashSet<string>(all.First()), (h, e) =>
+                foreach (var ssidList in all)
+                {
+                    foreach (var ssid in ssidList)
                     {
-                        h.IntersectWith(e);
-                        return h;
-                    })
-                    .Where(s => !string.IsNullOrWhiteSpace(s))
-                    .Distinct()
-                    .ToArray();
+                        if (!ssids.Contains(ssid))
+                            ssids.Add(ssid);
+                    }
+                }
             }
 
-            OnSsidListReceived(ssids);
+            OnSsidListReceived(ssids.ToArray());
         }
 
         IEnumerator GetSsidFromId(string id, Action<string[]> callback)
