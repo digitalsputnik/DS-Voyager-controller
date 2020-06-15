@@ -89,7 +89,7 @@ namespace VoyagerApp.UI.Menus
 
         public void ReloadSsidList()
         {
-            StartLoadingSsids();
+            if (!_loading) StartLoadingSsids();
         }
 
         public void ConnectToLamps(string[] ids)
@@ -253,12 +253,16 @@ namespace VoyagerApp.UI.Menus
                 string errorMessage = "";
                 BluetoothConnection active = null;
 
-                BluetoothHelper.ConnectAndValidate(lamp,
+                Connect();
+
+                void Connect()
+                {
+                    BluetoothHelper.ConnectAndValidate(lamp,
                         (connection) =>
                         {
                             active = connection;
 
-                            active.OnData += (data) =>
+                            active.OnData = (data) =>
                             {
                                 string decoded = Encoding.UTF8.GetString(data);
 
@@ -287,10 +291,11 @@ namespace VoyagerApp.UI.Menus
 
                             connected = true;
                         },
-                        (err) => { errorMessage = "Error: failed - " + err; },
+                        (err) => { errorMessage = "Error: failed - " + err; Connect(); },
                         (err) => { errorMessage = "Disconnected - " + err; }
                     );
-
+                }
+                
                 float endtime = Time.time + _timeout;
 
                 while (Time.time < endtime && !done)
@@ -305,7 +310,7 @@ namespace VoyagerApp.UI.Menus
                     Debug.Log(errorMessage);
             }
 
-            yield return new WaitUntil(() => unsupportedLamps.Count() + supportedLamps.Count() == _ids.Count());
+            yield return new WaitForSeconds(2.0f);
 
             var ssids = new List<string>();
 
@@ -371,7 +376,7 @@ namespace VoyagerApp.UI.Menus
                     active = conn;
                     _connections.Add(active);
 
-                    active.OnData += (data) =>
+                    active.OnData = (data) =>
                     {
                         string decoded = Encoding.UTF8.GetString(data);
 
