@@ -16,6 +16,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Transform _itemsContainer = null;
         [SerializeField] BluetoothLampItem _itemPrefab = null;
         [SerializeField] BluetoothClientModeMenu _clientMenu = null;
+        [SerializeField] AddLampsMenu _addLampsMenu = null;
         [SerializeField] Button _selectAllBtn = null;
         [SerializeField] Button _continueBtn = null;
 
@@ -35,7 +36,7 @@ namespace VoyagerApp.UI.Menus
 
         internal override void OnHide()
         {
-            LampManager.instance.onLampAdded += OnLampAdded;
+            LampManager.instance.onLampAdded -= OnLampAdded;
             BluetoothHelper.StopScanningForLamps();
             StopCoroutine(GetLampNames());
             foreach (var con in _connections)
@@ -46,6 +47,11 @@ namespace VoyagerApp.UI.Menus
         {
             _selectAllBtn.interactable = _items.Count > 0 && !_items.TrueForAll(i => i.Toggled);
             _continueBtn.interactable = _items.Any(i => i.Toggled);
+        }
+
+        public void Back()
+        {
+            GetComponentInParent<InspectorMenuContainer>()?.ShowMenu(_addLampsMenu);
         }
 
         void OnLampAdded(Lamp lamp)
@@ -72,13 +78,13 @@ namespace VoyagerApp.UI.Menus
                     item.NamePolled = false;
                     _items.Add(item);
 
-                    //if (peripheral.name == "")
-                    //{
+                    if (peripheral.name == "")
+                    {
                         StartCoroutine(LampLoadingAnimation(item));
                         _namelessItems.Enqueue(item);
-                    //}
-                    //else
-                        //item.Name = peripheral.name;
+                    }
+                    else
+                        item.Name = peripheral.name;
                 }
             }
         }

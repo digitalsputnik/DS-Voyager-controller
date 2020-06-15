@@ -31,6 +31,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Button _setBtn = null;
         [SerializeField] GameObject _statusText = null;
         [SerializeField] GameObject _bleInfoText = null;
+        [SerializeField] AddBluetoothLampsMenu _bleMenu = null;
         [Space(3)]
         [SerializeField] string[] _loadingAnim = null;
         [SerializeField] float _animationSpeed = 0.6f;
@@ -61,6 +62,11 @@ namespace VoyagerApp.UI.Menus
             StopAllCoroutines();
 
             _loading = false;
+        }
+
+        public void Back()
+        {
+            GetComponentInParent<InspectorMenuContainer>()?.ShowMenu(_bleMenu);
         }
 
         public void ShowScanSsids()
