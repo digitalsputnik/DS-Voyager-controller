@@ -310,8 +310,6 @@ namespace VoyagerApp.UI.Menus
                     Debug.Log(errorMessage);
             }
 
-            yield return new WaitForSeconds(2.0f);
-
             var ssids = new List<string>();
 
             if (supportedLamps.Count() == 0)
