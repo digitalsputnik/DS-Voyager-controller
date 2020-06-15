@@ -18,6 +18,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] SetEffectItem itemPrefab = null;
         [SerializeField] Transform container = null;
         [SerializeField] bool inWorkspace = true;
+        [SerializeField] Vector2Int maxPreferedSized = new Vector2Int(1280, 720);
 
         List<SetEffectItem> items = new List<SetEffectItem>();
 
@@ -36,12 +37,38 @@ namespace VoyagerApp.UI.Menus
 
         public void SelectEffect(Effect effect)
         {
-            GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+            ValidateVideoResolution(effect, () =>
+            {
+                GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
 
-            if (inWorkspace)
-                SelectEffectFromWorkspace(effect);
+                if (inWorkspace)
+                    SelectEffectFromWorkspace(effect);
+                else
+                    SelectEffectFromMapping(effect);
+            });
+        }
+
+        public void ValidateVideoResolution(Effect effect, Action onValidated)
+        {
+            if (effect is Video video)
+            {
+                if (video.width > maxPreferedSized.x || video.height > maxPreferedSized.y)
+                {
+                    DialogBox.Show(
+                        "WARNING",
+                        "The video resolution is not supported and the application might suffer.",
+                        new string[] { "OK", "IGNORE" },
+                        new Action[] { null, onValidated });
+                }
+                else
+                {
+                    onValidated?.Invoke();
+                }
+            }
             else
-                SelectEffectFromMapping(effect);
+            {
+                onValidated?.Invoke();
+            }
         }
 
         public void RemoveEffect(Effect effect)

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
@@ -154,10 +154,33 @@ namespace VoyagerApp.Videos
 
         internal static void SetVideo(Video video)
         {
-            instance.renderTexture = new RenderTexture(
-                (int)video.width,
-                (int)video.height,
-                1, RenderTextureFormat.ARGB32);
+            if (instance.renderTexture != null)
+            {
+                DestroyImmediate(instance.renderTexture);
+                instance.renderTexture = null;
+            }
+
+            var width = (int)video.width;
+            var height = (int)video.height;
+
+            if (width >= height)
+            {
+                while (height > 720)
+                {
+                    width /= 2;
+                    height /= 2;
+                }
+            }
+            else
+            {
+                while (width > 720)
+                {
+                    width /= 2;
+                    height /= 2;
+                }
+            }
+
+            instance.renderTexture = new RenderTexture(width, height, 1, RenderTextureFormat.ARGB32);
             instance.renderTexture.Create();
 
             instance.videoPlayer.url = video.path;
