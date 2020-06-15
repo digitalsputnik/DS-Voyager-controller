@@ -312,46 +312,48 @@ namespace VoyagerApp.UI.Menus
             if (supportedLamps.Count() == 0)
             {
                 DialogBox.Show("BLE Error", "Scanning SSID's is not supported by any of the lamps firmware that are currently connected. Please update lamps or type SSID manually.", new string[] { "OK" }, new Action[] { null });
+                yield return new WaitForSeconds(0.1f);
                 OnSsidListReceived(ssids.ToArray());
-                yield break;
             }
-
-            List<string[]> all = new List<string[]>();
-
-            int finished = 0;
-
-            for (int i = 0; i < 4; i++)
+            else
             {
-                if (i < supportedLamps.Count())
+                List<string[]> all = new List<string[]>();
+
+                int finished = 0;
+
+                for (int i = 0; i < 4; i++)
                 {
-                    StartCoroutine(GetSsidFromId(supportedLamps[i], (result) =>
+                    if (i < supportedLamps.Count())
                     {
-                        all.Add(result);
-                        finished++;
-                    }));
-                }
-            }
-
-            float endTime = Time.time + _timeout;
-            while (Time.time < endTime && finished < _ids.Length)
-                yield return new WaitForSeconds(0.5f);
-
-            foreach (var connection in _connections)
-                BluetoothHelper.DisconnectFromPeripheral(connection.ID);
-
-            if (all.Count != 0)
-            {
-                foreach (var ssidList in all)
-                {
-                    foreach (var ssid in ssidList)
-                    {
-                        if (!ssids.Contains(ssid))
-                            ssids.Add(ssid);
+                        StartCoroutine(GetSsidFromId(supportedLamps[i], (result) =>
+                        {
+                            all.Add(result);
+                            finished++;
+                        }));
                     }
                 }
-            }
 
-            OnSsidListReceived(ssids.ToArray());
+                float endTime = Time.time + _timeout;
+                while (Time.time < endTime && finished < _ids.Length)
+                    yield return new WaitForSeconds(0.5f);
+
+                foreach (var connection in _connections)
+                    BluetoothHelper.DisconnectFromPeripheral(connection.ID);
+
+                if (all.Count != 0)
+                {
+                    foreach (var ssidList in all)
+                    {
+                        foreach (var ssid in ssidList)
+                        {
+                            if (!ssids.Contains(ssid))
+                                ssids.Add(ssid);
+                        }
+                    }
+                }
+
+                OnSsidListReceived(ssids.ToArray());
+            }
         }
 
         IEnumerator GetSsidFromId(string id, Action<string[]> callback)
