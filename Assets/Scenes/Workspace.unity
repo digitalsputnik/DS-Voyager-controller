@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1995,9 +1995,7 @@ PrefabInstance:
     - target: {fileID: 8269508053611200199, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_Text
-      value: 'BACK
-
-'
+      value: BACK
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
@@ -14295,20 +14293,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7126406877853642885, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7126406877853642885, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.050048828
+      value: -1.1500549
       objectReference: {fileID: 0}
     - target: {fileID: 7126406877853642885, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: -0.1
+      value: 2.2999449
+      objectReference: {fileID: 0}
+    - target: {fileID: 7126406877853642885, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.00048828125
       objectReference: {fileID: 0}
     - target: {fileID: 8269508053611200199, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_Text
-      value: 'BACK
-
-'
+      value: BACK
+      objectReference: {fileID: 0}
+    - target: {fileID: 8269508053611200199, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
+      propertyPath: m_FontData.m_RichText
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8269508053611200199, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
+      propertyPath: m_FontData.m_AlignByGeometry
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8269508053611200199, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
+      propertyPath: m_FontData.m_Alignment
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
@@ -14331,7 +14352,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1360728843}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
   m_Name: 
@@ -23339,7 +23360,7 @@ PrefabInstance:
     - target: {fileID: 8440753727207303362, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -56.500046
+      value: -56.5
       objectReference: {fileID: 0}
     - target: {fileID: 8440753727207303362, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
