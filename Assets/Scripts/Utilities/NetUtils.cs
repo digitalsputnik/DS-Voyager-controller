@@ -55,9 +55,6 @@ namespace VoyagerApp.Utilities
         {
             get
             {
-                //if (Application.isMobilePlatform)
-                //    return IPAddress.Any;
-
                 var host = Dns.GetHostEntry(Dns.GetHostName());
 
                 foreach (var ip in host.AddressList)
@@ -79,8 +76,8 @@ namespace VoyagerApp.Utilities
                 {
                     foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
                     {
-                        if (!ip.IsDnsEligible)
-                            continue;
+                        //if (!ip.IsDnsEligible)
+                        //    continue;
                         if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
                             addresses.Add(ip.Address);
                     }
@@ -145,7 +142,7 @@ namespace VoyagerApp.Utilities
                     interfaceFound = true;
                 }
             }
-            catch (NullReferenceException ex)
+            catch
             {
                 try
                 {
@@ -154,7 +151,7 @@ namespace VoyagerApp.Utilities
                         interfaceFound = true;
                     }
                 }
-                catch (NullReferenceException exept)
+                catch
                 {
                         interfaceFound = false;
                 }
