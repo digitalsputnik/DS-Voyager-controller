@@ -43,6 +43,10 @@ namespace VoyagerApp.Networking.Voyager
         DmxModeResponse,
         SetGlobalIntensity,
         SetStream,
-        StreamFrame
+        StreamFrame,
+
+        // BLE
+        GetSerial,
+        GetChipVersion
     }
 }

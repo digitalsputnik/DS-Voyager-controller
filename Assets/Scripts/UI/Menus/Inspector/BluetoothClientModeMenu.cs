@@ -139,8 +139,6 @@ namespace VoyagerApp.UI.Menus
             {
                 bool done = false;
                 bool hadError = false;
-                bool started = false;
-                bool connected = false;
                 string errorMessage = null;
                 BluetoothConnection active = null;
 
@@ -152,30 +150,23 @@ namespace VoyagerApp.UI.Menus
 
                         active.OnData += (data) =>
                         {
-                            string decoded = Encoding.UTF8.GetString(data);
-
-                            if (decoded.Contains("poll_reply"))
+                            if (Encoding.UTF8.GetString(data) == JSON)
                             {
-                                if (decoded.Contains("CHIP_version"))
-                                {
-                                    JObject obj = JObject.Parse(decoded);
-                                    int lampVersion = Convert.ToInt32((string)obj["CHIP_version"][1]);
-                                    active.lampVersion = lampVersion;
-                                }
+                                done = true;
+                                BluetoothHelper.DisconnectFromPeripheral(active.ID);
+                            }
+                            else
+                            {
+                                var packet = Packet.Deserialize<BleChipVersion>(data);
+
+                                if (packet != null)
+                                    active.lampVersion = packet.version[1];
                                 else
                                     active.lampVersion = 400;
-                            }
-
-                            if (decoded == JSON)
-                            {
-                                started = true;
-                                BluetoothHelper.DisconnectFromPeripheral(active.ID);
                             }
                         };
 
                         active.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
-
-                        connected = true;
                     },
                     (err) =>
                     {
@@ -191,8 +182,8 @@ namespace VoyagerApp.UI.Menus
                             errorMessage = $"Disconnected, got error {err}";
                         }
 
-                        done = true;
                         _connections.Remove(_connections.FirstOrDefault(c => c.ID == id));
+                        done = true;
                     }
                 );
 
@@ -208,10 +199,10 @@ namespace VoyagerApp.UI.Menus
                         break;
                     }
 
-                    if (connected && !started && active != null)
+                    if (active != null)
                     {
                         if (active.lampVersion == 0)
-                            active.Write(WRITE_CHAR, new PollRequestPacket().Serialize());
+                            active.Write(WRITE_CHAR, new BleChipVersion().Serialize());
                         else if (active.lampVersion < 500)
                             active.Write(WRITE_CHAR, VoyagerNetworkMode.Client(ssid, password, active.Name).ToData());
                         else
@@ -248,10 +239,10 @@ namespace VoyagerApp.UI.Menus
             foreach (var lamp in _ids)
             {
                 bool done = false;
-                bool connected = false;
-                bool versionPolled = false;
                 string errorMessage = "";
                 BluetoothConnection active = null;
+
+                float endtime = Time.time + _timeout;
 
                 Connect();
 
@@ -261,50 +252,47 @@ namespace VoyagerApp.UI.Menus
                         (connection) =>
                         {
                             active = connection;
+                            endtime = Time.time + 2.0f;
+
+                            _connections.Add(connection);
 
                             active.OnData = (data) =>
                             {
-                                string decoded = Encoding.UTF8.GetString(data);
+                                var packet = Packet.Deserialize<BleChipVersion>(data);
 
-                                if (decoded.Contains("poll_reply") && !versionPolled)
-                                {
-                                    versionPolled = true;
+                                if (packet != null)
+                                    supportedLamps.Add(lamp);
+                                else
+                                    unsupportedLamps.Add(lamp);
 
-                                    if (decoded.Contains("CHIP_version"))
-                                    {
-                                        JObject obj = JObject.Parse(decoded);
-                                        int lampVersion = Convert.ToInt32((string)obj["CHIP_version"][1]);
-                                        supportedLamps.Add(lamp);
-                                        BluetoothHelper.DisconnectFromPeripheral(active.ID);
-                                        done = true;
-                                    }
-                                    else
-                                    {
-                                        unsupportedLamps.Add(lamp);
-                                        BluetoothHelper.DisconnectFromPeripheral(active.ID);
-                                        done = true;
-                                    }
-                                }
+                                done = true;
+                                BluetoothHelper.DisconnectFromPeripheral(active.ID);
                             };
 
                             active.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
-
-                            connected = true;
                         },
                         (err) => { errorMessage = "Error: failed - " + err; Connect(); },
-                        (err) => { errorMessage = "Disconnected - " + err; }
+                        (err) =>
+                        {
+                            errorMessage = "Disconnected - " + err;
+                            _connections.Remove(_connections.FirstOrDefault(c => c.ID == lamp));
+                        }
                     );
                 }
-                
-                float endtime = Time.time + _timeout;
 
                 while (Time.time < endtime && !done)
                 {
-                    if (connected)
+                    if (active != null)
+                    {
+                        active.Write(WRITE_CHAR, new BleChipVersion().Serialize());
                         active.Write(WRITE_CHAR, new PollRequestPacket().Serialize());
+                    }
 
                     yield return new WaitForSeconds(1.0f);
                 }
+
+                if (!done)
+                    unsupportedLamps.Add(lamp);
 
                 if (errorMessage != "")
                     Debug.Log(errorMessage);

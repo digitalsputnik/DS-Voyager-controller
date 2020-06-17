@@ -78,7 +78,7 @@ namespace VoyagerApp.UI.Menus
                     item.NamePolled = false;
                     _items.Add(item);
 
-                    if (peripheral.name == "")
+                    if (peripheral.name == "" || peripheral.name == "Unknown")
                     {
                         StartCoroutine(LampLoadingAnimation(item));
                         _namelessItems.Enqueue(item);
@@ -118,10 +118,17 @@ namespace VoyagerApp.UI.Menus
                             {
                                 lamp.NamePolled = true;
 
-                                string decoded = Encoding.UTF8.GetString(data);
+                                var decoded = Encoding.UTF8.GetString(data);
+                                var packet = Packet.Deserialize<BleSerialPacket>(data);
 
-                                JObject obj = JObject.Parse(Encoding.UTF8.GetString(data));
-                                MainThread.Dispach(() => lamp.Name = decoded.Contains("serial_name") ? (string)obj["serial_name"] : lamp.BluetoothId);
+                                if (packet != null)
+                                {
+                                    lamp.Name = packet.serial;
+                                }
+                                else
+                                {
+                                    Debug.Log($"deserializing packet failed. packet {decoded}");
+                                }
 
                                 BluetoothHelper.DisconnectFromPeripheral(lamp.BluetoothId);
                             };
@@ -164,7 +171,7 @@ namespace VoyagerApp.UI.Menus
                         }
 
                         if (connected)
-                            active.Write(WRITE_CHAR, new PollRequestPacket().Serialize());
+                            active.Write(WRITE_CHAR, new BleSerialPacket().Serialize());
 
                         yield return new WaitForSeconds(1.0f);
                     }
