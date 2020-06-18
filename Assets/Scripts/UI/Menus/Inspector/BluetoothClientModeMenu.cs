@@ -78,10 +78,9 @@ namespace VoyagerApp.UI.Menus
 
         public void ShowTypeSsid()
         {
-            _setBtn.interactable = true;
-
             if (!_loading)
             {
+                _setBtn.interactable = true;
                 _ssidListObj.gameObject.SetActive(false);
                 _ssidFieldObj.gameObject.SetActive(true);
             }
@@ -439,6 +438,7 @@ namespace VoyagerApp.UI.Menus
             }
             else
             {
+                _ssidRefreshBtn.interactable = true;
                 _ssidList.SetItems("Not found");
             }
         }
