@@ -26,6 +26,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] GameObject _ssidFieldObj = null;
         [SerializeField] InputField _ssidField = null;
         [SerializeField] Button _setSsidScan = null;
+        [SerializeField] Button _typeSsid = null;
         [Space(3)]
         [SerializeField] InputField _passwordField = null;
         [SerializeField] Button _setBtn = null;
@@ -224,6 +225,7 @@ namespace VoyagerApp.UI.Menus
             _setBtn.interactable = false;
             _ssidList.interactable = false;
             _ssidRefreshBtn.interactable = false;
+            _typeSsid.interactable = false;
             _loading = true;
 
             StartCoroutine(PollSsidsFromBluetooth());
@@ -251,7 +253,7 @@ namespace VoyagerApp.UI.Menus
                         (connection) =>
                         {
                             active = connection;
-                            endtime = Time.time + 2.0f;
+                            MainThread.Dispach(() => endtime = Time.time + 2.0f);
 
                             _connections.Add(connection);
 
@@ -301,7 +303,7 @@ namespace VoyagerApp.UI.Menus
 
             if (supportedLamps.Count() == 0)
             {
-                DialogBox.Show("BLE Error", "Scanning SSID's is not supported by any of the lamps firmware that are currently connected. Please update lamps or type SSID manually.", new string[] { "OK" }, new Action[] { null });
+                DialogBox.Show("BLE Error", "Scanning SSID's failed, make sure you're lamps are updated and try again or type SSID manually.", new string[] { "OK" }, new Action[] { null });
                 yield return new WaitForSeconds(0.1f);
                 OnSsidListReceived(ssids.ToArray());
             }
@@ -434,11 +436,13 @@ namespace VoyagerApp.UI.Menus
                 _setBtn.interactable = true;
                 _ssidList.interactable = true;
                 _ssidRefreshBtn.interactable = true;
+                _typeSsid.interactable = true;
                 _ssidList.SetItems(ssids);
             }
             else
             {
                 _ssidRefreshBtn.interactable = true;
+                _typeSsid.interactable = true;
                 _ssidList.SetItems("Not found");
             }
         }

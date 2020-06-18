@@ -4481,6 +4481,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Select All
       objectReference: {fileID: 0}
+    - target: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8269508053611200199, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_Text
@@ -7100,7 +7105,7 @@ PrefabInstance:
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -10957,6 +10962,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 926772108}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &926772110 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 926772108}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &933546377
 GameObject:
   m_ObjectHideFlags: 0
@@ -17438,6 +17455,7 @@ MonoBehaviour:
   _ssidFieldObj: {fileID: 215030074}
   _ssidField: {fileID: 438193063}
   _setSsidScan: {fileID: 143271251}
+  _typeSsid: {fileID: 926772110}
   _passwordField: {fileID: 551743001}
   _setBtn: {fileID: 984979040}
   _statusText: {fileID: 1447892005}
