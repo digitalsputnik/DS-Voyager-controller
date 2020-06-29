@@ -44,6 +44,8 @@ namespace VoyagerApp.UI
             alertedControllers.Clear();
         }
 
+        void ConnectionChanged() => alertedControllers.Clear();
+
         void VoyagerClientMessageReceived(object sender, byte[] data)
         {
             var endpoint = (IPEndPoint)sender;
