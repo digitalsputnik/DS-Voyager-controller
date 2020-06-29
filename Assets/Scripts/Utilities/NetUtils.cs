@@ -3,6 +3,7 @@
 // Copyright: © Digital Sputnik OÜ
 // -----------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -30,7 +31,7 @@ namespace VoyagerApp.Utilities
                     Application.platform == RuntimePlatform.OSXPlayer ||
                     Application.platform == RuntimePlatform.OSXEditor )
                 {
-                    var wireless = WirelessInterface;
+                    var wireless = NetworkInterface;
                     if (wireless != null)
                         return InterfaceToAddress(wireless);
                 }
@@ -55,11 +56,13 @@ namespace VoyagerApp.Utilities
             get
             {
                 var host = Dns.GetHostEntry(Dns.GetHostName());
+
                 foreach (var ip in host.AddressList)
                 {
                     if (ip.AddressFamily == AddressFamily.InterNetwork)
                         return ip;
                 }
+
                 return IPAddress.Any;
             }
         }
@@ -73,8 +76,8 @@ namespace VoyagerApp.Utilities
                 {
                     foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
                     {
-                        if (!ip.IsDnsEligible)
-                            continue;
+                        //if (!ip.IsDnsEligible)
+                        //    continue;
                         if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
                             addresses.Add(ip.Address);
                     }
@@ -98,27 +101,77 @@ namespace VoyagerApp.Utilities
             }
         }
 
-        static NetworkInterface WirelessInterface
+        static NetworkInterface NetworkInterface
         {
             get
             {
                 var adapters = NetworkInterface.GetAllNetworkInterfaces();
-                var wireless = adapters.FirstOrDefault(_ =>
-                    _.SupportsMulticast &&
-                    _.OperationalStatus == OperationalStatus.Up &&
-                    _.GetIPProperties().GetIPv4Properties() != null &&
-                    _.NetworkInterfaceType == NetworkInterfaceType.Wireless80211);
-                return wireless;
+
+                var networkInterfaces = adapters.Where(_ =>
+                _.SupportsMulticast &&
+                _.OperationalStatus == OperationalStatus.Up &&
+                _.Description != "Npcap Loopback Adapter" &&
+                (_.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || _.NetworkInterfaceType == NetworkInterfaceType.Ethernet));
+
+                var wirelessInterface = networkInterfaces.FirstOrDefault(_ => _.NetworkInterfaceType == NetworkInterfaceType.Wireless80211);
+                var wiredInterface = networkInterfaces.FirstOrDefault(_ => _.NetworkInterfaceType == NetworkInterfaceType.Ethernet);
+
+                if (wirelessInterface != null)
+                {
+                    if (GetProperties(wirelessInterface))
+                        return wirelessInterface;
+                }
+                else if (wiredInterface != null)
+                {
+                    if (GetProperties(wiredInterface))
+                        return wiredInterface;
+                }
+
+                return null;
             }
+        }
+
+        static bool GetProperties(NetworkInterface networkInterface)
+        {
+            bool interfaceFound = false;
+
+            try
+            {
+                if (networkInterface.GetIPProperties().GetIPv4Properties() != null)
+                {
+                    interfaceFound = true;
+                }
+            }
+            catch
+            {
+                try
+                {
+                    if (networkInterface.GetIPProperties().GetIPv6Properties() != null)
+                    {
+                        interfaceFound = true;
+                    }
+                }
+                catch
+                {
+                        interfaceFound = false;
+                }
+            }
+
+            return interfaceFound;
         }
 
         static IPAddress InterfaceToAddress(NetworkInterface _interface)
         {
             var addresses = _interface.GetIPProperties().UnicastAddresses;
-            var info = addresses.First(_ =>
-                _.Address.AddressFamily == AddressFamily.InterNetwork);
-            byte[] address = info.Address.GetAddressBytes();
-            return new IPAddress(address);
+            var info = addresses.FirstOrDefault(addr => addr.Address.AddressFamily == AddressFamily.InterNetwork);
+
+            if (info != null)
+            {
+                byte[] address = info.Address.GetAddressBytes();
+                return new IPAddress(address);
+            }
+
+            return IPAddress.Any;
         }
     }
 }

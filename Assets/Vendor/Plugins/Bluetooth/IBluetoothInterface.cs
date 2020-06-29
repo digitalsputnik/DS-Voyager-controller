@@ -7,6 +7,7 @@ namespace DigitalSputnik.Bluetooth
 {
     internal interface IBluetoothInterface
     {
+        bool IsInitialized();
         void Initialize();
         void EnableBluetooth();
         void DisableBluetooth();

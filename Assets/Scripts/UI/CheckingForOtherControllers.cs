@@ -30,13 +30,18 @@ namespace VoyagerApp.UI
         void Start()
         {
             NetUtils.VoyagerClient.onReceived += VoyagerClientMessageReceived;
-            NetUtils.VoyagerClient.onConnectionChanged += ConnectionChanged;
+            NetUtils.VoyagerClient.onConnectionChanged += VoyagerClientConnectionChanged;
         }
 
         void OnDestroy()
         {
             NetUtils.VoyagerClient.onReceived -= VoyagerClientMessageReceived;
-            NetUtils.VoyagerClient.onConnectionChanged -= ConnectionChanged;
+            NetUtils.VoyagerClient.onConnectionChanged -= VoyagerClientConnectionChanged;
+        }
+
+        void VoyagerClientConnectionChanged()
+        {
+            alertedControllers.Clear();
         }
 
         void ConnectionChanged() => alertedControllers.Clear();

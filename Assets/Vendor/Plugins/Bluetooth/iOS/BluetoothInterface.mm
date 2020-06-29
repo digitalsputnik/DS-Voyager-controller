@@ -33,6 +33,29 @@
         [_peripheralsList removeAllObjects];
         NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], CBCentralManagerScanOptionAllowDuplicatesKey, nil];
         [_centralManager scanForPeripheralsWithServices:services options:options];
+        
+        NSArray *peripherals = [_centralManager retrieveConnectedPeripheralsWithServices:services];
+        for (CBPeripheral* peripheral in peripherals)
+        {
+            bool exists = false;
+            
+            for (CBPeripheral* peri in _peripheralsList)
+            {
+                if ([peripheral identifier] == [peri identifier])
+                {
+                    exists = true;
+                }
+            }
+            
+            if (!exists)
+            {
+                NSLog(@"Discovered new peripheral %@ (%@) from device", peripheral.name, [peripheral identifier]);
+                [_peripheralsList addObject:peripheral];
+            }
+            
+            NSString *data = [NSString stringWithFormat:@"%@|%@|0", [peripheral identifier], peripheral.name];
+            [self callUnityObject:"iOS Bluetooth Listener" Method:"PeripheralScanned" Parameter:[data  UTF8String]];
+        }
     }
 
     - (void)stopScanning

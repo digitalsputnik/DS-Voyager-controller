@@ -15,6 +15,7 @@ namespace DigitalSputnik.Bluetooth
         const string LIBRARY_NAME = "com.example.bleplugin";
 
         AndroidJavaObject _pluginObject;
+        AndroidJavaObject activity;
         AndroidBluetoothListener _listener;
 
         InternalPeripheralScanHandler _onPeripheralScanned;
@@ -26,6 +27,10 @@ namespace DigitalSputnik.Bluetooth
         Dictionary<string, InternalCharacteristicUpdateHandler> _onCharacteristicUpdate = new Dictionary<string, InternalCharacteristicUpdateHandler>();
 
         bool _scanning = false;
+        bool _supported = false;
+        bool _initialized = false;
+        bool _isBluetoothEnabled = false;
+        bool _isLocationEnabled = false;
 
         List<ScannedAndroidDevice> _scannedDevices = new List<ScannedAndroidDevice>();
         List<ScannedAndroidDevice> _connectedDevices = new List<ScannedAndroidDevice>();
@@ -48,13 +53,38 @@ namespace DigitalSputnik.Bluetooth
                 Permission.HasUserAuthorizedPermission(Permission.CoarseLocation));
 
             AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+            activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
             AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
 
-            _pluginObject = new AndroidJavaObject(LIBRARY_NAME + ".BLEObject", context);
+            var initializeCallback = new AndroidInitializeCallback(InitializeCallback);
+
+            object[] parameters = { context, initializeCallback };
+
+            _pluginObject = new AndroidJavaObject(LIBRARY_NAME + ".BLEObject", parameters);
             _listener._plugin = _pluginObject;
 
             SetCallbacks();
+        }
+
+        public bool IsInitialized()
+        {
+            return _initialized;
+        }
+
+        public bool AreServicesEnabled()
+        {
+            if (_supported)
+            {
+                _isBluetoothEnabled = _pluginObject.Call<bool>("checkIfBluetoothEnabled");
+                _isLocationEnabled = _pluginObject.Call<bool>("checkIfLocationEnabled");
+
+                if (_isBluetoothEnabled && _isLocationEnabled)
+                    return true;
+                else
+                    return false;
+            }
+            else
+                return false;
         }
 
         public void SetCallbacks()
@@ -71,7 +101,7 @@ namespace DigitalSputnik.Bluetooth
 
         public void StartScanning(string[] services, InternalPeripheralScanHandler callback)
         {
-            if (!_scanning)
+            if (!_scanning && AreServicesEnabled())
             {   
                 if (services == null)
                     services = new string[0];
@@ -98,7 +128,14 @@ namespace DigitalSputnik.Bluetooth
 
         public void EnableBluetooth()
         {
-            Debug.LogError("BluetoothLog: [Bluetooth Android] EnableBluetooth not yet implemented!");
+            if (_supported)
+            {
+                if(!_isBluetoothEnabled)
+                    _pluginObject.Call("enableBluetooth", activity);
+
+                if(!_isLocationEnabled)
+                    _pluginObject.Call("enableLocation", activity);
+            }
         }
 
         public void DisableBluetooth()
@@ -206,6 +243,24 @@ namespace DigitalSputnik.Bluetooth
             }
         }
 
+        IEnumerator EnableServices()
+        {
+            yield return new WaitUntil(() => _pluginObject != null);
+
+            EnableBluetooth();
+
+            _initialized = true;
+        }
+
+        void InitializeCallback(bool isBluetoothEnabled, bool isLocationEnabled, bool isSupported)
+        {
+            _supported = isSupported;
+            _isBluetoothEnabled = isBluetoothEnabled;
+            _isLocationEnabled = isLocationEnabled;
+
+            _listener.StartCoroutine(EnableServices());
+        }
+
         void OnPeripheralScanned(string name, string mac, int rssi, AndroidJavaObject device)
         {
             if (_scanning)
@@ -252,7 +307,7 @@ namespace DigitalSputnik.Bluetooth
                         if (device.connecting)
                             _onConnectFail[mac]?.Invoke(mac, "Something went wrong...");
                         else
-                            _onDisconnect[mac]?.Invoke(mac, "Disconnected");
+                            _onDisconnect[mac]?.Invoke(mac, "");
 
                         _connectedDevices.Remove(device);
                     }
@@ -312,6 +367,23 @@ namespace DigitalSputnik.Bluetooth
                 var characteristic = device.characteristics[characteristicUuid];
                 var data = Encoding.UTF8.GetBytes(message);
                 _onCharacteristicUpdate[mac]?.Invoke(mac, serviceUuid, characteristicUuid, data);
+            }
+        }
+
+        public class AndroidInitializeCallback : AndroidJavaProxy
+        {
+            internal Action<bool, bool, bool> _callback;
+
+            public AndroidInitializeCallback() : base("com.example.bleplugin.BLEInitializeCallback") { }
+
+            public AndroidInitializeCallback(Action<bool, bool, bool> callback) : this()
+            {
+                _callback = callback;
+            }
+
+            public void call(bool isBluetoothEnabled, bool isLocationEnabled, bool isSupported)
+            {
+                _callback?.Invoke(isBluetoothEnabled, isLocationEnabled, isSupported);
             }
         }
 

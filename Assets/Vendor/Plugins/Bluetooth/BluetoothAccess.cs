@@ -13,7 +13,7 @@ namespace DigitalSputnik.Bluetooth
     {
         static BluetoothAccess _instance;
 
-        IBluetoothInterface _interface;
+        static IBluetoothInterface _interface;
         List<PeripheralInfo> _scannedPeripherals;
 
         PeripheralHandler _onPeripheralScanned;
@@ -23,7 +23,16 @@ namespace DigitalSputnik.Bluetooth
 
         #region Public Properties
         public static List<PeripheralInfo> ScannedPeripherals => _instance._scannedPeripherals;
-        public static bool IsInitialized => _instance != null;
+        public static bool IsInitialized 
+        {
+            get 
+            { 
+                if (_interface == null)
+                    return false;
+                else
+                    return _interface.IsInitialized();
+            }
+        }
         #endregion
 
         #region Public Variables
@@ -161,17 +170,15 @@ namespace DigitalSputnik.Bluetooth
     public class PeripheralAccess
     {
         IBluetoothInterface _interface;
-        string _id;
-
         PeripheralServicesHandler _onServicesScanned;
         PeripheralServiceCharacteristicsHandler _onServiceCharacteristicsScanned;
         Dictionary<string, Dictionary<string, PeripheralCharacteristicUpdate>> _characteristicUpdateDelegates;
 
-        public string ID => _id;
+        public string ID { get; }
 
         internal PeripheralAccess(string id, IBluetoothInterface bluetoothInterface)
         {
-            _id = id;
+            ID = id;
             _interface = bluetoothInterface;
             _interface.SetCharacteristicsUpdateCallback(id, OnCharacteristicUpdate);
             _characteristicUpdateDelegates = new Dictionary<string, Dictionary<string, PeripheralCharacteristicUpdate>>();
@@ -180,13 +187,13 @@ namespace DigitalSputnik.Bluetooth
         public void ScanServices(PeripheralServicesHandler onScanned)
         {
             _onServicesScanned = onScanned;
-            _interface.GetServices(_id, OnServicesScanned);
+            _interface.GetServices(ID, OnServicesScanned);
         }
 
         public void ScanServiceCharacteristics(string service, PeripheralServiceCharacteristicsHandler onScanned)
         {
             _onServiceCharacteristicsScanned = onScanned;
-            _interface.GetCharacteristics(_id, service, OnServiceCharacteristicsScanned);
+            _interface.GetCharacteristics(ID, service, OnServiceCharacteristicsScanned);
         }
 
         public void SubscribeToCharacteristic(string service, string characteristic, PeripheralCharacteristicUpdate onDataUpdate)
@@ -200,18 +207,18 @@ namespace DigitalSputnik.Bluetooth
             if (!_characteristicUpdateDelegates[service].ContainsKey(characteristic))
             {
                 _characteristicUpdateDelegates[service].Add(characteristic, onDataUpdate);
-                _interface.SubscribeToCharacteristicUpdate(_id, characteristic);
+                _interface.SubscribeToCharacteristicUpdate(ID, characteristic);
             }
         }
 
-        public void WriteToCharacteristic(string service, string characteristic, byte[] data)
+        public void WriteToCharacteristic(string characteristic, byte[] data)
         {
-            _interface.WriteToCharacteristic(_id, characteristic, data);
+            _interface.WriteToCharacteristic(ID, characteristic, data);
         }
 
         void OnServicesScanned(string id, string[] services)
         {
-            if (id == _id)
+            if (id == ID)
             {
                 _onServicesScanned?.Invoke(this, services);
             }
@@ -219,7 +226,7 @@ namespace DigitalSputnik.Bluetooth
 
         void OnServiceCharacteristicsScanned(string id, string service, string[] characteristics)
         {
-            if (id == _id)
+            if (id == ID)
             {
                 _onServiceCharacteristicsScanned?.Invoke(this, service, characteristics);
             }
@@ -227,10 +234,7 @@ namespace DigitalSputnik.Bluetooth
 
         void OnCharacteristicUpdate(string id, string service, string characteristic, byte[] data)
         {
-            service = service.ToUpper();
-            characteristic = characteristic.ToUpper();
-
-            if (id.ToUpper() == _id.ToUpper())
+            if (id == ID)
             {
                 if (_characteristicUpdateDelegates.ContainsKey(service))
                 {

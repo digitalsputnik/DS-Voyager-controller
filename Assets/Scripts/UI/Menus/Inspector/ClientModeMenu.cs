@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
@@ -120,6 +123,8 @@ namespace VoyagerApp.UI.Menus
             yield return new WaitWhile(() =>
                 (gathered != count) && ((TimeUtils.Epoch - starttime) < timeout)
             );
+
+
 
             List<string> returnSsids = new List<string>();
 

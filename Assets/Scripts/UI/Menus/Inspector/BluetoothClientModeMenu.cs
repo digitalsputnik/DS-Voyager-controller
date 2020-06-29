@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,12 +7,18 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps.Voyager;
+using VoyagerApp.Networking.Voyager;
 using VoyagerApp.UI.Overlays;
 
 namespace VoyagerApp.UI.Menus
 {
     public class BluetoothClientModeMenu : Menu
     {
+        const string SERVICE = BluetoothHelper.SERVICE_UID;
+        const string READ_CHAR = BluetoothHelper.UART_TX_CHARACTERISTIC_UUID;
+        const string WRITE_CHAR = BluetoothHelper.UART_RX_CHARACTERISTIC_UUID;
+
+        [Space(3)]
         [SerializeField] GameObject _ssidListObj = null;
         [SerializeField] ListPicker _ssidList = null;
         [SerializeField] Button _ssidRefreshBtn = null;
@@ -19,15 +26,17 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] GameObject _ssidFieldObj = null;
         [SerializeField] InputField _ssidField = null;
         [SerializeField] Button _setSsidScan = null;
+        [SerializeField] Button _typeSsid = null;
         [Space(3)]
         [SerializeField] InputField _passwordField = null;
         [SerializeField] Button _setBtn = null;
         [SerializeField] GameObject _statusText = null;
         [SerializeField] GameObject _bleInfoText = null;
+        [SerializeField] AddBluetoothLampsMenu _bleMenu = null;
         [Space(3)]
         [SerializeField] string[] _loadingAnim = null;
         [SerializeField] float _animationSpeed = 0.6f;
-        [SerializeField] float _timeout = 10.0f;
+        [SerializeField] float _timeout = 30.0f;
 
         bool _loading;
         string[] _ids;
@@ -36,22 +45,14 @@ namespace VoyagerApp.UI.Menus
         internal override void OnShow()
         {
             _statusText.SetActive(false);
-
-            if (Application.platform == RuntimePlatform.IPhonePlayer)
-            {
-                SetupIOS();
-                ShowTypeSsid();
-                _bleInfoText.SetActive(true);
-            }
-            else if (Application.platform == RuntimePlatform.Android)
-            {
-                ShowScanSsids();
-                _bleInfoText.SetActive(true);
-            }
+            _bleInfoText.SetActive(true);
+            ShowTypeSsid();
         }
 
         internal override void OnHide()
         {
+            // TODO: Ssid textfield saving should work and iOS & android the same way.
+            //       Right now it only works on iOS.
             if (Application.platform == RuntimePlatform.IPhonePlayer)
                 ApplicationSettings.IOSBluetoothWifiSsid = _ssidField.text;
 
@@ -59,6 +60,13 @@ namespace VoyagerApp.UI.Menus
                 BluetoothHelper.DisconnectFromPeripheral(connection.ID);
 
             StopAllCoroutines();
+
+            _loading = false;
+        }
+
+        public void Back()
+        {
+            GetComponentInParent<InspectorMenuContainer>()?.ShowMenu(_bleMenu);
         }
 
         public void ShowScanSsids()
@@ -72,6 +80,7 @@ namespace VoyagerApp.UI.Menus
         {
             if (!_loading)
             {
+                _setBtn.interactable = true;
                 _ssidListObj.gameObject.SetActive(false);
                 _ssidFieldObj.gameObject.SetActive(true);
             }
@@ -79,7 +88,7 @@ namespace VoyagerApp.UI.Menus
 
         public void ReloadSsidList()
         {
-            StartLoadingSsids();
+            if (!_loading) StartLoadingSsids();
         }
 
         public void ConnectToLamps(string[] ids)
@@ -89,6 +98,9 @@ namespace VoyagerApp.UI.Menus
 
         public void Set()
         {
+            foreach (var connection in _connections)
+                BluetoothHelper.DisconnectFromPeripheral(connection.ID);
+
             var ssid = _ssidListObj.activeSelf ? _ssidList.selected : _ssidField.text;
             var password = _passwordField.text;
 
@@ -116,57 +128,11 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
-        //void OnConnectedToLamp(BluetoothConnection connection)
-        //{
-        //    connection.OnServices += (services) => OnServices(connection, services);
-        //    connection.GetServices();
-        //}
-
-        //void OnServices(BluetoothConnection connection, string[] services)
-        //{
-        //    if (services.Any(s => s.ToLower() == BluetoothHelper.SERVICE_UID))
-        //    {
-        //        connection.OnCharacteristics += (service, characs) => OnCharacteristics(connection, service, characs);
-        //        connection.GetCharacteristics(BluetoothHelper.SERVICE_UID);
-        //    }
-        //    else
-        //    {
-        //        BluetoothHelper.DisconnectFromPeripheral(connection.ID);
-        //    }
-        //}
-
-        //void OnLampDisconnected(string id)
-        //{
-        //    var connection = _connections.FirstOrDefault(c => c.ID == id);
-        //    if (connection != null) _connections.Remove(connection);
-        //}
-
-        //void OnCharacteristics(BluetoothConnection connection, string service, string[] characs)
-        //{
-        //    if (service.ToLower() == BluetoothHelper.SERVICE_UID)
-        //    {
-        //        const string READ_CHAR = BluetoothHelper.UART_RX_CHARACTERISTIC_UUID;
-        //        const string WRITE_CHAR = BluetoothHelper.UART_TX_CHARACTERISTIC_UUID;
-
-        //        if (characs.Any(c => c.ToLower() == READ_CHAR) && characs.Any(c => c.ToLower() == WRITE_CHAR))
-        //        {
-        //            _connections.Add(connection);
-        //        }
-        //        else
-        //        {
-        //            BluetoothHelper.DisconnectFromPeripheral(connection.ID);
-        //        }
-        //    }
-        //}
-
         IEnumerator IEnumSetWifiSettings(string ssid, string password)
         {
             _statusText.SetActive(true);
 
             const string JSON = @"{""op_code"": ""ble_ack""}";
-            const string SERVICE = BluetoothHelper.SERVICE_UID;
-            const string READ_CHAR = BluetoothHelper.UART_TX_CHARACTERISTIC_UUID;
-            const string WRITE_CHAR = BluetoothHelper.UART_RX_CHARACTERISTIC_UUID;
 
             foreach (var id in _ids)
             {
@@ -175,65 +141,56 @@ namespace VoyagerApp.UI.Menus
                 string errorMessage = null;
                 BluetoothConnection active = null;
 
-                BluetoothHelper.ConnectToPeripheral(id, (connection) =>
+                BluetoothHelper.ConnectAndValidate(id,
+                    (connection) =>
                     {
-                        _connections.Add(connection);
+                        active = connection;
+                        _connections.Add(active);
 
-                        connection.OnServices += (services) =>
+                        active.OnData += (data) =>
                         {
-                            if (services.Any(s => s.ToLower() == SERVICE))
+                            if (Encoding.UTF8.GetString(data) == JSON)
                             {
-                                connection.OnCharacteristics += (service, characs) =>
-                                {
-                                    if (service.ToLower() == SERVICE)
-                                    {
-                                        if (characs.Any(c => c.ToLower() == READ_CHAR) && characs.Any(c => c.ToLower() == WRITE_CHAR))
-                                        {
-                                            active = connection;
-                                            connection.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
-                                            connection.OnData += (data) =>
-                                            {
-                                                if (Encoding.UTF8.GetString(data) == JSON)
-                                                    BluetoothHelper.DisconnectFromPeripheral(connection.ID);
-                                            };
-                                        }
-                                        else
-                                        {
-                                            hadError = true;
-                                            errorMessage = $"No correct characteristic found from lamp {connection.Name}.";
-                                            BluetoothHelper.DisconnectFromPeripheral(connection.ID);
-                                        }
-                                    }
-                                };
-                                connection.GetCharacteristics(BluetoothHelper.SERVICE_UID);
+                                done = true;
+                                BluetoothHelper.DisconnectFromPeripheral(active.ID);
                             }
                             else
                             {
-                                hadError = true;
-                                errorMessage = $"No correct service found from lamp {connection.Name}.";
-                                BluetoothHelper.DisconnectFromPeripheral(connection.ID);
+                                var packet = Packet.Deserialize<BleChipVersion>(data);
+
+                                if (packet != null)
+                                    active.lampVersion = packet.version[1];
+                                else
+                                    active.lampVersion = 400;
                             }
                         };
-                        connection.GetServices();
+
+                        active.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
                     },
-                    (error) =>
+                    (err) =>
                     {
                         hadError = true;
                         errorMessage = $"Failed to connect to device {id}";
                         done = true;
                     },
-                    (_) =>
+                    (err) =>
                     {
-                        done = true;
+                        if (!string.IsNullOrEmpty(err))
+                        {
+                            hadError = true;
+                            errorMessage = $"Disconnected, got error {err}";
+                        }
+
                         _connections.Remove(_connections.FirstOrDefault(c => c.ID == id));
+                        done = true;
                     }
                 );
 
-                var startTime = Time.time;
+                var endtime = Time.time + _timeout;
 
                 while (!done)
                 {
-                    if ((Time.time - startTime) >= _timeout)
+                    if (Time.time >= endtime)
                     {
                         hadError = true;
                         string name = active != null ? active.Name : id;
@@ -243,111 +200,22 @@ namespace VoyagerApp.UI.Menus
 
                     if (active != null)
                     {
-                        var package = VoyagerNetworkMode.Client(ssid, password, active.Name);
-                        active.Write(SERVICE, WRITE_CHAR, package.ToData());
+                        if (active.lampVersion == 0)
+                            active.Write(WRITE_CHAR, new BleChipVersion().Serialize());
+                        else if (active.lampVersion < 500)
+                            active.Write(WRITE_CHAR, VoyagerNetworkMode.Client(ssid, password, active.Name).ToData());
+                        else
+                            active.Write(WRITE_CHAR, VoyagerNetworkMode.SecureClient(ssid, password, active.Name).ToData());
                     }
 
-                    yield return new WaitForSeconds(0.2f);
+                    yield return new WaitForSeconds(1f);
                 }
 
                 if (hadError)
                     DialogBox.Show("BLE Error", errorMessage, new string[] { "OK" }, new Action[] { null });
             }
 
-            //List<BluetoothConnection> connections = new List<BluetoothConnection>();
-            //List<string> approvedConnections = new List<string>();
-            //int waitCount = _ids.Length;
-
-            //foreach (var id in _ids)
-            //{
-            //    BluetoothHelper.ConnectToPeripheral(id,
-            //        (connection) =>
-            //        {
-            //            connection.OnServices += (services) =>
-            //            {
-            //                if (services.Any(s => s.ToLower() == SERVICE))
-            //                {
-            //                    connection.OnCharacteristics += (service, characs) =>
-            //                    {
-            //                        if (service.ToLower() == SERVICE)
-            //                        {
-            //                            if (characs.Any(c => c.ToLower() == READ_CHAR) && characs.Any(c => c.ToLower() == WRITE_CHAR))
-            //                            {
-            //                                connections.Add(connection);
-            //                                connection.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
-            //                                connection.OnData += (data) =>
-            //                                {
-            //                                    if (Encoding.UTF8.GetString(data) == JSON)
-            //                                    {
-            //                                        if (!approvedConnections.Contains(id))
-            //                                            approvedConnections.Add(id);
-            //                                    }
-            //                                };
-            //                            }
-            //                            else
-            //                                BluetoothHelper.DisconnectFromPeripheral(connection.ID);
-            //                        }
-            //                    };
-            //                    connection.GetCharacteristics(BluetoothHelper.SERVICE_UID);
-            //                }
-            //                else
-            //                {
-            //                    BluetoothHelper.DisconnectFromPeripheral(connection.ID);
-            //                }
-            //            };
-            //            connection.GetServices();
-            //        },
-            //        (error) =>
-            //        {
-            //            Debug.Log($"Failed to connect to {id}");
-            //            waitCount--;
-            //        },
-            //        (id) =>
-            //        {
-            //            Debug.Log($"Disconnected from {id}");
-            //            waitCount--;
-            //        }
-            //    );
-            //}
-
-            //_connections.ForEach(c =>
-            //{
-            //    c.SubscribeToCharacteristicUpdate(SERVICE, READCHARAC);
-            //    c.OnData += (data) =>
-            //    {
-            //        if (Encoding.UTF8.GetString(data) == JSON)
-            //        {
-            //            if (!approvedConnections.Contains(c.ID))
-            //                approvedConnections.Add(c.ID);
-            //        }
-            //    };
-            //});
-
-            //// TODO: There should be a timeout here!
-            //while (approvedConnections.Count != _connections.Count)
-            //{
-            //    _connections.ForEach(c =>
-            //    {
-            //        if (!approvedConnections.Contains(c.ID))
-            //        {
-            //            var package = VoyagerNetworkMode.Client(ssid, password, c.Name);
-            //            c.Write(SERVICE, WRITECHARAC, package.ToData());
-            //        }
-            //    });
-
-            //    yield return new WaitForSeconds(1.0f);
-            //}
-
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
-        }
-
-        void SetupIOS()
-        {
-#if UNITY_IOS
-            string ssid = IOSNetworkHelpers.GetCurrentSsidName();
-            _ssidField.text = (ssid == "unknown") ? ApplicationSettings.IOSBluetoothWifiSsid : ssid;
-            _setSsidScan.interactable = false;
-#endif
         }
 
         void StartLoadingSsids()
@@ -356,14 +224,194 @@ namespace VoyagerApp.UI.Menus
             _setBtn.interactable = false;
             _ssidList.interactable = false;
             _ssidRefreshBtn.interactable = false;
-
-#if UNITY_ANDROID
-            AndroidNetworkHelpers.ScanForSsids(this, 10.0f, OnSsidListReceived);
-#endif
-
+            _typeSsid.interactable = false;
             _loading = true;
 
+            StartCoroutine(PollSsidsFromBluetooth());
             StartCoroutine(IEnumLoadingAnimation());
+        }
+
+        IEnumerator PollSsidsFromBluetooth()
+        {
+            List<string> supportedLamps = new List<string>();
+            List<string> unsupportedLamps = new List<string>();
+
+            foreach (var lamp in _ids)
+            {
+                bool done = false;
+                string errorMessage = "";
+                BluetoothConnection active = null;
+
+                float endtime = Time.time + _timeout;
+
+                Connect();
+
+                void Connect()
+                {
+                    BluetoothHelper.ConnectAndValidate(lamp,
+                        (connection) =>
+                        {
+                            active = connection;
+                            MainThread.Dispach(() => endtime = Time.time + 2.0f);
+
+                            _connections.Add(connection);
+
+                            active.OnData = (data) =>
+                            {
+                                var packet = Packet.Deserialize<BleChipVersion>(data);
+
+                                if (packet != null)
+                                    supportedLamps.Add(lamp);
+                                else
+                                    unsupportedLamps.Add(lamp);
+
+                                done = true;
+                                BluetoothHelper.DisconnectFromPeripheral(active.ID);
+                            };
+
+                            active.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
+                        },
+                        (err) => { errorMessage = "Error: failed - " + err; Connect(); },
+                        (err) =>
+                        {
+                            errorMessage = "Disconnected - " + err;
+                            _connections.Remove(_connections.FirstOrDefault(c => c.ID == lamp));
+                        }
+                    );
+                }
+
+                while (Time.time < endtime && !done)
+                {
+                    if (active != null)
+                    {
+                        active.Write(WRITE_CHAR, new BleChipVersion().Serialize());
+                        active.Write(WRITE_CHAR, new PollRequestPacket().Serialize());
+                    }
+
+                    yield return new WaitForSeconds(1.0f);
+                }
+
+                if (!done)
+                    unsupportedLamps.Add(lamp);
+
+                if (errorMessage != "")
+                    Debug.Log(errorMessage);
+            }
+
+            var ssids = new List<string>();
+
+            if (supportedLamps.Count() == 0)
+            {
+                DialogBox.Show("BLE Error", "Scanning SSID's failed, make sure you're lamps are updated and try again or type SSID manually.", new string[] { "OK" }, new Action[] { null });
+                yield return new WaitForSeconds(0.1f);
+                OnSsidListReceived(ssids.ToArray());
+            }
+            else
+            {
+                List<string[]> all = new List<string[]>();
+
+                int finished = 0;
+
+                for (int i = 0; i < 4; i++)
+                {
+                    if (i < supportedLamps.Count())
+                    {
+                        StartCoroutine(GetSsidFromId(supportedLamps[i], (result) =>
+                        {
+                            all.Add(result);
+                            finished++;
+                        }));
+                    }
+                }
+
+                float endTime = Time.time + _timeout;
+                while (Time.time < endTime && finished < _ids.Length)
+                    yield return new WaitForSeconds(0.5f);
+
+                foreach (var connection in _connections)
+                    BluetoothHelper.DisconnectFromPeripheral(connection.ID);
+
+                if (all.Count != 0)
+                {
+                    foreach (var ssidList in all)
+                    {
+                        foreach (var ssid in ssidList)
+                        {
+                            if (!ssids.Contains(ssid))
+                                ssids.Add(ssid);
+                        }
+                    }
+                }
+
+                OnSsidListReceived(ssids.ToArray());
+            }
+        }
+
+        IEnumerator GetSsidFromId(string id, Action<string[]> callback)
+        {
+            bool started = false;
+            bool finished = false;
+            List<string> ssids = new List<string>();
+
+            const string BEGIN_JSON = "{\"op_code\": \"ack_ssid_list_request\"}";
+            const string END_JSON = "{\"op_code\": \"ack_ssid_list_complete\"}";
+
+            BluetoothConnection active = null;
+
+            BluetoothHelper.ConnectAndValidate(id,
+                (conn) =>
+                {
+                    active = conn;
+                    _connections.Add(active);
+
+                    active.OnData = (data) =>
+                    {
+                        string decoded = Encoding.UTF8.GetString(data);
+
+                        if (decoded != BEGIN_JSON && decoded != END_JSON)
+                        {
+                            foreach (var ssid in decoded.Split(','))
+                            {
+                                if (!ssids.Contains(ssid))
+                                    ssids.Add(ssid);
+                            }
+                        }
+
+                        if (decoded == BEGIN_JSON)
+                            started = true;
+
+                        if (decoded == END_JSON)
+                            finished = true;
+                    };
+
+                    active.SubscribeToCharacteristicUpdate(SERVICE, READ_CHAR);
+                },
+                (err) =>
+                {
+                    finished = true;
+                },
+                (err) =>
+                {
+                    finished = true;
+                    _connections.Remove(_connections.FirstOrDefault(c => c.ID == id));
+                });
+
+
+            float endTime = Time.time + _timeout;
+
+            while (Time.time < endTime && !finished)
+            {
+                if (!started && active != null)
+                {
+                    var packet = new SsidListRequestPacket();
+                    var sendData = packet.Serialize();
+                    active.Write(WRITE_CHAR, sendData);
+                }
+
+                yield return new WaitForSeconds(0.5f);
+            }
+
+            callback(ssids.ToArray());
         }
 
         IEnumerator IEnumLoadingAnimation()
@@ -387,10 +435,13 @@ namespace VoyagerApp.UI.Menus
                 _setBtn.interactable = true;
                 _ssidList.interactable = true;
                 _ssidRefreshBtn.interactable = true;
+                _typeSsid.interactable = true;
                 _ssidList.SetItems(ssids);
             }
             else
             {
+                _ssidRefreshBtn.interactable = true;
+                _typeSsid.interactable = true;
                 _ssidList.SetItems("Not found");
             }
         }

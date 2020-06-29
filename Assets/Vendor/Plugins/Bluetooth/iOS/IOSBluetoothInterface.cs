@@ -50,6 +50,11 @@ namespace DigitalSputnik.Bluetooth
 #endregion
 
 #region Interface Implementation
+        public bool IsInitialized()
+        {
+            return _initialized;
+        }
+        
         public void Initialize()
         {
             if (!_initialized)
@@ -82,7 +87,11 @@ namespace DigitalSputnik.Bluetooth
             {
                 _onPeripheralScanned = callback;
                 if (services != null)
+                {
+                    for (int i = 0; i < services.Length; i++)
+                        services[i] = services[i].ToUpper();
                     _iOSStartScanning(services, services.Length);
+                }
                 else
                     _iOSStartScanning(null, 0);
                 _scanning = true;
@@ -158,49 +167,54 @@ namespace DigitalSputnik.Bluetooth
 #region Event Handling
         void OnPeripheralScanned(string id, string name, int rssi)
         {
-            _onPeripheralScanned?.Invoke(id, name, rssi);
+            _onPeripheralScanned?.Invoke(id.ToLower(), name, rssi);
         }
 
-        void OnPeripheralNotFound(string peripheral)
+        void OnPeripheralNotFound(string id)
         {
-            OnConnectingFailed(peripheral, $"Peripheral {peripheral} not found");
+            id = id.ToLower();
+            OnConnectingFailed(id, $"Peripheral {id} not found");
         }
 
-        void OnConnectingFailed(string peripheral, string error)
+        void OnConnectingFailed(string id, string error)
         {
             if (_onConnectFailed != null)
             {
-                _onConnectFailed.Invoke(peripheral, error);
+                _onConnectFailed.Invoke(id.ToLower(), error);
                 _onConnectFailed = null;
                 _onConnected = null;
             }
         }
 
-        void OnConnectingSuccessful(string peripheral)
+        void OnConnectingSuccessful(string id)
         {
             if (_onConnected != null)
             {
-                _onConnected.Invoke(peripheral);
+                _onConnected.Invoke(id.ToLower());
                 _onConnected = null;
                 _onConnectFailed = null;
             }
         }
 
-        void OnDisconnect(string peripheral, string error)
+        void OnDisconnect(string id, string error)
         {
             if (_onDisconnect != null)
             {
-                _onDisconnect?.Invoke(peripheral, error);
+                _onDisconnect?.Invoke(id.ToLower(), error);
                 _onDisconnect = null;
             }
         }
 
-        void OnServices(string peripheral, string[] services, string error)
+        void OnServices(string id, string[] services, string error)
         {
             if (_onServices != null)
             {
                 if (string.IsNullOrEmpty(error))
-                    _onServices.Invoke(peripheral, services);
+                {
+                    for (int i = 0; i < services.Length; i++)
+                        services[i] = services[i].ToLower();
+                    _onServices.Invoke(id.ToLower(), services);
+                }
                 else
                     Debug.LogError($"[IOS Bluetooth error] {error}");
 
@@ -208,12 +222,16 @@ namespace DigitalSputnik.Bluetooth
             }
         }
 
-        void OnCharacteristics(string peripheral, string service, string[] characteristics, string error)
+        void OnCharacteristics(string id, string service, string[] characteristics, string error)
         {
             if (_onCharacteristics != null)
             {
                 if (string.IsNullOrEmpty(error))
-                    _onCharacteristics.Invoke(peripheral, service, characteristics);
+                {
+                    for (int i = 0; i < characteristics.Length; i++)
+                        characteristics[i] = characteristics[i].ToLower();
+                    _onCharacteristics.Invoke(id.ToLower(), service.ToLower(), characteristics);
+                }
                 else
                     Debug.LogError($"[IOS Bluetooth error] {error}");
 
@@ -221,7 +239,7 @@ namespace DigitalSputnik.Bluetooth
             }
         }
 
-        void OnCharacteristicUpdate(string peripheral, string service, string characteristic, string error, byte[] data)
+        void OnCharacteristicUpdate(string id, string service, string characteristic, string error, byte[] data)
         {
 
             if (_onCharacteristicUpdate != null)
@@ -230,7 +248,7 @@ namespace DigitalSputnik.Bluetooth
                 {
                     var base64 = Encoding.UTF8.GetString(data);
                     var decoded = Convert.FromBase64String(base64);
-                    _onCharacteristicUpdate.Invoke(peripheral, service, characteristic, decoded);
+                    _onCharacteristicUpdate.Invoke(id.ToLower(), service.ToLower(), characteristic.ToLower(), decoded);
                 }
                 else
                     Debug.LogError($"[IOS Bluetooth error] {error}");
