@@ -46,6 +46,7 @@ namespace VoyagerApp.UI.Menus
         {
             _statusText.SetActive(false);
             _bleInfoText.SetActive(true);
+
             ShowTypeSsid();
         }
 
