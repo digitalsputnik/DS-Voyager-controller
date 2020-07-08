@@ -80,8 +80,8 @@ namespace VoyagerApp.UI.Menus
             streamDelayField.onChanged += StreamDelayChanged;
             streamFpsField.onChanged += StreamFpsChanged;
 
-            streamDelayField.gameObject.SetActive(ApplicationState.DeveloperMode && !(effect is Video));
-            streamFpsField.gameObject.SetActive(ApplicationState.DeveloperMode && !(effect is Video));
+            streamDelayField.gameObject.SetActive(ApplicationState.DeveloperMode && !(effect is Video || effect is Effects.Image));
+            streamFpsField.gameObject.SetActive(ApplicationState.DeveloperMode && !(effect is Video || effect is Effects.Image));
 
             EnableDisableObjects();
         }
