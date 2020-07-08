@@ -22,6 +22,29 @@ namespace VoyagerApp.UI.Menus
 
         List<SetEffectItem> items = new List<SetEffectItem>();
 
+        public void AddEffectClicked()
+        {
+            DialogBox.Show(
+                "Add Effect",
+                "Pick which effect you want to add",
+                new string[] { "IMAGE", "VIDEO", "CANCEL" },
+                new Action[] { AddImageEffectClicked, AddVideoEffectClick, null }
+            );
+        }
+
+        public void AddImageEffectClicked()
+        {
+            FileUtils.LoadPictureFromDevice(path => 
+            {
+                if (path != "" && path != "Null" && path != null)
+                {
+                    Image image = ImageEffectLoader.LoadImageFromPath(path);
+                    image.timestamp = TimeUtils.Epoch;
+                    OrderEffects();
+                }
+            });
+        }
+
         public void AddVideoEffectClick()
         {
             FileUtils.LoadVideoFromDevice(path =>

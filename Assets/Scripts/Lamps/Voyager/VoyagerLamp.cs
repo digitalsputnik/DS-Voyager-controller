@@ -175,6 +175,39 @@ namespace VoyagerApp.Lamps.Voyager
                 lastTimestamp = last;
             }
 
+            if (effect is Image image)
+            {
+                var start = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset;
+
+                var packet = new PacketCollection(
+                    new SetVideoPacket(1, start),
+                    new SetFpsPacket(1),
+                    new SetItshePacket(itshe)
+                );
+
+                NetUtils.VoyagerClient.KeepSendingPacket(
+                    this,
+                    "set_effect",
+                    packet,
+                    VoyagerClient.PORT_SETTINGS,
+                    last);
+
+                NetUtils.VoyagerClient.KeepSendingPacket(
+                    this,
+                    "set_fps",
+                    new SetFpsPacket(1),
+                    VoyagerClient.PORT_SETTINGS,
+                    TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset);
+
+                if (effect != this.effect)
+                    buffer.Setup(1);
+
+                if (this.effect == null)
+                    buffer.Setup(1);
+
+                lastTimestamp = last;
+            }
+
             base.SetEffect(effect);
         }
 

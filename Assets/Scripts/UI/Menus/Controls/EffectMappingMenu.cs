@@ -35,7 +35,7 @@ namespace VoyagerApp.UI.Menus
 
             this.effect = effect;
 
-            if (effect is Video)
+            if (effect is Video || effect is Effects.Image)
             {
                 syphonSource.transform.parent.gameObject.SetActive(false);
                 spoutSource.transform.parent.gameObject.SetActive(false);

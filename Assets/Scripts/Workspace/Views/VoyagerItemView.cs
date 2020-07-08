@@ -169,6 +169,12 @@ namespace VoyagerApp.Workspace.Views
                 else
                     DrawItshFrame();
             }
+            else if (lamp.effect is Image)
+            {
+                VideoEffectBuffer buffer = lamp.buffer;
+                if (buffer.FrameExists(0))
+                    DrawBufferFrame(buffer, 0);
+            }
             else if (lamp.effect is SyphonStream || lamp.effect is SpoutStream)
             {
                 if (lamp.prevStream != null)

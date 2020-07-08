@@ -32,10 +32,12 @@ namespace VoyagerApp.Effects
         public double duraction => (double)frames / fps;
     }
 
-    public class Stream : Effect
+    public class Image : Effect
     {
-
+        public Texture2D image;
     }
+
+    public class Stream : Effect { }
 
     public class SyphonStream : Stream
     {
