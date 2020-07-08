@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DigitalSputnik.Bluetooth;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
