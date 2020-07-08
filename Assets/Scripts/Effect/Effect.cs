@@ -28,7 +28,6 @@ namespace VoyagerApp.Effects
         public uint width;
         public uint height;
         public double startTime;
-
         public double duraction => (double)frames / fps;
     }
 

@@ -16,23 +16,12 @@ namespace VoyagerApp.Effects
         void Start()
         {
             _renderMesh = GetComponent<MeshRenderer>();
-            SelectionMove.onSelectionMoveEnded += SendImageToLamps;
-            StartCoroutine(ResendImage());
+            SelectionMove.onSelectionMoveEnded += ResetImageEffect;
         }
 
         void OnDestroy()
         {
-            SelectionMove.onSelectionMoveEnded -= SendImageToLamps;
-            StopCoroutine(ResendImage());
-        }
-
-        IEnumerator ResendImage()
-        {
-            while(true)
-            {
-                yield return new WaitForSeconds(0.5f);
-                SendImageToLamps();
-            }
+            SelectionMove.onSelectionMoveEnded -= ResetImageEffect;
         }
 
         public void SetImage(Image image)
@@ -41,7 +30,12 @@ namespace VoyagerApp.Effects
             var texture = _image.image;
             _renderMesh.material.SetTexture("_MainTex", texture);
             ResizeMesh(texture);
-            SendImageToLamps();
+            ResetImageEffect();
+        }
+
+        public void UpdateEffectSettings()
+        {
+            ShaderUtils.ApplyEffectToMaterial(_renderMesh.sharedMaterial, _image);
         }
 
         void ResizeMesh(Texture2D texture)
@@ -69,16 +63,16 @@ namespace VoyagerApp.Effects
             return new Vector2(width, height);
         }
 
-        void SendImageToLamps()
+        void ResetImageEffect()
         {
             if (gameObject.activeInHierarchy)
             {
                 foreach (var selected in WorkspaceUtils.SelectedLampItems)
-                    HandleLampMove(selected);
+                    ResetImageEffectOnLamp(selected);
             }
         }
 
-        void HandleLampMove(LampItemView item)
+        void ResetImageEffectOnLamp(LampItemView item)
         {
             var mapping = GetLampMapping(item);
             var lamp = item.lamp;
@@ -90,7 +84,6 @@ namespace VoyagerApp.Effects
             }
 
             lamp.SetMapping(mapping);
-            RenderFrame(lamp);
         }
 
         EffectMapping GetLampMapping(LampItemView lamp)
@@ -113,14 +106,6 @@ namespace VoyagerApp.Effects
             }
 
             return new EffectMapping(pixels[0], pixels[1]);
-        }
-
-        void RenderFrame(Lamps.Lamp lamp)
-        {
-            var texture = _image.image;
-            var coords = VectorUtils.MapLampToVideoCoords(lamp, texture);
-            var colors = TextureUtils.CoordsToColors(coords, texture);
-            lamp.PushFrame(colors, 0);
         }
     }
 }

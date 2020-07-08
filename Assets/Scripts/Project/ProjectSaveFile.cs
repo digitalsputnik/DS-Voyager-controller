@@ -37,6 +37,11 @@ namespace VoyagerApp.Projects
     [Serializable]
     public class VideoPreset : Effect { }
 
+    public class Image : Effect
+    {
+        public byte[] data;
+    }
+
     [Serializable]
     public class Lamp
     {

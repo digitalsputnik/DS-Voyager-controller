@@ -10,6 +10,7 @@ namespace VoyagerApp.UI.Menus
     {
         [SerializeField] VideoMapper _videoMapper = null;
         [SerializeField] StreamMapper _streamMapper = null;
+        [SerializeField] ImageMapper _imageMapper = null;
 
         [SerializeField] IntField _fpsField = null;
         [SerializeField] IntField _liftField = null;
@@ -104,6 +105,16 @@ namespace VoyagerApp.UI.Menus
                 {
                     lamp.effect = null;
                     lamp.SetEffect(_effect);
+                }
+            }
+            else if (_effect is Image)
+            {
+                _imageMapper.UpdateEffectSettings();
+                foreach (var lamp in WorkspaceUtils.VoyagerLamps)
+                {
+                    lamp.effect = null;
+                    lamp.SetEffect(_effect);
+                    lamp.buffer.Clear();
                 }
             }
             else

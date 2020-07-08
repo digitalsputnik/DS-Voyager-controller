@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using VoyagerApp.Effects;
 using VoyagerApp.Utilities;
 
@@ -17,6 +18,19 @@ namespace VoyagerApp.Videos
 
         public override RenderState Update()
         {
+            if (!WorkspaceUtils.Lamps.Where(l => l.effect is Image).All(l => l.buffer.rendered))
+            {
+                foreach (var lamp in WorkspaceUtils.Lamps.Where(l => l.effect is Image))
+                {
+                    var image = (Image)lamp.effect;
+                    var texture = image.image;
+                    var coords = VectorUtils.MapLampToVideoCoords(lamp, texture);
+                    var colors = TextureUtils.CoordsToColors(coords, texture);
+                    lamp.PushFrame(colors, 0);
+                }
+                return new ConfirmPixelsState();
+            }
+
             if (!WorkspaceUtils.Lamps.Where(l => l.effect is Video).All(l => l.buffer.rendered))
                 return new PrepereQueueState();
 
