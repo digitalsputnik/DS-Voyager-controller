@@ -124,7 +124,7 @@ namespace VoyagerApp.UI.Menus
 
                                 if (packet != null)
                                 {
-                                    lamp.Name = packet.serial;
+                                    MainThread.Dispach(() => lamp.Name = packet.serial);
                                 }
                                 else
                                 {
