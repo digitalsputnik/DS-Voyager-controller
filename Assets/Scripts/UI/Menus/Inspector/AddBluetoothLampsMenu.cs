@@ -18,6 +18,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] AddLampsMenu _addLampsMenu = null;
         [SerializeField] Button _selectAllBtn = null;
         [SerializeField] Button _continueBtn = null;
+        [SerializeField] Text _selectAllBtnText = null;
 
         List<BluetoothLampItem> _items = new List<BluetoothLampItem>();
         List<BluetoothConnection> _connections = new List<BluetoothConnection>();
@@ -44,7 +45,8 @@ namespace VoyagerApp.UI.Menus
 
         void Update()
         {
-            _selectAllBtn.interactable = _items.Count > 0 && !_items.TrueForAll(i => i.Toggled);
+            //_selectAllBtn.interactable = _items.Count > 0 && !_items.TrueForAll(i => i.Toggled);
+            SelectButtonUpdate();
             _continueBtn.interactable = _items.Any(i => i.Toggled);
         }
 
@@ -214,6 +216,33 @@ namespace VoyagerApp.UI.Menus
         public void SelectAll()
         {
             foreach (var item in _items) item.Toggled = true;
+        }
+
+        public void DeselectAll()
+        {
+            foreach (var item in _items) item.Toggled = false;
+        }
+
+        public void SelectButtonUpdate()
+        {
+            _selectAllBtnText.text = _items.Any(i => i.Toggled) ? "DESELECT ALL" : "SELECT ALL";
+
+            if (_items.Count > 0 && _items.Any(i => i.Toggled))
+            {
+                _selectAllBtn.onClick.RemoveAllListeners();
+                _selectAllBtn.onClick.AddListener(DeselectAll);
+                _selectAllBtn.interactable = true;
+            }
+            else if (_items.Count > 0 && _items.TrueForAll(i => !i.Toggled))
+            {
+                _selectAllBtn.onClick.RemoveAllListeners();
+                _selectAllBtn.onClick.AddListener(SelectAll);
+                _selectAllBtn.interactable = true;
+            }
+            else
+            {
+                _selectAllBtn.interactable = false;
+            }
         }
 
         public void Continue()
