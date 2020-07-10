@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using System.Threading;
-using UnityEngine;
 using VoyagerApp.Effects;
 using VoyagerApp.Utilities;
 
@@ -20,28 +18,7 @@ namespace VoyagerApp.Videos
         public override RenderState Update()
         {
             if (!WorkspaceUtils.Lamps.Where(l => l.effect is Image).All(l => l.buffer.rendered))
-            {
-                foreach (var lamp in WorkspaceUtils.Lamps.Where(l => l.effect is Image))
-                {
-                    var image = (Image)lamp.effect;
-                    var texture = image.image;
-                    
-                    var material = VideoRenderer.instance.renderMaterial;
-                    var render = new RenderTexture(texture.width, texture.height, 1, RenderTextureFormat.ARGB32);
-
-                    ShaderUtils.ApplyEffectToMaterial(material, image);
-
-                    var prevActive = RenderTexture.active;
-                    Graphics.Blit(texture, render, material);
-                    texture = TextureUtils.RenderTextureToTexture2D(render);
-                    RenderTexture.active = prevActive;
-
-                    var coords = VectorUtils.MapLampToVideoCoords(lamp, texture);
-                    var colors = TextureUtils.CoordsToColors(coords, texture);
-                    lamp.PushFrame(colors, 0);
-                }
-                return new ConfirmPixelsState();
-            }
+                return new RenderImageState();
 
             if (!WorkspaceUtils.Lamps.Where(l => l.effect is Video).All(l => l.buffer.rendered))
                 return new PrepereQueueState();
