@@ -1,4 +1,4 @@
-namespace DigitalSputnik.Videos
+namespace DigitalSputnik
 {
     public interface ITimeProvider
     {

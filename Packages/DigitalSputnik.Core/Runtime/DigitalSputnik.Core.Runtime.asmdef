@@ -1,8 +1,6 @@
 {
-    "name": "DigitalSputnik.Videos.Runtime",
-    "references": [
-        "GUID:5756751e31f1947af93024177102cd1e"
-    ],
+    "name": "DigitalSputnik.Core.Runtime",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

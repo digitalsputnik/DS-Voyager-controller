@@ -1,10 +1,18 @@
 {
   "dependencies": {
+    "com.digitalsputnik.core": {
+      "version": "file:DigitalSputnik.Core",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.digitalsputnik.videos": {
       "version": "file:DigitalSputnik.Videos",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
+      "dependencies": {
+        "com.digitalsputnik.core": "0.0.1"
+      }
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",

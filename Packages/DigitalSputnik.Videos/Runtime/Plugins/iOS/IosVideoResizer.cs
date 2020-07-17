@@ -7,7 +7,7 @@ namespace DigitalSputnik.Videos.iOS
 {
     public class IosVideoResizer : IVideoResizer
     {
-        public bool Resize(Video video, int width, int height)
+        public bool Resize(ref Video video, int width, int height)
         {
             var flow = FlowState.Waiting;
             var output = MakeCopyPath(video.Path);

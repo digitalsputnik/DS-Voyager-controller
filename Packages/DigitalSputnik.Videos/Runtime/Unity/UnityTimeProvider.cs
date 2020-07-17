@@ -1,8 +1,8 @@
 using System;
 
-namespace DigitalSputnik.Videos.Tests
+namespace DigitalSputnik.Videos
 {
-    internal class TestTimeProvider : ITimeProvider
+    public class UnityTimeProvider : ITimeProvider
     {
         public double Epoch => (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
     }

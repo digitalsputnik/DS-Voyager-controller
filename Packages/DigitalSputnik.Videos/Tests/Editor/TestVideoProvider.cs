@@ -18,7 +18,7 @@ namespace DigitalSputnik.Videos.Tests
             else loaded?.Invoke(null);
         }
 
-        public bool Rename(Video video, string name)
+        public bool Rename(ref Video video, string name)
         {
             if (!IsNameCorrect(name)) return false;
 

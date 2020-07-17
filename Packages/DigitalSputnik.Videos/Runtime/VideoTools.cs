@@ -25,7 +25,7 @@ namespace DigitalSputnik.Videos
             var timeout = _time.Epoch + (double) LoadVideoTimeoutMilliseconds / 1000;
             Video video = null;
             var loaded = false;
-
+            
             _provider.LoadVideo(path, vid =>
             {
                 video = vid;
@@ -38,16 +38,11 @@ namespace DigitalSputnik.Videos
             return video;
         }
 
-        public bool Rename(Video video, string name) => _provider.Rename(video, name);
+        public bool Rename(ref Video video, string name) => _provider.Rename(ref video, name);
 
-        public bool Resize(Video video, int width, int height)
+        public bool Resize(ref Video video, int width, int height)
         {
-            return _resizer.Resize(video, width, height);
+            return _resizer.Resize(ref video, width, height);
         }
-    }
-
-    public interface IVideoResizer
-    {
-        bool Resize(Video video, int width, int height);
     }
 }

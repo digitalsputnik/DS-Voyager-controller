@@ -1,8 +1,7 @@
 {
-    "name": "DigitalSputnik.Videos.EditorTests",
+    "name": "DigitalSputnik.Core.EditorTests",
     "references": [
         "DigitalSputnik.Core.Runtime",
-        "DigitalSputnik.Videos.Runtime",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

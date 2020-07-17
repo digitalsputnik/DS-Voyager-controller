@@ -45,7 +45,7 @@ namespace DigitalSputnik.Videos.Tests
             var tools = A.VideoTools;
             var video = tools.GetTestVideo();
 
-            tools.Rename(video, NEW_NAME);
+            tools.Rename(ref video, NEW_NAME);
             Assert.AreEqual(video.Name, NEW_NAME);
         }
 
@@ -58,7 +58,7 @@ namespace DigitalSputnik.Videos.Tests
             var tools = A.VideoTools;
             var video = tools.GetTestVideo();
 
-            tools.Rename(video, NEW_NAME);
+            tools.Rename(ref video, NEW_NAME);
             Assert.AreEqual(video.Path, newPath);
         }
 
@@ -71,7 +71,7 @@ namespace DigitalSputnik.Videos.Tests
             var tools = A.VideoTools;
             var video = tools.GetTestVideo();
 
-            tools.Resize(video, TARGET_WIDTH, TARGET_HEIGHT);
+            tools.Resize(ref video, TARGET_WIDTH, TARGET_HEIGHT);
             Assert.AreEqual(video.Width, TARGET_WIDTH);
         }
 
@@ -84,7 +84,7 @@ namespace DigitalSputnik.Videos.Tests
             var tools = A.VideoTools;
             var video = tools.GetTestVideo();
 
-            tools.Resize(video, TARGET_WIDTH, TARGET_HEIGHT);
+            tools.Resize(ref video, TARGET_WIDTH, TARGET_HEIGHT);
             Assert.AreEqual(video.Height, TARGET_HEIGHT);
         }
     }
@@ -97,7 +97,7 @@ namespace DigitalSputnik.Videos.Tests
 
         private static IVideoProvider VideoProvider => new TestVideoProvider();
         private static IVideoResizer VideoResizer => new TestVideoResizer();
-        private static ITimeProvider TimeProvider => new TestTimeProvider();
+        private static ITimeProvider TimeProvider => new UnityTimeProvider();
         public static VideoTools VideoTools => new VideoTools(VideoProvider, VideoResizer, TimeProvider);
         public static Video GetTestVideo(this VideoTools tools) => tools.LoadVideo(TestVideoPath);
 
