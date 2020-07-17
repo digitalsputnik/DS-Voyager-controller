@@ -1,5 +1,4 @@
 using System.Threading;
-using ICSharpCode.NRefactory.Ast;
 
 namespace DigitalSputnik.Videos
 {
