@@ -12,9 +12,12 @@ namespace DigitalSputnik.Videos
         private const float VIDEO_LOAD_TIMEOUT = 10.0f;
         public void LoadVideo(string path, VideoHandler loaded)
         {
-            var obj = LoaderObject();
-            var player = obj.gameObject.AddComponent<VideoPlayer>();
-            obj.StartCoroutine(LoadVideoIEnumerator(player, path, loaded));
+            MainThreadRunner.Instance.EnqueueAction(() =>
+            {
+                var obj = LoaderObject();
+                var player = obj.gameObject.AddComponent<VideoPlayer>();
+                obj.StartCoroutine(LoadVideoIEnumerator(player, path, loaded)); 
+            });
         }
 
         public bool Rename(ref Video video, string name)

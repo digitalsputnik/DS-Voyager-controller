@@ -97,7 +97,7 @@ namespace DigitalSputnik.Videos.Tests
 
         private static IVideoProvider VideoProvider => new TestVideoProvider();
         private static IVideoResizer VideoResizer => new TestVideoResizer();
-        private static ITimeProvider TimeProvider => new UnityTimeProvider();
+        private static ITimeProvider TimeProvider => new SystemTimeProvider();
         public static VideoTools VideoTools => new VideoTools(VideoProvider, VideoResizer, TimeProvider);
         public static Video GetTestVideo(this VideoTools tools) => tools.LoadVideo(TestVideoPath);
 
