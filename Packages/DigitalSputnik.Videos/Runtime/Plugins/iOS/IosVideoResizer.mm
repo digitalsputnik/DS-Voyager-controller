@@ -11,8 +11,8 @@
 @implementation VideoResizer
     + (void)resize:(NSString*) input :(NSString *)output :(NSNumber *)width :(NSNumber *)height
     {
-        NSURL* inputURL = [NSURL URLWithString:input];
-        NSURL* outputURL = [NSURL URLWithString:output];
+        NSURL* inputURL = [NSURL fileURLWithPath:input]; //[NSURL URLWithString:input];
+        NSURL* outputURL = [NSURL fileURLWithPath:output];
         
         AVAsset* asset = [AVAsset assetWithURL:inputURL];
         
@@ -47,12 +47,12 @@
             }
             else if (encoder.status == AVAssetExportSessionStatusCancelled)
             {
-                NSString *data = [NSString stringWithFormat:@"%@", encoder.error.localizedDescription];
+                NSString *data = [NSString stringWithFormat:@"%@", encoder.error];
                 [self callUnityObject:"iOS Video Resize Listener" Method:"ResizeError" Parameter:[data  UTF8String]];
             }
             else
             {
-                NSString *data = [NSString stringWithFormat:@"%@", encoder.error.localizedDescription];
+                NSString *data = [NSString stringWithFormat:@"%@", encoder.error];
                 [self callUnityObject:"iOS Video Resize Listener" Method:"ResizeError" Parameter:[data  UTF8String]];
             }
         }];

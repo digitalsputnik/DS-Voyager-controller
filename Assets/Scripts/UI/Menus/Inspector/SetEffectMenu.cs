@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using DigitalSputnik;
 using UnityEngine;
 using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Networking.Voyager;
+using VoyagerApp.RefactoredEffects;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
+using Effect = VoyagerApp.Effects.Effect;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -28,7 +32,7 @@ namespace VoyagerApp.UI.Menus
             {
                 if (path != "" && path != "Null" && path != null)
                 {
-                    Video video = VideoEffectLoader.LoadNewVideoFromPath(path);
+                    var video = VideoEffectLoader.LoadNewVideoFromPath(path);
                     video.timestamp = TimeUtils.Epoch;
                     OrderEffects();
                 }
@@ -37,38 +41,65 @@ namespace VoyagerApp.UI.Menus
 
         public void SelectEffect(Effect effect)
         {
-            ValidateVideoResolution(effect, () =>
-            {
-                GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
-
-                if (inWorkspace)
-                    SelectEffectFromWorkspace(effect);
-                else
-                    SelectEffectFromMapping(effect);
-            });
+            ValidateVideoResolution(effect, ApplyEffectToLamp, ResizeVideoEffect);
         }
 
-        public void ValidateVideoResolution(Effect effect, Action onValidated)
+        private void ValidateVideoResolution(Effect effect, Action<Effect> fine, Action<Video> resize)
         {
             if (effect is Video video)
             {
                 if (video.width > maxPreferedSized.x || video.height > maxPreferedSized.y)
                 {
-                    DialogBox.Show(
-                        "WARNING",
-                        "The video resolution is not supported and the application might suffer.",
-                        new string[] { "OK", "IGNORE" },
-                        new Action[] { null, onValidated });
+                    if (Application.platform == RuntimePlatform.IPhonePlayer)
+                    {
+                        DialogBox.Show(
+                            "WARNING",
+                            "The video resolution is not supported and the application might suffer.",
+                            new string[] { "CONTINUE", "RESIZE", "CANCEL" },
+                            new Action[] { () => fine?.Invoke(effect), () => resize?.Invoke(video), null });
+                    }
+                    else
+                    {
+                        DialogBox.Show(
+                            "WARNING",
+                            "The video resolution is not supported and the application might suffer.",
+                            new string[] { "CONTINUE", "CANCEL" },
+                            new Action[] { () => fine?.Invoke(effect), null });
+                    }
                 }
-                else
-                {
-                    onValidated?.Invoke();
-                }
+                else fine?.Invoke(effect);
             }
+            else fine?.Invoke(effect);
+        }
+
+        private void ApplyEffectToLamp(Effect effect)
+        {
+            GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+
+            if (inWorkspace)
+                SelectEffectFromWorkspace(effect);
             else
-            {
-                onValidated?.Invoke();
-            }
+                SelectEffectFromMapping(effect);
+        }
+
+        private void ResizeVideoEffect(Video effect)
+        {
+            App.VideoTools.LoadVideo(effect.path, video =>
+            {  
+                new Thread(() =>
+                {
+                    if (App.VideoTools.Resize(ref video, maxPreferedSized.x, maxPreferedSized.y))
+                        MainThreadRunner.Instance.EnqueueAction(() => ApplyEffectToLamp(effect));
+                    else
+                    {
+                        DialogBox.Show(
+                            "FAIL",
+                            "Failed to change video resolution",
+                            new string[] { "OK", },
+                            new Action[] { null });
+                    }
+                }).Start();
+            });
         }
 
         public void RemoveEffect(Effect effect)

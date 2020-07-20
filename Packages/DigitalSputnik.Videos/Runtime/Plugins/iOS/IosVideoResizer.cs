@@ -22,7 +22,7 @@ namespace DigitalSputnik.Videos.iOS
 
             listener.OnResized += path =>
             {
-                output = path;
+                //output = path.Replace("file::");
                 flow = FlowState.Success;
             };
             
@@ -44,19 +44,28 @@ namespace DigitalSputnik.Videos.iOS
             var extenstion = Path.GetExtension(path);
             var directory = Path.GetDirectoryName(path) ?? "";
             var filename = Path.GetFileNameWithoutExtension(path);
-            return Path.Combine(directory, $"{filename}_temp.{extenstion}");
+            return Path.Combine(directory, $"{filename}_temp{extenstion}");
         }
 
         private static IosVideoResizerListener CreateListener()
         {
-            var go = new GameObject("iOS Video Resize Listener");
-            var listener = go.AddComponent<IosVideoResizerListener>();
+            GameObject go = null;
+            IosVideoResizerListener listener = null;
+            MainThreadRunner.Instance.EnqueueAction(() =>
+            {
+               go = new GameObject("iOS Video Resize Listener");
+               listener = go.AddComponent<IosVideoResizerListener>(); 
+            });
+            
+            while (listener == null)
+                Thread.Sleep(10);
+            
             return listener;
         }
 
         private static void CleanListener(Component listener)
         {
-            Object.Destroy(listener.gameObject);
+            MainThreadRunner.Instance.EnqueueAction(() => Object.Destroy(listener.gameObject));
         }
         
         [DllImport("__Internal")]
