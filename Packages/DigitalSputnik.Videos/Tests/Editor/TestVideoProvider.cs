@@ -11,7 +11,9 @@ namespace DigitalSputnik.Videos.Tests
                     Name = "h_chase",
                     Path = path,
                     Width = 640,
-                    Height = 360
+                    Height = 360,
+                    Fps = 30,
+                    FrameCount = 150
                 };
                 loaded?.Invoke(video);
             }

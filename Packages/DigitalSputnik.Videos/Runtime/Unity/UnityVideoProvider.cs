@@ -73,7 +73,9 @@ namespace DigitalSputnik.Videos
                     Height = (int) player.width,
                     Width = (int) player.height,
                     Name = Path.GetFileName(path),
-                    Path = path
+                    Path = path,
+                    FrameCount = player.frameCount,
+                    Fps = player.frameRate
                 };
                 
                 loaded?.Invoke(video);

@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace DigitalSputnik.Videos.Tests
 {
@@ -35,6 +37,24 @@ namespace DigitalSputnik.Videos.Tests
         public void VideoHeightMatches()
         {
             Assert.AreEqual(A.VideoTools.GetTestVideo()?.Height, A.TEST_VIDEO_HEIGHT);
+        }
+
+        [Test]
+        public void VideoFpsMatches()
+        {
+            Assert.AreEqual(A.VideoTools.GetTestVideo()?.Fps, A.TEST_VIDEO_FPS);
+        }
+        
+        [Test]
+        public void VideoFrameCountMatches()
+        {
+            Assert.AreEqual(A.VideoTools.GetTestVideo()?.FrameCount, A.TEST_VIDEO_FRAME_COUNT);
+        }
+        
+        [Test]
+        public void VideoDurationMatches()
+        {
+            Assert.AreEqual(A.VideoTools.GetTestVideo()?.Duration, A.TEST_VIDEO_DURATION);
         }
 
         [Test]
@@ -94,12 +114,28 @@ namespace DigitalSputnik.Videos.Tests
         public const string TEST_VIDEO_NAME = "h_chase";
         public const int TEST_VIDEO_WIDTH = 640;
         public const int TEST_VIDEO_HEIGHT = 360;
+        public const int TEST_VIDEO_FPS = 30;
+        public const int TEST_VIDEO_FRAME_COUNT = 150;
+        public const int TEST_VIDEO_DURATION = 5;
 
         private static IVideoProvider VideoProvider => new TestVideoProvider();
         private static IVideoResizer VideoResizer => new TestVideoResizer();
         private static ITimeProvider TimeProvider => new SystemTimeProvider();
-        public static VideoTools VideoTools => new VideoTools(VideoProvider, VideoResizer, TimeProvider);
-        public static Video GetTestVideo(this VideoTools tools) => tools.LoadVideo(TestVideoPath);
+        public static VideoTools VideoTools => new VideoTools(VideoProvider, VideoResizer);
+
+        public static Video GetTestVideo(this VideoTools tools)
+        {
+            Video video = null;
+            var time = TimeProvider;
+            var timeout = time.Epoch + 5.0f;
+            
+            tools.LoadVideo(TestVideoPath, vid => video = vid);
+
+            while (video == null && time.Epoch < timeout)
+                Thread.Sleep(10);
+
+            return video;
+        }
 
         public static string TestVideoPath
         {

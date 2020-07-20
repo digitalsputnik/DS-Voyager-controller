@@ -1,3 +1,4 @@
+#if UNITY_IOS
 using UnityEngine;
 
 namespace DigitalSputnik.Videos.iOS
@@ -24,3 +25,4 @@ namespace DigitalSputnik.Videos.iOS
         }
     }
 }
+#endif

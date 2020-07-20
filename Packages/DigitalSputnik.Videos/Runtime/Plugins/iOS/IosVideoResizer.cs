@@ -1,3 +1,4 @@
+#if UNITY_IOS
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -69,3 +70,4 @@ namespace DigitalSputnik.Videos.iOS
         }
     }
 }
+#endif
