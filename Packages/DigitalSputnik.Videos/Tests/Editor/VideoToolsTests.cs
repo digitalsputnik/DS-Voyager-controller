@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading;
 using NUnit.Framework;
-using UnityEngine;
 
 namespace DigitalSputnik.Videos.Tests
 {
@@ -91,7 +90,7 @@ namespace DigitalSputnik.Videos.Tests
             var tools = A.VideoTools;
             var video = tools.GetTestVideo();
 
-            tools.Resize(ref video, TARGET_WIDTH, TARGET_HEIGHT);
+            tools.Resize(video, TARGET_WIDTH, TARGET_HEIGHT);
             Assert.AreEqual(video.Width, TARGET_WIDTH);
         }
 
@@ -104,7 +103,7 @@ namespace DigitalSputnik.Videos.Tests
             var tools = A.VideoTools;
             var video = tools.GetTestVideo();
 
-            tools.Resize(ref video, TARGET_WIDTH, TARGET_HEIGHT);
+            tools.Resize(video, TARGET_WIDTH, TARGET_HEIGHT);
             Assert.AreEqual(video.Height, TARGET_HEIGHT);
         }
     }
@@ -145,6 +144,25 @@ namespace DigitalSputnik.Videos.Tests
                 var directory = Path.GetDirectoryName(traceFileName) ?? "";
                 return Path.Combine(directory, TEST_VIDEO_NAME + ".mp4");
             }
+        }
+
+        public static bool Resize(this VideoTools tools, Video video, int width, int height)
+        {
+            var resized = false;
+            var result = false;
+            var time = TimeProvider;
+            var timeout = time.Epoch + 5.0f;
+
+            tools.Resize(video, width, height, (success, err) =>
+            {
+                result = success;
+                resized = true;
+            });
+            
+            while (!resized && time.Epoch < timeout)
+                Thread.Sleep(10);
+            
+            return result;
         }
     }
 }

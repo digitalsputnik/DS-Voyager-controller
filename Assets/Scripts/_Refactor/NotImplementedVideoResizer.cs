@@ -5,10 +5,9 @@ namespace VoyagerApp
 {
     public class NotImplementedVideoResizer : IVideoResizer
     {
-        public bool Resize(ref Video video, int width, int height)
+        public void Resize(Video video, int width, int height, VideoResizeHandler resized)
         {
-            Debug.LogError("Using \"UnityNotImplementedVideoResizer\" to resize video.");
-            return false;
+            resized?.Invoke(false, "Using \"UnityNotImplementedVideoResizer\" to resize video.");
         }
     }
 }

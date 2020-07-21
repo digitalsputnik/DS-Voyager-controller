@@ -74,7 +74,7 @@ namespace VoyagerApp.UI.Menus
 
         private void ApplyEffectToLamp(Effect effect)
         {
-            GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+            GetComponentInParent<InspectorMenuContainer>().ShowMenu(null); // Move into initialization!
 
             if (inWorkspace)
                 SelectEffectFromWorkspace(effect);
@@ -84,12 +84,23 @@ namespace VoyagerApp.UI.Menus
 
         private void ResizeVideoEffect(Video effect)
         {
+            var item = items.FirstOrDefault(i => i.effect == effect);
+            
+            if (item == null) return;
+            
             App.VideoTools.LoadVideo(effect.path, video =>
             {  
-                new Thread(() =>
+                item.StartResizing();
+                App.VideoTools.Resize(video, maxPreferedSized.x, maxPreferedSized.y, (success, error) =>
                 {
-                    if (App.VideoTools.Resize(ref video, maxPreferedSized.x, maxPreferedSized.y))
-                        MainThreadRunner.Instance.EnqueueAction(() => ApplyEffectToLamp(effect));
+                    if (success)
+                    {
+                        effect.width = (uint) video.Width;
+                        effect.height = (uint) video.Height;
+                        
+                        item.StopResizing(effect);
+                        // ApplyEffectToLamp(effect);
+                    }
                     else
                     {
                         DialogBox.Show(
@@ -98,7 +109,7 @@ namespace VoyagerApp.UI.Menus
                             new string[] { "OK", },
                             new Action[] { null });
                     }
-                }).Start();
+                });
             });
         }
 
@@ -157,11 +168,10 @@ namespace VoyagerApp.UI.Menus
         void RemoveEffectItem(Effect effect)
         {
             var item = items.FirstOrDefault(i => i.effect == effect);
-            if (item != null)
-            {
-                items.Remove(item);
-                Destroy(item.gameObject);
-            }
+            if (item == null) return;
+            
+            items.Remove(item);
+            Destroy(item.gameObject);
         }
 
         void SelectEffectFromWorkspace(Effect effect)

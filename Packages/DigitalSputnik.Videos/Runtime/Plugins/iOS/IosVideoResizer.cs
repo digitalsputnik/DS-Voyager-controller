@@ -8,23 +8,25 @@ namespace DigitalSputnik.Videos.iOS
 {
     public class IosVideoResizer : IVideoResizer
     {
-        public bool Resize(ref Video video, int width, int height)
+        public void Resize(Video video, int width, int height, VideoResizeHandler resized)
+        {
+            new Thread(() => ResizeThread(video, width, height, resized)).Start();
+        }
+
+        private static void ResizeThread(Video video, int width, int height, VideoResizeHandler resized)
         {
             var flow = FlowState.Waiting;
             var output = MakeCopyPath(video.Path);
             var listener = CreateListener();
+            var error = string.Empty;
             
-            listener.OnError += error =>
+            listener.OnError += err =>
             {
-                Debug.LogError($"[Video Resizer] failed to resize video: {error}.");
+                error = err;
                 flow = FlowState.Failed;
             };
 
-            listener.OnResized += path =>
-            {
-                //output = path.Replace("file::");
-                flow = FlowState.Success;
-            };
+            listener.OnResized += path => flow = FlowState.Success;
             
             _iOS_VideoResizer_ResizeVideo(video.Path, output, width, height);
 
@@ -32,11 +34,16 @@ namespace DigitalSputnik.Videos.iOS
 
             CleanListener(listener);
 
-            if (flow != FlowState.Success) return false;
+            if (flow != FlowState.Success)
+                resized?.Invoke(false, error);
             
             File.Delete(video.Path);
             File.Move(output, video.Path);
-            return true;
+
+            video.Width = width;
+            video.Height = height;
+
+            MainThreadRunner.Instance.EnqueueAction(() => resized?.Invoke(true, string.Empty));
         }
 
         private static string MakeCopyPath(string path)
@@ -54,7 +61,7 @@ namespace DigitalSputnik.Videos.iOS
             MainThreadRunner.Instance.EnqueueAction(() =>
             {
                go = new GameObject("iOS Video Resize Listener");
-               listener = go.AddComponent<IosVideoResizerListener>(); 
+               listener = go.AddComponent<IosVideoResizerListener>();
             });
             
             while (listener == null)
@@ -67,7 +74,7 @@ namespace DigitalSputnik.Videos.iOS
         {
             MainThreadRunner.Instance.EnqueueAction(() => Object.Destroy(listener.gameObject));
         }
-        
+
         [DllImport("__Internal")]
         private static extern void _iOS_VideoResizer_ResizeVideo(string path, string output, int width, int height);
 

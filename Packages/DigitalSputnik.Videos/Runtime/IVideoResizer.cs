@@ -1,7 +1,9 @@
 namespace DigitalSputnik.Videos
 {
+    public delegate void VideoResizeHandler(bool success, string error);
+    
     public interface IVideoResizer
     {
-        bool Resize(ref Video video, int width, int height);
+        void Resize(Video video, int width, int height, VideoResizeHandler resized);
     }
 }

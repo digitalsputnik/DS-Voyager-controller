@@ -2,8 +2,6 @@ using System.Threading;
 
 namespace DigitalSputnik.Videos
 {
-    public delegate void VideoHandler(Video video);
-    
     public class VideoTools
     {
         private readonly IVideoProvider _provider;
@@ -20,11 +18,7 @@ namespace DigitalSputnik.Videos
             _provider.LoadVideo(path, loaded);
         }
 
-        public bool Rename(ref Video video, string name) => _provider.Rename(ref video, name);
-
-        public bool Resize(ref Video video, int width, int height)
-        {
-            return _resizer.Resize(ref video, width, height);
-        }
+        public void Rename(ref Video video, string name) => _provider.Rename(ref video, name);
+        public void Resize(Video video, int width, int height, VideoResizeHandler resized) => _resizer.Resize(video, width, height, resized);
     }
 }

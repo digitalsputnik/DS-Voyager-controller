@@ -2,8 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+// ReSharper disable Unity.PerformanceCriticalCodeNullComparison
+// ReSharper disable Unity.PerformanceCriticalCodeInvocation
+
 namespace DigitalSputnik
 {
+    /// <summary>
+    /// Running code on main thread through this class is expensive.
+    /// Should not be used in Update loop!
+    /// </summary>
     public class MainThreadRunner : MonoBehaviour
     {
         #region Singleton
@@ -31,6 +38,10 @@ namespace DigitalSputnik
 
         private readonly Queue<Action> _actions = new Queue<Action>();
 
+        /// <summary>
+        /// Enqueue the code to run in next update cycle.
+        /// </summary>
+        /// <param name="action">Action to run</param>
         public void EnqueueAction(Action action)
         {
             lock (_actions) _actions.Enqueue(action);
