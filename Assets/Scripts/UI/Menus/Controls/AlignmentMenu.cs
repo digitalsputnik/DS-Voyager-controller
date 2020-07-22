@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
@@ -9,6 +12,7 @@ namespace VoyagerApp.UI.Menus
     {
         [SerializeField] GameObject selectText = null;
         [SerializeField] GameObject selectDeselectBtn = null;
+        [SerializeField] GameObject undoBtn = null;
 
         [Header("Alignment")]
         [SerializeField] GameObject alignTitle = null;
@@ -22,15 +26,49 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] GameObject distHorizontal = null;
         [SerializeField] GameObject distVertical = null;
 
-        public void EditColorFx() => WorkspaceUtils.EnterToVideoMapping();
-        public void AlignHorizontally() => WorkspaceUtils.AlignSelectedLampsHorizontally();
-        public void AlignVertically() => WorkspaceUtils.AlignSelectedLampsVertically();
-        public void AlignFlip() => WorkspaceUtils.FlipSelectedLamps();
-        public void AliignScale() => WorkspaceUtils.ScaleSelectedLampsBasedOnBiggest();
+        List<List<LampWorkspaceState>> _states = new List<List<LampWorkspaceState>>();
 
-        public void DestributeHorizontally() => WorkspaceUtils.DistributeSelectedLampsHorizontally();
-        public void DestributeVertically() => WorkspaceUtils.DistributeSelectedLampsVertically();
+        public void EditColorFx()
+        {
+            SaveWorkspaceState();
+            WorkspaceUtils.EnterToVideoMapping();
+        }
 
+        public void AlignHorizontally()
+        {
+            SaveWorkspaceState();
+            WorkspaceUtils.AlignSelectedLampsHorizontally();
+        }
+
+        public void AlignVertically()
+        {
+            SaveWorkspaceState();
+            WorkspaceUtils.AlignSelectedLampsVertically();
+        }
+
+        public void AlignFlip()
+        {
+            SaveWorkspaceState();
+            WorkspaceUtils.FlipSelectedLamps();
+        }
+
+        public void AliignScale()
+        {
+            SaveWorkspaceState();
+            WorkspaceUtils.ScaleSelectedLampsBasedOnBiggest();
+        }
+
+        public void DestributeHorizontally()
+        {
+            SaveWorkspaceState();
+            WorkspaceUtils.DistributeSelectedLampsHorizontally();
+        }
+
+        public void DestributeVertically()
+        {
+            SaveWorkspaceState();
+            WorkspaceUtils.DistributeSelectedLampsVertically();
+        }
 
         public void SelectDeselect()
         {
@@ -38,6 +76,31 @@ namespace VoyagerApp.UI.Menus
                 WorkspaceUtils.SelectAll();
             else
                 WorkspaceUtils.DeselectAll();
+        }
+
+        public void Undo()
+        {
+            if (_states.Count > 0)
+            {
+                var states = _states[0];
+
+                foreach (var lampItem in WorkspaceUtils.LampItems)
+                {
+                    bool selected = WorkspaceSelection.instance.Contains(lampItem);
+                    var state = states.FirstOrDefault(s => s.lamp == lampItem.lamp);
+
+                    if (state != null)
+                    {
+                        WorkspaceSelection.instance.DeselectItem(lampItem);
+                        WorkspaceManager.instance.RemoveItem(lampItem);
+                        var item = state.lamp.AddToWorkspace(state.position, state.scale, state.rotation);
+                        if (selected) WorkspaceSelection.instance.SelectItem(item);
+                    }
+                }
+
+                _states.RemoveAt(0);
+            }
+            DisableEnableItems();
         }
 
         internal override void OnShow()
@@ -49,6 +112,7 @@ namespace VoyagerApp.UI.Menus
         internal override void OnHide()
         {
             WorkspaceSelection.instance.onSelectionChanged -= DisableEnableItems;
+            _states.Clear();
         }
 
         void DisableEnableItems()
@@ -61,6 +125,7 @@ namespace VoyagerApp.UI.Menus
             selectDeselectBtn
                 .GetComponentInChildren<Text>()
                 .text = all ? "DESELECT ALL" : "SELECT ALL";
+            undoBtn.SetActive(_states.Count > 0);
 
             selectText.SetActive(!one);
 
@@ -73,6 +138,12 @@ namespace VoyagerApp.UI.Menus
             distTitle.SetActive(one);
             distHorizontal.SetActive(one);
             distVertical.SetActive(one);
+        }
+
+        void SaveWorkspaceState()
+        {
+            _states.Insert(0, WorkspaceUtils.LampStates());
+            DisableEnableItems();
         }
     }
 }

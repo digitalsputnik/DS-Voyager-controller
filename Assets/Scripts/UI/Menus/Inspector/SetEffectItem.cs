@@ -45,6 +45,21 @@ namespace VoyagerApp.UI.Menus
             GetComponentInParent<SetEffectMenu>().SelectEffect(effect);
         }
 
+        public void StartResizing()
+        {
+            loadingOverlay.gameObject.SetActive(true);
+            loadingOverlay.gameObject.GetComponentInChildren<Text>().text = "RESIZING";
+            button.interactable = false;
+        }
+
+        public void StopResizing(Effect effect)
+        {
+            loadingOverlay.gameObject.SetActive(false);
+            button.interactable = true;
+            this.effect = effect;
+            SetupUI();
+        }
+
         IEnumerator WaitForAvailable()
         {
             yield return new WaitUntil(() => effect.available.value);

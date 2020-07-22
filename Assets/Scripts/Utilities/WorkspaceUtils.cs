@@ -411,5 +411,29 @@ namespace VoyagerApp.Utilities
         {
             get => SelectedLampItems.OrderBy(l => l.Order).ToList();
         }
+
+        public static List<LampWorkspaceState> LampStates()
+        {
+            var states = new List<LampWorkspaceState>();
+            foreach(var lamp in LampItems)
+            {
+                states.Add(new LampWorkspaceState
+                {
+                    lamp = lamp.lamp,
+                    position = lamp.position,
+                    scale = lamp.scale,
+                    rotation = lamp.rotation
+                });
+            }
+            return states;
+        }
+    }
+
+    public class LampWorkspaceState
+    {
+        public Lamp lamp;
+        public float2 position;
+        public float scale;
+        public float rotation;
     }
 }

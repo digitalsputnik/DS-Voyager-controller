@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -309,9 +308,9 @@ namespace VoyagerApp.UI.Menus
             }
             else
             {
-                List<string[]> all = new List<string[]>();
+                string[] ssidList = new string[0];
 
-                int finished = 0;
+                bool finished = false;
 
                 for (int i = 0; i < 4; i++)
                 {
@@ -319,28 +318,25 @@ namespace VoyagerApp.UI.Menus
                     {
                         StartCoroutine(GetSsidFromId(supportedLamps[i], (result) =>
                         {
-                            all.Add(result);
-                            finished++;
+                            ssidList = result;
+                            finished = true;
                         }));
                     }
                 }
 
                 float endTime = Time.time + _timeout;
-                while (Time.time < endTime && finished < _ids.Length)
+                while (Time.time < endTime && !finished)
                     yield return new WaitForSeconds(0.5f);
 
                 foreach (var connection in _connections)
                     BluetoothHelper.DisconnectFromPeripheral(connection.ID);
 
-                if (all.Count != 0)
+                if (ssidList.Length != 0)
                 {
-                    foreach (var ssidList in all)
+                    foreach (var ssid in ssidList)
                     {
-                        foreach (var ssid in ssidList)
-                        {
-                            if (!ssids.Contains(ssid))
-                                ssids.Add(ssid);
-                        }
+                        if (!ssids.Contains(ssid))
+                            ssids.Add(ssid);
                     }
                 }
 
