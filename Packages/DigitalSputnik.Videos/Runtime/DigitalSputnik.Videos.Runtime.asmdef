@@ -1,0 +1,15 @@
+{
+    "name": "DigitalSputnik.Videos.Runtime",
+    "references": [
+        "GUID:5756751e31f1947af93024177102cd1e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

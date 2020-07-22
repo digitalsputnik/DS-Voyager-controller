@@ -1,5 +1,5 @@
 //
-//  BluetoothInterface.m
+//  BluetoothInterface.mm
 //
 //  Created by Taavet Maask on 08.01.2020.
 //  Copyright © 2020 Taavet Maask. All rights reserved.
