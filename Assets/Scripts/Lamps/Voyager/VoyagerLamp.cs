@@ -175,6 +175,34 @@ namespace VoyagerApp.Lamps.Voyager
                 lastTimestamp = last;
             }
 
+            if (effect is Image image)
+            {
+                var start = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset;
+
+                var packet = new PacketCollection(
+                    new SetVideoPacket(1, start),
+                    new SetFpsPacket(1),
+                    new SetItshePacket(itshe)
+                );
+
+                NetUtils.VoyagerClient.KeepSendingPacket(
+                    this,
+                    "set_effect",
+                    packet,
+                    VoyagerClient.PORT_SETTINGS,
+                    last);
+
+                NetUtils.VoyagerClient.KeepSendingPacket(
+                    this,
+                    "set_fps",
+                    new SetFpsPacket(1),
+                    VoyagerClient.PORT_SETTINGS,
+                    TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset);
+
+                buffer.Setup(1);
+                lastTimestamp = last;
+            }
+
             base.SetEffect(effect);
         }
 
@@ -204,6 +232,7 @@ namespace VoyagerApp.Lamps.Voyager
                 if (!buffer.rendered)
                     buffer.Clear();
             }
+
             if (effect is SyphonStream || effect is SpoutStream)
             {
                 var packet = new PacketCollection(
@@ -217,6 +246,26 @@ namespace VoyagerApp.Lamps.Voyager
                     packet,
                     VoyagerClient.PORT_SETTINGS,
                     last);
+            }
+            
+            if (effect is Effects.Image image)
+            {
+                var start = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset;
+
+                var packet = new PacketCollection(
+                    new SetVideoPacket(1, start),
+                    new SetFpsPacket(1),
+                    new SetItshePacket(itshe)
+                );
+
+                NetUtils.VoyagerClient.KeepSendingPacket(
+                    this,
+                    "set_effect",
+                    packet,
+                    VoyagerClient.PORT_SETTINGS,
+                    last);
+
+                buffer.Clear();
             }
 
             lastTimestamp = last;

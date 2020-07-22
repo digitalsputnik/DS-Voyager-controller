@@ -131,17 +131,27 @@ namespace VoyagerApp.UI.Menus
             foreach (var lampData in data.lamps)
             {
                 var video = EffectManager.GetEffectWithId<Effects.Video>(lampData.effect);
+                var image = EffectManager.GetEffectWithId<Effects.Image>(lampData.effect);
+
                 var lamp = LampManager.instance.GetLampWithSerial(lampData.serial);
 
-                if (lamp != null && video != null)
+                if (lamp != null)
                 {
-                    lamp.effect = null;
-                    lamp.SetEffect(video);
-                    NetUtils.VoyagerClient.SendPacket(
-                        lamp,
-                        new SetPlayModePacket(PlaybackMode.Play, video.startTime, 0.0),
-                        VoyagerClient.PORT_SETTINGS
-                    );
+                    if (video != null)
+                    {
+                        lamp.effect = null;
+                        lamp.SetEffect(video);
+                        NetUtils.VoyagerClient.SendPacket(
+                            lamp,
+                            new SetPlayModePacket(PlaybackMode.Play, video.startTime, 0.0),
+                            VoyagerClient.PORT_SETTINGS
+                        );
+                    }
+                    if (image != null)
+                    {
+                        lamp.effect = null;
+                        lamp.SetEffect(image);
+                    }
                 }
             }
         }

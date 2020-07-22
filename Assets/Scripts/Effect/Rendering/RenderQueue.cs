@@ -9,6 +9,7 @@ namespace VoyagerApp.Videos
     {
         public List<Lamp> lamps = new List<Lamp>();
         public Queue<Video> videos = new Queue<Video>();
+        public Queue<Image> images = new Queue<Image>();
         public Video activeVideo = new Video();
 
         public void AddLamp(Lamp lamp)
@@ -25,6 +26,11 @@ namespace VoyagerApp.Videos
                 {
                     if (!videos.Contains(video) && video.width != 0)
                         videos.Enqueue(video);
+                }
+                else if (lamp.effect is Image image)
+                {
+                    if (!images.Contains(image) && image.image != null)
+                        images.Enqueue(image);
                 }
             }
         }

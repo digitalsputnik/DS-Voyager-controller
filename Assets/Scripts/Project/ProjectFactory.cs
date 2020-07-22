@@ -11,11 +11,11 @@ namespace VoyagerApp.Projects
 {
     public static class ProjectFactory
     {
-        public const string VERSION = "2.2.2";
+        public const string VERSION = "2.4";
 
         public static ProjectSaveData GetCurrentSaveData()
         {
-            var effectList = EffectManager.Effects.Where(e => e is Effects.Video).ToList();
+            var effectList = EffectManager.Effects.Where(e => e is Effects.Video || e is Effects.Image).ToList();
             var effects = new Effect[effectList.Count];
 
             for (int i = 0; i < effectList.Count; i++)
@@ -26,7 +26,7 @@ namespace VoyagerApp.Projects
                 {
                     if (effect.preset)
                     {
-                        var videoData = new VideoPreset
+                        effects[i] = new VideoPreset
                         {
                             id = effect.id,
                             name = effect.name,
@@ -36,12 +36,10 @@ namespace VoyagerApp.Projects
                             saturation = effect.saturation,
                             blur = effect.blur
                         };
-
-                        effects[i] = videoData;
                     }
                     else
                     {
-                        var videoData = new Video
+                        effects[i] = new Video
                         {
                             id = video.id,
                             name = video.name,
@@ -54,9 +52,22 @@ namespace VoyagerApp.Projects
                             saturation = effect.saturation,
                             blur = effect.blur
                         };
-
-                        effects[i] = videoData;
                     }
+                }
+                else if (effect is Effects.Image image)
+                {
+                    effects[i] = new Image
+                    {
+                        id = image.id,
+                        name = image.name,
+                        type = "image",
+                        data = image.image.GetRawTextureData(),
+                        
+                        lift = effect.lift,
+                        contrast = effect.contrast,
+                        saturation = effect.saturation,
+                        blur = effect.blur,
+                    };
                 }
             }
 
@@ -224,6 +235,8 @@ namespace VoyagerApp.Projects
 
             switch (version)
             {
+                case "2.4":
+                    return new ProjectParser2_4();
                 case "2.2.2":
                     return new ProjectParser2_2_2(); // HOT FIX VERSION
                 case "2.2":

@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1671,7 +1671,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.00012207031
+      value: 0.00001335144
       objectReference: {fileID: 0}
     - target: {fileID: 8440753726352283367, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -5626,7 +5626,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.0063476562}
+  m_AnchoredPosition: {x: 0, y: -0.0068359375}
   m_SizeDelta: {x: 0, y: -256.01282}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &435852501
@@ -5903,7 +5903,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.0063476562}
+  m_AnchoredPosition: {x: 0, y: -0.0068359375}
   m_SizeDelta: {x: 0, y: -256.01282}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &456226230
@@ -11646,7 +11646,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 119.15491
+      value: -0.00024414062
       objectReference: {fileID: 0}
     - target: {fileID: 8440753726352283367, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -14100,12 +14100,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1335493426}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &1342342844 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 3460918171478188068, guid: 696c43ec365ed4a45a6c16df774dc048,
-    type: 3}
-  m_PrefabInstance: {fileID: 3460918171069029508}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1348052979
 GameObject:
   m_ObjectHideFlags: 0
@@ -15919,7 +15913,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00012207031
+      value: -0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 8440753726352283367, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -16495,7 +16489,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 191.1549
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8440753726352283367, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -17966,7 +17960,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 335.15503
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8440753726352283367, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -21423,7 +21417,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.0063476562}
+  m_AnchoredPosition: {x: 0, y: -0.0068359375}
   m_SizeDelta: {x: 0, y: -256.01282}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1988088861
@@ -24655,7 +24649,7 @@ PrefabInstance:
     - target: {fileID: 222472898347849442, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.00012207031
+      value: -0.0000076293945
       objectReference: {fileID: 0}
     - target: {fileID: 222472898434721990, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -25672,17 +25666,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3460918170928807398, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
-      propertyPath: buttonPrefab
-      value: 
-      objectReference: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
-        type: 3}
-    - target: {fileID: 3460918170928807398, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
-      propertyPath: buttonContainer
-      value: 
-      objectReference: {fileID: 1342342844}
     - target: {fileID: 3460918170971012104, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -26368,11 +26351,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Joystick holder
       objectReference: {fileID: 0}
-    - target: {fileID: 4811136876639732304, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
-      propertyPath: m_Text
-      value: ADD NEW VIDEO
-      objectReference: {fileID: 0}
     - target: {fileID: 4873014093094303154, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -26401,7 +26379,7 @@ PrefabInstance:
     - target: {fileID: 4982162571616059871, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.00024414062
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5239298401100508583, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -26511,7 +26489,7 @@ PrefabInstance:
     - target: {fileID: 5986488919027459157, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -315.0254
+      value: -315.02637
       objectReference: {fileID: 0}
     - target: {fileID: 5986488919027459157, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -26716,7 +26694,7 @@ PrefabInstance:
     - target: {fileID: 7182056467811065707, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.00004196167
+      value: 0.00012207031
       objectReference: {fileID: 0}
     - target: {fileID: 7182056468412620220, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -26841,7 +26819,7 @@ PrefabInstance:
     - target: {fileID: 7602324312944798421, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_Name
-      value: Add Video Effect
+      value: Add Effect
       objectReference: {fileID: 0}
     - target: {fileID: 7602324312944798421, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}

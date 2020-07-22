@@ -9,7 +9,7 @@ namespace VoyagerApp.UI.Menus
     public class SetEffectItem : MonoBehaviour
     {
         [SerializeField] RawImage thumbnailImage = null;
-        [SerializeField] Image loadingOverlay = null;
+        [SerializeField] UnityEngine.UI.Image loadingOverlay = null;
         [SerializeField] Button removeButton = null;
         [SerializeField] Text nameText = null;
         [SerializeField] Text infoText = null;

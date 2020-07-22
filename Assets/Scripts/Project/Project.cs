@@ -11,6 +11,7 @@ using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.UI.Overlays;
+using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
 
@@ -205,6 +206,24 @@ namespace VoyagerApp.Projects
                         if (data.lamps[i].effect == videoPresetData.id)
                             data.lamps[i].effect = existingPreset.id;
                     }
+                }
+                if (effectData is Image imageData)
+                {
+                    var texture = new Texture2D(2, 2);
+                    texture.LoadRawTextureData(imageData.data);
+
+                    var image = new Effects.Image();
+                    image.id = imageData.id;
+                    image.name = imageData.name;
+                    image.image = texture;
+                    image.thumbnail = texture;
+                    image.timestamp = TimeUtils.Epoch;
+                    image.lift = imageData.lift;
+                    image.contrast = imageData.contrast;
+                    image.saturation = imageData.saturation;
+                    image.blur = imageData.blur;
+
+                    EffectManager.AddEffect(image);
                 }
             }
         }

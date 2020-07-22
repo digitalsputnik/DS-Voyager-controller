@@ -16,6 +16,7 @@ namespace VoyagerApp.UI
         [SerializeField] EffectSettingsMenu _settingsMenu = null;
         [SerializeField] VideoMapper _videoMapper = null;
         [SerializeField] StreamMapper _streamMapper = null;
+        [SerializeField] ImageMapper _imageMapper = null;
 
         [SerializeField] Button[] _playPauseStopBtns = new Button[0];
 
@@ -59,14 +60,17 @@ namespace VoyagerApp.UI
             if (effect is Video video)
             {
                 _videoMapper.SetVideo(video);
-                foreach (var button in _playPauseStopBtns)
-                    if (button != null) button.interactable = true;
+                SetButtonsInteractable(true);
+            }
+            else if (effect is Effects.Image image)
+            {
+                _imageMapper.SetImage(image);
+                SetButtonsInteractable(false);
             }
             else
             {
                 _streamMapper.SetEffect(effect);
-                foreach (var button in _playPauseStopBtns)
-                    if (button != null) button.interactable = false;
+                SetButtonsInteractable(false);
             }
 
             _mappingMenu.SetEffect(effect);
@@ -74,6 +78,13 @@ namespace VoyagerApp.UI
             _prevEffect = effect;
         }
 
+        void SetButtonsInteractable(bool interactable)
+        {
+            foreach (var button in _playPauseStopBtns)
+                if (button != null) button.interactable = interactable;
+        }
+
+        // TODO: Find some better solution here, plz!
         void PositionLampsBasedOnEffect(Effect effect, List<Lamp> lamps)
         {
             if (effect is Video)
@@ -81,12 +92,21 @@ namespace VoyagerApp.UI
                 PositionLamps(lamps, _videoMapper.transform);
                 _videoMapper.gameObject.SetActive(true);
                 _streamMapper.gameObject.SetActive(false);
+                _imageMapper.gameObject.SetActive(false);
+            }
+            if (effect is Effects.Image)
+            {
+                PositionLamps(lamps, _imageMapper.transform);
+                _videoMapper.gameObject.SetActive(false);
+                _streamMapper.gameObject.SetActive(false);
+                _imageMapper.gameObject.SetActive(true);
             }
             if (effect is SyphonStream || effect is SpoutStream)
             {
                 PositionLamps(lamps, _streamMapper.transform);
                 _videoMapper.gameObject.SetActive(false);
                 _streamMapper.gameObject.SetActive(true);
+                _imageMapper.gameObject.SetActive(false);
             }
         }
 

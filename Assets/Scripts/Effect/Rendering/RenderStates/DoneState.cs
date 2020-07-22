@@ -17,6 +17,9 @@ namespace VoyagerApp.Videos
 
         public override RenderState Update()
         {
+            if (!WorkspaceUtils.Lamps.Where(l => l.effect is Image).All(l => l.buffer.rendered))
+                return new RenderImageState();
+
             if (!WorkspaceUtils.Lamps.Where(l => l.effect is Video).All(l => l.buffer.rendered))
                 return new PrepereQueueState();
 

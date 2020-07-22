@@ -35,7 +35,7 @@ namespace VoyagerApp.UI.Menus
 
             this.effect = effect;
 
-            if (effect is Video)
+            if (effect is Video || effect is Effects.Image)
             {
                 syphonSource.transform.parent.gameObject.SetActive(false);
                 spoutSource.transform.parent.gameObject.SetActive(false);
@@ -80,8 +80,8 @@ namespace VoyagerApp.UI.Menus
             streamDelayField.onChanged += StreamDelayChanged;
             streamFpsField.onChanged += StreamFpsChanged;
 
-            streamDelayField.gameObject.SetActive(ApplicationState.DeveloperMode && !(effect is Video));
-            streamFpsField.gameObject.SetActive(ApplicationState.DeveloperMode && !(effect is Video));
+            streamDelayField.gameObject.SetActive(ApplicationState.DeveloperMode && !(effect is Video || effect is Effects.Image));
+            streamFpsField.gameObject.SetActive(ApplicationState.DeveloperMode && !(effect is Video || effect is Effects.Image));
 
             EnableDisableObjects();
         }
