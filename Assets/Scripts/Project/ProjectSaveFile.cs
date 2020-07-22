@@ -37,9 +37,23 @@ namespace VoyagerApp.Projects
     [Serializable]
     public class VideoPreset : Effect { }
 
+    [Serializable]
     public class Image : Effect
     {
         public byte[] data;
+    }
+
+    [Serializable]
+    public class Spout : Effect
+    {
+        public string source;
+    }
+     
+    [Serializable]
+    public class Syphon : Effect
+    {
+        public string server;
+        public string application;
     }
 
     [Serializable]

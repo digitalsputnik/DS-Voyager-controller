@@ -10,15 +10,15 @@ namespace VoyagerApp.Projects
 
         public ProjectSaveData Parse(string json)
         {
-            JObject jobj = JObject.Parse(json);
+            var jsonObj = JObject.Parse(json);
 
-            string version = (string)jobj["version"];
+            var version = (string)jsonObj["version"];
 
-            int effectsCount = jobj["effects"].Children().Count();
+            var effectsCount = jsonObj["effects"].Children().Count();
             var effects = new Effect[effectsCount];
-            for (int i = 0; i < effectsCount; i++)
+            for (var i = 0; i < effectsCount; i++)
             {
-                var effectToken = jobj["effects"][i];
+                var effectToken = jsonObj["effects"][i];
                 var type = (string)effectToken["type"];
 
                 var lift = (float)effectToken["lift"];
@@ -29,7 +29,7 @@ namespace VoyagerApp.Projects
                 switch (type)
                 {
                     case "video":
-                        Video video = new Video();
+                        var video = new Video();
                         video.id = (string)effectToken["id"];
                         video.file = (string)effectToken["file"];
                         video.name = (string)effectToken["name"];
@@ -43,7 +43,7 @@ namespace VoyagerApp.Projects
                         effects[i] = video;
                         break;
                     case "video_preset":
-                        VideoPreset preset = new VideoPreset();
+                        var preset = new VideoPreset();
                         preset.id = (string)effectToken["id"];
                         preset.name = (string)effectToken["name"];
                         preset.type = type;
@@ -54,7 +54,7 @@ namespace VoyagerApp.Projects
                         effects[i] = preset;
                         break;
                     case "picture":
-                        Image image = new Image();
+                        var image = new Image();
                         image.id = (string)effectToken["id"];
                         image.name = (string)effectToken["name"];
                         image.data = (byte[])effectToken["data"];
@@ -65,14 +65,35 @@ namespace VoyagerApp.Projects
                         image.blur = blur;
                         effects[i] = image;
                         break;
+                    case "syphon":
+                        var syphon = new Syphon();
+                        syphon.server = (string) effectToken["server"];
+                        syphon.application = (string) effectToken["application"];
+                        syphon.type = type;
+                        syphon.lift = lift;
+                        syphon.contrast = contrast;
+                        syphon.saturation = saturation;
+                        syphon.blur = blur;
+                        effects[i] = syphon;
+                        break;
+                    case "spout":
+                        var spout = new Spout();
+                        spout.source = (string) effectToken["source"];
+                        spout.type = type;
+                        spout.lift = lift;
+                        spout.contrast = contrast;
+                        spout.saturation = saturation;
+                        spout.blur = blur;
+                        effects[i] = spout;
+                        break;
                 }
             }
 
-            int lampsLength = jobj["lamps"].Children().Count();
+            var lampsLength = jsonObj["lamps"].Children().Count();
             var lamps = new Lamp[lampsLength];
-            for (int i = 0; i < lampsLength; i++)
+            for (var i = 0; i < lampsLength; i++)
             {
-                var lampToken = jobj["lamps"][i];
+                var lampToken = jsonObj["lamps"][i];
                 Lamp lamp = new Lamp();
                 lamp.serial = (string)lampToken["serial"];
                 lamp.length = (int)lampToken["length"];
@@ -84,11 +105,11 @@ namespace VoyagerApp.Projects
                 lamps[i] = lamp;
             }
 
-            int itemsLenght = jobj["items"].Children().Count();
-            var items = new Item[itemsLenght];
-            for (int i = 0; i < itemsLenght; i++)
+            var itemsLength = jsonObj["items"].Children().Count();
+            var items = new Item[itemsLength];
+            for (int i = 0; i < itemsLength; i++)
             {
-                var itemToken = jobj["items"][i];
+                var itemToken = jsonObj["items"][i];
                 string type = (string)itemToken["type"];
 
                 switch (type)
@@ -118,7 +139,7 @@ namespace VoyagerApp.Projects
                 }
             }
 
-            float[] camera = ((JArray)jobj["camera"]).Select(d => (float)d).ToArray();
+            var camera = ((JArray)jsonObj["camera"]).Select(d => (float)d).ToArray();
 
             return new ProjectSaveData
             {

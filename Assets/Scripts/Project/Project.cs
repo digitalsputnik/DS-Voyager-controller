@@ -134,23 +134,21 @@ namespace VoyagerApp.Projects
 
         public static void LoadWorkspace()
         {
-            if (PlayerPrefs.HasKey("workspace_temp"))
-            {
-                var json = PlayerPrefs.GetString("workspace_temp");
-                var data = WorkspaceDataParser.Parser(json);
-                LoadItems(data.items);
-                LoadCamera(data.camera);
-            }
+            if (!PlayerPrefs.HasKey("workspace_temp")) return;
+            
+            var json = PlayerPrefs.GetString("workspace_temp");
+            var data = WorkspaceDataParser.Parser(json);
+            LoadItems(data.items);
+            LoadCamera(data.camera);
         }
 
         public static ProjectSaveData GetProjectData(string json)
         {
             var parser = ProjectFactory.GetParser(json);
-            if (parser == null) return null;
-            return parser.Parse(json);
+            return parser?.Parse(json);
         }
 
-        static void Load(ProjectSaveData data, string path, bool positionsOnly)
+        private static void Load(ProjectSaveData data, string path, bool positionsOnly)
         {
             LoadEffects(ref data, path);
             LoadLamps(data.lamps, positionsOnly);
@@ -158,7 +156,7 @@ namespace VoyagerApp.Projects
             LoadCamera(data.camera);
         }
 
-        static void LoadEffects(ref ProjectSaveData data, string path)
+        private static void LoadEffects(ref ProjectSaveData data, string path)
         {
             EffectManager.Clear();
 
@@ -166,69 +164,100 @@ namespace VoyagerApp.Projects
 
             foreach (var effectData in effects)
             {
-                if (effectData is Video videoData)
+                switch (effectData)
                 {
-                    var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoData.name);
-
-                    if (existingPreset == null)
+                    case Video videoData:
                     {
-                        string vidPath = Path.Combine(path, VIDEOS, videoData.file);
-                        if (File.Exists(vidPath))
+                        var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoData.name);
+
+                        if (existingPreset == null)
                         {
-                            var vid = VideoEffectLoader.LoadNewVideoFromPath(vidPath);
-                            vid.frames = videoData.frames;
-                            vid.file = videoData.file;
-                            vid.fps = videoData.fps;
-                            vid.id = videoData.id;
-                            existingPreset = vid;
+                            var vidPath = Path.Combine(path, VIDEOS, videoData.file);
+                            if (File.Exists(vidPath))
+                            {
+                                var vid = VideoEffectLoader.LoadNewVideoFromPath(vidPath);
+                                vid.frames = videoData.frames;
+                                vid.file = videoData.file;
+                                vid.fps = videoData.fps;
+                                vid.id = videoData.id;
+                                existingPreset = vid;
+                            }
                         }
-                    }
 
-                    if (existingPreset != null)
+                        if (existingPreset != null)
+                        {
+                            existingPreset.lift = videoData.lift;
+                            existingPreset.contrast = videoData.contrast;
+                            existingPreset.saturation = videoData.saturation;
+                            existingPreset.blur = videoData.blur;
+                        }
+
+                        break;
+                    }
+                    case VideoPreset videoPresetData:
                     {
-                        existingPreset.lift = videoData.lift;
-                        existingPreset.contrast = videoData.contrast;
-                        existingPreset.saturation = videoData.saturation;
-                        existingPreset.blur = videoData.blur;
+                        var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoPresetData.name);
+
+                        existingPreset.lift = videoPresetData.lift;
+                        existingPreset.contrast = videoPresetData.contrast;
+                        existingPreset.saturation = videoPresetData.saturation;
+                        existingPreset.blur = videoPresetData.blur;
+
+                        for (int i = 0; i < data.lamps.Length; i++)
+                        {
+                            if (data.lamps[i].effect == videoPresetData.id)
+                                data.lamps[i].effect = existingPreset.id;
+                        }
+
+                        break;
                     }
-                }
-                else if (effectData is VideoPreset videoPresetData)
-                {
-                    var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoPresetData.name);
-
-                    existingPreset.lift = videoPresetData.lift;
-                    existingPreset.contrast = videoPresetData.contrast;
-                    existingPreset.saturation = videoPresetData.saturation;
-                    existingPreset.blur = videoPresetData.blur;
-
-                    for (int i = 0; i < data.lamps.Length; i++)
+                    case Image imageData:
                     {
-                        if (data.lamps[i].effect == videoPresetData.id)
-                            data.lamps[i].effect = existingPreset.id;
+                        var texture = new Texture2D(2, 2);
+                        texture.LoadRawTextureData(imageData.data);
+
+                        var image = new Effects.Image
+                        {
+                            id = imageData.id,
+                            name = imageData.name,
+                            image = texture,
+                            thumbnail = texture,
+                            timestamp = TimeUtils.Epoch,
+                            lift = imageData.lift,
+                            contrast = imageData.contrast,
+                            saturation = imageData.saturation,
+                            blur = imageData.blur
+                        };
+
+                        EffectManager.AddEffect(image);
+                        break;
                     }
-                }
-                if (effectData is Image imageData)
-                {
-                    var texture = new Texture2D(2, 2);
-                    texture.LoadRawTextureData(imageData.data);
-
-                    var image = new Effects.Image();
-                    image.id = imageData.id;
-                    image.name = imageData.name;
-                    image.image = texture;
-                    image.thumbnail = texture;
-                    image.timestamp = TimeUtils.Epoch;
-                    image.lift = imageData.lift;
-                    image.contrast = imageData.contrast;
-                    image.saturation = imageData.saturation;
-                    image.blur = imageData.blur;
-
-                    EffectManager.AddEffect(image);
+                    case Syphon syphonData:
+                        if (EffectManager.Effects.FirstOrDefault(e => e is SyphonStream) is SyphonStream syphon)
+                        {
+                            syphon.server = syphonData.server;
+                            syphon.application = syphonData.application;
+                            syphon.lift = syphonData.lift;
+                            syphon.contrast = syphonData.contrast;
+                            syphon.saturation = syphonData.saturation;
+                            syphon.blur = syphonData.blur;
+                        }
+                        break;
+                    case Spout spoutData:
+                        if (EffectManager.Effects.FirstOrDefault(e => e is SpoutStream) is SpoutStream spout)
+                        {
+                            spout.source = spoutData.source;
+                            spout.lift = spoutData.lift;
+                            spout.contrast = spoutData.contrast;
+                            spout.saturation = spoutData.saturation;
+                            spout.blur = spoutData.blur;
+                        }
+                        break;
                 }
             }
         }
 
-        static void LoadLamps(Lamp[] lamps, bool positionsOnly)
+        private static void LoadLamps(Lamp[] lamps, bool positionsOnly)
         {
             foreach (var lampData in lamps)
             {
@@ -279,7 +308,7 @@ namespace VoyagerApp.Projects
             }
         }
 
-        static void LoadItems(Item[] items)
+        private static void LoadItems(IEnumerable<Item> items)
         {
             WorkspaceManager.instance.Clear();
 
@@ -311,7 +340,7 @@ namespace VoyagerApp.Projects
             }
         }
 
-        static void LoadCamera(float[] camera)
+        private static void LoadCamera(IReadOnlyList<float> camera)
         {
             var cam = Camera.main;
 
@@ -441,8 +470,8 @@ namespace VoyagerApp.Projects
         {
             get
             {
-                string persistant = Application.persistentDataPath;
-                string projects = Path.Combine(persistant, PROJECTS_DIRECTORY);
+                var persistent = Application.persistentDataPath;
+                var projects = Path.Combine(persistent, PROJECTS_DIRECTORY);
 
                 if (!Directory.Exists(projects))
                     Directory.CreateDirectory(projects);

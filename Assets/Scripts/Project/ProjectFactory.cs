@@ -15,30 +15,27 @@ namespace VoyagerApp.Projects
 
         public static ProjectSaveData GetCurrentSaveData()
         {
-            var effectList = EffectManager.Effects.Where(e => e is Effects.Video || e is Effects.Image).ToList();
+            var effectList = EffectManager.Effects.Where(e => e is Effects.Video ||
+                                                              e is Effects.Image ||
+                                                              e is SpoutStream ||
+                                                              e is SyphonStream).ToList();
             var effects = new Effect[effectList.Count];
 
-            for (int i = 0; i < effectList.Count; i++)
+            for (var i = 0; i < effectList.Count; i++)
             {
                 var effect = effectList[i];
 
-                if (effect is Effects.Video video)
+                switch (effect)
                 {
-                    if (effect.preset)
-                    {
+                    case Effects.Video _ when effect.preset:
                         effects[i] = new VideoPreset
                         {
                             id = effect.id,
                             name = effect.name,
-                            type = "video_preset",
-                            lift = effect.lift,
-                            contrast = effect.contrast,
-                            saturation = effect.saturation,
-                            blur = effect.blur
+                            type = "video_preset"
                         };
-                    }
-                    else
-                    {
+                        break;
+                    case Effects.Video video:
                         effects[i] = new Video
                         {
                             id = video.id,
@@ -46,34 +43,44 @@ namespace VoyagerApp.Projects
                             type = "video",
                             file = video.file,
                             frames = video.frames,
-                            fps = video.fps,
-                            lift = effect.lift,
-                            contrast = effect.contrast,
-                            saturation = effect.saturation,
-                            blur = effect.blur
+                            fps = video.fps
                         };
-                    }
+                        break;
+                    case Effects.Image image:
+                        effects[i] = new Image
+                        {
+                            id = image.id,
+                            name = image.name,
+                            type = "image",
+                            data = image.image.GetRawTextureData()
+                        };
+                        break;
+                    case SyphonStream syphon:
+                        effects[i] = new Syphon
+                        {
+                            type = "syphon",
+                            server = syphon.server,
+                            application = syphon.application
+                        };
+                        break;
+                    case SpoutStream spout:
+                        effects[i] = new Spout
+                        {
+                            type = "spot",
+                            source = spout.source
+                        };
+                        break;
                 }
-                else if (effect is Effects.Image image)
-                {
-                    effects[i] = new Image
-                    {
-                        id = image.id,
-                        name = image.name,
-                        type = "image",
-                        data = image.image.GetRawTextureData(),
-                        
-                        lift = effect.lift,
-                        contrast = effect.contrast,
-                        saturation = effect.saturation,
-                        blur = effect.blur,
-                    };
-                }
+
+                effects[i].lift = effect.lift;
+                effects[i].contrast = effect.contrast;
+                effects[i].saturation = effect.saturation;
+                effects[i].blur = effect.blur;
             }
 
             var lamps = new Lamp[LampManager.instance.Lamps.Count];
 
-            for (int i = 0; i < lamps.Length; i++)
+            for (var i = 0; i < lamps.Length; i++)
             {
                 var lamp = LampManager.instance.Lamps[i];
 
@@ -108,51 +115,57 @@ namespace VoyagerApp.Projects
 
             foreach (var item in WorkspaceManager.instance.Items)
             {
-                if (item is LampItemView lampItem)
+                switch (item)
                 {
-                    var itemData = new LampItem
+                    case LampItemView lampItem:
                     {
-                        type = "voyager_lamp",
-                        serial = lampItem.lamp.serial,
-                        position = new float[]
+                        var itemData = new LampItem
                         {
-                            lampItem.position.x,
-                            lampItem.position.y
-                        },
-                        rotation = lampItem.rotation,
-                        scale = lampItem.scale
-                    };
+                            type = "voyager_lamp",
+                            serial = lampItem.lamp.serial,
+                            position = new[]
+                            {
+                                lampItem.position.x,
+                                lampItem.position.y
+                            },
+                            rotation = lampItem.rotation,
+                            scale = lampItem.scale
+                        };
 
-                    items.Add(itemData);
-                }
-
-                if (item is PictureItemView pictureItem)
-                {
-                    var itemData = new PictureItem
+                        items.Add(itemData);
+                        break;
+                    }
+                    case PictureItemView pictureItem:
                     {
-                        type = "picture",
-                        width = pictureItem.picture.width,
-                        height = pictureItem.picture.height,
-                        data = pictureItem.picture.EncodeToJPG(),
-                        order = pictureItem.GetOrder(),
-                        position = new float[]
+                        var itemData = new PictureItem
                         {
-                            pictureItem.position.x,
-                            pictureItem.position.y
-                        },
-                        rotation = pictureItem.rotation,
-                        scale = pictureItem.scale
-                    };
+                            type = "picture",
+                            width = pictureItem.picture.width,
+                            height = pictureItem.picture.height,
+                            data = pictureItem.picture.EncodeToJPG(),
+                            order = pictureItem.GetOrder(),
+                            position = new float[]
+                            {
+                                pictureItem.position.x,
+                                pictureItem.position.y
+                            },
+                            rotation = pictureItem.rotation,
+                            scale = pictureItem.scale
+                        };
 
-                    items.Add(itemData);
+                        items.Add(itemData);
+                        break;
+                    }
                 }
             }
 
-            Camera camera = Camera.main;
-            var cameraData = new float[]
+            var camera = Camera.main;
+            var position = camera.transform.position;
+            
+            var cameraData = new[]
             {
-                camera.transform.position.x,
-                camera.transform.position.y,
+                position.x,
+                position.y,
                 camera.orthographicSize
             };
 

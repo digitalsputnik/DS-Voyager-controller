@@ -86,11 +86,11 @@ Material:
     - _Parallax: 0.02
     - _QueueOffset: 0
     - _SampleGI: 0
-    - _Saturation: 1.67
+    - _Saturation: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StandardDeviation: 0.1
+    - _StandardDeviation: 0
     - _Surface: 0
     - _UVSec: 0
     - _ZWrite: 1
