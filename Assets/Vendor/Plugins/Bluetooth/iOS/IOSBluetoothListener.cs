@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿#if UNITY_IOS
+using System;
 using UnityEngine;
 
 namespace DigitalSputnik.Bluetooth
@@ -19,8 +19,8 @@ namespace DigitalSputnik.Bluetooth
         #region Callbacks From iOS
         public void PeripheralScanned(string raw)
         {
-            string[] fields = raw.Split('|');
-            string name = fields[1] == "(null)" ? "Unknown" : fields[1];
+            var fields = raw.Split('|');
+            var name = fields[1] == "(null)" ? "Unknown" : fields[1];
             OnPeripheralScanned?.Invoke(fields[0], name, int.Parse(fields[2]));
         }
 
@@ -80,10 +80,10 @@ namespace DigitalSputnik.Bluetooth
 
             if (string.IsNullOrEmpty(error))
             {
-                string stringData = "";
-                for (int i = 4; i < fields.Length; i++)
+                var stringData = "";
+                for (var i = 4; i < fields.Length; i++)
                     stringData += fields[i];
-                byte[] data = Convert.FromBase64String(stringData);
+                var data = Convert.FromBase64String(stringData);
                 OnCharacteristicUpdate?.Invoke(id, service, characteristic, error, data);
             }
             else
@@ -101,3 +101,4 @@ namespace DigitalSputnik.Bluetooth
     internal delegate void IosCharacteristicsHandler(string peripheral, string service, string[] characteristics, string error);
     internal delegate void IosCharacteristicUpdateHandler(string peripheral, string service, string characteristic, string error, byte[] data);
 }
+#endif
