@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Crosstales.Common.Model.Enum;
 using DigitalSputnik.Bluetooth;
 using Unity.Mathematics;
 using UnityEngine;
@@ -60,26 +60,32 @@ namespace VoyagerApp.UI.Menus
             StopCoroutine(AddLampsAgain());
         }
 
-        void ScanBluetooth()
+        private void Update()
+        {
+            foreach (var item in items.ToArray())
+            {
+                if (!item.lamp.connected)
+                    RemoveLampItem(item, false);
+            }
+        }
+
+        private void ScanBluetooth()
         {
             BluetoothHelper.StartScanningForLamps(LampScanned);
         }
 
-        void LampScanned(PeripheralInfo peripheral)
+        private void LampScanned(PeripheralInfo peripheral)
         {
-            if (ValidateBluetoothPeripheral(peripheral.name))
-            {
-                BluetoothHelper.StopScanningForLamps();
-                bluetoothBtn.SetActive(true);
-            }
+            if (!ValidateBluetoothPeripheral(peripheral.name))
+                return;
+            
+            BluetoothHelper.StopScanningForLamps();
+            bluetoothBtn.SetActive(true);
         }
 
-        bool ValidateBluetoothPeripheral(string name)
+        private static bool ValidateBluetoothPeripheral(string name)
         {
-            return !LampManager.instance.Lamps.Any(l =>
-            {
-                return l.serial == name && l.connected;
-            });
+            return !LampManager.instance.Lamps.Any(l => l.serial == name && l.connected);
         }
 
         void NewProject()
@@ -159,18 +165,18 @@ namespace VoyagerApp.UI.Menus
             CheckForAddAllLampsButton();
         }
 
-        void OnLampAdded(Lamp lamp)
+        private void OnLampAdded(Lamp lamp)
         {
-            if (!WorkspaceUtils.Lamps.Any(l => l == lamp) &&
-                !items.Any(i => i.lamp == lamp) &&
-                lamp.connected &&
-                math.abs(NetUtils.VoyagerClient.TimeOffset) > 0.01f)
-            {
-                AddLampItem item = Instantiate(prefab, container);
-                item.SetLamp(lamp);
-                items.Add(item);
-                CheckForAddAllLampsButton();
-            }
+            if (WorkspaceUtils.Lamps.Any(l => l == lamp) ||
+                items.Any(i => i.lamp == lamp) ||
+                !lamp.connected ||
+                !(math.abs(NetUtils.VoyagerClient.TimeOffset) > 0.01f))
+                return;
+            
+            var item = Instantiate(prefab, container);
+            item.SetLamp(lamp);
+            items.Add(item);
+            CheckForAddAllLampsButton();
         }
 
         void CheckForAddAllLampsButton()
