@@ -9,7 +9,9 @@ namespace VoyagerApp.UI.Menus
 {
     public class SetupMenu : Menu
     {
+        [SerializeField] InspectorMenuContainer inspectorMenuContainer = null;
         [SerializeField] GameObject developmentBtn = null;
+        [SerializeField] Menu Tutorial = null;
 
         internal override void OnShow()
         {
@@ -37,7 +39,20 @@ namespace VoyagerApp.UI.Menus
 
         public void OpenHelp()
         {
-            Application.OpenURL(ApplicationSettings.HELP_URL);
+            DialogBox.Show(
+                "Help",
+                "Would you like to do the tutorial again or get to the help page?",
+                new string[] { "TUTORIAL", "HELP PAGE" },
+                new Action[] {
+                    () =>
+                    {
+                        DialogBox.PauseDialogues();
+                        inspectorMenuContainer.ShowMenu(Tutorial);
+                    }
+                    ,
+                    () => { Application.OpenURL(ApplicationSettings.HELP_URL); }
+                }
+            );
         }
     }
 }
