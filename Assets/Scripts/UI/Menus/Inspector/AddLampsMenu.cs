@@ -32,6 +32,8 @@ namespace VoyagerApp.UI.Menus
             addAllLampsBtn.gameObject.SetActive(false);
             AddLampsToList();
 
+            RemoveWorkspaceLampsFromList();
+
             bluetoothBtn.SetActive(false);
 
             if (!BluetoothHelper.IsInitialized)
@@ -58,6 +60,15 @@ namespace VoyagerApp.UI.Menus
             BluetoothHelper.StopScanningForLamps();
 
             StopCoroutine(AddLampsAgain());
+        }
+
+        void RemoveWorkspaceLampsFromList()
+        {
+            foreach (var lamp in items.ToArray())
+            {
+                if (WorkspaceUtils.Lamps.Any(l => l.serial == lamp.lamp.serial))
+                    RemoveLampItem(lamp, false);
+            }
         }
 
         private void Update()
@@ -92,8 +103,7 @@ namespace VoyagerApp.UI.Menus
         {
             foreach (var item in items.ToArray())
             {
-                items.Remove(item);
-                Destroy(item);
+                RemoveLampItem(item, false);
             }
         }
 
@@ -118,7 +128,9 @@ namespace VoyagerApp.UI.Menus
             {
                 var addItem = items.FirstOrDefault(v => v.lamp == view.lamp);
                 if (addItem != null)
+                {
                     RemoveLampItem(addItem, true);
+                }
             }
         }
 
@@ -167,12 +179,15 @@ namespace VoyagerApp.UI.Menus
 
         private void OnLampAdded(Lamp lamp)
         {
+            Debug.Log("OnLampAdded: " + lamp.serial);
             if (WorkspaceUtils.Lamps.Any(l => l == lamp) ||
                 items.Any(i => i.lamp == lamp) ||
                 !lamp.connected ||
                 !(math.abs(NetUtils.VoyagerClient.TimeOffset) > 0.01f))
                 return;
-            
+
+            Debug.Log("Didn't return");
+
             var item = Instantiate(prefab, container);
             item.SetLamp(lamp);
             items.Add(item);

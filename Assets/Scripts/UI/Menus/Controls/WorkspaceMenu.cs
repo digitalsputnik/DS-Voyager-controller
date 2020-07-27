@@ -59,6 +59,7 @@ namespace VoyagerApp.UI.Menus
         {
             WorkspaceSelection.instance.onSelectionChanged += DisableEnableItems;
             WorkspaceManager.instance.onItemAdded += ItemAddedToWorkspace;
+            WorkspaceManager.instance.onItemRemoved += ItemRemovedWorkspace;
             DisableEnableItems();
         }
 
@@ -66,9 +67,15 @@ namespace VoyagerApp.UI.Menus
         {
             WorkspaceSelection.instance.onSelectionChanged -= DisableEnableItems;
             WorkspaceManager.instance.onItemAdded -= ItemAddedToWorkspace;
+            WorkspaceManager.instance.onItemRemoved -= ItemRemovedWorkspace;
         }
 
         void ItemAddedToWorkspace(WorkspaceItemView item)
+        {
+            DisableEnableItems();
+        }
+
+        void ItemRemovedWorkspace(WorkspaceItemView item)
         {
             DisableEnableItems();
         }

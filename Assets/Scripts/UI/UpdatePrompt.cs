@@ -49,7 +49,7 @@ namespace VoyagerApp.UI
 
         void OnLampsOutdated()
         {
-            if (container.current == updateMenu || showing) return;
+            if (showing) return;
 
             showing = true;
 

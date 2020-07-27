@@ -1695,7 +1695,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00001335144
+      value: -0.00012207031
       objectReference: {fileID: 0}
     - target: {fileID: 8440753726352283367, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -10548,6 +10548,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 819898901}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &832248920 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1196887077}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &865022556
 GameObject:
   m_ObjectHideFlags: 0
@@ -13432,6 +13444,7 @@ MonoBehaviour:
   divisionDropdown: {fileID: 1917587851}
   protocolDropdown: {fileID: 2038180775}
   formatDropdown: {fileID: 347360779}
+  setButton: {fileID: 832248920}
   stackIncreasement: 4
 --- !u!225 &1225778225
 CanvasGroup:
@@ -15988,7 +16001,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000061035156
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8440753726352283367, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -16564,7 +16577,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -0.000030517578
       objectReference: {fileID: 0}
     - target: {fileID: 8440753726352283367, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -18554,7 +18567,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -0.000030517578
       objectReference: {fileID: 0}
     - target: {fileID: 8440753726352283367, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -21383,6 +21396,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1166860731073187651, guid: 2b53f6402f71643cf8de86b447b449ae,
         type: 3}
+      propertyPath: m_Options.m_Options.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1166860731073187651, guid: 2b53f6402f71643cf8de86b447b449ae,
+        type: 3}
       propertyPath: m_Options.m_Options.Array.data[0].m_Text
       value: PER LAMP
       objectReference: {fileID: 0}
@@ -21395,6 +21413,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Options.m_Options.Array.data[2].m_Text
       value: PER PIXEL
+      objectReference: {fileID: 0}
+    - target: {fileID: 1166860731073187651, guid: 2b53f6402f71643cf8de86b447b449ae,
+        type: 3}
+      propertyPath: m_Options.m_Options.Array.data[3].m_Text
+      value: PER HALF
       objectReference: {fileID: 0}
     - target: {fileID: 1166860732147135832, guid: 2b53f6402f71643cf8de86b447b449ae,
         type: 3}
@@ -23926,7 +23949,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00012207031
+      value: -0.00005531311
       objectReference: {fileID: 0}
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -25267,7 +25290,7 @@ PrefabInstance:
     - target: {fileID: 222472898347849442, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.0000076293945
+      value: -0.000019073486
       objectReference: {fileID: 0}
     - target: {fileID: 222472898434721990, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}

@@ -39,10 +39,14 @@ namespace VoyagerApp.UI.Menus
 
         bool _loading;
         string[] _ids;
+
         List<BluetoothConnection> _connections = new List<BluetoothConnection>();
 
         internal override void OnShow()
         {
+            if (PlayerPrefs.HasKey("last_ble_ssid"))
+                _ssidField.text = PlayerPrefs.GetString("last_ble_ssid");
+
             _statusText.SetActive(false);
             _bleInfoText.SetActive(true);
 
@@ -107,6 +111,7 @@ namespace VoyagerApp.UI.Menus
             if (password.Length >= 8 && ssid.Length != 0 || password.Length == 0 && ssid.Length != 0)
             {
                 StartCoroutine(IEnumSetWifiSettings(ssid, password));
+                PlayerPrefs.SetString("last_ble_ssid", ssid);
             }
             else if (ssid.Length == 0)
             {

@@ -18,6 +18,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Dropdown divisionDropdown  = null;
         [SerializeField] Dropdown protocolDropdown  = null;
         [SerializeField] Dropdown formatDropdown    = null;
+        [SerializeField] Button setButton           = null;
         [Space(5)]
         [SerializeField] int stackIncreasement = 4;
 
@@ -29,6 +30,11 @@ namespace VoyagerApp.UI.Menus
         {
             base.Start();
             SubscribeToEvents();
+        }
+
+        void Update()
+        {
+            setButton.interactable = WorkspaceUtils.AtLastOneLampSelected;
         }
 
         void SubscribeToEvents()
