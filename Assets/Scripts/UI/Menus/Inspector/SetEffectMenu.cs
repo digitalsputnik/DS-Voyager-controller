@@ -22,6 +22,7 @@ namespace VoyagerApp.UI.Menus
 
         List<SetEffectItem> items = new List<SetEffectItem>();
 
+<<<<<<< Updated upstream
         public void AddVideoEffectClick()
         {
             FileUtils.LoadVideoFromDevice(path =>
@@ -32,6 +33,41 @@ namespace VoyagerApp.UI.Menus
                     video.timestamp = TimeUtils.Epoch;
                     OrderEffects();
                 }
+=======
+        public void AddEffectClicked()
+        {
+            DialogBox.Show(
+                "Add Effect",
+                "Pick which effect you want to add",
+                new string[] { "IMAGE", "VIDEO", "CANCEL" },
+                new Action[] { AddImageEffectClicked, AddVideoEffectClick, null }
+            );
+        }
+
+        private void AddImageEffectClicked()
+        {
+            FileUtils.LoadPictureFromDevice(path =>
+            {
+                if (path == "" || path == "Null" || path == null)
+                    return;
+                
+                var image = ImageEffectLoader.LoadImageFromPath(path);
+                image.timestamp = TimeUtils.Epoch;
+                OrderEffects();
+            });
+        }
+
+        private void AddVideoEffectClick()
+        {
+            FileUtils.LoadVideoFromDevice(path =>
+            {
+                if (path == "" || path == "Null" || path == null)
+                    return;
+                
+                var video = VideoEffectLoader.LoadNewVideoFromPath(path);
+                video.timestamp = TimeUtils.Epoch;
+                OrderEffects();
+>>>>>>> Stashed changes
             });
         }
 

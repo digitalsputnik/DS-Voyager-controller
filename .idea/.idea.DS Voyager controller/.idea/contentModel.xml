@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$PROJECT_DIR$" t="IncludeRecursive">
+      <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Editor" t="Include">
+          <e p="MenuItems.cs" t="Include" />
+          <e p="PostBuildProcess.cs" t="Include" />
+        </e>
+        <e p="Graphics" t="Include">
+          <e p="Materials" t="Include">
+            <e p="background_grid.shader" t="Include" />
+            <e p="BlurShader.shader" t="Include" />
+            <e p="dmx.shader" t="Include" />
+            <e p="LiftContrastSaturationBlur.shader" t="Include" />
+          </e>
+        </e>
+        <e p="Scripts" t="Include">
+          <e p="_Refactor" t="Include">
+            <e p="App.cs" t="Include" />
+            <e p="Effects" t="Include">
+              <e p="Effect.cs" t="Include" />
+              <e p="EffectLoader.cs" t="Include" />
+              <e p="EffectMeta.cs" t="Include" />
+              <e p="EffectSettings.cs" t="Include" />
+              <e p="Implementation" t="Include">
+                <e p="VideoEffect.cs" t="Include" />
+              </e>
+            </e>
+            <e p="NotImplementedVideoResizer.cs" t="Include" />
+          </e>
+          <e p="Bluetooth" t="Include">
+            <e p="BluetoothConnection.cs" t="Include" />
+            <e p="BluetoothDevice.cs" t="Include" />
+            <e p="BluetoothHelper.cs" t="Include" />
+          </e>
+          <e p="Commands" t="Include">
+            <e p="ICommand.cs" t="Include" />
+            <e p="SendPacketCommand.cs" t="Include" />
+          </e>
+          <e p="Dmx" t="Include">
+            <e p="DmxFormat.cs" t="Include" />
+            <e p="DmxProtocol.cs" t="Include" />
+            <e p="DmxSettings.cs" t="Include" />
+          </e>
+          <e p="Effect" t="Include">
+            <e p="Effect.cs" t="Include" />
+            <e p="EffectManager.cs" t="Include" />
+            <e p="EffectMapping.cs" t="Include" />
+            <e p="ImageEffectLoader.cs" t="Include" />
+            <e p="ImageMapper.cs" t="Include" />
+            <e p="Rendering" t="Include">
+              <e p="RenderQueue.cs" t="Include" />
+              <e p="RenderState.cs" t="Include" />
+              <e p="RenderStates" t="Include">
+                <e p="ConfirmPixelsState.cs" t="Include" />
+                <e p="DoneState.cs" t="Include" />
+                <e p="FramesRenderState.cs" t="Include" />
+                <e p="FullRenderState.cs" t="Include" />
+                <e p="PrepereQueueState.cs" t="Include" />
+                <e p="ProcessQueueState.cs" t="Include" />
+                <e p="RenderImageState.cs" t="Include" />
+                <e p="ResendBufferState.cs" t="Include" />
+              </e>
+              <e p="VideoRenderer.cs" t="Include" />
+            </e>
+            <e p="StreamMapper.cs" t="Include" />
+            <e p="VideoEffectBuffer.cs" t="Include" />
+            <e p="VideoEffectLoader.cs" t="Include" />
+          </e>
+          <e p="Itsh" t="Include">
+            <e p="Itsh.cs" t="Include" />
+            <e p="Itshe.cs" t="Include" />
+          </e>
+          <e p="Lamps" t="Include">
+            <e p="Lamp.cs" t="Include" />
+            <e p="LampManager.cs" t="Include" />
+            <e p="UpdateSettings.cs" t="Include" />
+            <e p="Voyager" t="Include">
+              <e p="VoyagerDataProcessor.cs" t="Include" />
+              <e p="VoyagerLamp.cs" t="Include" />
+              <e p="VoyagerLampInfoResponse.cs" t="Include" />
+              <e p="VoyagerNetworkMode.cs" t="Include" />
+              <e p="VoyagerUpdateUtility.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Networking" t="Include">
+            <e p="NetworkManager.cs" t="Include" />
+            <e p="RudpClient.cs" t="Include" />
+            <e p="TimesyncOffset.cs" t="Include" />
+            <e p="Voyager" t="Include">
+              <e p="OpCode.cs" t="Include" />
+              <e p="Packet.cs" t="Include" />
+              <e p="PacketCollection.cs" t="Include" />
+              <e p="Packets" t="Include">
+                <e p="BleChipVersion.cs" t="Include" />
+                <e p="BleSerialPacket.cs" t="Include" />
+                <e p="DmxModeRequest.cs" t="Include" />
+                <e p="DmxModeResponse.cs" t="Include" />
+                <e p="FpsRequestPacket.cs" t="Include" />
+                <e p="FpsResponsePacket.cs" t="Include" />
+                <e p="MissingFramesRequestPacket.cs" t="Include" />
+                <e p="MissingFramesResponsePacket.cs" t="Include" />
+                <e p="PixelOverridePacket.cs" t="Include" />
+                <e p="PollRequestPacket.cs" t="Include" />
+                <e p="SetDmxModePacket.cs" t="Include" />
+                <e p="SetEffectPacket.cs" t="Include" />
+                <e p="SetFpsPacket.cs" t="Include" />
+                <e p="SetFramePacket.cs" t="Include" />
+                <e p="SetGlobalIntensityPacket.cs" t="Include" />
+                <e p="SetItshePacket.cs" t="Include" />
+                <e p="SetPlayModePacket.cs" t="Include" />
+                <e p="SetStreamPacket.cs" t="Include" />
+                <e p="SetVideoPacket.cs" t="Include" />
+                <e p="SsidListRequestPacket.cs" t="Include" />
+                <e p="SsidListResponsePacket.cs" t="Include" />
+                <e p="StreamFramePacket.cs" t="Include" />
+                <e p="VideoRequestPacket.cs" t="Include" />
+                <e p="VideoResponsePacket.cs" t="Include" />
+              </e>
+              <e p="VoyagerClient.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Project" t="Include">
+            <e p="IProjectParser.cs" t="Include" />
+            <e p="Project.cs" t="Include" />
+            <e p="ProjectFactory.cs" t="Include" />
+            <e p="ProjectParser2_0.cs" t="Include" />
+            <e p="ProjectParser2_1.cs" t="Include" />
+            <e p="ProjectParser2_2.cs" t="Include" />
+            <e p="ProjectParser2_2_2.cs" t="Include" />
+            <e p="ProjectParser2_4.cs" t="Include" />
+            <e p="ProjectSaveFile.cs" t="Include" />
+            <e p="WorkspaceDataParser.cs" t="Include" />
+          </e>
+          <e p="UI" t="Include">
+            <e p="ApplicationSettings.cs" t="Include" />
+            <e p="ApplicationState.cs" t="Include" />
+            <e p="CameraMove.cs" t="Include" />
+            <e p="CheckingForOtherControllers.cs" t="Include" />
+            <e p="ColorWheelButton.cs" t="Include" />
+            <e p="ColorwheelManager.cs" t="Include" />
+            <e p="DebugPanel.cs" t="Include" />
+            <e p="DialogBox.cs" t="Include" />
+            <e p="EventValue.cs" t="Include" />
+            <e p="InputFieldMenu.cs" t="Include" />
+            <e p="InspectorMenuContainer.cs" t="Include" />
+            <e p="ListPicker.cs" t="Include" />
+            <e p="ListPickerMenu.cs" t="Include" />
+            <e p="LoadingBar.cs" t="Include" />
+            <e p="MainController.cs" t="Include" />
+            <e p="Menu.cs" t="Include" />
+            <e p="MenuContainer.cs" t="Include" />
+            <e p="Menus" t="Include">
+              <e p="Color Wheel" t="Include">
+                <e p="ColorWheelEventSystem.cs" t="Include" />
+                <e p="ColorWheelMenu.cs" t="Include" />
+              </e>
+              <e p="Controls" t="Include">
+                <e p="AlignmentMenu.cs" t="Include" />
+                <e p="AppSettingsMenu.cs" t="Include" />
+                <e p="DeveloperMenu.cs" t="Include" />
+                <e p="EffectMappingMenu.cs" t="Include" />
+                <e p="EffectSettingsMenu.cs" t="Include" />
+                <e p="LampSettingsMenu.cs" t="Include" />
+                <e p="NetworkSettingsMenu.cs" t="Include" />
+                <e p="SetupMenu.cs" t="Include" />
+                <e p="WorkspaceMenu.cs" t="Include" />
+              </e>
+              <e p="Inspector" t="Include">
+                <e p="AboutMenu.cs" t="Include" />
+                <e p="AddBluetoothLampsMenu.cs" t="Include" />
+                <e p="AddLampsMenu.cs" t="Include" />
+                <e p="BluetoothClientModeMenu.cs" t="Include" />
+                <e p="ClientModeMenu.cs" t="Include" />
+                <e p="CreateGroupMenu.cs" t="Include" />
+                <e p="DmxSettingsMenu.cs" t="Include" />
+                <e p="LoadMenu.cs" t="Include" />
+                <e p="MasterModeMultipleMenu.cs" t="Include" />
+                <e p="PickVideoMenu.cs" t="Include" />
+                <e p="RouterModeMenu.cs" t="Include" />
+                <e p="SaveMenu.cs" t="Include" />
+                <e p="SetEffectItem.cs" t="Include" />
+                <e p="SetEffectMenu.cs" t="Include" />
+                <e p="SliderToggle.cs" t="Include" />
+              </e>
+              <e p="Items" t="Include">
+                <e p="AddLampItem.cs" t="Include" />
+                <e p="BluetoothLampItem.cs" t="Include" />
+                <e p="IntField.cs" t="Include" />
+                <e p="ItshPickView.cs" t="Include" />
+                <e p="LoadMenuItem.cs" t="Include" />
+                <e p="PickVideoItem.cs" t="Include" />
+                <e p="ValueSlider.cs" t="Include" />
+              </e>
+            </e>
+            <e p="MoveIcon.cs" t="Include" />
+            <e p="PlatformSpecific.cs" t="Include" />
+            <e p="PlayPauseStop.cs" t="Include" />
+            <e p="RemoveBin.cs" t="Include" />
+            <e p="RenderLoadingDisplay.cs" t="Include" />
+            <e p="ShowHideMenu.cs" t="Include" />
+            <e p="SliderMenu.cs" t="Include" />
+            <e p="UIScaleDeviceBased.cs" t="Include" />
+            <e p="UpdateDialog.cs" t="Include" />
+            <e p="UpdatePrompt.cs" t="Include" />
+          </e>
+          <e p="Utilities" t="Include">
+            <e p="ColorUtils.cs" t="Include" />
+            <e p="DmxEnumConverter.cs" t="Include" />
+            <e p="EffectMappingController.cs" t="Include" />
+            <e p="FileUtils.cs" t="Include" />
+            <e p="IPAddressConverter.cs" t="Include" />
+            <e p="IPEndpointConverter.cs" t="Include" />
+            <e p="JsonData.cs" t="Include" />
+            <e p="Logger.cs" t="Include" />
+            <e p="MainThread.cs" t="Include" />
+            <e p="NetUtils.cs" t="Include" />
+            <e p="OpCodeConverter.cs" t="Include" />
+            <e p="SecurityUtility.cs" t="Include" />
+            <e p="ShaderUtils.cs" t="Include" />
+            <e p="Texture2DConverter.cs" t="Include" />
+            <e p="TextureUtils.cs" t="Include" />
+            <e p="TimeUtils.cs" t="Include" />
+            <e p="VectorUtils.cs" t="Include" />
+            <e p="VideoMappingController.cs" t="Include" />
+            <e p="WorkspaceUtils.cs" t="Include" />
+          </e>
+          <e p="Videos" t="Include">
+            <e p="VideoBuffer.cs" t="Include" />
+            <e p="VideoMapper.cs" t="Include" />
+            <e p="VideoMappingSettings.cs" t="Include" />
+          </e>
+          <e p="Workspace" t="Include">
+            <e p="AddOneLamp.cs" t="Include" />
+            <e p="BoxSelection.cs" t="Include" />
+            <e p="CreateWhiteIfAddedToWorkspace.cs" t="Include" />
+            <e p="IdentifySelectedLamps.cs" t="Include" />
+            <e p="ISelectableItem.cs" t="Include" />
+            <e p="SelectionController.cs" t="Include" />
+            <e p="SelectionHandle.cs" t="Include" />
+            <e p="SelectionMove.cs" t="Include" />
+            <e p="SetBoxSelectionMode.cs" t="Include" />
+            <e p="ShowSelectedLampsInfo.cs" t="Include" />
+            <e p="Views" t="Include">
+              <e p="GroupItemView.cs" t="Include" />
+              <e p="ItemsContainerView.cs" t="Include" />
+              <e p="LampItemView.cs" t="Include" />
+              <e p="PictureItemView.cs" t="Include" />
+              <e p="SelectionControllerView.cs" t="Include" />
+              <e p="VoyagerItemView.cs" t="Include" />
+            </e>
+            <e p="WorkspaceItemSaveData.cs" t="Include" />
+            <e p="WorkspaceItemView.cs" t="Include" />
+            <e p="WorkspaceManager.cs" t="Include" />
+            <e p="WorkspaceSaveLoad.cs" t="Include" />
+            <e p="WorkspaceSelection.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Vendor" t="Include">
+          <e p="Joystick Pack" t="Include">
+            <e p="Examples" t="Include">
+              <e p="JoystickPlayerExample.cs" t="Include" />
+              <e p="JoystickSetterExample.cs" t="Include" />
+            </e>
+            <e p="Scripts" t="Include">
+              <e p="Base" t="Include">
+                <e p="Joystick.cs" t="Include" />
+              </e>
+              <e p="Editor" t="Include">
+                <e p="DynamicJoystickEditor.cs" t="Include" />
+                <e p="FloatingJoystickEditor.cs" t="Include" />
+                <e p="JoystickEditor.cs" t="Include" />
+                <e p="VariableJoystickEditor.cs" t="Include" />
+              </e>
+              <e p="Joysticks" t="Include">
+                <e p="DynamicJoystick.cs" t="Include" />
+                <e p="FixedJoystick.cs" t="Include" />
+                <e p="FloatingJoystick.cs" t="Include" />
+                <e p="VariableJoystick.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Klak" t="Include">
+            <e p="Spout" t="Include">
+              <e p="Editor" t="Include">
+                <e p="MaterialPropertySelector.cs" t="Include" />
+                <e p="SpoutReceiverEditor.cs" t="Include" />
+                <e p="SpoutSenderEditor.cs" t="Include" />
+              </e>
+              <e p="Resources" t="Include">
+                <e p="Blit.shader" t="Include" />
+              </e>
+              <e p="Runtime" t="Include">
+                <e p="AssemblyInfo.cs" t="Include" />
+                <e p="Internal" t="Include">
+                  <e p="PluginEntry.cs" t="Include" />
+                  <e p="Utility.cs" t="Include" />
+                </e>
+                <e p="SpoutManager.cs" t="Include" />
+                <e p="SpoutReceiver.cs" t="Include" />
+                <e p="SpoutSender.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Syphon" t="Include">
+              <e p="Editor" t="Include">
+                <e p="SyphonClientEditor.cs" t="Include" />
+                <e p="SyphonServerEditor.cs" t="Include" />
+                <e p="SyphonServerListWindow.cs" t="Include" />
+              </e>
+              <e p="Internal" t="Include">
+                <e p="Resources" t="Include">
+                  <e p="Blit.shader" t="Include" />
+                </e>
+                <e p="SyphonCommon.cs" t="Include" />
+              </e>
+              <e p="Runtime" t="Include">
+                <e p="SyphonClient.cs" t="Include" />
+                <e p="SyphonServer.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Plugins" t="Include">
+            <e p="crosstales" t="Include">
+              <e p="Common" t="Include">
+                <e p="Editor" t="Include">
+                  <e p="Task" t="Include">
+                    <e p="BaseCompileDefines.cs" t="Include" />
+                    <e p="BaseSetupResources.cs" t="Include" />
+                    <e p="NYCheck.cs" t="Include" />
+                    <e p="SetupResources.cs" t="Include" />
+                  </e>
+                  <e p="Util" t="Include">
+                    <e p="BaseEditorHelper.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="README.txt" t="Include" />
+                <e p="Scripts" t="Include">
+                  <e p="ExtensionMethods.cs" t="Include" />
+                  <e p="Model" t="Include">
+                    <e p="Enum" t="Include">
+                      <e p="Platform.cs" t="Include" />
+                      <e p="SampleRate.cs" t="Include" />
+                    </e>
+                  </e>
+                  <e p="Tool" t="Include">
+                    <e p="SurviveSceneSwitch.cs" t="Include" />
+                    <e p="TakeScreenshot.cs" t="Include" />
+                  </e>
+                  <e p="Util" t="Include">
+                    <e p="BackgroundController.cs" t="Include" />
+                    <e p="BaseConstants.cs" t="Include" />
+                    <e p="BaseHelper.cs" t="Include" />
+                    <e p="CTPlayerPrefs.cs" t="Include" />
+                    <e p="CTProcess.cs" t="Include" />
+                    <e p="CTWebClient.cs" t="Include" />
+                    <e p="FFTAnalyzer.cs" t="Include" />
+                    <e p="FreeCam.cs" t="Include" />
+                    <e p="PlatformController.cs" t="Include" />
+                    <e p="RandomColor.cs" t="Include" />
+                    <e p="RandomRotator.cs" t="Include" />
+                    <e p="RandomScaler.cs" t="Include" />
+                    <e p="SerializableDictionary.cs" t="Include" />
+                    <e p="SerializeDeSerialize.cs" t="Include" />
+                    <e p="SpectrumVisualizer.cs" t="Include" />
+                    <e p="XmlHelper.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="UI" t="Include">
+                  <e p="Colors.txt" t="Include" />
+                  <e p="Scripts" t="Include">
+                    <e p="Social.cs" t="Include" />
+                    <e p="StaticManager.cs" t="Include" />
+                    <e p="UIDrag.cs" t="Include" />
+                    <e p="UIFocus.cs" t="Include" />
+                    <e p="UIHint.cs" t="Include" />
+                    <e p="UIResize.cs" t="Include" />
+                    <e p="UIWindowManager.cs" t="Include" />
+                    <e p="Util" t="Include">
+                      <e p="AudioFilterController.cs" t="Include" />
+                      <e p="AudioSourceController.cs" t="Include" />
+                      <e p="FPSDisplay.cs" t="Include" />
+                      <e p="ScrollRectHandler.cs" t="Include" />
+                    </e>
+                    <e p="WindowManager.cs" t="Include" />
+                  </e>
+                </e>
+              </e>
+              <e p="FileBrowser" t="Include">
+                <e p="3rd party" t="Include">
+                  <e p="Assets.txt" t="Include" />
+                </e>
+                <e p="Demo" t="Include">
+                  <e p="Scripts" t="Include">
+                    <e p="Examples.cs" t="Include" />
+                    <e p="GUIMain.cs" t="Include" />
+                    <e p="GUIScenes.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="Documentation" t="Include">
+                  <e p="id" t="Include">
+                    <e p="f9c139be-4da6-4d0f-894a-0675635af15f.txt" t="Include" />
+                  </e>
+                  <e p="VERSIONS.txt" t="Include" />
+                </e>
+                <e p="Editor" t="Include">
+                  <e p="Integration" t="Include">
+                    <e p="ConfigBase.cs" t="Include" />
+                    <e p="ConfigPreferences.cs" t="Include" />
+                    <e p="ConfigWindow.cs" t="Include" />
+                  </e>
+                  <e p="Task" t="Include">
+                    <e p="AAAConfigLoader.cs" t="Include" />
+                    <e p="CompileDefines.cs" t="Include" />
+                    <e p="Launch.cs" t="Include" />
+                    <e p="ReminderCheck.cs" t="Include" />
+                    <e p="SetupResources.cs" t="Include" />
+                    <e p="UpdateCheck.cs" t="Include" />
+                  </e>
+                  <e p="Util" t="Include">
+                    <e p="BuildPostprocessor.cs" t="Include" />
+                    <e p="EditorConfig.cs" t="Include" />
+                    <e p="EditorConstants.cs" t="Include" />
+                    <e p="EditorHelper.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="README.txt" t="Include" />
+                <e p="Scripts" t="Include">
+                  <e p="FileBrowser.cs" t="Include" />
+                  <e p="Util" t="Include">
+                    <e p="Config.cs" t="Include" />
+                    <e p="Constants.cs" t="Include" />
+                    <e p="Helper.cs" t="Include" />
+                  </e>
+                  <e p="Wrapper" t="Include">
+                    <e p="FileBrowserBase.cs" t="Include" />
+                    <e p="FileBrowserEditor.cs" t="Include" />
+                    <e p="FileBrowserGeneric.cs" t="Include" />
+                    <e p="FileBrowserLinux.cs" t="Include" />
+                    <e p="FileBrowserMac.cs" t="Include" />
+                    <e p="FileBrowserWindows.cs" t="Include" />
+                    <e p="FileBrowserWSA.cs" t="Include" />
+                    <e p="IFileBrowser.cs" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="NativeGallery" t="Include">
+              <e p="Android" t="Include">
+                <e p="NGCallbackHelper.cs" t="Include" />
+                <e p="NGMediaReceiveCallbackAndroid.cs" t="Include" />
+                <e p="NGPermissionCallbackAndroid.cs" t="Include" />
+              </e>
+              <e p="iOS" t="Include">
+                <e p="NGMediaReceiveCallbackiOS.cs" t="Include" />
+                <e p="NGMediaSaveCallbackiOS.cs" t="Include" />
+              </e>
+              <e p="NativeGallery.cs" t="Include" />
+              <e p="README.txt" t="Include" />
+            </e>
+            <e p="Network" t="Include">
+              <e p="Android" t="Include">
+                <e p="AndroidNetworkHelpers.cs" t="Include" />
+              </e>
+              <e p="iOS" t="Include">
+                <e p="IOSNetworkHelpers.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Scripts" t="Include">
+            <e p="TextOutline.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="crosstales.csproj" t="IncludeRecursive" />
+      <e p="DigitalSputnik.Bluetooth.Runtime.csproj" t="IncludeRecursive" />
+      <e p="DigitalSputnik.Core.Runtime.csproj" t="IncludeRecursive" />
+      <e p="DigitalSputnik.Videos.EditorTests.csproj" t="IncludeRecursive" />
+      <e p="DigitalSputnik.Videos.Runtime.csproj" t="IncludeRecursive" />
+      <e p="DS Voyager controller.sln" t="IncludeFlat" />
+      <e p="Klak.Spout.csproj" t="IncludeRecursive" />
+      <e p="Klak.Spout.Editor.csproj" t="IncludeRecursive" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="Packages" t="ExcludeRecursive">
+        <e p="DigitalSputnik.Bluetooth" t="Include">
+          <e p="Runtime" t="Include">
+            <e p="BluetoothAccess.cs" t="Include" />
+            <e p="HighLevel" t="Include">
+              <e p="Bluetooth.cs" t="Include" />
+              <e p="BluetoothConnection.cs" t="Include" />
+              <e p="BluetoothPeripheral.cs" t="Include" />
+              <e p="Delegates.cs" t="Include" />
+            </e>
+            <e p="IBluetoothInterface.cs" t="Include" />
+            <e p="Plugins" t="Include">
+              <e p="Android" t="Include">
+                <e p="AndroidBluetoothInterface.cs" t="Include" />
+                <e p="AndroidManifest.xml" t="Include" />
+              </e>
+              <e p="iOS" t="Include">
+                <e p="IOSBluetoothInterface.cs" t="Include" />
+                <e p="IOSBluetoothListener.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+        <e p="DigitalSputnik.Core" t="Include">
+          <e p="Runtime" t="Include">
+            <e p="ITimeProvider.cs" t="Include" />
+            <e p="Unity" t="Include">
+              <e p="MainThreadRunner.cs" t="Include" />
+              <e p="SystemTimeProvider.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="DigitalSputnik.Videos" t="Include">
+          <e p="Runtime" t="Include">
+            <e p="IVideoProvider.cs" t="Include" />
+            <e p="IVideoResizer.cs" t="Include" />
+            <e p="Plugins" t="Include">
+              <e p="iOS" t="Include">
+                <e p="iOSVideoResizer.cs" t="Include" />
+                <e p="IosVideoResizerListener.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Unity" t="Include">
+              <e p="UnityVideoProvider.cs" t="Include" />
+            </e>
+            <e p="Video.cs" t="Include" />
+            <e p="VideoTools.cs" t="Include" />
+          </e>
+          <e p="Tests" t="Include">
+            <e p="Editor" t="Include">
+              <e p="TestVideoProvider.cs" t="Include" />
+              <e p="TestVideoResizer.cs" t="Include" />
+              <e p="VideoToolsTests.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Temp/bin" t="ExcludeRecursive" />
+    </e>
+    <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.1/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.1/resharper-host/local/Transient/ReSharperHost/v201/SolutionCaches/_DS Voyager controller.-1111017929.00" t="ExcludeRecursive" />
+  </component>
+</project>
