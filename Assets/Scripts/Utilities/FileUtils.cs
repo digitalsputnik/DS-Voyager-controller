@@ -76,7 +76,7 @@ namespace VoyagerApp.Utilities
             }
         }
 
-        public static void LoadPictureFromDevice(PathHandler onLoaded)
+        public static void LoadPictureFromDevice(PathHandler loaded)
         {
             if (Application.isMobilePlatform)
             {
@@ -87,15 +87,33 @@ namespace VoyagerApp.Utilities
                         "Photos captured with iOS camera might not load.",
                         new string[] { "CANCEL", "OK" },
                         new Action[] {
+                            () => loaded?.Invoke(null),
                             () =>
                             {
-                                onLoaded?.Invoke(null);
-                            },
-                            () =>
-                            {
-                                NativeGallery.GetImageFromGallery((string path) =>
+                                NativeGallery.GetImageFromGallery(path =>
                                 {
-                                    onLoaded?.Invoke(string.IsNullOrEmpty(path) ? null : path);
+                                    if (string.IsNullOrEmpty(path))
+                                    {
+                                        loaded?.Invoke(null);
+                                        return;
+                                    }
+                                    
+                                    var name = "image_" + Guid.NewGuid().ToString().Substring(0, 4);
+
+                                    InputFieldMenu.Show("PICK NAME FOR IMAGE", name, text =>
+                                    {
+                                        name = text;
+                                        var newPath = Path.Combine(TempPath, name);
+                                        try
+                                        {
+                                            Copy(path, newPath);
+                                            loaded?.Invoke(newPath);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Debug.LogError(ex);
+                                        }
+                                    }, 3, false);
                                 }, "", "image/*");
                             }
                         }
@@ -105,7 +123,7 @@ namespace VoyagerApp.Utilities
                 {
                     NativeGallery.GetImageFromGallery((string path) =>
                     {
-                        onLoaded.Invoke(path == "" ? null : path);
+                        loaded.Invoke(path == "" ? null : path);
                     }, "", "image/*");
                 }
             }
@@ -118,7 +136,7 @@ namespace VoyagerApp.Utilities
                     new ExtensionFilter("JPEG Picture", "png")
                 };
                 string path = FileBrowser.OpenSingleFile("Open Picture", documents, extensions);
-                onLoaded.Invoke(path == "" ? null : path);
+                loaded.Invoke(path == "" ? null : path);
             }
         }
 
