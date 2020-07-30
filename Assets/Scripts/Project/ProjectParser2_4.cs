@@ -67,6 +67,7 @@ namespace VoyagerApp.Projects
                         break;
                     case "syphon":
                         var syphon = new Syphon();
+                        syphon.id = (string)effectToken["id"];
                         syphon.server = (string) effectToken["server"];
                         syphon.application = (string) effectToken["application"];
                         syphon.type = type;
@@ -78,6 +79,7 @@ namespace VoyagerApp.Projects
                         break;
                     case "spout":
                         var spout = new Spout();
+                        spout.id = (string)effectToken["id"];
                         spout.source = (string) effectToken["source"];
                         spout.type = type;
                         spout.lift = lift;

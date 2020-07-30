@@ -58,6 +58,7 @@ namespace VoyagerApp.Projects
                     case SyphonStream syphon:
                         effects[i] = new Syphon
                         {
+                            id = syphon.id,
                             type = "syphon",
                             server = syphon.server,
                             application = syphon.application
@@ -66,6 +67,7 @@ namespace VoyagerApp.Projects
                     case SpoutStream spout:
                         effects[i] = new Spout
                         {
+                            id = spout.id,
                             type = "spot",
                             source = spout.source
                         };

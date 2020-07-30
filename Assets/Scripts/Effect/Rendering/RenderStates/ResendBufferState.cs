@@ -77,18 +77,18 @@ namespace VoyagerApp.Videos
 
         long GetStartFrame(Lamp lamp, long offset)
         {
-            Video video = (Video)lamp.effect;
-
-            if (ApplicationState.Playmode.value == GlobalPlaymode.Play)
-                return TimeUtils.GetFrameOfVideo(video, 0.5);
-
-            var itemView = WorkspaceUtils.SelectedVoyagerLampItems.FirstOrDefault(i => i.lamp == lamp);
-
-            long frame = itemView.prevFrame + offset;
-            if (frame < 0)
-                frame += video.frames;
-
-            return frame;
+            if (lamp.effect is Video video)
+            {
+                if (ApplicationState.Playmode.value == GlobalPlaymode.Play)
+                    return TimeUtils.GetFrameOfVideo(video, 0.5);   
+                
+                var itemView = WorkspaceUtils.SelectedVoyagerLampItems.FirstOrDefault(i => i.lamp == lamp);
+                var frame = itemView.prevFrame + offset;
+                if (frame < 0) frame += video.frames;
+                return frame;
+            }
+            
+            return 0;
         }
 
         class LampState

@@ -238,6 +238,7 @@ namespace VoyagerApp.Projects
                     case Syphon syphonData:
                         if (EffectManager.Effects.FirstOrDefault(e => e is SyphonStream) is SyphonStream syphon)
                         {
+                            syphon.id = syphonData.id;
                             syphon.server = syphonData.server;
                             syphon.application = syphonData.application;
                             syphon.lift = syphonData.lift;
@@ -249,6 +250,7 @@ namespace VoyagerApp.Projects
                     case Spout spoutData:
                         if (EffectManager.Effects.FirstOrDefault(e => e is SpoutStream) is SpoutStream spout)
                         {
+                            spout.id = spoutData.id;
                             spout.source = spoutData.source;
                             spout.lift = spoutData.lift;
                             spout.contrast = spoutData.contrast;
@@ -264,7 +266,7 @@ namespace VoyagerApp.Projects
         {
             foreach (var lampData in lamps)
             {
-                var itsh = new Itshe(
+                var itshe = new Itshe(
                     lampData.itsh[0],
                     lampData.itsh[1],
                     lampData.itsh[2],
@@ -294,11 +296,18 @@ namespace VoyagerApp.Projects
 
                     LampManager.instance.AddLamp(lamp);
                 }
-
+                
                 if (positionsOnly) continue;
                 
-                lamp.itshe = itsh;
+                var effect = EffectManager.Effects.FirstOrDefault(e => e.id == lampData.effect);
+
+                if (effect == null) continue;
+
+                lamp.itshe = itshe;
                 lamp.mapping = mapping;
+                lamp.SetMapping(mapping);
+                lamp.SetEffect(effect);
+                lamp.SetItshe(itshe);
             }
         }
 
