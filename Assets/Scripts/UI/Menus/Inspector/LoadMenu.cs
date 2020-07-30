@@ -44,7 +44,7 @@ namespace VoyagerApp.UI.Menus
             FileUtils.LoadProject(OnImportFile);
         }
 
-        void OnImportFile(string file)
+        private void OnImportFile(string file)
         {
             string name = Path.GetFileNameWithoutExtension(file);
 
@@ -73,7 +73,7 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
-        void DisplayAllItems()
+        private void DisplayAllItems()
         {
             var projPath = Project.ProjectsDirectory;
             var projects = Directory.GetDirectories(projPath);
@@ -85,14 +85,18 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
-        void DisplayItem(string project)
+        private void DisplayItem(string project)
         {
             try
             {
                 LoadMenuItem item = Instantiate(itemPrefab, container);
                 items.Add(item);
                 item.SetPath(project);
-            } catch { }
+            }
+            catch
+            {
+                // ignored
+            }
         }
 
         public void LoadProject(string project)
@@ -102,7 +106,7 @@ namespace VoyagerApp.UI.Menus
                 "Clicking \"YES\" will send loaded video to lamps, otherwise " +
                 "only lamp positions will be loaded, but lamps will still play " +
                 "the video, they have at the moment.",
-                new string[] { "YES", "NO", "CANCEL" },
+                new[] { "YES", "NO", "CANCEL" },
                 new Action[] {
                     () =>
                     {
@@ -123,40 +127,47 @@ namespace VoyagerApp.UI.Menus
             );
         }
 
-        void OnSendBufferCancel() => ItemsInteractable = true;
-        
-        void OnSendBuffer()
+        private void OnSendBufferCancel() => ItemsInteractable = true;
+
+        private void OnSendBuffer()
         {
             VideoRenderer.SetState(new DoneState());
             foreach (var lampData in data.lamps)
             {
                 var video = EffectManager.GetEffectWithId<Effects.Video>(lampData.effect);
                 var image = EffectManager.GetEffectWithId<Effects.Image>(lampData.effect);
-
                 var lamp = LampManager.instance.GetLampWithSerial(lampData.serial);
-
-                if (lamp != null)
+;
+                var itshe = new Itshe
                 {
-                    if (video != null)
-                    {
-                        lamp.effect = null;
-                        lamp.SetEffect(video);
-                        NetUtils.VoyagerClient.SendPacket(
-                            lamp,
-                            new SetPlayModePacket(PlaybackMode.Play, video.startTime, 0.0),
-                            VoyagerClient.PORT_SETTINGS
-                        );
-                    }
-                    if (image != null)
-                    {
-                        lamp.effect = null;
-                        lamp.SetEffect(image);
-                    }
+                    i = lampData.itsh[0],
+                    t = lampData.itsh[1],
+                    s = lampData.itsh[2],
+                    h = lampData.itsh[3],
+                    e = lampData.itsh[4]
+                };
+
+                if (lamp == null) continue;
+
+                if (video != null)
+                {
+                    lamp.effect = null;
+                    lamp.SetEffect(video);
+                    NetUtils.VoyagerClient.SendPacket(
+                        lamp,
+                        new SetPlayModePacket(PlaybackMode.Play, video.startTime, 0.0),
+                        VoyagerClient.PORT_SETTINGS
+                    );
                 }
+                
+                if (image == null) continue;
+                
+                lamp.effect = null;
+                lamp.SetEffect(image);
             }
         }
 
-        bool ItemsInteractable
+        private bool ItemsInteractable
         {
             set
             {

@@ -90,7 +90,7 @@ namespace VoyagerApp.Projects
                     length = lamp.pixels,
                     effect = lamp.effect == null ? "" : lamp.effect.id,
                     address = lamp.address.ToString(),
-                    itsh = new float[]
+                    itsh = new[]
                     {
                         lamp.itshe.i,
                         lamp.itshe.t,
@@ -98,7 +98,7 @@ namespace VoyagerApp.Projects
                         lamp.itshe.h,
                         lamp.itshe.e
                     },
-                    mapping = new float[]
+                    mapping = new[]
                     {
                         lamp.mapping.p1.x,
                         lamp.mapping.p1.y,
@@ -226,8 +226,8 @@ namespace VoyagerApp.Projects
                 }
             }
 
-            Camera camera = Camera.main;
-            var cameraData = new float[]
+            var camera = Camera.main;
+            var cameraData = new []
             {
                 camera.transform.position.x,
                 camera.transform.position.y,

@@ -120,16 +120,17 @@ namespace VoyagerApp.Projects
         #region Loading
         public static ProjectSaveData Load(string name, bool positionsOnly = false)
         {
-            string path = Path.Combine(ProjectsDirectory, name, PROJECT_FILE);
-            if (File.Exists(path))
-            {
-                string json = File.ReadAllText(path);
-                var parser = ProjectFactory.GetParser(json);
-                var data = parser.Parse(json);
-                Load(data, Path.Combine(ProjectsDirectory, name), positionsOnly);
-                return data;
-            }
-            return null;
+            var path = Path.Combine(ProjectsDirectory, name, PROJECT_FILE);
+            
+            if (!File.Exists(path)) return null;
+            
+            var json = File.ReadAllText(path);
+            var parser = ProjectFactory.GetParser(json);
+            var data = parser.Parse(json);
+            
+            Load(data, Path.Combine(ProjectsDirectory, name), positionsOnly);
+            
+            return data;
         }
 
         public static void LoadWorkspace()
@@ -159,6 +160,8 @@ namespace VoyagerApp.Projects
         private static void LoadEffects(ref ProjectSaveData data, string path)
         {
             EffectManager.Clear();
+            
+            Debug.Log(JsonConvert.SerializeObject(data, Formatting.Indented));
 
             var effects = data.effects;
 
@@ -203,10 +206,10 @@ namespace VoyagerApp.Projects
                         existingPreset.saturation = videoPresetData.saturation;
                         existingPreset.blur = videoPresetData.blur;
 
-                        for (int i = 0; i < data.lamps.Length; i++)
+                        foreach (var lamp in data.lamps)
                         {
-                            if (data.lamps[i].effect == videoPresetData.id)
-                                data.lamps[i].effect = existingPreset.id;
+                            if (lamp.effect == videoPresetData.id)
+                                lamp.effect = existingPreset.id;
                         }
 
                         break;
@@ -257,7 +260,7 @@ namespace VoyagerApp.Projects
             }
         }
 
-        private static void LoadLamps(Lamp[] lamps, bool positionsOnly)
+        private static void LoadLamps(IEnumerable<Lamp> lamps, bool positionsOnly)
         {
             foreach (var lampData in lamps)
             {
@@ -289,22 +292,13 @@ namespace VoyagerApp.Projects
                         address = IPAddress.Parse(lampData.address)
                     };
 
-                    if (!positionsOnly)
-                    {
-                        lamp.itshe = itsh;
-                        lamp.mapping = mapping;
-                    }
-
                     LampManager.instance.AddLamp(lamp);
                 }
-                else
-                {
-                    if (!positionsOnly)
-                    {
-                        lamp.itshe = itsh;
-                        lamp.mapping = mapping;
-                    }
-                }
+
+                if (positionsOnly) continue;
+                
+                lamp.itshe = itsh;
+                lamp.mapping = mapping;
             }
         }
 

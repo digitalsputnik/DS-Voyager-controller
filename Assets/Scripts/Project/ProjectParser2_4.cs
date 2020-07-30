@@ -53,7 +53,7 @@ namespace VoyagerApp.Projects
                         preset.blur = blur;
                         effects[i] = preset;
                         break;
-                    case "picture":
+                    case "image":
                         var image = new Image();
                         image.id = (string)effectToken["id"];
                         image.name = (string)effectToken["name"];
