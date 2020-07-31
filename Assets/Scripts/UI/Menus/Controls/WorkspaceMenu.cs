@@ -86,6 +86,7 @@ namespace VoyagerApp.UI.Menus
             bool all = WorkspaceUtils.AllLampsSelected;
             bool share = WorkspaceUtils.SelectedLampsHaveSameEffect;
             bool has = WorkspaceUtils.VoyagerLamps.Count != 0;
+            bool hasDmx = WorkspaceUtils.AnySelectedLampsAreDmx;
 
             infoText.SetActive(!one);
 
@@ -96,7 +97,7 @@ namespace VoyagerApp.UI.Menus
 
             splitter2.SetActive(one);
             setColorFxBtn.SetActive(one);
-            editColorFxBtn.SetActive(one && share);
+            editColorFxBtn.SetActive(one && share && !hasDmx);
 
             splitter3.SetActive(one);
             setDmxBtn.SetActive(one);

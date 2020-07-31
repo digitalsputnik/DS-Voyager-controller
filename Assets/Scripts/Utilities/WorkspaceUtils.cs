@@ -169,6 +169,15 @@ namespace VoyagerApp.Utilities
             }
         }
 
+        public static bool AnySelectedLampsAreDmx
+        {
+            get
+            {
+                if (SelectedLamps.Count == 0) return false;
+                return SelectedVoyagerLamps.Any(l => l.dmxEnabled);
+            }
+        }
+
         public static void EnterToVideoMapping()
         {
             Effect effect = SelectedLamps[0].effect;

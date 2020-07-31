@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,8 @@ namespace VoyagerApp.UI
         [SerializeField] Menu updateMenu = null;
         [SerializeField] Button updateButton = null;
         [SerializeField] float waitTime = 5.0f;
+
+        List<LampItemView> updatingLamps = new List<LampItemView>();
 
         bool showing;
 
@@ -67,10 +70,13 @@ namespace VoyagerApp.UI
                     () =>
                     {
                         WorkspaceSelection.instance.Clear();
-                        foreach (var lamp in WorkspaceUtils.LampItems)
+                        foreach (var lampItem in WorkspaceUtils.LampItems)
                         {
-                            if (!lamp.lamp.updated)
-                                WorkspaceSelection.instance.SelectItem(lamp);
+                            if (!lampItem.lamp.updated && !updatingLamps.Any(l => l.lamp.serial == lampItem.lamp.serial))
+                            {
+                                WorkspaceSelection.instance.SelectItem(lampItem);
+                                updatingLamps.Add(lampItem);
+                            }
                         }
                         container.ShowMenu(updateMenu);
                         updateButton.onClick.Invoke();
@@ -88,8 +94,11 @@ namespace VoyagerApp.UI
 
             foreach (var lamp in lampsNotUpdated)
             {
-                var item = WorkspaceUtils.VoyagerItems.FirstOrDefault(v => v.lamp == lamp);
-                WorkspaceManager.instance.RemoveItem(item);
+                if (!updatingLamps.Any(l => l.lamp.serial == lamp.serial))
+                {
+                    var item = WorkspaceUtils.VoyagerItems.FirstOrDefault(v => v.lamp == lamp);
+                    WorkspaceManager.instance.RemoveItem(item);
+                }
             }
         }
     }

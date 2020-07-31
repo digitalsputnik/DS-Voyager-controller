@@ -12,6 +12,7 @@ namespace VoyagerApp.UI.Menus
     public class LampSettingsMenu : Menu
     {
         [SerializeField] Text selectDeselectBtnText     = null;
+        [SerializeField] GameObject selectDeselectBtn   = null;
         [SerializeField] GameObject infoTextObj         = null;
         [SerializeField] GameObject networkSettingsBtn  = null;
         [SerializeField] GameObject updateBtn           = null;
@@ -43,12 +44,16 @@ namespace VoyagerApp.UI.Menus
         internal override void OnShow()
         {
             WorkspaceSelection.instance.onSelectionChanged += OnSelectionChanged;
+            WorkspaceManager.instance.onItemAdded += ItemAddedToOrRemovedFromWorkspace;
+            WorkspaceManager.instance.onItemRemoved += ItemAddedToOrRemovedFromWorkspace;
             EnableDisableObjects();
         }
 
         internal override void OnHide()
         {
             WorkspaceSelection.instance.onSelectionChanged -= OnSelectionChanged;
+            WorkspaceManager.instance.onItemAdded -= ItemAddedToOrRemovedFromWorkspace;
+            WorkspaceManager.instance.onItemRemoved -= ItemAddedToOrRemovedFromWorkspace;
 
             if (updatesFinished)
             {
@@ -62,14 +67,21 @@ namespace VoyagerApp.UI.Menus
             EnableDisableObjects();
         }
 
+        void ItemAddedToOrRemovedFromWorkspace(WorkspaceItemView item)
+        {
+            EnableDisableObjects();
+        }
+
         void EnableDisableObjects()
         {
             bool one = WorkspaceUtils.AtLastOneLampSelected;
             bool all = WorkspaceUtils.AllLampsSelected;
+            bool has = WorkspaceUtils.VoyagerLamps.Count != 0;
 
             infoTextObj.SetActive(!one);
             networkSettingsBtn.SetActive(one);
             updateBtn.SetActive(one);
+            selectDeselectBtn.SetActive(has);
 
             selectDeselectBtnText.text = all ? "DESELECT ALL" : "SELECT ALL";
         }

@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1090,6 +1090,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectDeselectBtnText: {fileID: 391160642}
+  selectDeselectBtn: {fileID: 391160643}
   infoTextObj: {fileID: 1322594319}
   networkSettingsBtn: {fileID: 58413195}
   updateBtn: {fileID: 402482842}
@@ -1477,7 +1478,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 391160641}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 391160643}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
@@ -4947,6 +4948,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &391160643 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 391160641}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &391219203
 GameObject:
   m_ObjectHideFlags: 0
@@ -21402,7 +21409,7 @@ PrefabInstance:
     - target: {fileID: 1166860731073187651, guid: 2b53f6402f71643cf8de86b447b449ae,
         type: 3}
       propertyPath: m_Options.m_Options.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1166860731073187651, guid: 2b53f6402f71643cf8de86b447b449ae,
         type: 3}
