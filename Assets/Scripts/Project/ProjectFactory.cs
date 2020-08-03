@@ -52,8 +52,9 @@ namespace VoyagerApp.Projects
                             id = image.id,
                             name = image.name,
                             type = "image",
-                            data = image.image.GetRawTextureData()
+                            data = image.image.EncodeToPNG()
                         };
+
                         break;
                     case SyphonStream syphon:
                         effects[i] = new Syphon

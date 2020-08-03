@@ -217,7 +217,7 @@ namespace VoyagerApp.Projects
                     case Image imageData:
                     {
                         var texture = new Texture2D(2, 2);
-                        texture.LoadRawTextureData(imageData.data);
+                        texture.LoadImage(imageData.data, false);
 
                         var image = new Effects.Image
                         {
@@ -229,8 +229,10 @@ namespace VoyagerApp.Projects
                             lift = imageData.lift,
                             contrast = imageData.contrast,
                             saturation = imageData.saturation,
-                            blur = imageData.blur
+                            blur = imageData.blur,
+                            available = { value = true }
                         };
+
 
                         EffectManager.AddEffect(image);
                         break;
