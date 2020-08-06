@@ -134,21 +134,10 @@ namespace VoyagerApp.UI.Menus
             VideoRenderer.SetState(new DoneState());
             foreach (var lampData in data.lamps)
             {
-                var video = EffectManager.GetEffectWithId<Effects.Video>(lampData.effect);
-                var image = EffectManager.GetEffectWithId<Effects.Image>(lampData.effect);
                 var lamp = LampManager.instance.GetLampWithSerial(lampData.serial);
-;
-                var itshe = new Itshe
-                {
-                    i = lampData.itsh[0],
-                    t = lampData.itsh[1],
-                    s = lampData.itsh[2],
-                    h = lampData.itsh[3],
-                    e = lampData.itsh[4]
-                };
-
                 if (lamp == null) continue;
 
+                var video = EffectManager.GetEffectWithId<Effects.Video>(lampData.effect);
                 if (video != null)
                 {
                     lamp.effect = null;
@@ -159,11 +148,12 @@ namespace VoyagerApp.UI.Menus
                         VoyagerClient.PORT_SETTINGS
                     );
                 }
-                
-                if (image == null) continue;
+
+                var effect = EffectManager.GetEffectWithId<Effects.Effect>(lampData.effect);
+                if (effect == null) continue;
                 
                 lamp.effect = null;
-                lamp.SetEffect(image);
+                lamp.SetEffect(effect);
             }
         }
 
