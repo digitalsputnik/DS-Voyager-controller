@@ -110,6 +110,7 @@ namespace VoyagerApp.UI.Menus
 
             if (password.Length >= 8 && ssid.Length != 0 || password.Length == 0 && ssid.Length != 0)
             {
+                _setBtn.interactable = false;
                 StartCoroutine(IEnumSetWifiSettings(ssid, password));
                 PlayerPrefs.SetString("last_ble_ssid", ssid);
             }
@@ -257,7 +258,7 @@ namespace VoyagerApp.UI.Menus
                         (connection) =>
                         {
                             active = connection;
-                            MainThread.Dispach(() => endtime = Time.time + 2.0f);
+                            MainThread.Dispach(() => endtime = Time.time + 5.0f);
 
                             _connections.Add(connection);
 

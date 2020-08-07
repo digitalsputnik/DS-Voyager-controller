@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1049102131006670461}
   - component: {fileID: 956605390412279815}
   m_Layer: 0
-  m_Name: '[6]SSID And Password'
+  m_Name: '[7]SSID And Password'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +29,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &956605390412279815
 MonoBehaviour:
@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1a17e1407e43544906804a6cc6955a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 6
+  Order: 7
   title: WiFi Information
   info: Enter your external networks SSID and Password or scan the network by clicking
     SCAN and then selecting your network by SSID. Then click SET.
@@ -69,7 +69,7 @@ GameObject:
   - component: {fileID: 1042969921048608557}
   - component: {fileID: 1042969921048608556}
   m_Layer: 0
-  m_Name: '[28]Click Set'
+  m_Name: '[29]Click Set'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -87,7 +87,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 27
+  m_RootOrder: 28
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969921048608556
 MonoBehaviour:
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1a17e1407e43544906804a6cc6955a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 28
+  Order: 29
   title: Setting lamps to client mode
   info: "Enter your external networks SSID and Password or scan the network by clicking
     SCAN and then selecting your network by SSID. \nThen click SET"
@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 1042969921129099285}
   - component: {fileID: 1042969921129099284}
   m_Layer: 0
-  m_Name: '[23]Click Setup'
+  m_Name: '[24]Click Setup'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -145,7 +145,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 22
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969921129099284
 MonoBehaviour:
@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1a17e1407e43544906804a6cc6955a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 23
+  Order: 24
   title: Setting lamps to client mode
   info: Now click on SETUP on the right menu
   moreInfo: 
@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 1042969921198489718}
   - component: {fileID: 1042969921198489717}
   m_Layer: 0
-  m_Name: '[26]Click WiFi Setup'
+  m_Name: '[27]Click WiFi Setup'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -202,7 +202,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 25
+  m_RootOrder: 26
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969921198489717
 MonoBehaviour:
@@ -216,7 +216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1a17e1407e43544906804a6cc6955a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 26
+  Order: 27
   title: Setting lamps to client mode
   info: Click on WiFi Setup on the right menu.
   moreInfo: 
@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 1042969921199112679}
   - component: {fileID: 1042969921199112678}
   m_Layer: 0
-  m_Name: '[19]Check WiFi Mode'
+  m_Name: '[20]Check WiFi Mode'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -259,7 +259,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 18
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969921199112678
 MonoBehaviour:
@@ -273,7 +273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 616206e641643944487224a5692c3a01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 19
+  Order: 20
   title: Check WiFi Mode
   info: Check the WiFi mode by holding the power button for less than less than 2
     seconds (to avoid switching off your lamp) to check the color of the 3rd LED.
@@ -305,7 +305,7 @@ GameObject:
   - component: {fileID: 1042969921425243653}
   - component: {fileID: 1042969921425243652}
   m_Layer: 0
-  m_Name: '[27]Click Client Mode'
+  m_Name: '[28]Click Client Mode'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -323,7 +323,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 26
+  m_RootOrder: 27
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969921425243652
 MonoBehaviour:
@@ -337,7 +337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1a17e1407e43544906804a6cc6955a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 27
+  Order: 28
   title: Setting lamps to client mode
   info: Click on CLIENT MODE on the right menu.
   moreInfo: 
@@ -362,7 +362,7 @@ GameObject:
   - component: {fileID: 1042969921563154354}
   - component: {fileID: 1042969921563154353}
   m_Layer: 0
-  m_Name: '[16]Multiple lamps Query'
+  m_Name: '[17]Multiple lamps Query'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -380,7 +380,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969921563154353
 MonoBehaviour:
@@ -394,7 +394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c99b74ce4ef19c458dbf84429248992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 16
+  Order: 17
   title: Multiple Lamps
   info: Are you planning on connecting multiple lamps in the future?
   moreInfo: 
@@ -410,9 +410,9 @@ MonoBehaviour:
   leftButtonText: NO
   middleButtonText: 
   rightButtonText: YES
-  ifLeft: 10
+  ifLeft: 11
   ifMiddle: 0
-  ifRight: 17
+  ifRight: 18
 --- !u!1 &1042969922074834846
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,7 +424,7 @@ GameObject:
   - component: {fileID: 1042969922074834845}
   - component: {fileID: 1042969922074834844}
   m_Layer: 0
-  m_Name: '[17]Router Mode'
+  m_Name: '[18]Router Mode'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -442,7 +442,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 16
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969922074834844
 MonoBehaviour:
@@ -456,7 +456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 616206e641643944487224a5692c3a01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 17
+  Order: 18
   title: Router Mode
   info: To start using multiple Voyagers, set your first Voyager to Router mode.
     To toggle between the modes and set the Voyager to Router mode, hold down the
@@ -485,7 +485,7 @@ GameObject:
   - component: {fileID: 1042969922203181329}
   - component: {fileID: 1042969922203181328}
   m_Layer: 0
-  m_Name: '[15]One Lamp Connected'
+  m_Name: '[16]One Lamp Connected'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -503,7 +503,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 14
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969922203181328
 MonoBehaviour:
@@ -517,7 +517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 616206e641643944487224a5692c3a01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 15
+  Order: 16
   title: Connected!
   info: You can now start using your Voyager!
   moreInfo: 
@@ -541,7 +541,7 @@ GameObject:
   - component: {fileID: 1042969922263375248}
   - component: {fileID: 1042969922263375263}
   m_Layer: 0
-  m_Name: '[25]Click Select All'
+  m_Name: '[26]Click Select All'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -559,7 +559,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 24
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969922263375263
 MonoBehaviour:
@@ -573,7 +573,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1a17e1407e43544906804a6cc6955a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 25
+  Order: 26
   title: Setting lamps to client mode
   info: Select all lamps by clicking SELECT ALL.
   moreInfo: 
@@ -598,7 +598,7 @@ GameObject:
   - component: {fileID: 1042969922275524476}
   - component: {fileID: 1042969922275524475}
   m_Layer: 0
-  m_Name: '[20]Connect To Router'
+  m_Name: '[21]Connect To Router'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -616,7 +616,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 19
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969922275524475
 MonoBehaviour:
@@ -630,7 +630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 616206e641643944487224a5692c3a01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 20
+  Order: 21
   title: Connect to router
   info: "Open WiFi list on your device and find your Voyager.\nThe SSID (Network
     name) of the Voyager is\r it\u2019s serial number\r (DS026XXXXXXXXXX_M).\nPassword
@@ -656,7 +656,7 @@ GameObject:
   - component: {fileID: 1042969922302617498}
   - component: {fileID: 1042969922302617497}
   m_Layer: 0
-  m_Name: '[18]Client Mode'
+  m_Name: '[19]Client Mode'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -674,7 +674,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 17
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969922302617497
 MonoBehaviour:
@@ -688,7 +688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 616206e641643944487224a5692c3a01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 18
+  Order: 19
   title: Client Mode
   info: 'To connect other lamps, you must set them to Client Mode.
 
@@ -720,7 +720,7 @@ GameObject:
   - component: {fileID: 1042969922446469735}
   - component: {fileID: 1042969922446469734}
   m_Layer: 0
-  m_Name: '[29]Connect To External Network'
+  m_Name: '[30]Connect To External Network'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -738,7 +738,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 28
+  m_RootOrder: 29
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969922446469734
 MonoBehaviour:
@@ -752,7 +752,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 616206e641643944487224a5692c3a01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 29
+  Order: 30
   title: Connect to your external network
   info: "Now connect your device to your external network and you're done! \nJust
     add the lamps from the ADD LAMPS menu and start creating."
@@ -777,7 +777,7 @@ GameObject:
   - component: {fileID: 1042969922565610213}
   - component: {fileID: 1042969922565610212}
   m_Layer: 0
-  m_Name: '[21]Adding All Lamps'
+  m_Name: '[22]Adding All Lamps'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -795,7 +795,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 20
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969922565610212
 MonoBehaviour:
@@ -809,7 +809,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1a17e1407e43544906804a6cc6955a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 21
+  Order: 22
   title: Add Lamps
   info: "To connect all Voyagers to the external WiFi network. We first have to add
     them to our workspace. \nClick on ADD LAMPS on the right menu"
@@ -835,7 +835,7 @@ GameObject:
   - component: {fileID: 1042969922608048364}
   - component: {fileID: 1042969922608048363}
   m_Layer: 0
-  m_Name: '[11]Wifi Tutorial Start'
+  m_Name: '[12]Wifi Tutorial Start'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -853,7 +853,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969922608048363
 MonoBehaviour:
@@ -867,7 +867,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 616206e641643944487224a5692c3a01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 11
+  Order: 12
   title: WiFi Tutorial
   info: To begin, power on your Voyager by holding down the power button for 3 seconds.
     When turning on the Voyager, the power status led(1st led) turns from red to
@@ -894,7 +894,7 @@ GameObject:
   - component: {fileID: 1042969922609043612}
   - component: {fileID: 1042969922609043611}
   m_Layer: 0
-  m_Name: '[14]Select Lamp'
+  m_Name: '[15]Select Lamp'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -912,7 +912,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969922609043611
 MonoBehaviour:
@@ -926,7 +926,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be631d5df2acdac41a7ae88bf429139a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 14
+  Order: 15
   title: Add Lamp To Workspace
   info: To add the lamp, click on the lamp on the left menu.
   moreInfo: 
@@ -950,7 +950,7 @@ GameObject:
   - component: {fileID: 1042969922624383686}
   - component: {fileID: 1042969922624383685}
   m_Layer: 0
-  m_Name: '[22]Add All Lamps'
+  m_Name: '[23]Add All Lamps'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -968,7 +968,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 21
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969922624383685
 MonoBehaviour:
@@ -982,7 +982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1a17e1407e43544906804a6cc6955a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 22
+  Order: 23
   title: Add Lamps
   info: Next click on ADD ALL LAMPS on the left menu
   moreInfo: If ADD ALL LAMPS doesn't appear, the other lamps have not connected to
@@ -1008,7 +1008,7 @@ GameObject:
   - component: {fileID: 1042969922660710797}
   - component: {fileID: 1042969922660710796}
   m_Layer: 0
-  m_Name: '[24]Click Lamp Settings'
+  m_Name: '[25]Click Lamp Settings'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1026,7 +1026,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 23
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969922660710796
 MonoBehaviour:
@@ -1040,7 +1040,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1a17e1407e43544906804a6cc6955a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 24
+  Order: 25
   title: Setting lamps to client mode
   info: Next click on LAMP SETTINGS on the right menu
   moreInfo: 
@@ -1065,7 +1065,7 @@ GameObject:
   - component: {fileID: 1042969922819581886}
   - component: {fileID: 1042969922819581885}
   m_Layer: 0
-  m_Name: '[12]Connect to lamp'
+  m_Name: '[13]Connect to lamp'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1083,7 +1083,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969922819581885
 MonoBehaviour:
@@ -1097,7 +1097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 616206e641643944487224a5692c3a01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 12
+  Order: 13
   title: Connect to your Voyager
   info: "Open WiFi list on your device and find your Voyager.\nThe SSID (Network
     name) of the Voyager is\r it\u2019s serial number\r (DS026XXXXXXXXXX). Password
@@ -1123,7 +1123,7 @@ GameObject:
   - component: {fileID: 1042969922940395219}
   - component: {fileID: 1042969922940395218}
   m_Layer: 0
-  m_Name: '[13]Click Add Lamp'
+  m_Name: '[14]Click Add Lamp'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1141,7 +1141,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042969922940395218
 MonoBehaviour:
@@ -1155,7 +1155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1a17e1407e43544906804a6cc6955a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 13
+  Order: 14
   title: Adding The Lamp
   info: 'To start using the Voyager, you must add it from the lamp menu.
 
@@ -1256,7 +1256,7 @@ MonoBehaviour:
   - {fileID: 956605390412279815}
   - {fileID: 1818820967881060995}
   - {fileID: 6098999894034422203}
-  - {fileID: 5176861212675659316}
+  - {fileID: 0}
   - {fileID: 1042969922608048363}
   - {fileID: 1042969922819581885}
   - {fileID: 1042969922940395218}
@@ -1357,6 +1357,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.745283, g: 0.745283, b: 0.745283, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1421,7 +1422,7 @@ GameObject:
   - component: {fileID: 2560478898249429695}
   - component: {fileID: 1818820967881060995}
   m_Layer: 0
-  m_Name: '[7]Connect To The WiFi Network'
+  m_Name: '[8]Connect To The WiFi Network'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1439,7 +1440,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1818820967881060995
 MonoBehaviour:
@@ -1453,7 +1454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 616206e641643944487224a5692c3a01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 7
+  Order: 8
   title: Connect To The External Wifi
   info: To start using the lamps in the app, connect your device to the external
     WiFi you have connected the lamps to. Then click next.
@@ -1528,6 +1529,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.8301887, g: 0.8301887, b: 0.8301887, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1610,7 +1612,7 @@ GameObject:
   - component: {fileID: 8124420280729543899}
   - component: {fileID: 7205457624554518013}
   m_Layer: 0
-  m_Name: '[4]Click Add By Ble'
+  m_Name: '[5]Click Add By Ble'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1628,7 +1630,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7205457624554518013
 MonoBehaviour:
@@ -1642,7 +1644,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1a17e1407e43544906804a6cc6955a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 4
+  Order: 5
   title: Click Add By Ble
   info: Now the phone is looking for any lamps using bluetooth. If any are found,
     ADD BY BLE button appears. Click on the button to continue.
@@ -1732,6 +1734,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.0754717, g: 0.0754717, b: 0.0754717, a: 0.9019608}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1806,6 +1809,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.735849, g: 0.735849, b: 0.735849, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2117,6 +2121,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.0754717, g: 0.0754717, b: 0.0754717, a: 0.9019608}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2235,6 +2240,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.9150943, g: 0.9150943, b: 0.9150943, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2349,6 +2355,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.8207547, g: 0.8207547, b: 0.8207547, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2401,7 +2408,7 @@ GameObject:
   - component: {fileID: 7781785145803902267}
   - component: {fileID: 2899163985141523697}
   m_Layer: 0
-  m_Name: '[3]Click Add Lamps'
+  m_Name: '[4]Click Add Lamps'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2419,7 +2426,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2899163985141523697
 MonoBehaviour:
@@ -2433,7 +2440,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1a17e1407e43544906804a6cc6955a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 3
+  Order: 4
   title: Click Add Lamps
   info: To connect lamps using ble, start by opening the add lamps menu by clicking
     the ADD LAMPS button on the right menu.
@@ -2550,6 +2557,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.0754717, g: 0.0754717, b: 0.0754717, a: 0.9019608}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2594,7 +2602,7 @@ GameObject:
   - component: {fileID: 1584259675391472715}
   - component: {fileID: 6628622853852549494}
   m_Layer: 0
-  m_Name: '[5]Select Lamps And Continue'
+  m_Name: '[6]Select Lamps And Continue'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2612,7 +2620,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6628622853852549494
 MonoBehaviour:
@@ -2626,7 +2634,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1a17e1407e43544906804a6cc6955a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 5
+  Order: 6
   title: Selecting Lamps
   info: Next, select the lamps you wish to connect to an external WiFi network. Then
     click Continue.
@@ -2641,6 +2649,63 @@ MonoBehaviour:
   leftMenuToOpen: {fileID: 0}
   centerOverlay: 3
   Button: {fileID: 0}
+--- !u!1 &5693841392068963911
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2059165500972240494}
+  - component: {fileID: 1183065347115605622}
+  m_Layer: 0
+  m_Name: '[3]Turning on lamps'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2059165500972240494
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5693841392068963911}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8108149786315269946}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1183065347115605622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5693841392068963911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 616206e641643944487224a5692c3a01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Order: 3
+  title: Ble Tutorial
+  info: BLE (Bluetooth Low Energy) is only used to setup lamps by connecting them
+    to a WiFi Network. Click NEXT to start connecting lamps.
+  moreInfo: 
+  leftMenu: 1
+  rightMenu: 1
+  disableRightButton: 0
+  disableLeftButton: 1
+  clearWorkspace: 1
+  backJump: 0
+  rightMenuToOpen: {fileID: 0}
+  leftMenuToOpen: {fileID: 0}
+  centerOverlay: 2
 --- !u!1 &6784273246284538187
 GameObject:
   m_ObjectHideFlags: 0
@@ -2698,7 +2763,7 @@ MonoBehaviour:
   leftMenuToOpen: {fileID: 0}
   centerOverlay: 2
   IfMobile: 2
-  IfDesktop: 11
+  IfDesktop: 12
 --- !u!1 &7138121653478237540
 GameObject:
   m_ObjectHideFlags: 0
@@ -2820,7 +2885,7 @@ MonoBehaviour:
   leftButtonText: NO
   middleButtonText: 
   rightButtonText: Yes
-  ifLeft: 10
+  ifLeft: 11
   ifMiddle: 0
   ifRight: 1
 --- !u!1 &7444652316006537303
@@ -3086,6 +3151,7 @@ Transform:
   - {fileID: 3791978435211968681}
   - {fileID: 6637184178055498810}
   - {fileID: 6169968016443354800}
+  - {fileID: 2059165500972240494}
   - {fileID: 7781785145803902267}
   - {fileID: 8124420280729543899}
   - {fileID: 1584259675391472715}
@@ -3224,6 +3290,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.0754717, g: 0.0754717, b: 0.0754717, a: 0.9019608}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3246,9 +3313,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3813785508939273226}
-  - component: {fileID: 5176861212675659316}
+  - component: {fileID: 737686074310341426}
   m_Layer: 0
-  m_Name: '[9]Ble Tutorial End'
+  m_Name: '[10]Ble Tutorial End'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3266,9 +3333,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5176861212675659316
+--- !u!114 &737686074310341426
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3277,10 +3344,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8941968203585492757}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be631d5df2acdac41a7ae88bf429139a, type: 3}
+  m_Script: {fileID: 11500000, guid: 616206e641643944487224a5692c3a01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 9
+  Order: 10
   title: Ble Tutorial
   info: Done! The lamps are now usable from the add lamps menu while the controller
     device is connected to the WiFi network the lamps are connected to.
@@ -3305,7 +3372,7 @@ GameObject:
   - component: {fileID: 6027408278272069083}
   - component: {fileID: 6098999894034422203}
   m_Layer: 0
-  m_Name: '[8]Wifi Tutorial Prompt'
+  m_Name: '[9]Wifi Tutorial Prompt'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3323,7 +3390,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8108149786315269946}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6098999894034422203
 MonoBehaviour:
@@ -3337,7 +3404,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c99b74ce4ef19c458dbf84429248992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Order: 8
+  Order: 9
   title: Using The Lamps
   info: Would you like to go through the tutorial of how to add lamps to an external
     network using only WiFi?
@@ -3354,9 +3421,9 @@ MonoBehaviour:
   leftButtonText: NO
   middleButtonText: 
   rightButtonText: YES
-  ifLeft: 9
+  ifLeft: 11
   ifMiddle: 0
-  ifRight: 11
+  ifRight: 12
 --- !u!1 &9153095079485312074
 GameObject:
   m_ObjectHideFlags: 0
@@ -3417,6 +3484,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.9150943, g: 0.9150943, b: 0.9150943, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3558,6 +3626,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
+--- !u!224 &5522744895418960800 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 59041266502807558}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1503047811687784428 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
@@ -3570,12 +3644,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &5522744895418960800 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
-    type: 3}
-  m_PrefabInstance: {fileID: 59041266502807558}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &215154008309479565
 PrefabInstance:
   m_ObjectHideFlags: 0

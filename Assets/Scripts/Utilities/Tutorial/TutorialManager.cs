@@ -73,6 +73,9 @@ namespace VoyagerApp.UI.Menus
             canvas.interactable = true;
             canvas.blocksRaycasts = true;
 
+            Instance.menuContainer.ShowMenu(startMenu);
+            Instance.inspectorMenuContainer.ShowMenu(null);
+
             if (PlayerPrefs.HasKey("TutorialDone"))
                 SetNextTutorial(1);
             else
@@ -86,6 +89,9 @@ namespace VoyagerApp.UI.Menus
             canvas.alpha = 0.0f;
             canvas.interactable = false;
             canvas.blocksRaycasts = false;
+
+            Instance.menuContainer.ShowMenu(startMenu);
+            Instance.inspectorMenuContainer.ShowMenu(null);
         }
 
         void SetOverlayData()
