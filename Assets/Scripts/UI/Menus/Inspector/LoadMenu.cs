@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
+using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Networking.Voyager;
 using VoyagerApp.Projects;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
+using Effect = VoyagerApp.Effects.Effect;
+using Lamp = VoyagerApp.Projects.Lamp;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -134,7 +139,7 @@ namespace VoyagerApp.UI.Menus
             VideoRenderer.SetState(new DoneState());
             foreach (var lampData in data.lamps)
             {
-                var lamp = LampManager.instance.GetLampWithSerial(lampData.serial);
+                var lamp = LampManager.instance.GetLampWithSerial(lampData.serial) as VoyagerLamp;
                 if (lamp == null) continue;
 
                 var video = EffectManager.GetEffectWithId<Effects.Video>(lampData.effect);
@@ -149,11 +154,31 @@ namespace VoyagerApp.UI.Menus
                     );
                 }
 
-                var effect = EffectManager.GetEffectWithId<Effects.Effect>(lampData.effect);
+                var effect = EffectManager.GetEffectWithId(lampData.effect);
                 if (effect == null) continue;
-                
+
                 lamp.effect = null;
                 lamp.SetEffect(effect);
+
+                StartCoroutine(LoadStream(effect, lampData, lamp));
+            }
+        }
+
+        private static IEnumerator LoadStream(Effect effect, Lamp data, VoyagerLamp lamp)
+        {
+            if (!(effect is SyphonStream) && !(effect is SpoutStream))
+                yield break;
+            
+            yield return new WaitForSeconds(0.2f);
+                
+            var frame = data.buffer[0];
+            var colors = ColorUtils.BytesToColors(frame);
+
+            for (var i = 0; i < 5; i++)
+            {
+                var time = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset + 1.0f;
+                lamp.PushStreamFrame(colors, time);
+                yield return new WaitForSeconds(0.01f);
             }
         }
 

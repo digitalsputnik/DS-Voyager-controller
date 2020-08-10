@@ -273,7 +273,7 @@ namespace VoyagerApp.Lamps.Voyager
 
         public override void PushFrame(Color32[] colors, long frame)
         {
-            byte[] data = ColorUtils.ColorsToBytes(colors);
+            var data = ColorUtils.ColorsToBytes(colors);
             var packet = new SetFramePacket(frame, itshe, data);
             NetUtils.VoyagerClient.SendPacket(this, packet, VoyagerClient.PORT_VIDEO, last);
             base.PushFrame(colors, frame);
@@ -283,8 +283,12 @@ namespace VoyagerApp.Lamps.Voyager
         {
             prevStream = ColorUtils.ColorsToBytes(colors);
             var mix = ColorUtils.MixColorsToItshe(colors, itshe);
-            var packet = new StreamFramePacket(time, ColorUtils.ColorsToBytes(mix));
+            var frame = ColorUtils.ColorsToBytes(mix);
+            var packet = new StreamFramePacket(time, frame);
             NetUtils.VoyagerClient.SendPacket(this, packet, VoyagerClient.PORT_VIDEO, last);
+            
+            buffer.Setup(1);
+            buffer.SetFrame(0, frame);
         }
     }
 }
