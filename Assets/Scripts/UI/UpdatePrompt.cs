@@ -58,8 +58,8 @@ namespace VoyagerApp.UI
 
             DialogBox.Show(
                 "Update",
-                "Outdated lamp found from network. " +
-                "Would you like to update your lamp now?",
+                "There are outdated lamps found from the network. " +
+                "Would you like to update your lamps now?",
                 new string[] { "REMOVE", "OK" },
                 new Action[] {
                     () =>
