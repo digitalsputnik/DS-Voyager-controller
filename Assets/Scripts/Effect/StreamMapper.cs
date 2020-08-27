@@ -130,7 +130,7 @@ namespace VoyagerApp.Effects
         void StoreFrameBuffer(Texture2D texture)
         {
             streamBuffer.Clear();
-            time = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset + ((float)Delay / 1000);
+            time = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset + (double)Delay / 1000;
             foreach (var lamp in WorkspaceUtils.VoyagerLamps)
             {
                 var coords = VectorUtils.MapLampToVideoCoords(lamp, texture);
