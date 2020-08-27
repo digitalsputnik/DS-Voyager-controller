@@ -123,7 +123,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 2.4.10
+  bundleVersion: 2.4.12
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -173,9 +173,9 @@ PlayerSettings:
     iPhone: com.digitalsputnik.voyagercontroller
     tvOS: com.DS.LightGrade
   buildNumber:
-    Standalone: 250
-    iPhone: 2.4.10
-  AndroidBundleVersionCode: 250
+    Standalone: 252
+    iPhone: 2.4.12
+  AndroidBundleVersionCode: 252
   AndroidMinSdkVersion: 26
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -865,7 +865,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLWasmStreaming: 0
   scriptingDefineSymbols:
-    1: NATCAM_16;NATCAM_CORE;NATCAM_PRO;CT_FB;UNITY_POST_PROCESSING_STACK_V2;CT_FB_PRO
+    1: CT_FB;UNITY_POST_PROCESSING_STACK_V2;CT_FB_PRO
     4: NATCAM_16;INATCAM_C;NATCAM_CORE;NATCAM_PRO;CT_FB;CT_FB_PRO
     7: NATCAM_16;NATCAM_CORE;NATCAM_PRO;CT_FB;UNITY_POST_PROCESSING_STACK_V2;CT_FB_PRO
     13: NATCAM_16;NATCAM_CORE;NATCAM_PRO;UNITY_POST_PROCESSING_STACK_V2;CT_FB;CT_FB_PRO

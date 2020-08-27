@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading;
 using GuerrillaNtp_DS;
 using Newtonsoft.Json;
+using VoyagerApp.UI;
 using VoyagerApp.Utilities;
+using Debug = UnityEngine.Debug;
 
 namespace VoyagerApp.Networking
 {
@@ -15,7 +17,7 @@ namespace VoyagerApp.Networking
         public readonly int UpdateInterval;
         public TimeSpan Offset = TimeSpan.Zero;
 
-        readonly Thread thread;
+        private readonly Thread thread;
 
         public OffsetService()
         {
@@ -30,20 +32,20 @@ namespace VoyagerApp.Networking
             thread.Abort();
         }
 
-        void MasterFinder()
+        private void MasterFinder()
         {
             while (true)
             {
-                TimeSpan receivedOffset = OffsetServiceClient.Offset;
+                var receivedOffset = OffsetServiceClient.Offset;
                 if (receivedOffset != TimeSpan.Zero) Offset = receivedOffset;
                 Thread.Sleep(UpdateInterval);
             }
         }
     }
 
-    static class OffsetServiceClient
+    internal static class OffsetServiceClient
     {
-        public static TimeSpan LastOffset = TimeSpan.MinValue;
+        private static TimeSpan _lastOffset = TimeSpan.MinValue;
 
         public static TimeSpan Offset
         {
@@ -51,23 +53,26 @@ namespace VoyagerApp.Networking
             {
                 try
                 {
-                    IPEndPoint endpoint = MasterEndpoint;
+                    var endpoint = MasterEndpoint;
                     if (endpoint == null)
-                        return LastOffset;
+                        return _lastOffset;
 
                     using (var ntp = new NtpClient(endpoint))
                     {
                         if (ntp.GetCorrectionOffset().Equals(TimeSpan.Zero))
-                            return LastOffset;
+                            return _lastOffset;
 
                         var value = ntp.GetCorrectionOffset();
-                        LastOffset = value;
+                        _lastOffset = value;
                         return value;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return LastOffset;
+                    if (ApplicationState.DeveloperMode)
+                        Debug.LogError(ex.Message);
+                    
+                    return _lastOffset;
                 }
             }
         }
@@ -82,23 +87,21 @@ namespace VoyagerApp.Networking
             catch { return TimeSpan.Zero; }
         }
 
-        static IPEndPoint MasterEndpoint
+        private static IPEndPoint MasterEndpoint
         {
             get
             {
-                int timeoutMilliseconds = 4100;
-                int port = 51259;
-                IPAddress address = NetUtils.WifiInterfaceAddress;
+                const int TIMEOUT_MILLISECONDS = 4100;
+                const int PORT = 51259;
+                var address = NetUtils.WifiInterfaceAddress;
 
-                var listener = new RudpClient(port);
-                listener.EnableBroadcast = true;
-                listener.ReuseAddress = true;
+                var listener = new RudpClient(PORT) { EnableBroadcast = true, ReuseAddress = true };
 
-                var server = new IPEndPoint(address, port);
+                var server = new IPEndPoint(address, PORT);
                 var sw = new Stopwatch();
 
                 var message = new byte[] { 1, 2, 3, 4 };
-                var dest = new IPEndPoint(IPAddress.Broadcast, port);
+                var dest = new IPEndPoint(IPAddress.Broadcast, PORT);
 
                 listener.Send(dest, message);
 
@@ -106,7 +109,7 @@ namespace VoyagerApp.Networking
 
                 try
                 {
-                    while (sw.ElapsedMilliseconds < timeoutMilliseconds)
+                    while (sw.ElapsedMilliseconds < TIMEOUT_MILLISECONDS)
                     {
                         while (listener.Available > 0)
                         {
@@ -123,14 +126,13 @@ namespace VoyagerApp.Networking
                 finally
                 {
                     listener.Close();
-                    listener = null;
                 }
 
                 return null;
             }
         }
 
-        static bool ValidateAnnounce(string message)
+        private static bool ValidateAnnounce(string message)
         {
             try
             {
