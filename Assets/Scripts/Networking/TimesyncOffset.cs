@@ -54,8 +54,17 @@ namespace VoyagerApp.Networking
                 try
                 {
                     var endpoint = MasterEndpoint;
+
                     if (endpoint == null)
+                    {
+                        MainThread.Dispach(() =>
+                        {
+                            if (ApplicationState.DeveloperMode)
+                                Debug.LogError("Endpoint wasn't found!");
+                        });
+                        
                         return _lastOffset;
+                    }
 
                     using (var ntp = new NtpClient(endpoint))
                     {
@@ -119,12 +128,20 @@ namespace VoyagerApp.Networking
                             var announce = listener.Receive(ref server);
                             var announceString = Encoding.ASCII.GetString(announce);
 
-                            if (!ValidateAnnounce(announceString))continue;
+                            if (!ValidateAnnounce(announceString)) continue;
 
                             server.Port = 123;
                             return server;
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    MainThread.Dispach(() =>
+                    {
+                        if (ApplicationState.DeveloperMode)
+                            Debug.LogError(ex.Message);
+                    });
                 }
                 finally
                 {
