@@ -286,7 +286,6 @@ namespace VoyagerApp.Lamps.Voyager
             var frame = ColorUtils.ColorsToBytes(mix);
             var packet = new StreamFramePacket(time, frame);
             NetUtils.VoyagerClient.SendPacket(this, packet, VoyagerClient.PORT_VIDEO, last);
-            
             buffer.Setup(1);
             buffer.SetFrame(0, frame);
         }

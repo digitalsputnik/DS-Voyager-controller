@@ -84,7 +84,7 @@ namespace VoyagerApp.Effects
             var renderCap = 1.0f / Fps;
             var streamCap = 1.0f / Fps / 2.0f;
 
-            if ((time - prevRenderTime) >= renderCap)
+            if (time - prevRenderTime >= renderCap)
             {
                 RenderFrame();
                 prevRenderTime = time;

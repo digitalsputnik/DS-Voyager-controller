@@ -69,9 +69,12 @@ namespace VoyagerApp.Networking
                 }
                 catch (Exception ex)
                 {
-                    if (ApplicationState.DeveloperMode)
-                        Debug.LogError(ex.Message);
-                    
+                    MainThread.Dispach(() =>
+                    {
+                        if (ApplicationState.DeveloperMode)
+                            Debug.LogError(ex.Message);
+                    });
+
                     return _lastOffset;
                 }
             }
