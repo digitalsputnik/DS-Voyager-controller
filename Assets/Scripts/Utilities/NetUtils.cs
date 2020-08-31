@@ -26,17 +26,14 @@ namespace VoyagerApp.Utilities
         {
             get
             {
-                if (Application.platform == RuntimePlatform.WindowsPlayer ||
-                    Application.platform == RuntimePlatform.WindowsEditor ||
-                    Application.platform == RuntimePlatform.OSXPlayer ||
-                    Application.platform == RuntimePlatform.OSXEditor )
-                {
-                    var wireless = NetworkInterface;
-                    if (wireless != null)
-                        return InterfaceToAddress(wireless);
-                }
-
-                return IPAddress.Any;
+                if (Application.platform != RuntimePlatform.WindowsPlayer &&
+                    Application.platform != RuntimePlatform.WindowsEditor &&
+                    Application.platform != RuntimePlatform.OSXPlayer &&
+                    Application.platform != RuntimePlatform.OSXEditor)
+                    return IPAddress.Any;
+                
+                var wireless = NetworkInterface;
+                return wireless != null ? InterfaceToAddress(wireless) : IPAddress.Any;
             }
         }
 

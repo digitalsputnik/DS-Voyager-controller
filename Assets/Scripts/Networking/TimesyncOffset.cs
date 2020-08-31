@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using GuerrillaNtp_DS;
@@ -105,18 +106,16 @@ namespace VoyagerApp.Networking
             {
                 const int TIMEOUT_MILLISECONDS = 4100;
                 const int PORT = 51259;
-                var address = NetUtils.WifiInterfaceAddress;
 
-                var listener = new RudpClient(PORT) { EnableBroadcast = true, ReuseAddress = true };
-
-                var server = new IPEndPoint(address, PORT);
-                var sw = new Stopwatch();
-
+                var listener = new UdpClient();
+                var server = new IPEndPoint(IPAddress.Any, PORT);
+                var dest = new IPEndPoint(NetUtils.WifiInterfaceAddress, PORT);
                 var message = new byte[] { 1, 2, 3, 4 };
-                var dest = new IPEndPoint(IPAddress.Broadcast, PORT);
+                
+                listener.Client.Bind(server);
+                listener.Send(message, message.Length, dest);
 
-                listener.Send(dest, message);
-
+                var sw = new Stopwatch();
                 sw.Start();
 
                 try
@@ -125,14 +124,17 @@ namespace VoyagerApp.Networking
                     {
                         while (listener.Available > 0)
                         {
-                            var announce = listener.Receive(ref server);
+                            var endpoint = new IPEndPoint(IPAddress.Any, 0);
+                            var announce = listener.Receive(ref endpoint);
                             var announceString = Encoding.ASCII.GetString(announce);
 
                             if (!ValidateAnnounce(announceString)) continue;
 
-                            server.Port = 123;
-                            return server;
+                            endpoint.Port = 123;
+                            return endpoint;
                         }
+                        
+                        Thread.Sleep(10);
                     }
                 }
                 catch (Exception ex)
