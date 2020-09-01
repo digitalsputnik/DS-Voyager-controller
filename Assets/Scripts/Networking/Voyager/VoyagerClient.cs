@@ -29,7 +29,6 @@ namespace VoyagerApp.Networking.Voyager
 
         RudpClient discovery;
         RudpClient settings;
-
         OffsetService offset;
 
         public VoyagerClient(MonoBehaviour behaviour)

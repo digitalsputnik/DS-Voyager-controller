@@ -139,8 +139,8 @@ namespace VoyagerApp.UI.Menus
             var lamps = WorkspaceUtils.Lamps;
             foreach (var lamp in LampManager.instance.Lamps)
             {
-                if (!items.Any(i => i.lamp.serial == lamp.serial) &&
-                    !lamps.Any(l => l.serial == lamp.serial) &&
+                if (items.All(i => i.lamp.serial != lamp.serial) &&
+                    lamps.All(l => l.serial != lamp.serial) &&
                     lamp.connected)
                     OnLampAdded(lamp);
             }
@@ -180,6 +180,7 @@ namespace VoyagerApp.UI.Menus
         private void OnLampAdded(Lamp lamp)
         {
             Debug.Log("OnLampAdded: " + lamp.serial);
+
             if (WorkspaceUtils.Lamps.Any(l => l == lamp) ||
                 items.Any(i => i.lamp == lamp) ||
                 !lamp.connected ||

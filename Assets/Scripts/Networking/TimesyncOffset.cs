@@ -61,7 +61,7 @@ namespace VoyagerApp.Networking
                         MainThread.Dispach(() =>
                         {
                             if (ApplicationState.DeveloperMode)
-                                Debug.LogError("Endpoint wasn't found!");
+                                Debug.LogError("Timesync master not found. Might happen if no lamps in network.");
                         });
                         
                         return _lastOffset;
