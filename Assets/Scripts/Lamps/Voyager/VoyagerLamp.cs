@@ -71,8 +71,8 @@ namespace VoyagerApp.Lamps.Voyager
                 chipVersion = info.chipVersion;
                 passive = info.passiveActiveMode == "1";
 
-                short chargingCurrent = BitConverter.ToInt16(
-                    new byte[]
+                var chargingCurrent = BitConverter.ToInt16(
+                    new[]
                     {
                         (byte)info.chargingStatus[1],
                         (byte)info.chargingStatus[0]

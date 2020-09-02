@@ -119,7 +119,7 @@ namespace VoyagerApp.Videos
         void HandleLampItsheInterupt(Lamp lamp)
         {
             // TODO: Also add resend buffer state here.
-            if (WorkspaceUtils.SelectedLamps.All(l => l.effect is Video && l.buffer.rendered) && (state is DoneState || state is ResendBufferState))
+            if (WorkspaceUtils.SelectedLamps.All(l => l.effect is Video && l.buffer.rendered) && (state is DoneState || state is ResendBufferState || state is ConfirmPixelsState))
             {
                 UnsubscribeLampEvents();
                 if (state is ResendBufferState resendState)
@@ -245,6 +245,8 @@ namespace VoyagerApp.Videos
                 return texture;
             }
         }
+
+        internal static double CurrentVideoId => instance.currentVideo.startTime;
 
         #endregion
     }

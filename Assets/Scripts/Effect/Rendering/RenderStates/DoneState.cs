@@ -6,7 +6,7 @@ namespace VoyagerApp.Videos
 {
     public class DoneState : RenderState
     {
-        const double CONFIRM_STATE_TIME = 10.0f;
+        const double CONFIRM_STATE_TIME = 5.0f;
 
         double _startTime;
 
