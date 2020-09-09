@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -23342,6 +23342,11 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 584018351}
+    - target: {fileID: 1042969921048608556, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: title
+      value: Setting lamps to Client mode
+      objectReference: {fileID: 0}
     - target: {fileID: 1042969921129099284, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: rightMenuToOpen
@@ -23352,6 +23357,11 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 1762311172}
+    - target: {fileID: 1042969921129099284, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: title
+      value: Setting lamps to Client mode
+      objectReference: {fileID: 0}
     - target: {fileID: 1042969921198489717, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: rightMenuToOpen
@@ -23362,6 +23372,23 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 58413197}
+    - target: {fileID: 1042969921198489717, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: title
+      value: Setting lamps to Client mode
+      objectReference: {fileID: 0}
+    - target: {fileID: 1042969921199112678, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: moreInfo
+      value: "YELLOW:\r Master\r (default mode). Unit is creating its own WiFi network
+        and can be\r connected to a remote device.\r\nGREEN:\r Unit is a Client\r
+        and is connected to a network. When the Voyager is in client\r mode and searching
+        for a connection you will see a blinking green light.\r\nRED:\r Unit is a
+        client and cannot automatically find a network\r to connect to or has\r (temporary)
+        connection problems.\nBLUE:\r Router\r - The SSID (Network name ) has been
+        given an _M at the end.\r (i.e. DS0262XXXXXXXX_M). Other Voyagers set to
+        Client will connect automatically\r to this unit.\r"
+      objectReference: {fileID: 0}
     - target: {fileID: 1042969921425243652, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: rightMenuToOpen
@@ -23372,6 +23399,26 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 275778713}
+    - target: {fileID: 1042969921425243652, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: title
+      value: Setting lamps to Client mode
+      objectReference: {fileID: 0}
+    - target: {fileID: 1042969921563154353, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: info
+      value: Do you want to use multiple Voyagers?
+      objectReference: {fileID: 0}
+    - target: {fileID: 1042969922201362812, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: rightButtonText
+      value: YES
+      objectReference: {fileID: 0}
+    - target: {fileID: 1042969922201362812, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: info
+      value: Would you like to go through the connections tutorial?
+      objectReference: {fileID: 0}
     - target: {fileID: 1042969922263375263, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: rightMenuToOpen
@@ -23382,6 +23429,34 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 129566772}
+    - target: {fileID: 1042969922263375263, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: title
+      value: Setting lamps to Client mode
+      objectReference: {fileID: 0}
+    - target: {fileID: 1042969922275524475, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: title
+      value: Connect to Router Lamp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1042969922275524475, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: info
+      value: "Open WiFi list on your device and find your Voyager.\nThe SSID (Network
+        name) of the Voyager in Router mode is it's serial number with _M (DS026XXXXXXXXXX_M).\nPassword
+        is\r \"dsputnik\"."
+      objectReference: {fileID: 0}
+    - target: {fileID: 1042969922302617497, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: moreInfo
+      value: Setting the Voyagers to client mode connects them automatically to the
+        lamp which was set to Router Mode. If the lamps have been previously connected
+        to a different WiFi netrwork that is currently in range, the lamps will not
+        automatically connect to the router lamp. In this case you should close the
+        tutorial and first set the lamps to Master mode one by one using the Program
+        button on the side of the lamp and then set them to Client mode using the
+        app.
+      objectReference: {fileID: 0}
     - target: {fileID: 1042969922565610212, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: rightMenuToOpen
@@ -23392,6 +23467,14 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 1315860174}
+    - target: {fileID: 1042969922565610212, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: info
+      value: 'To connect all Voyagers to the external WiFi network. You first have
+        to add them to your workspace.
+
+        Click on ADD LAMPS on the right menu'
+      objectReference: {fileID: 0}
     - target: {fileID: 1042969922624383685, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: leftMenuToOpen
@@ -23412,6 +23495,18 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 771160152}
+    - target: {fileID: 1042969922660710796, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: title
+      value: Setting lamps to Client mode
+      objectReference: {fileID: 0}
+    - target: {fileID: 1042969922819581885, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: info
+      value: "Open WiFi list on your device and find your Voyager.\nThe SSID (Network
+        name) of the Voyager is\r it\u2019s serial number\r (DS026XXXXXXXXXX). Password
+        is\r \"dsputnik\"."
+      objectReference: {fileID: 0}
     - target: {fileID: 1042969922940395218, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: rightMenuToOpen
@@ -23422,6 +23517,14 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 1315860174}
+    - target: {fileID: 1042969922940395218, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: info
+      value: 'To start using the Voyager, you must add it from the "Add Lamps" menu.
+
+        To
+        open the lamp menu, click on the ADD LAMPS button on the right menu.'
+      objectReference: {fileID: 0}
     - target: {fileID: 1110400233971714258, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -23755,6 +23858,19 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 241909078}
+    - target: {fileID: 7205457624554518013, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: info
+      value: Now the device is looking for any lamps using bluetooth. If any are
+        found, ADD BY BLE button appears. Click on the button to continue.
+      objectReference: {fileID: 0}
+    - target: {fileID: 7205457624554518013, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: moreInfo
+      value: If all the lamps are in your current network already, "ADD BY BLE" button
+        is not displayed. If "ADD BY BLE" button is not appearing, make sure the
+        lamps are turned on and bluetooth and location are enabled on your device.
+      objectReference: {fileID: 0}
     - target: {fileID: 7392626584999569587, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -23804,6 +23920,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8118991561822787676, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: info
+      value: BLE (Bluetooth Low Energy) is only used to set up lamps by connecting
+        them to a WiFi Network. Click NEXT to start connecting lamps.
       objectReference: {fileID: 0}
     - target: {fileID: 8129084852126066749, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
