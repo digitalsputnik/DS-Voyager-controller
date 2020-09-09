@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerApp.Effects;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 
@@ -86,7 +86,7 @@ namespace VoyagerApp.UI.Menus
 
                 foreach (var lampItem in WorkspaceUtils.LampItems)
                 {
-                    bool selected = WorkspaceSelection.instance.Contains(lampItem);
+                    var selected = WorkspaceSelection.instance.Contains(lampItem);
                     var state = states.FirstOrDefault(s => s.lamp == lampItem.lamp);
 
                     if (state != null)
@@ -94,7 +94,13 @@ namespace VoyagerApp.UI.Menus
                         WorkspaceSelection.instance.DeselectItem(lampItem);
                         WorkspaceManager.instance.RemoveItem(lampItem);
                         var item = state.lamp.AddToWorkspace(state.position, state.scale, state.rotation);
+                        
                         if (selected) WorkspaceSelection.instance.SelectItem(item);
+
+                        item.lamp.buffer.Clear();
+                        item.lamp.SetEffect(null);
+                        item.lamp.SetEffect(state.effect);
+                        item.lamp.SetMapping(state.mapping);
                     }
                 }
 
