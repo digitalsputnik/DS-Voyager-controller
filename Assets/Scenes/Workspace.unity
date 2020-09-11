@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -14777,7 +14777,7 @@ PrefabInstance:
     - target: {fileID: 802620914053610863, guid: 0c2615ce77e7f493a9998d23cd0e9155,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 802620914053610863, guid: 0c2615ce77e7f493a9998d23cd0e9155,
         type: 3}
@@ -14787,7 +14787,7 @@ PrefabInstance:
     - target: {fileID: 802620914053610863, guid: 0c2615ce77e7f493a9998d23cd0e9155,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 802620914053610863, guid: 0c2615ce77e7f493a9998d23cd0e9155,
         type: 3}
@@ -22860,51 +22860,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3460918171069029509}
     m_Modifications:
-    - target: {fileID: 287576042, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
-      propertyPath: info
-      value: "Now connect your device to your external network and you're done! \nJust
-        add the lamps from the \"Add Lamps\" menu and start creating."
-      objectReference: {fileID: 0}
-    - target: {fileID: 287576042, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
-      propertyPath: ifRight
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 1959968791, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
-      propertyPath: m_Padding.m_Left
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1959968791, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
-      propertyPath: m_Padding.m_Right
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1959968791, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
-      propertyPath: m_ChildAlignment
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 2091659657, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
-      propertyPath: title
-      value: BLE Tutorial
-      objectReference: {fileID: 0}
-    - target: {fileID: 2091659657, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
-      propertyPath: ifLeft
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2091659657, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
-      propertyPath: ifRight
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2091659659, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
-      propertyPath: disableLeftButton
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2091659659, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
-      propertyPath: ifLeft
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2091659659, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
-      propertyPath: ifRight
-      value: 100
-      objectReference: {fileID: 0}
     - target: {fileID: 79336654033462607, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: inspectorMenuContainer
@@ -22930,16 +22885,6 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 984979040}
-    - target: {fileID: 956605390412279815, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: disableRightButton
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 956605390412279815, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: disableLeftButton
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1042969921048608556, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: leftMenuToOpen
@@ -22970,13 +22915,6 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 58413197}
-    - target: {fileID: 1042969921199112678, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: info
-      value: Check the WiFi mode by holding the power button(on the top of the lamp)
-        for less than less than 2 seconds (to avoid switching off your lamp) to check
-        the color of the 3rd LED.
-      objectReference: {fileID: 0}
     - target: {fileID: 1042969921425243652, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: rightMenuToOpen
@@ -22987,18 +22925,6 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 275778713}
-    - target: {fileID: 1042969922074834844, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: info
-      value: To start using multiple Voyagers, set your first Voyager to Router mode.
-        To toggle between the modes and set the Voyager to Router mode, hold down
-        the program button(on the side of the lamp) until the 3rd LED turns blue.
-      objectReference: {fileID: 0}
-    - target: {fileID: 1042969922201362812, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: ifLeft
-      value: 100
-      objectReference: {fileID: 0}
     - target: {fileID: 1042969922263375263, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: rightMenuToOpen
@@ -23009,31 +22935,6 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 129566772}
-    - target: {fileID: 1042969922275524475, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: title
-      value: Connect to Router lamp
-      objectReference: {fileID: 0}
-    - target: {fileID: 1042969922302617497, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: moreInfo
-      value: Setting the Voyagers to client mode connects them automatically to the
-        lamp which was set to Router Mode. If the lamps have been previously connected
-        to a different WiFi network that is currently in range, the lamps will not
-        automatically connect to the router lamp. In this case you should close the
-        tutorial and first set the lamps to Master mode one by one using the Program
-        button on the side of the lamp and then set them to Client mode using the
-        app.
-      objectReference: {fileID: 0}
-    - target: {fileID: 1042969922302617497, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: info
-      value: 'To connect other lamps, you must set them to Client Mode.
-
-        Hold
-        down the program button(on the side of the lamp) on each lamp until the 3rd
-        LED turns green.'
-      objectReference: {fileID: 0}
     - target: {fileID: 1042969922565610212, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: rightMenuToOpen
@@ -23044,14 +22945,6 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 1315860174}
-    - target: {fileID: 1042969922565610212, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: info
-      value: 'To connect all Voyagers. You first have to add them to your workspace.
-
-        Click
-        on ADD LAMPS on the right menu'
-      objectReference: {fileID: 0}
     - target: {fileID: 1042969922609043611, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: leftMenuToOpen
@@ -23197,11 +23090,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 2708630858830296269, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_RaycastTarget
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2899163985141523697, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: rightMenuToOpen
@@ -23212,22 +23100,6 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 1315860174}
-    - target: {fileID: 2899163985141523697, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: info
-      value: To connect lamps using BLE, start by opening the "Add Lamps" menu by
-        clicking the ADD LAMPS button on the right menu.
-      objectReference: {fileID: 0}
-    - target: {fileID: 2899163985141523697, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: title
-      value: Click ADD LAMPS
-      objectReference: {fileID: 0}
-    - target: {fileID: 3681386513269840140, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_FontData.m_Alignment
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 4098614287497015586, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -23245,12 +23117,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4098614287497015586, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
-      propertyPath: m_AnchoredPosition.y
+      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4098614287497015586, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
-      propertyPath: m_SizeDelta.x
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4098614287497015586, guid: c7232ab74f290ad4b8ce4ef420609fb9,
@@ -23258,133 +23130,42 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4191201619370208146, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: info
-      value: Would you like to connect the lamps to an external network?
-      objectReference: {fileID: 0}
-    - target: {fileID: 4191201619370208146, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: title
-      value: Connect to external network
-      objectReference: {fileID: 0}
-    - target: {fileID: 4191201619370208146, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: ifLeft
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 4200206494617473756, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_FontData.m_Alignment
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 4200206494617473756, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_RaycastTarget
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5097604644126111787, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: rightButtonText
-      value: MANY
-      objectReference: {fileID: 0}
-    - target: {fileID: 5097604644126111787, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: title
-      value: WiFi Tutorial
-      objectReference: {fileID: 0}
-    - target: {fileID: 5097604644126111787, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: info
-      value: Are you using one lamp or many(up to 9)?
-      objectReference: {fileID: 0}
-    - target: {fileID: 5509444413177934664, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -100
-      objectReference: {fileID: 0}
-    - target: {fileID: 5509444413177934664, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5509444413177934664, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5509444413177934664, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 5522744895418960800, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 5522744895418960800, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5522744895418960800, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5522744895418960800, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 5709815118684140897, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_Padding.m_Right
-      value: 70
-      objectReference: {fileID: 0}
-    - target: {fileID: 5709815118684140897, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_Padding.m_Left
-      value: 70
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098999894034422203, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: info
-      value: Would you like to go through the tutorial of how to add lamps using
-        only WiFi?
-      objectReference: {fileID: 0}
-    - target: {fileID: 6122609969744375974, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: info
-      value: Hold down the power button on the lamp until the first LED turns green.
-      objectReference: {fileID: 0}
-    - target: {fileID: 6321007182497261255, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6321007182497261255, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6321007182497261255, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+    - target: {fileID: 4436018634467478646, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6321007182497261255, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6321007182497261255, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+    - target: {fileID: 4436018634467478646, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: m_SizeDelta.x
+      value: -60
+      objectReference: {fileID: 0}
+    - target: {fileID: 5410751607749545636, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5522744895418960800, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6321007182497261255, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+    - target: {fileID: 5522744895418960800, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5522744895418960800, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5522744895418960800, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5522744895418960800, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -23409,21 +23190,6 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 241909078}
-    - target: {fileID: 7205457624554518013, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: title
-      value: Click ADD BY BLE
-      objectReference: {fileID: 0}
-    - target: {fileID: 7684641673600122447, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: m_Name
-      value: Top
-      objectReference: {fileID: 0}
-    - target: {fileID: 8118991561822787676, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: title
-      value: BLE Tutorial
-      objectReference: {fileID: 0}
     - target: {fileID: 8433838351822343772, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -23441,12 +23207,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8433838351822343772, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
-      propertyPath: m_AnchoredPosition.y
+      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8433838351822343772, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
-      propertyPath: m_SizeDelta.x
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8433838351822343772, guid: c7232ab74f290ad4b8ce4ef420609fb9,
@@ -23456,14 +23222,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8979087004872849241, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
-      propertyPath: info
-      value: Would you like to connect your lamp(s) to an external router by BLE
-        (recommended) or learn about connecting with WiFi?
-      objectReference: {fileID: 0}
-    - target: {fileID: 8979087004872849241, guid: c7232ab74f290ad4b8ce4ef420609fb9,
-        type: 3}
-      propertyPath: title
-      value: Connections Tutorial
+      propertyPath: ifRight
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
