@@ -46,12 +46,14 @@ namespace VoyagerApp.Projects
     [Serializable]
     public class Spout : Effect
     {
+        public int delay;
         public string source;
     }
      
     [Serializable]
     public class Syphon : Effect
     {
+        public int delay;
         public string server;
         public string application;
     }

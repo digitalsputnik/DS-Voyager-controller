@@ -62,7 +62,9 @@ namespace VoyagerApp.Projects
                             id = syphon.id,
                             type = "syphon",
                             server = syphon.server,
-                            application = syphon.application
+                            application = syphon.application,
+                            delay = syphon.delay
+                            
                         };
                         break;
                     case SpoutStream spout:
@@ -70,7 +72,8 @@ namespace VoyagerApp.Projects
                         {
                             id = spout.id,
                             type = "spot",
-                            source = spout.source
+                            source = spout.source,
+                            delay = spout.delay
                         };
                         break;
                 }
