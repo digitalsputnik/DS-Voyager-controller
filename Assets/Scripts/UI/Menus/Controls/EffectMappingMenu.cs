@@ -73,11 +73,9 @@ namespace VoyagerApp.UI.Menus
         internal override void OnShow()
         {
             streamMapper.Delay = streamDelayField.Value;
-            streamMapper.Fps = streamFpsField.Value;
 
             WorkspaceSelection.instance.onSelectionChanged += EnableDisableObjects;
             streamDelayField.onChanged += StreamDelayChanged;
-            streamFpsField.onChanged += StreamFpsChanged;
 
             streamDelayField.gameObject.SetActive(!(effect is Video || effect is Effects.Image));
 
