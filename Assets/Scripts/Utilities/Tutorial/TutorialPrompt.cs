@@ -45,8 +45,21 @@ namespace VoyagerApp.UI
 
         public void OnRightClick()
         {
-            TutorialManager.Instance.SetNextTutorial(ifRight);
-            ResetButtons();
+            if (ifRight == 100)
+            {
+                TutorialManager.Instance.CompletedAllTutorials();
+                ResetButtons();
+            }
+            else if (ifRight == 0)
+            {
+                TutorialManager.Instance.PreviousTutorial();
+                ResetButtons();
+            }
+            else
+            {
+                TutorialManager.Instance.SetNextTutorial(ifRight);
+                ResetButtons();
+            }
         }
 
         public void OnMiddleClick()
@@ -57,8 +70,21 @@ namespace VoyagerApp.UI
 
         public void OnLeftClick()
         {
-            TutorialManager.Instance.SetNextTutorial(ifLeft);
-            ResetButtons();
+            if (ifLeft == 100)
+            {
+                TutorialManager.Instance.CompletedAllTutorials();
+                ResetButtons();
+            }
+            else if (ifLeft == 0)
+            {
+                TutorialManager.Instance.PreviousTutorial();
+                ResetButtons();
+            }
+            else
+            {
+                TutorialManager.Instance.SetNextTutorial(ifLeft);
+                ResetButtons();
+            }
         }
 
         public void ResetButtons()

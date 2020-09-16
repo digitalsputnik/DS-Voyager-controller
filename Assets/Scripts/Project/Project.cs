@@ -243,6 +243,7 @@ namespace VoyagerApp.Projects
                             syphon.id = syphonData.id;
                             syphon.server = syphonData.server;
                             syphon.application = syphonData.application;
+                            syphon.delay = syphonData.delay;
                             syphon.lift = syphonData.lift;
                             syphon.contrast = syphonData.contrast;
                             syphon.saturation = syphonData.saturation;
@@ -254,6 +255,7 @@ namespace VoyagerApp.Projects
                         {
                             spout.id = spoutData.id;
                             spout.source = spoutData.source;
+                            spout.delay = spoutData.delay;
                             spout.lift = spoutData.lift;
                             spout.contrast = spoutData.contrast;
                             spout.saturation = spoutData.saturation;

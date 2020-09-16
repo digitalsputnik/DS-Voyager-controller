@@ -431,7 +431,9 @@ namespace VoyagerApp.Utilities
                     lamp = lamp.lamp,
                     position = lamp.position,
                     scale = lamp.scale,
-                    rotation = lamp.rotation
+                    rotation = lamp.rotation,
+                    mapping = lamp.lamp.mapping,
+                    effect = lamp.lamp.effect
                 });
             }
             return states;
@@ -444,5 +446,7 @@ namespace VoyagerApp.Utilities
         public float2 position;
         public float scale;
         public float rotation;
+        public EffectMapping mapping;
+        public Effect effect;
     }
 }

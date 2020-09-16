@@ -41,8 +41,8 @@ namespace VoyagerApp.UI.Menus
         {
             DialogBox.Show(
                 "Help",
-                "Would you like to do the tutorial again or get to the help page?",
-                new string[] { "TUTORIAL", "HELP PAGE" },
+                "Would you like to do the tutorial again or get to the support page?",
+                new string[] { "TUTORIAL", "SUPPORT PAGE", "EXIT"},
                 new Action[] {
                     () =>
                     {
@@ -51,6 +51,8 @@ namespace VoyagerApp.UI.Menus
                     }
                     ,
                     () => { Application.OpenURL(ApplicationSettings.HELP_URL); }
+                    ,
+                    () => {}
                 }
             );
         }

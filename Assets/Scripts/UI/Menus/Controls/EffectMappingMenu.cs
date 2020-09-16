@@ -40,25 +40,24 @@ namespace VoyagerApp.UI.Menus
                 syphonSource.transform.parent.gameObject.SetActive(false);
                 spoutSource.transform.parent.gameObject.SetActive(false);
                 streamDelayField.gameObject.SetActive(false);
-                streamFpsField.gameObject.SetActive(false);
                 splitter.SetActive(false);
             }
             else if (effect is SyphonStream syphon)
             {
                 SetupSyphon(syphon);
+                streamDelayField.SetValue(syphon.delay);
                 syphonSource.transform.parent.gameObject.SetActive(true);
                 spoutSource.transform.parent.gameObject.SetActive(false);
                 streamDelayField.gameObject.SetActive(true);
-                streamFpsField.gameObject.SetActive(true);
                 splitter.SetActive(true);
             }
             else if (effect is SpoutStream spout)
             {
                 SetupSpout(spout);
+                streamDelayField.SetValue(spout.delay);
                 syphonSource.transform.parent.gameObject.SetActive(false);
                 spoutSource.transform.parent.gameObject.SetActive(true);
                 streamDelayField.gameObject.SetActive(true);
-                streamFpsField.gameObject.SetActive(true);
                 splitter.SetActive(true);
             }
         }
@@ -74,14 +73,11 @@ namespace VoyagerApp.UI.Menus
         internal override void OnShow()
         {
             streamMapper.Delay = streamDelayField.Value;
-            streamMapper.Fps = streamFpsField.Value;
 
             WorkspaceSelection.instance.onSelectionChanged += EnableDisableObjects;
             streamDelayField.onChanged += StreamDelayChanged;
-            streamFpsField.onChanged += StreamFpsChanged;
 
             streamDelayField.gameObject.SetActive(!(effect is Video || effect is Effects.Image));
-            streamFpsField.gameObject.SetActive(!(effect is Video || effect is Effects.Image));
 
             EnableDisableObjects();
         }
@@ -245,12 +241,16 @@ namespace VoyagerApp.UI.Menus
         }
         #endregion
 
-        void StreamDelayChanged(int value)
+        private void StreamDelayChanged(int value)
         {
-            streamMapper.Delay = streamDelayField.Value;
+            if (effect is Stream stream)
+            {
+                streamMapper.Delay = streamDelayField.Value;
+                stream.delay = value;
+            }
         }
 
-        void StreamFpsChanged(int value)
+        private void StreamFpsChanged(int value)
         {
             streamMapper.Fps = streamFpsField.Value;
         }
@@ -261,10 +261,10 @@ namespace VoyagerApp.UI.Menus
             SceneManager.LoadScene(0);
         }
 
-        void EnableDisableObjects()
+        private void EnableDisableObjects()
         {
-            bool one = WorkspaceUtils.AtLastOneLampSelected;
-            bool all = WorkspaceUtils.AllLampsSelected;
+            var one = WorkspaceUtils.AtLastOneLampSelected;
+            var all = WorkspaceUtils.AllLampsSelected;
 
             selectDeselectBtnText.text = all ? "DESELECT ALL" : "SELECT ALL";
             alignmentBtn.SetActive(one);

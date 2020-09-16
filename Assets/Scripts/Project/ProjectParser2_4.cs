@@ -70,6 +70,7 @@ namespace VoyagerApp.Projects
                         syphon.id = (string)effectToken["id"];
                         syphon.server = (string) effectToken["server"];
                         syphon.application = (string) effectToken["application"];
+                        syphon.delay = (int) effectToken["delay"];
                         syphon.type = type;
                         syphon.lift = lift;
                         syphon.contrast = contrast;
@@ -81,6 +82,7 @@ namespace VoyagerApp.Projects
                         var spout = new Spout();
                         spout.id = (string)effectToken["id"];
                         spout.source = (string) effectToken["source"];
+                        spout.delay = (int) effectToken["delay"];
                         spout.type = type;
                         spout.lift = lift;
                         spout.contrast = contrast;
