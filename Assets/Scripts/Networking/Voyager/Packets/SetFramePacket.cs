@@ -19,9 +19,7 @@ namespace VoyagerApp.Networking.Voyager
 
         public SetFramePacket(long index, Itshe itshe, byte[] frame) : this()
         {
-            Color32[] colors = ColorUtils.BytesToColors(frame);
-            colors = ColorUtils.MixColorsToItshe(colors, itshe);
-            this.frame = ColorUtils.ColorsToBytes(colors);
+            this.frame = frame;
             this.index = index;
             temperature = itshe.t;
         }
