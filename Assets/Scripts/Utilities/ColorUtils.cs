@@ -3,6 +3,7 @@
 // Copyright: © Digital Sputnik OÜ
 // -----------------------------------------------------------------
 
+using System;
 using UnityEngine;
 
 namespace VoyagerApp.Utilities
@@ -124,6 +125,127 @@ namespace VoyagerApp.Utilities
             for (int i = 0; i < one.Length; i++)
                 results[i] = Color32.Lerp(one[i], two[i], time);
             return results;
+        }
+
+        public static Color ToColor(this Itshe itshe) => ItsheToRgb(itshe);
+        public static Color ItsheToRgb(Itshe itsh)
+        {
+            double r, g, b;
+            double h = itsh.h;
+            double i = itsh.i;
+            double s = itsh.s;
+
+            while (h < 0)
+                h += 360;
+            while (h >= 360)
+                h -= 360;
+            if (i <= 0)
+                r = g = b = 0;
+            else if (s <= 0)
+                r = g = b = i;
+            
+            else
+            {
+                var hf = h / 60.0;
+                var a = (int)Mathf.Floor((float)hf);
+                var f = hf - a;
+                var pv = i * (1 - s);
+                var qv = i * (1 - s * f);
+                var tv = i * (1 - s * (1 - f));
+                
+                switch (a)
+                {
+                    case 0:
+                        r = i;
+                        g = tv;
+                        b = pv;
+                        break;
+                    case 1:
+                        r = qv;
+                        g = i;
+                        b = pv;
+                        break;
+                    case 2:
+                        r = pv;
+                        g = i;
+                        b = tv;
+                        break;
+                    case 3:
+                        r = pv;
+                        g = qv;
+                        b = i;
+                        break;
+                    case 4:
+                        r = tv;
+                        g = pv;
+                        b = i;
+                        break;
+                    case 5:
+                        r = i;
+                        g = pv;
+                        b = qv;
+                        break;
+                    case 6:
+                        r = i;
+                        g = tv;
+                        b = pv;
+                        break;
+                    case -1:
+                        r = i;
+                        g = pv;
+                        b = qv;
+                        break;
+                    default:
+                        r = g = b = i;
+                        break;
+                }
+            }
+
+            var color = Color.gray;
+            color.r = Mathf.Clamp01((float)r);
+            color.g = Mathf.Clamp01((float)g);
+            color.b = Mathf.Clamp01((float)b);
+            return color;
+        }
+
+        public static Itshe ToItshe(this Color color, float t = Itshe.DEFAULT_TEMPERATURE, float effect = 1.0f) =>
+            RgbToItshe(color, t, effect);
+
+        public static Itshe RgbToItshe(Color rgb, float t = Itshe.DEFAULT_TEMPERATURE, float effect = 1.0f)
+        {
+            double h = 0, s;
+
+            var r = rgb.r * 255.0f;
+            var g = rgb.g * 255.0f;
+            var b = rgb.b * 255.0f;
+
+            double min = Mathf.Min(Mathf.Min(r, g), b);
+            double i = Mathf.Max(Mathf.Max(r, g), b);
+            var delta = i - min;
+
+            if (i == 0.0)
+                s = 0;
+            else
+                s = delta / i;
+
+            if (s == 0)
+                h = 0.0;
+
+            else
+            {
+                if (Math.Abs(r - i) < 0.001f)
+                    h = (g - b) / delta;
+                else if (Math.Abs(g - i) < 0.001f)
+                    h = 2 + (b - r) / delta;
+                else if (Math.Abs(b - i) < 0.001f)
+                    h = 4 + (r - g) / delta;
+
+                h *= 60;
+
+                while (h < 0.0) h += 360;
+            }
+
+            return new Itshe((float)i, t, (float)s, (float)h, effect);
         }
     }
 
