@@ -32,7 +32,7 @@ namespace VoyagerApp
             this.h = h;
         }
 
-        [JsonIgnore] public Color AsColor => ColorUtils.ItsheToRgb(new Itshe(i, t, s, h, 1.0f));
+        [JsonIgnore] public Color AsColor => Color.HSVToRGB(h, s, i); // ColorUtils.ItsheToRgb(new Itshe(i, t, s, h, 1.0f));
 
         public static Itsh white => new Itsh(1.0f, DEFAULT_TEMPERATURE, 0.0f, 0.0f);
 
