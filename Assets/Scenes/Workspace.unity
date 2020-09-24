@@ -22860,6 +22860,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3460918171069029509}
     m_Modifications:
+    - target: {fileID: 2091659659, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
+      propertyPath: rightButtonText
+      value: NEXT
+      objectReference: {fileID: 0}
+    - target: {fileID: 2091659659, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
+      propertyPath: ifRight
+      value: 24
+      objectReference: {fileID: 0}
     - target: {fileID: 79336654033462607, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: inspectorMenuContainer
@@ -22915,6 +22923,18 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 58413197}
+    - target: {fileID: 1042969921199112678, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: moreInfo
+      value: "YELLOW: Master (default mode). Unit is creating its own WiFi network
+        and can be\r connected to with a remote device.\r\nGREEN: Unit is a Client
+        and is connected to a network. When the Voyager is in Client\r mode and searching
+        for a connection you will see a blinking green light.\r\nRED: Unit is a Client
+        and cannot automatically find a network\r to connect to or has (temporary)
+        connection problems.\r\r\nBLUE: Router - The SSID (Network name) has been
+        given an _M at the end.\r (i.e. DS0262XXXXXXXX_M). Other Voyagers set to
+        Client will connect automatically to this unit."
+      objectReference: {fileID: 0}
     - target: {fileID: 1042969921425243652, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: rightMenuToOpen
@@ -23130,6 +23150,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4191201619370208146, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: info
+      value: Would you like to connect the lamp(s) to an external network?
+      objectReference: {fileID: 0}
     - target: {fileID: 4436018634467478646, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -23139,6 +23164,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.x
       value: -60
+      objectReference: {fileID: 0}
+    - target: {fileID: 5097604644126111787, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: moreInfo
+      value: If you have more than 9 lamps, it is recommended to connect lamps in
+        groups of 9.
       objectReference: {fileID: 0}
     - target: {fileID: 5410751607749545636, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
