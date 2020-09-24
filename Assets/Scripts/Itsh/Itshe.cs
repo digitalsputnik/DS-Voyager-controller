@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using Unity.Mathematics;
 using UnityEngine;
-using VoyagerApp.Utilities;
 
 namespace VoyagerApp
 {
@@ -47,7 +46,8 @@ namespace VoyagerApp
             return new Itsh(itshe.i, itshe.t, itshe.s, itshe.h);
         }
 
-        [JsonIgnore] public Color AsColor => this.ToColor();
+        [JsonIgnore]
+        public Color AsColor => Color.HSVToRGB(h, s, i);
 
         public static Itshe white => new Itshe(1.0f, DEFAULT_TEMPERATURE, 0.0f, 0.0f, 1.0f);
 
