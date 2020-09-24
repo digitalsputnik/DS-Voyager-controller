@@ -14,6 +14,14 @@
         "com.digitalsputnik.core": "0.0.1"
       }
     },
+    "com.digitalsputnik.voyager": {
+      "version": "file:DigitalSputnik.Voyager",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.digitalsputnik.core": "0.0.1"
+      }
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,

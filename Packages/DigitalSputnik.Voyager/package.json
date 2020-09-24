@@ -1,0 +1,10 @@
+{
+  "name": "com.digitalsputnik.voyager",
+  "displayName": "Digital Sputnik Voyager",
+  "version": "0.0.1",
+  "type": "library",
+  "dependencies": {
+    "com.digitalsputnik.core": "0.0.1"
+  },
+  "description": "Functionality to discover and control Voyager lamps through network"
+}
