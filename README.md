@@ -7,4 +7,6 @@ Application to control Digital Sputnik Voyager lights.
 
 **[Issue guide](/Assets/Documentation/ISSUES.md)**
 
+**[Release process](/Assets/Documentation/release.md)**
+
 ![](/screenshot.png)
