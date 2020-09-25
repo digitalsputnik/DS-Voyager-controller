@@ -19,7 +19,7 @@ Release candidates are published to the [releases page](https://github.com/digit
 ## Testing and Q&A
 Testing consists of three phases:
 1. Testing of new features - since new features;
-2. Filling out test sheet (link to template), which consists mostly of current features that should work;
+2. Filling out test sheet ([link to template](https://docs.google.com/spreadsheets/d/14ZKBtwgfpKyoVK-KiNli-We00_-AXu-2eqRtX73tk0I/edit?usp=sharing)), which consists mostly of current features that should work;
 3. Creative testing - trying to discover issues which do not fall under previous two categories.
 
 If there are issues in the pre-release versions, then triage will be applied to the issues to decide on whether:
