@@ -1,7 +1,11 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DigitalSputnik.Videos;
 using UnityEngine;
+using UnityEngine.Networking;
 
 #if UNITY_IOS && !UNITY_EDITOR
 using DigitalSputnik.Videos.iOS;
@@ -9,6 +13,7 @@ using DigitalSputnik.Videos.iOS;
 
 namespace VoyagerController.Effects
 {
+    [RequireComponent(typeof(ThumbnailLoader))]
     public class EffectManager : MonoBehaviour
     {
         #region Singleton
@@ -18,6 +23,7 @@ namespace VoyagerController.Effects
             if (_instance == null)
             {
                 _instance = this;
+                _thumbnails = GetComponent<ThumbnailLoader>();
                 DontDestroyOnLoad(gameObject);
                 LoadPresets();
             }
@@ -35,9 +41,11 @@ namespace VoyagerController.Effects
 
         private readonly List<Effect> _effects = new List<Effect>();
         
+        private ThumbnailLoader _thumbnails;
+        
         public static void AddEffect(Effect effect)
         {
-            if (_instance._effects.Any(p => p.Id == effect.Id)) return;
+            if (_instance._effects.Any(p => p.Name == effect.Name)) return;
             
             _instance._effects.Add(effect);
             OnEffectAdded?.Invoke(effect);
@@ -86,9 +94,15 @@ namespace VoyagerController.Effects
             foreach (var effect in _instance._effects.ToList().Where(effect => !IsEffectPreset(effect)))
                 _instance._effects.Remove(effect);
         }
+        #endregion
         
+        #region Presets
         private static void LoadPresets()
         {
+            LoadVideoPresets();
+            
+            // TODO: Add SPOUT and SYPHON streaming effects & also image effect
+
             /*
             VideoEffectLoader.LoadVideoPresets();
 
@@ -114,6 +128,69 @@ namespace VoyagerController.Effects
                 });
             }
             */
+        }
+        
+        [ContextMenu("Update Presets List")]
+        private void DoSomething()
+        {
+            var path = Path.Combine(Application.streamingAssetsPath, "video_presets");
+            _presets = Directory
+                .GetFiles(path, "*.mp4")
+                .Select(Path.GetFileNameWithoutExtension).
+                ToArray();
+        }
+
+        private static void LoadVideoPresets()
+        {
+            if (Application.platform != RuntimePlatform.Android)
+            {
+                var path = Path.Combine(Application.streamingAssetsPath, "video_presets");
+                LoadPresetsFrom(path);
+            }
+            else
+            {
+                if (!PlayerPrefs.HasKey("prefabs_loaded"))
+                {
+                    PlayerPrefs.SetInt("prefabs_loaded", 1);
+                    _instance.StartCoroutine(EnumSetupAndroidPresets(_instance._presets));
+                }
+                else
+                {
+                    var path = Path.Combine(Application.persistentDataPath, "video_presets");
+                    LoadPresetsFrom(path);
+                }
+            }
+        }
+
+        private static IEnumerator EnumSetupAndroidPresets(IEnumerable<string> presets)
+        {
+            var source = Path.Combine(Application.streamingAssetsPath, "video_presets");
+            var destination = Path.Combine(Application.persistentDataPath, "video_presets");
+
+            Directory.CreateDirectory(destination);
+
+            foreach (var preset in presets)
+            {
+                var url = Path.Combine(source, preset);
+                var dest = Path.Combine(destination, preset);
+
+                var load = new UnityWebRequest(url) { downloadHandler = new DownloadHandlerBuffer() };
+
+                yield return load.SendWebRequest();
+
+                if (load.isNetworkError)
+                    Debug.Log(load.error);
+
+                File.WriteAllBytes(dest, load.downloadHandler.data);
+            }
+
+            LoadVideoPresets();
+        }
+
+        private static void LoadPresetsFrom(string path)
+        {
+            foreach (var p in Directory.GetFiles(path, "*.mp4"))
+                _instance.LoadVideoEffect(p, effect => effect.Id = Guid.NewGuid().ToString());
         }
         #endregion
         
@@ -142,9 +219,14 @@ namespace VoyagerController.Effects
             #endif
         }
         
-        public static void LoadVideo(string path, EffectHandler loaded)
+        public void LoadVideoEffect(string path, EffectHandler loaded)
         {
-            Tools.LoadVideo(path, video => loaded?.Invoke(new VideoEffect(video)));
+            Tools.LoadVideo(path, video =>
+            {
+                var effect = new VideoEffect(video);
+                _thumbnails.LoadThumbnail(effect, loaded);
+                AddEffect(effect);
+            });
         }
 
         public static void ResizeVideo(VideoEffect video, int width, int height, EffectHandler done)
@@ -155,6 +237,7 @@ namespace VoyagerController.Effects
                 done?.Invoke(video);
             });
         }
+        
         #endregion
     }
 }

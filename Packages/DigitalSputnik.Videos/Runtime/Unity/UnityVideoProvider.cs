@@ -10,6 +10,7 @@ namespace DigitalSputnik.Videos
     public class UnityVideoProvider : IVideoProvider
     {
         private const float VIDEO_LOAD_TIMEOUT = 10.0f;
+
         public void LoadVideo(string path, VideoHandler loaded)
         {
             MainThreadRunner.Instance.EnqueueAction(() =>

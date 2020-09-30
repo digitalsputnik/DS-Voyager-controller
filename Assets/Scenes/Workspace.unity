@@ -14058,6 +14058,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1006171119}
+  - component: {fileID: 1006171121}
   - component: {fileID: 1006171120}
   m_Layer: 0
   m_Name: Effect Manager
@@ -14092,7 +14093,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca82a738d37d4b9c8fd2162fdcce879e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _presets: []
+  _presets:
+  - fire
+  - gradient
+  - h_chase
+  - h_chase_background
+  - h_chase_soft
+  - h_chase_soft_background
+  - police
+  - softgrad
+  - v_chase
+  - v_chase_background
+  - v_chase_soft
+  - v_chase_soft_background
+  - water
+  - white
+--- !u!114 &1006171121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006171118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11fe2c2b5ec54481ae6ba47505549712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1031205622
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15092,7 +15119,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 788294643429295483}
+      objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
@@ -16709,6 +16736,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dd2f7a19cdb8448aa81002763ca3550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &1314744108 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
+    type: 3}
+  m_PrefabInstance: {fileID: 921160637}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1322594318
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27036,7 +27069,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2050392026}
   - component: {fileID: 2050392028}
-  - component: {fileID: 788294643429295483}
+  - component: {fileID: 2050392027}
   m_Layer: 5
   m_Name: Set Effect Menu
   m_TagString: Untagged
@@ -27066,6 +27099,22 @@ RectTransform:
   m_AnchoredPosition: {x: -1000, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2050392027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2050392025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed3875a34dfab400b99ed0b8ba1b45b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _itemPrefab: {fileID: 8035561506252957581, guid: 729909f9a9228442f850ee0f1c5f7ac9,
+    type: 3}
+  _container: {fileID: 1314744108}
+  _applyToSelected: 1
 --- !u!225 &2050392028
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -29781,18 +29830,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
---- !u!114 &788294643429295483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2050392025}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 207e1954adea5400f8f615586f04f393, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &897986248685478536
 GameObject:
   m_ObjectHideFlags: 0
@@ -32803,7 +32840,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _container: {fileID: 3184923042902931717}
-  _startMenu: {fileID: 2072530006}
+  _startMenu: {fileID: 2050392027}
   _showHide: {fileID: 3184923044406905004}
 --- !u!114 &3184923043728705260
 MonoBehaviour:
