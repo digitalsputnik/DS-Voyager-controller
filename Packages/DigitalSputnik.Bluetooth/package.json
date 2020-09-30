@@ -1,0 +1,7 @@
+{
+  "name": "com.digitalsputnik.bluetooth",
+  "displayName": "Digital Sputnik Bluetooth",
+  "version": "0.0.1",
+  "type": "library",
+  "description": "Access to use Bluetooth on iOS and Android devices."
+}

@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.digitalsputnik.bluetooth": {
+      "version": "file:DigitalSputnik.Bluetooth",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.digitalsputnik.core": {
       "version": "file:DigitalSputnik.Core",
       "depth": 0,

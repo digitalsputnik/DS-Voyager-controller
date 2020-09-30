@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using DigitalSputnik;
 using DigitalSputnik.Voyager;
 using UnityEngine;
@@ -34,51 +33,62 @@ namespace VoyagerController
         }
 
         #endregion
-
-        #region Events
+        
+        #region Static
         public static LampHandler OnLampDiscovered;
+        public static LampDatabase Lamps => Instance._database;
         #endregion
         
+        #region Lamps
         private readonly LampDatabase _database = new LampDatabase();
-        private readonly List<Lamp> _lamps = new List<Lamp>();
         
         private void Setup()
         {
             LampManager.Instance.OnLampDiscovered += LampDiscovered;
             LampManager.Instance.AddClient(new VoyagerClient());
+            if (Application.isMobilePlatform && !Application.isEditor)
+                LampManager.Instance.AddClient(new BluetoothClient());
         }
 
         private void Dispose()
         {
-            LampManager.Instance.RemoveClient<VoyagerClient>();
             _database.Clear();
-            _lamps.Clear();
+            LampManager.Instance.RemoveClient<VoyagerClient>();
+            if (Application.isMobilePlatform && !Application.isEditor)
+                LampManager.Instance.RemoveClient<BluetoothClient>();
         }
 
         private void LampDiscovered(Lamp lamp)
         {
-            _lamps.Add(lamp);
-            CreateMetadataBasedOnType(lamp);
-
-            _database.Get(lamp).Discovered = DateTime.UtcNow;
-            
-            Debugger.LogInfo($"Lamp {lamp.Serial} discovered at {_database.Get(lamp.Serial).Discovered}");
-        }
-
-        private void CreateMetadataBasedOnType(Lamp lamp)
-        {
-            var serial = lamp.Serial;
-            
-            switch (lamp)
+            if (AddLampToDatabase(lamp))
             {
-                case VoyagerLamp _:
-                    _database.Create<VoyagerMetadata>(serial);
-                    break;
-                default:
-                    _database.Create<LampMetadata>(serial);
-                    break;
+                Debugger.LogInfo($"Lamp {lamp.Serial} discovered at {_database.GetMetadata(lamp.Serial).Discovered}");
+                MainThread.Dispatch(() => OnLampDiscovered?.Invoke(lamp));
             }
         }
+
+        private bool AddLampToDatabase(Lamp lamp)
+        {
+            try
+            {
+                switch (lamp)
+                {
+                    case VoyagerLamp _:
+                        _database.Add<VoyagerMetadata>(lamp);
+                        break;
+                    default:
+                        _database.Add<LampMetadata>(lamp);
+                        break;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debugger.LogError(ex.Message);
+                return false;
+            }
+        }
+        #endregion
     }
 
     public delegate void LampHandler(Lamp lamp);
