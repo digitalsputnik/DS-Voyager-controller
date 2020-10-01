@@ -22,7 +22,7 @@ namespace VoyagerController.Workspace
         [SerializeField] private TextMesh _nameText = null;
         [SerializeField] private TextMesh _orderText = null;
 
-        private VoyagerMetadata _meta;
+        private LampMetadata _meta;
         private Texture2D _pixelsTexture;
         private static readonly int _baseMap = Shader.PropertyToID("_BaseMap");
 
@@ -32,7 +32,7 @@ namespace VoyagerController.Workspace
 
             if (LampHandle == null) return false;
             
-            _meta = ApplicationManager.Lamps.GetMetadata<VoyagerMetadata>(LampHandle.Serial);
+            _meta = ApplicationManager.Lamps.GetMetadata(LampHandle.Serial);
             return base.Setup(data, uid);
         }
         

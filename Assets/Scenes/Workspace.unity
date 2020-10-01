@@ -8112,7 +8112,7 @@ Transform:
   m_LocalScale: {x: 1000, y: 1000, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &585339809
 PrefabInstance:
@@ -17948,7 +17948,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1440986008
 GameObject:
@@ -21418,7 +21418,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1675783967
 MonoBehaviour:
@@ -22783,7 +22783,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1762591098}
   - component: {fileID: 1762591099}
-  - component: {fileID: 1762591101}
+  - component: {fileID: 1762591100}
   m_Layer: 0
   m_Name: Video Renderer
   m_TagString: Untagged
@@ -22803,7 +22803,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!328 &1762591099
 VideoPlayer:
@@ -22839,7 +22839,7 @@ VideoPlayer:
   m_Looping: 1
   m_WaitForFirstFrame: 1
   m_FrameReadyEventEnabled: 0
---- !u!114 &1762591101
+--- !u!114 &1762591100
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -22848,7 +22848,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1762591097}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2330d32c669e94dd0af4cf7a1b926908, type: 3}
+  m_Script: {fileID: 11500000, guid: df4825bc943c14193b381143737ebf80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1763948362
@@ -29801,7 +29801,7 @@ RectTransform:
   - {fileID: 1601197726}
   - {fileID: 474074824}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

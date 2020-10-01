@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using VoyagerController;
 using VoyagerController.Workspace;
 
-namespace VoyagerApp.UI
+namespace VoyagerController.UI
 {
     public class MoveIcon : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {

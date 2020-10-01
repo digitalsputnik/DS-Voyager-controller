@@ -90,7 +90,7 @@ namespace VoyagerController.UI
                 .OrderByDescending(e => e.Meta.Timestamp)
                 .ThenByDescending(e => e.Name == "white")
                 .ThenByDescending(e => ApplicationManager.Lamps
-                    .GetMetadata<LampMetadata>(l => l.Effect == e).Count());
+                    .GetMetadata(l => l.Effect == e).Count());
             // TODO: Here should be streams
         }
         

@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DigitalSputnik;
+using DigitalSputnik.Colors;
+using DigitalSputnik.Voyager;
 using VoyagerController.Effects;
 
 namespace VoyagerController
@@ -11,12 +12,12 @@ namespace VoyagerController
         private const string ALREADY_CONTAINS_EXCEPTION = "Already contains lamp with the same serial";
         private const string UNKNOWN_LAMP_EXCEPTION = "No lamp with the serial found";
         
-        private List<Lamp> _lamps;
+        private List<VoyagerLamp> _lamps;
         private Dictionary<string, LampMetadata> _metadata;
 
         public LampDatabase()
         {
-            _lamps = new List<Lamp>();
+            _lamps = new List<VoyagerLamp>();
             _metadata = new Dictionary<string, LampMetadata>();
         }
 
@@ -31,42 +32,35 @@ namespace VoyagerController
             _metadata.Clear();
         }
 
-        public void Add<T>(Lamp lamp) where T : LampMetadata, new()
+        public void Add(VoyagerLamp lamp)
         {
             if (Contains(lamp.Serial))
                 throw new Exception(ALREADY_CONTAINS_EXCEPTION);
             
             _lamps.Add(lamp);
-            _metadata[lamp.Serial] = new T();
+            _metadata[lamp.Serial] = new LampMetadata();
         }
 
-        public IEnumerable<Lamp> GetLamps() => GetLamps<Lamp>();
+        public IEnumerable<VoyagerLamp> GetLamps() => _lamps;
 
-        public IEnumerable<T> GetLamps<T>() where T : Lamp => _lamps.OfType<T>();
+        public VoyagerLamp GetLamp(string serial)
+        {
+            if (!Contains(serial))
+                throw new Exception(UNKNOWN_LAMP_EXCEPTION);
+            return _lamps.FirstOrDefault(l => l.Serial == serial);
+        }
 
-        public Lamp GetLamp(string serial) => GetLamp<Lamp>(serial);
-
-        public T GetLamp<T>(string serial) where T : Lamp
+        public LampMetadata GetMetadata(string serial)
         {
             if (!Contains(serial))
                 throw new Exception(UNKNOWN_LAMP_EXCEPTION);
 
-            return _lamps.FirstOrDefault(l => l.Serial == serial) as T;
+            return _metadata[serial];
         }
 
-        public LampMetadata GetMetadata(string serial) => GetMetadata<LampMetadata>(serial);
-
-        public T GetMetadata<T>(string serial) where T : LampMetadata
+        public IEnumerable<LampMetadata> GetMetadata(Func<LampMetadata, bool> predicate)
         {
-            if (!Contains(serial))
-                throw new Exception(UNKNOWN_LAMP_EXCEPTION);
-
-            return _metadata[serial] as T;
-        }
-
-        public IEnumerable<T> GetMetadata<T>(Func<T, bool> predicate) where T : LampMetadata
-        {
-            return _metadata.Values.OfType<T>().Where(predicate);
+            return _metadata.Values.Where(predicate);
         }
     }
     
@@ -76,8 +70,7 @@ namespace VoyagerController
         public DateTime Discovered { get; set; }
         public Effect Effect { get; set; }
         public double TimeEffectApplied { get; set; }
+        public bool Rendered { get; set; } = false;
+        public Rgb[][] FrameBuffer { get; set; }
     }
-    
-    [Serializable]
-    public class VoyagerMetadata : LampMetadata { }
 }

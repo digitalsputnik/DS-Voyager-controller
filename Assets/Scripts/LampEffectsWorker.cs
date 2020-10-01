@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using DigitalSputnik;
+using DigitalSputnik.Colors;
 using DigitalSputnik.Voyager;
 using DigitalSputnik.Voyager.Communication;
 using UnityEngine;
@@ -26,12 +28,25 @@ namespace VoyagerController
                     break;
             }
         }
+        
+        public static void ApplyVideoFrameToVoyager(VoyagerLamp voyager, long index, IEnumerable<Rgb> rgb)
+        {
+            var time = ApplicationManager.Lamps.GetMetadata(voyager.Serial).TimeEffectApplied;
+            /* 
+            voyager.
+            voyager.SendVideoFrame();
+            
+            var packet = new SetFramePacket(frame, itshe, data);
+            // NetUtils.VoyagerClient.SendPacket(this, packet, VoyagerClient.PORT_VIDEO, last);
+            */
+        }
 
         private static void ApplyVideoToVoyager(VoyagerLamp voyager, VideoEffect video)
         {
             var offset = TimeOffset(voyager);
             var start = video.Meta.StartTime + offset;
             var time = TimeUtils.Epoch + offset;
+            var framebuffer = new Rgb[video.Video.FrameCount][];
 
             var packet = new PacketCollection(
                 new SetVideoPacket((long)video.Video.FrameCount, start),
@@ -39,6 +54,8 @@ namespace VoyagerController
             );
 
             ApplicationManager.Lamps.GetMetadata(voyager.Serial).TimeEffectApplied = time;
+            ApplicationManager.Lamps.GetMetadata(voyager.Serial).Rendered = false;
+            ApplicationManager.Lamps.GetMetadata(voyager.Serial).FrameBuffer = framebuffer;
 
             SendPacket(voyager, packet, time);
         }

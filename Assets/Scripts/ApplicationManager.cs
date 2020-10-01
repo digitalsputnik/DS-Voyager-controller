@@ -71,16 +71,12 @@ namespace VoyagerController
         {
             try
             {
-                switch (lamp)
+                if (lamp is VoyagerLamp voyager)
                 {
-                    case VoyagerLamp _:
-                        _database.Add<VoyagerMetadata>(lamp);
-                        break;
-                    default:
-                        _database.Add<LampMetadata>(lamp);
-                        break;
+                    _database.Add(voyager);
+                    return true;   
                 }
-                return true;
+                else return false;
             }
             catch (Exception ex)
             {

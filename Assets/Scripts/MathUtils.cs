@@ -1,3 +1,4 @@
+using DigitalSputnik.Colors;
 using UnityEngine;
 
 namespace VoyagerController
@@ -13,5 +14,15 @@ namespace VoyagerController
             if (angle < 0f) angle += 360f;
             return angle;
         }
+
+        public static Rgb[] ToRgbArray(this Color32[] colors)
+        {
+            var rgb = new Rgb[colors.Length];
+            for (var i = 0; i < colors.Length; i++)
+                rgb[i] = colors[i].ToRgb();
+            return rgb;
+        }
+        
+        public static Rgb ToRgb(this Color32 color) => new Rgb(color.r, color.g, color.b);
     }
 }
