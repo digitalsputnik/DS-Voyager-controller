@@ -14,7 +14,7 @@ namespace VoyagerController.Workspace
         public delegate void SelectionHandler();
         public static event SelectionHandler OnSelectionChanged;
 
-        public static IEnumerable<WorkspaceItem> Selected => _instance._selected;
+        private static IEnumerable<WorkspaceItem> Selected => _instance._selected;
         
         private readonly List<WorkspaceItem> _selected = new List<WorkspaceItem>();
         
@@ -28,9 +28,13 @@ namespace VoyagerController.Workspace
             WorkspaceManager.OnItemRemoved -= ItemRemovedFromWorkspace;
         }
 
+        public static IEnumerable<T> GetSelected<T>() where T : WorkspaceItem => Selected.OfType<T>();
+
+        public static IEnumerable<WorkspaceItem> GetSelected() => GetSelected<WorkspaceItem>(); 
+
         public static void SelectItem(WorkspaceItem selectable)
         {
-            if (Selected.Contains(selectable)) return;
+            if (Contains(selectable)) return;
             
             selectable.Select();
             _instance._selected.Add(selectable);
@@ -39,7 +43,7 @@ namespace VoyagerController.Workspace
         
         public static void DeselectItem(WorkspaceItem selectable)
         {
-            if (!Selected.Contains(selectable)) return;
+            if (!Contains(selectable)) return;
             
             selectable.Deselect();
             _instance._selected.Remove(selectable);

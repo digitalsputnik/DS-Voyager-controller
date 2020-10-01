@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEngine;
 using VoyagerController.Effects;
+using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
 {
@@ -20,7 +21,7 @@ namespace VoyagerController.UI
             EffectManager.OnEffectAdded += OnEffectEvent;
             EffectManager.OnEffectModified += OnEffectEvent;
             EffectManager.OnEffectRemoved += OnEffectEvent;
-            base.OnShow();
+            UpdateEffectsList();
         }
 
         internal override void OnHide()
@@ -28,7 +29,6 @@ namespace VoyagerController.UI
             EffectManager.OnEffectAdded -= OnEffectEvent;
             EffectManager.OnEffectModified -= OnEffectEvent;
             EffectManager.OnEffectRemoved -= OnEffectEvent;
-            base.OnHide();
         }
 
         private void OnEffectEvent(Effect effect) => UpdateEffectsList();
@@ -50,17 +50,7 @@ namespace VoyagerController.UI
                 _items.Add(item);
             }
         }
-
-        private void ApplyEffectToSelectedLamps(Effect effect)
-        {
-            // TODO: Implement
-        }
-
-        private void ApplyEffectToAllLamps(Effect effect)
-        {
-            // TODO: Implement
-        }
-
+        
         private void ClearItems()
         {
             foreach (var item in _items)
@@ -68,7 +58,19 @@ namespace VoyagerController.UI
             _items.Clear();
         }
 
-        private IEnumerable<Effect> GetEffectsInOrder()
+        private static void ApplyEffectToSelectedLamps(Effect effect)
+        {
+            foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>())
+                EffectManager.ApplyEffectToLamp(item.LampHandle, effect);
+        }
+
+        private static void ApplyEffectToAllLamps(Effect effect)
+        {
+            foreach (var item in WorkspaceManager.GetItems<VoyagerItem>())
+                EffectManager.ApplyEffectToLamp(item.LampHandle, effect);
+        }
+
+        private static IEnumerable<Effect> GetEffectsInOrder()
         {
             return EffectManager.GetEffects()
                 .OrderByDescending(e => e.Meta.Timestamp)

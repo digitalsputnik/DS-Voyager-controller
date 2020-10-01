@@ -10,19 +10,13 @@ namespace VoyagerController.Workspace
 
         public static Bounds Bounds;
 
-        private void Start()
-        {
-            WorkspaceSelection.OnSelectionChanged += SelectionChanged;
-        }
-        
-        private void OnDestroy()
-        {
-            WorkspaceSelection.OnSelectionChanged -= SelectionChanged;
-        }
+        private void Start() => WorkspaceSelection.OnSelectionChanged += SelectionChanged;
+
+        private void OnDestroy() => WorkspaceSelection.OnSelectionChanged -= SelectionChanged;
 
         private void SelectionChanged()
         {
-            if (WorkspaceSelection.Selected.Any())
+            if (WorkspaceSelection.GetSelected().Any())
             {
                 if (_selectionController != null)
                     UpdateExisting();
@@ -39,10 +33,10 @@ namespace VoyagerController.Workspace
         private void CreateNew()
         {
             Bounds = new Bounds(
-                WorkspaceSelection.Selected.First().SelectPositions[0],
+                WorkspaceSelection.GetSelected().First().SelectPositions[0],
                 Vector3.zero);
 
-            foreach (var item in WorkspaceSelection.Selected)
+            foreach (var item in WorkspaceSelection.GetSelected())
                 Bounds.Encapsulate(item.Bounds);
 
             Bounds.Expand(0.5f);
@@ -50,7 +44,7 @@ namespace VoyagerController.Workspace
             _selectionController = WorkspaceManager.InstantiateItem<SelectionControllerItem>(null);
             _selectionController.SetBounds(Bounds);
 
-            foreach (var item in WorkspaceSelection.Selected)
+            foreach (var item in WorkspaceSelection.GetSelected())
                 item.SetParent(_selectionController);
         }
 

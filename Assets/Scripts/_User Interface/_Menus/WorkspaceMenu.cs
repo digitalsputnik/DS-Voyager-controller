@@ -1,11 +1,15 @@
-﻿using System.IO;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
 {
     public class WorkspaceMenu : Menu
     {
+        private const string SELECT_ALL_TEXT = "SELECT ALL";
+        private const string DESELECT_ALL_TEXT = "DESELECT ALL";
+        
         [SerializeField] private GameObject _infoText = null;
         [SerializeField] private GameObject _splitter1 = null;
         [SerializeField] private GameObject _selectDeselectAllBtn = null;
@@ -23,27 +27,25 @@ namespace VoyagerController.UI
         public override void Start()
         {
             _selectDeselectText = _selectDeselectAllBtn.GetComponentInChildren<Text>();
-            DisableEnableItems();
+            UpdateUserInterface();
             base.Start();
         }
 
         internal override void OnShow()
         {
-            /* 
-            WorkspaceSelection.instance.onSelectionChanged += DisableEnableItems;
-            WorkspaceManager.instance.onItemAdded += ItemAddedToWorkspace;
-            WorkspaceManager.instance.onItemRemoved += ItemRemovedWorkspace;
-            DisableEnableItems();
-            */
+            WorkspaceSelection.OnSelectionChanged += UpdateUserInterface;
+            WorkspaceManager.OnItemAdded += OnItemEvent;
+            WorkspaceManager.OnItemRemoved += OnItemEvent;
+            UpdateUserInterface();
         }
+
+        private void OnItemEvent(WorkspaceItem item) => UpdateUserInterface();
 
         internal override void OnHide()
         {
-            /*
-            WorkspaceSelection.instance.onSelectionChanged -= DisableEnableItems;
-            WorkspaceManager.instance.onItemAdded -= ItemAddedToWorkspace;
-            WorkspaceManager.instance.onItemRemoved -= ItemRemovedWorkspace;
-            */
+            WorkspaceSelection.OnSelectionChanged -= UpdateUserInterface;
+            WorkspaceManager.OnItemAdded -= OnItemEvent;
+            WorkspaceManager.OnItemRemoved -= OnItemEvent;
         }
 
         public void AddPicture()
@@ -53,67 +55,72 @@ namespace VoyagerController.UI
 
         public void SelectDeselect()
         {
-            /* 
             if (!WorkspaceUtils.AllLampsSelected)
-                WorkspaceUtils.SelectAll();
+                WorkspaceUtils.SelectAllLamps();
             else
-                WorkspaceUtils.DeselectAll();
-            */
+                WorkspaceUtils.DeselectAllLamps();
         }
 
         public void SelectWithSameEffect()
         {
-            /* 
-            var effect = WorkspaceUtils.SelectedLamps[0].effect;
-            WorkspaceUtils.SelectLampsWithEffect(effect);
-            */
+            var serial = WorkspaceSelection.GetSelected<VoyagerItem>().First().LampHandle.Serial;
+            var effect = ApplicationManager.Lamps.GetMetadata(serial).Effect;
+
+            foreach (var item in WorkspaceUtils.GetItemsWithSameEffect(effect))
+                WorkspaceSelection.SelectItem(item);
         }
 
         public void EditEffectClick()
         {
+            // TODO: Implement
             // WorkspaceUtils.EnterToVideoMapping();
         }
 
-        /*
-        void ItemAddedToWorkspace(WorkspaceItemView item)
+        private void UpdateUserInterface()
         {
-            DisableEnableItems();
+            var selectedLamps = WorkspaceSelection.GetSelected<VoyagerItem>().ToList();
+            var lampsInWorkspace = WorkspaceManager.GetItems<VoyagerItem>().ToList();
+            
+            var has = lampsInWorkspace.Any();
+            var one = selectedLamps.Any();
+            var all = WorkspaceUtils.AllLampsSelected;
+            // TODO: Check if effects are shared
+            // TODO: Check if any lamp is in DMX mode
+            var share = SelectedLampsShareSameEffect();
+            var dmx = false;
+            
+            _infoText.SetActive(!one);
+            
+            _splitter1.SetActive(one);
+            _selectDeselectAllBtn.SetActive(has);
+            _selectDeselectText.text = all ? DESELECT_ALL_TEXT : SELECT_ALL_TEXT;
+            _selectColorFxBtn.SetActive(one && share);
+            
+            _splitter2.SetActive(one);
+            _setEffectBtn.SetActive(one);
+            _editEffectBtn.SetActive(one && share && !dmx);
+            
+            _splitter3.SetActive(one);
+            _setDmxBtn.SetActive(one);
+            
+            _splitter4.SetActive(one);
+            _alignmentBtn.SetActive(one);
         }
 
-        void ItemRemovedWorkspace(WorkspaceItemView item)
+        private bool SelectedLampsShareSameEffect()
         {
-            DisableEnableItems();
-        }
-        */
-
-        private void DisableEnableItems()
-        {
-            /*
-            bool one = WorkspaceUtils.AtLastOneLampSelected;
-            bool all = WorkspaceUtils.AllLampsSelected;
-            bool share = WorkspaceUtils.SelectedLampsHaveSameEffect;
-            bool has = WorkspaceUtils.VoyagerLamps.Count != 0;
-            bool hasDmx = WorkspaceUtils.AnySelectedLampsAreDmx;
-
-            infoText.SetActive(!one);
-
-            splitter1.SetActive(one);
-            selectDeselectAllBtn.SetActive(has);
-            selectDeselectText.text = all ? "DESELECT ALL" : "SELECT ALL";
-            selectColorFxBtn.SetActive(one && share);
-
-            splitter2.SetActive(one);
-            setColorFxBtn.SetActive(one);
-            editColorFxBtn.SetActive(one && share && !hasDmx);
-
-            splitter3.SetActive(one);
-            setDmxBtn.SetActive(one);
-
-            splitter4.SetActive(one);
-            alignmentBtn.SetActive(one);
-            */
+            if (!WorkspaceSelection.GetSelected().Any()) return false;
+            
+            var serial = WorkspaceSelection.GetSelected<VoyagerItem>().First().LampHandle.Serial;
+            var effect = ApplicationManager.Lamps.GetMetadata(serial).Effect;
+            return WorkspaceSelection.GetSelected<VoyagerItem>().All(v =>
+            {
+                var ser = v.LampHandle.Serial;
+                return ApplicationManager.Lamps.GetMetadata(ser).Effect == effect;
+            });
         }
 
+        /* 
         private void PicturePicked(string path)
         {
             if (path == null || path == "Null" || path == "") return;
@@ -132,11 +139,10 @@ namespace VoyagerController.UI
 
             texture.Apply();
 
-            /*
             WorkspaceManager.instance
                 .InstantiateItem<PictureItemView>(texture)
                 .PositionBasedCamera();
-            */
         }
+        */
     }
 }

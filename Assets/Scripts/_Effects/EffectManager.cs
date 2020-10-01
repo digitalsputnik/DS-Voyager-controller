@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DigitalSputnik;
 using DigitalSputnik.Videos;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -49,6 +50,7 @@ namespace VoyagerController.Effects
             
             _instance._effects.Add(effect);
             OnEffectAdded?.Invoke(effect);
+            Debugger.LogInfo($"Effect {effect.Name} added");
         }
 
         public static void RemoveEffect(Effect effect)
@@ -131,7 +133,7 @@ namespace VoyagerController.Effects
         }
         
         [ContextMenu("Update Presets List")]
-        private void DoSomething()
+        private void UpdatePresetsList()
         {
             var path = Path.Combine(Application.streamingAssetsPath, "video_presets");
             _presets = Directory
@@ -235,9 +237,18 @@ namespace VoyagerController.Effects
             {
                 if (!success) Debugger.LogError(error);
                 done?.Invoke(video);
+                OnEffectModified?.Invoke(video);
             });
         }
         
+        #endregion
+        
+        #region Lamps
+        public static void ApplyEffectToLamp(Lamp lamp, Effect effect)
+        {
+            // TODO: Implement
+            ApplicationManager.Lamps.GetMetadata(lamp.Serial).Effect = effect;
+        }
         #endregion
     }
 }

@@ -30,7 +30,7 @@ namespace VoyagerController.UI
         {
             if (ItemOverBin(Input.mousePosition))
             {
-                foreach (var selected in new List<WorkspaceItem>(WorkspaceSelection.Selected))
+                foreach (var selected in new List<WorkspaceItem>(WorkspaceSelection.GetSelected()))
                 {
                     WorkspaceManager.RemoveItem(selected);
                     WorkspaceSelection.Clear();

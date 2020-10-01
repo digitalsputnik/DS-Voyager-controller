@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik;
+using VoyagerController.Effects;
 
 namespace VoyagerController
 {
@@ -68,6 +69,7 @@ namespace VoyagerController
     public class LampMetadata
     {
         public DateTime Discovered { get; set; }
+        public Effect Effect { get; set; }
     }
     
     [Serializable]
