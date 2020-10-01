@@ -6,13 +6,19 @@ using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
 {
+    /*
+     *    TODO:
+     *     - Adding new video effects
+     *     - Adding new image effects
+     *     - Check if added video is in prefered size
+     *     - Ordering based on streams
+     */
+    
     public class SetEffectMenu : Menu
     {
         [SerializeField] private SetEffectItem _itemPrefab = null;
         [SerializeField] private Transform _container = null;
         [SerializeField] private bool _applyToSelected = true;
-        // [SerializeField] private bool _inWorkspace = true;
-        // [SerializeField] private Vector2Int maxPreferedSized = new Vector2Int(1280, 720);
 
         private readonly List<SetEffectItem> _items = new List<SetEffectItem>();
 
@@ -21,6 +27,7 @@ namespace VoyagerController.UI
             EffectManager.OnEffectAdded += OnEffectEvent;
             EffectManager.OnEffectModified += OnEffectEvent;
             EffectManager.OnEffectRemoved += OnEffectEvent;
+            WorkspaceSelection.OnSelectionChanged += OnWorkspaceSelectionChanged;
             UpdateEffectsList();
         }
 
@@ -29,6 +36,7 @@ namespace VoyagerController.UI
             EffectManager.OnEffectAdded -= OnEffectEvent;
             EffectManager.OnEffectModified -= OnEffectEvent;
             EffectManager.OnEffectRemoved -= OnEffectEvent;
+            WorkspaceSelection.OnSelectionChanged -= OnWorkspaceSelectionChanged;
         }
 
         private void OnEffectEvent(Effect effect) => UpdateEffectsList();
@@ -57,26 +65,33 @@ namespace VoyagerController.UI
                 Destroy(item.gameObject);
             _items.Clear();
         }
+        
+        private void OnWorkspaceSelectionChanged()
+        {
+            if (!WorkspaceSelection.GetSelected<VoyagerItem>().Any())
+                GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+        }
 
         private static void ApplyEffectToSelectedLamps(Effect effect)
         {
             foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>())
-                EffectManager.ApplyEffectToLamp(item.LampHandle, effect);
+                LampEffectsWorker.ApplyEffectToLamp(item.LampHandle, effect);
         }
 
         private static void ApplyEffectToAllLamps(Effect effect)
         {
             foreach (var item in WorkspaceManager.GetItems<VoyagerItem>())
-                EffectManager.ApplyEffectToLamp(item.LampHandle, effect);
+                LampEffectsWorker.ApplyEffectToLamp(item.LampHandle, effect);
         }
 
         private static IEnumerable<Effect> GetEffectsInOrder()
         {
             return EffectManager.GetEffects()
                 .OrderByDescending(e => e.Meta.Timestamp)
-                .ThenByDescending(e => e.Name == "white");
+                .ThenByDescending(e => e.Name == "white")
+                .ThenByDescending(e => ApplicationManager.Lamps
+                    .GetMetadata<LampMetadata>(l => l.Effect == e).Count());
             // TODO: Here should be streams
-            // TODO: Also, how many lamps have the effect
         }
         
         /*

@@ -63,6 +63,11 @@ namespace VoyagerController
 
             return _metadata[serial] as T;
         }
+
+        public IEnumerable<T> GetMetadata<T>(Func<T, bool> predicate) where T : LampMetadata
+        {
+            return _metadata.Values.OfType<T>().Where(predicate);
+        }
     }
     
     [Serializable]
@@ -70,6 +75,7 @@ namespace VoyagerController
     {
         public DateTime Discovered { get; set; }
         public Effect Effect { get; set; }
+        public double TimeEffectApplied { get; set; }
     }
     
     [Serializable]
