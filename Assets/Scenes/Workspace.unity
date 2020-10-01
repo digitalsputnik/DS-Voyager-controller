@@ -18058,6 +18058,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f511f7e07f47415cba74c49d9bddf62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _image: {fileID: 1440986011}
+  _activeColor: {r: 0.6037736, g: 0.16803133, b: 0.16803133, a: 1}
+  _normalColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &1440986011
 MonoBehaviour:
   m_ObjectHideFlags: 0
