@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Workspace;
+using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.UI.Menus
 {

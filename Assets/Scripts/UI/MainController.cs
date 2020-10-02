@@ -1,5 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using VoyagerApp.UI.Overlays;
+using VoyagerApp.Workspace;
+using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.UI
 {
