@@ -72,16 +72,18 @@ namespace VoyagerController.UI
                 GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
-        private static void ApplyEffectToSelectedLamps(Effect effect)
+        private void ApplyEffectToSelectedLamps(Effect effect)
         {
             foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>())
                 LampEffectsWorker.ApplyEffectToLamp(item.LampHandle, effect);
+            GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
-        private static void ApplyEffectToAllLamps(Effect effect)
+        private void ApplyEffectToAllLamps(Effect effect)
         {
             foreach (var item in WorkspaceManager.GetItems<VoyagerItem>())
                 LampEffectsWorker.ApplyEffectToLamp(item.LampHandle, effect);
+            GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
         private static IEnumerable<Effect> GetEffectsInOrder()

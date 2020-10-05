@@ -4,7 +4,7 @@ namespace VoyagerController.Rendering
     {
         internal override VideoRenderState Update()
         {
-            return this;
+            return new CheckIfRenderedState();
         }
     }
 }

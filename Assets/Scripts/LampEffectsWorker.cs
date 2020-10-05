@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using DigitalSputnik;
 using DigitalSputnik.Colors;
 using DigitalSputnik.Voyager;
@@ -18,8 +19,6 @@ namespace VoyagerController
             if (ApplicationManager.Lamps.GetMetadata(lamp.Serial).Effect == effect)
                 return;
 
-            ApplicationManager.Lamps.GetMetadata(lamp.Serial).Effect = effect;
-
             switch (lamp)
             {
                 case VoyagerLamp voyager:
@@ -28,35 +27,40 @@ namespace VoyagerController
                     break;
             }
         }
-        
-        public static void ApplyVideoFrameToVoyager(VoyagerLamp voyager, long index, IEnumerable<Rgb> rgb)
-        {
-            var time = ApplicationManager.Lamps.GetMetadata(voyager.Serial).TimeEffectApplied;
-            /* 
-            voyager.
-            voyager.SendVideoFrame();
-            
-            var packet = new SetFramePacket(frame, itshe, data);
-            // NetUtils.VoyagerClient.SendPacket(this, packet, VoyagerClient.PORT_VIDEO, last);
-            */
-        }
 
         private static void ApplyVideoToVoyager(VoyagerLamp voyager, VideoEffect video)
         {
+            var meta = ApplicationManager.Lamps.GetMetadata(voyager.Serial);
             var offset = TimeOffset(voyager);
             var start = video.Meta.StartTime + offset;
             var time = TimeUtils.Epoch + offset;
             var framebuffer = new Rgb[video.Video.FrameCount][];
 
             var packet = new PacketCollection(
-                new SetVideoPacket((long)video.Video.FrameCount, start),
+                new SetVideoPacket((long) video.Video.FrameCount, start),
+                new SetItshePacket(new Itshe()), // TODO: Remove later!
                 new SetFpsPacket(video.Video.Fps)
             );
 
-            ApplicationManager.Lamps.GetMetadata(voyager.Serial).TimeEffectApplied = time;
-            ApplicationManager.Lamps.GetMetadata(voyager.Serial).Rendered = false;
-            ApplicationManager.Lamps.GetMetadata(voyager.Serial).FrameBuffer = framebuffer;
+            meta.TimeEffectApplied = time;
+            meta.Rendered = false;
+            meta.FrameBuffer = framebuffer;
+            meta.Effect = video;
 
+            SendPacket(voyager, packet, time);
+        }
+
+        public static void ApplyVideoFrameToVoyager(VoyagerLamp voyager, long index, Rgb[] rgb)
+        {
+            var meta = ApplicationManager.Lamps.GetMetadata(voyager.Serial);
+            var time = meta.TimeEffectApplied;
+            var data = ColorUtils.RgbArrayToBytes(rgb);
+            var packet = new VideoFramePacket(index, data);
+
+            meta.FrameBuffer[index] = rgb;
+            if (meta.FrameBuffer.All(frame => frame != null))
+                meta.Rendered = true;
+            
             SendPacket(voyager, packet, time);
         }
 
@@ -75,8 +79,11 @@ namespace VoyagerController
         {
             switch (voyager.Endpoint)
             {
-                case LampNetworkEndPoint networkEndPoint:
-                    VoyagerClient.Instance.SendSettingsPacket(voyager, packet, time);
+                case LampNetworkEndPoint _:
+                    if (packet is VideoFramePacket)
+                        VoyagerClient.Instance.SendFramePacket(voyager, packet, time);
+                    else
+                        VoyagerClient.Instance.SendSettingsPacket(voyager, packet, time);
                     break;
             }
         }

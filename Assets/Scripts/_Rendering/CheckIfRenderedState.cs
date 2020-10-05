@@ -14,7 +14,11 @@ namespace VoyagerController.Rendering
         private static bool AllLampsRendered()
         {
             var database = ApplicationManager.Lamps;
-            return database.GetLamps().All(l => database.GetMetadata((string) l.Serial).Rendered);
+            return database.GetLamps().All(l =>
+            {
+                var meta = database.GetMetadata(l.Serial);
+                return meta.Effect == null || meta.Effect != null && meta.Rendered;
+            });
         }
     }
 }
