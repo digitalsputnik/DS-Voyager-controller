@@ -148,7 +148,7 @@ namespace VoyagerController
             SendPacket(voyager, packet, time);
         }
 
-        private static double TimeOffset(Lamp lamp)
+        public static double TimeOffset(Lamp lamp)
         {
             switch (lamp.Endpoint)
             {

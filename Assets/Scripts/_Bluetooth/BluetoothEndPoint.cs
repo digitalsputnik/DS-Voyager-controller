@@ -2,10 +2,10 @@ using DigitalSputnik;
 
 namespace VoyagerController
 {
-    public class BluetoothEndpoint : LampEndPoint
+    public class BluetoothEndPoint : LampEndPoint
     {
         public string Id { get; set; }
 
-        public BluetoothEndpoint(string id) => Id = id;
+        public BluetoothEndPoint(string id) => Id = id;
     }
 }

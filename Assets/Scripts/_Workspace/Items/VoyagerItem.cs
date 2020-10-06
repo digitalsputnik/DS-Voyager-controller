@@ -1,5 +1,9 @@
+using System;
+using DigitalSputnik;
+using DigitalSputnik.Videos;
 using DigitalSputnik.Voyager;
 using UnityEngine;
+using VoyagerController.Effects;
 
 namespace VoyagerController.Workspace
 {
@@ -25,6 +29,7 @@ namespace VoyagerController.Workspace
         private LampMetadata _meta;
         private Texture2D _pixelsTexture;
         private static readonly int _baseMap = Shader.PropertyToID("_BaseMap");
+        private LampConnectionType _connectionType;
 
         public override bool Setup(object data, string uid = "")
         {
@@ -34,6 +39,12 @@ namespace VoyagerController.Workspace
             
             _meta = Metadata.Get(LampHandle.Serial);
             return base.Setup(data, uid);
+        }
+
+        private void Update()
+        {
+            UpdateConnectionType();
+            UpdatePixels();
         }
         
         protected override void Generate()
@@ -90,6 +101,34 @@ namespace VoyagerController.Workspace
             */
         }
 
+        private void UpdatePixels()
+        {
+            if (_meta.Effect is VideoEffect video)
+            {
+                var index = GetFrameOfVideo(video.Video);
+
+                if (_meta.FrameBuffer[index] != null)
+                {
+                    var colors = _meta.FrameBuffer[index].ToColorArray();
+                    _pixelsTexture.SetPixels32(colors);
+                    _pixelsTexture.Apply();
+                }
+            }
+        }
+
+        private void UpdateConnectionType()
+        {
+            switch (LampHandle.Endpoint)
+            {
+                case LampNetworkEndPoint _:
+                    _connectionType = LampConnectionType.NetConnection;
+                    break;
+                case BluetoothEndPoint _:
+                    _connectionType = LampConnectionType.BluetoothConnection;
+                    break;
+            }
+        }
+
         private void UpdateText()
         {
             _nameText.text = LampHandle.Serial;
@@ -125,6 +164,26 @@ namespace VoyagerController.Workspace
             }
 
             return positions;
+        }
+
+        private enum LampConnectionType
+        {
+            Disconnected,
+            NetConnection,
+            BluetoothConnection
+        }
+        
+        public long GetFrameOfVideo(Video video)
+        {
+            // TODO: Time offset should be moved to somewhere else.
+            var since = TimeUtils.Epoch - _meta.TimeEffectApplied + LampEffectsWorker.TimeOffset(LampHandle);
+
+            if (video == null) return 0;
+            
+            var frames = (long)(since * video.Fps);
+            while (frames < 0) frames += (long)video.FrameCount;
+            return frames % (long)video.FrameCount;
+
         }
     }
 }
