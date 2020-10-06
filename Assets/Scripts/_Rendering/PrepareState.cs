@@ -1,4 +1,6 @@
 using System.Linq;
+using DigitalSputnik;
+using DigitalSputnik.Voyager;
 using VoyagerController.Effects;
 
 namespace VoyagerController.Rendering
@@ -7,11 +9,10 @@ namespace VoyagerController.Rendering
     {
         internal override VideoRenderState Update()
         {
-            var database = ApplicationManager.Lamps;
-            var unRendered = database.GetLamps()
+            var unRendered = LampManager.Instance.GetLampsOfType<VoyagerLamp>()
                 .Where(l =>
                 {
-                    var meta = database.GetMetadata((string) l.Serial);
+                    var meta = Metadata.Get(l.Serial);
                     return meta.Effect is VideoEffect && !meta.Rendered;
                 });
 

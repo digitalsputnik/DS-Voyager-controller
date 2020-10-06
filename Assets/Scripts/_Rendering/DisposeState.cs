@@ -4,6 +4,7 @@ namespace VoyagerController.Rendering
     {
         internal override VideoRenderState Update()
         {
+            VideoEffectRenderer.Clear();
             return new CheckIfRenderedState();
         }
     }

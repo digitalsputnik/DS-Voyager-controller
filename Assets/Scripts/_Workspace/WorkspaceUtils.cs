@@ -32,7 +32,7 @@ namespace VoyagerController.Workspace
         {
             return WorkspaceManager
                 .GetItems<VoyagerItem>()
-                .Where(v => ApplicationManager.Lamps.GetMetadata(v.LampHandle.Serial).Effect == effect);
+                .Where(v => Metadata.Get(v.LampHandle.Serial).Effect == effect);
         }
     }
 }

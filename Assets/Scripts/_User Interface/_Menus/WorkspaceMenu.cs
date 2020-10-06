@@ -64,7 +64,7 @@ namespace VoyagerController.UI
         public void SelectWithSameEffect()
         {
             var serial = WorkspaceSelection.GetSelected<VoyagerItem>().First().LampHandle.Serial;
-            var effect = ApplicationManager.Lamps.GetMetadata(serial).Effect;
+            var effect = Metadata.Get(serial).Effect;
 
             foreach (var item in WorkspaceUtils.GetItemsWithSameEffect(effect))
                 WorkspaceSelection.SelectItem(item);
@@ -107,16 +107,16 @@ namespace VoyagerController.UI
             _alignmentBtn.SetActive(one);
         }
 
-        private bool SelectedLampsShareSameEffect()
+        private static bool SelectedLampsShareSameEffect()
         {
             if (!WorkspaceSelection.GetSelected().Any()) return false;
             
             var serial = WorkspaceSelection.GetSelected<VoyagerItem>().First().LampHandle.Serial;
-            var effect = ApplicationManager.Lamps.GetMetadata(serial).Effect;
+            var effect = Metadata.Get(serial).Effect;
             return WorkspaceSelection.GetSelected<VoyagerItem>().All(v =>
             {
                 var ser = v.LampHandle.Serial;
-                return ApplicationManager.Lamps.GetMetadata(ser).Effect == effect;
+                return Metadata.Get(ser).Effect == effect;
             });
         }
 

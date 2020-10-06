@@ -26,7 +26,11 @@ namespace VoyagerController.Rendering
 
         private void Update()
         {
+            var current = _state;
+            
             _state = _state.Update();
+            
+            if (_state != current) Debugger.LogInfo($"Render state changed to {_state}");
         }
 
         public static void PrepareVideoPlayer(Video video, Action prepared)
@@ -41,6 +45,7 @@ namespace VoyagerController.Rendering
             VideoPlayer.url = video.Path;
             VideoPlayer.renderMode = VideoRenderMode.RenderTexture;
             VideoPlayer.targetTexture = RenderTexture;
+            VideoPlayer.isLooping = true;
             VideoPlayer.Prepare();
 
             _instance.StartCoroutine(WaitUntilVideoPlayerPrepared(prepared));
@@ -57,6 +62,11 @@ namespace VoyagerController.Rendering
             var render = new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32);
             render.Create();
             return render;
+        }
+        
+        internal static void Clear()
+        {
+            VideoPlayer.Stop();
         }
     }
 }

@@ -1,13 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using DigitalSputnik.Colors;
 using DigitalSputnik.Voyager;
 using UnityEngine;
 using VoyagerController.Effects;
+using Object = UnityEngine.Object;
 
 namespace VoyagerController.Rendering
 {
-    internal class RenderState : VideoRenderState
+    internal class RenderState : VideoRenderState, IDisposable
     {
         private RenderQueue _queue;
         private VideoEffect _effect;
@@ -15,11 +16,10 @@ namespace VoyagerController.Rendering
         private long _prevVideoIndex;
 
         private bool _playerPrepared = false;
+        private Texture2D _texture;
         
         public RenderState(RenderQueue queue)
         {
-            Debugger.LogInfo("Entered to rendering");
-            
             _queue = queue;
             DequeueNextEffect();
         }
@@ -46,17 +46,18 @@ namespace VoyagerController.Rendering
                 return;
             
             var index = player.frame;
-            var frame = VideoEffectRenderer.RenderTexture.ToTexture2D();
+
+            if (_texture != null) Object.Destroy(_texture);
+            
+            _texture = VideoEffectRenderer.RenderTexture.ToTexture2D();
 
             foreach (var voyager in _lamps)
             {
-                var colors = RenderLampColors(voyager, frame);
+                var colors = RenderLampColors(voyager, _texture);
                 SendColorsToLamp(voyager, colors, index);
-                Debugger.LogInfo($"Rendered frame {index}");
             }
 
             _prevVideoIndex = index;
-            Object.Destroy(frame);
         }
 
         private static Color32[] RenderLampColors(VoyagerLamp lamp, Texture2D frame)
@@ -81,8 +82,12 @@ namespace VoyagerController.Rendering
             
             VideoEffectRenderer.PrepareVideoPlayer(_effect.Video, () =>
             {
-                _playerPrepared = true;
                 VideoEffectRenderer.VideoPlayer.Play();
+                VideoEffectRenderer.VideoPlayer.frame = 1;
+                VideoEffectRenderer.VideoPlayer.seekCompleted += source =>
+                {
+                    _playerPrepared = true;
+                };
             });
         }
 
@@ -90,7 +95,12 @@ namespace VoyagerController.Rendering
 
         private bool CurrentEffectRendered()
         {
-            return _lamps.All(l => ApplicationManager.Lamps.GetMetadata(l.Serial).Rendered);
+            return _lamps.All(l => Metadata.Get(l.Serial).Rendered);
+        }
+        
+        public void Dispose()
+        {
+            if (_texture != null) Object.Destroy(_texture);
         }
         
         private static Color32[] CoordsToColors(Vector2Int[] coords, Texture2D frame)
@@ -108,7 +118,7 @@ namespace VoyagerController.Rendering
 
         private static IEnumerable<Vector2Int> MapLampToVideoCoords(VoyagerLamp voyager, Texture2D frame)
         {
-            var mapping = ApplicationManager.Lamps.GetMetadata(voyager.Serial).EffectMapping;
+            var mapping = Metadata.Get(voyager.Serial).EffectMapping;
             var coords = new Vector2Int[voyager.PixelCount];
 
             var p1 = new Vector2(mapping.X1, mapping.Y1);

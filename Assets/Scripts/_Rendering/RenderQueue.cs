@@ -14,7 +14,7 @@ namespace VoyagerController.Rendering
 
             foreach (var lamp in lamps)
             {
-                var effect = (VideoEffect) ApplicationManager.Lamps.GetMetadata(lamp.Serial).Effect;
+                var effect = (VideoEffect) Metadata.Get(lamp.Serial).Effect;
                 if (!dictionary.ContainsKey(effect))
                     dictionary.Add(effect, new List<VoyagerLamp>());
                 dictionary[effect].Add(lamp);

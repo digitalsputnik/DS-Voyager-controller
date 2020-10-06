@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -25491,6 +25491,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1927760496}
   - component: {fileID: 1927760497}
+  - component: {fileID: 1927760499}
   - component: {fileID: 1927760498}
   - component: {fileID: 187987131}
   m_Layer: 0
@@ -25536,6 +25537,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42162c17b9db4764977194aecf06d056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1927760499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927760495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc927863a353454dbe8734949322b196, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1932300192
@@ -28541,7 +28554,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
   m_Value: 1.0000005
-  m_Size: 0.8400176
+  m_Size: 0.8437377
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

@@ -14,16 +14,8 @@ namespace VoyagerController.UI
         [SerializeField] private TextButton _addLampBtnPrefab = null;
         [SerializeField] private Button _addAllLampsBtn = null;
 
-        private LampDatabase _lampDatabase;
         private readonly List<TextButton> _lampItems = new List<TextButton>();
-
-        public override void Start()
-        {
-            _lampDatabase = ApplicationManager.Lamps;
-            base.Start();
-        }
-
-
+        
         internal override void OnShow()
         {
             _addAllLampsBtn.gameObject.SetActive(false);
@@ -40,7 +32,7 @@ namespace VoyagerController.UI
         {
             ClearLampsList();
 
-            foreach (var lamp in _lampDatabase.GetLamps())
+            foreach (var lamp in LampManager.Instance.GetLampsOfType<VoyagerLamp>())
             {
                 if (LampValidToAdd(lamp))
                 {

@@ -36,11 +36,9 @@ namespace VoyagerController
         
         #region Static
         public static LampHandler OnLampDiscovered;
-        public static LampDatabase Lamps => Instance._database;
         #endregion
         
         #region Lamps
-        private readonly LampDatabase _database = new LampDatabase();
         
         private void Setup()
         {
@@ -52,7 +50,7 @@ namespace VoyagerController
 
         private void Dispose()
         {
-            _database.Clear();
+            Metadata.Clear();
             LampManager.Instance.RemoveClient<VoyagerClient>();
             if (Application.isMobilePlatform && !Application.isEditor)
                 LampManager.Instance.RemoveClient<BluetoothClient>();
@@ -62,7 +60,7 @@ namespace VoyagerController
         {
             if (AddLampToDatabase(lamp))
             {
-                Debugger.LogInfo($"Lamp {lamp.Serial} discovered at {_database.GetMetadata(lamp.Serial).Discovered}");
+                Debugger.LogInfo($"Lamp {lamp.Serial} discovered at {Metadata.Get(lamp.Serial).Discovered}");
                 MainThread.Dispatch(() => OnLampDiscovered?.Invoke(lamp));
             }
         }
@@ -73,7 +71,7 @@ namespace VoyagerController
             {
                 if (lamp is VoyagerLamp voyager)
                 {
-                    _database.Add(voyager);
+                    Metadata.Add(voyager);
                     return true;   
                 }
                 else return false;

@@ -91,8 +91,7 @@ namespace VoyagerController.UI
             return EffectManager.GetEffects()
                 .OrderByDescending(e => e.Meta.Timestamp)
                 .ThenByDescending(e => e.Name == "white")
-                .ThenByDescending(e => ApplicationManager.Lamps
-                    .GetMetadata(l => l.Effect == e).Count());
+                .ThenByDescending(e => Metadata.Get(l => l.Effect == e).Count());
             // TODO: Here should be streams
         }
         

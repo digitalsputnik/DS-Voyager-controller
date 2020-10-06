@@ -32,7 +32,7 @@ namespace VoyagerController.Workspace
 
             if (LampHandle == null) return false;
             
-            _meta = ApplicationManager.Lamps.GetMetadata(LampHandle.Serial);
+            _meta = Metadata.Get(LampHandle.Serial);
             return base.Setup(data, uid);
         }
         

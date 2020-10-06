@@ -44,7 +44,6 @@ namespace VoyagerController.Effects
             
             _instance._effects.Add(effect);
             OnEffectAdded?.Invoke(effect);
-            Debugger.LogInfo($"Effect {effect.Name} added");
         }
 
         public static void RemoveEffect(Effect effect)
