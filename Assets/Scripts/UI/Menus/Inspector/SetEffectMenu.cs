@@ -38,15 +38,26 @@ namespace VoyagerApp.UI.Menus
 
         public void AddImageEffectClicked()
         {
-            FileUtils.LoadPictureFromDevice(path => 
-            {
-                if (path != "" && path != "Null" && path != null)
+            DialogBox.Show(
+                "ATTENTION",
+                "Images bigger than 1920 x 1080 might crash the application",
+                new string[] { "CONTINUE", "CANCEL" },
+                new Action[]
                 {
-                    Image image = ImageEffectLoader.LoadImageFromPath(path);
-                    image.timestamp = TimeUtils.Epoch;
-                    OrderEffects();
-                }
-            });
+                    () =>
+                    {
+                        FileUtils.LoadPictureFromDevice(path => 
+                        {
+                            if (path != "" && path != "Null" && path != null)
+                            {
+                                Image image = ImageEffectLoader.LoadImageFromPath(path);
+                                image.timestamp = TimeUtils.Epoch;
+                                OrderEffects();
+                            }
+                        }, true);
+                    } 
+                    , null
+                });
         }
 
         public void AddVideoEffectClick()

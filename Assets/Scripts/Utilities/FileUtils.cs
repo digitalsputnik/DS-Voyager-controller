@@ -76,7 +76,7 @@ namespace VoyagerApp.Utilities
             }
         }
 
-        public static void LoadPictureFromDevice(PathHandler loaded)
+        public static void LoadPictureFromDevice(PathHandler loaded, bool rename)
         {
             if (Application.isMobilePlatform)
             {
@@ -100,20 +100,27 @@ namespace VoyagerApp.Utilities
                                     
                                     var name = "image_" + Guid.NewGuid().ToString().Substring(0, 4);
 
-                                    InputFieldMenu.Show("PICK NAME FOR IMAGE", name, text =>
+                                    if (rename)
                                     {
-                                        name = text;
-                                        var newPath = Path.Combine(TempPath, name);
-                                        try
+                                        InputFieldMenu.Show("PICK NAME FOR IMAGE", name, text =>
                                         {
-                                            Copy(path, newPath);
-                                            loaded?.Invoke(newPath);
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Debug.LogError(ex);
-                                        }
-                                    }, 3, false);
+                                            name = text;
+                                            var newPath = Path.Combine(TempPath, name);
+                                            try
+                                            {
+                                                Copy(path, newPath);
+                                                loaded?.Invoke(newPath);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                Debug.LogError(ex);
+                                            }
+                                        }, 3, false);   
+                                    }
+                                    else
+                                    {
+                                        loaded?.Invoke(path);
+                                    }
                                 }, "", "image/*");
                             }
                         }
@@ -133,7 +140,8 @@ namespace VoyagerApp.Utilities
                 ExtensionFilter[] extensions =
                 {
                     new ExtensionFilter("PNG Picture", "png"),
-                    new ExtensionFilter("JPEG Picture", "png")
+                    new ExtensionFilter("JPG Picture", "jpg"),
+                    new ExtensionFilter("JPEG Picture", "jpeg")
                 };
                 string path = FileBrowser.OpenSingleFile("Open Picture", documents, extensions);
                 loaded.Invoke(path == "" ? null : path);

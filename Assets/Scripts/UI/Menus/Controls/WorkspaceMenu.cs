@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.UI.Overlays;
@@ -26,7 +27,13 @@ namespace VoyagerApp.UI.Menus
 
         public void AddPicture()
         {
-            FileUtils.LoadPictureFromDevice(PicturePicked);
+            FileUtils.LoadPictureFromDevice(PicturePicked, false);
+            
+            DialogBox.Show(
+                "ATTENTION",
+                "Images bigger than 1920 x 1080 might crash the application",
+                new[] { "CONTINUE", "CANCEL" },
+                new Action[] { () => FileUtils.LoadPictureFromDevice(PicturePicked, false), null });
         }
 
         public void SelectDeselect()
