@@ -1,6 +1,4 @@
-using System;
 using DigitalSputnik;
-using DigitalSputnik.Videos;
 using DigitalSputnik.Voyager;
 using UnityEngine;
 using VoyagerController.Effects;
@@ -105,11 +103,16 @@ namespace VoyagerController.Workspace
         {
             if (_meta.Effect is VideoEffect video)
             {
-                var index = GetFrameOfVideo(video.Video);
+                var index = LampEffectsWorker.GetCurrentFrameOfVideo(LampHandle, video.Video);
 
                 if (_meta.FrameBuffer[index] != null)
                 {
                     var colors = _meta.FrameBuffer[index].ToColorArray();
+                    var color = (Color)_meta.Itshe.ToColor();
+                    
+                    for (var i = 0; i < colors.Length; i++)
+                        colors[i] = colors[i] * color;
+                    
                     _pixelsTexture.SetPixels32(colors);
                     _pixelsTexture.Apply();
                 }
@@ -171,19 +174,6 @@ namespace VoyagerController.Workspace
             Disconnected,
             NetConnection,
             BluetoothConnection
-        }
-        
-        public long GetFrameOfVideo(Video video)
-        {
-            // TODO: Time offset should be moved to somewhere else.
-            var since = TimeUtils.Epoch - _meta.TimeEffectApplied + LampEffectsWorker.TimeOffset(LampHandle);
-
-            if (video == null) return 0;
-            
-            var frames = (long)(since * video.Fps);
-            while (frames < 0) frames += (long)video.FrameCount;
-            return frames % (long)video.FrameCount;
-
         }
     }
 }

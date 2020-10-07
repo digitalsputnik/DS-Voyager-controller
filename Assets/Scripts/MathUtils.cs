@@ -32,7 +32,9 @@ namespace VoyagerController
                 colors[i] = rgbs[i].ToColor();
             return colors;
         }
-
+        
         public static Color32 ToColor(this Rgb rgb) => new Color32(rgb.RByte, rgb.GByte, rgb.BByte, 255);
+        
+        public static Color32 ToColor(this Itshe itshe) => ColorUtils.ItsheToRgb(itshe).ToColor();
     }
 }

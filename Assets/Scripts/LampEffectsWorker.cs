@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik;
 using DigitalSputnik.Colors;
+using DigitalSputnik.Videos;
 using DigitalSputnik.Voyager;
 using DigitalSputnik.Voyager.Communication;
 using UnityEngine;
@@ -116,21 +117,34 @@ namespace VoyagerController
             var time = TimeUtils.Epoch + offset;
             var framebuffer = new Rgb[video.Video.FrameCount][];
             var confirmed = new bool[video.Video.FrameCount];
+            var itshe = meta.Itshe;
 
             var packet = new PacketCollection(
                 new SetVideoPacket((long) video.Video.FrameCount, start),
-                new SetItshePacket(new Itshe()), // TODO: Remove later!
+                new SetItshePacket(itshe),
                 new SetFpsPacket(video.Video.Fps)
             );
 
             for (var i = 0; i < framebuffer.Length; i++) framebuffer[i] = null;
 
             meta.TimeEffectApplied = time;
+            meta.VideoStartTime = start;
             meta.Rendered = false;
             meta.FrameBuffer = framebuffer;
             meta.Effect = video;
             meta.ConfirmedFrames = confirmed;
 
+            SendPacket(voyager, packet, time);
+        }
+
+        public static void ApplyItsheToVoyager(VoyagerLamp voyager, Itshe itshe)
+        {
+            var meta = Metadata.Get(voyager.Serial);
+            var time = TimeUtils.Epoch + TimeOffset(voyager);
+            var packet = new SetItshePacket(itshe);
+
+            meta.Itshe = itshe;
+            
             SendPacket(voyager, packet, time);
         }
 
@@ -182,6 +196,19 @@ namespace VoyagerController
                 meta.ConfirmedFrames[i] = true;
             foreach (var index in response.Indices)
                 meta.ConfirmedFrames[index] = false;
+        }
+
+        public static long GetCurrentFrameOfVideo(VoyagerLamp voyager, Video video, long add = 0)
+        {
+            var meta = Metadata.Get(voyager.Serial);
+            var since = TimeUtils.Epoch - meta.VideoStartTime + TimeOffset(voyager);
+
+            if (video == null) return 0;
+            
+            var frames = (long)(since * video.Fps) + add;
+            while (frames < 0) frames += (long)video.FrameCount;
+            return frames % (long)video.FrameCount;
+
         }
     }
 }

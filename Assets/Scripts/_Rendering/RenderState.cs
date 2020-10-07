@@ -10,6 +10,8 @@ namespace VoyagerController.Rendering
 {
     internal class RenderState : VideoRenderState, IDisposable
     {
+        private const long FRAMES_TO_ADD_AT_START = 5;
+        
         private RenderQueue _queue;
         private VideoEffect _effect;
         private List<VoyagerLamp> _lamps;
@@ -83,7 +85,8 @@ namespace VoyagerController.Rendering
             VideoEffectRenderer.PrepareVideoPlayer(_effect.Video, () =>
             {
                 VideoEffectRenderer.VideoPlayer.Play();
-                VideoEffectRenderer.VideoPlayer.frame = 1;
+                VideoEffectRenderer.VideoPlayer.frame =
+                    LampEffectsWorker.GetCurrentFrameOfVideo(_lamps[0], _effect.Video) + FRAMES_TO_ADD_AT_START;
                 VideoEffectRenderer.VideoPlayer.seekCompleted += source =>
                 {
                     _playerPrepared = true;
