@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using DigitalSputnik;
 using UnityEngine;
 using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Networking.Voyager;
-using VoyagerApp.RefactoredEffects;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
@@ -32,7 +29,7 @@ namespace VoyagerApp.UI.Menus
                 "Add Effect",
                 "Pick which effect you want to add",
                 new string[] { "IMAGE", "VIDEO", "CANCEL" },
-                new Action[] { AddImageEffectClicked, AddVideoEffectClick, null }
+                new Action[] { AddImageEffectClicked, AddVideoEffectClick, null}
             );
         }
 
@@ -40,8 +37,8 @@ namespace VoyagerApp.UI.Menus
         {
             DialogBox.Show(
                 "ATTENTION",
-                "Images bigger than 1920 x 1080 might crash the application",
-                new string[] { "CONTINUE", "CANCEL" },
+                "Images bigger than 640 x 480 might crash the application",
+                new[] { "CONTINUE", "CANCEL" },
                 new Action[]
                 {
                     () =>

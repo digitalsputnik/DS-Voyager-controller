@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Effects;
 using VoyagerApp.Utilities;
+using Image = VoyagerApp.Effects.Image;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -73,13 +74,18 @@ namespace VoyagerApp.UI.Menus
             nameText.text = effect.name;
             button.interactable = true;
 
-            if (effect is Video video)
+            switch (effect)
             {
-                infoText.text =
-                    "duration \n" +
-                    TimeUtils.GetVideoTimecode(video) + "\n" +
-                    "resolution \n" +
-                    video.width + "x" + video.height;
+                case Video video:
+                    infoText.text =
+                        "duration\n" +
+                        TimeUtils.GetVideoTimecode(video) + "\n" +
+                        "resolution\n" +
+                        video.width + "x" + video.height;
+                    break;
+                case Image image:
+                    infoText.text = "resolution\n" + image.thumbnail.width + "x" + image.thumbnail.height;
+                    break;
             }
 
             if (effect.preset)
