@@ -21,13 +21,12 @@ namespace VoyagerController.UI
         private Itshe _beginning;
         private Itshe _itshe;
         private bool _approved;
-        private Itshe _prevItshe;
+        private bool _changed;
 
         public void SetItsh(Itshe itshe)
         {
             _beginning = itshe;
             _itshe = itshe;
-            _prevItshe = itshe;
 
             _intensitySlider.SetValue(itshe.I);
             _temperatureSlider.SetValue(itshe.T);
@@ -80,10 +79,10 @@ namespace VoyagerController.UI
 
         private void UpdateLoop()
         {
-            if (_itshe == _prevItshe) return;
+            if (!_changed) return;
             
             ColorWheelManager.ValuePicked(_itshe);
-            _prevItshe = _itshe;
+            _changed = false;
         }
 
         #region Sliders
@@ -119,6 +118,8 @@ namespace VoyagerController.UI
             UnsubscribeWheel();
             _wheel.SetFromItsh(_itshe);
             SubscribeWheel();
+
+            _changed = true;
         }
 
         #endregion
@@ -144,6 +145,8 @@ namespace VoyagerController.UI
             _saturationSlider.SetValue(saturation);
             _hueSlider.SetValue(hue);
             SubscribeSliders();
+
+            _changed = true;
         }
         #endregion
 

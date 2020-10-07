@@ -51,7 +51,7 @@ namespace VoyagerController
             }
 
             var data = asset.bytes;
-            assets.Add(name, data);
+            assets.Add(BUNDLE_FILE, data);
         }
 
         public static void UpdateLamp(VoyagerLamp lamp, VoyagerUpdateHandler onDone, VoyagerUpdateMessageHandler onMessage)
@@ -73,12 +73,13 @@ namespace VoyagerController
 				onMessage?.Invoke(new VoyagerUpdateMessage(lamp, "Starting update. Uploading update to lamp."));
 				UploadUpdateToLamp(sftp);
 				onMessage?.Invoke(new VoyagerUpdateMessage(lamp, "Installing update."));
-				InstallUpdateOnLamp(ssh, out var reboot);
+				InstallUpdateOnLamp(ssh);
                 onMessage?.Invoke(new VoyagerUpdateMessage(lamp, "Successfully installed new software on lamp."));
                 success = true;
             }
             catch (Exception ex)
 			{
+                Debugger.LogError(ex.Message);
 				onMessage?.Invoke(new VoyagerUpdateMessage(lamp, "Failed lamp update."));
 				error = ex.Message;
 			}
@@ -110,17 +111,16 @@ namespace VoyagerController
         private void UploadUpdateToLamp(SftpClient sftp)
         {
             sftp.Connect();
-            
+
             SetDestination(sftp, BUNDLE_DEST);
             UploadByteAsset(sftp, BUNDLE_FILE);
 
             sftp.Disconnect();
         }
 
-        private static void InstallUpdateOnLamp(SshClient ssh, out bool reboot)
+        private static void InstallUpdateOnLamp(SshClient ssh)
         {
             ssh.Connect();
-            reboot = false;
 
             const string DOS2_UNIX_CMD = "dos2unix " + 
                                          BUNDLE_DEST + "/*.py " + 
@@ -151,13 +151,11 @@ namespace VoyagerController
                     if (output == null) continue;
 
                     success = !output.Contains("FAIL");
-                    reboot = output.Contains("REBOOT");
                     done = output.Contains("REBOOT") || output.Contains("UPDATE SUCCESSFUL") || output.Contains("FAIL");
                 }
             }
 
             if (!success) throw new Exception("Update failed!");
-
             ssh.Disconnect();
         }
 
