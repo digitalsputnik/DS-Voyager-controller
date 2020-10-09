@@ -13,6 +13,9 @@ namespace VoyagerController
 {
     public class LampEffectsWorker : MonoBehaviour
     {
+        private static LampEffectsWorker _instance;
+        private void Awake() => _instance = this;
+
         private const double MISSING_FRAMES_REQUEST_FREQUENCY = 2.0;
 
         private readonly List<VoyagerLamp> _confirmingLamps = new List<VoyagerLamp>();
@@ -20,12 +23,16 @@ namespace VoyagerController
 
         private void Start()
         {
-            VoyagerClient.Instance.AddOpListener<MissingFramesResponse>(OpCode.MissingFramesResponse, OnMissingFramesResponse);
+            LampManager.Instance
+                .GetClient<VoyagerNetworkClient>()
+                .AddOpListener<MissingFramesResponse>(OpCode.MissingFramesResponse, OnMissingFramesResponse);
         }
 
         private void OnDestroy()
         {
-            VoyagerClient.Instance?.RemoveOpListener<MissingFramesResponse>(OpCode.MissingFramesResponse, OnMissingFramesResponse);
+            LampManager.Instance
+                .GetClient<VoyagerNetworkClient>()?
+                .RemoveOpListener<MissingFramesResponse>(OpCode.MissingFramesResponse, OnMissingFramesResponse);
         }
 
         private void Update()
@@ -87,12 +94,12 @@ namespace VoyagerController
             _previousMissingFramesRequest = TimeUtils.Epoch;
         }
 
-        private static void RequestMissingFrames(VoyagerLamp voyager)
+        private void RequestMissingFrames(VoyagerLamp voyager)
         {
             var videoTime = Metadata.Get(voyager.Serial).TimeEffectApplied;
             var packet = new MissingFramesRequest(videoTime);
             var time = TimeUtils.Epoch + TimeOffset(voyager);
-            SendPacket(voyager, packet, time);
+            GetLampClient(voyager).SendSettingsPacket(voyager, packet, time);
         }
 
         public static void ApplyEffectToLamp(Lamp lamp, Effect effect)
@@ -114,16 +121,11 @@ namespace VoyagerController
             var meta = Metadata.Get(voyager.Serial);
             var offset = TimeOffset(voyager);
             var start = video.Meta.StartTime + offset;
-            var time = TimeUtils.Epoch + offset;
             var framebuffer = new Rgb[video.Video.FrameCount][];
             var confirmed = new bool[video.Video.FrameCount];
-            var itshe = meta.Itshe;
-
-            var packet = new PacketCollection(
-                new SetVideoPacket((long) video.Video.FrameCount, start),
-                new SetItshePacket(itshe),
-                new SetFpsPacket(video.Video.Fps)
-            );
+            
+            var time = GetLampClient(voyager).StartVideo(voyager, (long) video.Video.FrameCount, start);
+            GetLampClient(voyager).SetItshe(voyager, meta.Itshe);
 
             for (var i = 0; i < framebuffer.Length; i++) framebuffer[i] = null;
 
@@ -133,59 +135,27 @@ namespace VoyagerController
             meta.FrameBuffer = framebuffer;
             meta.Effect = video;
             meta.ConfirmedFrames = confirmed;
-
-            SendPacket(voyager, packet, time);
         }
 
         public static void ApplyItsheToVoyager(VoyagerLamp voyager, Itshe itshe)
         {
             var meta = Metadata.Get(voyager.Serial);
-            var time = TimeUtils.Epoch + TimeOffset(voyager);
-            var packet = new SetItshePacket(itshe);
-
+            GetLampClient(voyager).SetItshe(voyager, meta.Itshe);
             meta.Itshe = itshe;
-            
-            SendPacket(voyager, packet, time);
         }
 
         public static void ApplyVideoFrameToVoyager(VoyagerLamp voyager, long index, Rgb[] rgb)
         {
             var meta = Metadata.Get(voyager.Serial);
             var time = meta.TimeEffectApplied;
-            var data = ColorUtils.RgbArrayToBytes(rgb);
-            var packet = new VideoFramePacket(index, data);
-
+            GetLampClient(voyager).SendVideoFrame(voyager, index, time, rgb);
             meta.FrameBuffer[index] = rgb;
             if (meta.FrameBuffer.All(frame => frame != null))
                 meta.Rendered = true;
-            
-            SendPacket(voyager, packet, time);
         }
 
-        public static double TimeOffset(Lamp lamp)
-        {
-            switch (lamp.Endpoint)
-            {
-                case LampNetworkEndPoint _:
-                    return VoyagerClient.Instance.TimeOffset;
-            }
+        public static double TimeOffset(Lamp lamp) => GetLampClient(lamp).TimeOffset;
 
-            return 0.0;
-        }
-
-        private static void SendPacket(VoyagerLamp voyager, Packet packet, double time)
-        {
-            switch (voyager.Endpoint)
-            {
-                case LampNetworkEndPoint _:
-                    if (packet is VideoFramePacket)
-                        VoyagerClient.Instance.SendFramePacket(voyager, packet, time);
-                    else
-                        VoyagerClient.Instance.SendSettingsPacket(voyager, packet, time);
-                    break;
-            }
-        }
-        
         private static void OnMissingFramesResponse(VoyagerLamp voyager, MissingFramesResponse response)
         {
             var meta = Metadata.Get(voyager.Serial);
@@ -209,6 +179,18 @@ namespace VoyagerController
             while (frames < 0) frames += (long)video.FrameCount;
             return frames % (long)video.FrameCount;
 
+        }
+
+        private static VoyagerClient GetLampClient(Lamp lamp)
+        {
+            switch (lamp.Endpoint)
+            {
+                case LampNetworkEndPoint _:
+                    return LampManager.Instance.GetClient<VoyagerNetworkClient>();
+                case BluetoothEndPoint _:
+                    return LampManager.Instance.GetClient<VoyagerBluetoothClient>();
+            }
+            return null;
         }
     }
 }

@@ -1,14 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using DigitalSputnik;
 using DigitalSputnik.Ble;
+using DigitalSputnik.Colors;
 using DigitalSputnik.Voyager;
+using DigitalSputnik.Voyager.Communication;
 
 namespace VoyagerController
 {
-    public class BluetoothClient : LampClient
+    public class VoyagerBluetoothClient : VoyagerClient
     {
+        private static VoyagerBluetoothClient _instance;
+        
         private const double INITIALIZATION_TIME = 0.5;
         private const double SCAN_RESTART_TIME = 30.0;
         private const string SERVICE_UID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
@@ -23,10 +27,16 @@ namespace VoyagerController
         
         private readonly List<BluetoothConnection> _connections = new List<BluetoothConnection>();
         private readonly List<string> _inActiveConnections = new List<string>();
+
+        public static void SendMessage(VoyagerLamp lamp, byte[] message)
+        {
+            // TODO: Implement
+        }
         
-        public BluetoothClient()
+        public VoyagerBluetoothClient()
         {
             BluetoothAccess.Initialize();
+            _instance = this;
         }
     
         protected override void Update()
@@ -104,10 +114,7 @@ namespace VoyagerController
                 return;
 
             BluetoothAccess.Connect(peripheral.Id,
-                access =>
-                {
-                    
-                },
+                SetupValidatedDevice,
                 (info, error) => { },
                 (info, error) =>
                 {
@@ -117,7 +124,24 @@ namespace VoyagerController
                     _inActiveConnections.Add(connection.Id);
                 });
         }
-        
+
+        private void SetupValidatedDevice(PeripheralAccess access)
+        {
+            var connection = new BluetoothConnection(access);
+            
+            access.SubscribeToCharacteristic(SERVICE_UID, UART_TX_CHARACTERISTIC_UUID, DataReceivedFromBluetooth);
+            
+            _connections.Add(connection);
+            
+            Debugger.LogInfo("Connected to bluetooth");
+        }
+
+        private void DataReceivedFromBluetooth(PeripheralAccess access, string service, string characteristic, byte[] data)
+        {
+            var str = Encoding.UTF8.GetString(data);
+            Debugger.LogInfo("Bluetooth received: " + data);
+        }
+
         private bool RemoveOldestConnectedDevice()
         {
             var remove = _connections.FirstOrDefault(c => c.LastMessage > LEFT_OUT_TIME);
@@ -133,15 +157,66 @@ namespace VoyagerController
             return _connections.FirstOrDefault(c => c.Id == id);
         }
 
+        public override void SendSettingsPacket(VoyagerLamp voyager, Packet packet, double time)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override double TimeOffset => 0.0;
+
+        public override void SetItshe(VoyagerLamp voyager, Itshe itshe)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override double SetStream(VoyagerLamp voyager)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void SendStreamFrame(VoyagerLamp voyager, double time, double index, Rgb[] frame)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override double StartVideo(VoyagerLamp voyager, long frameCount, double startTime = -1)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void SendVideoFrame(VoyagerLamp voyager, long index, double time, Rgb[] frame)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void OverridePixels(VoyagerLamp voyager, Itshe itshe, double duration)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void SetFps(VoyagerLamp voyager, double fps)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void SetNetworkMode(VoyagerLamp voyager, NetworkMode mode, string ssid = "", string password = "")
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void SetGlobalIntensity(VoyagerLamp voyager, double value)
+        {
+            throw new System.NotImplementedException();
+        }
+        
         private class BluetoothConnection
         {
-            public string Id { get; }
-            public BluetoothAccess Access { get; }
+            public string Id => Access.Id;
+            public PeripheralAccess Access { get; }
             public double LastMessage { get; set; }
 
-            public BluetoothConnection(string id, BluetoothAccess access)
+            public BluetoothConnection(PeripheralAccess access)
             {
-                Id = id;
                 Access = access;
                 LastMessage = TimeUtils.Epoch;
             }
