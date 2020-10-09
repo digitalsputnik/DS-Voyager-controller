@@ -31,8 +31,7 @@ namespace Klak.Syphon
     {
         public static (string, string)[] GetListOfServers()
         {
-            List<(string, string)> names = new List<(string, string)>();
-
+            var names = new List<(string, string)>();
             var list = Plugin_CreateServerList();
             var count = Plugin_GetServerListCount(list);
 

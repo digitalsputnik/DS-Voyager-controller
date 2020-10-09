@@ -18,13 +18,13 @@ namespace VoyagerController.Workspace
 
         public static void SelectAllLamps()
         {
-            foreach (var lamp in WorkspaceManager.GetItems<VoyagerItem>())
+            foreach (var lamp in WorkspaceManager.GetItems<VoyagerItem>().ToArray())
                 WorkspaceSelection.SelectItem(lamp);
         }
 
         public static void DeselectAllLamps()
         {
-            foreach (var lamp in WorkspaceManager.GetItems<VoyagerItem>())
+            foreach (var lamp in WorkspaceManager.GetItems<VoyagerItem>().ToArray())
                 WorkspaceSelection.DeselectItem(lamp);
         }
 

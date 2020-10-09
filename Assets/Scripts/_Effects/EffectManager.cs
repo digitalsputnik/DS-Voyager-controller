@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DigitalSputnik;
-using DigitalSputnik.Voyager;
 using UnityEngine;
 
 #if UNITY_IOS && !UNITY_EDITOR

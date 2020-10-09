@@ -1,6 +1,7 @@
 using System.Linq;
 using DigitalSputnik;
 using DigitalSputnik.Voyager;
+using VoyagerController.Effects;
 
 namespace VoyagerController.Rendering
 {
@@ -18,7 +19,7 @@ namespace VoyagerController.Rendering
             return LampManager.Instance.GetLampsOfType<VoyagerLamp>().All(l =>
             {
                 var meta = Metadata.Get(l.Serial);
-                return meta.Effect == null || meta.Effect != null && meta.Rendered;
+                return !(meta.Effect is VideoEffect) || meta.Effect is VideoEffect && meta.Rendered;
             });
         }
     }

@@ -169,7 +169,7 @@ namespace VoyagerController
             throw new System.NotImplementedException();
         }
 
-        public override double SetStream(VoyagerLamp voyager)
+        public override double StartStream(VoyagerLamp voyager)
         {
             throw new System.NotImplementedException();
         }

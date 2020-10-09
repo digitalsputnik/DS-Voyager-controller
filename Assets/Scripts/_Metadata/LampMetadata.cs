@@ -12,6 +12,7 @@ namespace VoyagerController
         public EffectMapping EffectMapping { get; set; } = new EffectMapping();
         public Itshe Itshe { get; set; } = new Itshe();
         public bool[] ConfirmedFrames { get; set; }
+        public Rgb[] PreviousStreamFrame { get; set; }
         public double TimeEffectApplied { get; set; }
         public double VideoStartTime { get; set; }
         public bool Rendered { get; set; } = false;

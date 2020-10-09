@@ -101,20 +101,37 @@ namespace VoyagerController.Workspace
 
         private void UpdatePixels()
         {
-            if (_meta.Effect is VideoEffect video)
+            switch (_meta.Effect)
             {
-                var index = LampEffectsWorker.GetCurrentFrameOfVideo(LampHandle, video.Video);
-
-                if (_meta.FrameBuffer[index] != null)
+                case VideoEffect video:
                 {
-                    var colors = _meta.FrameBuffer[index].ToColorArray();
+                    var index = LampEffectsWorker.GetCurrentFrameOfVideo(LampHandle, video.Video);
+
+                    if (_meta.FrameBuffer[index] != null)
+                    {
+                        var colors = _meta.FrameBuffer[index].ToColorArray();
+                        var color = (Color)_meta.Itshe.ToColor();
+                    
+                        for (var i = 0; i < colors.Length; i++)
+                            colors[i] = colors[i] * color;
+                    
+                        _pixelsTexture.SetPixels32(colors);
+                        _pixelsTexture.Apply();
+                    }
+
+                    break;
+                }
+                case SyphonEffect _:
+                {
+                    var colors = _meta.PreviousStreamFrame.ToColorArray();
                     var color = (Color)_meta.Itshe.ToColor();
                     
                     for (var i = 0; i < colors.Length; i++)
                         colors[i] = colors[i] * color;
-                    
+                
                     _pixelsTexture.SetPixels32(colors);
                     _pixelsTexture.Apply();
+                    break;
                 }
             }
         }

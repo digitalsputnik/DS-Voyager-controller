@@ -64,8 +64,8 @@ namespace VoyagerController.Rendering
 
         private static Color32[] RenderLampColors(VoyagerLamp lamp, Texture2D frame)
         {
-            var coords = MapLampToVideoCoords(lamp, frame);
-            return CoordsToColors(coords.ToArray(), frame);
+            var coords = TextureExtensions.MapLampToVideoCoords(lamp, frame);
+            return TextureExtensions.CoordsToColors(coords.ToArray(), frame);
         }
 
         private static void SendColorsToLamp(VoyagerLamp voyager, Color32[] colors, long index)
@@ -98,50 +98,12 @@ namespace VoyagerController.Rendering
 
         private bool CurrentEffectRendered()
         {
-            return _lamps.All(l => Metadata.Get(l.Serial).Rendered);
+            return _lamps.All(l => Metadata.Get(l.Serial).Effect is VideoEffect && Metadata.Get(l.Serial).Rendered);
         }
         
         public void Dispose()
         {
             if (_texture != null) Object.Destroy(_texture);
-        }
-        
-        private static Color32[] CoordsToColors(Vector2Int[] coords, Texture2D frame)
-        {
-            var colors = new Color32[coords.Length];
-            for (var i = 0; i < coords.Length; i++)
-            {
-                if (coords[i].x == -1 && coords[i].y == -1)
-                    colors[i] = Color.black;
-                else
-                    colors[i] = frame.GetPixel(coords[i].x, coords[i].y);
-            }
-            return colors;
-        }
-
-        private static IEnumerable<Vector2Int> MapLampToVideoCoords(VoyagerLamp voyager, Texture2D frame)
-        {
-            var mapping = Metadata.Get(voyager.Serial).EffectMapping;
-            var coords = new Vector2Int[voyager.PixelCount];
-
-            var p1 = new Vector2(mapping.X1, mapping.Y1);
-            var p2 = new Vector2(mapping.X2, mapping.Y2);
-
-            var delta = p2 - p1;
-            var steps = delta / (coords.Length - 1);
-
-            for (var i = 0; i < coords.Length; i++)
-            {
-                var x = p1.x + (steps.x * i);
-                var y = p1.y + (steps.y * i);
-
-                if (x > 1.0f || x < 0.0f || y > 1.0f || y < 0.0f)
-                    coords[i] = new Vector2Int(-1, -1);
-                else
-                    coords[i] = new Vector2Int((int) (x * frame.width), (int) (y * frame.height));
-            }
-
-            return coords;
         }
     }
 }

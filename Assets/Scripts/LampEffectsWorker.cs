@@ -85,7 +85,6 @@ namespace VoyagerController
             Debugger.LogInfo($"Ended confirming lamp {voyager.Serial}");
         }
 
-
         private void RequestMissingFrames()
         {
             if (TimeUtils.Epoch < _previousMissingFramesRequest + MISSING_FRAMES_REQUEST_FREQUENCY) return;
@@ -110,12 +109,27 @@ namespace VoyagerController
             switch (lamp)
             {
                 case VoyagerLamp voyager:
-                    if (effect is VideoEffect video)
-                        ApplyVideoToVoyager(voyager, video);
+                    switch (effect)
+                    {
+                        case VideoEffect video:
+                            ApplyVideoToVoyager(voyager, video);
+                            break;
+                        case SyphonEffect syphon:
+                            ApplyStreamToVoyager(voyager, syphon);
+                            break;
+                    }
                     break;
             }
         }
 
+        private static void ApplyStreamToVoyager(VoyagerLamp voyager, Effect effect)
+        {
+            var meta = Metadata.Get(voyager.Serial);
+            var time = GetLampClient(voyager).StartStream(voyager);
+            meta.TimeEffectApplied = time;
+            meta.Effect = effect;
+        }
+        
         private static void ApplyVideoToVoyager(VoyagerLamp voyager, VideoEffect video)
         {
             var meta = Metadata.Get(voyager.Serial);
@@ -152,6 +166,15 @@ namespace VoyagerController
             meta.FrameBuffer[index] = rgb;
             if (meta.FrameBuffer.All(frame => frame != null))
                 meta.Rendered = true;
+        }
+
+        public static void ApplyStreamFrameToVoyager(VoyagerLamp voyager, Rgb[] rgb, double delay)
+        {
+            var meta = Metadata.Get(voyager.Serial);
+            var start = meta.TimeEffectApplied;
+            var time = TimeUtils.Epoch + TimeOffset(voyager) + delay;
+            GetLampClient(voyager).SendStreamFrame(voyager, start, time, rgb);
+            meta.PreviousStreamFrame = rgb;
         }
 
         public static double TimeOffset(Lamp lamp) => GetLampClient(lamp).TimeOffset;
