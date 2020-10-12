@@ -6,6 +6,7 @@ using DigitalSputnik.Ble;
 using DigitalSputnik.Colors;
 using DigitalSputnik.Voyager;
 using DigitalSputnik.Voyager.Communication;
+using UnityEngine;
 
 namespace VoyagerController
 {
@@ -13,7 +14,7 @@ namespace VoyagerController
     {
         private static VoyagerBluetoothClient _instance;
         
-        private const double INITIALIZATION_TIME = 0.5;
+        private const double INITIALIZATION_TIME = 2.0;
         private const double SCAN_RESTART_TIME = 30.0;
         private const string SERVICE_UID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
         private const string UART_RX_CHARACTERISTIC_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
@@ -36,7 +37,7 @@ namespace VoyagerController
         public VoyagerBluetoothClient()
         {
             BluetoothAccess.Initialize();
-            _instance = this;
+            _instance = this; 
         }
     
         protected override void Update()
@@ -46,7 +47,7 @@ namespace VoyagerController
                 case ClientState.WaitingForInitialization when BluetoothAccess.IsInitialized:
                     OnBluetoothInitializedByDevice();
                     break;
-                case ClientState.Initialized when TimeUtils.Epoch > _initializedTime + INITIALIZATION_TIME:
+                case ClientState.Initialized when TimeUtils.Epoch > _initializedTime + INITIALIZATION_TIME && BluetoothAccess.IsInitialized:
                     OnBluetoothWaitedByController();
                     break;
                 case ClientState.Ready:
@@ -67,20 +68,23 @@ namespace VoyagerController
         private void OnBluetoothWaitedByController()
         {
             _state = ClientState.Ready;
-            StartScanning();
             Debugger.LogInfo("Bluetooth is now ready and starts scanning");
+            StartScanning();
         }
 
         private void CheckToRestartScanning()
         {
-            if (_lastScanStarted + SCAN_RESTART_TIME > TimeUtils.Epoch) return;
+            if (TimeUtils.Epoch < _lastScanStarted + SCAN_RESTART_TIME) return;
             
             StopScanning();
             StartScanning();
+
+            _lastScanStarted = TimeUtils.Epoch;
         }
 
         private void StartScanning()
         {
+            Debugger.LogInfo("Bluetooth scanning started");
             _lastScanStarted = TimeUtils.Epoch;
             BluetoothAccess.StartScanning(PeripheralScanned, new[] { SERVICE_UID });
         }
@@ -112,6 +116,8 @@ namespace VoyagerController
             // The lamp is already found from network and doesn't need to be added through bluetooth.
             if (LampManager.Instance.GetLampWithSerial<VoyagerLamp>(peripheral.Name) != null)
                 return;
+            
+            Debugger.LogInfo($"Peripheral found - {peripheral.Name}");
 
             BluetoothAccess.Connect(peripheral.Id,
                 SetupValidatedDevice,

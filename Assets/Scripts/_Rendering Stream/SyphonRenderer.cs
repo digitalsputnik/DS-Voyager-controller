@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Klak.Syphon;
 using UnityEngine;
@@ -17,7 +16,8 @@ namespace VoyagerController.Rendering
 
         private void Start()
         {
-            if (Application.platform != RuntimePlatform.OSXEditor && Application.platform != RuntimePlatform.OSXPlayer)
+            if (Application.platform != RuntimePlatform.OSXEditor &&
+                Application.platform != RuntimePlatform.OSXPlayer)
             {
                 Destroy(gameObject);
                 return;

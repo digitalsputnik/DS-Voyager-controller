@@ -68,7 +68,7 @@ namespace DigitalSputnik.Ble
         private static void SetupPlatformBluetoothInterface()
         {
 #if UNITY_IOS && !UNITY_EDITOR
-            _interface = new IosBluetoothInterface();
+            _interface = new IOSBluetoothInterface();
 #elif UNITY_ANDROID && !UNITY_EDITOR
             _interface = new AndroidBluetoothInterface();
 #endif

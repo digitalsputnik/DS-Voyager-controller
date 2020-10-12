@@ -44,7 +44,7 @@ namespace VoyagerController
         {
             LampManager.Instance.OnLampDiscovered += LampDiscovered;
             LampManager.Instance.AddClient(new VoyagerNetworkClient());
-            if (Application.isMobilePlatform && !Application.isEditor)
+            if (Application.isMobilePlatform && !Application.isEditor) 
                 LampManager.Instance.AddClient(new VoyagerBluetoothClient());
         }
 
@@ -52,7 +52,7 @@ namespace VoyagerController
         {
             Metadata.Clear();
             LampManager.Instance.RemoveClient<VoyagerClient>();
-            if (Application.isMobilePlatform && !Application.isEditor)
+            if (Application.isMobilePlatform && !Application.isEditor) 
                 LampManager.Instance.RemoveClient<VoyagerBluetoothClient>();
         }
 

@@ -14,8 +14,11 @@ namespace VoyagerController.Effects
         {
             if (Application.platform != RuntimePlatform.OSXPlayer &&
                 Application.platform != RuntimePlatform.OSXEditor)
+            {
+                Destroy(this);
                 return;
-            
+            }
+
             var syphonEffect = new SyphonEffect();
             
             EffectManager.AddEffect(syphonEffect);
