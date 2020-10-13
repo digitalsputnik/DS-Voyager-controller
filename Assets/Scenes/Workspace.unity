@@ -22900,8 +22900,9 @@ PrefabInstance:
     - target: {fileID: 956605390412279815, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: info
-      value: "Enter your external network\u2019s SSID and Password or scan the network
-        by clicking SCAN and then select your network by SSID. Then click SET."
+      value: "\nEnter your external network\u2019s SSID and Password or scan the
+        network by clicking SCAN and then select your network by SSID. Then click
+        SET."
       objectReference: {fileID: 0}
     - target: {fileID: 1042969921048608556, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
@@ -22913,6 +22914,13 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 584018351}
+    - target: {fileID: 1042969921048608556, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: info
+      value: "\nEnter your external\r network\u2019s SSID and Password or scan the
+        networks by clicking SCAN and then select your network by SSID. \rThen click
+        SET."
+      objectReference: {fileID: 0}
     - target: {fileID: 1042969921129099284, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: rightMenuToOpen
