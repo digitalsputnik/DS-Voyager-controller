@@ -22860,6 +22860,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3460918171069029509}
     m_Modifications:
+    - target: {fileID: 287576042, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
+      propertyPath: info
+      value: Now connect your device to your external network and you're done!
+      objectReference: {fileID: 0}
     - target: {fileID: 2091659659, guid: c7232ab74f290ad4b8ce4ef420609fb9, type: 3}
       propertyPath: rightButtonText
       value: NEXT
@@ -22893,6 +22897,12 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 984979040}
+    - target: {fileID: 956605390412279815, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: info
+      value: "Enter your external network\u2019s SSID and Password or scan the network
+        by clicking SCAN and then select your network by SSID. Then click SET."
+      objectReference: {fileID: 0}
     - target: {fileID: 1042969921048608556, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: leftMenuToOpen
@@ -23211,6 +23221,12 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 585339813}
+    - target: {fileID: 6628622853852549494, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: info
+      value: Next, select the lamps you wish to connect to an external WiFi network.
+        Then click CONTINUE.
+      objectReference: {fileID: 0}
     - target: {fileID: 7205457624554518013, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: leftMenuToOpen
