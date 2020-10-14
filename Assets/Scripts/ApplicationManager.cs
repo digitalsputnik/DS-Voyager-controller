@@ -72,7 +72,7 @@ namespace VoyagerController
                 if (lamp is VoyagerLamp voyager)
                 {
                     Metadata.Add(voyager);
-                    return true;   
+                    return true;
                 }
                 else return false;
             }

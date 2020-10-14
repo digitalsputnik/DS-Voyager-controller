@@ -6,6 +6,9 @@ using DigitalSputnik;
 using DigitalSputnik.Videos;
 using UnityEngine;
 using UnityEngine.Networking;
+#if UNITY_IOS && !UNITY_EDITOR
+using DigitalSputnik.Videos.iOS;
+#endif
 
 namespace VoyagerController.Effects
 {
@@ -135,16 +138,15 @@ namespace VoyagerController.Effects
 
             foreach (var preset in presets)
             {
-                var url = Path.Combine(source, preset);
-                var dest = Path.Combine(destination, preset);
-
+                var url = Path.Combine(source, preset) + ".mp4";
+                var dest = Path.Combine(destination, preset) + ".mp4";
+                
                 var load = new UnityWebRequest(url) { downloadHandler = new DownloadHandlerBuffer() };
 
                 yield return load.SendWebRequest();
 
-                if (load.isNetworkError)
-                    Debug.Log(load.error);
-
+                if (load.isNetworkError) Debug.Log(load.error);
+                
                 File.WriteAllBytes(dest, load.downloadHandler.data);
             }
 

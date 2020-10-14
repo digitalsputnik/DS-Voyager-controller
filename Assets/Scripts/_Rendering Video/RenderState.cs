@@ -49,6 +49,9 @@ namespace VoyagerController.Rendering
             
             var index = player.frame;
 
+            if (index >= (long) _effect.Video.FrameCount)
+                return;
+
             if (_texture != null) Object.Destroy(_texture);
             
             _texture = VideoEffectRenderer.RenderTexture.ToTexture2D();

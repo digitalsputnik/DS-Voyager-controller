@@ -68,14 +68,14 @@ namespace DigitalSputnik.Ble
         private static void SetupPlatformBluetoothInterface()
         {
 #if UNITY_IOS && !UNITY_EDITOR
-            _interface = new IOSBluetoothInterface();
+            _interface = new IosBluetoothInterface();
 #elif UNITY_ANDROID && !UNITY_EDITOR
             _interface = new AndroidBluetoothInterface();
 #endif
             _interface?.Initialize();
         }
 
-        void InternalStartScanning(PeripheralHandler scanned, string[] services)
+        void InternalStartScanning(PeripheralHandler scanned, string[]services)
         {
             _onPeripheralScanned = scanned;
             _interface.StartScanning(services, PeripheralScanned);
@@ -183,41 +183,34 @@ namespace DigitalSputnik.Ble
         {
             if (!_characteristicUpdateDelegates.ContainsKey(service))
                 _characteristicUpdateDelegates.Add(service, new Dictionary<string, PeripheralCharacteristicUpdate>());
+            if (_characteristicUpdateDelegates[service].ContainsKey(characteristic)) return;
 
-            if (!_characteristicUpdateDelegates[service].ContainsKey(characteristic))
-            {
-                _characteristicUpdateDelegates[service].Add(characteristic, dataUpdate);
-                _interface.SubscribeToCharacteristicUpdate(Id, characteristic);
-            }
+            _characteristicUpdateDelegates[service].Add(characteristic, dataUpdate);
+            _interface.SubscribeToCharacteristicUpdate(Id, characteristic);
         }
 
-        public void WriteToCharacteristic(string characteristic, byte[] data)
+        public void WriteToCharacteristic(string characteristic, byte[]data)
         {
             _interface.WriteToCharacteristic(Id, characteristic, data);
         }
 
-        private void OnServicesScanned(string id, string[] services)
+        private void OnServicesScanned(string id, string[]services)
         {
-            if (id == Id)
-            {
-                _onServicesScanned?.Invoke(this, services);
-            }
+            if (id == Id) _onServicesScanned?.Invoke(this, services);
         }
 
         private void OnServiceCharacteristicsScanned(string id, string service, string[] characteristics)
         {
-            if (id == Id)
-            {
-                _onServiceCharacteristicsScanned?.Invoke(this, service, characteristics);
-            }
+            if (id == Id) _onServiceCharacteristicsScanned?.Invoke(this, service, characteristics);
         }
 
         private void OnCharacteristicUpdate(string id, string service, string characteristic, byte[] data)
         {
             if (id != Id) return;
             if (!_characteristicUpdateDelegates.ContainsKey(service)) return;
-            if (_characteristicUpdateDelegates[service].ContainsKey(characteristic))
-                _characteristicUpdateDelegates[service][characteristic]?.Invoke(this, service, characteristic, data);
+            if (!_characteristicUpdateDelegates[service].ContainsKey(characteristic)) return;
+
+            _characteristicUpdateDelegates[service][characteristic]?.Invoke(this, service, characteristic, data);
         }
     }
 }

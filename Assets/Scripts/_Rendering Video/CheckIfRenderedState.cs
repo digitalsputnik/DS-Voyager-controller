@@ -16,7 +16,7 @@ namespace VoyagerController.Rendering
 
         private static bool AllLampsRendered()
         {
-            return LampManager.Instance.GetLampsOfType<VoyagerLamp>().All(l =>
+            return LampManager.Instance.GetLampsOfType<VoyagerLamp>().ToArray().All(l =>
             {
                 var meta = Metadata.Get(l.Serial);
                 return !(meta.Effect is VideoEffect) || meta.Effect is VideoEffect && meta.Rendered;

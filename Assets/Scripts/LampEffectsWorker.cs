@@ -149,6 +149,8 @@ namespace VoyagerController
             meta.FrameBuffer = framebuffer;
             meta.Effect = video;
             meta.ConfirmedFrames = confirmed;
+            
+            Debug.Log("here");
         }
 
         public static void ApplyItsheToVoyager(VoyagerLamp voyager, Itshe itshe)

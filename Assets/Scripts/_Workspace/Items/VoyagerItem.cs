@@ -1,4 +1,5 @@
 using DigitalSputnik;
+using DigitalSputnik.Colors;
 using DigitalSputnik.Voyager;
 using UnityEngine;
 using VoyagerController.Effects;
@@ -133,6 +134,15 @@ namespace VoyagerController.Workspace
                     _pixelsTexture.Apply();
                     break;
                 }
+                default:
+                    if (LampHandle.Endpoint is BluetoothEndPoint)
+                    {
+                        var rgb = ColorUtils.ItsheToRgb(_meta.Itshe);
+                        var colors = ColorUtils.RgbToArray(rgb, LampHandle.PixelCount).ToColorArray();
+                        _pixelsTexture.SetPixels32(colors);
+                        _pixelsTexture.Apply();
+                    }
+                    break;
             }
         }
 
@@ -152,6 +162,8 @@ namespace VoyagerController.Workspace
         private void UpdateText()
         {
             _nameText.text = LampHandle.Serial;
+            if (LampHandle.Endpoint is BluetoothEndPoint)
+                _nameText.text = "Bluetooth " + _nameText.text;
         }
 
         public override Vector3[] SelectPositions

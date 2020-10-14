@@ -36,8 +36,9 @@ namespace VoyagerController.UI
             {
                 if (LampValidToAdd(lamp))
                 {
+                    var title = lamp.Endpoint is BluetoothEndPoint ? "BT " + lamp.Serial : lamp.Serial;
                     var item = Instantiate(_addLampBtnPrefab, _container);
-                    item.Setup(lamp.Serial, () => AddLampToWorkspace(lamp));
+                    item.Setup(title, () => AddLampToWorkspace(lamp));
                     _lampItems.Add(item);
                 }
             }

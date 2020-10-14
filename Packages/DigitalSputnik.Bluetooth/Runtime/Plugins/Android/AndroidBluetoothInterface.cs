@@ -1,6 +1,5 @@
 ﻿#if UNITY_ANDROID
 
-using DigitalSputnik.Ble;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -223,11 +222,8 @@ namespace DigitalSputnik.Ble
         public void SetCharacteristicsUpdateCallback(string mac, InternalCharacteristicUpdateHandler callback)
         {
             var device = _connectedDevices.FirstOrDefault(d => d.mac == mac);
-
-            if (device != null && device.connected)
-            {
-                    _onCharacteristicUpdate[mac] = callback;
-            }
+            if (device == null || !device.connected) return;
+            _onCharacteristicUpdate[mac] = callback;
         }
 
         public void SubscribeToCharacteristicUpdate(string mac, string characteristic)
@@ -380,17 +376,14 @@ namespace DigitalSputnik.Ble
 
         void OnCharacteristicUpdate(string mac, string serviceUuid, string characteristicUuid, int status, string message)
         {
-            var device = _connectedDevices.FirstOrDefault(d => d.mac == mac);
+            var device = _connectedDevices.FirstOrDefault(d => string.Equals(d.mac, mac, StringComparison.CurrentCultureIgnoreCase));
 
-            if (device != null)
-            {
-                if (device.mac != mac) return;
+            if (device == null) return;
 
-                var service = device.services[serviceUuid];
-                var characteristic = device.characteristics[characteristicUuid];
-                var data = Encoding.UTF8.GetBytes(message);
-                _onCharacteristicUpdate[mac]?.Invoke(mac, serviceUuid, characteristicUuid, data);
-            }
+            // var service = device.services[serviceUuid];
+            // var characteristic = device.characteristics[characteristicUuid];
+            var data = Encoding.UTF8.GetBytes(message);
+            _onCharacteristicUpdate[mac].Invoke(mac, serviceUuid, characteristicUuid, data);
         }
 
         public class AndroidInitializeCallback : AndroidJavaProxy
