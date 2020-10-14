@@ -7,6 +7,7 @@ using DigitalSputnik.Ble;
 using DigitalSputnik.Colors;
 using DigitalSputnik.Voyager;
 using DigitalSputnik.Voyager.Communication;
+using DigitalSputnik.Voyager.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -304,7 +305,7 @@ namespace VoyagerController
 
         private static byte[] ObjectToBytes(object obj)
         {
-            var json = JsonConvert.SerializeObject(obj);
+            var json = JsonConvert.SerializeObject(obj, new ItsheConverter());
             return Encoding.UTF8.GetBytes(json);
         }
         
