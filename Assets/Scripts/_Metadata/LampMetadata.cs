@@ -17,5 +17,10 @@ namespace VoyagerController
         public double VideoStartTime { get; set; }
         public bool Rendered { get; set; } = false;
         public Rgb[][] FrameBuffer { get; set; }
+
+        public LampMetadata()
+        {
+            Itshe.E = 1.0f;
+        }
     }
 }

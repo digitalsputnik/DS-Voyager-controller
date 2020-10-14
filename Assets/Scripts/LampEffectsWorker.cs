@@ -149,8 +149,6 @@ namespace VoyagerController
             meta.FrameBuffer = framebuffer;
             meta.Effect = video;
             meta.ConfirmedFrames = confirmed;
-            
-            Debug.Log("here");
         }
 
         public static void ApplyItsheToVoyager(VoyagerLamp voyager, Itshe itshe)
@@ -164,10 +162,15 @@ namespace VoyagerController
         {
             var meta = Metadata.Get(voyager.Serial);
             var time = meta.TimeEffectApplied;
+            
             GetLampClient(voyager).SendVideoFrame(voyager, index, time, rgb);
+            
             meta.FrameBuffer[index] = rgb;
             if (meta.FrameBuffer.All(frame => frame != null))
                 meta.Rendered = true;
+
+            if (voyager.Endpoint is BluetoothEndPoint)
+                meta.ConfirmedFrames[index] = true;
         }
 
         public static void ApplyStreamFrameToVoyager(VoyagerLamp voyager, Rgb[] rgb, double delay)
