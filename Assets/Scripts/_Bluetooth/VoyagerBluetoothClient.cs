@@ -247,8 +247,8 @@ namespace VoyagerController
 
         public override void SetItshe(VoyagerLamp voyager, Itshe itshe)
         {
-            var packet = new SetItshePacket(itshe);
-            SendSettingsPacket(voyager, packet, TimeUtils.Epoch);
+            var packet = new SetItshePacket("set_itshe", TimeUtils.Epoch, itshe);
+            SendMessage(voyager, ObjectToBytes(packet));
         }
 
         public override double StartStream(VoyagerLamp voyager)
@@ -349,6 +349,23 @@ namespace VoyagerController
             public string OpCode { get; set; }
             [JsonProperty("length")]
             public int Length { get; set; }
+        }
+
+        public struct SetItshePacket
+        {
+            [JsonProperty("op_code")]
+            public string OpCode { get; set; }
+            [JsonProperty("timestamp")]
+            public double Timestamp { get; set; }
+            [JsonProperty("itshe")]
+            public Itshe Itshe { get; set; }
+
+            public SetItshePacket(string op, double timestamp, Itshe itshe)
+            {
+                OpCode = op;
+                Timestamp = timestamp;
+                Itshe = itshe;
+            }
         }
 
         private enum ValidateState
