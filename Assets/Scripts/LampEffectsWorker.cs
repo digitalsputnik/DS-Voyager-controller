@@ -7,6 +7,7 @@ using DigitalSputnik.Videos;
 using DigitalSputnik.Voyager;
 using DigitalSputnik.Voyager.Communication;
 using UnityEngine;
+using VoyagerController.Bluetooth;
 using VoyagerController.Effects;
 
 namespace VoyagerController

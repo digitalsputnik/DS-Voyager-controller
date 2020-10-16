@@ -1,6 +1,6 @@
 using DigitalSputnik;
 
-namespace VoyagerController
+namespace VoyagerController.Bluetooth
 {
     public class BluetoothEndPoint : LampEndPoint
     {

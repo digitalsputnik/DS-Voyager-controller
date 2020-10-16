@@ -4,6 +4,7 @@ using DigitalSputnik;
 using DigitalSputnik.Voyager;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerController.Bluetooth;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI

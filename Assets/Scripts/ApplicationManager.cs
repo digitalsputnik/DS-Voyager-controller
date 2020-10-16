@@ -2,6 +2,7 @@
 using DigitalSputnik;
 using DigitalSputnik.Voyager;
 using UnityEngine;
+using VoyagerController.Bluetooth;
 
 namespace VoyagerController
 {

@@ -10,9 +10,8 @@ using DigitalSputnik.Voyager.Communication;
 using DigitalSputnik.Voyager.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
-namespace VoyagerController
+namespace VoyagerController.Bluetooth
 {
     public class VoyagerBluetoothClient : VoyagerClient
     {
@@ -31,7 +30,6 @@ namespace VoyagerController
         private double _lastScanStarted = 0.0;
         
         private readonly List<BluetoothConnection> _connections = new List<BluetoothConnection>();
-        // private readonly List<string> _inActiveConnections = new List<string>();
         
         public VoyagerBluetoothClient()
         {
@@ -145,7 +143,9 @@ namespace VoyagerController
         private void ValidateScannedDeviceAndConnect(PeripheralInfo peripheral)
         {
             // The lamp is already found from network and doesn't need to be added through bluetooth.
-            if (LampManager.Instance.GetLampWithSerial<VoyagerLamp>(peripheral.Name) != null)
+
+            var updLamp = LampManager.Instance.GetLampWithSerial<VoyagerLamp>(peripheral.Name);
+            if (updLamp != null && updLamp.Connected)
                 return;
             
             Debugger.LogInfo($"Peripheral found - {peripheral.Name}");
@@ -238,13 +238,15 @@ namespace VoyagerController
             return _connections.FirstOrDefault(c => c.Id == id);
         }
 
+        #region Implementaion
+        
+        public override double TimeOffset => 0.0;
+
         public override void SendSettingsPacket(VoyagerLamp voyager, Packet packet, double time)
         {
             packet.Timestamp = time;
             SendMessage(voyager, ObjectToBytes(packet));
         }
-
-        public override double TimeOffset => 0.0;
 
         public override void SetItshe(VoyagerLamp voyager, Itshe itshe)
         {
@@ -309,6 +311,16 @@ namespace VoyagerController
             return Encoding.UTF8.GetBytes(json);
         }
         
+        #endregion
+
+        private enum ValidateState
+        {
+            Connected,
+            GettingSerial,
+            GettingLength,
+            Ready
+        }
+        
         private class BluetoothConnection
         {
             public string Id => Access.Id;
@@ -323,58 +335,6 @@ namespace VoyagerController
                 LastMessage = TimeUtils.Epoch;
                 Lamp = lamp;
             }
-        }
-
-        [Serializable]
-        private struct RequestPackage
-        {
-            [JsonProperty("op_code")]
-            public string OpCode { get; set; }
-
-            public RequestPackage(string op) => OpCode = op;
-        }
-
-        [Serializable]
-        private struct GetSerialResponsePackage
-        {
-            [JsonProperty("op_code")]
-            public string OpCode { get; set; }
-            [JsonProperty("serial")]
-            public string Serial { get; set; }
-        }
-
-        [Serializable]
-        private struct GetLengthResponsePackage
-        {
-            [JsonProperty("op_code")]
-            public string OpCode { get; set; }
-            [JsonProperty("length")]
-            public int Length { get; set; }
-        }
-
-        public struct SetItshePacket
-        {
-            [JsonProperty("op_code")]
-            public string OpCode { get; set; }
-            [JsonProperty("timestamp")]
-            public double Timestamp { get; set; }
-            [JsonProperty("itshe")]
-            public Itshe Itshe { get; set; }
-
-            public SetItshePacket(string op, double timestamp, Itshe itshe)
-            {
-                OpCode = op;
-                Timestamp = timestamp;
-                Itshe = itshe;
-            }
-        }
-
-        private enum ValidateState
-        {
-            Connected,
-            GettingSerial,
-            GettingLength,
-            Ready
         }
     }
 }

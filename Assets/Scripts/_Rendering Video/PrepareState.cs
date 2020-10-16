@@ -14,7 +14,11 @@ namespace VoyagerController.Rendering
                 {
                     var meta = Metadata.Get(l.Serial);
                     return meta.Effect is VideoEffect && !meta.Rendered;
-                });
+                })
+                .ToArray();
+            
+            if (!unRendered.Any())
+                return new IdleState();
 
             return new RenderState(RenderQueue.Create(unRendered));
         }

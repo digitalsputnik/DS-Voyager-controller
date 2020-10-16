@@ -35,7 +35,7 @@ namespace VoyagerController.Effects
         {
             new Thread(() =>
             {
-                var clients = SyphonHelper.GetListOfServers();
+                var clients = SyphonHelper.GetListOfServers() ?? new (string, string)[0];
                 AvailableServers = clients
                     .Select(client => new SyphonCredentials(client.Item1, client.Item2))
                     .ToArray();

@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using DigitalSputnik.Videos;
+using DigitalSputnik.Voyager;
 using UnityEngine;
 using UnityEngine.Video;
+using VoyagerController.Effects;
+using VoyagerController.Workspace;
 
 namespace VoyagerController.Rendering
 {
@@ -15,9 +20,11 @@ namespace VoyagerController.Rendering
         public static VideoPlayer VideoPlayer => _instance._videoPlayer;
         public static RenderTexture RenderTexture => _instance._renderTexture;
         
-        private VideoRenderState _state = new CheckIfRenderedState();
+        private VideoRenderState _state = new IdleState();
         private VideoPlayer _videoPlayer = null;
         private RenderTexture _renderTexture = null;
+        
+        private Dictionary<VoyagerLamp, Effect> _prevEffects = new Dictionary<VoyagerLamp, Effect>(); 
 
         private void Start()
         {
@@ -27,6 +34,9 @@ namespace VoyagerController.Rendering
         private void Update()
         {
             var current = _state;
+            
+            if (EffectsChanged())
+                _state = new PrepareState();
             
             _state = _state.Update();
             
@@ -67,6 +77,27 @@ namespace VoyagerController.Rendering
         internal static void Clear()
         {
             VideoPlayer.Stop();
+        }
+
+        private bool EffectsChanged()
+        {
+            var result = false;
+            var lamps = WorkspaceManager.GetItems<VoyagerItem>()
+                .Select(i => i.LampHandle)
+                .Where(v => Metadata.Get(v.Serial).Effect is VideoEffect)
+                .ToArray();
+
+            if (!lamps.All(l => _prevEffects.ContainsKey(l)))
+                result = true;
+
+            if (!result && lamps.Any(l => Metadata.Get(l.Serial).Effect != _prevEffects[l]))
+                result = true;
+            
+            _prevEffects.Clear();
+            foreach (var lamp in lamps)
+                _prevEffects.Add(lamp, Metadata.Get(lamp.Serial).Effect);
+
+            return result;
         }
     }
 }

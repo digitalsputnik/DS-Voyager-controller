@@ -5,7 +5,15 @@ namespace VoyagerController.Rendering
         internal override VideoRenderState Update()
         {
             VideoEffectRenderer.Clear();
-            return new CheckIfRenderedState();
+            return new IdleState();
+        }
+    }
+
+    internal class IdleState : VideoRenderState
+    {
+        internal override VideoRenderState Update()
+        {
+            return this;
         }
     }
 }

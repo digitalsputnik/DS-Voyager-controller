@@ -2,6 +2,7 @@ using DigitalSputnik;
 using DigitalSputnik.Colors;
 using DigitalSputnik.Voyager;
 using UnityEngine;
+using VoyagerController.Bluetooth;
 using VoyagerController.Effects;
 
 namespace VoyagerController.Workspace
@@ -44,6 +45,7 @@ namespace VoyagerController.Workspace
         {
             UpdateConnectionType();
             UpdatePixels();
+            UpdateText();
         }
         
         protected override void Generate()
@@ -164,6 +166,7 @@ namespace VoyagerController.Workspace
             _nameText.text = LampHandle.Serial;
             if (LampHandle.Endpoint is BluetoothEndPoint)
                 _nameText.text = "Bluetooth " + _nameText.text;
+            _nameText.text += LampHandle.Connected ? " Connected" : " Disconnected";
         }
 
         public override Vector3[] SelectPositions
