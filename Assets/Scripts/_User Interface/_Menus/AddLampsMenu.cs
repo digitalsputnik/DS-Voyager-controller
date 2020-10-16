@@ -12,10 +12,10 @@ namespace VoyagerController.UI
     public class AddLampsMenu : Menu
     {
         [SerializeField] private Transform _container = null;
-        [SerializeField] private TextButton _addLampBtnPrefab = null;
+        [SerializeField] private AddLampItem _addLampBtnPrefab = null;
         [SerializeField] private Button _addAllLampsBtn = null;
 
-        private readonly List<TextButton> _lampItems = new List<TextButton>();
+        private readonly List<AddLampItem> _lampItems = new List<AddLampItem>();
         
         internal override void OnShow()
         {
@@ -35,13 +35,11 @@ namespace VoyagerController.UI
 
             foreach (var lamp in LampManager.Instance.GetLampsOfType<VoyagerLamp>())
             {
-                if (LampValidToAdd(lamp))
-                {
-                    var title = lamp.Endpoint is BluetoothEndPoint ? "BT " + lamp.Serial : lamp.Serial;
-                    var item = Instantiate(_addLampBtnPrefab, _container);
-                    item.Setup(title, () => AddLampToWorkspace(lamp));
-                    _lampItems.Add(item);
-                }
+                if (!LampValidToAdd(lamp)) continue;
+                
+                var item = Instantiate(_addLampBtnPrefab, _container);
+                item.Setup(lamp, () => AddLampToWorkspace(lamp));
+                _lampItems.Add(item);
             }
             
             UpdateAddAllLampsBtn();

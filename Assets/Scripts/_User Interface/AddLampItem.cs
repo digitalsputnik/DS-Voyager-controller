@@ -1,11 +1,15 @@
 ﻿using System;
+using DigitalSputnik.Voyager;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerController.Bluetooth;
 
 namespace VoyagerController.UI
 {
-    public class TextButton : MonoBehaviour
+    public class AddLampItem : MonoBehaviour
     {
+        [SerializeField] private Image _bleIcon = null;
+    
         private Text _text;
         private Action _action;
 
@@ -14,15 +18,16 @@ namespace VoyagerController.UI
             _text = GetComponentInChildren<Text>();
         }
 
-        public void Setup(string text, Action action)
+        public void Setup(VoyagerLamp voyager, Action action)
         {
-            _text.text = text;
+            _text.text = voyager.Serial;
             _action = action;
+            _bleIcon.gameObject.SetActive(voyager.Endpoint is BluetoothEndPoint);
         }
 
         public void Click()
         {
             _action?.Invoke();
         }
-    }
+    }   
 }
