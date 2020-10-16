@@ -19,15 +19,15 @@ namespace VoyagerController.Effects
                 return;
             }
 
-            var syphonEffect = new SyphonEffect();
+            var effect = new SyphonEffect();
             
-            EffectManager.AddEffect(syphonEffect);
+            EffectManager.AddEffect(effect);
             
             RefreshClients(() =>
             {
                 if (!AvailableServers.Any()) return;
-                syphonEffect.Server = AvailableServers[0];
-                EffectManager.InvokeEffectModified(syphonEffect);
+                effect.Server = AvailableServers[0];
+                EffectManager.InvokeEffectModified(effect);
             });
         }
 
@@ -39,7 +39,7 @@ namespace VoyagerController.Effects
                 AvailableServers = clients
                     .Select(client => new SyphonCredentials(client.Item1, client.Item2))
                     .ToArray();
-                MainThread.Dispatch(() => refreshed?.Invoke());
+                MainThread.Dispatch(refreshed);
             }).Start();
         }
     }
