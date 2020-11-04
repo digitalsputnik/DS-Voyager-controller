@@ -25,16 +25,16 @@ namespace VoyagerController.UI
 
             ControllingModeChanged(ApplicationState.ControlMode.Value);
 
-            SelectionMove.OnSelectionMoveStarted += SelectionMoveStarted;
-            SelectionMove.OnSelectionMoveEnded += SelectionMoveEnded;
+            SelectionMove.SelectionMoveStarted += SelectionMoveStarted;
+            SelectionMove.SelectionMoveEnded += SelectionMoveEnded;
             ApplicationState.ColorWheelActive.OnChanged += ColorWheelActiveChanged;
             ApplicationState.ControlMode.OnChanged += ControllingModeChanged;
         }
         
         private void OnDestroy()
         {
-            SelectionMove.OnSelectionMoveStarted -= SelectionMoveStarted;
-            SelectionMove.OnSelectionMoveEnded -= SelectionMoveEnded;
+            SelectionMove.SelectionMoveStarted -= SelectionMoveStarted;
+            SelectionMove.SelectionMoveEnded -= SelectionMoveEnded;
             ApplicationState.ColorWheelActive.OnChanged -= ColorWheelActiveChanged;
             ApplicationState.ControlMode.OnChanged -= ControllingModeChanged;
         }

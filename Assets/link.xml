@@ -1,0 +1,11 @@
+<linker>
+    <assembly fullname="DigitalSputnik.Voyager" preserve="all" />
+    <assembly fullname="System.Core">
+        <type fullname="System.Linq.Expressions.Interpreter.LightLambda" preserve="all" />
+    </assembly>
+    <assembly fullname="AssemblyCSharp">
+        <type fullname="Models.MyCSharpClass">
+            <method signature="System.Void .ctor()"/>
+        </type>
+    </assembly>
+</linker>

@@ -46,17 +46,17 @@ namespace VoyagerController.UI
 
         internal override void OnShow()
         {
-            WorkspaceSelection.OnSelectionChanged += OnSelectionChanged;
-            WorkspaceManager.OnItemAdded += ItemAddedToOrRemovedFromWorkspace;
-            WorkspaceManager.OnItemRemoved += ItemAddedToOrRemovedFromWorkspace;
+            WorkspaceSelection.SelectionChanged += OnSelectionChanged;
+            WorkspaceManager.ItemAdded += ItemAddedToOrRemovedFromWorkspace;
+            WorkspaceManager.ItemRemoved += ItemAddedToOrRemovedFromWorkspace;
             EnableDisableObjects();
         }
 
         internal override void OnHide()
         {
-            WorkspaceSelection.OnSelectionChanged -= OnSelectionChanged;
-            WorkspaceManager.OnItemAdded -= ItemAddedToOrRemovedFromWorkspace;
-            WorkspaceManager.OnItemRemoved -= ItemAddedToOrRemovedFromWorkspace;
+            WorkspaceSelection.SelectionChanged -= OnSelectionChanged;
+            WorkspaceManager.ItemAdded -= ItemAddedToOrRemovedFromWorkspace;
+            WorkspaceManager.ItemRemoved -= ItemAddedToOrRemovedFromWorkspace;
 
             if (_updatesFinished)
             {

@@ -79,6 +79,12 @@ namespace VoyagerController.Rendering
             VideoPlayer.Stop();
         }
 
+        public static void Stop()
+        {
+            _instance._state = new IdleState();
+            Clear();
+        }
+
         private bool EffectsChanged()
         {
             var result = false;

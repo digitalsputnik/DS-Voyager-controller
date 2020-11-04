@@ -86,15 +86,15 @@ namespace VoyagerController.UI
         private void SubscribeEvents()
         {
             ApplicationManager.OnLampDiscovered += LampDiscovered;
-            WorkspaceManager.OnItemAdded += WorkspaceChanged;
-            WorkspaceManager.OnItemRemoved += WorkspaceChanged;
+            WorkspaceManager.ItemAdded += WorkspaceChanged;
+            WorkspaceManager.ItemRemoved += WorkspaceChanged;
         }
 
         private void UnsubscribeEvents()
         {
             ApplicationManager.OnLampDiscovered -= LampDiscovered;
-            WorkspaceManager.OnItemAdded -= WorkspaceChanged;
-            WorkspaceManager.OnItemRemoved -= WorkspaceChanged;
+            WorkspaceManager.ItemAdded -= WorkspaceChanged;
+            WorkspaceManager.ItemRemoved -= WorkspaceChanged;
         }
 
         private void LampDiscovered(Lamp lamp) => UpdateLampsList();

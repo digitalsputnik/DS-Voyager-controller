@@ -17,14 +17,14 @@ namespace VoyagerController.UI
         private void Start()
         {
             _button = GetComponent<Button>();
-            WorkspaceSelection.OnSelectionChanged += SelectionChanged;
+            WorkspaceSelection.SelectionChanged += SelectionChanged;
             _button.onClick.AddListener(Click);
             SelectionChanged();
         }
 
         private void OnDestroy()
         {
-            WorkspaceSelection.OnSelectionChanged -= SelectionChanged;
+            WorkspaceSelection.SelectionChanged -= SelectionChanged;
         }
 
         private void SelectionChanged()

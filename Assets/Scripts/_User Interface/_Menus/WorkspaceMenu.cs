@@ -33,9 +33,9 @@ namespace VoyagerController.UI
 
         internal override void OnShow()
         {
-            WorkspaceSelection.OnSelectionChanged += UpdateUserInterface;
-            WorkspaceManager.OnItemAdded += OnItemEvent;
-            WorkspaceManager.OnItemRemoved += OnItemEvent;
+            WorkspaceSelection.SelectionChanged += UpdateUserInterface;
+            WorkspaceManager.ItemAdded += OnItemEvent;
+            WorkspaceManager.ItemRemoved += OnItemEvent;
             UpdateUserInterface();
         }
 
@@ -43,9 +43,9 @@ namespace VoyagerController.UI
 
         internal override void OnHide()
         {
-            WorkspaceSelection.OnSelectionChanged -= UpdateUserInterface;
-            WorkspaceManager.OnItemAdded -= OnItemEvent;
-            WorkspaceManager.OnItemRemoved -= OnItemEvent;
+            WorkspaceSelection.SelectionChanged -= UpdateUserInterface;
+            WorkspaceManager.ItemAdded -= OnItemEvent;
+            WorkspaceManager.ItemRemoved -= OnItemEvent;
         }
 
         public void AddPicture()

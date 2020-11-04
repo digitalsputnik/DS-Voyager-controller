@@ -9,8 +9,8 @@ namespace VoyagerController.Workspace
     {
         public static bool Enabled = true;
 
-        public static event SelectionHandler OnSelectionMoveStarted;
-        public static event SelectionHandler OnSelectionMoveEnded;
+        public static SelectionHandler SelectionMoveStarted;
+        public static SelectionHandler SelectionMoveEnded;
 
         [SerializeField] private SelectionHandle _moveHandle = null;
         [SerializeField] private SelectionHandle _resizeHandle = null;
@@ -27,7 +27,7 @@ namespace VoyagerController.Workspace
 
         private List<ItemsContainerItem> _prevUnder = new List<ItemsContainerItem>();
 
-        public static void RaiseMovedEvent() => OnSelectionMoveEnded?.Invoke();
+        public static void RaiseMovedEvent() => SelectionMoveEnded?.Invoke();
 
         private void Start()
         {
@@ -43,7 +43,7 @@ namespace VoyagerController.Workspace
             if (state.phase == SelectionHandlerPhase.Begin)
             {
                 _startPosition = TargetPos;
-                OnSelectionMoveStarted?.Invoke();
+                SelectionMoveStarted?.Invoke();
             }
 
             var delta = state.startPosition - state.position;
@@ -54,7 +54,7 @@ namespace VoyagerController.Workspace
             if (state.phase == SelectionHandlerPhase.End)
             {
                 ManageOldUnder(_prevUnder);
-                OnSelectionMoveEnded?.Invoke();
+                SelectionMoveEnded?.Invoke();
             }
         }
 
@@ -70,7 +70,7 @@ namespace VoyagerController.Workspace
                 _startDistance = math.distance(_startPosition, state.position);
                 _startScale = TargetScale;
 
-                OnSelectionMoveStarted?.Invoke();
+                SelectionMoveStarted?.Invoke();
             }
 
             var rotation = _startPosition.AngleTo(state.position);
@@ -81,7 +81,7 @@ namespace VoyagerController.Workspace
             TargetScale = _startScale * factor;
 
             if (state.phase == SelectionHandlerPhase.End)
-                OnSelectionMoveEnded?.Invoke();
+                SelectionMoveEnded?.Invoke();
         }
 
         private Transform TargetTransform => _targetView.transform;

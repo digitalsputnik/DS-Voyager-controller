@@ -13,15 +13,15 @@ namespace VoyagerController.UI
 
         private void Start()
         {
-            SelectionMove.OnSelectionMoveStarted += SelectionMoveStarted;
-            SelectionMove.OnSelectionMoveEnded += SelectionMoveEnded;
+            SelectionMove.SelectionMoveStarted += SelectionMoveStarted;
+            SelectionMove.SelectionMoveEnded += SelectionMoveEnded;
             gameObject.SetActive(false);
         }
 
         private void OnDestroy()
         {
-            SelectionMove.OnSelectionMoveStarted -= SelectionMoveStarted;
-            SelectionMove.OnSelectionMoveEnded -= SelectionMoveEnded;
+            SelectionMove.SelectionMoveStarted -= SelectionMoveStarted;
+            SelectionMove.SelectionMoveEnded -= SelectionMoveEnded;
         }
 
         private void SelectionMoveStarted() => gameObject.SetActive(true);

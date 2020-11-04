@@ -10,9 +10,9 @@ namespace VoyagerController.Workspace
 
         public static Bounds Bounds;
 
-        private void Start() => WorkspaceSelection.OnSelectionChanged += SelectionChanged;
+        private void Start() => WorkspaceSelection.SelectionChanged += SelectionChanged;
 
-        private void OnDestroy() => WorkspaceSelection.OnSelectionChanged -= SelectionChanged;
+        private void OnDestroy() => WorkspaceSelection.SelectionChanged -= SelectionChanged;
 
         private void SelectionChanged()
         {

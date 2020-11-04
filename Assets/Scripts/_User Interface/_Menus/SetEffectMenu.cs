@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Crosstales.FB;
+using DigitalSputnik;
 using UnityEngine;
 using VoyagerController.Effects;
 using VoyagerController.Workspace;
@@ -27,7 +31,7 @@ namespace VoyagerController.UI
             EffectManager.OnEffectAdded += OnEffectEvent;
             EffectManager.OnEffectModified += OnEffectEvent;
             EffectManager.OnEffectRemoved += OnEffectEvent;
-            WorkspaceSelection.OnSelectionChanged += OnWorkspaceSelectionChanged;
+            WorkspaceSelection.SelectionChanged += OnWorkspaceSelectionChanged;
             UpdateEffectsList();
         }
 
@@ -36,7 +40,7 @@ namespace VoyagerController.UI
             EffectManager.OnEffectAdded -= OnEffectEvent;
             EffectManager.OnEffectModified -= OnEffectEvent;
             EffectManager.OnEffectRemoved -= OnEffectEvent;
-            WorkspaceSelection.OnSelectionChanged -= OnWorkspaceSelectionChanged;
+            WorkspaceSelection.SelectionChanged -= OnWorkspaceSelectionChanged;
         }
 
         private void OnEffectEvent(Effect effect) => UpdateEffectsList();
@@ -94,6 +98,64 @@ namespace VoyagerController.UI
                 .ThenByDescending(e => Metadata.Get(l => l.Effect == e).Count());
             // TODO: Here should be streams
         }
+
+        public void AddEffect()
+        {
+            LoadVideoFromDevice(path =>
+            {
+                if (path != "" && path != "Null" && path != null)
+                {
+                    VideoEffectLoader.LoadVideoEffect(path, video =>
+                    {
+                        video.Meta.Timestamp = TimeUtils.Epoch;
+                        UpdateEffectsList();
+                    });
+                }
+            });
+        }
+        
+        public static void LoadVideoFromDevice(Action<string> loaded)
+        {
+            if (Application.isMobilePlatform)
+            {
+                NativeGallery.GetVideoFromGallery(path =>
+                {
+                    if (string.IsNullOrEmpty(path))
+                    {
+                        loaded?.Invoke(null);
+                        return;
+                    }
+
+                    if (Application.platform == RuntimePlatform.IPhonePlayer)
+                    {
+                        // TODO: Implement - the name should be asked from user.
+                    }
+                    else
+                    {
+                        loaded.Invoke(path);
+                    }
+                });
+            }
+            else
+            {
+                var documents = DocumentsPath;
+                var extensions = new[] { new ExtensionFilter("Video", "mp4") };
+                var path = FileBrowser.OpenSingleFile("Open Video", documents, extensions);
+                loaded.Invoke(path == "" ? null : path);
+            }
+        }
+
+        private static string DocumentsPath
+        {
+            get
+            {
+                if (Application.platform == RuntimePlatform.WindowsPlayer ||
+                    Application.platform == RuntimePlatform.WindowsEditor)
+                    return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                else
+                    return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            }
+        }
         
         /*
         public void AddEffectClicked()
@@ -102,7 +164,7 @@ namespace VoyagerController.UI
                 "Add Effect",
                 "Pick which effect you want to add",
                 new string[] { "IMAGE", "VIDEO", "CANCEL" },
-                new Action[] { AddImageEffectClicked, AddVideoEffectClick, null }
+                new Action[] { AddImageEffectClicked, AddVideoEffectClick, null}
             );
         }
 

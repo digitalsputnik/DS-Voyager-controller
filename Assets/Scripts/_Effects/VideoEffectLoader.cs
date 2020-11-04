@@ -52,13 +52,13 @@ namespace VoyagerController.Effects
             #endif
         }
         
-        public void LoadVideoEffect(string path, EffectHandler loaded)
+        public static void LoadVideoEffect(string path, EffectHandler loaded)
         {
             Tools.LoadVideo(path, video =>
             {
                 var effect = new VideoEffect(video);
                 effect.Meta.StartTime = TimeUtils.Epoch;
-                _thumbnailLoader.LoadThumbnail(effect, loaded);
+                _instance._thumbnailLoader.LoadThumbnail(effect, loaded);
                 EffectManager.AddEffect(effect);
             });
         }
@@ -156,7 +156,7 @@ namespace VoyagerController.Effects
         private static void LoadPresetsFrom(string path)
         {
             foreach (var p in Directory.GetFiles(path, "*.mp4"))
-                _instance.LoadVideoEffect(p, effect => effect.Id = Guid.NewGuid().ToString());
+                LoadVideoEffect(p, effect => effect.Id = Guid.NewGuid().ToString());
         }
         #endregion
     }

@@ -1,3 +1,4 @@
+using System;
 using DigitalSputnik;
 using DigitalSputnik.Colors;
 using DigitalSputnik.Voyager;
@@ -30,6 +31,7 @@ namespace VoyagerController.Workspace
         private Texture2D _pixelsTexture;
         private static readonly int _baseMap = Shader.PropertyToID("_BaseMap");
         private LampConnectionType _connectionType;
+        private Transform _transform;
 
         public override bool Setup(object data, string uid = "")
         {
@@ -39,6 +41,28 @@ namespace VoyagerController.Workspace
             
             _meta = Metadata.Get(LampHandle.Serial);
             return base.Setup(data, uid);
+        }
+
+        private void Start()
+        {
+            SelectionMove.SelectionMoveEnded += SelectionMoved;
+        }
+
+        private void OnDestroy()
+        {
+            SelectionMove.SelectionMoveEnded -= SelectionMoved;
+        }
+        
+        private void SelectionMoved()
+        {
+            if (WorkspaceSelection.Contains(this))
+            {
+                var mapping = Metadata.Get(LampHandle.Serial).WorkspaceMapping;
+                var pos = _transform.position;
+                mapping.Position = new[] { pos.x, pos.y };
+                mapping.Rotation = _transform.eulerAngles.z;
+                mapping.Scale = _transform.lossyScale.x;
+            }
         }
 
         private void Update()
@@ -53,6 +77,20 @@ namespace VoyagerController.Workspace
             SetupSizeAndPositions();
             SetupTextureAndMaterial();
             UpdateText();
+            PositionLamp();
+        }
+        
+        private void PositionLamp()
+        {
+            var mapping = _meta.WorkspaceMapping;
+            var position = new Vector3(mapping.Position[0], mapping.Position[1], 0.0f);
+            var rotation = new Vector3(0.0f, 0.0f, mapping.Rotation);
+            var scale = Vector3.one * mapping.Scale;
+
+            _transform = transform;
+            _transform.localScale = scale;
+            _transform.eulerAngles = rotation;
+            _transform.position = position;
         }
 
         private void SetupSizeAndPositions()

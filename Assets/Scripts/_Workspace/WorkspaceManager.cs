@@ -10,8 +10,8 @@ namespace VoyagerController.Workspace
         
         private static WorkspaceManager _instance;
         
-        public static WorkspaceItemHandler OnItemAdded;
-        public static WorkspaceItemHandler OnItemRemoved;
+        public static WorkspaceItemHandler ItemAdded;
+        public static WorkspaceItemHandler ItemRemoved;
 
         private WorkspaceItem[] _itemPrefabs;
         private readonly List<WorkspaceItem> _items = new List<WorkspaceItem>();
@@ -42,8 +42,11 @@ namespace VoyagerController.Workspace
             item.Setup(data);
 
             _instance._items.Add(item);
-            OnItemAdded?.Invoke(item);
-                
+
+            if (item is VoyagerItem voyager)
+                Metadata.Get(voyager.LampHandle.Serial).InWorkspace = true;
+
+            ItemAdded?.Invoke(item);
             return item;
         }
 
@@ -53,8 +56,18 @@ namespace VoyagerController.Workspace
             {
                 Destroy(item.gameObject);
                 _instance._items.Remove(item);
-                OnItemRemoved?.Invoke(item);
+
+                if (item is VoyagerItem voyager)
+                    Metadata.Get(voyager.LampHandle.Serial).InWorkspace = false;
+                
+                ItemRemoved?.Invoke(item);
             }
+        }
+
+        public static void Clear()
+        {
+            for (var i = _instance._items.Count - 1; i >= 0; i--)
+                RemoveItem(_instance._items[i]);
         }
     }
 

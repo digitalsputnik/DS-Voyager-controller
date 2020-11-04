@@ -12,7 +12,7 @@ namespace VoyagerController.Workspace
         #endregion
 
         public delegate void SelectionHandler();
-        public static event SelectionHandler OnSelectionChanged;
+        public static SelectionHandler SelectionChanged;
 
         private static IEnumerable<WorkspaceItem> Selected => _instance._selected;
         
@@ -20,12 +20,12 @@ namespace VoyagerController.Workspace
         
         private void Start()
         {
-            WorkspaceManager.OnItemRemoved += ItemRemovedFromWorkspace;
+            WorkspaceManager.ItemRemoved += ItemRemovedFromWorkspace;
         }
 
         private void OnDestroy()
         {
-            WorkspaceManager.OnItemRemoved -= ItemRemovedFromWorkspace;
+            WorkspaceManager.ItemRemoved -= ItemRemovedFromWorkspace;
         }
 
         public static IEnumerable<T> GetSelected<T>() where T : WorkspaceItem => Selected.OfType<T>();
@@ -38,7 +38,7 @@ namespace VoyagerController.Workspace
             
             selectable.Select();
             _instance._selected.Add(selectable);
-            OnSelectionChanged?.Invoke();
+            SelectionChanged?.Invoke();
         }
         
         public static void DeselectItem(WorkspaceItem selectable)
@@ -47,7 +47,7 @@ namespace VoyagerController.Workspace
             
             selectable.Deselect();
             _instance._selected.Remove(selectable);
-            OnSelectionChanged?.Invoke();
+            SelectionChanged?.Invoke();
         }
 
         public static bool Contains(WorkspaceItem selectable) => Selected.Contains(selectable);
@@ -58,7 +58,7 @@ namespace VoyagerController.Workspace
         {
             _instance._selected.ForEach(s => s.Deselect());
             _instance._selected.Clear();
-            OnSelectionChanged?.Invoke();
+            SelectionChanged?.Invoke();
         }
 
         private static void ItemRemovedFromWorkspace(WorkspaceItem item) => DeselectItem(item);

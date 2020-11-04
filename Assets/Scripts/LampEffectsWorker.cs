@@ -99,7 +99,7 @@ namespace VoyagerController
             var videoTime = Metadata.Get(voyager.Serial).TimeEffectApplied;
             var packet = new MissingFramesRequest(videoTime);
             var time = TimeUtils.Epoch + TimeOffset(voyager);
-            GetLampClient(voyager).SendSettingsPacket(voyager, packet, time);
+            GetLampClient(voyager)?.SendSettingsPacket(voyager, packet, time);
         }
 
         public static void ApplyEffectToLamp(Lamp lamp, Effect effect)
@@ -126,7 +126,7 @@ namespace VoyagerController
         private static void ApplyStreamToVoyager(VoyagerLamp voyager, Effect effect)
         {
             var meta = Metadata.Get(voyager.Serial);
-            var time = GetLampClient(voyager).StartStream(voyager);
+            var time = GetLampClient(voyager)?.StartStream(voyager) ?? TimeUtils.Epoch;
             meta.TimeEffectApplied = time;
             meta.Effect = effect;
         }
@@ -138,9 +138,14 @@ namespace VoyagerController
             var start = video.Meta.StartTime + offset;
             var framebuffer = new Rgb[video.Video.FrameCount][];
             var confirmed = new bool[video.Video.FrameCount];
-            
-            var time = GetLampClient(voyager).StartVideo(voyager, (long) video.Video.FrameCount, start);
-            GetLampClient(voyager).SetItshe(voyager, meta.Itshe);
+            var time = TimeUtils.Epoch;
+            var client = GetLampClient(voyager);
+
+            if (client != null)
+            {
+                time = client.StartVideo(voyager, (long) video.Video.FrameCount, start);
+                client.SetItshe(voyager, meta.Itshe);   
+            }
 
             for (var i = 0; i < framebuffer.Length; i++) framebuffer[i] = null;
 
@@ -155,7 +160,7 @@ namespace VoyagerController
         public static void ApplyItsheToVoyager(VoyagerLamp voyager, Itshe itshe)
         {
             var meta = Metadata.Get(voyager.Serial);
-            GetLampClient(voyager).SetItshe(voyager, meta.Itshe);
+            GetLampClient(voyager)?.SetItshe(voyager, meta.Itshe);
             meta.Itshe = itshe;
         }
 
@@ -164,7 +169,7 @@ namespace VoyagerController
             var meta = Metadata.Get(voyager.Serial);
             var time = meta.TimeEffectApplied;
             
-            GetLampClient(voyager).SendVideoFrame(voyager, index, time, rgb);
+            GetLampClient(voyager)?.SendVideoFrame(voyager, index, time, rgb);
             
             meta.FrameBuffer[index] = rgb;
             if (meta.FrameBuffer.All(frame => frame != null))
@@ -179,11 +184,11 @@ namespace VoyagerController
             var meta = Metadata.Get(voyager.Serial);
             var start = meta.TimeEffectApplied;
             var time = TimeUtils.Epoch + TimeOffset(voyager) + delay;
-            GetLampClient(voyager).SendStreamFrame(voyager, start, time, rgb);
+            GetLampClient(voyager)?.SendStreamFrame(voyager, start, time, rgb);
             meta.PreviousStreamFrame = rgb;
         }
 
-        public static double TimeOffset(Lamp lamp) => GetLampClient(lamp).TimeOffset;
+        public static double TimeOffset(Lamp lamp) => GetLampClient(lamp)?.TimeOffset ?? 0.0;
 
         private static void OnMissingFramesResponse(VoyagerLamp voyager, MissingFramesResponse response)
         {

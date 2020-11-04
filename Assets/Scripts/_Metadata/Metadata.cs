@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DigitalSputnik;
 using DigitalSputnik.Voyager;
 using UnityEngine;
 
@@ -48,6 +49,13 @@ namespace VoyagerController
         public static IEnumerable<LampMetadata> Get(Func<LampMetadata, bool> predicate)
         {
             return _instance._metadata.Values.Where(predicate);
+        }
+
+        public static Dictionary<string, LampMetadata> GetAll() => _instance._metadata;
+
+        public static void SetMetadata(string serial, LampMetadata metadata)
+        {
+            _instance._metadata[serial] = metadata;
         }
     }
 }
