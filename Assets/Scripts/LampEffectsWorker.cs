@@ -127,7 +127,15 @@ namespace VoyagerController
         private static void ApplyStreamToVoyager(VoyagerLamp voyager, Effect effect)
         {
             var meta = Metadata.Get(voyager.Serial);
-            var time = GetLampClient(voyager)?.StartStream(voyager) ?? TimeUtils.Epoch;
+            var time = TimeUtils.Epoch;
+            var client = GetLampClient(voyager);
+
+            if (client != null)
+            {
+                time = GetLampClient(voyager).StartStream(voyager);
+                client.SetItshe(voyager, meta.Itshe);
+            }
+            
             meta.TimeEffectApplied = time;
             meta.Effect = effect;
         }

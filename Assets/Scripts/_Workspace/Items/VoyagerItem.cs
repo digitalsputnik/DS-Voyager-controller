@@ -5,6 +5,7 @@ using DigitalSputnik.Voyager;
 using UnityEngine;
 using VoyagerController.Bluetooth;
 using VoyagerController.Effects;
+using VoyagerController.Mapping;
 
 namespace VoyagerController.Workspace
 {
@@ -43,6 +44,22 @@ namespace VoyagerController.Workspace
             return base.Setup(data, uid);
         }
 
+        public Vector2[] GetPixelWorldPositions()
+        {
+            var positions = new Vector2[LampHandle.PixelCount];
+            var distance = 1.0f / LampHandle.PixelCount;
+            var offset = distance / 2.0f;
+
+            for (var i = 0; i < LampHandle.PixelCount; i++)
+            {
+                var x = i * distance - 0.5f + offset;
+                var local = new Vector2(x, 0.0f);
+                positions[i] = _pixels.TransformPoint(local);
+            }
+
+            return positions;
+        }
+
         private void Start()
         {
             SelectionMove.SelectionMoveEnded += SelectionMoved;
@@ -51,18 +68,6 @@ namespace VoyagerController.Workspace
         private void OnDestroy()
         {
             SelectionMove.SelectionMoveEnded -= SelectionMoved;
-        }
-        
-        private void SelectionMoved()
-        {
-            if (WorkspaceSelection.Contains(this))
-            {
-                var mapping = Metadata.Get(LampHandle.Serial).WorkspaceMapping;
-                var pos = _transform.position;
-                mapping.Position = new[] { pos.x, pos.y };
-                mapping.Rotation = _transform.eulerAngles.z;
-                mapping.Scale = _transform.lossyScale.x;
-            }
         }
 
         private void Update()
@@ -91,6 +96,25 @@ namespace VoyagerController.Workspace
             _transform.localScale = scale;
             _transform.eulerAngles = rotation;
             _transform.position = position;
+        }
+        
+        private void SelectionMoved()
+        {
+            if (WorkspaceSelection.Contains(this))
+            {
+                if (EffectMapper.EffectMappingIsActive)
+                {
+                    var mapping = Metadata.Get(LampHandle.Serial).WorkspaceMapping;
+                    var pos = _transform.position;
+                    mapping.Position = new[] { pos.x, pos.y };
+                    mapping.Rotation = _transform.eulerAngles.z;
+                    mapping.Scale = _transform.lossyScale.x;
+                }
+                else
+                {
+                    _meta.EffectMapping = EffectMapper.CalculateLampEffectMapping(this);
+                }
+            }
         }
 
         private void SetupSizeAndPositions()

@@ -1,6 +1,8 @@
 ﻿using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerController.Mapping;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
@@ -72,8 +74,9 @@ namespace VoyagerController.UI
 
         public void EditEffectClick()
         {
-            // TODO: Implement
-            // WorkspaceUtils.EnterToVideoMapping();
+            var item = WorkspaceSelection.GetSelected<VoyagerItem>().First();
+            var meta = Metadata.Get(item.LampHandle.Serial);
+            EffectMapper.EnterEffectMapping(meta.Effect);
         }
 
         private void UpdateUserInterface()

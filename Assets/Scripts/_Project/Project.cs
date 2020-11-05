@@ -32,8 +32,8 @@ namespace VoyagerController.ProjectManagement
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.S))
-                Save("test", true);
+            if (Input.GetKeyDown(KeyCode.L))
+                Load("test");
         }
 
         #region Save

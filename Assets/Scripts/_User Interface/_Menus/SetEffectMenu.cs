@@ -6,6 +6,7 @@ using Crosstales.FB;
 using DigitalSputnik;
 using UnityEngine;
 using VoyagerController.Effects;
+using VoyagerController.Mapping;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
@@ -58,6 +59,8 @@ namespace VoyagerController.UI
                         ApplyEffectToSelectedLamps(effect);
                     else
                         ApplyEffectToAllLamps(effect);
+                    
+                    EffectMapper.EnterEffectMapping(effect);
                 });
                 _items.Add(item);
             }

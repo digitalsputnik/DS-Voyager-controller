@@ -11,16 +11,21 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9577AC7A-62EF-4317-9789-031239BA8798/29/91ec0ed1/Dictionary`2.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering Stream/SpoutRenderer.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectDisplay.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/VideoEffectDisplay.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/WorkspaceMenu.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" />
       </list>
     </option>
   </component>
@@ -35,7 +40,7 @@
     <property name="Discover.Launch.Via.Unity" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="CodeLensConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.build.unityPlugin" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor &amp; Play">
@@ -66,7 +71,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1604572038817</updated>
-      <workItem from="1604572046775" duration="2386000" />
+      <workItem from="1604572046775" duration="7987000" />
     </task>
     <servers />
   </component>
@@ -143,9 +148,17 @@
       <screen x="0" y="0" width="2250" height="1460" />
     </state>
     <state width="2208" height="543" key="GridCell.Tab.3.right/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210017" />
-    <state x="627" y="375" key="SettingsEditor" timestamp="1604572954185">
+    <state x="957" y="447" key="RiderGenerateDialog" timestamp="1604582464006">
       <screen x="0" y="0" width="2250" height="1460" />
     </state>
-    <state x="627" y="375" key="SettingsEditor/0.0.2250.1460@0.0.2250.1460" timestamp="1604572954185" />
+    <state x="957" y="447" key="RiderGenerateDialog/0.0.2250.1460@0.0.2250.1460" timestamp="1604582464006" />
+    <state x="627" y="375" key="SettingsEditor" timestamp="1604583140636">
+      <screen x="0" y="0" width="2250" height="1460" />
+    </state>
+    <state x="627" y="375" key="SettingsEditor/0.0.2250.1460@0.0.2250.1460" timestamp="1604583140636" />
+    <state x="770" y="329" width="708" height="801" key="find.popup" timestamp="1604579723503">
+      <screen x="0" y="0" width="2250" height="1460" />
+    </state>
+    <state x="770" y="329" width="708" height="801" key="find.popup/0.0.2250.1460@0.0.2250.1460" timestamp="1604579723503" />
   </component>
 </project>
