@@ -163,6 +163,7 @@ namespace VoyagerController.Workspace
                     break;
                 }
                 case SyphonEffect _:
+                case SpoutEffect _:
                 {
                     var colors = _meta.PreviousStreamFrame.ToColorArray();
                     var color = (Color)_meta.Itshe.ToColor();

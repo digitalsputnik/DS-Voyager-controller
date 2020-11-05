@@ -23,11 +23,18 @@ namespace VoyagerController.ProjectManagement
         public const string VIDEOS_DIRECTORY = "videos";
         private const string PROJECTS_DIRECTORY = "projects";
         private const string PROJECT_FILE = "project.dsprj";
-        
+
         private static Project _instance;
+        
+        [SerializeField] private string _version;
+
         private void Awake() => _instance = this;
 
-        [SerializeField] private string _version;
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+                Save("test", true);
+        }
 
         #region Save
         public static void Save(string name, bool hide = false)

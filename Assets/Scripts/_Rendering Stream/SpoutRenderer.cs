@@ -87,6 +87,6 @@ namespace VoyagerController.Rendering
 
         private static bool AnyLampIsStreaming => WorkspaceManager
             .GetItems<VoyagerItem>()
-            .Any(v => Metadata.Get(v.LampHandle.Serial).Effect is SyphonEffect);
+            .Any(v => Metadata.Get(v.LampHandle.Serial).Effect is SpoutEffect);
     }
 }

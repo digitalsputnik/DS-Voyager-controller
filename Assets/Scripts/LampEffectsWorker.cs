@@ -115,8 +115,9 @@ namespace VoyagerController
                         case VideoEffect video:
                             ApplyVideoToVoyager(voyager, video);
                             break;
-                        case SyphonEffect syphon:
-                            ApplyStreamToVoyager(voyager, syphon);
+                        case SyphonEffect _:
+                        case SpoutEffect _:
+                            ApplyStreamToVoyager(voyager, effect);
                             break;
                     }
                     break;
