@@ -9,6 +9,8 @@ namespace VoyagerController.Mapping
 {
     public class VideoEffectDisplay : EffectDisplay
     {
+        private const float CORRECT_FRAME_RATE = 5.0f;
+        
         private VideoPlayer _player;
         private Video _video;
         private VoyagerLamp _lamp;
@@ -31,7 +33,7 @@ namespace VoyagerController.Mapping
         private void PlayerPrepared(VideoPlayer source)
         {
             _player.Play();
-            CorrectFrame();
+            InvokeRepeating(nameof(CorrectFrame), 0.0f, CORRECT_FRAME_RATE);
         }
 
         private void CorrectFrame()
@@ -43,6 +45,7 @@ namespace VoyagerController.Mapping
 
         public override void Clean()
         {
+            StopAllCoroutines();
             _player.prepareCompleted -= PlayerPrepared;
             _player.enabled = false;
         }
