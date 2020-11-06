@@ -1,8 +1,10 @@
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using VoyagerController.Effects;
 using VoyagerController.UI;
 using VoyagerController.Workspace;
+using Menu = VoyagerController.UI.Menu;
 
 namespace VoyagerController.Mapping
 {
@@ -37,7 +39,38 @@ namespace VoyagerController.Mapping
             _instance._effect = effect;
             _instance.MoveLampsToCorrectPosition();
             _instance._menuContainer.ShowMenu(_instance._mappingMenu);
-            
+
+            var selected = WorkspaceSelection.GetSelected<VoyagerItem>().ToArray();
+
+            foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>().ToArray())
+            {
+                if (selected.Contains(voyager))
+                {
+                    var meta = Metadata.Get(voyager.LampHandle.Serial);
+                    var point1 = new Vector3(meta.EffectMapping.X1 - 0.5f, meta.EffectMapping.Y1 - 0.5f);
+                    var point2 = new Vector3(meta.EffectMapping.X2 - 0.5f, meta.EffectMapping.Y2 - 0.5f);
+                    var transform = voyager.transform;
+
+                    point1 = _instance._displayTransform.TransformPoint(point1);
+                    point2 = _instance._displayTransform.TransformPoint(point2);
+
+                    var center = (point1 + point2) / 2.0f;
+                    var angle = AngleFromTo(point1, point2);
+
+                    var position = new Vector3(center.x, center.y, 0.0f);
+                    var rotation = new Vector3(0.0f, 0.0f, angle);
+
+                    transform.position = position;
+                    transform.eulerAngles = rotation;
+                }
+                else
+                {
+                    WorkspaceManager.RemoveItem(voyager);
+                }
+            }
+
+            WorkspaceSelection.Clear();
+
             switch (effect)
             {
                 case VideoEffect video:
@@ -98,6 +131,14 @@ namespace VoyagerController.Mapping
                 Y1 = pixels[0].y,
                 Y2 = pixels[1].y
             };
+        }
+        
+        private static float AngleFromTo(Vector2 from, Vector2 to)
+        {
+            var direction = to - from;
+            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            if (angle < 0f) angle += 360f;
+            return angle;
         }
 
         private void MoveLampsToCorrectPosition()

@@ -1,4 +1,3 @@
-using System;
 using DigitalSputnik;
 using DigitalSputnik.Colors;
 using DigitalSputnik.Voyager;
