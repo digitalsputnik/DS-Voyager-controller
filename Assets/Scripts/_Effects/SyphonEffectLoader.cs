@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Threading;
 using Klak.Syphon;
 using UnityEngine;
 
@@ -33,14 +32,11 @@ namespace VoyagerController.Effects
 
         public static void RefreshClients(Action refreshed)
         {
-            new Thread(() =>
-            {
-                var clients = SyphonHelper.GetListOfServers() ?? new (string, string)[0];
-                AvailableServers = clients
-                    .Select(client => new SyphonCredentials(client.Item1, client.Item2))
-                    .ToArray();
-                MainThread.Dispatch(refreshed);
-            }).Start();
+            var clients = SyphonHelper.GetListOfServers() ?? new (string, string)[0];
+            AvailableServers = clients
+                .Select(client => new SyphonCredentials(client.Item1, client.Item2))
+                .ToArray();
+            refreshed?.Invoke();
         }
     }
 }
