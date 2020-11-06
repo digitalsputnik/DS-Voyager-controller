@@ -14,10 +14,6 @@ using VoyagerController.Workspace;
 
 namespace VoyagerController.ProjectManagement
 {
-    // The data should have two sections:
-    // - Lamp information
-    // - Workspace layout
-
     public class Project : MonoBehaviour
     {
         public const string VIDEOS_DIRECTORY = "videos";

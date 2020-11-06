@@ -59,6 +59,19 @@ namespace VoyagerController.Workspace
 
             return positions;
         }
+        
+        public void PositionLampBasedOnWorkspaceMapping()
+        {
+            var mapping = _meta.WorkspaceMapping;
+            var position = new Vector3(mapping.Position[0], mapping.Position[1], 0.0f);
+            var rotation = new Vector3(0.0f, 0.0f, mapping.Rotation);
+            var scale = Vector3.one * mapping.Scale;
+
+            _transform = transform;
+            _transform.localScale = scale;
+            _transform.eulerAngles = rotation;
+            _transform.position = position;
+        }
 
         private void Start()
         {
@@ -82,27 +95,14 @@ namespace VoyagerController.Workspace
             SetupSizeAndPositions();
             SetupTextureAndMaterial();
             UpdateText();
-            PositionLamp();
+            PositionLampBasedOnWorkspaceMapping();
         }
-        
-        private void PositionLamp()
-        {
-            var mapping = _meta.WorkspaceMapping;
-            var position = new Vector3(mapping.Position[0], mapping.Position[1], 0.0f);
-            var rotation = new Vector3(0.0f, 0.0f, mapping.Rotation);
-            var scale = Vector3.one * mapping.Scale;
 
-            _transform = transform;
-            _transform.localScale = scale;
-            _transform.eulerAngles = rotation;
-            _transform.position = position;
-        }
-        
         private void SelectionMoved()
         {
             if (WorkspaceSelection.Contains(this))
             {
-                if (EffectMapper.EffectMappingIsActive)
+                if (!EffectMapper.EffectMappingIsActive)
                 {
                     var mapping = Metadata.Get(LampHandle.Serial).WorkspaceMapping;
                     var pos = _transform.position;

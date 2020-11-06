@@ -1,8 +1,7 @@
-﻿using System;
 using System.Linq;
-using Newtonsoft.Json;
 using UnityEngine;
 using VoyagerController.Effects;
+using VoyagerController.UI;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.Mapping
@@ -17,6 +16,9 @@ namespace VoyagerController.Mapping
         public static bool EffectMappingIsActive = false;
 
         [SerializeField] private Transform _displayTransform = null;
+        [SerializeField] private MenuContainer _menuContainer = null;
+        [SerializeField] private EffectMappingMenu _mappingMenu = null;
+        [SerializeField] private Menu _exitMenu = null;
         
         private EffectDisplay[] _displays;
         private EffectDisplay _activeDisplay;
@@ -32,8 +34,9 @@ namespace VoyagerController.Mapping
         {
             _instance.CleanPreviousDisplay();
             _instance.gameObject.SetActive(true);
-
             _instance._effect = effect;
+            _instance.MoveLampsToCorrectPosition();
+            _instance._menuContainer.ShowMenu(_instance._mappingMenu);
             
             switch (effect)
             {
@@ -41,11 +44,8 @@ namespace VoyagerController.Mapping
                     _instance.PrepareDisplay<VideoEffectDisplay>(video);
                     break;
             }
-            
-            _instance.MoveLampsToCorrectPosition();
 
             SelectionMove.SelectionMoveEnded += SelectedItemsMoved;
-
             EffectMappingIsActive = true;
         }
 
@@ -65,6 +65,13 @@ namespace VoyagerController.Mapping
         {
             _instance.CleanPreviousDisplay();
             _instance.gameObject.SetActive(false);
+            _instance._menuContainer.ShowMenu(_instance._exitMenu);
+            
+            WorkspaceSelection.Clear();
+
+            foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>())
+                voyager.PositionLampBasedOnWorkspaceMapping();
+            
             EffectMappingIsActive = false;
         }
         
