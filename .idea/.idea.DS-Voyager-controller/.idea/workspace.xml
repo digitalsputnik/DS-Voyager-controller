@@ -22,10 +22,11 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectDisplay.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/VideoEffectDisplay.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/WorkspaceMenu.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/VideoEffectDisplay.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/SpoutEffectLoader.cs" />
       </list>
     </option>
   </component>
@@ -72,7 +73,7 @@
       <option name="presentableId" value="Default" />
       <updated>1604572038817</updated>
       <workItem from="1604572046775" duration="7987000" />
-      <workItem from="1604651482882" duration="665000" />
+      <workItem from="1604651482882" duration="2798000" />
     </task>
     <servers />
   </component>

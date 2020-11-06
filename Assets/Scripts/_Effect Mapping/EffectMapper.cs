@@ -22,10 +22,8 @@ namespace VoyagerController.Mapping
 
         private void Start()
         {
-            _displayTransform.gameObject.SetActive(true);
             _displays = _displayTransform.GetComponents<EffectDisplay>() ?? new EffectDisplay[0];
             gameObject.SetActive(false);
-            Debug.Log(_displays.Length);
         }
 
         public static void EnterEffectMapping(Effect effect)

@@ -33,12 +33,9 @@ namespace VoyagerController.Effects
 
         public static void RefreshSources(Action refreshed)
         {
-            new Thread(() =>
-            {
-                var sources = SpoutManager.GetSourceNames();
-                AvailableSources = sources;
-                MainThread.Dispatch(refreshed);
-            }).Start();
+            var sources = SpoutManager.GetSourceNames();
+            AvailableSources = sources;
+            refreshed?.Invoke();
         }
     }
 }
