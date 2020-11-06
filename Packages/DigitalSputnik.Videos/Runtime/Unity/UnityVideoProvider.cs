@@ -71,8 +71,8 @@ namespace DigitalSputnik.Videos
 
                 var video = new Video
                 {
-                    Height = (int) player.width,
-                    Width = (int) player.height,
+                    Width = (int) player.width,
+                    Height = (int) player.height,
                     Name = Path.GetFileName(path),
                     Path = path,
                     FrameCount = player.frameCount,

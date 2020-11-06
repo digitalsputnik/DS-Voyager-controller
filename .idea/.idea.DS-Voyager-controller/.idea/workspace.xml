@@ -19,14 +19,16 @@
       <list>
         <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering Stream/SpoutRenderer.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectDisplay.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/WorkspaceMenu.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/SpoutEffectLoader.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/VideoEffectDisplay.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering Video/VideoEffectRenderer.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/TextureExtensions.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" />
       </list>
     </option>
   </component>
@@ -73,7 +75,7 @@
       <option name="presentableId" value="Default" />
       <updated>1604572038817</updated>
       <workItem from="1604572046775" duration="7987000" />
-      <workItem from="1604651482882" duration="3105000" />
+      <workItem from="1604651482882" duration="5717000" />
     </task>
     <servers />
   </component>

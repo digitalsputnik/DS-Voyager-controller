@@ -9,7 +9,7 @@ namespace VoyagerController.Mapping
 {
     public class VideoEffectDisplay : EffectDisplay
     {
-        private const float CORRECT_FRAME_RATE = 5.0f;
+        private const float CORRECT_FRAME_RATE = 15.0f;
         
         private VideoPlayer _player;
         private Video _video;

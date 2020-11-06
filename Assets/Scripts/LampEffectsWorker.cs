@@ -104,8 +104,8 @@ namespace VoyagerController
 
         public static void ApplyEffectToLamp(Lamp lamp, Effect effect)
         {
-            if (Metadata.Get(lamp.Serial).Effect == effect)
-                return;
+            // if (Metadata.Get(lamp.Serial).Effect == effect)
+            //    return;
 
             switch (lamp)
             {

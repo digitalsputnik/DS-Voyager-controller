@@ -43,8 +43,8 @@ namespace VoyagerController
 
             for (var i = 0; i < coords.Length; i++)
             {
-                var x = p1.x + (steps.x * i);
-                var y = p1.y + (steps.y * i);
+                var x = p1.x + steps.x * i;
+                var y = p1.y + steps.y * i;
 
                 if (x > 1.0f || x < 0.0f || y > 1.0f || y < 0.0f)
                     coords[i] = new Vector2Int(-1, -1);

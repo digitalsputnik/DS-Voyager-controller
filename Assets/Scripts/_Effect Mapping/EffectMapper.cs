@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Newtonsoft.Json;
 using UnityEngine;
 using VoyagerController.Effects;
 using VoyagerController.Workspace;
@@ -19,6 +20,7 @@ namespace VoyagerController.Mapping
         
         private EffectDisplay[] _displays;
         private EffectDisplay _activeDisplay;
+        private Effect _effect;
 
         private void Start()
         {
@@ -29,7 +31,9 @@ namespace VoyagerController.Mapping
         public static void EnterEffectMapping(Effect effect)
         {
             _instance.CleanPreviousDisplay();
-            _instance.gameObject.SetActive(true);   
+            _instance.gameObject.SetActive(true);
+
+            _instance._effect = effect;
             
             switch (effect)
             {
@@ -39,8 +43,22 @@ namespace VoyagerController.Mapping
             }
             
             _instance.MoveLampsToCorrectPosition();
-            
+
+            SelectionMove.SelectionMoveEnded += SelectedItemsMoved;
+
             EffectMappingIsActive = true;
+        }
+
+        private static void SelectedItemsMoved()
+        {
+            foreach (var voyager in WorkspaceSelection.GetSelected<VoyagerItem>())
+            {
+                var mapping = CalculateLampEffectMapping(voyager);
+                var meta = Metadata.Get(voyager.LampHandle.Serial);
+                
+                meta.EffectMapping = mapping;
+                LampEffectsWorker.ApplyEffectToLamp(voyager.LampHandle, _instance._effect);
+            }
         }
 
         public static void LeaveEffectMapping()
@@ -60,8 +78,8 @@ namespace VoyagerController.Mapping
                 var pixel = pixels[i];
                 var local = _instance._displayTransform.InverseTransformPoint(pixel);
 
-                var x = local.x + 0.0f;
-                var y = local.y + 0.0f;
+                var x = local.x + 0.5f;
+                var y = local.y + 0.5f;
                 
                 pixels[i] = new Vector2(x, y);
             }
