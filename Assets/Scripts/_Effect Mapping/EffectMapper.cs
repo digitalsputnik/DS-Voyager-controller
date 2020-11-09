@@ -76,12 +76,10 @@ namespace VoyagerController.Mapping
 
             switch (effect)
             {
-                case VideoEffect video:
-                    _instance.PrepareDisplay<VideoEffectDisplay>(video);
-                    break;
-                case SyphonEffect syphon:
-                    _instance.PrepareDisplay<SyphonEffectDisplay>(syphon);
-                    break;
+                case VideoEffect video: _instance.PrepareDisplay<VideoEffectDisplay>(video); break;
+                case SyphonEffect syphon: _instance.PrepareDisplay<SyphonEffectDisplay>(syphon); break;
+                case SpoutEffect spout: _instance.PrepareDisplay<SpoutEffectDisplay>(spout); break;
+                case ImageEffect image: _instance.PrepareDisplay<ImageEffectDisplay>(image); break;
             }
 
             SelectionMove.SelectionMoveEnded += SelectedItemsMoved;

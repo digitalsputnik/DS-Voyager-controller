@@ -4,17 +4,17 @@ using VoyagerController.Rendering;
 
 namespace VoyagerController.Mapping
 {
-    public class SyphonEffectDisplay : EffectDisplay
+    public class SpoutEffectDisplay : EffectDisplay
     {
         private MeshRenderer _meshRenderer;
         private readonly int _baseMap = Shader.PropertyToID("_BaseMap");
-
+        
         public override void Setup(Effect effect)
         {
-            if (effect is SyphonEffect)
+            if (effect is SpoutEffect)
             {
                 _meshRenderer = GetComponent<MeshRenderer>();
-                _meshRenderer.sharedMaterial.SetTexture(_baseMap, SyphonRenderer.SyphonRenderTexture);
+                _meshRenderer.sharedMaterial.SetTexture(_baseMap, SpoutRenderer.SpoutRenderTexture);
             }
         }
 

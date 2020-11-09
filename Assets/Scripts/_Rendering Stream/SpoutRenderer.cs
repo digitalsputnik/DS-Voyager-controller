@@ -9,6 +9,8 @@ namespace VoyagerController.Rendering
     [RequireComponent(typeof(SpoutReceiver))]
     public class SpoutRenderer : MonoBehaviour
     {
+        public static RenderTexture SpoutRenderTexture { get; private set; }
+        
         private RenderTexture _render;
         private SpoutReceiver _client;
         private SpoutEffect _effect;
@@ -25,6 +27,8 @@ namespace VoyagerController.Rendering
 
             _render = new RenderTexture(640, 480,  0, RenderTextureFormat.ARGB32);
             _render.Create();
+
+            SpoutRenderTexture = _render;
 
             _effect = EffectManager.GetEffects<SpoutEffect>().First();
             

@@ -76,39 +76,6 @@ namespace VoyagerController.Effects
         #region Presets
         private static void LoadPresets()
         {
-            LoadVideoPresets();
-            
-            // TODO: Add SPOUT and SYPHON streaming effects & also image effect
-
-            /*
-            VideoEffectLoader.LoadVideoPresets();
-
-            if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXEditor)
-            {
-                AddEffect(new SyphonStream
-                {
-                    preset = true,
-                    name = "Syphon Stream",
-                    id = System.Guid.NewGuid().ToString(),
-                    available = new EventValue<bool>(true)
-                });
-            }
-
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
-            {
-                AddEffect(new SpoutStream
-                {
-                    preset = true,
-                    name = "Spout Stream",
-                    id = System.Guid.NewGuid().ToString(),
-                    available = new EventValue<bool>(true)
-                });
-            }
-            */
-        }
-
-        private static void LoadVideoPresets()
-        {
             if (Application.platform != RuntimePlatform.Android)
             {
                 var path = Path.Combine(Application.streamingAssetsPath, "video_presets");
@@ -150,7 +117,7 @@ namespace VoyagerController.Effects
                 File.WriteAllBytes(dest, load.downloadHandler.data);
             }
 
-            LoadVideoPresets();
+            LoadPresets();
         }
 
         private static void LoadPresetsFrom(string path)
