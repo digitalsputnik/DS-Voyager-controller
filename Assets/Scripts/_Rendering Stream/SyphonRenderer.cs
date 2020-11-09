@@ -9,6 +9,8 @@ namespace VoyagerController.Rendering
     [RequireComponent(typeof(SyphonClient))]
     public class SyphonRenderer : MonoBehaviour
     {
+        public static RenderTexture SyphonRenderTexture { get; private set; }
+        
         private RenderTexture _render;
         private SyphonClient _client;
         private SyphonEffect _effect;
@@ -25,6 +27,8 @@ namespace VoyagerController.Rendering
 
             _render = new RenderTexture(640, 480,  0, RenderTextureFormat.ARGB32);
             _render.Create();
+
+            SyphonRenderTexture = _render;
 
             _effect = EffectManager.GetEffects<SyphonEffect>().First();
             

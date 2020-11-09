@@ -1,10 +1,8 @@
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using VoyagerController.Effects;
 using VoyagerController.UI;
 using VoyagerController.Workspace;
-using Menu = VoyagerController.UI.Menu;
 
 namespace VoyagerController.Mapping
 {
@@ -14,6 +12,8 @@ namespace VoyagerController.Mapping
         private static EffectMapper _instance;
         private void Awake() => _instance = this;
         #endregion
+
+        private const float ANIMATION_TIME = 0.2f;
         
         public static bool EffectMappingIsActive = false;
 
@@ -37,7 +37,6 @@ namespace VoyagerController.Mapping
             _instance.CleanPreviousDisplay();
             _instance.gameObject.SetActive(true);
             _instance._effect = effect;
-            _instance.MoveLampsToCorrectPosition();
             _instance._menuContainer.ShowMenu(_instance._mappingMenu);
 
             var selected = WorkspaceSelection.GetSelected<VoyagerItem>().ToArray();
@@ -53,19 +52,23 @@ namespace VoyagerController.Mapping
 
                     point1 = _instance._displayTransform.TransformPoint(point1);
                     point2 = _instance._displayTransform.TransformPoint(point2);
-
+                    
                     var center = (point1 + point2) / 2.0f;
                     var angle = AngleFromTo(point1, point2);
 
                     var position = new Vector3(center.x, center.y, 0.0f);
                     var rotation = new Vector3(0.0f, 0.0f, angle);
 
-                    transform.position = position;
-                    transform.eulerAngles = rotation;
+                    var pixelSize = voyager.GetPixelSize() * (voyager.LampHandle.PixelCount + 1) / voyager.LampHandle.PixelCount;
+                    var scale = Vector3.Distance(point1, point2) * pixelSize.x * Vector3.one;
+
+                    LeanTween.move(transform.gameObject, position, ANIMATION_TIME);
+                    LeanTween.rotate(transform.gameObject, rotation, ANIMATION_TIME);
+                    LeanTween.scale(transform.gameObject, scale, ANIMATION_TIME);
                 }
                 else
                 {
-                    WorkspaceManager.RemoveItem(voyager);
+                    voyager.gameObject.SetActive(false);
                 }
             }
 
@@ -75,6 +78,9 @@ namespace VoyagerController.Mapping
             {
                 case VideoEffect video:
                     _instance.PrepareDisplay<VideoEffectDisplay>(video);
+                    break;
+                case SyphonEffect syphon:
+                    _instance.PrepareDisplay<SyphonEffectDisplay>(syphon);
                     break;
             }
 
@@ -103,7 +109,17 @@ namespace VoyagerController.Mapping
             WorkspaceSelection.Clear();
 
             foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>())
-                voyager.PositionLampBasedOnWorkspaceMapping();
+            {
+                voyager.gameObject.SetActive(true);
+
+                var position = voyager.GetWorkspacePosition();
+                var rotation = voyager.GetWorkspaceRotation();
+                var scale = voyager.GetWorkspaceScale();
+                
+                LeanTween.move(voyager.gameObject, position, ANIMATION_TIME);
+                LeanTween.rotate(voyager.gameObject, rotation, ANIMATION_TIME);
+                LeanTween.scale(voyager.gameObject, scale, ANIMATION_TIME);
+            }
             
             EffectMappingIsActive = false;
         }
@@ -140,12 +156,7 @@ namespace VoyagerController.Mapping
             if (angle < 0f) angle += 360f;
             return angle;
         }
-
-        private void MoveLampsToCorrectPosition()
-        {
-            
-        }
-
+        
         private void CleanPreviousDisplay()
         {
             if (_activeDisplay != null)
@@ -155,7 +166,7 @@ namespace VoyagerController.Mapping
             }
         }
 
-        private void PrepareDisplay<T>(Effect effect) where T : VideoEffectDisplay
+        private void PrepareDisplay<T>(Effect effect) where T : EffectDisplay
         {
             var display = _displays.OfType<T>().First();
             display.Setup(effect);

@@ -72,6 +72,26 @@ namespace VoyagerController.Workspace
             _transform.position = position;
         }
 
+        public Vector3 GetWorkspacePosition()
+        {
+            var mapping = _meta.WorkspaceMapping;
+            return new Vector3(mapping.Position[0], mapping.Position[1], 0.0f);
+        }
+
+        public Vector3 GetWorkspaceRotation()
+        {
+            var mapping = _meta.WorkspaceMapping;
+            return new Vector3(0.0f, 0.0f, mapping.Rotation);
+        }
+
+        public Vector3 GetWorkspaceScale()
+        {
+            var mapping = _meta.WorkspaceMapping;
+            return Vector3.one * mapping.Scale;
+        }
+
+        public Vector2 GetPixelSize() => _pixelSize;
+
         private void Start()
         {
             SelectionMove.SelectionMoveEnded += SelectionMoved;
