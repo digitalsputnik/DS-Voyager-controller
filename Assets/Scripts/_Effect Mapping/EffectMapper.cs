@@ -13,7 +13,7 @@ namespace VoyagerController.Mapping
         private void Awake() => _instance = this;
         #endregion
 
-        private const float ANIMATION_TIME = 0.2f;
+        private const float ANIMATION_TIME = 0.1f;
         
         public static bool EffectMappingIsActive = false;
 
@@ -59,8 +59,8 @@ namespace VoyagerController.Mapping
                     var position = new Vector3(center.x, center.y, 0.0f);
                     var rotation = new Vector3(0.0f, 0.0f, angle);
 
-                    var pixelSize = voyager.GetPixelSize() * (voyager.LampHandle.PixelCount + 1) / voyager.LampHandle.PixelCount;
-                    var scale = Vector3.Distance(point1, point2) * pixelSize.x * Vector3.one;
+                    var distance = Vector3.Distance(point1, point2);
+                    var scale = Vector3.one * distance / ((voyager.LampHandle.PixelCount - 1) * voyager.GetPixelSize().x);
 
                     LeanTween.move(transform.gameObject, position, ANIMATION_TIME);
                     LeanTween.rotate(transform.gameObject, rotation, ANIMATION_TIME);
