@@ -85,6 +85,7 @@ namespace VoyagerController.ProjectManagement
             {
                 Hide = hide,
                 Version = _instance._version,
+                AppVersion = Application.version,
                 Lamps = LampManager.Instance.GetLampsOfType<VoyagerLamp>().ToArray(),
                 Effects = EffectManager.GetEffects().ToArray(),
                 LampMetadata = Metadata.GetAll()
@@ -181,6 +182,7 @@ namespace VoyagerController.ProjectManagement
     {
         public bool Hide { get; set; }
         public string Version { get; set; }
+        public string AppVersion { get; set; }
         public VoyagerLamp[] Lamps { get; set; }
         public Effect[] Effects { get; set; }
         public Dictionary<string, LampMetadata> LampMetadata { get; set; }
