@@ -104,6 +104,15 @@ namespace VoyagerController.UI
 
         public void AddEffect()
         {
+            DialogBox.Show(
+                "WHAT EFFECT?",
+                "Pick which effect you would like to add.",
+                new string[] { "VIDEO", "IMAGE" },
+                new Action[] { AddVideoEffect, AddImageEffect });
+        }
+
+        public void AddVideoEffect()
+        {
             LoadVideoFromDevice(path =>
             {
                 if (path != "" && path != "Null" && path != null)
@@ -113,6 +122,20 @@ namespace VoyagerController.UI
                         video.Meta.Timestamp = TimeUtils.Epoch;
                         UpdateEffectsList();
                     });
+                }
+            });
+        }
+
+        public void AddImageEffect()
+        {
+            LoadImageFromDevice(path =>
+            {
+                if (path != "" && path != "Null" && path != null)
+                {
+                    var image = new ImageEffect(path);
+                    image.Meta.Timestamp = TimeUtils.Epoch;
+                    EffectManager.AddEffect(image);
+                    UpdateEffectsList();
                 }
             });
         }
@@ -144,6 +167,36 @@ namespace VoyagerController.UI
                 var documents = DocumentsPath;
                 var extensions = new[] { new ExtensionFilter("Video", "mp4") };
                 var path = FileBrowser.OpenSingleFile("Open Video", documents, extensions);
+                loaded.Invoke(path == "" ? null : path);
+            }
+        }
+        
+        public static void LoadImageFromDevice(Action<string> loaded)
+        {
+            if (Application.isMobilePlatform)
+            {
+                if (Application.platform == RuntimePlatform.IPhonePlayer)
+                {
+                    // TODO: Implement - the name should be asked from user.
+                }
+                else
+                {
+                    NativeGallery.GetImageFromGallery((string path) =>
+                    {
+                        loaded.Invoke(path == "" ? null : path);
+                    }, "", "image/*");
+                }
+            }
+            else
+            {
+                var documents = DocumentsPath;
+                var extensions = new[]
+                {
+                    new ExtensionFilter("PNG Picture", "png"),
+                    new ExtensionFilter("JPEG Picture", "jpeg"),
+                    new ExtensionFilter("JPG Picture", "jpg")
+                };
+                var path = FileBrowser.OpenSingleFile("Open Picture", documents, extensions);
                 loaded.Invoke(path == "" ? null : path);
             }
         }

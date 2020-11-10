@@ -50,7 +50,7 @@ namespace VoyagerController
                 var meta = Metadata.Get(l.Serial);
                 
                 if (_confirmingLamps.Contains(l)) return false;
-                if (!(meta.Effect is VideoEffect)) return false;
+                if (!(meta.Effect is VideoEffect || meta.Effect is ImageEffect)) return false;
 
                 return meta.ConfirmedFrames
                     .Where((c, index) => meta.FrameBuffer[index] != null && c == false)
@@ -72,7 +72,7 @@ namespace VoyagerController
             var confirmed =  _confirmingLamps.Where(l =>
             {
                 var meta = Metadata.Get(l.Serial);
-                if (!(meta.Effect is VideoEffect)) return true;
+                if (!(meta.Effect is VideoEffect || meta.Effect is ImageEffect)) return true;
                 return meta.Rendered && meta.ConfirmedFrames.All(c => c);
             });
 
@@ -104,9 +104,6 @@ namespace VoyagerController
 
         public static void ApplyEffectToLamp(Lamp lamp, Effect effect)
         {
-            // if (Metadata.Get(lamp.Serial).Effect == effect)
-            //    return;
-
             switch (lamp)
             {
                 case VoyagerLamp voyager:
@@ -118,6 +115,9 @@ namespace VoyagerController
                         case SyphonEffect _:
                         case SpoutEffect _:
                             ApplyStreamToVoyager(voyager, effect);
+                            break;
+                        case ImageEffect image:
+                            ApplyImageToVoyager(voyager, image);
                             break;
                     }
                     break;
@@ -163,6 +163,32 @@ namespace VoyagerController
             meta.Rendered = false;
             meta.FrameBuffer = framebuffer;
             meta.Effect = video;
+            meta.ConfirmedFrames = confirmed;
+        }
+        
+        private static void ApplyImageToVoyager(VoyagerLamp voyager, ImageEffect image)
+        {
+            var meta = Metadata.Get(voyager.Serial);
+            var offset = TimeOffset(voyager);
+            var start = image.Meta.StartTime + offset;
+            var framebuffer = new Rgb[1][];
+            var confirmed = new bool[1];
+            var time = TimeUtils.Epoch;
+            var client = GetLampClient(voyager);
+
+            if (client != null)
+            {
+                time = client.StartVideo(voyager, 1, start);
+                client.SetItshe(voyager, meta.Itshe);   
+            }
+
+            framebuffer[0] = null;
+
+            meta.TimeEffectApplied = time;
+            meta.VideoStartTime = start;
+            meta.Rendered = false;
+            meta.FrameBuffer = framebuffer;
+            meta.Effect = image;
             meta.ConfirmedFrames = confirmed;
         }
 

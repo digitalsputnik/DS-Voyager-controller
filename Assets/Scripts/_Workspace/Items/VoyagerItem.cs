@@ -218,6 +218,19 @@ namespace VoyagerController.Workspace
                     _pixelsTexture.Apply();
                     break;
                 }
+                case ImageEffect _:
+                    if (_meta.FrameBuffer[0] != null)
+                    {
+                        var colors = _meta.FrameBuffer[0].ToColorArray();
+                        var color = (Color)_meta.Itshe.ToColor();
+                    
+                        for (var i = 0; i < colors.Length; i++)
+                            colors[i] = colors[i] * color;
+                    
+                        _pixelsTexture.SetPixels32(colors);
+                        _pixelsTexture.Apply();
+                    }
+                    break;
                 default:
                     if (LampHandle.Endpoint is BluetoothEndPoint)
                     {

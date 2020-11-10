@@ -33,13 +33,20 @@ namespace VoyagerController.UI
             _thumbnailImage.enabled = false;
             _nameText.text = _effect.Name;
 
-            if (_effect is VideoEffect video)
+            switch (_effect)
             {
-                _infoText.text =
-                    "duration \n" +
-                    VideoTimeCode(video.Video) + "\n" +
-                    "resolution \n" +
-                    video.Video.Width + "x" + video.Video.Height;
+                case VideoEffect video:
+                    _infoText.text =
+                        "duration \n" +
+                        VideoTimeCode(video.Video) + "\n" +
+                        "resolution \n" +
+                        video.Video.Width + "x" + video.Video.Height;
+                    break;
+                case ImageEffect image:
+                    _infoText.text =
+                        "resolution \n" +
+                        image.ImageTexture.width + "x" + image.ImageTexture.height;
+                    break;
             }
 
             if (EffectManager.IsEffectPreset(_effect))

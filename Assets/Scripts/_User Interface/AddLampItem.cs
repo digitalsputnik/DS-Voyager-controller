@@ -29,5 +29,5 @@ namespace VoyagerController.UI
         {
             _action?.Invoke();
         }
-    }   
+    }
 }

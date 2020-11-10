@@ -19,6 +19,12 @@ namespace VoyagerController
         private float prevTouchDistance;
         private float touchDistanceDelta;
 
+        public float ZoomDistance
+        {
+            get => cam.orthographicSize;
+            set => cam.orthographicSize = value;
+        }
+
         private void Start()
         {
             cam = GetComponent<Camera>();
@@ -170,7 +176,7 @@ namespace VoyagerController
                 }
             }
 
-			if (State == CameraMoveState.WorkspaceClear || State == CameraMoveState.WorkspaceOverItem)
+			if (State == CameraMoveState.WorkspaceClear ||State == CameraMoveState.WorkspaceOverItem)
 				PointerPosition = cam.ScreenToWorldPoint(Input.GetTouch(0).position);
 
 			if (State == CameraMoveState.CameraMove)

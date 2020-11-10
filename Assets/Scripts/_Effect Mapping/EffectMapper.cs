@@ -1,4 +1,5 @@
 using System.Linq;
+using DigitalSputnik.Colors;
 using UnityEngine;
 using VoyagerController.Effects;
 using VoyagerController.UI;
@@ -21,10 +22,11 @@ namespace VoyagerController.Mapping
         [SerializeField] private MenuContainer _menuContainer = null;
         [SerializeField] private EffectMappingMenu _mappingMenu = null;
         [SerializeField] private Menu _exitMenu = null;
+        [SerializeField] private CameraMove _camera = null;
         
         private EffectDisplay[] _displays;
         private EffectDisplay _activeDisplay;
-        private Effect _effect;
+        private Vector3 _previousCamPosition;
 
         private void Start()
         {
@@ -36,7 +38,6 @@ namespace VoyagerController.Mapping
         {
             _instance.CleanPreviousDisplay();
             _instance.gameObject.SetActive(true);
-            _instance._effect = effect;
             _instance._menuContainer.ShowMenu(_instance._mappingMenu);
 
             var selected = WorkspaceSelection.GetSelected<VoyagerItem>().ToArray();
@@ -82,6 +83,12 @@ namespace VoyagerController.Mapping
                 case ImageEffect image: _instance.PrepareDisplay<ImageEffectDisplay>(image); break;
             }
 
+            var camTransform = _instance._camera.transform;
+            var camCurrentPosition = camTransform.position;
+            var camPosition = new Vector3(0.0f, 0.0f, camCurrentPosition.z);
+            _instance._previousCamPosition = camCurrentPosition;
+            LeanTween.move(camTransform.gameObject, camPosition, ANIMATION_TIME);
+
             SelectionMove.SelectionMoveEnded += SelectedItemsMoved;
             EffectMappingIsActive = true;
         }
@@ -92,9 +99,8 @@ namespace VoyagerController.Mapping
             {
                 var mapping = CalculateLampEffectMapping(voyager);
                 var meta = Metadata.Get(voyager.LampHandle.Serial);
-                
                 meta.EffectMapping = mapping;
-                LampEffectsWorker.ApplyEffectToLamp(voyager.LampHandle, _instance._effect);
+                LampEffectsWorker.ApplyEffectToLamp(voyager.LampHandle, meta.Effect);
             }
         }
 
@@ -118,6 +124,8 @@ namespace VoyagerController.Mapping
                 LeanTween.rotate(voyager.gameObject, rotation, ANIMATION_TIME);
                 LeanTween.scale(voyager.gameObject, scale, ANIMATION_TIME);
             }
+
+            LeanTween.move(_instance._camera.gameObject, _instance._previousCamPosition, ANIMATION_TIME);
             
             EffectMappingIsActive = false;
         }
