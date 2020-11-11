@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using DigitalSputnik;
+using DigitalSputnik.Voyager;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace VoyagerController
@@ -18,6 +20,7 @@ namespace VoyagerController
         private Vector2 pointerStart;
         private float prevTouchDistance;
         private float touchDistanceDelta;
+        private float zoomDistanceStart;
 
         public float ZoomDistance
         {
@@ -28,6 +31,7 @@ namespace VoyagerController
         private void Start()
         {
             cam = GetComponent<Camera>();
+            zoomDistanceStart = ZoomDistance;
             Input.simulateMouseWithTouches = false;
         }
 
@@ -252,10 +256,17 @@ namespace VoyagerController
             var size = cam.orthographicSize + step;
 
             var before = WorldPoint();
-            cam.orthographicSize = Mathf.Clamp(size, _minSize, _maxSize);
+            ZoomDistance = Mathf.Clamp(size, _minSize, _maxSize);
             Vector3 after = WorldPoint();
 
             transform.position = transform.position - (after - before);
+        }
+
+        public void SnapCameraToLamp(VoyagerLamp lamp)
+        {
+            var pos = Metadata.Get(lamp.Serial).WorkspaceMapping.Position;
+            ZoomDistance = zoomDistanceStart;
+            transform.localPosition = new Vector3(pos[0], pos[1], transform.localPosition.z);
         }
 
         private float GetStep()

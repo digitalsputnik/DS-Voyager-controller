@@ -37,13 +37,16 @@ namespace VoyagerController
         
         #region Static
         public static LampHandler OnLampDiscovered;
+
+        public static LampHandler OnLampBroadcasted;
         #endregion
-        
+
         #region Lamps
-        
+
         private void Setup()
         {
             LampManager.Instance.OnLampDiscovered += LampDiscovered;
+            LampManager.Instance.OnLampBroadcasted += LampBroadcasted;
             LampManager.Instance.AddClient(new VoyagerNetworkClient());
             if (Application.isMobilePlatform && !Application.isEditor) 
                 LampManager.Instance.AddClient(new VoyagerBluetoothClient());
@@ -64,6 +67,12 @@ namespace VoyagerController
                 Debugger.LogInfo($"Lamp {lamp.Serial} discovered at {Metadata.Get(lamp.Serial).Discovered}");
                 MainThread.Dispatch(() => OnLampDiscovered?.Invoke(lamp));
             }
+        }
+
+        private void LampBroadcasted(Lamp lamp)
+        {
+            Debugger.LogInfo($"Lamp {lamp.Serial} broadcasted");
+            MainThread.Dispatch(() => OnLampBroadcasted?.Invoke(lamp));
         }
 
         private bool AddLampToDatabase(Lamp lamp)

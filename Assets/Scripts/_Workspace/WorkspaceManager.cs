@@ -16,6 +16,8 @@ namespace VoyagerController.Workspace
         private WorkspaceItem[] _itemPrefabs;
         private readonly List<WorkspaceItem> _items = new List<WorkspaceItem>();
 
+        private static float step = -2.0f;
+
         private void Awake()
         {
             _instance = this;
@@ -41,10 +43,19 @@ namespace VoyagerController.Workspace
 
             item.Setup(data);
 
-            _instance._items.Add(item);
-
             if (item is VoyagerItem voyager)
-                Metadata.Get(voyager.LampHandle.Serial).InWorkspace = true;
+            {
+                voyager.transform.localPosition = new Vector2(
+                    _instance._items.Count() != 0 ? _instance._items.Last().transform.localPosition.x : 0f,
+                    _instance._items.Count() != 0 ? _instance._items.Last().transform.localPosition.y + step : 0f
+                );
+
+                var lampMetaData = Metadata.Get(voyager.LampHandle.Serial);
+                lampMetaData.WorkspaceMapping.Position = new[] { voyager.transform.localPosition.x, voyager.transform.localPosition.y };
+                lampMetaData.InWorkspace = true;
+            }
+
+            _instance._items.Add(item);
 
             ItemAdded?.Invoke(item);
             return item;

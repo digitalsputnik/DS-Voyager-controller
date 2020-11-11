@@ -60,7 +60,12 @@ namespace VoyagerController.UI
         private void AddLampToWorkspace(Lamp lamp)
         {
             if (lamp is VoyagerLamp voyager)
-                WorkspaceManager.InstantiateItem<VoyagerItem>(voyager);
+            {
+                var voyagerItem = WorkspaceManager.InstantiateItem<VoyagerItem>(voyager);
+                FindObjectOfType<CameraMove>().SnapCameraToLamp(voyager);
+                WorkspaceSelection.Clear();
+                WorkspaceSelection.SelectItem(voyagerItem);
+            }
         }
 
         private static bool LampValidToAdd(Lamp lamp)
@@ -86,6 +91,7 @@ namespace VoyagerController.UI
         private void SubscribeEvents()
         {
             ApplicationManager.OnLampDiscovered += LampDiscovered;
+            ApplicationManager.OnLampBroadcasted += LampBroadcasted;
             WorkspaceManager.ItemAdded += WorkspaceChanged;
             WorkspaceManager.ItemRemoved += WorkspaceChanged;
         }
@@ -93,11 +99,19 @@ namespace VoyagerController.UI
         private void UnsubscribeEvents()
         {
             ApplicationManager.OnLampDiscovered -= LampDiscovered;
+            ApplicationManager.OnLampBroadcasted -= LampBroadcasted;
             WorkspaceManager.ItemAdded -= WorkspaceChanged;
             WorkspaceManager.ItemRemoved -= WorkspaceChanged;
         }
 
         private void LampDiscovered(Lamp lamp) => UpdateLampsList();
+
+        private void LampBroadcasted(Lamp lamp)
+        {
+            if (LampValidToAdd(lamp))
+                AddLampToWorkspace(lamp);
+        }
+
         private void WorkspaceChanged(WorkspaceItem item) => UpdateLampsList();
         
         public void AddAllLamps()
@@ -107,6 +121,11 @@ namespace VoyagerController.UI
                 lampItem.Click();
             UpdateLampsList();
             SubscribeEvents();
+
+            WorkspaceSelection.Clear();
+
+            foreach (var lamp in WorkspaceManager.GetItems<VoyagerItem>().ToList())
+                WorkspaceSelection.SelectItem(lamp);
         }
     }
 }
