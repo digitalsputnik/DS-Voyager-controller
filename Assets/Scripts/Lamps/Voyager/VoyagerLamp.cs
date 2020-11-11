@@ -31,6 +31,7 @@ namespace VoyagerApp.Lamps.Voyager
         public int dmxDivision;
         public DmxProtocol dmxProtocol;
         public DmxFormat dmxFormat;
+        public bool dmxPollReceived;
 
         public byte[] prevStream;
 
@@ -94,6 +95,7 @@ namespace VoyagerApp.Lamps.Voyager
                 dmxDivision = dmx.division;
                 dmxProtocol = DmxProtocolHelper.FromString(dmx.protocol);
                 dmxFormat = DmxFormatHelper.FromString(dmx.format);
+                dmxPollReceived = true;
             }
 
             base.Update(data);

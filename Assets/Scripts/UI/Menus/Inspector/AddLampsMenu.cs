@@ -7,6 +7,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
+using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
@@ -139,9 +140,11 @@ namespace VoyagerApp.UI.Menus
             var lamps = WorkspaceUtils.Lamps;
             foreach (var lamp in LampManager.instance.Lamps)
             {
+                var voyager = (VoyagerLamp) lamp;
+                
                 if (items.All(i => i.lamp.serial != lamp.serial) &&
                     lamps.All(l => l.serial != lamp.serial) &&
-                    lamp.connected)
+                    lamp.connected && voyager.dmxPollReceived)
                     OnLampAdded(lamp);
             }
             CheckForAddAllLampsButton();
