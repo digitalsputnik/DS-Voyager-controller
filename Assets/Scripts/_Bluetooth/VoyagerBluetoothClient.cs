@@ -239,7 +239,12 @@ namespace VoyagerController.Bluetooth
         }
 
         #region Implementaion
-        
+
+        public override void PollAvailableSsidList(VoyagerLamp voyager, SsidListHandler callback)
+        {
+            callback?.Invoke(voyager, new string[0]);
+        }
+
         public override double TimeOffset => 0.0;
 
         public override void SendSettingsPacket(VoyagerLamp voyager, Packet packet, double time)
