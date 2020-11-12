@@ -10036,7 +10036,7 @@ PrefabInstance:
     - target: {fileID: 8440753727207303362, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -2.0000305
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 8440753727207303362, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -24490,7 +24490,7 @@ PrefabInstance:
     - target: {fileID: 8455935338822375204, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
         type: 3}
       propertyPath: voyagerAnimVersion
-      value: 1.609
+      value: 1.610
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7627344489101607328, guid: 5a5e02a9e8076452585ceb20c6b05f0a, type: 3}
