@@ -95,6 +95,8 @@ namespace VoyagerController.Mapping
 
         private static void SelectedItemsMoved()
         {
+            if (!EffectMappingIsActive) return;
+            
             foreach (var voyager in WorkspaceSelection.GetSelected<VoyagerItem>())
             {
                 var mapping = CalculateLampEffectMapping(voyager);

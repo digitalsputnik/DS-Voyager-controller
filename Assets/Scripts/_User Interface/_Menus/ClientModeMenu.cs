@@ -13,14 +13,14 @@ namespace VoyagerController.UI
     {
         private const float SSID_POLL_TIMEOUT = 15.0f;
         private const float LOADING_ANIMATION_SPEED = 0.6f;
-        private static readonly string[] LOADING_ANIMATION_VALUES = new string[]
+        private static readonly string[] LOADING_ANIMATION_VALUES = 
         {
-            "Loading   ",
-            "Loading.  ",
-            "Loading.. ",
+            "Loading",
+            "Loading.",
+            "Loading..",
             "Loading...",
         };
-
+        
         [SerializeField] private ListPicker _ssidList = null;
         [SerializeField] private InputField _ssidField = null;
         [SerializeField] private InputField _passwordField = null;
@@ -40,23 +40,22 @@ namespace VoyagerController.UI
         {
             if (!_loading)
             {
-                _ssidList.gameObject.SetActive(false);
-                _ssidField.gameObject.SetActive(true);
+                _ssidList.transform.parent.gameObject.SetActive(false);
+                _ssidField.transform.parent.gameObject.SetActive(true);
 
                 if (WorkspaceSelection.GetSelected<VoyagerItem>().Any() && string.IsNullOrEmpty(_ssidField.text))
-                {
-                    // TODO: Set ssid to one of the lamps active ssid || take the ssid from settings.
-                    // _ssidField.text = WorkspaceSelection.GetSelected<VoyagerItem>().First().LampHandle
-                }
+                    _ssidField.text = WorkspaceSelection.GetSelected<VoyagerItem>().First().LampHandle.ActiveSsid;
             }
         }
 
         public void ScanSsidMode()
         {
-            _ssidList.gameObject.SetActive(true);
-            _ssidField.gameObject.SetActive(false);
+            _ssidList.transform.parent.gameObject.SetActive(true);
+            _ssidField.transform.parent.gameObject.SetActive(false);
             StartPolling();
         }
+
+        public void Refresh() => StartPolling();
 
         public void Set()
         {
@@ -66,9 +65,7 @@ namespace VoyagerController.UI
             if (password.Length >= 8 && ssid.Length != 0 || password.Length == 0 && ssid.Length != 0)
             {
                 foreach (var voyager in WorkspaceSelection.GetSelected<VoyagerItem>().Select(i => i.LampHandle))
-                {
-                    // TODO: Implement network settings on library side!
-                }
+                    voyager.SetNetworkMode(NetworkMode.Client, ssid, password);
 
                 GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
             }
@@ -91,7 +88,7 @@ namespace VoyagerController.UI
                 );
             }
         }
-
+        
         internal override void OnShow()
         {
             if (_ssidField.gameObject.activeSelf) TypeSsidMode();
@@ -101,7 +98,7 @@ namespace VoyagerController.UI
         {
             _lampToSsids.Clear();
         }
-        
+
         #region Polling SSIDS
 
         private void StartPolling()
@@ -118,8 +115,32 @@ namespace VoyagerController.UI
 
         private IEnumerator EnumPollSsidListFromLamps()
         {
-            yield return new WaitForSeconds(5.0f);
-            OnSsidListReceived(new List<string>());
+            _loading = true;
+            
+            var need = WorkspaceManager.GetItems<VoyagerItem>().Count();
+            var received = new List<string[]>();
+            var start = Time.time;
+
+            foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>().Select(i => i.LampHandle))
+                voyager.PollSsidList((sender, ssids) => { received.Add(ssids); });
+
+            yield return new WaitUntil(() => received.Count >= need || Time.time - start >= SSID_POLL_TIMEOUT);
+            
+            var intersection = received.Any() ?
+               received
+                   .Skip(1)
+                   .Aggregate(
+                       new HashSet<string>(received.First()), (h, e) => {
+                           h.IntersectWith(e);
+                           return h;
+                       })
+                   .Where(s => !string.IsNullOrEmpty(s))
+                   .Distinct()
+                   .ToList() : new List<string>();
+
+            _loading = false;
+            
+            OnSsidListReceived(intersection);
         }
 
         private void OnSsidListReceived(List<string> ssids)
@@ -134,6 +155,7 @@ namespace VoyagerController.UI
             else
             {
                 _ssidList.SetItems("Not found");
+                _refreshButton.interactable = true;
             }
         }
 

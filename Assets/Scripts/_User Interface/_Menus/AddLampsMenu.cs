@@ -5,6 +5,7 @@ using DigitalSputnik.Voyager;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerController.Bluetooth;
+using VoyagerController.Effects;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
@@ -65,6 +66,12 @@ namespace VoyagerController.UI
                 FindObjectOfType<CameraMove>().SnapCameraToLamp(voyager);
                 WorkspaceSelection.Clear();
                 WorkspaceSelection.SelectItem(voyagerItem);
+
+                if (Metadata.Get(voyager.Serial).Effect == null)
+                {
+                    var effect = EffectManager.GetEffectWithName("white.mp4");
+                    LampEffectsWorker.ApplyEffectToLamp(voyager, effect);
+                }
             }
         }
 
