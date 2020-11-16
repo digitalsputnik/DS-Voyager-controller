@@ -39,11 +39,10 @@ namespace VoyagerController.ProjectManagement
             {
                 case EffectType.Video:
                     var video = EffectManager.GetEffectWithName<VideoEffect>(raw.Name);
-                    
+
                     if (video == null)
                     {
-                        var path = Path.Combine(_videosPath, raw.Name);
-                        Debug.Log(path);
+                        var path = Path.Combine(_videosPath, raw.Name + ".mp4");
                         VideoEffectLoader.LoadVideoEffect(path, effect =>
                         {
                             effect.Settings = raw.Settings;

@@ -28,7 +28,7 @@ namespace DigitalSputnik.Videos
             var directory = Path.GetDirectoryName(video.Path) ?? "";
             var extension = Path.GetExtension(video.Path);
             var path = Path.Combine(directory, $"{name}.{extension}");
-
+            
             try
             {
                 File.Move(video.Path ?? "", path);
@@ -73,7 +73,7 @@ namespace DigitalSputnik.Videos
                 {
                     Width = (int) player.width,
                     Height = (int) player.height,
-                    Name = Path.GetFileName(path),
+                    Name = Path.GetFileNameWithoutExtension(path),
                     Path = path,
                     FrameCount = player.frameCount,
                     Fps = player.frameRate

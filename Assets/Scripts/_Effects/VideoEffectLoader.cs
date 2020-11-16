@@ -40,7 +40,7 @@ namespace VoyagerController.Effects
         private static void InitializeVideoTools()
         {
             var resizer = CreateVideoResizerBasedOnPlatform();
-            _tools = new DigitalSputnik.Videos.VideoTools(new UnityVideoProvider(), resizer);
+            _tools = new VideoTools(new UnityVideoProvider(), resizer);
         }
         
         private static IVideoResizer CreateVideoResizerBasedOnPlatform()
