@@ -63,14 +63,14 @@ namespace VoyagerApp.Videos
 
             SubscribeLampEvents();
         }
-
+        
+        
         void SubscribeLampEvents()
         {
             if (!lampEventsSubscribed)
             {
                 LampManager.instance.onLampEffectChanged += HandleLampInterupt;
                 LampManager.instance.onLampMappingChanged += HandleLampInterupt;
-                LampManager.instance.onLampItsheChanged += HandleLampItsheInterupt;
                 EffectManager.instance.onEffectModified += OnEffectModified;
                 lampEventsSubscribed = true;
             }
@@ -82,7 +82,6 @@ namespace VoyagerApp.Videos
             {
                 LampManager.instance.onLampEffectChanged -= HandleLampInterupt;
                 LampManager.instance.onLampMappingChanged -= HandleLampInterupt;
-                LampManager.instance.onLampItsheChanged -= HandleLampItsheInterupt;
                 EffectManager.instance.onEffectModified -= OnEffectModified;
                 lampEventsSubscribed = false;
             }
@@ -113,25 +112,6 @@ namespace VoyagerApp.Videos
         void HandleLampInterupt(Lamp lamp)
         {
             if (WorkspaceUtils.Lamps.Contains(lamp))
-                Interupt();
-        }
-
-        void HandleLampItsheInterupt(Lamp lamp)
-        {
-            // TODO: Also add resend buffer state here.
-            if (WorkspaceUtils.SelectedLamps.All(l => l.effect is Video && l.buffer.rendered) && (state is DoneState || state is ResendBufferState || state is ConfirmPixelsState))
-            {
-                UnsubscribeLampEvents();
-                if (state is ResendBufferState resendState)
-                    resendState.AddLamp(lamp);
-                else
-                {
-                    state = new ResendBufferState();
-                    ((ResendBufferState)state).AddLamp(lamp);
-                }
-                SubscribeLampEvents();
-            }
-            else
                 Interupt();
         }
 

@@ -130,7 +130,7 @@ namespace VoyagerApp.Videos
                 foreach (var index in _missingFrames[lamp])
                 {
                     var frame = lamp.buffer.GetFrame(index);
-                    var packet = new SetFramePacket(index, lamp.itshe, frame);
+                    var packet = new SetFramePacket(index, frame);
                     NetUtils.VoyagerClient.SendPacket(lamp, packet, VoyagerClient.PORT_VIDEO, time);
                 }
             }

@@ -212,84 +212,32 @@ namespace VoyagerApp.Lamps.Voyager
         {
             base.SetItshe(itshe);
 
-            last = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset;
+            var time = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset;
+            var packet = new SetItshePacket(itshe);
+            var port = VoyagerClient.PORT_SETTINGS;
 
-            if (effect is Video video)
-            {
-                var start = video.startTime + NetUtils.VoyagerClient.TimeOffset;
-
-                var packet = new PacketCollection(
-                    new SetVideoPacket(video.frames, start),
-                    new SetFpsPacket(video.fps),
-                    new SetItshePacket(itshe)
-                );
-
-                NetUtils.VoyagerClient.KeepSendingPacket(
-                    this,
-                    "set_effect",
-                    packet,
-                    VoyagerClient.PORT_SETTINGS,
-                    last);
-
-                if (!buffer.rendered)
-                    buffer.Clear();
-            }
-
-            if (effect is SyphonStream || effect is SpoutStream)
-            {
-                var packet = new PacketCollection(
-                    new SetStreamPacket(),
-                    new SetItshePacket(itshe)
-                );
-
-                NetUtils.VoyagerClient.KeepSendingPacket(
-                    this,
-                    "set_effect",
-                    packet,
-                    VoyagerClient.PORT_SETTINGS,
-                    last);
-            }
-            
-            if (effect is Effects.Image image)
-            {
-                var start = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset;
-
-                var packet = new PacketCollection(
-                    new SetVideoPacket(1, start),
-                    new SetFpsPacket(1),
-                    new SetItshePacket(itshe)
-                );
-
-                NetUtils.VoyagerClient.KeepSendingPacket(
-                    this,
-                    "set_effect",
-                    packet,
-                    VoyagerClient.PORT_SETTINGS,
-                    last);
-
-                buffer.Clear();
-            }
-
-            lastTimestamp = last;
+            NetUtils.VoyagerClient.KeepSendingPacket(this, "set_itshe", packet, port, time);
         }
 
         public override void PushFrame(Color32[] colors, long frame)
         {
             var data = ColorUtils.ColorsToBytes(colors);
-            var packet = new SetFramePacket(frame, itshe, data);
+            var packet = new SetFramePacket(frame, data);
             NetUtils.VoyagerClient.SendPacket(this, packet, VoyagerClient.PORT_VIDEO, last);
             base.PushFrame(colors, frame);
         }
 
-        public void PushStreamFrame(Color32[] colors, double time)
+        public void PushStreamFrame(Color32[]colors, double time)
         {
-            prevStream = ColorUtils.ColorsToBytes(colors);
-            var mix = ColorUtils.MixColorsToItshe(colors, itshe);
-            var frame = ColorUtils.ColorsToBytes(mix);
+            var frame = ColorUtils.ColorsToBytes(colors);
             var packet = new StreamFramePacket(time, frame);
+            
             NetUtils.VoyagerClient.SendPacket(this, packet, VoyagerClient.PORT_VIDEO, last);
+            
             buffer.Setup(1);
             buffer.SetFrame(0, frame);
+            
+            prevStream = frame;
         }
     }
 }
