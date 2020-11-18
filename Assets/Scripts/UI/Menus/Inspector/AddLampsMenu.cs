@@ -26,6 +26,7 @@ namespace VoyagerApp.UI.Menus
         internal override void OnShow()
         {
             LampManager.instance.onLampAdded += OnLampAdded;
+            LampManager.instance.onLampBroadcasted += OnLampBroadcasted;
             WorkspaceManager.instance.onItemRemoved += ItemRemovedFromWorkspace;
             WorkspaceManager.instance.onItemAdded += ItemAddedToWorkspace;
             ApplicationState.OnNewProject += NewProject;
@@ -51,6 +52,7 @@ namespace VoyagerApp.UI.Menus
         internal override void OnHide()
         {
             LampManager.instance.onLampAdded -= OnLampAdded;
+            LampManager.instance.onLampBroadcasted -= OnLampBroadcasted;
             WorkspaceManager.instance.onItemRemoved -= ItemRemovedFromWorkspace;
             WorkspaceManager.instance.onItemAdded -= ItemAddedToWorkspace;
             ApplicationState.OnNewProject -= NewProject;
@@ -152,16 +154,12 @@ namespace VoyagerApp.UI.Menus
 
         public void AddAllLamps()
         {
-            int count = items.Count;
-            float2[] points = VectorUtils.ScreenVerticalPositions(count);
-            AddLampItem[] itms = items.ToArray();
-            for (int i = 0; i < count; i++)
+            foreach (var item in items.ToList())
             {
-                Vector2 point = points[i];
-                AddLampItem item = itms[i];
-                item.lamp.AddToWorkspace(point);
+                var vlamp = item.lamp.AddToWorkspace();
+                WorkspaceSelection.instance.SelectItem(vlamp);
             }
-
+            
             while (items.Count > 0)
                 RemoveLampItem(items[0], true);
         }
@@ -196,6 +194,20 @@ namespace VoyagerApp.UI.Menus
             item.SetLamp(lamp);
             items.Add(item);
             CheckForAddAllLampsButton();
+        }
+
+        private void OnLampBroadcasted(Lamp lamp)
+        {
+            Debug.Log("OnLampBroadcasted: " + lamp.serial);
+
+            if (WorkspaceUtils.Lamps.Any(l => l == lamp))
+                return;
+
+            Debug.Log("Didn't return");
+
+            var vlamp = lamp.AddToWorkspace();
+            WorkspaceSelection.instance.Clear();
+            WorkspaceSelection.instance.SelectItem(vlamp);
         }
 
         void CheckForAddAllLampsButton()

@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
 using VoyagerApp.Utilities;
+using VoyagerApp.Workspace;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -19,8 +20,9 @@ namespace VoyagerApp.UI.Menus
 
         public void OnClick()
         {
-            Vector2 position = VectorUtils.HalfScreenRandomVerticalPosition;
-            lamp.AddToWorkspace(position);
+            var vlamp = lamp.AddToWorkspace();
+            WorkspaceSelection.instance.Clear();
+            WorkspaceSelection.instance.SelectItem(vlamp);
             //AddLampsMenu menu = GetComponentInParent<AddLampsMenu>();
             //menu.RemoveLampItem(this);
         }

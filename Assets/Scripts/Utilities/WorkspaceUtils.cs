@@ -416,6 +416,16 @@ namespace VoyagerApp.Utilities
             SelectionMove.RaiseMovedEvent();
         }
 
+        public static void SetCameraPosition(Vector2 pos)
+        {
+            Camera.main.transform.localPosition = new Vector3(pos[0], pos[1], Camera.main.transform.localPosition.z);
+        }
+
+        public static void SetCameraZoom(float zoom)
+        {
+            Camera.main.orthographicSize = zoom;
+        }
+
         public static List<LampItemView> SelectedLampItemsInOrder
         {
             get => SelectedLampItems.OrderBy(l => l.Order).ToList();

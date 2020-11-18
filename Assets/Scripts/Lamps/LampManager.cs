@@ -35,6 +35,7 @@ namespace VoyagerApp.Lamps
         public event LampHandler onLampMappingChanged;
         public event LampHandler onLampEffectChanged;
         public event LampHandler onLampItsheChanged;
+        public event LampHandler onLampBroadcasted;
 
         List<LampDataProcessor> dataProcessors = new List<LampDataProcessor>();
 
@@ -64,6 +65,8 @@ namespace VoyagerApp.Lamps
                 onLampRemoved?.Invoke(same);
             }
         }
+
+        public void LampBroadcasted(Lamp lamp) => onLampBroadcasted?.Invoke(lamp);
 
         public void Clear() => new List<Lamp>(Lamps).ForEach(RemoveLamp);
 

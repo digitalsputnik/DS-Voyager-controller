@@ -44,6 +44,7 @@ namespace VoyagerApp.Networking.Voyager
         SetGlobalIntensity,
         SetStream,
         StreamFrame,
+        ActivateVideoTrigger,
 
         // BLE
         GetSerial,
