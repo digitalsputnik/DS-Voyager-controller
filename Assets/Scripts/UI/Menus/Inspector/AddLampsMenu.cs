@@ -22,6 +22,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] AddLampItem prefab = null;
         [SerializeField] Button addAllLampsBtn = null;
         List<AddLampItem> items = new List<AddLampItem>();
+        Vector3 step = new Vector3(0, -2.0f , 0);
 
         internal override void OnShow()
         {
@@ -154,11 +155,20 @@ namespace VoyagerApp.UI.Menus
 
         public void AddAllLamps()
         {
+            WorkspaceSelection.instance.Clear();
+
+            List<LampItemView> addedLampItems = new List<LampItemView>();
+
             foreach (var item in items.ToList())
             {
-                var vlamp = item.lamp.AddToWorkspace();
-                WorkspaceSelection.instance.SelectItem(vlamp);
+                var lampItem = item.lamp.AddToWorkspace(WorkspaceUtils.PositionOfLastNotSelectedLamp + step);
+                addedLampItems.Add(lampItem);
             }
+
+            WorkspaceUtils.SetCameraPosition(WorkspaceUtils.PositionOfLastNotSelectedLamp);
+
+            foreach (var item in addedLampItems)
+                WorkspaceSelection.instance.SelectItem(item);
             
             while (items.Count > 0)
                 RemoveLampItem(items[0], true);
@@ -205,8 +215,9 @@ namespace VoyagerApp.UI.Menus
 
             Debug.Log("Didn't return");
 
-            var vlamp = lamp.AddToWorkspace();
             WorkspaceSelection.instance.Clear();
+            var vlamp = lamp.AddToWorkspace(WorkspaceUtils.PositionOfLastNotSelectedLamp + step);
+            WorkspaceUtils.SetCameraPosition(vlamp.transform.localPosition);
             WorkspaceSelection.instance.SelectItem(vlamp);
         }
 

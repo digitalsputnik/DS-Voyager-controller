@@ -19,9 +19,6 @@ namespace VoyagerApp.Workspace
         List<WorkspaceItemView> prefabs = new List<WorkspaceItemView>();
         List<WorkspaceItemView> items = new List<WorkspaceItemView>();
 
-        public float step = -2.0f;
-        private float defaultCameraZoom = 8.0f;
-
         public List<WorkspaceItemView> Items => items;
 
         public T InstantiateItem<T>(object data, Vector2 position, float scale, float rotation)
@@ -55,18 +52,6 @@ namespace VoyagerApp.Workspace
             T prefab = GetPrefabOfType<T>();
             T item = Instantiate(prefab, transform);
             item.Setup(data);
-
-            if (item is Views.VoyagerItemView voyager)
-            {
-                voyager.transform.localPosition = new Vector2(
-                    instance.items.Count() != 0 ? instance.items.Last().transform.localPosition.x : 0f,
-                    instance.items.Count() != 0 ? instance.items.Last().transform.localPosition.y + step : 0f
-                );
-
-                WorkspaceUtils.SetCameraPosition(voyager.transform.localPosition);
-                WorkspaceUtils.SetCameraZoom(defaultCameraZoom);
-            }
-
             items.Add(item);
             onItemAdded?.Invoke(item);
             return item;

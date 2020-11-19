@@ -431,6 +431,11 @@ namespace VoyagerApp.Utilities
             get => SelectedLampItems.OrderBy(l => l.Order).ToList();
         }
 
+        public static Vector3 PositionOfLastNotSelectedLamp
+        {
+            get => VoyagerItems.Count() != 0 ? VoyagerItems.Last().transform.localPosition : Vector3.zero;
+        }
+
         public static List<LampWorkspaceState> LampStates()
         {
             var states = new List<LampWorkspaceState>();
