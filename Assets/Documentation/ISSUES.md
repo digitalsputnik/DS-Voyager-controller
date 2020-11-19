@@ -13,9 +13,10 @@ If there is a label "for testing" on an issue, the issue should be fixed in the 
 1. Issue is created;
 2. Issue is reviewed by project manager if it will be **taken into development = issue is assigned a milestone and a developer**;
 3. When issue is taken into development, it should be put a label "in development".
-4. When issue is fixed by developer in pre-release version, it should be assigned a stage "in testing".
-5. If tester cannot recreate an issue/confirms that feature request is working -> "fixed" state.
-6. Issue is closed when its published/pushed to master branch.
+4. When issue is pushed to repository, it should be assigned a label "fix pushed" by developer.
+5. When issue is fixed by developer in pre-release version, it should be assigned a stage "in testing" by developer/publisher.
+6. If tester cannot recreate an issue/confirms that feature request is working -> "fixed" state.
+7. Issue is closed when its published/pushed to master branch.
 
 ### Issue label categories
 **Platform**: OSX, Android, Windows, iOS, Embedded
