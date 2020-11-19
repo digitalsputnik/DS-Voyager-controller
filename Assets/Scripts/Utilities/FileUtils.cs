@@ -76,55 +76,28 @@ namespace VoyagerApp.Utilities
             }
         }
 
-        public static void LoadPictureFromDevice(PathHandler loaded, bool rename)
+        public static void LoadPictureFromDevice(PathHandler loaded, bool rename, bool iOSWarning = true)
         {
             if (Application.isMobilePlatform)
             {
                 if (Application.platform == RuntimePlatform.IPhonePlayer)
                 {
-                    DialogBox.Show(
-                        "WARNING",
-                        "Photos captured with iOS camera might not load.",
-                        new string[] { "CANCEL", "OK" },
-                        new Action[] {
-                            () => loaded?.Invoke(null),
-                            () =>
-                            {
-                                NativeGallery.GetImageFromGallery(path =>
-                                {
-                                    if (string.IsNullOrEmpty(path))
-                                    {
-                                        loaded?.Invoke(null);
-                                        return;
-                                    }
-                                    
-                                    var name = "image_" + Guid.NewGuid().ToString().Substring(0, 4);
-
-                                    if (rename)
-                                    {
-                                        InputFieldMenu.Show("PICK NAME FOR IMAGE", name, text =>
-                                        {
-                                            name = text;
-                                            var newPath = Path.Combine(TempPath, name);
-                                            try
-                                            {
-                                                Copy(path, newPath);
-                                                loaded?.Invoke(newPath);
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                Debug.LogError(ex);
-                                            }
-                                        }, 3, false);   
-                                    }
-                                    else
-                                    {
-                                        loaded?.Invoke(path);
-                                    }
-                                }, "", "image/*");
+                    if (iOSWarning)
+                    {
+                        DialogBox.Show(
+                            "WARNING",
+                            "Photos captured with iOS camera might not load.",
+                            new string[] { "CANCEL", "OK" },
+                            new Action[] {
+                                () => loaded?.Invoke(null),
+                                () => LoadPictureIOS(loaded, rename)
                             }
-                        }
-                    );
+                        );   
+                    }
+                    else
+                    {
+                        LoadPictureIOS(loaded, rename);
+                    }
                 }
                 else
                 {
@@ -146,6 +119,42 @@ namespace VoyagerApp.Utilities
                 string path = FileBrowser.OpenSingleFile("Open Picture", documents, extensions);
                 loaded.Invoke(path == "" ? null : path);
             }
+        }
+
+        private static void LoadPictureIOS(PathHandler loaded, bool rename)
+        {
+            NativeGallery.GetImageFromGallery(path =>
+            {
+                if (string.IsNullOrEmpty(path))
+                {
+                    loaded?.Invoke(null);
+                    return;
+                }
+                                        
+                var name = "image_" + Guid.NewGuid().ToString().Substring(0, 4);
+
+                if (rename)
+                {
+                    InputFieldMenu.Show("PICK NAME FOR IMAGE", name, text =>
+                    {
+                        name = text;
+                        var newPath = Path.Combine(TempPath, name);
+                        try
+                        {
+                            Copy(path, newPath);
+                            loaded?.Invoke(newPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogError(ex);
+                        }
+                    }, 3, false);   
+                }
+                else
+                {
+                    loaded?.Invoke(path);
+                }
+            }, "", "image/*");
         }
 
         public static string DocumentsPath

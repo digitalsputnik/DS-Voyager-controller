@@ -25,7 +25,7 @@ namespace VoyagerApp.UI.Menus
 
         public void AddPicture()
         {
-            FileUtils.LoadPictureFromDevice(PicturePicked, false);
+            FileUtils.LoadPictureFromDevice(PicturePicked, false, false);
         }
 
         public void SelectDeselect()
