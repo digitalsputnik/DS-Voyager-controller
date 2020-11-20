@@ -22,7 +22,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] AddLampItem prefab = null;
         [SerializeField] Button addAllLampsBtn = null;
         List<AddLampItem> items = new List<AddLampItem>();
-        Vector3 step = new Vector3(0, -2.0f , 0);
+        Vector3 step = new Vector3(0, -1.0f , 0);
 
         internal override void OnShow()
         {

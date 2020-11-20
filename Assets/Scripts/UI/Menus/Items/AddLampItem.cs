@@ -21,7 +21,7 @@ namespace VoyagerApp.UI.Menus
         public void OnClick()
         {
             WorkspaceSelection.instance.Clear();
-            var vlamp = lamp.AddToWorkspace(WorkspaceUtils.PositionOfLastNotSelectedLamp + new Vector3(0,-2.0f,0));
+            var vlamp = lamp.AddToWorkspace(WorkspaceUtils.PositionOfLastNotSelectedLamp + new Vector3(0,-1.0f,0));
             WorkspaceUtils.SetCameraPosition(vlamp.transform.localPosition);
             WorkspaceSelection.instance.SelectItem(vlamp);
             //AddLampsMenu menu = GetComponentInParent<AddLampsMenu>();
