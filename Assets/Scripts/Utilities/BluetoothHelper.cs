@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik.Bluetooth;
 using UnityEngine;
+using VoyagerApp.Networking.Voyager;
 
 public static class BluetoothHelper
 {
@@ -143,7 +144,7 @@ public class BluetoothConnection
     public Action<byte[]> OnData;
     public string ID => _access.ID;
 
-    public int lampVersion = 0;
+    public BlePollReply PollReply { get; set; } = null;
 
     public string Name
     {

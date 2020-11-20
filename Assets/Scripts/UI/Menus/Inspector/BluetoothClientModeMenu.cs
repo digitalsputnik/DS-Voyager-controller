@@ -5,9 +5,12 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Networking.Voyager;
 using VoyagerApp.UI.Overlays;
+using VoyagerApp.Workspace;
+using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -51,6 +54,8 @@ namespace VoyagerApp.UI.Menus
             _bleInfoText.SetActive(true);
 
             ShowTypeSsid();
+
+            _passwordField.text = ApplicationSettings.PreviousWifiPassword;
         }
 
         internal override void OnHide()
@@ -132,6 +137,8 @@ namespace VoyagerApp.UI.Menus
                     new Action[] { null }
                 );
             }
+
+            ApplicationSettings.PreviousWifiPassword = password;
         }
 
         IEnumerator IEnumSetWifiSettings(string ssid, string password)
@@ -139,6 +146,7 @@ namespace VoyagerApp.UI.Menus
             _statusText.SetActive(true);
 
             const string JSON = @"{""op_code"": ""ble_ack""}";
+            const string JSON_POLL = @"{""op_code"": ""poll_reply""}";
 
             foreach (var id in _ids)
             {
@@ -152,22 +160,22 @@ namespace VoyagerApp.UI.Menus
                     {
                         active = connection;
                         _connections.Add(active);
+                        
+                        Debug.Log("Connected to ble");
 
-                        active.OnData += (data) =>
+                        active.OnData += data =>
                         {
+                            Debug.Log("received:\n" + Encoding.UTF8.GetString(data));
+                            
                             if (Encoding.UTF8.GetString(data) == JSON)
                             {
                                 done = true;
+                                AddConnectionToWorkspace(active.PollReply);
                                 BluetoothHelper.DisconnectFromPeripheral(active.ID);
                             }
                             else
                             {
-                                var packet = Packet.Deserialize<BleChipVersion>(data);
-
-                                if (packet != null)
-                                    active.lampVersion = packet.version[1];
-                                else
-                                    active.lampVersion = 400;
+                                active.PollReply = Packet.Deserialize<BlePollReply>(data);
                             }
                         };
 
@@ -206,9 +214,12 @@ namespace VoyagerApp.UI.Menus
 
                     if (active != null)
                     {
-                        if (active.lampVersion == 0)
-                            active.Write(WRITE_CHAR, new BleChipVersion().Serialize());
-                        else if (active.lampVersion < 500)
+                        if (active.PollReply == null)
+                        {
+                            active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_POLL));
+                            Debug.Log($"Sending out poll request by ble: {JSON_POLL}");
+                        }
+                        else if (active.PollReply.Version[0] < 500)
                             active.Write(WRITE_CHAR, VoyagerNetworkMode.Client(ssid, password, active.Name).ToData());
                         else
                             active.Write(WRITE_CHAR, VoyagerNetworkMode.SecureClient(ssid, password, active.Name).ToData());
@@ -218,10 +229,34 @@ namespace VoyagerApp.UI.Menus
                 }
 
                 if (hadError)
-                    DialogBox.Show("BLE Error", errorMessage, new string[] { "OK" }, new Action[] { null });
+                    DialogBox.Show("BLE Error", errorMessage, new[] { "OK" }, new Action[] { null });
             }
 
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+        }
+
+        private void AddConnectionToWorkspace(BlePollReply pollReply)
+        {
+            var lamp = LampManager.instance.GetLampWithSerial(pollReply.serial);
+
+            if (lamp == null)
+            {
+                lamp = new VoyagerLamp
+                {
+                    serial = pollReply.serial,
+                    chipVersion = pollReply.Version,
+                    battery = pollReply.Battery,
+                    length = pollReply.Length,
+                    lastMessage = 0.0
+                };
+
+                LampManager.instance.AddLamp(lamp);
+            }
+
+            if (lamp is VoyagerLamp voyager)
+            {
+                WorkspaceManager.instance.InstantiateItem<VoyagerItemView>(voyager);
+            }
         }
 
         void StartLoadingSsids()

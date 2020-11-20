@@ -48,6 +48,7 @@ namespace VoyagerApp.Networking.Voyager
 
         // BLE
         GetSerial,
-        GetChipVersion
+        GetChipVersion,
+        PollReply
     }
 }
