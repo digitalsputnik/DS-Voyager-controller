@@ -8,6 +8,8 @@ namespace VoyagerApp.Videos
     {
         public override RenderState Update()
         {
+            // TODO: Optimize
+            
             foreach (var lamp in WorkspaceUtils.Lamps.Where(l => l.effect is Effects.Image))
             {
                 var image = (Effects.Image)lamp.effect;
