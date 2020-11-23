@@ -28,7 +28,7 @@ namespace VoyagerApp.Lamps.Voyager
                 HandleDmxResponseData(data, sender);
         }
 
-        void HandleResponseData(byte[] data)
+        void HandleResponseData(byte[]data)
         {
             var packed = VoyagerLampInfoResponse.FromData(data);
             Lamp lamp = manager.GetLampWithSerial(packed.serial);
@@ -63,7 +63,7 @@ namespace VoyagerApp.Lamps.Voyager
             }
         }
 
-        bool DataContains(byte[] data, string str)
+        bool DataContains(byte[]data, string str)
         {
             string json = Encoding.UTF8.GetString(data);
             return json.Contains(str);

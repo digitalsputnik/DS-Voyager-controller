@@ -10,6 +10,8 @@ namespace VoyagerApp.Networking.Voyager
         public int Battery { get; set; }
         [JsonProperty("serial_name")]
         public string Serial { get; set; }
+        [JsonProperty("IP")]
+        public byte[] IpAddress { get; set; }
         [JsonProperty("CHIP_version")]
         public int[] Version { get; set; }
         

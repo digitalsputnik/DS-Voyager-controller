@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
@@ -177,7 +179,7 @@ namespace VoyagerApp.UI.Menus
                             if (Encoding.UTF8.GetString(data) == JSON)
                             {
                                 done = true;
-                                //AddConnectionToWorkspace(active.PollReply);
+                                AddConnectionToWorkspace(active.PollReply);
                                 BluetoothHelper.DisconnectFromPeripheral(active.ID);
                             }
                             else
@@ -244,26 +246,32 @@ namespace VoyagerApp.UI.Menus
 
         private void AddConnectionToWorkspace(BlePollReply pollReply)
         {
-            var lamp = LampManager.instance.GetLampWithSerial(pollReply.serial);
-
-            if (lamp == null)
+            MainThread.Dispach(() =>
             {
-                lamp = new VoyagerLamp
+                Debug.Log(JsonConvert.SerializeObject(pollReply, Formatting.Indented)); 
+                
+                var lamp = LampManager.instance.GetLampWithSerial(pollReply.serial);
+
+                if (lamp == null)
                 {
-                    serial = pollReply.serial,
-                    chipVersion = pollReply.Version,
-                    battery = pollReply.Battery,
-                    length = pollReply.Length,
-                    lastMessage = 0.0
-                };
+                    lamp = new VoyagerLamp
+                    {
+                        serial = pollReply.Serial,
+                        chipVersion = pollReply.Version,
+                        battery = pollReply.Battery,
+                        length = pollReply.Length,
+                        address = new IPAddress(pollReply.IpAddress),
+                        lastMessage = 0.0
+                    };
 
-                LampManager.instance.AddLamp(lamp);
-            }
+                    LampManager.instance.AddLamp(lamp);
+                }
 
-            if (lamp is VoyagerLamp voyager)
-            {
-                MainThread.Dispach(() => WorkspaceManager.instance.InstantiateItem<VoyagerItemView>(voyager));
-            }
+                if (lamp is VoyagerLamp voyager)
+                {
+                    WorkspaceManager.instance.InstantiateItem<VoyagerItemView>(voyager);
+                } 
+            });
         }
 
         void StartLoadingSsids()
