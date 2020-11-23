@@ -32,6 +32,7 @@ namespace VoyagerApp.UI.Menus
         [Space(3)]
         [SerializeField] InputField _passwordField = null;
         [SerializeField] Button _setBtn = null;
+        [SerializeField] Text _setBtnText = null;
         [SerializeField] GameObject _statusText = null;
         [SerializeField] GameObject _bleInfoText = null;
         [SerializeField] AddBluetoothLampsMenu _bleMenu = null;
@@ -40,7 +41,8 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] float _animationSpeed = 0.6f;
         [SerializeField] float _timeout = 30.0f;
 
-        bool _loading;
+        bool _ssidListLoading;
+        bool _setLoading;
         string[] _ids;
 
         List<BluetoothConnection> _connections = new List<BluetoothConnection>();
@@ -70,7 +72,8 @@ namespace VoyagerApp.UI.Menus
 
             StopAllCoroutines();
 
-            _loading = false;
+            _ssidListLoading = false;
+            _setLoading = false;
         }
 
         public void Back()
@@ -87,9 +90,13 @@ namespace VoyagerApp.UI.Menus
 
         public void ShowTypeSsid()
         {
-            if (!_loading)
+            if (!_ssidListLoading)
             {
+                _ssidField.interactable = true;
+                _setSsidScan.interactable = true;
+                _passwordField.interactable = true;
                 _setBtn.interactable = true;
+                _setBtnText.text = "SET";
                 _ssidListObj.gameObject.SetActive(false);
                 _ssidFieldObj.gameObject.SetActive(true);
             }
@@ -97,7 +104,7 @@ namespace VoyagerApp.UI.Menus
 
         public void ReloadSsidList()
         {
-            if (!_loading) StartLoadingSsids();
+            if (!_ssidListLoading) StartLoadingSsids();
         }
 
         public void ConnectToLamps(string[] ids)
@@ -115,7 +122,7 @@ namespace VoyagerApp.UI.Menus
 
             if (password.Length >= 8 && ssid.Length != 0 || password.Length == 0 && ssid.Length != 0)
             {
-                _setBtn.interactable = false;
+                StartSetLoading();
                 StartCoroutine(IEnumSetWifiSettings(ssid, password));
                 PlayerPrefs.SetString("last_ble_ssid", ssid);
             }
@@ -146,7 +153,7 @@ namespace VoyagerApp.UI.Menus
             _statusText.SetActive(true);
 
             const string JSON = @"{""op_code"": ""ble_ack""}";
-            const string JSON_POLL = @"{""op_code"": ""poll_reply""}";
+            const string JSON_POLL = @"{""op_code"": ""poll_request""}";
 
             foreach (var id in _ids)
             {
@@ -170,7 +177,7 @@ namespace VoyagerApp.UI.Menus
                             if (Encoding.UTF8.GetString(data) == JSON)
                             {
                                 done = true;
-                                AddConnectionToWorkspace(active.PollReply);
+                                //AddConnectionToWorkspace(active.PollReply);
                                 BluetoothHelper.DisconnectFromPeripheral(active.ID);
                             }
                             else
@@ -219,7 +226,7 @@ namespace VoyagerApp.UI.Menus
                             active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_POLL));
                             Debug.Log($"Sending out poll request by ble: {JSON_POLL}");
                         }
-                        else if (active.PollReply.Version[0] < 500)
+                        else if (active.PollReply.Version[1] < 500)
                             active.Write(WRITE_CHAR, VoyagerNetworkMode.Client(ssid, password, active.Name).ToData());
                         else
                             active.Write(WRITE_CHAR, VoyagerNetworkMode.SecureClient(ssid, password, active.Name).ToData());
@@ -255,7 +262,7 @@ namespace VoyagerApp.UI.Menus
 
             if (lamp is VoyagerLamp voyager)
             {
-                WorkspaceManager.instance.InstantiateItem<VoyagerItemView>(voyager);
+                MainThread.Dispach(() => WorkspaceManager.instance.InstantiateItem<VoyagerItemView>(voyager));
             }
         }
 
@@ -266,10 +273,25 @@ namespace VoyagerApp.UI.Menus
             _ssidList.interactable = false;
             _ssidRefreshBtn.interactable = false;
             _typeSsid.interactable = false;
-            _loading = true;
+            _ssidListLoading = true;
 
             StartCoroutine(PollSsidsFromBluetooth());
-            StartCoroutine(IEnumLoadingAnimation());
+            StartCoroutine(IEnumSsidLoadingAnimation());
+        }
+
+        void StartSetLoading()
+        {
+            _setBtn.interactable = false;
+            _typeSsid.interactable = false;
+            _ssidField.interactable = false;
+            _setSsidScan.interactable = false;
+            _passwordField.interactable = false;
+            _ssidList.interactable = false;
+            _ssidRefreshBtn.interactable = false;
+
+            _setLoading = true;
+
+            StartCoroutine(IEnumSetLoadingAnimation());
         }
 
         IEnumerator PollSsidsFromBluetooth()
@@ -452,10 +474,10 @@ namespace VoyagerApp.UI.Menus
             callback(ssids.ToArray());
         }
 
-        IEnumerator IEnumLoadingAnimation()
+        IEnumerator IEnumSsidLoadingAnimation()
         {
             int i = 0;
-            while (_loading)
+            while (_ssidListLoading)
             {
                 _ssidList.SetItems(_loadingAnim[i]);
                 yield return new WaitForSeconds(_animationSpeed);
@@ -466,7 +488,7 @@ namespace VoyagerApp.UI.Menus
 
         void OnSsidListReceived(string[] ssids)
         {
-            _loading = false;
+            _ssidListLoading = false;
 
             if (ssids.Length > 0)
             {
@@ -481,6 +503,18 @@ namespace VoyagerApp.UI.Menus
                 _ssidRefreshBtn.interactable = true;
                 _typeSsid.interactable = true;
                 _ssidList.SetItems("Not found");
+            }
+        }
+
+        IEnumerator IEnumSetLoadingAnimation()
+        {
+            int i = 0;
+            while (_setLoading)
+            {
+                _setBtnText.text = _loadingAnim[i];
+                yield return new WaitForSeconds(_animationSpeed);
+                if (++i >= _loadingAnim.Length)
+                    i = 0;
             }
         }
     }
