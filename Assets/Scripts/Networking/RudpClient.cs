@@ -11,9 +11,9 @@ namespace VoyagerApp.Networking
         public delegate void InitializeHandler();
         public event InitializeHandler onInitialize;
 
-        UdpClient client;
-        readonly int port;
-        bool ready;
+        private UdpClient client;
+        private readonly int port;
+        private bool ready;
 
         public bool EnableBroadcast
         {
@@ -43,9 +43,8 @@ namespace VoyagerApp.Networking
             {
                 client.Send(data, data.Length, endpoint);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Debug.LogError(ex);
                 ready = false;
                 client.Dispose();
                 client = null;
@@ -53,7 +52,7 @@ namespace VoyagerApp.Networking
             }
         }
 
-        public byte[] Receive(ref IPEndPoint endpoint)
+        public byte[] Receive(ref IPEndPoint endpoint)
         {
             if (!ready) return new byte[0];
 
@@ -61,9 +60,8 @@ namespace VoyagerApp.Networking
             {
                 return client.Receive(ref endpoint);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Debug.LogError(ex);
                 ready = false;
                 client.Dispose();
                 client = null;
@@ -72,17 +70,13 @@ namespace VoyagerApp.Networking
             }
         }
 
-        public void Close()
-        {
-            client.Close();
-        }
+        public void Close() => client.Close();
 
         void InitializeClient()
         {
-            IPAddress address = NetUtils.WifiInterfaceAddress;
-            IPEndPoint endpoint = new IPEndPoint(address, port);
-            client = new UdpClient(endpoint);
-            client.Client.ReceiveTimeout = 1000;
+            var address = NetUtils.WifiInterfaceAddress;
+            var endpoint = new IPEndPoint(address, port);
+            client = new UdpClient(endpoint) { Client = { ReceiveTimeout = 1000 }};
             ready = true;
             onInitialize?.Invoke();
         }

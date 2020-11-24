@@ -154,13 +154,17 @@ namespace VoyagerApp.UI.Menus
         {
             _statusText.SetActive(true);
 
-            const string JSON = @"{""op_code"": ""ble_ack""}";
-            const string JSON_POLL = @"{""op_code"": ""poll_request""}";
+            const string JSON_SET_RESPONSE = @"{""op_code"": ""ble_ack""}";
+            const string JSON_SERIAL_REQUEST = @"{""op_code"": ""get_serial""}";
+            const string JSON_VERSION_REQUEST = @"{""op_code"": ""get_chip_version""}";
+            const string JSON_LENGTH_REQUEST = @"{""op_code"": ""get_length""}";
+            const string JSON_BATTERY_REQUEST = @"{""op_code"": ""get_battery""}";
+            const string JSON_IP_REQUEST = @"{""op_code"": ""get_ip""}";
 
             foreach (var id in _ids)
             {
-                bool done = false;
-                bool hadError = false;
+                var done = false;
+                var hadError = false;
                 string errorMessage = null;
                 BluetoothConnection active = null;
 
@@ -176,15 +180,34 @@ namespace VoyagerApp.UI.Menus
                         {
                             Debug.Log("received:\n" + Encoding.UTF8.GetString(data));
                             
-                            if (Encoding.UTF8.GetString(data) == JSON)
+                            if (Encoding.UTF8.GetString(data) == JSON_SET_RESPONSE)
                             {
                                 done = true;
-                                AddConnectionToWorkspace(active.PollReply);
+                                AddConnectionToWorkspace(active);
                                 BluetoothHelper.DisconnectFromPeripheral(active.ID);
                             }
                             else
                             {
-                                active.PollReply = Packet.Deserialize<BlePollReply>(data);
+                                var packet = Packet.Deserialize<BlePollReply>(data);
+                                Debug.Log(packet.Op);
+                                switch (packet.Op)
+                                {
+                                    case "get_serial":
+                                        active.Serial = packet.Serial;
+                                        break;
+                                    case "get_chip_version":
+                                        active.Version = packet.Version;
+                                        break;
+                                    case "get_length":
+                                        active.Length = packet.Length;
+                                        break;
+                                    case "get_battery":
+                                        active.Battery = packet.Battery;
+                                        break;
+                                    case "get_ip":
+                                        active.IpAddress = packet.IpAddress;
+                                        break;
+                                }
                             }
                         };
 
@@ -223,12 +246,16 @@ namespace VoyagerApp.UI.Menus
 
                     if (active != null)
                     {
-                        if (active.PollReply == null)
+                        if (!ConnectionHasAllInfo(active))
                         {
-                            active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_POLL));
-                            Debug.Log($"Sending out poll request by ble: {JSON_POLL}");
+                            Debug.Log($"Sending out poll requests");
+                            active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_SERIAL_REQUEST));
+                            active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_VERSION_REQUEST));
+                            active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_LENGTH_REQUEST));
+                            active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_BATTERY_REQUEST));
+                            active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_IP_REQUEST));
                         }
-                        else if (active.PollReply.Version[1] < 500)
+                        else if (active.Version[1] < 500)
                             active.Write(WRITE_CHAR, VoyagerNetworkMode.Client(ssid, password, active.Name).ToData());
                         else
                             active.Write(WRITE_CHAR, VoyagerNetworkMode.SecureClient(ssid, password, active.Name).ToData());
@@ -244,23 +271,32 @@ namespace VoyagerApp.UI.Menus
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
-        private void AddConnectionToWorkspace(BlePollReply pollReply)
+        private bool ConnectionHasAllInfo(BluetoothConnection connection)
+        {
+            Debug.Log(
+                $"{connection.Length}, {connection.Battery},  {connection.Serial}, {string.Join(".", connection.IpAddress ?? new byte [0])}, {string.Join(", ", connection.Version ?? new int[0])}");
+            return connection.Length != -1 &&
+                   connection.Battery != -1 &&
+                   !string.IsNullOrWhiteSpace(connection.Serial) &&
+                   connection.IpAddress != null &&
+                   connection.Version != null;
+        }
+
+        private void AddConnectionToWorkspace(BluetoothConnection connection)
         {
             MainThread.Dispach(() =>
             {
-                Debug.Log(JsonConvert.SerializeObject(pollReply, Formatting.Indented)); 
-                
-                var lamp = LampManager.instance.GetLampWithSerial(pollReply.serial);
+                var lamp = LampManager.instance.GetLampWithSerial(connection.Serial);
 
                 if (lamp == null)
                 {
                     lamp = new VoyagerLamp
                     {
-                        serial = pollReply.Serial,
-                        chipVersion = pollReply.Version,
-                        battery = pollReply.Battery,
-                        length = pollReply.Length,
-                        address = new IPAddress(pollReply.IpAddress),
+                        serial = connection.Serial,
+                        chipVersion = connection.Version,
+                        battery = connection.Battery,
+                        length = connection.Length,
+                        address = new IPAddress(connection.IpAddress),
                         lastMessage = 0.0
                     };
 

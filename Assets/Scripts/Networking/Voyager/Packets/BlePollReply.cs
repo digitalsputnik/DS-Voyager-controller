@@ -4,15 +4,17 @@ namespace VoyagerApp.Networking.Voyager
 {
     public class BlePollReply : Packet
     {
-        [JsonProperty("length")]
+        [JsonProperty("op_code")]
+        public string Op { get; set; }
+        [JsonProperty("length")] 
         public int Length { get; set; }
         [JsonProperty("battery_level")]
         public int Battery { get; set; }
-        [JsonProperty("serial_name")]
+        [JsonProperty("serial")]
         public string Serial { get; set; }
-        [JsonProperty("IP")]
+        [JsonProperty("ip")]
         public byte[] IpAddress { get; set; }
-        [JsonProperty("CHIP_version")]
+        [JsonProperty("version")]
         public int[] Version { get; set; }
         
         public BlePollReply() : base(OpCode.PollReply) { }

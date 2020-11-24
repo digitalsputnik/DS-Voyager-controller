@@ -4,7 +4,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
-#import <SDAVAssetExportSession.h>
+#import "SDAVAssetExportSession.h"
 
 @interface VideoResizer : NSObject @end
 

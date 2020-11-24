@@ -42,10 +42,10 @@ namespace VoyagerApp.Lamps.Voyager
         void HandleBroadcast(byte[] data)
         {
             var packed = ActivateVideoTrigger.FromData(data);
-            Lamp lamp = manager.GetLampWithSerial(packed.serial);
+            var lamp = manager.GetLampWithSerial(packed.serial);
 
             if (lamp != null)
-                BroadcastLamp(lamp);
+                MainThread.Dispach(() => BroadcastLamp(lamp));
         }
 
         void HandleDmxResponseData(byte[] data, object sender)
@@ -65,7 +65,7 @@ namespace VoyagerApp.Lamps.Voyager
 
         bool DataContains(byte[]data, string str)
         {
-            string json = Encoding.UTF8.GetString(data);
+            var json = Encoding.UTF8.GetString(data);
             return json.Contains(str);
         }
 

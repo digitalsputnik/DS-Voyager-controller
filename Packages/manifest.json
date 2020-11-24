@@ -16,7 +16,6 @@
     "com.unity.mathematics": "1.1.0",
     "com.unity.render-pipelines.universal": "7.3.1",
     "com.unity.ugui": "1.0.0",
-    "com.yasirkula.nativegallery": "https://github.com/yasirkula/UnityNativeGallery.git",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
@@ -48,11 +47,5 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  },
-  "lock": {
-    "com.yasirkula.nativegallery": {
-      "revision": "HEAD",
-      "hash": "be970b2515fe1bab1b22883c63f55ba6a26a5559"
-    }
   }
 }
