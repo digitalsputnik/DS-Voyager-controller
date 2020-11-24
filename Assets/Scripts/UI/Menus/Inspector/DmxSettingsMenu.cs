@@ -79,6 +79,7 @@ namespace VoyagerApp.UI.Menus
                     settings.format
                 );
                 NetUtils.VoyagerClient.SendPacket(lamp, packet, VoyagerClient.PORT_SETTINGS);
+                lamp.effect = null;
             }
         }
 
