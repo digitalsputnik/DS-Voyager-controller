@@ -31,9 +31,9 @@ namespace VoyagerApp.Utilities
         {
             if (Application.isMobilePlatform)
             {
-                NativeGallery.GetVideoFromGallery((string path) =>
+                NativeGallery.GetVideoFromGallery(path =>
                 {
-                    if (path == string.Empty || path == null)
+                    if (string.IsNullOrEmpty(path))
                     {
                         onLoaded?.Invoke(null);
                         return;
@@ -41,19 +41,19 @@ namespace VoyagerApp.Utilities
 
                     if (Application.platform == RuntimePlatform.IPhonePlayer)
                     {
-                        string name = "video_" + Guid.NewGuid().ToString().Substring(0, 4);
+                        var name = "video_" + Guid.NewGuid().ToString().Substring(0, 4);
 
                         InputFieldMenu.Show("PICK NAME FOR VIDEO", name,
-                            (string text) =>
+                            text =>
                             {
                                 name = text;
 
-                                string newPath = Path.Combine(TempPath, name + ".MOV");
+                                var newPath = Path.Combine(TempPath, name + ".MOV");
+                                
                                 try
                                 {
                                     Copy(path, newPath);
                                     onLoaded?.Invoke(newPath);
-                                    return;
                                 }
                                 catch (Exception ex)
                                 {
@@ -69,9 +69,9 @@ namespace VoyagerApp.Utilities
             }
             else
             {
-                string documents = DocumentsPath;
-                ExtensionFilter[] extensions = { new ExtensionFilter("Video", "mp4") };
-                string path = FileBrowser.OpenSingleFile("Open Video", documents, extensions);
+                var documents = DocumentsPath;
+                var extensions = new [] { new ExtensionFilter("Video", "mp4") };
+                var path = FileBrowser.OpenSingleFile("Open Video", documents, extensions);
                 onLoaded.Invoke(path == "" ? null : path);
             }
         }
