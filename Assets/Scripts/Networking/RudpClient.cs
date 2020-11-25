@@ -15,11 +15,7 @@ namespace VoyagerApp.Networking
         private readonly int port;
         private bool ready;
 
-        public bool EnableBroadcast
-        {
-            get => client.EnableBroadcast;
-            set => client.EnableBroadcast = value;
-        }
+        public bool EnableBroadcast { get; set; }
 
         public bool ReuseAddress
         {
@@ -76,7 +72,11 @@ namespace VoyagerApp.Networking
         {
             var address = NetUtils.WifiInterfaceAddress;
             var endpoint = new IPEndPoint(address, port);
-            client = new UdpClient(endpoint) { Client = { ReceiveTimeout = 1000 }};
+            client = new UdpClient(endpoint)
+            {
+                Client = { ReceiveTimeout = 1000 }, 
+                EnableBroadcast = EnableBroadcast
+            };
             ready = true;
             onInitialize?.Invoke();
         }
