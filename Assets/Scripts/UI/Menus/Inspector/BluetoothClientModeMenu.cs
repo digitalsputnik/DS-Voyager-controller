@@ -7,10 +7,12 @@ using System.Text;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Networking.Voyager;
 using VoyagerApp.UI.Overlays;
+using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
 
@@ -273,8 +275,6 @@ namespace VoyagerApp.UI.Menus
 
         private bool ConnectionHasAllInfo(BluetoothConnection connection)
         {
-            Debug.Log(
-                $"{connection.Length}, {connection.Battery},  {connection.Serial}, {string.Join(".", connection.IpAddress ?? new byte [0])}, {string.Join(", ", connection.Version ?? new int[0])}");
             return connection.Length != -1 &&
                    connection.Battery != -1 &&
                    !string.IsNullOrWhiteSpace(connection.Serial) &&
@@ -305,9 +305,25 @@ namespace VoyagerApp.UI.Menus
 
                 if (lamp is VoyagerLamp voyager)
                 {
-                    WorkspaceManager.instance.InstantiateItem<VoyagerItemView>(voyager);
+                    if (!WorkspaceUtils.VoyagerLamps.Contains(voyager))
+                    {
+                        var item = WorkspaceManager.instance.InstantiateItem<VoyagerItemView>(voyager);
+                        item.StartCoroutine(ApplyEffectWhenConnects(voyager));
+                    }
                 } 
             });
+        }
+
+        private IEnumerator ApplyEffectWhenConnects(VoyagerLamp voyager)
+        {
+            yield return new WaitUntil(() => voyager.connected);
+
+            if (WorkspaceUtils.VoyagerLamps.Contains(voyager))
+            {
+                var effect = EffectManager.GetEffectWithName<Video>("white");
+                voyager.effect = null;
+                voyager.SetEffect(effect);
+            }
         }
 
         void StartLoadingSsids()
