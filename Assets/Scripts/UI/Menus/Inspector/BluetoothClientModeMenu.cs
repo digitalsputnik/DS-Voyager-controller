@@ -111,7 +111,7 @@ namespace VoyagerApp.UI.Menus
             if (!_ssidListLoading) StartLoadingSsids();
         }
 
-        public void ConnectToLamps(string[] ids)
+        public void ConnectToLamps(string[] ids)
         {
             _ids = ids;
         }
@@ -152,17 +152,12 @@ namespace VoyagerApp.UI.Menus
             ApplicationSettings.PreviousWifiPassword = password;
         }
 
-        IEnumerator IEnumSetWifiSettings(string ssid, string password)
+        private IEnumerator IEnumSetWifiSettings(string ssid, string password)
         {
             _statusText.SetActive(true);
 
             const string JSON_SET_RESPONSE = @"{""op_code"": ""ble_ack""}";
             const string JSON_POLL_REQUEST = @"{""op_code"": ""poll_request_short""}";
-            //const string JSON_SERIAL_REQUEST = @"{""op_code"": ""get_serial""}";
-            //const string JSON_VERSION_REQUEST = @"{""op_code"": ""get_chip_version""}";
-            //const string JSON_LENGTH_REQUEST = @"{""op_code"": ""get_length""}";
-            //const string JSON_BATTERY_REQUEST = @"{""op_code"": ""get_battery""}";
-            //const string JSON_IP_REQUEST = @"{""op_code"": ""get_ip""}";
 
             foreach (var id in _ids)
             {
@@ -191,36 +186,7 @@ namespace VoyagerApp.UI.Menus
                             }
                             else
                             {
-                                var packet = Packet.Deserialize<BlePollReply>(data);
-                                Debug.Log(packet.Op);
-
-                                if (packet != null)
-                                {
-                                    active.Serial = packet.Serial;
-                                    active.Version = packet.Version;
-                                    active.Length = packet.Length;
-                                    active.Battery = packet.Battery;
-                                    active.IpAddress = packet.IpAddress;
-                                }
-
-                                /*switch (packet.Op)
-                                {
-                                    case "get_serial":
-                                        active.Serial = packet.Serial;
-                                        break;
-                                    case "get_chip_version":
-                                        active.Version = packet.Version;
-                                        break;
-                                    case "get_length":
-                                        active.Length = packet.Length;
-                                        break;
-                                    case "get_battery":
-                                        active.Battery = packet.Battery;
-                                        break;
-                                    case "get_ip":
-                                        active.IpAddress = packet.IpAddress;
-                                        break;
-                                }*/
+                                active.PollReply = Packet.Deserialize<BlePollReply>(data);
                             }
                         };
 
@@ -259,13 +225,13 @@ namespace VoyagerApp.UI.Menus
 
                     if (active != null)
                     {
-                        if (!ConnectionHasAllInfo(active))
+                        if (active.PollReply == null)
                         {
-                            Debug.Log($"Sending out poll request");
+                            Debug.Log("Sending out poll request");
                             active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_POLL_REQUEST));
 
                         }
-                        else if (active.Version[1] < 500)
+                        else if (active.PollReply.Version[1] < 500)
                             active.Write(WRITE_CHAR, VoyagerNetworkMode.Client(ssid, password, active.Name).ToData());
                         else
                             active.Write(WRITE_CHAR, VoyagerNetworkMode.SecureClient(ssid, password, active.Name).ToData());
@@ -281,30 +247,20 @@ namespace VoyagerApp.UI.Menus
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 
-        private bool ConnectionHasAllInfo(BluetoothConnection connection)
-        {
-            return connection.Length != -1 &&
-                   connection.Battery != -1 &&
-                   !string.IsNullOrWhiteSpace(connection.Serial) &&
-                   connection.IpAddress != null &&
-                   connection.Version != null;
-        }
-
         private void AddConnectionToWorkspace(BluetoothConnection connection)
         {
             MainThread.Dispach(() =>
             {
-                var lamp = LampManager.instance.GetLampWithSerial(connection.Serial);
+                var lamp = LampManager.instance.GetLampWithSerial(connection.PollReply.Serial);
 
                 if (lamp == null)
                 {
                     lamp = new VoyagerLamp
                     {
-                        serial = connection.Serial,
-                        chipVersion = connection.Version,
-                        battery = connection.Battery,
-                        length = connection.Length,
-                        address = new IPAddress(connection.IpAddress),
+                        serial = connection.PollReply.Serial,
+                        chipVersion = connection.PollReply.Version,
+                        length = connection.PollReply.Length,
+                        address = IPAddress.Any,
                         lastMessage = 0.0
                     };
 

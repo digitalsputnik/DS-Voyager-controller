@@ -144,11 +144,7 @@ public class BluetoothConnection
     public Action<byte[]> OnData;
     public string ID => _access.ID;
 
-    public int Length { get; set; } = -1;
-    public int Battery { get; set; } = -1;
-    public string Serial { get; set; } = string.Empty;
-    public byte[] IpAddress { get; set; } = null;
-    public int[] Version { get; set; } = null;
+    public BlePollReply PollReply { get; set; }
     
     public string Name
     {
