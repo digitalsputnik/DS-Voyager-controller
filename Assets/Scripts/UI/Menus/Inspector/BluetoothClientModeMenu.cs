@@ -315,7 +315,9 @@ namespace VoyagerApp.UI.Menus
                 {
                     if (!WorkspaceUtils.VoyagerLamps.Contains(voyager))
                     {
-                        var item = WorkspaceManager.instance.InstantiateItem<VoyagerItemView>(voyager);
+                        WorkspaceSelection.instance.Clear();
+                        var item = WorkspaceManager.instance.InstantiateItem<VoyagerItemView>(voyager, WorkspaceUtils.PositionOfLastNotSelectedLamp + new Vector3(0, -1.0f, 0));
+                        WorkspaceUtils.SetCameraPosition(item.transform.localPosition);
                         item.StartCoroutine(ApplyEffectWhenConnects(voyager));
                     }
                 } 
