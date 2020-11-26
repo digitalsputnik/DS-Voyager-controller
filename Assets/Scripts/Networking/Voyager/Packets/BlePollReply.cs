@@ -6,15 +6,15 @@ namespace VoyagerApp.Networking.Voyager
     {
         [JsonProperty("op_code")]
         public string Op { get; set; }
-        [JsonProperty("length")] 
+        [JsonProperty("len")] 
         public int Length { get; set; }
-        [JsonProperty("battery_level")]
+        [JsonProperty("bl")]
         public int Battery { get; set; }
-        [JsonProperty("serial")]
+        [JsonProperty("sn")]
         public string Serial { get; set; }
-        [JsonProperty("ip")]
+        [JsonProperty("IP")]
         public byte[] IpAddress { get; set; }
-        [JsonProperty("version")]
+        [JsonProperty("cv")]
         public int[] Version { get; set; }
         
         public BlePollReply() : base(OpCode.PollReply) { }

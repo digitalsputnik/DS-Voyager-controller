@@ -157,11 +157,12 @@ namespace VoyagerApp.UI.Menus
             _statusText.SetActive(true);
 
             const string JSON_SET_RESPONSE = @"{""op_code"": ""ble_ack""}";
-            const string JSON_SERIAL_REQUEST = @"{""op_code"": ""get_serial""}";
-            const string JSON_VERSION_REQUEST = @"{""op_code"": ""get_chip_version""}";
-            const string JSON_LENGTH_REQUEST = @"{""op_code"": ""get_length""}";
-            const string JSON_BATTERY_REQUEST = @"{""op_code"": ""get_battery""}";
-            const string JSON_IP_REQUEST = @"{""op_code"": ""get_ip""}";
+            const string JSON_POLL_REQUEST = @"{""op_code"": ""poll_request_short""}";
+            //const string JSON_SERIAL_REQUEST = @"{""op_code"": ""get_serial""}";
+            //const string JSON_VERSION_REQUEST = @"{""op_code"": ""get_chip_version""}";
+            //const string JSON_LENGTH_REQUEST = @"{""op_code"": ""get_length""}";
+            //const string JSON_BATTERY_REQUEST = @"{""op_code"": ""get_battery""}";
+            //const string JSON_IP_REQUEST = @"{""op_code"": ""get_ip""}";
 
             foreach (var id in _ids)
             {
@@ -192,7 +193,17 @@ namespace VoyagerApp.UI.Menus
                             {
                                 var packet = Packet.Deserialize<BlePollReply>(data);
                                 Debug.Log(packet.Op);
-                                switch (packet.Op)
+
+                                if (packet != null)
+                                {
+                                    active.Serial = packet.Serial;
+                                    active.Version = packet.Version;
+                                    active.Length = packet.Length;
+                                    active.Battery = packet.Battery;
+                                    active.IpAddress = packet.IpAddress;
+                                }
+
+                                /*switch (packet.Op)
                                 {
                                     case "get_serial":
                                         active.Serial = packet.Serial;
@@ -209,7 +220,7 @@ namespace VoyagerApp.UI.Menus
                                     case "get_ip":
                                         active.IpAddress = packet.IpAddress;
                                         break;
-                                }
+                                }*/
                             }
                         };
 
@@ -250,37 +261,9 @@ namespace VoyagerApp.UI.Menus
                     {
                         if (!ConnectionHasAllInfo(active))
                         {
-                            Debug.Log($"Sending out poll requests");
+                            Debug.Log($"Sending out poll request");
+                            active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_POLL_REQUEST));
 
-                            if (string.IsNullOrWhiteSpace(active.Serial))
-                            {
-                                active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_SERIAL_REQUEST));
-                                yield return new WaitForSeconds(0.2f);
-                            }
-                             
-                            if (active.Version == null)
-                            {
-                                active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_VERSION_REQUEST));
-                                yield return new WaitForSeconds(0.2f);
-                            }
-
-                            if (active.Length == -1)
-                            {
-                                active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_LENGTH_REQUEST));
-                                yield return new WaitForSeconds(0.2f);
-                            }
-
-                            if (active.Battery == -1)
-                            {
-                                active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_BATTERY_REQUEST));
-                                yield return new WaitForSeconds(0.2f);
-                            }
-
-                            if (active.IpAddress == null)
-                            {
-                                active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_IP_REQUEST));
-                                yield return new WaitForSeconds(0.2f);
-                            }
                         }
                         else if (active.Version[1] < 500)
                             active.Write(WRITE_CHAR, VoyagerNetworkMode.Client(ssid, password, active.Name).ToData());

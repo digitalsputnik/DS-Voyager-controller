@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -24455,6 +24455,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Managers
       objectReference: {fileID: 0}
+    - target: {fileID: 4099646543211210977, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
+        type: 3}
+      propertyPath: videoPresets.Array.size
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 4099646543211210977, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
+        type: 3}
+      propertyPath: videoPresets.Array.data[14]
+      value: fireworks.mp4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4099646543211210977, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
+        type: 3}
+      propertyPath: videoPresets.Array.data[15]
+      value: noise.mp4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4099646543211210977, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
+        type: 3}
+      propertyPath: videoPresets.Array.data[16]
+      value: lightning.mp4
+      objectReference: {fileID: 0}
     - target: {fileID: 4155129993798555352, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
         type: 3}
       propertyPath: gradient.key2.r
@@ -24508,7 +24528,7 @@ PrefabInstance:
     - target: {fileID: 8455935338822375204, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
         type: 3}
       propertyPath: voyagerAnimVersion
-      value: 1.757
+      value: 1.760
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7627344489101607328, guid: 5a5e02a9e8076452585ceb20c6b05f0a, type: 3}

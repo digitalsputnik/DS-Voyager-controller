@@ -1608,6 +1608,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Managers
       objectReference: {fileID: 0}
+    - target: {fileID: 4099646543211210977, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
+        type: 3}
+      propertyPath: videoPresets.Array.size
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 4099646543211210977, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
+        type: 3}
+      propertyPath: videoPresets.Array.data[14]
+      value: fireworks.mp4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4099646543211210977, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
+        type: 3}
+      propertyPath: videoPresets.Array.data[15]
+      value: noise.mp4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4099646543211210977, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
+        type: 3}
+      propertyPath: videoPresets.Array.data[16]
+      value: lightning.mp4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a5e02a9e8076452585ceb20c6b05f0a, type: 3}
 --- !u!1001 &639149911
