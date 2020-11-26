@@ -251,15 +251,36 @@ namespace VoyagerApp.UI.Menus
                         if (!ConnectionHasAllInfo(active))
                         {
                             Debug.Log($"Sending out poll requests");
-                            active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_SERIAL_REQUEST));
-                            yield return new WaitForSeconds(0.5f);
-                            active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_VERSION_REQUEST));
-                            yield return new WaitForSeconds(0.5f);
-                            active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_LENGTH_REQUEST));
-                            yield return new WaitForSeconds(0.5f);
-                            active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_BATTERY_REQUEST));
-                            yield return new WaitForSeconds(0.5f);
-                            active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_IP_REQUEST));
+
+                            if (string.IsNullOrWhiteSpace(active.Serial))
+                            {
+                                active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_SERIAL_REQUEST));
+                                yield return new WaitForSeconds(0.2f);
+                            }
+                             
+                            if (active.Version == null)
+                            {
+                                active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_VERSION_REQUEST));
+                                yield return new WaitForSeconds(0.2f);
+                            }
+
+                            if (active.Length == -1)
+                            {
+                                active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_LENGTH_REQUEST));
+                                yield return new WaitForSeconds(0.2f);
+                            }
+
+                            if (active.Battery == -1)
+                            {
+                                active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_BATTERY_REQUEST));
+                                yield return new WaitForSeconds(0.2f);
+                            }
+
+                            if (active.IpAddress == null)
+                            {
+                                active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_IP_REQUEST));
+                                yield return new WaitForSeconds(0.2f);
+                            }
                         }
                         else if (active.Version[1] < 500)
                             active.Write(WRITE_CHAR, VoyagerNetworkMode.Client(ssid, password, active.Name).ToData());
