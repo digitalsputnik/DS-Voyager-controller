@@ -252,9 +252,13 @@ namespace VoyagerApp.UI.Menus
                         {
                             Debug.Log($"Sending out poll requests");
                             active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_SERIAL_REQUEST));
+                            yield return new WaitForSeconds(0.5f);
                             active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_VERSION_REQUEST));
+                            yield return new WaitForSeconds(0.5f);
                             active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_LENGTH_REQUEST));
+                            yield return new WaitForSeconds(0.5f);
                             active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_BATTERY_REQUEST));
+                            yield return new WaitForSeconds(0.5f);
                             active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_IP_REQUEST));
                         }
                         else if (active.Version[1] < 500)
