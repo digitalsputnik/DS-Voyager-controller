@@ -433,7 +433,7 @@ namespace VoyagerApp.UI.Menus
 
             if (supportedLamps.Count() == 0)
             {
-                DialogBox.Show("BLE Error", "Scanning SSID's failed, make sure you're lamps are updated and try again or type SSID manually.", new string[] { "OK" }, new Action[] { null });
+                DialogBox.Show("BLE Error", "Scanning SSID's failed, make sure your lamps are updated and try again or type SSID manually.", new string[] { "OK" }, new Action[] { null });
                 yield return new WaitForSeconds(0.1f);
                 OnSsidListReceived(ssids.ToArray());
             }

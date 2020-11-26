@@ -151,11 +151,7 @@ namespace VoyagerApp.Lamps.Voyager
                     VoyagerClient.PORT_SETTINGS,
                     TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset);
 
-                if (effect != this.effect)
-                    buffer.Setup(video.frames);
-
-                if (this.effect == null)
-                    buffer.Setup(video.frames);
+                buffer.Setup(video.frames);
 
                 lastTimestamp = last;
             }

@@ -32,7 +32,7 @@ public static class BluetoothHelper
         yield return new WaitUntil(() => BluetoothAccess.IsInitialized);
         // Bluetooth access should check the initialization from OS,
         // but does not do it at the moment. That's why we wait.
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.5f);
         onInitialized?.Invoke();
     }
 
