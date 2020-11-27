@@ -22927,6 +22927,11 @@ PrefabInstance:
       propertyPath: Button
       value: 
       objectReference: {fileID: 1762311172}
+    - target: {fileID: 1042969921129099284, guid: c7232ab74f290ad4b8ce4ef420609fb9,
+        type: 3}
+      propertyPath: clearLampSelection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1042969921198489717, guid: c7232ab74f290ad4b8ce4ef420609fb9,
         type: 3}
       propertyPath: rightMenuToOpen

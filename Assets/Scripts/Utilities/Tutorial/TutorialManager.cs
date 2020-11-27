@@ -133,6 +133,9 @@ namespace VoyagerApp.UI.Menus
             if (currentTutorial.clearWorkspace)
                 WorkspaceManager.instance.Clear();
 
+            if (currentTutorial.clearLampSelection)
+                WorkspaceSelection.instance.Clear();
+
             extendedInfoField.SetActive(false);
             defaultCenterOverlay.SetActive(false);
             topCenterOverlay.SetActive(false);

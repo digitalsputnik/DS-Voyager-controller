@@ -21,6 +21,7 @@ namespace VoyagerApp.UI
         public bool disableLeftButton;
 
         public bool clearWorkspace;
+        public bool clearLampSelection;
 
         public int backJump;
 
