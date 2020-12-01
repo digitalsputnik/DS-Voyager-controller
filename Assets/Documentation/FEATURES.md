@@ -55,6 +55,7 @@ Seda listi tehes mõtlesin sellele, et kui Roadmap oleks üleval kodulehel, siis
 11. Underwater usage (playback + ITSHX)
 12. Matrix mapping
 13. Bluetooth library
+14. Smart home integration
 
 
 ### Mari
