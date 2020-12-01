@@ -16,3 +16,17 @@
 ### Taaniel
 5. Device to device project sharing
 12. NDI integration to Voyager Controller for virtual studios
+
+### Taavet
+
+Seda listi tehes mõtlesin sellele, et kui Roadmap oleks üleval kodulehel, siis mis mind huvitaks. Pea-aegu, et iga punkt hargneb muidugi väiksemateks tükkideks lahti ja vajab palju tööd. Ma olen rääkinud seda varem ja arvan ka siiani, et meil on omajagu fundamentaalseid asju (pean silmas punkte 3, 4, 5 ja 6), mis tuleks korda teha, et tulevik oleks helgem ja kindlam. Kui baas asjad on korras, siis selle peale on uusi feature'eid kindlam kirjutada.
+
+1. **Video compression** - See on juba tegemisel, tuleks lõpetada.
+2. **DMX controller software** - Teha lihtsa UI'ga valmis, kasutades DigitalSputnik.Net libra - selle taga oli raha ka.
+3. **Communication protocol korda** - Läbi mõelda, kõik kirja panna ja siis implementeerida mõlemalt poolt. Unustada ka JSON ja võtta kasutusele ka mõni Reliable UDP lahendus. Kas teha ise või kasutada olemasolevat lahendust (nt. https://github.com/RevenantX/LiteNetLib).
+4. **DigitalSputnik.Net** - Vaadata libra üle, teha kõik korda ja avalikustada, et kaasata teisi arendajaid ja asjahuvilisi. Leian, et mida varem, seda parem.
+5. **Embedded render engine** - Lambi poolne soft kirjutada süsteemi keelega (nt. C, C++, Rust), et oleks suurem kontroll masina üle ja et koodibaasi saaks kasutada ka uuematel microcontrolleritel. 
+6. **Voyager Controller UX ja Monet UX** - Need kaks eraldi programmi võiksid kasutada samasuguseid loogikaid ja UI'd aga sihtides erinevaid kasutajaid. Tuleks vaadata hoolega üle, millised feature'id lähevad ühele, millised teisele, või hoopis mõlemale. UX peaks läbima ühte ja samasugust flow'd mõlemas rakenduses võttes käiku ka tavad mis esinevad teistes rakendustes ja mis tunduvad klientidele intuitiivsena. Siinkohal ootan ka Jan'i arvamust, kes UI'd ette heitis - küllap tal on palju häid ideid kuidas asi paremaks teha.
+7. **Multi-controller support** - Pärast UI paitamist saaks selle juurde minna.
+8. **Animation control** - Esialgu Lambi ja Libra vahel teha, pärast seda mõelda, kuidas UI'se implementeerida. 
+9. **Bluetooth library** - Seda sooviti panna store ülesse.
