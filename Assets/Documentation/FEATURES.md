@@ -30,3 +30,12 @@ Seda listi tehes mõtlesin sellele, et kui Roadmap oleks üleval kodulehel, siis
 7. **Multi-controller support** - Pärast UI paitamist saaks selle juurde minna.
 8. **Animation control** - Esialgu Lambi ja Libra vahel teha, pärast seda mõelda, kuidas UI'se implementeerida. 
 9. **Bluetooth library** - Seda sooviti panna store ülesse.
+
+
+### Jan
+1 ... 3
+4. Voyager libra + Project and video management (autosave)
+4.5 Underwater usage (playback + ITSHX) 
+...
+9. Voyager Controller UX
+10. Dropbox/Gdrive integration for project sharing
