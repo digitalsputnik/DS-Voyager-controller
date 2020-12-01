@@ -13,6 +13,6 @@
  10. Project and video management (autosave)
  11. Voyager Controller UX
 ---
-# Taaniel
+### Taaniel
 5. Device to device project sharing
 12. NDI integration to Voyager Controller for virtual studios
