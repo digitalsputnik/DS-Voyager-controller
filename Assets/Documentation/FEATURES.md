@@ -59,6 +59,7 @@ Seda listi tehes mõtlesin sellele, et kui Roadmap oleks üleval kodulehel, siis
 
 ### Mari
 - TimeLine: video management and ordering
+- UI: design + wording for Messages/Alerts/Errors etc.
 - Project management and fast share + merge: import/export lamp (with all settings)
 - Connection stability and distance + difficult conditions: wire control
 - FX settings and CW Sliders: value range vs outcome proportions + for ex Possibility for lower Intesity than 1%
