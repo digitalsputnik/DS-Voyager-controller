@@ -56,3 +56,14 @@ Seda listi tehes mõtlesin sellele, et kui Roadmap oleks üleval kodulehel, siis
 12. Matrix mapping
 13. Bluetooth library
 
+
+### Mari
+- TimeLine: video management and ordering
+- Project management and fast share + merge: import/export lamp (with all settings)
+- Connection stability and distance + difficult conditions: wire control
+- FX settings and CW Sliders: value range vs outcome proportions + for ex Possibility for lower Intesity than 1%
+- Easy music/rhythm sync: stream from some other app? (in addition to ex: After Effects) - or some Play/Pause/Stop sync possibility..
+- Voice control (preset and/or custom triggers or other smart home solutions.. + Date/Time control..)
+
+
+
