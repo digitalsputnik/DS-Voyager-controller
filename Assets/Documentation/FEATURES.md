@@ -39,3 +39,20 @@ Seda listi tehes mõtlesin sellele, et kui Roadmap oleks üleval kodulehel, siis
 ...  
 9 Voyager Controller UX  
 10 Dropbox/Gdrive integration for project sharing  
+
+
+### Joosep
+1. Video compression - capacity to use any image or video filmed by the same handheld device
+2. DMX controller software - sACN/ArtNet input to Voyager stream
+3. DigitalSputnik.Net + Communication Protocol
+4. Voyaberry (ESP32/Raspberry based) - to control ARRI and other lamps used in industry.
+5. ESP32 Voyager implementation - first to integrate DS lights into Voyager infrastructure
+6. Monet release/multicontroller support (playback + ITSHX)
+7. Voyager Controller UI/UX
+8. Animation control - preliminary timeline implentation
+9. Project and video management (autosave)
+10. Dropbox/Gdrive integration for project sharing
+11. Underwater usage (playback + ITSHX)
+12. Matrix mapping
+13. Bluetooth library
+
