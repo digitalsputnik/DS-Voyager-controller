@@ -1,7 +1,7 @@
 ﻿## In this file is list of features that we would like to implement.
 
 ## GOALS!
-1. Video compression - capacity to use any image or video filmed by the same handheld device
+1. Video compression ([milestone](https://github.com/digitalsputnik/DS-Voyager-controller/milestone/9)) - capacity to use any image or video filmed by the same handheld device
 1. Animation control - fade in/fade-out (preliminary timeline implentation)
 1. FX settings and CW Sliders: value range vs outcome proportions + for ex Possibility for lower Intesity than 1%
 1. DigitalSputnik.NET - Vaadata libra üle, teha kõik korda ja avalikustada, et kaasata teisi arendajaid ja asjahuvilisi.
