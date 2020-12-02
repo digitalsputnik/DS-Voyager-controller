@@ -1,5 +1,3 @@
-using System.Threading;
-
 namespace DigitalSputnik.Videos
 {
     public class VideoTools

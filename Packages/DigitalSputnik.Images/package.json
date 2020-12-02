@@ -1,6 +1,6 @@
 {
-  "name": "om.digitalsputnik.videos",
-  "displayName": "Digital Sputnik Videos",
+  "name": "om.digitalsputnik.images",
+  "displayName": "Digital Sputnik Images",
   "version": "0.0.1",
   "type": "library",
   "dependencies": {
