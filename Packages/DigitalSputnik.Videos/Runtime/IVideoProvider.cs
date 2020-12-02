@@ -1,6 +1,7 @@
 namespace DigitalSputnik.Videos
 {
     public delegate void VideoHandler(Video video);
+    
     public interface IVideoProvider
     {
         void LoadVideo(string path, VideoHandler loaded);
