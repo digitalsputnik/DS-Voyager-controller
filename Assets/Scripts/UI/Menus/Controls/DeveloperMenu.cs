@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps.Voyager;
@@ -15,6 +16,27 @@ namespace VoyagerApp.UI.Menus
         public void UploadUpdate()
         {
             FileUtils.PickFile(OnUpdatePicked);
+        }
+
+        public void ForceUpdateMaster()
+        {
+            try
+            {
+                var lamp = new VoyagerLamp();
+                lamp.serial = "Unknown";
+                lamp.address = IPAddress.Parse("172.20.0.1");
+                var utility = new VoyagerUpdateUtility();
+                utility.UpdateLamp(lamp, OnUpdateFinished, OnUpdateMessage);
+            }
+            catch (Exception ex)
+            {
+                DialogBox.Show(
+                    "ERROR UPLOADING UPDATE",
+                    ex.Message,
+                    new string[] { "OK" },
+                    new Action[] { null }
+                );
+            }
         }
 
         void OnUpdatePicked(string path)
