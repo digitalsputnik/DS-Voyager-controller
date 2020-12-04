@@ -1,8 +1,10 @@
 #if UNITY_IOS
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace DigitalSputnik.Videos.iOS
 {
@@ -11,6 +13,36 @@ namespace DigitalSputnik.Videos.iOS
         public void Resize(Video video, int width, int height, VideoResizeHandler resized)
         {
             new Thread(() => ResizeThread(video, width, height, resized)).Start();
+        }
+
+        public static void ResizeFromPath(string path, int maxWidth, int maxHeight, Action<bool, string> resized)
+        {
+            var flow = FlowState.Waiting;
+            var output = MakeCopyPath(path);
+            var listener = CreateListener();
+            var error = string.Empty;
+            
+            listener.OnError += err =>
+            {
+                error = err;
+                flow = FlowState.Failed;
+            };
+
+            listener.OnResized += _ => flow = FlowState.Success;
+            
+            _iOS_VideoResizer_ResizeVideoBetween(path, output, maxWidth, maxHeight);
+
+            while (flow == FlowState.Waiting) Thread.Sleep(10);
+
+            CleanListener(listener);
+            
+            if (flow != FlowState.Success)
+                resized?.Invoke(false, error);
+            
+            File.Delete(path);
+            File.Move(output, path);
+            
+            MainThreadRunner.Instance.EnqueueAction(() => resized?.Invoke(true, string.Empty));
         }
 
         private static void ResizeThread(Video video, int width, int height, VideoResizeHandler resized)
@@ -77,6 +109,9 @@ namespace DigitalSputnik.Videos.iOS
 
         [DllImport("__Internal")]
         private static extern void _iOS_VideoResizer_ResizeVideo(string path, string output, int width, int height);
+        
+        [DllImport("__Internal")]
+        private static extern void _iOS_VideoResizer_ResizeVideoBetween(string path, string output, int width, int height);
 
         private enum FlowState
         {
