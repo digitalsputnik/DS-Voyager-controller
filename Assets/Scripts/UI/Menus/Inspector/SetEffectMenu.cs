@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using DigitalSputnik;
 using UnityEngine;
 using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
@@ -11,6 +13,11 @@ using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
 using Effect = VoyagerApp.Effects.Effect;
+using DsImage = DigitalSputnik.Images.Image;
+
+#if UNITY_IOS
+using DigitalSputnik.Images.iOS;
+#endif
 
 namespace VoyagerApp.UI.Menus
 {
@@ -35,26 +42,34 @@ namespace VoyagerApp.UI.Menus
 
         public void AddImageEffectClicked()
         {
-            DialogBox.Show(
-                "ATTENTION",
-                "Images bigger than 640 x 480 might crash the application",
-                new[] { "CONTINUE", "CANCEL" },
-                new Action[]
+            FileUtils.LoadPictureFromDevice(path => 
+            {
+                if (path != "" && path != "Null" && path != null)
                 {
-                    () =>
+#if UNITY_IOS // && !UNITY_EDITOR
+                    MainThreadRunner.Instance.enabled = true;
+                    new Thread(() =>
                     {
-                        FileUtils.LoadPictureFromDevice(path => 
+                        IosImageResizer.Initialize();
+                        var dsImage = new DsImage { Path = path };
+                        var resizer = new IosImageResizer();
+                        resizer.Resize(dsImage, 512, 512, (success, error) =>
                         {
-                            if (path != "" && path != "Null" && path != null)
+                            MainThread.Dispach(() =>
                             {
-                                Image image = ImageEffectLoader.LoadImageFromPath(path);
+                                var image = ImageEffectLoader.LoadImageFromPath(path);
                                 image.timestamp = TimeUtils.Epoch;
                                 OrderEffects();
-                            }
-                        }, true);
-                    } 
-                    , null
-                });
+                            });
+                        });  
+                    }).Start();
+#else
+                                var image = ImageEffectLoader.LoadImageFromPath(path);
+                                image.timestamp = TimeUtils.Epoch;
+                                OrderEffects();
+#endif
+                }
+            }, true);
         }
 
         public void AddVideoEffectClick()
