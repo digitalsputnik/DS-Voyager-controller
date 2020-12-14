@@ -9,11 +9,6 @@ using UnityEngine;
 using VoyagerApp.UI;
 using VoyagerApp.UI.Overlays;
 
-#if UNITY_IOS
-using DigitalSputnik;
-using DigitalSputnik.Videos.iOS;
-#endif
-
 namespace VoyagerApp.Utilities
 {
     public static class FileUtils
@@ -48,38 +43,22 @@ namespace VoyagerApp.Utilities
                     if (Application.platform == RuntimePlatform.IPhonePlayer)
                     {
                         var name = "video_" + Guid.NewGuid().ToString().Substring(0, 4);
-                        
+
                         InputFieldMenu.Show("PICK NAME FOR VIDEO", name,
                             text =>
                             {
                                 name = text;
+
                                 var newPath = Path.Combine(TempPath, name + ".MOV");
+                                
                                 try
                                 {
-                                    #if UNITY_IOS
-                                    MainThreadRunner.Instance.enabled = true;
-                                    new Thread(() =>
-                                    {
-                                        Copy(path, newPath);
-                                        IosVideoResizer.ResizeFromPath(path, 512, 512, (success, error) =>
-                                        {
-                                            if (success) onLoaded?.Invoke(path);
-                                            else
-                                            {
-                                                Debug.LogError(error);
-                                                onLoaded?.Invoke(string.Empty);
-                                            }
-                                        });
-                                    }).Start();
-                                    #else
-                                    Debug.LogError("Fuck.");
-                                    onLoaded?.Invoke(string.Empty);
-                                    #endif
+                                    Copy(path, newPath);
+                                    onLoaded?.Invoke(newPath);
                                 }
                                 catch (Exception ex)
                                 {
                                     Debug.LogError(ex);
-                                    onLoaded?.Invoke(string.Empty);
                                 }
                             }, 3, false);
                     }
