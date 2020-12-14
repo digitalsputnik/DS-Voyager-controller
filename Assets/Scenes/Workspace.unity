@@ -1694,7 +1694,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000015258789
+      value: 0.000045776367
       objectReference: {fileID: 0}
     - target: {fileID: 8440753726352283367, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -21216,6 +21216,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa6270a2c5abe4cc7939e5e9aba15240, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1934301325 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2597874397192115069, guid: 696c43ec365ed4a45a6c16df774dc048,
+    type: 3}
+  m_PrefabInstance: {fileID: 3460918171069029508}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1939072358
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25388,7 +25400,7 @@ PrefabInstance:
     - target: {fileID: 222472898347849442, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 0.000015258789
       objectReference: {fileID: 0}
     - target: {fileID: 222472898434721990, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -26870,6 +26882,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4248921330930539007, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: addEffectButton
+      value: 
+      objectReference: {fileID: 1934301325}
     - target: {fileID: 4261774986040029001, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_AnchorMin.y

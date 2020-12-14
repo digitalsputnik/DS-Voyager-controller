@@ -14,6 +14,7 @@ using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
 using Effect = VoyagerApp.Effects.Effect;
 using DsImage = DigitalSputnik.Images.Image;
+using UnityEngine.UI;
 
 #if UNITY_IOS && !UNITY_EDITOR
 using DigitalSputnik.Images.iOS;
@@ -23,6 +24,7 @@ namespace VoyagerApp.UI.Menus
 {
     public class SetEffectMenu : Menu
     {
+        [SerializeField] Button addEffectButton = null;
         [SerializeField] SetEffectItem itemPrefab = null;
         [SerializeField] Transform container = null;
         [SerializeField] bool inWorkspace = true;
@@ -72,8 +74,39 @@ namespace VoyagerApp.UI.Menus
             }, true);
         }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+        private void Update()
+        {
+            if (AndroidVideoResizer.IsCompressing)
+            {
+                addEffectButton.interactable = false;
+                addEffectButton.GetComponentInChildren<Text>().text = "RESIZING: " + AndroidVideoResizer.Progress;
+            }
+        }
+#endif
+
         public void AddVideoEffectClick()
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            AndroidVideoResizer.PickVideo(this, (success, result) =>
+            {
+                if (success && result != null)
+                {
+                    MainThread.Dispach(() =>
+                    {
+                        var video = VideoEffectLoader.LoadNewVideoFromPath(result);
+                        video.timestamp = TimeUtils.Epoch;
+                        OrderEffects();
+                    });
+                }
+
+                MainThread.Dispach(() =>
+                {
+                    addEffectButton.interactable = true;
+                    addEffectButton.GetComponentInChildren<Text>().text = "ADD EFFECT";
+                });
+            });
+#else
             FileUtils.LoadVideoFromDevice(path =>
             {
                 if (path != "" && path != "Null" && path != null)
@@ -83,6 +116,7 @@ namespace VoyagerApp.UI.Menus
                     OrderEffects();
                 }
             });
+#endif
         }
 
         public void SelectEffect(Effect effect)
