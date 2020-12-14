@@ -12,13 +12,18 @@
         NSURL* inputURL = [NSURL fileURLWithPath:input];
         NSData* imageData = [NSData dataWithContentsOfURL:inputURL];
         UIImage* image = [UIImage imageWithData:imageData];
-        NSString* command = [NSString stringWithFormat:@"%@x%@", width, height];
-        UIImage* resizedImage = [image resizedImageByMagick: command];
         
-        [UIImagePNGRepresentation(resizedImage) writeToFile:output atomically:YES];
-        
-        NSString *data = [NSString stringWithFormat:@"%@", output];
-        [self callUnityObject:"iOS Image Resize Listener" Method:"ResizeDone" Parameter:[data  UTF8String]];
+        if(image.size.width < width.floatValue && image.size.height < height.floatValue) {
+            [UIImagePNGRepresentation(image) writeToFile:output atomically:YES];
+            NSString *data = [NSString stringWithFormat:@"%@", output];
+            [self callUnityObject:"iOS Image Resize Listener" Method:"ResizeDone" Parameter:[data  UTF8String]];
+        } else {
+            NSString* command = [NSString stringWithFormat:@"%@x%@", width, height];
+            UIImage* resizedImage = [image resizedImageByMagick: command];
+            [UIImagePNGRepresentation(resizedImage) writeToFile:output atomically:YES];
+            NSString *data = [NSString stringWithFormat:@"%@", output];
+            [self callUnityObject:"iOS Image Resize Listener" Method:"ResizeDone" Parameter:[data  UTF8String]];
+        }
     }
 
     + (void)callUnityObject:(const char*)object Method:(const char*)method Parameter:(const char*)parameter

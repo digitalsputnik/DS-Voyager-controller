@@ -15,7 +15,7 @@ using VoyagerApp.Workspace.Views;
 using Effect = VoyagerApp.Effects.Effect;
 using DsImage = DigitalSputnik.Images.Image;
 
-#if UNITY_IOS
+#if UNITY_IOS && !UNITY_EDITOR
 using DigitalSputnik.Images.iOS;
 #endif
 
@@ -46,7 +46,7 @@ namespace VoyagerApp.UI.Menus
             {
                 if (path != "" && path != "Null" && path != null)
                 {
-#if UNITY_IOS // && !UNITY_EDITOR
+#if UNITY_IOS && !UNITY_EDITOR
                     MainThreadRunner.Instance.enabled = true;
                     new Thread(() =>
                     {
@@ -89,6 +89,8 @@ namespace VoyagerApp.UI.Menus
         {
             if (effect is Video video)
                 ValidateVideoResolution(video, ApplyEffectToLamp, ResizeVideoEffect);
+            else
+                ApplyEffectToLamp(effect);
         }
 
         private void ValidateVideoResolution(Video video, Action<Effect> fine, Action<Video> resize)

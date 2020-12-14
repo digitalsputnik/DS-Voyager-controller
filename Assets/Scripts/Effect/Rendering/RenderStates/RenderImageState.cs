@@ -13,21 +13,25 @@ namespace VoyagerApp.Videos
             foreach (var lamp in WorkspaceUtils.Lamps.Where(l => l.effect is Effects.Image))
             {
                 var image = (Effects.Image)lamp.effect;
-                var texture = image.image;
-                
+
                 var material = VideoRenderer.instance.renderMaterial;
-                var render = new RenderTexture(texture.width, texture.height, 1, RenderTextureFormat.ARGB32);
+                var render = new RenderTexture(image.image.width, image.image.height, 1, RenderTextureFormat.ARGB32);
 
                 ShaderUtils.ApplyEffectToMaterial(material, image);
 
                 var prevActive = RenderTexture.active;
-                Graphics.Blit(texture, render, material);
-                texture = TextureUtils.RenderTextureToTexture2D(render);
+                Graphics.Blit(image.image, render, material);
+
+                var texture = TextureUtils.RenderTextureToTexture2D(render);
+
                 RenderTexture.active = prevActive;
 
                 var coords = VectorUtils.MapLampToVideoCoords(lamp, texture);
                 var colors = TextureUtils.CoordsToColors(coords, texture);
                 lamp.PushFrame(colors, 0);
+                
+                if (render != null) Object.Destroy(render);
+                if (texture != null) Object.Destroy(texture);
             }
             return new ConfirmPixelsState();
         }
