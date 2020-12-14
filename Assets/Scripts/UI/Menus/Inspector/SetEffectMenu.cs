@@ -87,35 +87,33 @@ namespace VoyagerApp.UI.Menus
 
         public void SelectEffect(Effect effect)
         {
-            ValidateVideoResolution(effect, ApplyEffectToLamp, ResizeVideoEffect);
+            if (effect is Video video)
+                ValidateVideoResolution(video, ApplyEffectToLamp, ResizeVideoEffect);
         }
 
-        private void ValidateVideoResolution(Effect effect, Action<Effect> fine, Action<Video> resize)
+        private void ValidateVideoResolution(Video video, Action<Effect> fine, Action<Video> resize)
         {
-            if (effect is Video video)
+            if (video.width > maxPreferedSized.x || video.height > maxPreferedSized.y)
             {
-                if (video.width > maxPreferedSized.x || video.height > maxPreferedSized.y)
+                if (Application.platform == RuntimePlatform.IPhonePlayer)
                 {
-                    if (Application.platform == RuntimePlatform.IPhonePlayer)
-                    {
-                        DialogBox.Show(
-                            "WARNING",
-                            "The video resolution is not supported and the application might suffer.",
-                            new string[] { "CONTINUE", "RESIZE", "CANCEL" },
-                            new Action[] { () => fine?.Invoke(effect), () => resize?.Invoke(video), null });
-                    }
-                    else
-                    {
-                        DialogBox.Show(
-                            "WARNING",
-                            "The video resolution is not supported and the application might suffer.",
-                            new string[] { "CONTINUE", "CANCEL" },
-                            new Action[] { () => fine?.Invoke(effect), null });
-                    }
+                    DialogBox.Show(
+                        "WARNING",
+                        "The video resolution is not supported and the application might suffer.",
+                        new [] { "CONTINUE", "RESIZE", "CANCEL" },
+                        new Action[] { () => fine?.Invoke(video), () => resize?.Invoke(video), null });
                 }
-                else fine?.Invoke(effect);
+                else
+                {
+                    DialogBox.Show(
+                        "WARNING",
+                        "The video resolution is not supported and the application might suffer.",
+                        new [] { "CONTINUE", "CANCEL" },
+                        new Action[] { () => fine?.Invoke(video), null });
+                }
             }
-            else fine?.Invoke(effect);
+            else
+                fine?.Invoke(video);
         }
 
         private void ApplyEffectToLamp(Effect effect)
