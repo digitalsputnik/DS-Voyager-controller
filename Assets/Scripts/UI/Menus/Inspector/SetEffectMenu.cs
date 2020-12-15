@@ -32,6 +32,8 @@ namespace VoyagerApp.UI.Menus
 
         List<SetEffectItem> items = new List<SetEffectItem>();
 
+        bool resizing = false;
+
         public void AddEffectClicked()
         {
             DialogBox.Show(
@@ -77,10 +79,15 @@ namespace VoyagerApp.UI.Menus
 #if UNITY_ANDROID && !UNITY_EDITOR
         private void Update()
         {
-            if (AndroidVideoResizer.IsCompressing)
+            if (AndroidVideoResizer.IsCompressing && AndroidVideoResizer.Progress != null)
             {
                 addEffectButton.interactable = false;
                 addEffectButton.GetComponentInChildren<Text>().text = "RESIZING: " + AndroidVideoResizer.Progress;
+            }
+            else if (resizing)
+            {
+                addEffectButton.interactable = false;
+                addEffectButton.GetComponentInChildren<Text>().text = "RESIZING: 0%";
             }
         }
 #endif
@@ -99,6 +106,16 @@ namespace VoyagerApp.UI.Menus
                         OrderEffects();
                     });
                 }
+                else if (!success)
+                {
+                    DialogBox.Show(
+                        "ERROR",
+                        "Video resizing failed: " + result != null ? result : "Unknown error",
+                        new[] { "OK" },
+                        new Action[] { null });
+                }
+
+                resizing = false;
 
                 MainThread.Dispach(() =>
                 {
@@ -106,6 +123,8 @@ namespace VoyagerApp.UI.Menus
                     addEffectButton.GetComponentInChildren<Text>().text = "ADD EFFECT";
                 });
             });
+
+            resizing = true;
 #else
             FileUtils.LoadVideoFromDevice(path =>
             {

@@ -4700,6 +4700,11 @@ PrefabInstance:
       propertyPath: inWorkspace
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4248921330930539007, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: addEffectButton
+      value: 
+      objectReference: {fileID: 1576845261}
     - target: {fileID: 4261774986040029001, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -5989,6 +5994,18 @@ MonoBehaviour:
 --- !u!114 &1576845260 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6411857496433573025, guid: 696c43ec365ed4a45a6c16df774dc048,
+    type: 3}
+  m_PrefabInstance: {fileID: 1576845251}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1576845261 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2597874397192115069, guid: 696c43ec365ed4a45a6c16df774dc048,
     type: 3}
   m_PrefabInstance: {fileID: 1576845251}
   m_PrefabAsset: {fileID: 0}
