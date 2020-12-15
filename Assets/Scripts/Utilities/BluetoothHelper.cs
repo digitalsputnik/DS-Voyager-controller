@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik.Bluetooth;
 using UnityEngine;
+using VoyagerApp.Networking.Voyager;
 
 public static class BluetoothHelper
 {
@@ -31,7 +32,7 @@ public static class BluetoothHelper
         yield return new WaitUntil(() => BluetoothAccess.IsInitialized);
         // Bluetooth access should check the initialization from OS,
         // but does not do it at the moment. That's why we wait.
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(3.0f);
         onInitialized?.Invoke();
     }
 
@@ -143,8 +144,8 @@ public class BluetoothConnection
     public Action<byte[]> OnData;
     public string ID => _access.ID;
 
-    public int lampVersion = 0;
-
+    public BlePollReply PollReply { get; set; }
+    
     public string Name
     {
         get

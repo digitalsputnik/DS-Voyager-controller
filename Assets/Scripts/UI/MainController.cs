@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using VoyagerApp.UI.Overlays;
+using VoyagerApp.Workspace;
+using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.UI
 {
@@ -6,6 +10,7 @@ namespace VoyagerApp.UI
     {
         [SerializeField] InspectorMenuContainer inspectorMenuContainer = null;
         [SerializeField] Menu addAllLampsMenu = null;
+        [SerializeField] Menu Tutorial = null;
 
         void Start()
         {
@@ -18,6 +23,11 @@ namespace VoyagerApp.UI
             {
                 Projects.Project.LoadWorkspace();
                 PlayerPrefs.DeleteKey("from_video_mapping");
+            }
+            else if (!PlayerPrefs.HasKey("TutorialDone"))
+            {
+                DialogBox.PauseDialogues();
+                inspectorMenuContainer.ShowMenu(Tutorial);
             }
             else
             {

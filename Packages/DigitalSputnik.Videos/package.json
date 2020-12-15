@@ -1,0 +1,9 @@
+{
+  "name": "om.digitalsputnik.videos",
+  "displayName": "Digital Sputnik Videos",
+  "version": "0.0.1",
+  "type": "library",
+  "dependencies": {
+    "com.digitalsputnik.core": "0.0.1"
+  }
+}

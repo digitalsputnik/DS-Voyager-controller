@@ -15,17 +15,20 @@ namespace VoyagerApp.Lamps.Voyager
         }
 
         bool IsLampInfoResponse(byte[] data) => DataContains(data, "serial_name");
+        bool IsLampBroadcast(byte[] data) => DataContains(data, "side_button_click");
         bool IsDmxSettingsResponse(byte[] data) => DataContains(data, "dmx_mode_response");
 
         void VoyagerDataReceived(object sender, byte[] data)
         {
-            if (IsLampInfoResponse(data))
+            if (IsLampBroadcast(data))
+                HandleBroadcast(data);
+            else if (IsLampInfoResponse(data))
                 HandleResponseData(data);
             else if (IsDmxSettingsResponse(data))
                 HandleDmxResponseData(data, sender);
         }
 
-        void HandleResponseData(byte[] data)
+        void HandleResponseData(byte[]data)
         {
             var packed = VoyagerLampInfoResponse.FromData(data);
             Lamp lamp = manager.GetLampWithSerial(packed.serial);
@@ -34,6 +37,15 @@ namespace VoyagerApp.Lamps.Voyager
                 CreateLamp(packed);
             else
                 lamp.Update(packed);
+        }
+
+        void HandleBroadcast(byte[] data)
+        {
+            var packed = ActivateVideoTrigger.FromData(data);
+            var lamp = manager.GetLampWithSerial(packed.serial);
+
+            if (lamp != null)
+                MainThread.Dispach(() => BroadcastLamp(lamp));
         }
 
         void HandleDmxResponseData(byte[] data, object sender)
@@ -51,9 +63,9 @@ namespace VoyagerApp.Lamps.Voyager
             }
         }
 
-        bool DataContains(byte[] data, string str)
+        bool DataContains(byte[]data, string str)
         {
-            string json = Encoding.UTF8.GetString(data);
+            var json = Encoding.UTF8.GetString(data);
             return json.Contains(str);
         }
 
@@ -63,5 +75,7 @@ namespace VoyagerApp.Lamps.Voyager
             lamp.Update(packed);
             manager.AddLamp(lamp);
         }
+
+        void BroadcastLamp(Lamp lamp) => manager.LampBroadcasted(lamp);
     }
 }

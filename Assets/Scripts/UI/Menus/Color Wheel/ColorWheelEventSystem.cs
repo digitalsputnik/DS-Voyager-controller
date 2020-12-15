@@ -89,11 +89,11 @@ namespace VoyagerApp.UI.Menus
         void SetupSnappingPoints()
         {
             float radius = rect.rect.width / 2.0f;
-            float step = 1.0f / 6.0f;
+            float step = 1.0f / 12.0f;
             snappingPoints[0] = new Vector2(0.0f, 0.0f);
 
             int counter = 1;
-            for (int a = 0; a < 6; a++)
+            for (int a = 0; a < 12; a++)
             {
                 for (int m = 0; m < 5; m++)
                 {

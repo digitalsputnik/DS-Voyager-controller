@@ -11,6 +11,7 @@ using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.UI.Overlays;
+using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
 
@@ -119,37 +120,36 @@ namespace VoyagerApp.Projects
         #region Loading
         public static ProjectSaveData Load(string name, bool positionsOnly = false)
         {
-            string path = Path.Combine(ProjectsDirectory, name, PROJECT_FILE);
-            if (File.Exists(path))
-            {
-                string json = File.ReadAllText(path);
-                var parser = ProjectFactory.GetParser(json);
-                var data = parser.Parse(json);
-                Load(data, Path.Combine(ProjectsDirectory, name), positionsOnly);
-                return data;
-            }
-            return null;
+            var path = Path.Combine(ProjectsDirectory, name, PROJECT_FILE);
+            
+            if (!File.Exists(path)) return null;
+            
+            var json = File.ReadAllText(path);
+            var parser = ProjectFactory.GetParser(json);
+            var data = parser.Parse(json);
+            
+            Load(data, Path.Combine(ProjectsDirectory, name), positionsOnly);
+            
+            return data;
         }
 
         public static void LoadWorkspace()
         {
-            if (PlayerPrefs.HasKey("workspace_temp"))
-            {
-                var json = PlayerPrefs.GetString("workspace_temp");
-                var data = WorkspaceDataParser.Parser(json);
-                LoadItems(data.items);
-                LoadCamera(data.camera);
-            }
+            if (!PlayerPrefs.HasKey("workspace_temp")) return;
+            
+            var json = PlayerPrefs.GetString("workspace_temp");
+            var data = WorkspaceDataParser.Parser(json);
+            LoadItems(data.items);
+            LoadCamera(data.camera);
         }
 
         public static ProjectSaveData GetProjectData(string json)
         {
             var parser = ProjectFactory.GetParser(json);
-            if (parser == null) return null;
-            return parser.Parse(json);
+            return parser?.Parse(json);
         }
 
-        static void Load(ProjectSaveData data, string path, bool positionsOnly)
+        private static void Load(ProjectSaveData data, string path, bool positionsOnly)
         {
             LoadEffects(ref data, path);
             LoadLamps(data.lamps, positionsOnly);
@@ -157,63 +157,120 @@ namespace VoyagerApp.Projects
             LoadCamera(data.camera);
         }
 
-        static void LoadEffects(ref ProjectSaveData data, string path)
+        private static void LoadEffects(ref ProjectSaveData data, string path)
         {
             EffectManager.Clear();
+            
+            Debug.Log(JsonConvert.SerializeObject(data, Formatting.Indented));
 
             var effects = data.effects;
 
             foreach (var effectData in effects)
             {
-                if (effectData is Video videoData)
+                switch (effectData)
                 {
-                    var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoData.name);
-
-                    if (existingPreset == null)
+                    case Video videoData:
                     {
-                        string vidPath = Path.Combine(path, VIDEOS, videoData.file);
-                        if (File.Exists(vidPath))
+                        var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoData.name);
+
+                        if (existingPreset == null)
                         {
-                            var vid = VideoEffectLoader.LoadNewVideoFromPath(vidPath);
-                            vid.frames = videoData.frames;
-                            vid.file = videoData.file;
-                            vid.fps = videoData.fps;
-                            vid.id = videoData.id;
-                            existingPreset = vid;
+                            var vidPath = Path.Combine(path, VIDEOS, videoData.file);
+                            if (File.Exists(vidPath))
+                            {
+                                var vid = VideoEffectLoader.LoadNewVideoFromPath(vidPath);
+                                vid.frames = videoData.frames;
+                                vid.file = videoData.file;
+                                vid.fps = videoData.fps;
+                                vid.id = videoData.id;
+                                existingPreset = vid;
+                            }
                         }
-                    }
 
-                    if (existingPreset != null)
+                        if (existingPreset != null)
+                        {
+                            existingPreset.lift = videoData.lift;
+                            existingPreset.contrast = videoData.contrast;
+                            existingPreset.saturation = videoData.saturation;
+                            existingPreset.blur = videoData.blur;
+                        }
+
+                        break;
+                    }
+                    case VideoPreset videoPresetData:
                     {
-                        existingPreset.lift = videoData.lift;
-                        existingPreset.contrast = videoData.contrast;
-                        existingPreset.saturation = videoData.saturation;
-                        existingPreset.blur = videoData.blur;
+                        var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoPresetData.name);
+
+                        existingPreset.lift = videoPresetData.lift;
+                        existingPreset.contrast = videoPresetData.contrast;
+                        existingPreset.saturation = videoPresetData.saturation;
+                        existingPreset.blur = videoPresetData.blur;
+
+                        foreach (var lamp in data.lamps)
+                        {
+                            if (lamp.effect == videoPresetData.id)
+                                lamp.effect = existingPreset.id;
+                        }
+
+                        break;
                     }
-                }
-                else if (effectData is VideoPreset videoPresetData)
-                {
-                    var existingPreset = EffectManager.Effects.FirstOrDefault(e => e.name == videoPresetData.name);
-
-                    existingPreset.lift = videoPresetData.lift;
-                    existingPreset.contrast = videoPresetData.contrast;
-                    existingPreset.saturation = videoPresetData.saturation;
-                    existingPreset.blur = videoPresetData.blur;
-
-                    for (int i = 0; i < data.lamps.Length; i++)
+                    case Image imageData:
                     {
-                        if (data.lamps[i].effect == videoPresetData.id)
-                            data.lamps[i].effect = existingPreset.id;
+                        var texture = new Texture2D(2, 2);
+                        texture.LoadImage(imageData.data, false);
+
+                        var image = new Effects.Image
+                        {
+                            id = imageData.id,
+                            name = imageData.name,
+                            image = texture,
+                            thumbnail = texture,
+                            timestamp = TimeUtils.Epoch,
+                            lift = imageData.lift,
+                            contrast = imageData.contrast,
+                            saturation = imageData.saturation,
+                            blur = imageData.blur,
+                            available = { value = true }
+                        };
+
+
+                        EffectManager.AddEffect(image);
+                        break;
                     }
+                    case Syphon syphonData:
+                        if (EffectManager.Effects.FirstOrDefault(e => e is SyphonStream) is SyphonStream syphon)
+                        {
+                            syphon.id = syphonData.id;
+                            syphon.server = syphonData.server;
+                            syphon.application = syphonData.application;
+                            syphon.delay = syphonData.delay;
+                            syphon.lift = syphonData.lift;
+                            syphon.contrast = syphonData.contrast;
+                            syphon.saturation = syphonData.saturation;
+                            syphon.blur = syphonData.blur;
+                        }
+                        break;
+                    case Spout spoutData:
+                        if (EffectManager.Effects.FirstOrDefault(e => e is SpoutStream) is SpoutStream spout)
+                        {
+                            spout.id = spoutData.id;
+                            spout.source = spoutData.source;
+                            spout.delay = spoutData.delay;
+                            spout.lift = spoutData.lift;
+                            spout.contrast = spoutData.contrast;
+                            spout.saturation = spoutData.saturation;
+                            spout.blur = spoutData.blur;
+                        }
+                        break;
                 }
             }
         }
 
-        static void LoadLamps(Lamp[] lamps, bool positionsOnly)
+        private static void LoadLamps(IEnumerable<Lamp> lamps, bool positionsOnly)
         {
             foreach (var lampData in lamps)
             {
-                var itsh = new Itshe(
+                var itshe = new Itshe(
                     lampData.itsh[0],
                     lampData.itsh[1],
                     lampData.itsh[2],
@@ -241,26 +298,24 @@ namespace VoyagerApp.Projects
                         address = IPAddress.Parse(lampData.address)
                     };
 
-                    if (!positionsOnly)
-                    {
-                        lamp.itshe = itsh;
-                        lamp.mapping = mapping;
-                    }
-
                     LampManager.instance.AddLamp(lamp);
                 }
-                else
-                {
-                    if (!positionsOnly)
-                    {
-                        lamp.itshe = itsh;
-                        lamp.mapping = mapping;
-                    }
-                }
+                
+                if (positionsOnly) continue;
+                
+                var effect = EffectManager.Effects.FirstOrDefault(e => e.id == lampData.effect);
+
+                if (effect == null) continue;
+
+                lamp.itshe = itshe;
+                lamp.mapping = mapping;
+                lamp.SetMapping(mapping);
+                lamp.SetEffect(effect);
+                lamp.SetItshe(itshe);
             }
         }
 
-        static void LoadItems(Item[] items)
+        private static void LoadItems(IEnumerable<Item> items)
         {
             WorkspaceManager.instance.Clear();
 
@@ -292,7 +347,7 @@ namespace VoyagerApp.Projects
             }
         }
 
-        static void LoadCamera(float[] camera)
+        private static void LoadCamera(IReadOnlyList<float> camera)
         {
             var cam = Camera.main;
 
@@ -422,8 +477,8 @@ namespace VoyagerApp.Projects
         {
             get
             {
-                string persistant = Application.persistentDataPath;
-                string projects = Path.Combine(persistant, PROJECTS_DIRECTORY);
+                var persistent = Application.persistentDataPath;
+                var projects = Path.Combine(persistent, PROJECTS_DIRECTORY);
 
                 if (!Directory.Exists(projects))
                     Directory.CreateDirectory(projects);

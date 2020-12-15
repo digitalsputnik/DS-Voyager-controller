@@ -10,6 +10,7 @@ using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
+using Effect = VoyagerApp.Effects.Effect;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -22,13 +23,47 @@ namespace VoyagerApp.UI.Menus
 
         List<SetEffectItem> items = new List<SetEffectItem>();
 
+        public void AddEffectClicked()
+        {
+            DialogBox.Show(
+                "Add Effect",
+                "Pick which effect you want to add",
+                new string[] { "IMAGE", "VIDEO", "CANCEL" },
+                new Action[] { AddImageEffectClicked, AddVideoEffectClick, null}
+            );
+        }
+
+        public void AddImageEffectClicked()
+        {
+            DialogBox.Show(
+                "ATTENTION",
+                "Images bigger than 640 x 480 might crash the application",
+                new[] { "CONTINUE", "CANCEL" },
+                new Action[]
+                {
+                    () =>
+                    {
+                        FileUtils.LoadPictureFromDevice(path => 
+                        {
+                            if (path != "" && path != "Null" && path != null)
+                            {
+                                Image image = ImageEffectLoader.LoadImageFromPath(path);
+                                image.timestamp = TimeUtils.Epoch;
+                                OrderEffects();
+                            }
+                        }, true);
+                    } 
+                    , null
+                });
+        }
+
         public void AddVideoEffectClick()
         {
             FileUtils.LoadVideoFromDevice(path =>
             {
                 if (path != "" && path != "Null" && path != null)
                 {
-                    Video video = VideoEffectLoader.LoadNewVideoFromPath(path);
+                    var video = VideoEffectLoader.LoadNewVideoFromPath(path);
                     video.timestamp = TimeUtils.Epoch;
                     OrderEffects();
                 }
@@ -37,38 +72,76 @@ namespace VoyagerApp.UI.Menus
 
         public void SelectEffect(Effect effect)
         {
-            ValidateVideoResolution(effect, () =>
-            {
-                GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
-
-                if (inWorkspace)
-                    SelectEffectFromWorkspace(effect);
-                else
-                    SelectEffectFromMapping(effect);
-            });
+            ValidateVideoResolution(effect, ApplyEffectToLamp, ResizeVideoEffect);
         }
 
-        public void ValidateVideoResolution(Effect effect, Action onValidated)
+        private void ValidateVideoResolution(Effect effect, Action<Effect> fine, Action<Video> resize)
         {
             if (effect is Video video)
             {
                 if (video.width > maxPreferedSized.x || video.height > maxPreferedSized.y)
                 {
-                    DialogBox.Show(
-                        "WARNING",
-                        "The video resolution is not supported and the application might suffer.",
-                        new string[] { "OK", "IGNORE" },
-                        new Action[] { null, onValidated });
+                    if (Application.platform == RuntimePlatform.IPhonePlayer)
+                    {
+                        DialogBox.Show(
+                            "WARNING",
+                            "The video resolution is not supported and the application might suffer.",
+                            new string[] { "CONTINUE", "RESIZE", "CANCEL" },
+                            new Action[] { () => fine?.Invoke(effect), () => resize?.Invoke(video), null });
+                    }
+                    else
+                    {
+                        DialogBox.Show(
+                            "WARNING",
+                            "The video resolution is not supported and the application might suffer.",
+                            new string[] { "CONTINUE", "CANCEL" },
+                            new Action[] { () => fine?.Invoke(effect), null });
+                    }
                 }
-                else
-                {
-                    onValidated?.Invoke();
-                }
+                else fine?.Invoke(effect);
             }
+            else fine?.Invoke(effect);
+        }
+
+        private void ApplyEffectToLamp(Effect effect)
+        {
+            GetComponentInParent<InspectorMenuContainer>().ShowMenu(null); // Move into initialization!
+
+            if (inWorkspace)
+                SelectEffectFromWorkspace(effect);
             else
-            {
-                onValidated?.Invoke();
-            }
+                SelectEffectFromMapping(effect);
+        }
+
+        private void ResizeVideoEffect(Video effect)
+        {
+            var item = items.FirstOrDefault(i => i.effect == effect);
+            
+            if (item == null) return;
+            
+            App.VideoTools.LoadVideo(effect.path, video =>
+            {  
+                item.StartResizing();
+                App.VideoTools.Resize(video, maxPreferedSized.x, maxPreferedSized.y, (success, error) =>
+                {
+                    if (success)
+                    {
+                        effect.width = (uint) video.Width;
+                        effect.height = (uint) video.Height;
+                        
+                        item.StopResizing(effect);
+                        // ApplyEffectToLamp(effect);
+                    }
+                    else
+                    {
+                        DialogBox.Show(
+                            "FAIL",
+                            "Failed to change video resolution",
+                            new string[] { "OK", },
+                            new Action[] { null });
+                    }
+                });
+            });
         }
 
         public void RemoveEffect(Effect effect)
@@ -126,11 +199,10 @@ namespace VoyagerApp.UI.Menus
         void RemoveEffectItem(Effect effect)
         {
             var item = items.FirstOrDefault(i => i.effect == effect);
-            if (item != null)
-            {
-                items.Remove(item);
-                Destroy(item.gameObject);
-            }
+            if (item == null) return;
+            
+            items.Remove(item);
+            Destroy(item.gameObject);
         }
 
         void SelectEffectFromWorkspace(Effect effect)

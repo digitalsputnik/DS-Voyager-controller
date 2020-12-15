@@ -32,19 +32,23 @@ namespace VoyagerApp.UI
         {
             yield return new WaitForSeconds(0.3f);
             Video video = EffectManager.GetEffectWithName<Video>("white");
-            if (lamp.effect == null && !((VoyagerLamp)lamp).dmxEnabled)
+
+            if (lamp is VoyagerLamp voyager)
             {
-                yield return new WaitUntil(() => video.available.value);
+                if (lamp.effect == null && !voyager.dmxEnabled)
+                {
+                    yield return new WaitUntil(() => video.available.value);
 
-                lamp.SetEffect(video);
-                lamp.SetItshe(ApplicationSettings.AddedLampsDefaultColor);
+                    lamp.SetEffect(video);
+                    lamp.SetItshe(ApplicationSettings.AddedLampsDefaultColor);
 
-                var handle = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset + 0.3;
+                    var handle = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset + 0.3;
 
-                NetUtils.VoyagerClient.SendPacket(
-                    lamp,
-                    new SetPlayModePacket(PlaybackMode.Play,  video.startTime, handle),
-                    VoyagerClient.PORT_SETTINGS);
+                    NetUtils.VoyagerClient.SendPacket(
+                        lamp,
+                        new SetPlayModePacket(PlaybackMode.Play,  video.startTime, handle),
+                        VoyagerClient.PORT_SETTINGS);
+                }   
             }
         }
     }

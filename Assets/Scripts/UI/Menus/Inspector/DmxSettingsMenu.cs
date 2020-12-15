@@ -18,6 +18,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] Dropdown divisionDropdown  = null;
         [SerializeField] Dropdown protocolDropdown  = null;
         [SerializeField] Dropdown formatDropdown    = null;
+        [SerializeField] Button setButton           = null;
         [Space(5)]
         [SerializeField] int stackIncreasement = 4;
 
@@ -29,6 +30,11 @@ namespace VoyagerApp.UI.Menus
         {
             base.Start();
             SubscribeToEvents();
+        }
+
+        void Update()
+        {
+            setButton.interactable = WorkspaceUtils.AtLastOneLampSelected;
         }
 
         void SubscribeToEvents()
@@ -73,6 +79,7 @@ namespace VoyagerApp.UI.Menus
                     settings.format
                 );
                 NetUtils.VoyagerClient.SendPacket(lamp, packet, VoyagerClient.PORT_SETTINGS);
+                lamp.effect = null;
             }
         }
 
@@ -192,6 +199,8 @@ namespace VoyagerApp.UI.Menus
                     return 16 * stackIncreasement;
                 case 2:
                     return lamp.pixels * stackIncreasement;
+                case 3:
+                    return 2 * stackIncreasement;
                 default:
                     return 0;
             }

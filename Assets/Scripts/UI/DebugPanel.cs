@@ -6,24 +6,23 @@ namespace VoyagerApp.UI
 {
     public class DebugPanel : MonoBehaviour
     {
-        [SerializeField] GameObject panelObject = null;
-        [SerializeField] Text timesyncText = null;
+        [SerializeField] private GameObject _panelObject = null;
+        [SerializeField] private Text _text = null;
 
-        void Start()
+        private void Start()
         {
-            if (!ApplicationState.DeveloperMode)
-            {
-                gameObject.SetActive(false);
-                return;
-            }
+            if (ApplicationState.DeveloperMode) return;
+            gameObject.SetActive(false);
         }
 
 
-        void Update()
+        private void Update()
         {
-            if (panelObject.activeSelf)
+            if (_panelObject.activeSelf)
             {
-                timesyncText.text = $"TIMESYNC: {NetUtils.VoyagerClient.TimeOffset}";
+                _text.text = $"TIME OFFSET: {NetUtils.VoyagerClient.TimeOffset}\n" + 
+                             $"SYSTEM TIME: {TimeUtils.Epoch}\n" +
+                             $"LAMP TIME: {TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset}";
             }
         }
     }

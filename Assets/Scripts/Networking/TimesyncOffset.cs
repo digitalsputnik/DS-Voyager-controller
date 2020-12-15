@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using GuerrillaNtp_DS;
 using Newtonsoft.Json;
+using VoyagerApp.UI;
 using VoyagerApp.Utilities;
+using Debug = UnityEngine.Debug;
 
 namespace VoyagerApp.Networking
 {
@@ -15,7 +18,7 @@ namespace VoyagerApp.Networking
         public readonly int UpdateInterval;
         public TimeSpan Offset = TimeSpan.Zero;
 
-        readonly Thread thread;
+        private readonly Thread thread;
 
         public OffsetService()
         {
@@ -30,20 +33,20 @@ namespace VoyagerApp.Networking
             thread.Abort();
         }
 
-        void MasterFinder()
+        private void MasterFinder()
         {
             while (true)
             {
-                TimeSpan receivedOffset = OffsetServiceClient.Offset;
+                var receivedOffset = OffsetServiceClient.Offset;
                 if (receivedOffset != TimeSpan.Zero) Offset = receivedOffset;
                 Thread.Sleep(UpdateInterval);
             }
         }
     }
 
-    static class OffsetServiceClient
+    internal static class OffsetServiceClient
     {
-        public static TimeSpan LastOffset = TimeSpan.MinValue;
+        private static TimeSpan _lastOffset = TimeSpan.MinValue;
 
         public static TimeSpan Offset
         {
@@ -51,23 +54,38 @@ namespace VoyagerApp.Networking
             {
                 try
                 {
-                    IPEndPoint endpoint = MasterEndpoint;
+                    var endpoint = MasterEndpoint;
+
                     if (endpoint == null)
-                        return LastOffset;
+                    {
+                        MainThread.Dispach(() =>
+                        {
+                            if (ApplicationState.DeveloperMode)
+                                Debug.LogError("Timesync master not found. Might happen if no lamps in network.");
+                        });
+                        
+                        return _lastOffset;
+                    }
 
                     using (var ntp = new NtpClient(endpoint))
                     {
                         if (ntp.GetCorrectionOffset().Equals(TimeSpan.Zero))
-                            return LastOffset;
+                            return _lastOffset;
 
                         var value = ntp.GetCorrectionOffset();
-                        LastOffset = value;
+                        _lastOffset = value;
                         return value;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return LastOffset;
+                    MainThread.Dispach(() =>
+                    {
+                        if (ApplicationState.DeveloperMode)
+                            Debug.LogError(ex.Message);
+                    });
+
+                    return _lastOffset;
                 }
             }
         }
@@ -82,55 +100,61 @@ namespace VoyagerApp.Networking
             catch { return TimeSpan.Zero; }
         }
 
-        static IPEndPoint MasterEndpoint
+        private static IPEndPoint MasterEndpoint
         {
             get
             {
-                int timeoutMilliseconds = 4100;
-                int port = 51259;
-                IPAddress address = NetUtils.WifiInterfaceAddress;
+                const int TIMEOUT_MILLISECONDS = 4100;
+                const int PORT = 51259;
 
-                var listener = new RudpClient(port);
-                listener.EnableBroadcast = true;
-                listener.ReuseAddress = true;
-
-                var server = new IPEndPoint(address, port);
-                var sw = new Stopwatch();
-
+                var listener = new UdpClient();
+                var server = new IPEndPoint(IPAddress.Any, PORT);
+                var dest = new IPEndPoint(NetUtils.WifiInterfaceAddress, PORT);
                 var message = new byte[] { 1, 2, 3, 4 };
-                var dest = new IPEndPoint(IPAddress.Broadcast, port);
+                
+                listener.Client.Bind(server);
+                listener.Send(message, message.Length, dest);
 
-                listener.Send(dest, message);
-
+                var sw = new Stopwatch();
                 sw.Start();
 
                 try
                 {
-                    while (sw.ElapsedMilliseconds < timeoutMilliseconds)
+                    while (sw.ElapsedMilliseconds < TIMEOUT_MILLISECONDS)
                     {
                         while (listener.Available > 0)
                         {
-                            var announce = listener.Receive(ref server);
+                            var endpoint = new IPEndPoint(IPAddress.Any, 0);
+                            var announce = listener.Receive(ref endpoint);
                             var announceString = Encoding.ASCII.GetString(announce);
 
-                            if (!ValidateAnnounce(announceString))continue;
+                            if (!ValidateAnnounce(announceString)) continue;
 
-                            server.Port = 123;
-                            return server;
+                            endpoint.Port = 123;
+                            return endpoint;
                         }
+                        
+                        Thread.Sleep(10);
                     }
+                }
+                catch (Exception ex)
+                {
+                    MainThread.Dispach(() =>
+                    {
+                        if (ApplicationState.DeveloperMode)
+                            Debug.LogError(ex.Message);
+                    });
                 }
                 finally
                 {
                     listener.Close();
-                    listener = null;
                 }
 
                 return null;
             }
         }
 
-        static bool ValidateAnnounce(string message)
+        private static bool ValidateAnnounce(string message)
         {
             try
             {

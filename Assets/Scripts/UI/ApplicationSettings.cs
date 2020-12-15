@@ -11,14 +11,15 @@ namespace VoyagerApp.UI
         const string ITSH_IDENTIFICATION  = "identify_itsh";
         const string ITSH_DEFAULT         = "default_itsh";
 
-        const string INFO_BATTERY_LEVEL    = "info_battery_level";
-        const string INFO_CHARGING_STATUS  = "info_charging_status";
-        const string INFO_WIFI_MODE        = "info_wifi_mode";
-        const string INFO_LENGHT           = "info_lenght";
-        const string INFO_DMX_UNIVERSE     = "info_dmx_universe";
-        const string INFO_DMX_CHANNEL      = "info_dmx_channel";
-        const string INFO_IP_ADDRESS       = "info_ip_address";
-        const string INFO_FIRMWARE_VERSION = "info_firmware_version";
+        private const string INFO_BATTERY_LEVEL    = "info_battery_level";
+        private const string INFO_CHARGING_STATUS  = "info_charging_status";
+        private const string INFO_WIFI_MODE        = "info_wifi_mode";
+        private const string INFO_WIFI_PASSWORD    = "info_wifi_password";
+        private const string INFO_LENGHT           = "info_lenght";
+        private const string INFO_DMX_UNIVERSE     = "info_dmx_universe";
+        private const string INFO_DMX_CHANNEL      = "info_dmx_channel";
+        private const string INFO_IP_ADDRESS       = "info_ip_address";
+        private const string INFO_FIRMWARE_VERSION = "info_firmware_version";
 
         const string SETT_IOS_BLE_WIFISSiD = "sett_ios_ble_wifissid";
 
@@ -121,6 +122,12 @@ namespace VoyagerApp.UI
         {
             get => GetString(SETT_IOS_BLE_WIFISSiD, "VoyagerRouter");
             set => SetString(SETT_IOS_BLE_WIFISSiD, value);
+        }
+
+        public static string PreviousWifiPassword
+        {
+            get => GetString(INFO_WIFI_PASSWORD, "dsputnik");
+            set => SetString(INFO_WIFI_PASSWORD, value);
         }
 
         static void SetBool(string key, bool value)

@@ -28,13 +28,17 @@ namespace VoyagerApp.Effects
         public uint width;
         public uint height;
         public double startTime;
-
         public double duraction => (double)frames / fps;
+    }
+
+    public class Image : Effect
+    {
+        public Texture2D image;
     }
 
     public class Stream : Effect
     {
-
+        public int delay = 150;
     }
 
     public class SyphonStream : Stream

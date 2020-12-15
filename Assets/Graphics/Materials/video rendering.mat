@@ -69,7 +69,7 @@ Material:
     - _ApplyGamma: 0
     - _Blend: 0
     - _Blur: 0
-    - _BlurSize: 0.028
+    - _BlurSize: 0.20799999
     - _BumpScale: 1
     - _Contrast: 1
     - _Cull: 2

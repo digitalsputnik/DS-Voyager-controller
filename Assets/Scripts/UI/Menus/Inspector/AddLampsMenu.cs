@@ -1,12 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Crosstales.Common.Model.Enum;
 using DigitalSputnik.Bluetooth;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
+using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
@@ -21,16 +22,20 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] AddLampItem prefab = null;
         [SerializeField] Button addAllLampsBtn = null;
         List<AddLampItem> items = new List<AddLampItem>();
+        Vector3 step = new Vector3(0, -1.0f , 0);
 
         internal override void OnShow()
         {
             LampManager.instance.onLampAdded += OnLampAdded;
+            LampManager.instance.onLampBroadcasted += OnLampBroadcasted;
             WorkspaceManager.instance.onItemRemoved += ItemRemovedFromWorkspace;
             WorkspaceManager.instance.onItemAdded += ItemAddedToWorkspace;
             ApplicationState.OnNewProject += NewProject;
 
             addAllLampsBtn.gameObject.SetActive(false);
             AddLampsToList();
+
+            RemoveWorkspaceLampsFromList();
 
             bluetoothBtn.SetActive(false);
 
@@ -48,6 +53,7 @@ namespace VoyagerApp.UI.Menus
         internal override void OnHide()
         {
             LampManager.instance.onLampAdded -= OnLampAdded;
+            LampManager.instance.onLampBroadcasted -= OnLampBroadcasted;
             WorkspaceManager.instance.onItemRemoved -= ItemRemovedFromWorkspace;
             WorkspaceManager.instance.onItemAdded -= ItemAddedToWorkspace;
             ApplicationState.OnNewProject -= NewProject;
@@ -60,34 +66,48 @@ namespace VoyagerApp.UI.Menus
             StopCoroutine(AddLampsAgain());
         }
 
-        void ScanBluetooth()
+        void RemoveWorkspaceLampsFromList()
+        {
+            foreach (var lamp in items.ToArray())
+            {
+                if (WorkspaceUtils.Lamps.Any(l => l.serial == lamp.lamp.serial))
+                    RemoveLampItem(lamp, false);
+            }
+        }
+
+        private void Update()
+        {
+            foreach (var item in items.ToArray())
+            {
+                if (!item.lamp.connected)
+                    RemoveLampItem(item, false);
+            }
+        }
+
+        private void ScanBluetooth()
         {
             BluetoothHelper.StartScanningForLamps(LampScanned);
         }
 
-        void LampScanned(PeripheralInfo peripheral)
+        private void LampScanned(PeripheralInfo peripheral)
         {
-            if (ValidateBluetoothPeripheral(peripheral.name))
-            {
-                BluetoothHelper.StopScanningForLamps();
-                bluetoothBtn.SetActive(true);
-            }
+            if (!ValidateBluetoothPeripheral(peripheral.name))
+                return;
+            
+            BluetoothHelper.StopScanningForLamps();
+            bluetoothBtn.SetActive(true);
         }
 
-        bool ValidateBluetoothPeripheral(string name)
+        private static bool ValidateBluetoothPeripheral(string name)
         {
-            return !LampManager.instance.Lamps.Any(l =>
-            {
-                return l.serial == name && l.connected;
-            });
+            return !LampManager.instance.Lamps.Any(l => l.serial == name && l.connected);
         }
 
         void NewProject()
         {
             foreach (var item in items.ToArray())
             {
-                items.Remove(item);
-                Destroy(item);
+                RemoveLampItem(item, false);
             }
         }
 
@@ -112,7 +132,9 @@ namespace VoyagerApp.UI.Menus
             {
                 var addItem = items.FirstOrDefault(v => v.lamp == view.lamp);
                 if (addItem != null)
+                {
                     RemoveLampItem(addItem, true);
+                }
             }
         }
 
@@ -121,9 +143,11 @@ namespace VoyagerApp.UI.Menus
             var lamps = WorkspaceUtils.Lamps;
             foreach (var lamp in LampManager.instance.Lamps)
             {
-                if (!items.Any(i => i.lamp.serial == lamp.serial) &&
-                    !lamps.Any(l => l.serial == lamp.serial) &&
-                    lamp.connected)
+                var voyager = (VoyagerLamp) lamp;
+                
+                if (items.All(i => i.lamp.serial != lamp.serial) &&
+                    lamps.All(l => l.serial != lamp.serial) &&
+                    lamp.connected && voyager.dmxPollReceived)
                     OnLampAdded(lamp);
             }
             CheckForAddAllLampsButton();
@@ -131,16 +155,21 @@ namespace VoyagerApp.UI.Menus
 
         public void AddAllLamps()
         {
-            int count = items.Count;
-            float2[] points = VectorUtils.ScreenVerticalPositions(count);
-            AddLampItem[] itms = items.ToArray();
-            for (int i = 0; i < count; i++)
+            WorkspaceSelection.instance.Clear();
+
+            List<LampItemView> addedLampItems = new List<LampItemView>();
+
+            foreach (var item in items.ToList())
             {
-                Vector2 point = points[i];
-                AddLampItem item = itms[i];
-                item.lamp.AddToWorkspace(point);
+                var lampItem = item.lamp.AddToWorkspace(WorkspaceUtils.PositionOfLastNotSelectedLamp + step);
+                addedLampItems.Add(lampItem);
             }
 
+            WorkspaceUtils.SetCameraPosition(WorkspaceUtils.PositionOfLastNotSelectedLamp);
+
+            foreach (var item in addedLampItems)
+                WorkspaceSelection.instance.SelectItem(item);
+            
             while (items.Count > 0)
                 RemoveLampItem(items[0], true);
         }
@@ -159,18 +188,37 @@ namespace VoyagerApp.UI.Menus
             CheckForAddAllLampsButton();
         }
 
-        void OnLampAdded(Lamp lamp)
+        private void OnLampAdded(Lamp lamp)
         {
-            if (!WorkspaceUtils.Lamps.Any(l => l == lamp) &&
-                !items.Any(i => i.lamp == lamp) &&
-                lamp.connected &&
-                math.abs(NetUtils.VoyagerClient.TimeOffset) > 0.01f)
-            {
-                AddLampItem item = Instantiate(prefab, container);
-                item.SetLamp(lamp);
-                items.Add(item);
-                CheckForAddAllLampsButton();
-            }
+            Debug.Log("OnLampAdded: " + lamp.serial);
+
+            if (WorkspaceUtils.Lamps.Any(l => l == lamp) ||
+                items.Any(i => i.lamp == lamp) ||
+                !lamp.connected ||
+                !(math.abs(NetUtils.VoyagerClient.TimeOffset) > 0.01f))
+                return;
+
+            Debug.Log("Didn't return");
+
+            var item = Instantiate(prefab, container);
+            item.SetLamp(lamp);
+            items.Add(item);
+            CheckForAddAllLampsButton();
+        }
+
+        private void OnLampBroadcasted(Lamp lamp)
+        {
+            Debug.Log("OnLampBroadcasted: " + lamp.serial);
+
+            if (WorkspaceUtils.Lamps.Any(l => l == lamp))
+                return;
+
+            Debug.Log("Didn't return");
+
+            WorkspaceSelection.instance.Clear();
+            var vlamp = lamp.AddToWorkspace(WorkspaceUtils.PositionOfLastNotSelectedLamp + step);
+            WorkspaceUtils.SetCameraPosition(vlamp.transform.localPosition);
+            WorkspaceSelection.instance.SelectItem(vlamp);
         }
 
         void CheckForAddAllLampsButton()

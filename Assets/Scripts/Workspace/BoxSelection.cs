@@ -67,7 +67,7 @@ namespace VoyagerApp.UI
         void OnSelectionEnded()
         {
             if (math.distance(startPoint, CameraMove.pointerPosition) < 0.05f)
-                CheckIfClick();
+                OnItemClicked();
             else
                 ApplySelectionToItems(ItemsUnderSelection);
 
@@ -75,21 +75,6 @@ namespace VoyagerApp.UI
             currentSelection = null;
 
             SetItemOrders();
-        }
-
-        void CheckIfClick()
-        {
-            WorkspaceSelection.instance.Clear();
-
-            if (WorkspaceManager.instance.GetItemsOfType<SelectionControllerView>().Length > 0)
-            {
-                Bounds bounds = SelectionController.bounds;
-                bounds.Expand(new float3(float2.zero, 100.0f));
-
-                if (bounds.Contains(CameraMove.pointerPosition))
-                    OnItemClicked();
-            }
-            else OnItemClicked();
         }
 
         void OnItemClicked()
@@ -100,7 +85,11 @@ namespace VoyagerApp.UI
                 WorkspaceItemView view = hit.transform.GetComponentInParent<WorkspaceItemView>();
                 if (view is ISelectableItem selectable)
                     ApplySelectionToItems(new List<ISelectableItem> { selectable });
+                else
+                    WorkspaceSelection.instance.Clear();
             }
+            else
+                WorkspaceSelection.instance.Clear();
         }
 
         void ApplySelectionToItems(List<ISelectableItem> items)

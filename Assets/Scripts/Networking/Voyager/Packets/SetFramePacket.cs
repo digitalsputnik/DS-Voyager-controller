@@ -10,20 +10,15 @@ namespace VoyagerApp.Networking.Voyager
     {
         [JsonProperty("index")]
         public long index;
-        [JsonProperty("temperature")]
-        public float temperature;
         [JsonProperty("frame")]
         public byte[] frame;
 
         public SetFramePacket() : base(OpCode.SetFrame) { }
 
-        public SetFramePacket(long index, Itshe itshe, byte[] frame) : this()
+        public SetFramePacket(long index, byte[] frame) : this()
         {
-            Color32[] colors = ColorUtils.BytesToColors(frame);
-            colors = ColorUtils.MixColorsToItshe(colors, itshe);
-            this.frame = ColorUtils.ColorsToBytes(colors);
+            this.frame = frame;
             this.index = index;
-            temperature = itshe.t;
         }
     }
 }

@@ -2,9 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Lamps;
@@ -38,6 +35,7 @@ namespace VoyagerApp.UI.Menus
         internal override void OnShow()
         {
             if (ssidFieldObj.activeSelf) TypeSsidBtnClick();
+            passwordField.text = ApplicationSettings.PreviousWifiPassword;
         }
 
         internal override void OnHide()
@@ -208,6 +206,8 @@ namespace VoyagerApp.UI.Menus
                     new Action[] { null }
                 );
             }
+
+            passwordField.text = password;
         }
     }
 }

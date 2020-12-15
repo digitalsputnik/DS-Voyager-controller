@@ -31,9 +31,9 @@ namespace VoyagerApp.Utilities
         {
             if (Application.isMobilePlatform)
             {
-                NativeGallery.GetVideoFromGallery((string path) =>
+                NativeGallery.GetVideoFromGallery(path =>
                 {
-                    if (path == string.Empty || path == null)
+                    if (string.IsNullOrEmpty(path))
                     {
                         onLoaded?.Invoke(null);
                         return;
@@ -41,19 +41,19 @@ namespace VoyagerApp.Utilities
 
                     if (Application.platform == RuntimePlatform.IPhonePlayer)
                     {
-                        string name = "video_" + Guid.NewGuid().ToString().Substring(0, 4);
+                        var name = "video_" + Guid.NewGuid().ToString().Substring(0, 4);
 
                         InputFieldMenu.Show("PICK NAME FOR VIDEO", name,
-                            (string text) =>
+                            text =>
                             {
                                 name = text;
 
-                                string newPath = Path.Combine(TempPath, name + ".MOV");
+                                var newPath = Path.Combine(TempPath, name + ".MOV");
+                                
                                 try
                                 {
                                     Copy(path, newPath);
                                     onLoaded?.Invoke(newPath);
-                                    return;
                                 }
                                 catch (Exception ex)
                                 {
@@ -69,43 +69,41 @@ namespace VoyagerApp.Utilities
             }
             else
             {
-                string documents = DocumentsPath;
-                ExtensionFilter[] extensions = { new ExtensionFilter("Video", "mp4") };
-                string path = FileBrowser.OpenSingleFile("Open Video", documents, extensions);
+                var documents = DocumentsPath;
+                var extensions = new [] { new ExtensionFilter("Video", "mp4") };
+                var path = FileBrowser.OpenSingleFile("Open Video", documents, extensions);
                 onLoaded.Invoke(path == "" ? null : path);
             }
         }
 
-        public static void LoadPictureFromDevice(PathHandler onLoaded)
+        public static void LoadPictureFromDevice(PathHandler loaded, bool rename, bool iOSWarning = true)
         {
             if (Application.isMobilePlatform)
             {
                 if (Application.platform == RuntimePlatform.IPhonePlayer)
                 {
-                    DialogBox.Show(
-                        "WARNING",
-                        "Photos captured with iOS camera might not load.",
-                        new string[] { "CANCEL", "OK" },
-                        new Action[] {
-                            () =>
-                            {
-                                onLoaded?.Invoke(null);
-                            },
-                            () =>
-                            {
-                                NativeGallery.GetImageFromGallery((string path) =>
-                                {
-                                    onLoaded?.Invoke(string.IsNullOrEmpty(path) ? null : path);
-                                }, "", "image/*");
+                    if (iOSWarning)
+                    {
+                        DialogBox.Show(
+                            "WARNING",
+                            "Photos captured with iOS camera might not load.",
+                            new string[] { "CANCEL", "OK" },
+                            new Action[] {
+                                () => loaded?.Invoke(null),
+                                () => LoadPictureIOS(loaded, rename)
                             }
-                        }
-                    );
+                        );   
+                    }
+                    else
+                    {
+                        LoadPictureIOS(loaded, rename);
+                    }
                 }
                 else
                 {
                     NativeGallery.GetImageFromGallery((string path) =>
                     {
-                        onLoaded.Invoke(path == "" ? null : path);
+                        loaded.Invoke(path == "" ? null : path);
                     }, "", "image/*");
                 }
             }
@@ -115,11 +113,48 @@ namespace VoyagerApp.Utilities
                 ExtensionFilter[] extensions =
                 {
                     new ExtensionFilter("PNG Picture", "png"),
-                    new ExtensionFilter("JPEG Picture", "png")
+                    new ExtensionFilter("JPG Picture", "jpg"),
+                    new ExtensionFilter("JPEG Picture", "jpeg")
                 };
                 string path = FileBrowser.OpenSingleFile("Open Picture", documents, extensions);
-                onLoaded.Invoke(path == "" ? null : path);
+                loaded.Invoke(path == "" ? null : path);
             }
+        }
+
+        private static void LoadPictureIOS(PathHandler loaded, bool rename)
+        {
+            NativeGallery.GetImageFromGallery(path =>
+            {
+                if (string.IsNullOrEmpty(path))
+                {
+                    loaded?.Invoke(null);
+                    return;
+                }
+                                        
+                var name = "image_" + Guid.NewGuid().ToString().Substring(0, 4);
+
+                if (rename)
+                {
+                    InputFieldMenu.Show("PICK NAME FOR IMAGE", name, text =>
+                    {
+                        name = text;
+                        var newPath = Path.Combine(TempPath, name);
+                        try
+                        {
+                            Copy(path, newPath);
+                            loaded?.Invoke(newPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogError(ex);
+                        }
+                    }, 3, false);   
+                }
+                else
+                {
+                    loaded?.Invoke(path);
+                }
+            }, "", "image/*");
         }
 
         public static string DocumentsPath

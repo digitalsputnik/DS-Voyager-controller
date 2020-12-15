@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Unity.Mathematics;
@@ -17,13 +18,19 @@ namespace VoyagerApp.Effects
         const float VIDEO_THUMBNAIL_TIMEOUT = 10.0f;
         const float VIDEO_THUMBNAIL_TIME = 2.0f;
 
-        public static Video LoadVideo(Video video)
+        static Queue<Video> loadVideoQueue = new Queue<Video>();
+
+        static bool queueHandlerRunning = false;
+
+        /*public static Video LoadVideo(Video video)
         {
-            EffectManager.instance.StartCoroutine(
-                LoadVideo(EffectManager.instance.gameObject, video));
+            //EffectManager.instance.StartCoroutine(LoadVideo(EffectManager.instance.gameObject, video));
+
+            loadVideoQueue.Enqueue(video);
+
             EffectManager.AddEffect(video);
             return video;
-        }
+        }*/
 
         public static Video LoadNewVideoFromPath(string path)
         {
@@ -36,15 +43,36 @@ namespace VoyagerApp.Effects
                 preset = EffectManager.instance.videoPresets.Any(p => p == Path.GetFileName(path))
             };
 
-            EffectManager.instance.StartCoroutine(
-                LoadVideo(EffectManager.instance.gameObject, video));
+            //EffectManager.instance.StartCoroutine(LoadVideo(EffectManager.instance.gameObject, video));
+
+            loadVideoQueue.Enqueue(video);
+
+            if (!queueHandlerRunning)
+                EffectManager.instance.StartCoroutine(LoadVideoQueueHandler());
+
             EffectManager.AddEffect(video);
             return video;
         }
 
-        internal static IEnumerator LoadVideo(GameObject obj, Video video)
+        internal static IEnumerator LoadVideoQueueHandler()
         {
-            var player = obj.AddComponent<VideoPlayer>();
+            queueHandlerRunning = true;
+
+            while (loadVideoQueue.Count > 0)
+            {
+                var video = loadVideoQueue.Dequeue();
+
+                EffectManager.instance.StartCoroutine(LoadVideo(video));
+
+                yield return new WaitForSeconds(0.2f);
+            }
+
+            queueHandlerRunning = false;
+        }
+
+        internal static IEnumerator LoadVideo(Video video)
+        {
+            var player = EffectManager.instance.gameObject.AddComponent<VideoPlayer>();
             var render = SetupVideoPlayer(player, video.path);
 
             player.Play();
@@ -110,11 +138,12 @@ namespace VoyagerApp.Effects
             }
             else
             {
-                if (!PlayerPrefs.HasKey("prefabs_loaded"))
+                var newPresets = GetNewPresets();
+
+                if (newPresets.Count() > 0)
                 {
-                    PlayerPrefs.SetInt("prefabs_loaded", 1);
                     EffectManager.instance.StartCoroutine(
-                        IEnumSetupAndroidPresets(EffectManager.instance.videoPresets));
+                        IEnumSetupAndroidPresets(newPresets.ToArray()));
                 }
                 else
                 {
@@ -124,12 +153,38 @@ namespace VoyagerApp.Effects
             }
         }
 
+        static List<string> GetNewPresets()
+        {
+            var path = Path.Combine(Application.persistentDataPath, "video_presets");
+            var allPresets = EffectManager.instance.videoPresets;
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            var loadedPresetPaths = Directory.GetFiles(path, "*.mp4");
+
+            List<string> loadedPresetFileNames = new List<string>();
+            List<string> newPresets = new List<string>();
+
+            foreach (var presetPath in loadedPresetPaths)
+                loadedPresetFileNames.Add(Path.GetFileName(presetPath));
+
+            foreach (var preset in allPresets)
+            {
+                if (!loadedPresetFileNames.Contains(preset))
+                    newPresets.Add(preset);
+            }
+
+            return newPresets;
+        }
+
         static IEnumerator IEnumSetupAndroidPresets(string[] presets)
         {
             string source = Path.Combine(Application.streamingAssetsPath, "video_presets");
             string destin = Path.Combine(Application.persistentDataPath, "video_presets");
 
-            Directory.CreateDirectory(destin);
+            if (!Directory.Exists(destin))
+                Directory.CreateDirectory(destin);
 
             foreach (var preset in presets)
             {

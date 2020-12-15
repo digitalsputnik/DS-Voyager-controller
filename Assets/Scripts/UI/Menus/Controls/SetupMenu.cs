@@ -4,12 +4,15 @@ using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Workspace;
+using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.UI.Menus
 {
     public class SetupMenu : Menu
     {
+        [SerializeField] InspectorMenuContainer inspectorMenuContainer = null;
         [SerializeField] GameObject developmentBtn = null;
+        [SerializeField] Menu Tutorial = null;
 
         internal override void OnShow()
         {
@@ -37,7 +40,41 @@ namespace VoyagerApp.UI.Menus
 
         public void OpenHelp()
         {
-            Application.OpenURL(ApplicationSettings.HELP_URL);
+            DialogBox.Show(
+                "Help",
+                "Would you like to go through the tutorial on connecting lamps or go to the support page?",
+                new string[] { "TUTORIAL", "SUPPORT PAGE", "EXIT"},
+                new Action[] {
+                    () =>
+                    {
+                        if (WorkspaceManager.instance.GetItemsOfType<VoyagerItemView>().Length > 0)
+                        {
+                            DialogBox.Show(
+                                "ATTENTION",
+                                "Starting the tutorial will clear out the workspace, would you like to continue?",
+                                new[] {"CANCEL", "YES"},
+                                new Action[]
+                                {
+                                    null,
+                                    () =>
+                                    {
+                                        DialogBox.PauseDialogues();
+                                        inspectorMenuContainer.ShowMenu(Tutorial);
+                                    }
+                                });
+                        }
+                        else
+                        {
+                            DialogBox.PauseDialogues();
+                            inspectorMenuContainer.ShowMenu(Tutorial); 
+                        }
+                    }
+                    ,
+                    () => { Application.OpenURL(ApplicationSettings.HELP_URL); }
+                    ,
+                    () => {}
+                }
+            );
         }
     }
 }

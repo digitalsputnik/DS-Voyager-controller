@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Projects;
@@ -31,8 +33,29 @@ namespace VoyagerApp.UI.Menus
 
         public void Save()
         {
-            if (Project.Save(filenameField.text) != null)
-                GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+            var projPath = Project.ProjectsDirectory;
+            var projects = Directory.GetDirectories(projPath).Select(Path.GetFileName);
+            var projectName = filenameField.text;
+
+            if (projects.Any(p => p == projectName))
+            {
+                DialogBox.Show(
+                    "WARNING", 
+                    $"Project \"{projectName}\" already exists. Overwrite?",
+                    new [] { "OK", "CANCEL" }, 
+                    new Action[] { () => ForceSave(projectName), null }
+                    );
+            }
+            else
+            {
+                ForceSave(projectName);
+            }
+        }
+
+        private void ForceSave(string filename)
+        {
+            if (Project.Save(filename) != null)
+                GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);   
         }
 
         public void Export()

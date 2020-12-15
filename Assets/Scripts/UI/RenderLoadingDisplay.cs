@@ -32,7 +32,7 @@ public class RenderLoadingDisplay : MonoBehaviour
 
     void RendererStateChanged(RenderState state)
     {
-        if (state is DoneState || state is ConfirmPixelsState)
+        if (state is DoneState ||state is ConfirmPixelsState)
         {
             if (gameObject.activeInHierarchy)
                 gameObject.SetActive(false);
@@ -59,15 +59,12 @@ public class RenderLoadingDisplay : MonoBehaviour
 
         if (state is ConfirmPixelsState)
             infoText.text = "UPLOADING MISSING PIXELS";
-
-        if (state is ResendBufferState)
-            infoText.text = "RESENDING BUFFERS";
     }
 
     void RendererProgressChanged(float progress)
     {
         loadingBarImage.fillAmount = progress;
-        progressText.text = ((int)(progress * 100)).ToString() + "%";
+        progressText.text = (int)(progress * 100) + "%";
 
         if (!gameObject.activeInHierarchy)
             gameObject.SetActive(true);

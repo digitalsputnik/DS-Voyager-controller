@@ -3,13 +3,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using VoyagerApp.Effects;
 using VoyagerApp.Utilities;
+using Image = VoyagerApp.Effects.Image;
 
 namespace VoyagerApp.UI.Menus
 {
     public class SetEffectItem : MonoBehaviour
     {
         [SerializeField] RawImage thumbnailImage = null;
-        [SerializeField] Image loadingOverlay = null;
+        [SerializeField] UnityEngine.UI.Image loadingOverlay = null;
         [SerializeField] Button removeButton = null;
         [SerializeField] Text nameText = null;
         [SerializeField] Text infoText = null;
@@ -45,6 +46,21 @@ namespace VoyagerApp.UI.Menus
             GetComponentInParent<SetEffectMenu>().SelectEffect(effect);
         }
 
+        public void StartResizing()
+        {
+            loadingOverlay.gameObject.SetActive(true);
+            loadingOverlay.gameObject.GetComponentInChildren<Text>().text = "RESIZING";
+            button.interactable = false;
+        }
+
+        public void StopResizing(Effect effect)
+        {
+            loadingOverlay.gameObject.SetActive(false);
+            button.interactable = true;
+            this.effect = effect;
+            SetupUI();
+        }
+
         IEnumerator WaitForAvailable()
         {
             yield return new WaitUntil(() => effect.available.value);
@@ -58,13 +74,18 @@ namespace VoyagerApp.UI.Menus
             nameText.text = effect.name;
             button.interactable = true;
 
-            if (effect is Video video)
+            switch (effect)
             {
-                infoText.text =
-                    "duration \n" +
-                    TimeUtils.GetVideoTimecode(video) + "\n" +
-                    "resolution \n" +
-                    video.width + "x" + video.height;
+                case Video video:
+                    infoText.text =
+                        "duration\n" +
+                        TimeUtils.GetVideoTimecode(video) + "\n" +
+                        "resolution\n" +
+                        video.width + "x" + video.height;
+                    break;
+                case Image image:
+                    infoText.text = "resolution\n" + image.thumbnail.width + "x" + image.thumbnail.height;
+                    break;
             }
 
             if (effect.preset)

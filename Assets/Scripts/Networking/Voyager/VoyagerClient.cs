@@ -29,12 +29,11 @@ namespace VoyagerApp.Networking.Voyager
 
         RudpClient discovery;
         RudpClient settings;
-
         OffsetService offset;
 
         public VoyagerClient(MonoBehaviour behaviour)
         {
-            discovery = new RudpClient(PORT_DISCOVERY);
+            discovery = new RudpClient(PORT_DISCOVERY) { EnableBroadcast = true };
             settings = new RudpClient(PORT_SETTINGS);
             settings.onInitialize += () => onConnectionChanged?.Invoke();
 

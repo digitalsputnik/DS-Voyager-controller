@@ -1,14 +1,20 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerApp.Effects;
+using VoyagerApp.Lamps;
 using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Networking.Voyager;
 using VoyagerApp.UI.Overlays;
+using VoyagerApp.Utilities;
+using VoyagerApp.Workspace;
+using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -30,6 +36,7 @@ namespace VoyagerApp.UI.Menus
         [Space(3)]
         [SerializeField] InputField _passwordField = null;
         [SerializeField] Button _setBtn = null;
+        [SerializeField] Text _setBtnText = null;
         [SerializeField] GameObject _statusText = null;
         [SerializeField] GameObject _bleInfoText = null;
         [SerializeField] AddBluetoothLampsMenu _bleMenu = null;
@@ -38,15 +45,23 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] float _animationSpeed = 0.6f;
         [SerializeField] float _timeout = 30.0f;
 
-        bool _loading;
+        bool _ssidListLoading;
+        bool _setLoading;
         string[] _ids;
+
         List<BluetoothConnection> _connections = new List<BluetoothConnection>();
 
         internal override void OnShow()
         {
+            if (PlayerPrefs.HasKey("last_ble_ssid"))
+                _ssidField.text = PlayerPrefs.GetString("last_ble_ssid");
+
             _statusText.SetActive(false);
             _bleInfoText.SetActive(true);
+
             ShowTypeSsid();
+
+            _passwordField.text = ApplicationSettings.PreviousWifiPassword;
         }
 
         internal override void OnHide()
@@ -61,7 +76,8 @@ namespace VoyagerApp.UI.Menus
 
             StopAllCoroutines();
 
-            _loading = false;
+            _ssidListLoading = false;
+            _setLoading = false;
         }
 
         public void Back()
@@ -78,9 +94,13 @@ namespace VoyagerApp.UI.Menus
 
         public void ShowTypeSsid()
         {
-            if (!_loading)
+            if (!_ssidListLoading)
             {
+                _ssidField.interactable = true;
+                _setSsidScan.interactable = true;
+                _passwordField.interactable = true;
                 _setBtn.interactable = true;
+                _setBtnText.text = "SET";
                 _ssidListObj.gameObject.SetActive(false);
                 _ssidFieldObj.gameObject.SetActive(true);
             }
@@ -88,10 +108,10 @@ namespace VoyagerApp.UI.Menus
 
         public void ReloadSsidList()
         {
-            if (!_loading) StartLoadingSsids();
+            if (!_ssidListLoading) StartLoadingSsids();
         }
 
-        public void ConnectToLamps(string[] ids)
+        public void ConnectToLamps(string[] ids)
         {
             _ids = ids;
         }
@@ -106,7 +126,9 @@ namespace VoyagerApp.UI.Menus
 
             if (password.Length >= 8 && ssid.Length != 0 || password.Length == 0 && ssid.Length != 0)
             {
+                StartSetLoading();
                 StartCoroutine(IEnumSetWifiSettings(ssid, password));
+                PlayerPrefs.SetString("last_ble_ssid", ssid);
             }
             else if (ssid.Length == 0)
             {
@@ -126,18 +148,21 @@ namespace VoyagerApp.UI.Menus
                     new Action[] { null }
                 );
             }
+
+            ApplicationSettings.PreviousWifiPassword = password;
         }
 
-        IEnumerator IEnumSetWifiSettings(string ssid, string password)
+        private IEnumerator IEnumSetWifiSettings(string ssid, string password)
         {
             _statusText.SetActive(true);
 
-            const string JSON = @"{""op_code"": ""ble_ack""}";
+            const string JSON_SET_RESPONSE = @"{""op_code"": ""ble_ack""}";
+            const string JSON_POLL_REQUEST = @"{""op_code"": ""poll_request_short""}";
 
             foreach (var id in _ids)
             {
-                bool done = false;
-                bool hadError = false;
+                var done = false;
+                var hadError = false;
                 string errorMessage = null;
                 BluetoothConnection active = null;
 
@@ -146,22 +171,22 @@ namespace VoyagerApp.UI.Menus
                     {
                         active = connection;
                         _connections.Add(active);
+                        
+                        Debug.Log("Connected to ble");
 
-                        active.OnData += (data) =>
+                        active.OnData += data =>
                         {
-                            if (Encoding.UTF8.GetString(data) == JSON)
+                            Debug.Log("received:\n" + Encoding.UTF8.GetString(data));
+                            
+                            if (Encoding.UTF8.GetString(data) == JSON_SET_RESPONSE)
                             {
                                 done = true;
+                                AddConnectionToWorkspace(active);
                                 BluetoothHelper.DisconnectFromPeripheral(active.ID);
                             }
                             else
                             {
-                                var packet = Packet.Deserialize<BleChipVersion>(data);
-
-                                if (packet != null)
-                                    active.lampVersion = packet.version[1];
-                                else
-                                    active.lampVersion = 400;
+                                active.PollReply = Packet.Deserialize<BlePollReply>(data);
                             }
                         };
 
@@ -200,9 +225,13 @@ namespace VoyagerApp.UI.Menus
 
                     if (active != null)
                     {
-                        if (active.lampVersion == 0)
-                            active.Write(WRITE_CHAR, new BleChipVersion().Serialize());
-                        else if (active.lampVersion < 500)
+                        if (active.PollReply == null)
+                        {
+                            Debug.Log("Sending out poll request");
+                            active.Write(WRITE_CHAR, Encoding.UTF8.GetBytes(JSON_POLL_REQUEST));
+
+                        }
+                        else if (active.PollReply.Version[1] < 500)
                             active.Write(WRITE_CHAR, VoyagerNetworkMode.Client(ssid, password, active.Name).ToData());
                         else
                             active.Write(WRITE_CHAR, VoyagerNetworkMode.SecureClient(ssid, password, active.Name).ToData());
@@ -212,10 +241,55 @@ namespace VoyagerApp.UI.Menus
                 }
 
                 if (hadError)
-                    DialogBox.Show("BLE Error", errorMessage, new string[] { "OK" }, new Action[] { null });
+                    DialogBox.Show("BLE Error", errorMessage, new[] { "OK" }, new Action[] { null });
             }
 
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+        }
+
+        private void AddConnectionToWorkspace(BluetoothConnection connection)
+        {
+            MainThread.Dispach(() =>
+            {
+                var lamp = LampManager.instance.GetLampWithSerial(connection.PollReply.Serial);
+
+                if (lamp == null)
+                {
+                    lamp = new VoyagerLamp
+                    {
+                        serial = connection.PollReply.Serial,
+                        chipVersion = connection.PollReply.Version,
+                        length = connection.PollReply.Length,
+                        address = IPAddress.Any,
+                        lastMessage = 0.0
+                    };
+
+                    LampManager.instance.AddLamp(lamp);
+                }
+
+                if (lamp is VoyagerLamp voyager)
+                {
+                    if (!WorkspaceUtils.VoyagerLamps.Contains(voyager))
+                    {
+                        WorkspaceSelection.instance.Clear();
+                        var item = WorkspaceManager.instance.InstantiateItem<VoyagerItemView>(voyager, WorkspaceUtils.PositionOfLastNotSelectedLamp + new Vector3(0, -1.0f, 0));
+                        WorkspaceUtils.SetCameraPosition(item.transform.localPosition);
+                        item.StartCoroutine(ApplyEffectWhenConnects(voyager));
+                    }
+                } 
+            });
+        }
+
+        private IEnumerator ApplyEffectWhenConnects(VoyagerLamp voyager)
+        {
+            yield return new WaitUntil(() => voyager.connected);
+
+            if (WorkspaceUtils.VoyagerLamps.Contains(voyager))
+            {
+                var effect = EffectManager.GetEffectWithName<Video>("white");
+                voyager.effect = null;
+                voyager.SetEffect(effect);
+            }
         }
 
         void StartLoadingSsids()
@@ -225,10 +299,25 @@ namespace VoyagerApp.UI.Menus
             _ssidList.interactable = false;
             _ssidRefreshBtn.interactable = false;
             _typeSsid.interactable = false;
-            _loading = true;
+            _ssidListLoading = true;
 
             StartCoroutine(PollSsidsFromBluetooth());
-            StartCoroutine(IEnumLoadingAnimation());
+            StartCoroutine(IEnumSsidLoadingAnimation());
+        }
+
+        void StartSetLoading()
+        {
+            _setBtn.interactable = false;
+            _typeSsid.interactable = false;
+            _ssidField.interactable = false;
+            _setSsidScan.interactable = false;
+            _passwordField.interactable = false;
+            _ssidList.interactable = false;
+            _ssidRefreshBtn.interactable = false;
+
+            _setLoading = true;
+
+            StartCoroutine(IEnumSetLoadingAnimation());
         }
 
         IEnumerator PollSsidsFromBluetooth()
@@ -252,7 +341,7 @@ namespace VoyagerApp.UI.Menus
                         (connection) =>
                         {
                             active = connection;
-                            MainThread.Dispach(() => endtime = Time.time + 2.0f);
+                            MainThread.Dispach(() => endtime = Time.time + 5.0f);
 
                             _connections.Add(connection);
 
@@ -302,15 +391,15 @@ namespace VoyagerApp.UI.Menus
 
             if (supportedLamps.Count() == 0)
             {
-                DialogBox.Show("BLE Error", "Scanning SSID's failed, make sure you're lamps are updated and try again or type SSID manually.", new string[] { "OK" }, new Action[] { null });
+                DialogBox.Show("BLE Error", "Scanning SSID's failed, make sure your lamps are updated and try again or type SSID manually.", new string[] { "OK" }, new Action[] { null });
                 yield return new WaitForSeconds(0.1f);
                 OnSsidListReceived(ssids.ToArray());
             }
             else
             {
-                List<string[]> all = new List<string[]>();
+                string[] ssidList = new string[0];
 
-                int finished = 0;
+                bool finished = false;
 
                 for (int i = 0; i < 4; i++)
                 {
@@ -318,28 +407,25 @@ namespace VoyagerApp.UI.Menus
                     {
                         StartCoroutine(GetSsidFromId(supportedLamps[i], (result) =>
                         {
-                            all.Add(result);
-                            finished++;
+                            ssidList = result;
+                            finished = true;
                         }));
                     }
                 }
 
                 float endTime = Time.time + _timeout;
-                while (Time.time < endTime && finished < _ids.Length)
+                while (Time.time < endTime && !finished)
                     yield return new WaitForSeconds(0.5f);
 
                 foreach (var connection in _connections)
                     BluetoothHelper.DisconnectFromPeripheral(connection.ID);
 
-                if (all.Count != 0)
+                if (ssidList.Length != 0)
                 {
-                    foreach (var ssidList in all)
+                    foreach (var ssid in ssidList)
                     {
-                        foreach (var ssid in ssidList)
-                        {
-                            if (!ssids.Contains(ssid))
-                                ssids.Add(ssid);
-                        }
+                        if (!ssids.Contains(ssid))
+                            ssids.Add(ssid);
                     }
                 }
 
@@ -414,10 +500,10 @@ namespace VoyagerApp.UI.Menus
             callback(ssids.ToArray());
         }
 
-        IEnumerator IEnumLoadingAnimation()
+        IEnumerator IEnumSsidLoadingAnimation()
         {
             int i = 0;
-            while (_loading)
+            while (_ssidListLoading)
             {
                 _ssidList.SetItems(_loadingAnim[i]);
                 yield return new WaitForSeconds(_animationSpeed);
@@ -428,7 +514,7 @@ namespace VoyagerApp.UI.Menus
 
         void OnSsidListReceived(string[] ssids)
         {
-            _loading = false;
+            _ssidListLoading = false;
 
             if (ssids.Length > 0)
             {
@@ -443,6 +529,18 @@ namespace VoyagerApp.UI.Menus
                 _ssidRefreshBtn.interactable = true;
                 _typeSsid.interactable = true;
                 _ssidList.SetItems("Not found");
+            }
+        }
+
+        IEnumerator IEnumSetLoadingAnimation()
+        {
+            int i = 0;
+            while (_setLoading)
+            {
+                _setBtnText.text = _loadingAnim[i];
+                yield return new WaitForSeconds(_animationSpeed);
+                if (++i >= _loadingAnim.Length)
+                    i = 0;
             }
         }
     }

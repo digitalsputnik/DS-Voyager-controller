@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
+using VoyagerApp.Lamps.Voyager;
 using VoyagerApp.Networking.Voyager;
 using VoyagerApp.Projects;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 using VoyagerApp.Videos;
+using Effect = VoyagerApp.Effects.Effect;
+using Lamp = VoyagerApp.Projects.Lamp;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -44,7 +49,7 @@ namespace VoyagerApp.UI.Menus
             FileUtils.LoadProject(OnImportFile);
         }
 
-        void OnImportFile(string file)
+        private void OnImportFile(string file)
         {
             string name = Path.GetFileNameWithoutExtension(file);
 
@@ -73,7 +78,7 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
-        void DisplayAllItems()
+        private void DisplayAllItems()
         {
             var projPath = Project.ProjectsDirectory;
             var projects = Directory.GetDirectories(projPath);
@@ -85,14 +90,18 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
-        void DisplayItem(string project)
+        private void DisplayItem(string project)
         {
             try
             {
                 LoadMenuItem item = Instantiate(itemPrefab, container);
                 items.Add(item);
                 item.SetPath(project);
-            } catch { }
+            }
+            catch
+            {
+                // ignored
+            }
         }
 
         public void LoadProject(string project)
@@ -102,7 +111,7 @@ namespace VoyagerApp.UI.Menus
                 "Clicking \"YES\" will send loaded video to lamps, otherwise " +
                 "only lamp positions will be loaded, but lamps will still play " +
                 "the video, they have at the moment.",
-                new string[] { "YES", "NO", "CANCEL" },
+                new[] { "YES", "NO", "CANCEL" },
                 new Action[] {
                     () =>
                     {
@@ -123,17 +132,18 @@ namespace VoyagerApp.UI.Menus
             );
         }
 
-        void OnSendBufferCancel() => ItemsInteractable = true;
-        
-        void OnSendBuffer()
+        private void OnSendBufferCancel() => ItemsInteractable = true;
+
+        private void OnSendBuffer()
         {
             VideoRenderer.SetState(new DoneState());
             foreach (var lampData in data.lamps)
             {
-                var video = EffectManager.GetEffectWithId<Effects.Video>(lampData.effect);
-                var lamp = LampManager.instance.GetLampWithSerial(lampData.serial);
+                var lamp = LampManager.instance.GetLampWithSerial(lampData.serial) as VoyagerLamp;
+                if (lamp == null) continue;
 
-                if (lamp != null && video != null)
+                var video = EffectManager.GetEffectWithId<Effects.Video>(lampData.effect);
+                if (video != null)
                 {
                     lamp.effect = null;
                     lamp.SetEffect(video);
@@ -143,10 +153,36 @@ namespace VoyagerApp.UI.Menus
                         VoyagerClient.PORT_SETTINGS
                     );
                 }
+
+                var effect = EffectManager.GetEffectWithId(lampData.effect);
+                if (effect == null) continue;
+
+                lamp.effect = null;
+                lamp.SetEffect(effect);
+
+                StartCoroutine(LoadStream(effect, lampData, lamp));
             }
         }
 
-        bool ItemsInteractable
+        private static IEnumerator LoadStream(Effect effect, Lamp data, VoyagerLamp lamp)
+        {
+            if (!(effect is SyphonStream) && !(effect is SpoutStream))
+                yield break;
+            
+            yield return new WaitForSeconds(0.2f);
+                
+            var frame = data.buffer[0];
+            var colors = ColorUtils.BytesToColors(frame);
+
+            for (var i = 0; i < 5; i++)
+            {
+                var time = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset + 1.0f;
+                lamp.PushStreamFrame(colors, time);
+                yield return new WaitForSeconds(0.01f);
+            }
+        }
+
+        private bool ItemsInteractable
         {
             set
             {

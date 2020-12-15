@@ -12,7 +12,6 @@ namespace DigitalSputnik.Bluetooth
         bool _scanning;
 
         InternalPeripheralScanHandler _onPeripheralScanned;
-
         InternalPeripheralConnectHandler _onConnected;
         InternalPeripheralConnectFailHandler _onConnectFailed;
         InternalPeripheralDisconnectHandler _onDisconnect;
@@ -59,8 +58,8 @@ namespace DigitalSputnik.Bluetooth
         {
             if (!_initialized)
             {
-                GameObject obj = new GameObject("iOS Bluetooth Listener");
-                IOSBluetoothListener listener = obj.AddComponent<IOSBluetoothListener>();
+                var obj = new GameObject("iOS Bluetooth Listener");
+                var listener = obj.AddComponent<IOSBluetoothListener>();
 
                 listener.OnPeripheralScanned += OnPeripheralScanned;
                 listener.OnPeripheralNotFound += OnPeripheralNotFound;
@@ -77,7 +76,7 @@ namespace DigitalSputnik.Bluetooth
             }
             else
             {
-                Debug.LogError("Bluetooth interface is allready initialized!");
+                Debug.LogError("Bluetooth interface is already initialized!");
             }
         }
 

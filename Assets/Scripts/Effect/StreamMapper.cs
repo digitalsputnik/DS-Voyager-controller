@@ -50,21 +50,23 @@ namespace VoyagerApp.Effects
         {
             this.effect = effect;
 
-            if (effect is SyphonStream syphonStream)
+            switch (effect)
             {
-                syphon.serverName = syphonStream.server;
-                syphon.appName = syphonStream.application;
-                syphon.enabled = true;
-                spout.enabled = false;
-            }
-
-            if (effect is SpoutStream spoutStream)
-            {
-                spout.sourceName = spoutStream.source;
-                spout.enabled = true;
-                syphon.enabled = false;
-                StopAllCoroutines();
-                StartCoroutine(RevokeSpoutStream());
+                case SyphonStream syphonStream:
+                    syphon.serverName = syphonStream.server;
+                    syphon.appName = syphonStream.application;
+                    syphon.enabled = true;
+                    spout.enabled = false;
+                    UpdateEffectSettings();
+                    break;
+                case SpoutStream spoutStream:
+                    spout.sourceName = spoutStream.source;
+                    spout.enabled = true;
+                    syphon.enabled = false;
+                    StopAllCoroutines();
+                    StartCoroutine(RevokeSpoutStream());
+                    UpdateEffectSettings();
+                    break;
             }
         }
 
@@ -82,7 +84,7 @@ namespace VoyagerApp.Effects
             var renderCap = 1.0f / Fps;
             var streamCap = 1.0f / Fps / 2.0f;
 
-            if ((time - prevRenderTime) >= renderCap)
+            if (time - prevRenderTime >= renderCap)
             {
                 RenderFrame();
                 prevRenderTime = time;
@@ -128,7 +130,7 @@ namespace VoyagerApp.Effects
         void StoreFrameBuffer(Texture2D texture)
         {
             streamBuffer.Clear();
-            time = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset + ((float)Delay / 1000);
+            time = TimeUtils.Epoch + NetUtils.VoyagerClient.TimeOffset + (double)Delay / 1000;
             foreach (var lamp in WorkspaceUtils.VoyagerLamps)
             {
                 var coords = VectorUtils.MapLampToVideoCoords(lamp, texture);

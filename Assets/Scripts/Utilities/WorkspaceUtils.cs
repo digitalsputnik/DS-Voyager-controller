@@ -169,6 +169,15 @@ namespace VoyagerApp.Utilities
             }
         }
 
+        public static bool AnySelectedLampsAreDmx
+        {
+            get
+            {
+                if (SelectedLamps.Count == 0) return false;
+                return SelectedVoyagerLamps.Any(l => l.dmxEnabled);
+            }
+        }
+
         public static void EnterToVideoMapping()
         {
             Effect effect = SelectedLamps[0].effect;
@@ -407,9 +416,52 @@ namespace VoyagerApp.Utilities
             SelectionMove.RaiseMovedEvent();
         }
 
+        public static void SetCameraPosition(Vector2 pos)
+        {
+            Camera.main.transform.localPosition = new Vector3(pos[0], pos[1], Camera.main.transform.localPosition.z);
+        }
+
+        public static void SetCameraZoom(float zoom)
+        {
+            Camera.main.orthographicSize = zoom;
+        }
+
         public static List<LampItemView> SelectedLampItemsInOrder
         {
             get => SelectedLampItems.OrderBy(l => l.Order).ToList();
         }
+
+        public static Vector3 PositionOfLastNotSelectedLamp
+        {
+            get => VoyagerItems.Count() != 0 ? VoyagerItems.Last().transform.localPosition : Vector3.zero;
+        }
+
+        public static List<LampWorkspaceState> LampStates()
+        {
+            var states = new List<LampWorkspaceState>();
+            foreach(var lamp in LampItems)
+            {
+                states.Add(new LampWorkspaceState
+                {
+                    lamp = lamp.lamp,
+                    position = lamp.position,
+                    scale = lamp.scale,
+                    rotation = lamp.rotation,
+                    mapping = lamp.lamp.mapping,
+                    effect = lamp.lamp.effect
+                });
+            }
+            return states;
+        }
+    }
+
+    public class LampWorkspaceState
+    {
+        public Lamp lamp;
+        public float2 position;
+        public float scale;
+        public float rotation;
+        public EffectMapping mapping;
+        public Effect effect;
     }
 }

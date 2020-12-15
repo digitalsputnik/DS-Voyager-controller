@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
-using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
@@ -26,7 +25,7 @@ namespace VoyagerApp.UI.Menus
 
         public void AddPicture()
         {
-            FileUtils.LoadPictureFromDevice(PicturePicked);
+            FileUtils.LoadPictureFromDevice(PicturePicked, false, false);
         }
 
         public void SelectDeselect()
@@ -59,6 +58,7 @@ namespace VoyagerApp.UI.Menus
         {
             WorkspaceSelection.instance.onSelectionChanged += DisableEnableItems;
             WorkspaceManager.instance.onItemAdded += ItemAddedToWorkspace;
+            WorkspaceManager.instance.onItemRemoved += ItemRemovedWorkspace;
             DisableEnableItems();
         }
 
@@ -66,9 +66,15 @@ namespace VoyagerApp.UI.Menus
         {
             WorkspaceSelection.instance.onSelectionChanged -= DisableEnableItems;
             WorkspaceManager.instance.onItemAdded -= ItemAddedToWorkspace;
+            WorkspaceManager.instance.onItemRemoved -= ItemRemovedWorkspace;
         }
 
         void ItemAddedToWorkspace(WorkspaceItemView item)
+        {
+            DisableEnableItems();
+        }
+
+        void ItemRemovedWorkspace(WorkspaceItemView item)
         {
             DisableEnableItems();
         }
@@ -79,6 +85,7 @@ namespace VoyagerApp.UI.Menus
             bool all = WorkspaceUtils.AllLampsSelected;
             bool share = WorkspaceUtils.SelectedLampsHaveSameEffect;
             bool has = WorkspaceUtils.VoyagerLamps.Count != 0;
+            bool hasDmx = WorkspaceUtils.AnySelectedLampsAreDmx;
 
             infoText.SetActive(!one);
 
@@ -89,7 +96,7 @@ namespace VoyagerApp.UI.Menus
 
             splitter2.SetActive(one);
             setColorFxBtn.SetActive(one);
-            editColorFxBtn.SetActive(one && share);
+            editColorFxBtn.SetActive(one && share && !hasDmx);
 
             splitter3.SetActive(one);
             setDmxBtn.SetActive(one);
