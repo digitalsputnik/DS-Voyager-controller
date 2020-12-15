@@ -65,11 +65,9 @@ namespace VoyagerApp.UI.Menus
                 addEffectButton.GetComponentInChildren<Text>().text = "RESIZING: 0%";
             }
         }
-#endif
 
-        public void AddVideoEffectClick()
+        public void ResizeVideoOnAndroid()
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
             AndroidVideoResizer.PickVideo(this, (success, result) =>
             {
                 if (success && result != null)
@@ -100,6 +98,30 @@ namespace VoyagerApp.UI.Menus
             });
 
             resizing = true;
+        }
+#endif
+
+        public void AddVideoEffectClick()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            DialogBox.Show(
+                "INFO",
+                "It is suggested to compress the video for better performance. Would you like to compress the video?",
+                new[] { "YES", "NO", "CANCEL" },
+                new Action[] 
+                {
+                    () => ResizeVideoOnAndroid(), 
+                    () => FileUtils.LoadVideoFromDevice(path =>
+                    {
+                        if (path != "" && path != "Null" && path != null)
+                        {
+                            var video = VideoEffectLoader.LoadNewVideoFromPath(path);
+                            video.timestamp = TimeUtils.Epoch;
+                            OrderEffects();
+                        }
+                    }), 
+                    null
+                });
 #else
             FileUtils.LoadVideoFromDevice(path =>
             {
