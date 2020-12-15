@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using DigitalSputnik;
 using UnityEngine;
 using VoyagerApp.Effects;
 using VoyagerApp.Lamps;
@@ -15,10 +13,6 @@ using VoyagerApp.Workspace.Views;
 using Effect = VoyagerApp.Effects.Effect;
 using DsImage = DigitalSputnik.Images.Image;
 using UnityEngine.UI;
-
-#if UNITY_IOS && !UNITY_EDITOR
-using DigitalSputnik.Images.iOS;
-#endif
 
 namespace VoyagerApp.UI.Menus
 {
@@ -50,28 +44,9 @@ namespace VoyagerApp.UI.Menus
             {
                 if (path != "" && path != "Null" && path != null)
                 {
-#if UNITY_IOS && !UNITY_EDITOR
-                    MainThreadRunner.Instance.enabled = true;
-                    new Thread(() =>
-                    {
-                        IosImageResizer.Initialize();
-                        var dsImage = new DsImage { Path = path };
-                        var resizer = new IosImageResizer();
-                        resizer.Resize(dsImage, 512, 512, (success, error) =>
-                        {
-                            MainThread.Dispach(() =>
-                            {
-                                var image = ImageEffectLoader.LoadImageFromPath(path);
-                                image.timestamp = TimeUtils.Epoch;
-                                OrderEffects();
-                            });
-                        });  
-                    }).Start();
-#else
-                                var image = ImageEffectLoader.LoadImageFromPath(path);
-                                image.timestamp = TimeUtils.Epoch;
-                                OrderEffects();
-#endif
+                    var image = ImageEffectLoader.LoadImageFromPath(path);
+                    image.timestamp = TimeUtils.Epoch;
+                    OrderEffects();
                 }
             }, true);
         }
