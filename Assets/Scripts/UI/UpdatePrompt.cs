@@ -40,7 +40,7 @@ namespace VoyagerApp.UI
             
             if (item is VoyagerItemView voyager)
             {
-                var lampVersion = new Version(voyager.lamp.version[0], voyager.lamp.version[1]);
+                var lampVersion = new Version(voyager.lamp.version);
                 
                 if (!voyager.lamp.updated && voyager.lamp.connected)
                 {
