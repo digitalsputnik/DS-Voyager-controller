@@ -144,11 +144,21 @@ namespace VoyagerApp.UI.Menus
             foreach (var lamp in LampManager.instance.Lamps)
             {
                 var voyager = (VoyagerLamp) lamp;
-                
+
                 if (items.All(i => i.lamp.serial != lamp.serial) &&
                     lamps.All(l => l.serial != lamp.serial) &&
-                    lamp.connected && voyager.dmxPollReceived)
-                    OnLampAdded(lamp);
+                    lamp.connected)
+                {
+                    if (lamp.version == UpdateSettings.VoyagerAnimationVersion)
+                    {
+                        if (voyager.dmxPollReceived)
+                            OnLampAdded(lamp);
+                    }
+                    else
+                    {
+                        OnLampAdded(lamp);
+                    }
+                }
             }
             CheckForAddAllLampsButton();
         }
