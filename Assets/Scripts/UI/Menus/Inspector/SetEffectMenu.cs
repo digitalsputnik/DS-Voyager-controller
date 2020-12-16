@@ -48,7 +48,7 @@ namespace VoyagerApp.UI.Menus
                     image.timestamp = TimeUtils.Epoch;
                     OrderEffects();
                 }
-            }, true);
+            }, true, false);
         }
 
 #if UNITY_ANDROID && !UNITY_EDITOR
