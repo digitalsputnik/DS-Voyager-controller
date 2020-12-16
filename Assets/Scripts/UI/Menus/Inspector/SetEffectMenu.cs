@@ -154,6 +154,10 @@ namespace VoyagerApp.UI.Menus
                         new [] { "CONTINUE", "RESIZE", "CANCEL" },
                         new Action[] { () => fine?.Invoke(video), () => resize?.Invoke(video), null });
                 }
+                else if (Application.platform == RuntimePlatform.Android)
+                {
+                    fine?.Invoke(video);
+                }
                 else
                 {
                     DialogBox.Show(
