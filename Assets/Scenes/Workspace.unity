@@ -25782,6 +25782,46 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1631822837578629236, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: presets.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1631822837578629236, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: max
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 1631822837578629236, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: startValue
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1631822837578629236, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: presets.Array.data[5]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1631822837578629236, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: presets.Array.data[1]
+      value: 0.20833333
+      objectReference: {fileID: 0}
+    - target: {fileID: 1631822837578629236, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: presets.Array.data[2]
+      value: 0.41666666
+      objectReference: {fileID: 0}
+    - target: {fileID: 1631822837578629236, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: presets.Array.data[3]
+      value: 0.625
+      objectReference: {fileID: 0}
+    - target: {fileID: 1631822837578629236, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: presets.Array.data[4]
+      value: 0.8333333
+      objectReference: {fileID: 0}
     - target: {fileID: 1662433354893760185, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
