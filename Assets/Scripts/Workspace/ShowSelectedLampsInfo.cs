@@ -72,8 +72,8 @@ namespace VoyagerApp.UI
                 info.Add(lamp.length > 50 ? "4ft" : "2ft");
             if (ApplicationSettings.ShowInfoBatteryLevel)
                 info.Add($"{lamp.battery}%");
-            if (ApplicationSettings.ShowInfoChargingStatus && lamp.charging)
-                info.Add("charging");
+            if (ApplicationSettings.ShowInfoChargingStatus)
+                info.Add(lamp.charging ? "charging" : "not charging");
             if (ApplicationSettings.ShowInfoWifiMode)
                 info.Add(ModeFromString(lamp.mode));
             if (lamp.dmxEnabled)
