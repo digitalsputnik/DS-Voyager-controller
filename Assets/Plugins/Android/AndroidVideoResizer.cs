@@ -90,6 +90,8 @@ public static class AndroidVideoResizer
             _callback?.Invoke(false, "Compression in progress");
     }
 
+    public static void UpdateCallback(Action<bool, string> _callback) => _compressionFinishedCallback = _callback;
+
     static IEnumerator SetupAndPickVideo()
     {
         if (!initialized)

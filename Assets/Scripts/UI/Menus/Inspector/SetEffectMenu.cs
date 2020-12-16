@@ -66,38 +66,33 @@ namespace VoyagerApp.UI.Menus
             }
         }
 
-        public void ResizeVideoOnAndroid()
+        void AndroidVideoResizerCallback(bool success, string result)
         {
-            AndroidVideoResizer.PickVideo(this, (success, result) =>
+            if (success && result != null)
             {
-                if (success && result != null)
-                {
-                    MainThread.Dispach(() =>
-                    {
-                        var video = VideoEffectLoader.LoadNewVideoFromPath(result);
-                        video.timestamp = TimeUtils.Epoch;
-                        OrderEffects();
-                    });
-                }
-                else if (!success)
-                {
-                    DialogBox.Show(
-                        "ERROR",
-                        "Video resizing failed: " + result != null ? result : "Unknown error",
-                        new[] { "OK" },
-                        new Action[] { null });
-                }
-
-                resizing = false;
-
                 MainThread.Dispach(() =>
                 {
-                    addEffectButton.interactable = true;
-                    addEffectButton.GetComponentInChildren<Text>().text = "ADD EFFECT";
+                    var video = VideoEffectLoader.LoadNewVideoFromPath(result);
+                    video.timestamp = TimeUtils.Epoch;
+                    OrderEffects();
                 });
-            });
+            }
+            else if (!success)
+            {
+                DialogBox.Show(
+                    "ERROR",
+                    "Video resizing failed: " + result != null ? result : "Unknown error",
+                    new[] { "OK" },
+                    new Action[] { null });
+            }
 
-            resizing = true;
+            resizing = false;
+
+            MainThread.Dispach(() =>
+            {
+                addEffectButton.interactable = true;
+                addEffectButton.GetComponentInChildren<Text>().text = "ADD EFFECT";
+            });
         }
 #endif
 
@@ -110,7 +105,11 @@ namespace VoyagerApp.UI.Menus
                 new[] { "YES", "NO", "CANCEL" },
                 new Action[] 
                 {
-                    () => ResizeVideoOnAndroid(), 
+                    () =>
+                    {
+                        AndroidVideoResizer.PickVideo(this, AndroidVideoResizerCallback); 
+                        resizing = true;
+                    }, 
                     () => FileUtils.LoadVideoFromDevice(path =>
                     {
                         if (path != "" && path != "Null" && path != null)
@@ -221,6 +220,11 @@ namespace VoyagerApp.UI.Menus
 
             OrderEffects();
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (AndroidVideoResizer.IsCompressing)
+                AndroidVideoResizer.UpdateCallback(AndroidVideoResizerCallback);
+#endif
+
             EffectManager.onEffectAdded += OnEffectAdded;
             EffectManager.onEffectRemoved += OnEffectRemoved;
             WorkspaceSelection.instance.onSelectionChanged += OnSelectionChanged;
@@ -315,7 +319,20 @@ namespace VoyagerApp.UI.Menus
         }
 
         void OrderEffects()
-        {
+        { 
+            //Currently items list can sometimes contain destroyed items.
+            //This is why we sort them out. 
+            //TODO: Find where destroyed items are not removed from the list
+            List<SetEffectItem> existingItems = new List<SetEffectItem>();
+
+            foreach (var item in items.ToList())
+            {
+                if (item != null)
+                    existingItems.Add(item);
+            }
+
+            items = existingItems;
+
             var order = items
                 .OrderByDescending(i => i.effect.timestamp)
                 .ThenByDescending(i => i.effect.name == "white")

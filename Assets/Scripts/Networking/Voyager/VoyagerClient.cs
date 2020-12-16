@@ -95,25 +95,34 @@ namespace VoyagerApp.Networking.Voyager
             return data;
         }
 
-        public void TurnToClient(Lamp lamp, string ssid, string password)
+        public IEnumerator SendPacketsFiveTimes(byte[] package, IPEndPoint endpoint)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Send(package, endpoint);
+                yield return new WaitForSeconds(0.05f);
+            }
+        }
+
+        public void TurnToClient(MonoBehaviour behaviour, Lamp lamp, string ssid, string password)
         {
             var package = VoyagerNetworkMode.SecureClient(ssid, password, lamp.serial);
             var endpoint = new IPEndPoint(lamp.address, PORT_DISCOVERY);
-            Send(package.ToData(), endpoint);
+            behaviour.StartCoroutine(SendPacketsFiveTimes(package.ToData(), endpoint));
         }
 
-        public void TurnToRouter(Lamp lamp)
+        public void TurnToRouter(MonoBehaviour behaviour, Lamp lamp)
         {
             var package = VoyagerNetworkMode.Router(lamp.serial);
             var endpoint = new IPEndPoint(lamp.address, PORT_DISCOVERY);
-            Send(package.ToData(), endpoint);
+            behaviour.StartCoroutine(SendPacketsFiveTimes(package.ToData(), endpoint));
         }
 
-        public void TurnToMaster(Lamp lamp)
+        public void TurnToMaster(MonoBehaviour behaviour, Lamp lamp)
         {
             var package = VoyagerNetworkMode.Master(lamp.serial);
             var endpoint = new IPEndPoint(lamp.address, PORT_DISCOVERY);
-            Send(package.ToData(), endpoint);
+            behaviour.StartCoroutine(SendPacketsFiveTimes(package.ToData(), endpoint));
         }
 
         public override void Send(byte[] data, object info)

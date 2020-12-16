@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using VoyagerApp.Lamps;
+using VoyagerApp.Utilities;
 using VoyagerApp.Workspace.Views;
 
 namespace VoyagerApp.Workspace
@@ -58,11 +61,31 @@ namespace VoyagerApp.Workspace
         void Start()
         {
             WorkspaceManager.instance.onItemRemoved += ItemRemovedFromWorkspace;
+            LampManager.instance.onLampBroadcasted += OnLampBroadcasted;
         }
 
         void OnDestroy()
         {
             WorkspaceManager.instance.onItemRemoved -= ItemRemovedFromWorkspace;
+            LampManager.instance.onLampBroadcasted -= OnLampBroadcasted;
+        }
+
+        private void OnLampBroadcasted(Lamp lamp)
+        {
+            if (!WorkspaceUtils.VoyagerItems.Any(l => l.lamp == lamp))
+                return;
+
+            var vlamp = WorkspaceUtils.VoyagerItems.FirstOrDefault(l => l.lamp == lamp);
+
+            if (vlamp == null)
+                return;
+
+            if (instance.selected.Count == 1 && instance.Selected.Contains(vlamp))
+                return;
+
+            instance.Clear();
+            WorkspaceUtils.SetCameraPosition(vlamp.transform.localPosition);
+            instance.SelectItem(vlamp);
         }
 
         private void ItemRemovedFromWorkspace(WorkspaceItemView item)

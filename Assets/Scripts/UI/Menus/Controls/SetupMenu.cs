@@ -43,7 +43,7 @@ namespace VoyagerApp.UI.Menus
             DialogBox.Show(
                 "Help",
                 "Would you like to go through the tutorial on connecting lamps or go to the support page?",
-                new string[] { "TUTORIAL", "SUPPORT PAGE", "EXIT"},
+                new string[] { "TUTORIAL", "SUPPORT PAGE", "CANCEL"},
                 new Action[] {
                     () =>
                     {
