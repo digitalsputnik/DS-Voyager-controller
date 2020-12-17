@@ -164,8 +164,8 @@ namespace VoyagerApp.Utilities
             get
             {
                 if (SelectedLamps.Count == 0) return false;
-                Effect video = SelectedLamps[0].effect;
-                return SelectedLamps.All(l => l.effect == video);
+                var video = SelectedLamps[0].effect;
+                return video != null && SelectedLamps.All(l => l.effect == video);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerApp.Effects;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
@@ -16,6 +17,7 @@ namespace VoyagerApp.UI.Menus
         [SerializeField] GameObject splitter2            = null;
         [SerializeField] GameObject setColorFxBtn        = null;
         [SerializeField] GameObject editColorFxBtn       = null;
+        [SerializeField] GameObject removeColorFxBtn     = null;
         [SerializeField] GameObject splitter3            = null;
         [SerializeField] GameObject setDmxBtn            = null;
         [SerializeField] GameObject splitter4            = null;
@@ -45,6 +47,21 @@ namespace VoyagerApp.UI.Menus
         public void EditEffectClick()
         {
             WorkspaceUtils.EnterToVideoMapping();
+        }
+        
+        public void RemoveEffectClick()
+        {
+            var selected = WorkspaceUtils.SelectedLampItems;
+            var effect = EffectManager.GetEffectWithName<Video>("white");
+
+            foreach (var lamp in WorkspaceUtils.SelectedLamps)
+            {
+                lamp.SetEffect(effect);
+                lamp.SetItshe(ApplicationSettings.AddedLampsDefaultColor);
+            }
+            
+            WorkspaceSelection.instance.Clear();
+            selected.ForEach(WorkspaceSelection.instance.SelectItem);
         }
 
         public override void Start()
@@ -97,6 +114,7 @@ namespace VoyagerApp.UI.Menus
             splitter2.SetActive(one);
             setColorFxBtn.SetActive(one);
             editColorFxBtn.SetActive(one && share && !hasDmx);
+            removeColorFxBtn.SetActive(one && !hasDmx);
 
             splitter3.SetActive(one);
             setDmxBtn.SetActive(one);
