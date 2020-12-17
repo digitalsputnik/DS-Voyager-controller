@@ -106,7 +106,7 @@ namespace VoyagerApp.UI.Menus
 
         void OnDmxChannelToggleChanged(bool value)
         {
-            ApplicationSettings.ShowInfoChargingStatus = value;
+            ApplicationSettings.ShowInfoDmxChannel = value;
         }
 
         void OnIpAddressToggleChanged(bool value)
