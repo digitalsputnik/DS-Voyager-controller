@@ -207,7 +207,7 @@ namespace VoyagerApp.UI.Menus
                 );
             }
 
-            passwordField.text = password;
+            ApplicationSettings.PreviousWifiPassword = password;
         }
     }
 }
