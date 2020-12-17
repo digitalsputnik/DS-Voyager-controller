@@ -13,6 +13,7 @@ using VoyagerApp.Workspace.Views;
 using Effect = VoyagerApp.Effects.Effect;
 using DsImage = DigitalSputnik.Images.Image;
 using UnityEngine.UI;
+using System.IO;
 
 namespace VoyagerApp.UI.Menus
 {
@@ -72,9 +73,28 @@ namespace VoyagerApp.UI.Menus
             {
                 MainThread.Dispach(() =>
                 {
-                    var video = VideoEffectLoader.LoadNewVideoFromPath(result);
-                    video.timestamp = TimeUtils.Epoch;
-                    OrderEffects();
+                    var name = "video_" + Guid.NewGuid().ToString().Substring(0, 4);
+
+                    InputFieldMenu.Show("PICK NAME FOR VIDEO", name,
+                        text =>
+                        {
+                            name = text;
+
+                            var newPath = Path.Combine(FileUtils.TempPath, name + ".mp4");
+
+                            try
+                            {
+                                FileUtils.Copy(result, newPath);
+
+                                var video = VideoEffectLoader.LoadNewVideoFromPath(newPath);
+                                video.timestamp = TimeUtils.Epoch;
+                                OrderEffects();
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.LogError(ex);
+                            }
+                        }, 3, false);
                 });
             }
             else if (!success)

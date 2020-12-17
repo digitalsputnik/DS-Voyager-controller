@@ -147,7 +147,7 @@ namespace VoyagerApp.UI
             
             foreach (var lamp in WorkspaceUtils.LampItems.ToArray())
             {
-                var version = new Version(lamp.lamp.version[0], lamp.lamp.version[1]);
+                var version = new Version(lamp.lamp.version);
                 if (version > appVersion)
                     WorkspaceManager.instance.RemoveItem(lamp);
             }
