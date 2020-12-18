@@ -39,6 +39,7 @@ namespace VoyagerApp.UI
                 {
                     yield return new WaitUntil(() => video.available.value);
 
+                    lamp.SetMapping(EffectMapping.Default);
                     lamp.SetEffect(video);
                     lamp.SetItshe(ApplicationSettings.AddedLampsDefaultColor);
 

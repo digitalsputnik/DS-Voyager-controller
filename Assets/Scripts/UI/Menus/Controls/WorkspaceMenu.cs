@@ -113,8 +113,8 @@ namespace VoyagerApp.UI.Menus
 
             splitter2.SetActive(one);
             setColorFxBtn.SetActive(one);
-            editColorFxBtn.SetActive(false);
-            removeColorFxBtn.SetActive(one && !hasDmx);
+            editColorFxBtn.SetActive(one && share && !hasDmx);
+            removeColorFxBtn.SetActive(false);
 
             splitter3.SetActive(one);
             setDmxBtn.SetActive(one);
