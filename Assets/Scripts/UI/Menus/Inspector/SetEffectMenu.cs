@@ -121,7 +121,7 @@ namespace VoyagerApp.UI.Menus
 #if UNITY_ANDROID && !UNITY_EDITOR
             DialogBox.Show(
                 "INFO",
-                "It is suggested to compress the video for better performance. Would you like to compress the video?",
+                "It is suggested to resize the video for better performance. Would you like to resize the video?",
                 new[] { "YES", "NO", "CANCEL" },
                 new Action[] 
                 {
