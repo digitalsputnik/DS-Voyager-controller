@@ -20,6 +20,7 @@ namespace VoyagerApp.UI
         [SerializeField] float waitTime = 5.0f;
 
         List<LampItemView> updatingLamps = new List<LampItemView>();
+        public static List<string> newerWarnedLamps = new List<string>();
 
         private bool _showingLampOlder;
         private bool _showingLampNewer;
@@ -47,8 +48,10 @@ namespace VoyagerApp.UI
                     StopCoroutine(WaitForAnothers());
                     StartCoroutine(WaitForAnothers());
                 }
-                else if (appVersion < lampVersion)
+                else if (appVersion < lampVersion && !newerWarnedLamps.Contains(voyager.lamp.serial))
                 {
+                    newerWarnedLamps.Add(voyager.lamp.serial);
+
                     StopCoroutine(WaitForAnothersLampNewer());
                     StartCoroutine(WaitForAnothersLampNewer());
                 }
@@ -118,7 +121,7 @@ namespace VoyagerApp.UI
                     {
                         RemoveLampsWithNewerVersion();
                         _showingLampNewer = false;
-                    }, null
+                    }, () => _showingLampNewer = false
                 }
             );
         }

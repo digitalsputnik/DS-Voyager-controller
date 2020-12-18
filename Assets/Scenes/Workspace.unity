@@ -25045,7 +25045,7 @@ PrefabInstance:
     - target: {fileID: 8455935338822375204, guid: 5a5e02a9e8076452585ceb20c6b05f0a,
         type: 3}
       propertyPath: voyagerAnimVersion
-      value: 1.769
+      value: 1.771
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7627344489101607328, guid: 5a5e02a9e8076452585ceb20c6b05f0a, type: 3}
