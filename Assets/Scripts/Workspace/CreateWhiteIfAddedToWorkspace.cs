@@ -31,7 +31,7 @@ namespace VoyagerApp.UI
         IEnumerator AddLamp(Lamp lamp)
         {
             yield return new WaitForSeconds(0.3f);
-            Video video = EffectManager.GetEffectWithName<Video>("white");
+            var video = EffectManager.GetEffectWithName<Video>("white");
 
             if (lamp is VoyagerLamp voyager)
             {
