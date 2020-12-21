@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace VoyagerController.Serial
 
         public VoyagerSerialClient()
         {
-            Task.Delay(2000).ContinueWith(t => Scan());
+            Task.Delay(1000).ContinueWith(t => Scan());
         }
 
         private void Scan()
@@ -54,7 +55,7 @@ namespace VoyagerController.Serial
 
                 var lamp = new VoyagerLamp(this)
                 {
-                    Endpoint = new SerialEndPoint() {Stream = serialPort},
+                    Endpoint = new SerialEndPoint() { Stream = serialPort },
                     Serial = "DS" + portName,
                     PixelCount = 42,
                     Connected = true
@@ -71,8 +72,12 @@ namespace VoyagerController.Serial
                 if (!endpoint.Stream.IsOpen)
                     endpoint.Stream.Open();
 
+                Debug.Log(message);
+
                 var packet = AssembleVoyagerPacket(message);
-                endpoint.Stream.Write(Encoding.UTF8.GetString(packet));
+                endpoint.Stream.Write(packet, 0, packet.Length);
+
+                endpoint.Stream.Close();
             }
         }
         
@@ -110,10 +115,16 @@ namespace VoyagerController.Serial
         public override void SetItshe(VoyagerLamp voyager, Itshe itshe)
         {
             var packet = new SetItshePacket(itshe);
-            packet.Timestamp = TimeUtils.Epoch;
-            var json = JsonConvert.SerializeObject(packet, new ItsheConverter());
 
-            SendMessage(voyager, json);
+            string message = BuildSetItshe(itshe).Replace(" ", "");
+
+            SendMessage(voyager, message);
+        }
+
+        public string BuildSetItshe(Itshe itshe)
+        {
+            return "{\"itshe\":{\"e\":" + itshe.E.ToString().Replace(",",".") + ",\"h\":" + itshe.H.ToString().Replace(",", ".") + ",\"i\":" + itshe.I.ToString().Replace(",", ".")
+                + ",\"s\":" + itshe.S.ToString().Replace(",", ".") + ",\"t\":" + itshe.T.ToString().Replace(",", ".") + "}, \"op_code\":\"set_itshe\", \"timestamp\":" + TimeUtils.Epoch.ToString().Replace(",", ".") + "}";
         }
 
         public override double StartStream(VoyagerLamp voyager)
@@ -158,7 +169,9 @@ namespace VoyagerController.Serial
 
         public override void SendSettingsPacket(VoyagerLamp voyager, Packet packet, double time)
         {
-            
+            packet.Timestamp = time;
+            var json = JsonConvert.SerializeObject(packet, new ItsheConverter());
+            SendMessage(voyager, json);
         }
 
         public override void PollAvailableSsidList(VoyagerLamp voyager, SsidListHandler callback)

@@ -101,6 +101,6 @@ public class SerialTest : MonoBehaviour
 
     private void OnDestroy()
     {
-        _stream.Close();
+        //_stream.Close();
     }
 }
