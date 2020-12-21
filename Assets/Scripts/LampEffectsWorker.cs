@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
 using DigitalSputnik;
 using DigitalSputnik.Colors;

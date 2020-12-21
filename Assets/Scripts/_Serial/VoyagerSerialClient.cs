@@ -49,13 +49,16 @@ namespace VoyagerController.Serial
                     ReadTimeout = 1
                 };
 
-                var lamp = new VoyagerLamp(this);
-                lamp.Endpoint = new SerialEndPoint() { Stream = serialPort };
-                lamp.Serial = "DS0264000500000";
-                lamp.PixelCount = 42;
-                lamp.Connected = true;
+                var lamp = new VoyagerLamp(this)
+                {
+                    Endpoint = new SerialEndPoint() {Stream = serialPort},
+                    Serial = "DS0264000500000",
+                    PixelCount = 42,
+                    Connected = true
+                };
 
                 AddLampToManager(lamp);
+                if (!Metadata.Contains(lamp.Serial)) Metadata.Add(lamp);
             }
         }
 
