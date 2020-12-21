@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using DigitalSputnik;
 using DigitalSputnik.Colors;
 using DigitalSputnik.Voyager;
 using DigitalSputnik.Voyager.Communication;
 using DigitalSputnik.Voyager.Json;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace VoyagerController.Serial
 {
@@ -35,7 +38,7 @@ namespace VoyagerController.Serial
 
         public VoyagerSerialClient()
         {
-            Scan();
+            Task.Delay(2000).ContinueWith(t => Scan());
         }
 
         private void Scan()
@@ -52,13 +55,12 @@ namespace VoyagerController.Serial
                 var lamp = new VoyagerLamp(this)
                 {
                     Endpoint = new SerialEndPoint() {Stream = serialPort},
-                    Serial = "DS0264000500000",
+                    Serial = "DS" + portName,
                     PixelCount = 42,
                     Connected = true
                 };
 
                 AddLampToManager(lamp);
-                if (!Metadata.Contains(lamp.Serial)) Metadata.Add(lamp);
             }
         }
 
@@ -70,9 +72,7 @@ namespace VoyagerController.Serial
                     endpoint.Stream.Open();
 
                 var packet = AssembleVoyagerPacket(message);
-                endpoint.Stream.Write(packet, 0, packet.Length);
-
-                endpoint.Stream.Close();
+                endpoint.Stream.Write(Encoding.UTF8.GetString(packet));
             }
         }
         
@@ -110,7 +110,10 @@ namespace VoyagerController.Serial
         public override void SetItshe(VoyagerLamp voyager, Itshe itshe)
         {
             var packet = new SetItshePacket(itshe);
-            SendSettingsPacket(voyager, packet, TimeUtils.Epoch);
+            packet.Timestamp = TimeUtils.Epoch;
+            var json = JsonConvert.SerializeObject(packet, new ItsheConverter());
+
+            SendMessage(voyager, json);
         }
 
         public override double StartStream(VoyagerLamp voyager)
@@ -155,9 +158,7 @@ namespace VoyagerController.Serial
 
         public override void SendSettingsPacket(VoyagerLamp voyager, Packet packet, double time)
         {
-            packet.Timestamp = time;
-            var json = JsonConvert.SerializeObject(packet, new ItsheConverter());
-            SendMessage(voyager, json);
+            
         }
 
         public override void PollAvailableSsidList(VoyagerLamp voyager, SsidListHandler callback)
