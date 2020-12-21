@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="" />
+    <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_Serial/SerialEndPoint.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_Serial/SerialEndPoint.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/crosstales/FileBrowser/3rd party/PlayMaker.unitypackage.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Videos/Runtime/Plugins/Editor.meta" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -10,27 +19,11 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9577AC7A-62EF-4317-9789-031239BA8798/29/91ec0ed1/Dictionary`2.cs" root0="SKIP_HIGHLIGHTING" />
-  </component>
   <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering Stream/SpoutRenderer.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectDisplay.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/WorkspaceMenu.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/SpoutEffectLoader.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/VideoEffectDisplay.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering Video/VideoEffectRenderer.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/TextureExtensions.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" />
-      </list>
-    </option>
+    <changedPaths>
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Serial/VoyagerSerialClient.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" />
+    </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
   <component name="ProjectViewState">
@@ -42,6 +35,7 @@
     <property name="DebuggerViewTab_PTCS_LastProportionKey" value="0.29995406" />
     <property name="Discover.Launch.Via.Unity" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.build.unityPlugin" />
     <property name="vue.rearranger.settings.migration" value="true" />
@@ -52,7 +46,7 @@
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
       <option name="selectedOptions">
-        <set />
+        <list />
       </option>
       <method v="2" />
     </configuration>
@@ -61,7 +55,7 @@
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
       <option name="selectedOptions">
-        <set />
+        <list />
       </option>
       <method v="2" />
     </configuration>
@@ -76,6 +70,7 @@
       <updated>1604572038817</updated>
       <workItem from="1604572046775" duration="7987000" />
       <workItem from="1604651482882" duration="5717000" />
+      <workItem from="1608549391657" duration="1148000" />
     </task>
     <servers />
   </component>
@@ -84,85 +79,18 @@
   </component>
   <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="EditMode" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state width="2208" height="543" key="GridCell.Tab.0.bottom" timestamp="1604574210016">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.0.bottom/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210016" />
-    <state width="2208" height="543" key="GridCell.Tab.0.center" timestamp="1604574210016">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.0.center/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210016" />
-    <state width="2208" height="543" key="GridCell.Tab.0.left" timestamp="1604574210016">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.0.left/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210016" />
-    <state width="2208" height="543" key="GridCell.Tab.0.right" timestamp="1604574210016">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.0.right/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210016" />
-    <state width="2208" height="543" key="GridCell.Tab.1.bottom" timestamp="1604574210017">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.1.bottom/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210017" />
-    <state width="2208" height="543" key="GridCell.Tab.1.center" timestamp="1604574210016">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.1.center/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210016" />
-    <state width="2208" height="543" key="GridCell.Tab.1.left" timestamp="1604574210016">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.1.left/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210016" />
-    <state width="2208" height="543" key="GridCell.Tab.1.right" timestamp="1604574210017">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.1.right/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210017" />
-    <state width="2208" height="543" key="GridCell.Tab.2.bottom" timestamp="1604574210017">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.2.bottom/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210017" />
-    <state width="2208" height="543" key="GridCell.Tab.2.center" timestamp="1604574210017">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.2.center/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210017" />
-    <state width="2208" height="543" key="GridCell.Tab.2.left" timestamp="1604574210017">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.2.left/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210017" />
-    <state width="2208" height="543" key="GridCell.Tab.2.right" timestamp="1604574210017">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.2.right/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210017" />
-    <state width="2208" height="543" key="GridCell.Tab.3.bottom" timestamp="1604574210017">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.3.bottom/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210017" />
-    <state width="2208" height="543" key="GridCell.Tab.3.center" timestamp="1604574210017">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.3.center/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210017" />
-    <state width="2208" height="543" key="GridCell.Tab.3.left" timestamp="1604574210017">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.3.left/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210017" />
-    <state width="2208" height="543" key="GridCell.Tab.3.right" timestamp="1604574210017">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state width="2208" height="543" key="GridCell.Tab.3.right/0.0.2250.1460@0.0.2250.1460" timestamp="1604574210017" />
-    <state x="957" y="447" key="RiderGenerateDialog" timestamp="1604582464006">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state x="957" y="447" key="RiderGenerateDialog/0.0.2250.1460@0.0.2250.1460" timestamp="1604582464006" />
-    <state x="627" y="375" key="SettingsEditor" timestamp="1604583140636">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state x="627" y="375" key="SettingsEditor/0.0.2250.1460@0.0.2250.1460" timestamp="1604583140636" />
-    <state x="770" y="329" width="708" height="801" key="find.popup" timestamp="1604579723503">
-      <screen x="0" y="0" width="2250" height="1460" />
-    </state>
-    <state x="770" y="329" width="708" height="801" key="find.popup/0.0.2250.1460@0.0.2250.1460" timestamp="1604579723503" />
   </component>
 </project>
