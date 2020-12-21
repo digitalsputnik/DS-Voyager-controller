@@ -24611,7 +24611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c20a7072733a547728eeec1f15e168c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _serialPort: /dev/tty.usbserial-1440
+  _serialPort: COM3
 --- !u!1001 &1939072358
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27750,8 +27750,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 70750426}
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
-  m_Value: 1.0000004
-  m_Size: 0.80529296
+  m_Value: 1.0000005
+  m_Size: 0.71390486
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.IO.Ports;
+using System.Linq;
 using System.Text;
 using DigitalSputnik;
 using DigitalSputnik.Colors;
@@ -28,20 +30,46 @@ namespace VoyagerController.Serial
             0x97, 0xc9, 0x4a, 0x14, 0xf6, 0xa8, 0x74, 0x2a, 0xc8, 0x96, 0x15, 0x4b, 0xa9, 0xf7, 0xb6, 0xe8, 0x0a, 0x54,
             0xd7, 0x89, 0x6b, 0x35
         };
-        
+
         public override double TimeOffset => 0.0f;
 
         public VoyagerSerialClient()
         {
-            
+            Scan();
+        }
+
+        private void Scan()
+        {
+            foreach (var portName in SerialPort.GetPortNames())
+            {
+                var serialPort = new SerialPort(portName, 750000, Parity.None, 8, StopBits.One)
+                {
+                    Handshake = Handshake.None,
+                    RtsEnable = false,
+                    ReadTimeout = 1
+                };
+
+                var lamp = new VoyagerLamp(this);
+                lamp.Endpoint = new SerialEndPoint() { Stream = serialPort };
+                lamp.Serial = "DS0264000500000";
+                lamp.PixelCount = 42;
+                lamp.Connected = true;
+
+                AddLampToManager(lamp);
+            }
         }
 
         private static void SendMessage(VoyagerLamp voyager, string message)
         {
             if (voyager.Endpoint is SerialEndPoint endpoint)
             {
+                if (!endpoint.Stream.IsOpen)
+                    endpoint.Stream.Open();
+
                 var packet = AssembleVoyagerPacket(message);
                 endpoint.Stream.Write(packet, 0, packet.Length);
+
+                endpoint.Stream.Close();
             }
         }
         
