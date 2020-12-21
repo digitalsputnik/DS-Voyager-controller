@@ -10,6 +10,7 @@ using DigitalSputnik.Voyager.Communication;
 using UnityEngine;
 using VoyagerController.Bluetooth;
 using VoyagerController.Effects;
+using VoyagerController.Serial;
 
 namespace VoyagerController
 {
@@ -260,6 +261,8 @@ namespace VoyagerController
                     return LampManager.Instance.GetClient<VoyagerNetworkClient>();
                 case BluetoothEndPoint _:
                     return LampManager.Instance.GetClient<VoyagerBluetoothClient>();
+                case SerialEndPoint _:
+                    return LampManager.Instance.GetClient<VoyagerSerialClient>();
             }
             return null;
         }
