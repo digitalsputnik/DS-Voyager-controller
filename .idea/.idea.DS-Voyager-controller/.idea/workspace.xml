@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Serial/SerialEndPoint.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Serial/SerialEndPoint.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Serial/VoyagerSerialClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Serial/VoyagerSerialClient.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,9 +19,10 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Serial/VoyagerSerialClient.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/SerialTest.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Serial/SerialEndPoint.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Serial/VoyagerSerialClient.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -75,7 +76,7 @@
       <updated>1604572038817</updated>
       <workItem from="1604572046775" duration="7987000" />
       <workItem from="1604651482882" duration="5717000" />
-      <workItem from="1608549391657" duration="3046000" />
+      <workItem from="1608549391657" duration="3823000" />
     </task>
     <servers />
   </component>
