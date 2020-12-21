@@ -24528,6 +24528,7 @@ GameObject:
   - component: {fileID: 1927760498}
   - component: {fileID: 187987131}
   - component: {fileID: 1927760500}
+  - component: {fileID: 1927760501}
   m_Layer: 0
   m_Name: Application Manager
   m_TagString: Untagged
@@ -24598,6 +24599,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _version: 1.709
+--- !u!114 &1927760501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927760495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c20a7072733a547728eeec1f15e168c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _serialPort: /dev/tty.usbserial-1440
 --- !u!1001 &1939072358
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27737,7 +27751,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
   m_Value: 1.0000004
-  m_Size: 0.81813437
+  m_Size: 0.80529296
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -35577,7 +35591,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -315.0254, y: 64}
+  m_AnchoredPosition: {x: -315.02637, y: 64}
   m_SizeDelta: {x: -757.9501, y: 120}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &7277574384266088299

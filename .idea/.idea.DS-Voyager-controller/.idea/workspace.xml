@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_Serial/SerialEndPoint.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_Serial/SerialEndPoint.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/crosstales/FileBrowser/3rd party/PlayMaker.unitypackage.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Videos/Runtime/Plugins/Editor.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,10 +14,14 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/SerialTest.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
       <option value="$PROJECT_DIR$/Assets/Scripts/_Serial/VoyagerSerialClient.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/SerialTest.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -37,6 +36,12 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="preferences.build.unityPlugin" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -70,7 +75,7 @@
       <updated>1604572038817</updated>
       <workItem from="1604572046775" duration="7987000" />
       <workItem from="1604651482882" duration="5717000" />
-      <workItem from="1608549391657" duration="1148000" />
+      <workItem from="1608549391657" duration="3046000" />
     </task>
     <servers />
   </component>

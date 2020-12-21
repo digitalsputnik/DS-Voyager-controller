@@ -145,6 +145,7 @@
           <e p="LampEffectsWorker.cs" t="Include" />
           <e p="MainThread.cs" t="Include" />
           <e p="MathUtils.cs" t="Include" />
+          <e p="SerialTest.cs" t="Include" />
           <e p="Temperature.cs" t="Include" />
           <e p="TextureExtensions.cs" t="Include" />
           <e p="VoyagerUpdater.cs" t="Include" />
