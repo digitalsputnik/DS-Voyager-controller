@@ -82,9 +82,12 @@ namespace VoyagerController.Serial
         {
             if (voyager.Endpoint is SerialEndPoint endpoint)
             {
-                var packet = AssembleVoyagerPacket(message);
-                endpoint.Stream.Write(packet, 0, packet.Length);
-                Debug.Log($"[{packet.Length}] " + Encoding.UTF8.GetString(packet));
+                if (endpoint.Stream.IsOpen)
+                {
+                    var packet = AssembleVoyagerPacket(message);
+                    endpoint.Stream.Write(packet, 0, packet.Length);
+                    Debug.Log($"[{packet.Length}] " + Encoding.UTF8.GetString(packet));
+                }
             }
         }
         
