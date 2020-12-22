@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/SerialTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/SerialTest.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Serial/VoyagerSerialClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Serial/VoyagerSerialClient.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,24 +99,5 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Scripts/_Serial/VoyagerSerialClient.cs</url>
-          <line>99</line>
-          <properties documentPath="$PROJECT_DIR$/Assets/Scripts/_Serial/VoyagerSerialClient.cs" initialLine="99" containingFunctionPresentation="method 'AssembleVoyagerPacket'">
-            <startOffsets>
-              <option value="4645" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4664" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

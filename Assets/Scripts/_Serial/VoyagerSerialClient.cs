@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -123,15 +124,15 @@ namespace VoyagerController.Serial
             var msgBuilder = new StringBuilder();
 
             msgBuilder.Append("{\"itshe\":{\"e\":");
-            msgBuilder.Append(itshe.E);
+            msgBuilder.Append(itshe.E.ToString(CultureInfo.InvariantCulture));
             msgBuilder.Append(",\"h\":");
-            msgBuilder.Append(itshe.H);
+            msgBuilder.Append(itshe.H.ToString(CultureInfo.InvariantCulture));
             msgBuilder.Append(",\"i\":");
-            msgBuilder.Append(itshe.I);
+            msgBuilder.Append(itshe.I.ToString(CultureInfo.InvariantCulture));
             msgBuilder.Append(",\"s\":");
-            msgBuilder.Append(itshe.S);
+            msgBuilder.Append(itshe.S.ToString(CultureInfo.InvariantCulture));
             msgBuilder.Append(",\"t\":");
-            msgBuilder.Append(itshe.T);
+            msgBuilder.Append(itshe.T.ToString(CultureInfo.InvariantCulture));
             msgBuilder.Append("}, \"op_code\":\"set_itshe\", \"timestamp\":");
             msgBuilder.Append(TimeUtils.Epoch);
             msgBuilder.Append("}");
