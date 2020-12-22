@@ -119,10 +119,9 @@ namespace VoyagerController.Serial
             byte crc = 0xFF; //Seed value
             if (bytes != null && bytes.Length > 0)
             {
-                foreach (byte b in bytes)
-                {
-                    crc ^= CRC8_TABLE[crc ^ b];
-                }
+                var length = bytes.Length & 0xff;
+                for (var i = 0; i < length; i++)
+                    crc ^= CRC8_TABLE[crc ^ bytes[i]];
             }
             return crc;
         }
