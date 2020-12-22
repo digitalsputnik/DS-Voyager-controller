@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DigitalSputnik;
 using DigitalSputnik.Colors;
@@ -53,6 +50,16 @@ namespace VoyagerController.Serial
                     ReadTimeout = 1
                 };
 
+                try 
+                {
+                    if (!serialPort.IsOpen)
+                        serialPort.Open();
+                }
+                catch(Exception ex)
+                {
+                    Debug.Log(ex);
+                }
+
                 var lamp = new VoyagerLamp(this)
                 {
                     Endpoint = new SerialEndPoint() { Stream = serialPort },
@@ -69,15 +76,10 @@ namespace VoyagerController.Serial
         {
             if (voyager.Endpoint is SerialEndPoint endpoint)
             {
-                if (!endpoint.Stream.IsOpen)
-                    endpoint.Stream.Open();
-
                 Debug.Log(message);
 
                 var packet = AssembleVoyagerPacket(message);
                 endpoint.Stream.Write(packet, 0, packet.Length);
-
-                endpoint.Stream.Close();
             }
         }
         
@@ -177,6 +179,15 @@ namespace VoyagerController.Serial
         public override void PollAvailableSsidList(VoyagerLamp voyager, SsidListHandler callback)
         {
             
+        }
+
+        public override void Dispose()
+        {
+            foreach (var lamp in LampManager.Instance.Lamps)
+            {
+                if (lamp.Endpoint is SerialEndPoint serial)
+                    serial.Stream.Close();
+            }
         }
         #endregion
     }
