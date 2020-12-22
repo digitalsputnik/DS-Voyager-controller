@@ -24528,7 +24528,6 @@ GameObject:
   - component: {fileID: 1927760498}
   - component: {fileID: 187987131}
   - component: {fileID: 1927760500}
-  - component: {fileID: 1927760501}
   m_Layer: 0
   m_Name: Application Manager
   m_TagString: Untagged
@@ -24598,20 +24597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39964f1bdfe6e4a6c953d734c51b220b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _version: 1.709
---- !u!114 &1927760501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1927760495}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c20a7072733a547728eeec1f15e168c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _serialPort: COM3
+  _version: 1.772
 --- !u!1001 &1939072358
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27750,8 +27736,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 70750426}
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1.0000005
+  m_Size: 0.8365564
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

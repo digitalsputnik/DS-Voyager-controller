@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerController.Mapping;
+using VoyagerController.Serial;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
@@ -91,6 +92,7 @@ namespace VoyagerController.UI
             // TODO: Check if any lamp is in DMX mode
             var share = SelectedLampsShareSameEffect();
             var dmx = false;
+            var anySerial = selectedLamps.Any(l => l.LampHandle.Endpoint is SerialEndPoint);
             
             _infoText.SetActive(!one);
             
@@ -99,10 +101,10 @@ namespace VoyagerController.UI
             _selectDeselectText.text = all ? DESELECT_ALL_TEXT : SELECT_ALL_TEXT;
             _selectColorFxBtn.SetActive(one && share);
             
-            _splitter2.SetActive(one);
-            _setEffectBtn.SetActive(one);
-            _editEffectBtn.SetActive(one && share && !dmx);
-            
+            _splitter2.SetActive(one && !anySerial);
+            _setEffectBtn.SetActive(one && !anySerial);
+            _editEffectBtn.SetActive(one && share && !dmx && !anySerial);
+
             _splitter3.SetActive(one);
             _setDmxBtn.SetActive(one);
             

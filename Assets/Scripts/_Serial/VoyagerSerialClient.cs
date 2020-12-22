@@ -123,7 +123,9 @@ namespace VoyagerController.Serial
                 for (var i = 0; i < length; i++)
                     crc ^= CRC8_TABLE[crc ^ bytes[i]];
             }
-            return crc;
+
+            return 0x0;
+            // return crc;
         }
         
         #region Implementation

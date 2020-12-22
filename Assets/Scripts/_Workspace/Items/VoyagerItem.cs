@@ -232,12 +232,11 @@ namespace VoyagerController.Workspace
                     }
                     break;
                 default:
-                    if (LampHandle.Endpoint is BluetoothEndPoint)
                     {
                         var rgb = ColorUtils.ItsheToRgb(_meta.Itshe);
                         var colors = ColorUtils.RgbToArray(rgb, LampHandle.PixelCount).ToColorArray();
                         _pixelsTexture.SetPixels32(colors);
-                        _pixelsTexture.Apply();
+                        _pixelsTexture.Apply();   
                     }
                     break;
             }
