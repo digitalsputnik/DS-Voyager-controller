@@ -55,6 +55,16 @@ namespace VoyagerController.Serial
                 
                 serialPort.Open();
 
+                try 
+                {
+                    if (!serialPort.IsOpen)
+                        serialPort.Open();
+                }
+                catch(Exception ex)
+                {
+                    Debug.Log(ex);
+                }
+
                 var lamp = new VoyagerLamp(this)
                 {
                     Endpoint = new SerialEndPoint { Stream = serialPort },
@@ -179,6 +189,15 @@ namespace VoyagerController.Serial
         public override void PollAvailableSsidList(VoyagerLamp voyager, SsidListHandler callback)
         {
             
+        }
+
+        public override void Dispose()
+        {
+            foreach (var lamp in LampManager.Instance.Lamps)
+            {
+                if (lamp.Endpoint is SerialEndPoint serial)
+                    serial.Stream.Close();
+            }
         }
         #endregion
         
