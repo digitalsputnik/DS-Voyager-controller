@@ -113,9 +113,15 @@ namespace VoyagerController.Serial
 
         private static byte ComputeCRC8Checksum(byte[] bytes)
         {
-            const byte CRC = 0xFF;
-            if (bytes == null || bytes.Length <= 0) return CRC;
-            return bytes.Aggregate(CRC, (current, b) => (byte) (current ^ CRC8_TABLE[current ^ b]));
+            byte crc = 0xFF; //Seed value
+            if (bytes != null && bytes.Length > 0)
+            {
+                foreach (byte b in bytes)
+                {
+                    crc ^= CRC8_TABLE[crc ^ b];
+                }
+            }
+            return crc;
         }
         
         #region Implementation
@@ -139,7 +145,11 @@ namespace VoyagerController.Serial
 
             var json = msgBuilder.ToString().Replace(' ', '\0');
 
-            SendMessage(voyager, json);
+            var packet = new SetItshePacket(itshe);
+            
+            SendSettingsPacket(voyager, packet, TimeUtils.Epoch);
+            
+            // SendMessage(voyager, json);
         }
 
         public override double StartStream(VoyagerLamp voyager)
@@ -185,7 +195,7 @@ namespace VoyagerController.Serial
         public override void SendSettingsPacket(VoyagerLamp voyager, Packet packet, double time)
         {
             packet.Timestamp = time;
-            var json = JsonConvert.SerializeObject(packet, new ItsheConverter());
+            var json = JsonConvert.SerializeObject(packet, new ItsheConverter()).Replace(' ', '\0');
             SendMessage(voyager, json);
         }
 
