@@ -54,7 +54,7 @@ namespace VoyagerController.Serial
                     WriteBufferSize = 2048
                 };
                 
-                serialPort.Open();
+                //serialPort.Open();
 
                 try 
                 {
@@ -134,7 +134,7 @@ namespace VoyagerController.Serial
             msgBuilder.Append(",\"t\":");
             msgBuilder.Append(itshe.T.ToString(CultureInfo.InvariantCulture));
             msgBuilder.Append("},\"op_code\":\"set_itshe\",\"timestamp\":");
-            msgBuilder.Append(TimeUtils.Epoch);
+            msgBuilder.Append(TimeUtils.Epoch.ToString(CultureInfo.InvariantCulture));
             msgBuilder.Append("}");
 
             var json = msgBuilder.ToString().Replace(' ', '\0');
