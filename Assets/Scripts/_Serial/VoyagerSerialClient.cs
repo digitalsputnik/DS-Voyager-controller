@@ -133,7 +133,7 @@ namespace VoyagerController.Serial
             msgBuilder.Append(itshe.S.ToString(CultureInfo.InvariantCulture));
             msgBuilder.Append(",\"t\":");
             msgBuilder.Append(itshe.T.ToString(CultureInfo.InvariantCulture));
-            msgBuilder.Append("}, \"op_code\":\"set_itshe\", \"timestamp\":");
+            msgBuilder.Append("},\"op_code\":\"set_itshe\"\"timestamp\":");
             msgBuilder.Append(TimeUtils.Epoch);
             msgBuilder.Append("}");
 
