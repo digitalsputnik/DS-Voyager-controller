@@ -133,11 +133,13 @@ namespace VoyagerController.Serial
             msgBuilder.Append(itshe.S.ToString(CultureInfo.InvariantCulture));
             msgBuilder.Append(",\"t\":");
             msgBuilder.Append(itshe.T.ToString(CultureInfo.InvariantCulture));
-            msgBuilder.Append("},\"op_code\":\"set_itshe\"\"timestamp\":");
+            msgBuilder.Append("},\"op_code\":\"set_itshe\",\"timestamp\":");
             msgBuilder.Append(TimeUtils.Epoch);
             msgBuilder.Append("}");
 
-            SendMessage(voyager, msgBuilder.ToString());
+            var json = msgBuilder.ToString().Replace(' ', '\0');
+
+            SendMessage(voyager, json);
         }
 
         public override double StartStream(VoyagerLamp voyager)
