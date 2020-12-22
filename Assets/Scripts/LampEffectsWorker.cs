@@ -198,7 +198,6 @@ namespace VoyagerController
         {
             var meta = Metadata.Get(voyager.Serial);
             GetLampClient(voyager)?.SetItshe(voyager, meta.Itshe);
-            Debug.Log(GetLampClient(voyager));
             meta.Itshe = itshe;
         }
 

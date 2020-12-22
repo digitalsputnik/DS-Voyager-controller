@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SerialTest : MonoBehaviour
 {
-    private const string JSON = "{\"itshe\":{\"e\":1.0,\"h\":0.5,\"i\":0.5,\"s\":1.0,\"t\":0.5},\"op_code\":\"set_itshe\",\"timestamp\":10}";
+    public const string JSON = "{\"itshe\":{\"e\":1.0,\"h\":0.5,\"i\":0.5,\"s\":1.0,\"t\":0.5},\"op_code\":\"set_itshe\",\"timestamp\":10}";
     
     [SerializeField] private string _serialPort = "";
 

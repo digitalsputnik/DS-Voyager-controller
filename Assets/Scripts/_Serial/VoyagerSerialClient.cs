@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
@@ -44,18 +43,21 @@ namespace VoyagerController.Serial
 
         private void Scan()
         {
-            foreach (var portName in SerialPort.GetPortNames())
+            foreach (var portName in AvailableComPorts())
             {
                 var serialPort = new SerialPort(portName, 750000, Parity.None, 8, StopBits.One)
                 {
                     Handshake = Handshake.None,
                     RtsEnable = false,
-                    ReadTimeout = 1
+                    ReadTimeout = 1,
+                    WriteBufferSize = 2048
                 };
+                
+                serialPort.Open();
 
                 var lamp = new VoyagerLamp(this)
                 {
-                    Endpoint = new SerialEndPoint() { Stream = serialPort },
+                    Endpoint = new SerialEndPoint { Stream = serialPort },
                     Serial = "DS" + portName,
                     PixelCount = 42,
                     Connected = true
@@ -69,15 +71,9 @@ namespace VoyagerController.Serial
         {
             if (voyager.Endpoint is SerialEndPoint endpoint)
             {
-                if (!endpoint.Stream.IsOpen)
-                    endpoint.Stream.Open();
-
-                Debug.Log(message);
-
                 var packet = AssembleVoyagerPacket(message);
                 endpoint.Stream.Write(packet, 0, packet.Length);
-
-                endpoint.Stream.Close();
+                Debug.Log($"[{packet.Length}] " + Encoding.UTF8.GetString(packet));
             }
         }
         
@@ -88,17 +84,17 @@ namespace VoyagerController.Serial
             var footer = new byte[] { 0xEF, 0xFE };
 
             //Packet assembly (header + packet + footer + CRC8)
-            var initialPacket = new byte[header.Length + text.Length + footer.Length];
-            var packetContent = System.Text.Encoding.UTF8.GetBytes(text);
+            var packetContent = Encoding.UTF8.GetBytes(text);
+            var initialPacket = new byte[header.Length + packetContent.Length + footer.Length];
             var finalPacket = new byte[initialPacket.Length + 1]; //added crc8
 
-            System.Buffer.BlockCopy(header, 0, initialPacket, 0, header.Length);
-            System.Buffer.BlockCopy(packetContent, 0, initialPacket, header.Length, packetContent.Length);
-            System.Buffer.BlockCopy(footer, 0, initialPacket, header.Length + packetContent.Length, footer.Length);
+            Buffer.BlockCopy(header, 0, initialPacket, 0, header.Length);
+            Buffer.BlockCopy(packetContent, 0, initialPacket, header.Length, packetContent.Length);
+            Buffer.BlockCopy(footer, 0, initialPacket, header.Length + packetContent.Length, footer.Length);
 
             //Calculating and adding CRC8
             var crc8 = ComputeCRC8Checksum(initialPacket);
-            System.Buffer.BlockCopy(initialPacket, 0, finalPacket, 0, initialPacket.Length);
+            Buffer.BlockCopy(initialPacket, 0, finalPacket, 0, initialPacket.Length);
             finalPacket[finalPacket.Length - 1] = crc8;
 
             return finalPacket;
@@ -114,17 +110,23 @@ namespace VoyagerController.Serial
         #region Implementation
         public override void SetItshe(VoyagerLamp voyager, Itshe itshe)
         {
-            var packet = new SetItshePacket(itshe);
+            var msgBuilder = new StringBuilder();
 
-            string message = BuildSetItshe(itshe).Replace(" ", "");
+            msgBuilder.Append("{\"itshe\":{\"e\":");
+            msgBuilder.Append(itshe.E);
+            msgBuilder.Append(",\"h\":");
+            msgBuilder.Append(itshe.H);
+            msgBuilder.Append(",\"i\":");
+            msgBuilder.Append(itshe.I);
+            msgBuilder.Append(",\"s\":");
+            msgBuilder.Append(itshe.S);
+            msgBuilder.Append(",\"t\":");
+            msgBuilder.Append(itshe.T);
+            msgBuilder.Append("}, \"op_code\":\"set_itshe\", \"timestamp\":");
+            msgBuilder.Append(TimeUtils.Epoch);
+            msgBuilder.Append("}");
 
-            SendMessage(voyager, message);
-        }
-
-        public string BuildSetItshe(Itshe itshe)
-        {
-            return "{\"itshe\":{\"e\":" + itshe.E.ToString().Replace(",",".") + ",\"h\":" + itshe.H.ToString().Replace(",", ".") + ",\"i\":" + itshe.I.ToString().Replace(",", ".")
-                + ",\"s\":" + itshe.S.ToString().Replace(",", ".") + ",\"t\":" + itshe.T.ToString().Replace(",", ".") + "}, \"op_code\":\"set_itshe\", \"timestamp\":" + TimeUtils.Epoch.ToString().Replace(",", ".") + "}";
+            SendMessage(voyager, msgBuilder.ToString());
         }
 
         public override double StartStream(VoyagerLamp voyager)
@@ -178,6 +180,33 @@ namespace VoyagerController.Serial
         {
             
         }
+        #endregion
+        
+        #region Utilities
+
+        private static string[] AvailableComPorts()
+        {
+            if (Application.platform == RuntimePlatform.WindowsEditor ||
+                Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                return SerialPort.GetPortNames();
+            }
+
+            
+            if (Application.platform == RuntimePlatform.OSXEditor || 
+                Application.platform == RuntimePlatform.OSXPlayer)
+            {
+                var ports = new List<string>();
+                var p = (int)Environment.OSVersion.Platform;
+                if (p != 4 && p != 128 && p != 6) return ports.ToArray();
+                var ttys = System.IO.Directory.GetFiles ("/dev/", "tty.*");
+                ports.AddRange(ttys.Where(dev => dev.StartsWith("/dev/tty.")));
+                return ports.ToArray();
+            }
+
+            return new string[0];
+        }
+        
         #endregion
     }
 }
