@@ -1,7 +1,6 @@
 ﻿## In this file is list of features that we would like to implement.
 
 ## GOALS!
-1. Video compression ([milestone](https://github.com/digitalsputnik/DS-Voyager-controller/milestone/9)) - capacity to use any image or video filmed by the same handheld device
 1. Animation control - fade in/fade-out (preliminary timeline implentation)
 1. FX settings and CW Sliders: value range vs outcome proportions + for ex Possibility for lower Intesity than 1%
 1. DigitalSputnik.NET - Overview the library for open sourcing
@@ -15,7 +14,7 @@
 1. Voyager Controller UX ja Monet UX using DigitalSputnik.NET back-end
 1. Monet release/multicontroller support (playback + ITSHX)
 1. Matrix mapping
-1. Underwater usage/wire control (playback + ITSHX)
+1. Underwater usage/serial control (playback + ITSHX) - [prototype is available with ITSHX control](https://github.com/digitalsputnik/DS-Voyager-controller/releases/tag/v2.6.1)
 1. NDI integration to Voyager Controller for virtual studios
 1. Smart home integration (i.e. Google home voice control)
 1. Dropbox/Gdrive integration for project sharing
