@@ -1,6 +1,7 @@
 ﻿## In this file is list of features that we would like to implement.
 
 ## GOALS!
+1. Project handling - Change existing setup without the need to upload all the frames all over again
 1. Animation control - fade in/fade-out (preliminary timeline implentation) - [Milestone](https://github.com/digitalsputnik/DS-Voyager-controller/milestone/13)
 1. FX settings and CW Sliders: value range vs outcome proportions + for ex Possibility for lower Intesity than 1%
 1. DigitalSputnik.NET - Overview the library for open sourcing
