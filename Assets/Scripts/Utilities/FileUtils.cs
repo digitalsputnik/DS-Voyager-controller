@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Crosstales.FB;
 using Newtonsoft.Json.Linq;
@@ -39,32 +40,30 @@ namespace VoyagerApp.Utilities
                         return;
                     }
 
-                    if (Application.platform == RuntimePlatform.IPhonePlayer)
-                    {
-                        var name = "video_" + Guid.NewGuid().ToString().Substring(0, 4);
+                    var name = "video_" + Guid.NewGuid().ToString().Substring(0, 4);
 
-                        InputFieldMenu.Show("PICK NAME FOR VIDEO", name,
-                            text =>
+                    InputFieldMenu.Show("PICK NAME FOR VIDEO", name,
+                        text =>
+                        {
+                            name = text;
+
+                            var extension = ".MOV";
+
+                            if (Application.platform == RuntimePlatform.Android)
+                                extension = ".mp4";
+                            
+                            var newPath = Path.Combine(TempPath, name + extension);
+
+                            try
                             {
-                                name = text;
-
-                                var newPath = Path.Combine(TempPath, name + ".MOV");
-                                
-                                try
-                                {
-                                    Copy(path, newPath);
-                                    onLoaded?.Invoke(newPath);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Debug.LogError(ex);
-                                }
-                            }, 3, false);
-                    }
-                    else
-                    {
-                        onLoaded.Invoke(path);
-                    }
+                                Copy(path, newPath);
+                                onLoaded?.Invoke(newPath);
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.LogError(ex);
+                            }
+                        }, 3, false);
                 }, "", "video/*");
             }
             else
@@ -80,31 +79,21 @@ namespace VoyagerApp.Utilities
         {
             if (Application.isMobilePlatform)
             {
-                if (Application.platform == RuntimePlatform.IPhonePlayer)
+                if (iOSWarning)
                 {
-                    if (iOSWarning)
-                    {
-                        DialogBox.Show(
-                            "WARNING",
-                            "Photos captured with iOS camera might not load.",
-                            new string[] { "CANCEL", "OK" },
-                            new Action[] {
+                    DialogBox.Show(
+                        "WARNING",
+                        "Photos captured with iOS camera might not load.",
+                        new string[] { "CANCEL", "OK" },
+                        new Action[] {
                                 () => loaded?.Invoke(null),
-                                () => LoadPictureIOS(loaded, rename)
-                            }
-                        );   
-                    }
-                    else
-                    {
-                        LoadPictureIOS(loaded, rename);
-                    }
+                                () => LoadPictureMobile(loaded, rename)
+                        }
+                    );
                 }
                 else
                 {
-                    NativeGallery.GetImageFromGallery((string path) =>
-                    {
-                        loaded.Invoke(path == "" ? null : path);
-                    }, "", "image/*");
+                    LoadPictureMobile(loaded, rename);
                 }
             }
             else
@@ -121,7 +110,7 @@ namespace VoyagerApp.Utilities
             }
         }
 
-        private static void LoadPictureIOS(PathHandler loaded, bool rename)
+        private static void LoadPictureMobile(PathHandler loaded, bool rename)
         {
             NativeGallery.GetImageFromGallery(path =>
             {

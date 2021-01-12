@@ -4700,6 +4700,11 @@ PrefabInstance:
       propertyPath: inWorkspace
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4248921330930539007, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: addEffectButton
+      value: 
+      objectReference: {fileID: 1576845261}
     - target: {fileID: 4261774986040029001, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -5129,6 +5134,56 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7032172090212179770, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: presets.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7032172090212179770, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: valueText
+      value: 
+      objectReference: {fileID: 1576845263}
+    - target: {fileID: 7032172090212179770, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: expandBtn
+      value: 
+      objectReference: {fileID: 1576845262}
+    - target: {fileID: 7032172090212179770, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: max
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 7032172090212179770, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: startValue
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7032172090212179770, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: presets.Array.data[1]
+      value: 0.20833333
+      objectReference: {fileID: 0}
+    - target: {fileID: 7032172090212179770, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: presets.Array.data[2]
+      value: 0.41666666
+      objectReference: {fileID: 0}
+    - target: {fileID: 7032172090212179770, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: presets.Array.data[3]
+      value: 0.625
+      objectReference: {fileID: 0}
+    - target: {fileID: 7032172090212179770, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: presets.Array.data[4]
+      value: 0.8333333
+      objectReference: {fileID: 0}
+    - target: {fileID: 7032172090212179770, guid: 696c43ec365ed4a45a6c16df774dc048,
+        type: 3}
+      propertyPath: presets.Array.data[5]
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7068563914467923809, guid: 696c43ec365ed4a45a6c16df774dc048,
         type: 3}
@@ -5996,6 +6051,42 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1576845261 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2597874397192115069, guid: 696c43ec365ed4a45a6c16df774dc048,
+    type: 3}
+  m_PrefabInstance: {fileID: 1576845251}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1576845262 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6322920478349051439, guid: 696c43ec365ed4a45a6c16df774dc048,
+    type: 3}
+  m_PrefabInstance: {fileID: 1576845251}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1576845263 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3564195391179773698, guid: 696c43ec365ed4a45a6c16df774dc048,
+    type: 3}
+  m_PrefabInstance: {fileID: 1576845251}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1578090345

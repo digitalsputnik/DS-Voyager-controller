@@ -184,7 +184,7 @@ namespace VoyagerApp.UI.Menus
                 var client = NetUtils.VoyagerClient;
 
                 foreach (var lamp in WorkspaceUtils.SelectedLamps)
-                    client.TurnToClient(lamp, ssid, password);
+                    client.TurnToClient(this, lamp, ssid, password);
 
                 GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
             }
@@ -207,7 +207,7 @@ namespace VoyagerApp.UI.Menus
                 );
             }
 
-            passwordField.text = password;
+            ApplicationSettings.PreviousWifiPassword = password;
         }
     }
 }

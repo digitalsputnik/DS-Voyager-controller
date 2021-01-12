@@ -8,7 +8,7 @@ namespace VoyagerApp.UI.Menus
         {
             var client = NetUtils.VoyagerClient;
             foreach (var lamp in WorkspaceUtils.SelectedLamps)
-                client.TurnToRouter(lamp);
+                client.TurnToRouter(this, lamp);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
     }

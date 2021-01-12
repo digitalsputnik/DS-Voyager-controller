@@ -11,17 +11,23 @@ using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
 using VoyagerApp.Workspace.Views;
 using Effect = VoyagerApp.Effects.Effect;
+using DsImage = DigitalSputnik.Images.Image;
+using UnityEngine.UI;
+using System.IO;
 
 namespace VoyagerApp.UI.Menus
 {
     public class SetEffectMenu : Menu
     {
+        [SerializeField] Button addEffectButton = null;
         [SerializeField] SetEffectItem itemPrefab = null;
         [SerializeField] Transform container = null;
         [SerializeField] bool inWorkspace = true;
         [SerializeField] Vector2Int maxPreferedSized = new Vector2Int(1280, 720);
 
         List<SetEffectItem> items = new List<SetEffectItem>();
+
+        bool resizing = false;
 
         public void AddEffectClicked()
         {
@@ -35,30 +41,107 @@ namespace VoyagerApp.UI.Menus
 
         public void AddImageEffectClicked()
         {
-            DialogBox.Show(
-                "ATTENTION",
-                "Images bigger than 640 x 480 might crash the application",
-                new[] { "CONTINUE", "CANCEL" },
-                new Action[]
+            FileUtils.LoadPictureFromDevice(path => 
+            {
+                if (path != "" && path != "Null" && path != null)
                 {
-                    () =>
-                    {
-                        FileUtils.LoadPictureFromDevice(path => 
+                    var image = ImageEffectLoader.LoadImageFromPath(path);
+                    image.timestamp = TimeUtils.Epoch;
+                    OrderEffects();
+                }
+            }, true, false);
+        }
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        private void Update()
+        {
+            if (AndroidVideoResizer.IsCompressing && AndroidVideoResizer.Progress != null)
+            {
+                addEffectButton.interactable = false;
+                addEffectButton.GetComponentInChildren<Text>().text = "RESIZING: " + AndroidVideoResizer.Progress;
+            }
+            else if (resizing)
+            {
+                addEffectButton.interactable = false;
+                addEffectButton.GetComponentInChildren<Text>().text = "RESIZING: 0%";
+            }
+        }
+
+        void AndroidVideoResizerCallback(bool success, string result)
+        {
+            if (success && result != null)
+            {
+                MainThread.Dispach(() =>
+                {
+                    var name = "video_" + Guid.NewGuid().ToString().Substring(0, 4);
+
+                    InputFieldMenu.Show("PICK NAME FOR VIDEO", name,
+                        text =>
                         {
-                            if (path != "" && path != "Null" && path != null)
+                            name = text;
+
+                            var newPath = Path.Combine(FileUtils.TempPath, name + ".mp4");
+
+                            try
                             {
-                                Image image = ImageEffectLoader.LoadImageFromPath(path);
-                                image.timestamp = TimeUtils.Epoch;
+                                FileUtils.Copy(result, newPath);
+
+                                var video = VideoEffectLoader.LoadNewVideoFromPath(newPath);
+                                video.timestamp = TimeUtils.Epoch;
                                 OrderEffects();
                             }
-                        }, true);
-                    } 
-                    , null
+                            catch (Exception ex)
+                            {
+                                Debug.LogError(ex);
+                            }
+                        }, 3, false);
                 });
+            }
+            else if (!success)
+            {
+                DialogBox.Show(
+                    "ERROR",
+                    "Video resizing failed: " + result != null ? result : "Unknown error",
+                    new[] { "OK" },
+                    new Action[] { null });
+            }
+
+            resizing = false;
+
+            MainThread.Dispach(() =>
+            {
+                addEffectButton.interactable = true;
+                addEffectButton.GetComponentInChildren<Text>().text = "ADD EFFECT";
+            });
         }
+#endif
 
         public void AddVideoEffectClick()
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            DialogBox.Show(
+                "INFO",
+                "It is suggested to resize the video for better performance. Would you like to resize the video?",
+                new[] { "YES", "NO", "CANCEL" },
+                new Action[] 
+                {
+                    () =>
+                    {
+                        AndroidVideoResizer.PickVideo(this, AndroidVideoResizerCallback); 
+                        resizing = true;
+                    }, 
+                    () => FileUtils.LoadVideoFromDevice(path =>
+                    {
+                        if (path != "" && path != "Null" && path != null)
+                        {
+                            var video = VideoEffectLoader.LoadNewVideoFromPath(path);
+                            video.timestamp = TimeUtils.Epoch;
+                            OrderEffects();
+                        }
+                    }), 
+                    null
+                });
+#else
             FileUtils.LoadVideoFromDevice(path =>
             {
                 if (path != "" && path != "Null" && path != null)
@@ -68,39 +151,44 @@ namespace VoyagerApp.UI.Menus
                     OrderEffects();
                 }
             });
+#endif
         }
 
         public void SelectEffect(Effect effect)
         {
-            ValidateVideoResolution(effect, ApplyEffectToLamp, ResizeVideoEffect);
+            if (effect is Video video)
+                ValidateVideoResolution(video, ApplyEffectToLamp, ResizeVideoEffect);
+            else
+                ApplyEffectToLamp(effect);
         }
 
-        private void ValidateVideoResolution(Effect effect, Action<Effect> fine, Action<Video> resize)
+        private void ValidateVideoResolution(Video video, Action<Effect> fine, Action<Video> resize)
         {
-            if (effect is Video video)
+            if (video.width > maxPreferedSized.x || video.height > maxPreferedSized.y)
             {
-                if (video.width > maxPreferedSized.x || video.height > maxPreferedSized.y)
+                if (Application.platform == RuntimePlatform.IPhonePlayer)
                 {
-                    if (Application.platform == RuntimePlatform.IPhonePlayer)
-                    {
-                        DialogBox.Show(
-                            "WARNING",
-                            "The video resolution is not supported and the application might suffer.",
-                            new string[] { "CONTINUE", "RESIZE", "CANCEL" },
-                            new Action[] { () => fine?.Invoke(effect), () => resize?.Invoke(video), null });
-                    }
-                    else
-                    {
-                        DialogBox.Show(
-                            "WARNING",
-                            "The video resolution is not supported and the application might suffer.",
-                            new string[] { "CONTINUE", "CANCEL" },
-                            new Action[] { () => fine?.Invoke(effect), null });
-                    }
+                    DialogBox.Show(
+                        "WARNING",
+                        "The video resolution is not supported and the application might suffer.",
+                        new [] { "CONTINUE", "RESIZE", "CANCEL" },
+                        new Action[] { () => fine?.Invoke(video), () => resize?.Invoke(video), null });
                 }
-                else fine?.Invoke(effect);
+                else if (Application.platform == RuntimePlatform.Android)
+                {
+                    fine?.Invoke(video);
+                }
+                else
+                {
+                    DialogBox.Show(
+                        "WARNING",
+                        "The video resolution is not supported and the application might suffer.",
+                        new [] { "CONTINUE", "CANCEL" },
+                        new Action[] { () => fine?.Invoke(video), null });
+                }
             }
-            else fine?.Invoke(effect);
+            else
+                fine?.Invoke(video);
         }
 
         private void ApplyEffectToLamp(Effect effect)
@@ -155,6 +243,11 @@ namespace VoyagerApp.UI.Menus
                 AddEffectItem(effect);
 
             OrderEffects();
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (AndroidVideoResizer.IsCompressing)
+                AndroidVideoResizer.UpdateCallback(AndroidVideoResizerCallback);
+#endif
 
             EffectManager.onEffectAdded += OnEffectAdded;
             EffectManager.onEffectRemoved += OnEffectRemoved;
@@ -250,7 +343,20 @@ namespace VoyagerApp.UI.Menus
         }
 
         void OrderEffects()
-        {
+        { 
+            //Currently items list can sometimes contain destroyed items.
+            //This is why we sort them out. 
+            //TODO: Find where destroyed items are not removed from the list
+            List<SetEffectItem> existingItems = new List<SetEffectItem>();
+
+            foreach (var item in items.ToList())
+            {
+                if (item != null)
+                    existingItems.Add(item);
+            }
+
+            items = existingItems;
+
             var order = items
                 .OrderByDescending(i => i.effect.timestamp)
                 .ThenByDescending(i => i.effect.name == "white")

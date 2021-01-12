@@ -1,3 +1,6 @@
+using System.Threading;
+using DigitalSputnik;
+
 namespace DigitalSputnik.Images
 {
     public class ImageTools
@@ -27,7 +30,19 @@ namespace DigitalSputnik.Images
         {
             if (_resizer != null)
             {
-                _resizer.Resize(image, width, height, resized);
+                // To initialize MainThreadRunner in case it's not initialized, yet.
+                MainThreadRunner.Instance.enabled = true;
+                
+                new Thread(() =>
+                {
+                    _resizer.Resize(image, width, height, (success, error) =>
+                    {
+                        MainThreadRunner.Instance.EnqueueAction(() =>
+                        {
+                            resized?.Invoke(success, error);
+                        });
+                    });
+                }).Start();
             }
             else
             {

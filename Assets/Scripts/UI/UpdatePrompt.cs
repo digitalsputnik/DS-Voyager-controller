@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerApp.Lamps;
 using VoyagerApp.UI.Overlays;
 using VoyagerApp.Utilities;
 using VoyagerApp.Workspace;
@@ -19,42 +20,61 @@ namespace VoyagerApp.UI
         [SerializeField] float waitTime = 5.0f;
 
         List<LampItemView> updatingLamps = new List<LampItemView>();
+        public static List<string> newerWarnedLamps = new List<string>();
 
-        bool showing;
+        private bool _showingLampOlder;
+        private bool _showingLampNewer;
 
-        void Start()
+        private void Start()
         {
             WorkspaceManager.instance.onItemAdded += WorkspaceItemAdded;
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             WorkspaceManager.instance.onItemAdded -= WorkspaceItemAdded;
         }
 
         void WorkspaceItemAdded(WorkspaceItemView item)
         {
+            var appVersion = new Version(UpdateSettings.VoyagerAnimationVersion);
+            
             if (item is VoyagerItemView voyager)
             {
+                var lampVersion = new Version(voyager.lamp.version);
+                
                 if (!voyager.lamp.updated && voyager.lamp.connected)
                 {
-                    StopAllCoroutines();
+                    StopCoroutine(WaitForAnothers());
                     StartCoroutine(WaitForAnothers());
+                }
+                else if (appVersion < lampVersion && !newerWarnedLamps.Contains(voyager.lamp.serial))
+                {
+                    newerWarnedLamps.Add(voyager.lamp.serial);
+
+                    StopCoroutine(WaitForAnothersLampNewer());
+                    StartCoroutine(WaitForAnothersLampNewer());
                 }
             }
         }
 
-        IEnumerator WaitForAnothers()
+        private IEnumerator WaitForAnothers()
         {
             yield return new WaitForSeconds(waitTime);
             OnLampsOutdated();
         }
 
+        private IEnumerator WaitForAnothersLampNewer()
+        {
+            yield return new WaitForSeconds(waitTime);
+            OnLampNewer();
+        }
+
         void OnLampsOutdated()
         {
-            if (showing) return;
+            if (_showingLampOlder) return;
 
-            showing = true;
+            _showingLampOlder = true;
 
             DialogBox.Show(
                 "Update",
@@ -65,7 +85,7 @@ namespace VoyagerApp.UI
                     () =>
                     {
                         RemoveNotUpdatedLamps();
-                        showing = false;
+                        _showingLampOlder = false;
                     },
                     () =>
                     {
@@ -80,13 +100,33 @@ namespace VoyagerApp.UI
                         }
                         container.ShowMenu(updateMenu);
                         updateButton.onClick.Invoke();
-                        showing = false;
+                        _showingLampOlder = false;
                     }
                 }
             );
         }
 
-        void RemoveNotUpdatedLamps()
+        private void OnLampNewer()
+        {
+            if (_showingLampNewer) return;
+
+            _showingLampNewer = true;
+
+            DialogBox.Show(
+                "Lamp software is newer",
+                "Workspace contains lamps with newer software than the app. Some features might not work. Update your application for better experience.",
+                new [] { "REMOVE", "OK" },
+                new Action[] {
+                    () =>
+                    {
+                        RemoveLampsWithNewerVersion();
+                        _showingLampNewer = false;
+                    }, () => _showingLampNewer = false
+                }
+            );
+        }
+
+        private void RemoveNotUpdatedLamps()
         {
             var lampsNotUpdated = WorkspaceUtils.VoyagerLamps.Where(l => l.updated == false).ToList();
 
@@ -94,11 +134,25 @@ namespace VoyagerApp.UI
 
             foreach (var lamp in lampsNotUpdated)
             {
-                if (!updatingLamps.Any(l => l.lamp.serial == lamp.serial))
+                if (updatingLamps.All(l => l.lamp.serial != lamp.serial))
                 {
                     var item = WorkspaceUtils.VoyagerItems.FirstOrDefault(v => v.lamp == lamp);
                     WorkspaceManager.instance.RemoveItem(item);
                 }
+            }
+        }
+
+        private void RemoveLampsWithNewerVersion()
+        {
+            var appVersion = new Version(UpdateSettings.VoyagerAnimationVersion);
+
+            WorkspaceSelection.instance.Clear();
+            
+            foreach (var lamp in WorkspaceUtils.LampItems.ToArray())
+            {
+                var version = new Version(lamp.lamp.version);
+                if (version > appVersion)
+                    WorkspaceManager.instance.RemoveItem(lamp);
             }
         }
     }
