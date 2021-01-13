@@ -13,7 +13,7 @@
 1. Tag system apply - tags for other devices to sort lamps
 1. Voyager Controller UX ja Monet UX using DigitalSputnik.NET back-end
 1. Monet release/multicontroller support (playback + ITSHX)
-1. Matrix mapping
+1. [Matrix mapping](https://github.com/digitalsputnik/DS-Voyager-controller/milestone/7)
 1. Underwater usage/serial control (playback + ITSHX) - [prototype is available with ITSHX control](https://github.com/digitalsputnik/DS-Voyager-controller/releases/tag/v2.6.1)
 1. NDI integration to Voyager Controller for virtual studios
 1. Smart home integration (i.e. Google home voice control)
