@@ -24,7 +24,7 @@ namespace VoyagerController.ProjectManagement
             var json = JObject.Load(reader).ToString();
             var data = JsonConvert.DeserializeObject<VoyagerData>(json);
 
-            var voyager = new VoyagerLamp(null)
+            var voyager = new VoyagerLamp
             {
                 Serial = data.Serial,
                 PixelCount = data.PixelCount, 

@@ -96,8 +96,10 @@
             <e p="_Menus" t="Include">
               <e p="AboutMenu.cs" t="Include" />
               <e p="AddLampsMenu.cs" t="Include" />
+              <e p="AppSettingsMenu.cs" t="Include" />
               <e p="ClientModeMenu.cs" t="Include" />
               <e p="EffectMappingMenu.cs" t="Include" />
+              <e p="ItshePicker.cs" t="Include" />
               <e p="LampSettingsMenu.cs" t="Include" />
               <e p="MasterModeMenu.cs" t="Include" />
               <e p="NetworkSettingsMenu.cs" t="Include" />
@@ -138,6 +140,7 @@
             <e p="WorkspaceUtils.cs" t="Include" />
           </e>
           <e p="ApplicationManager.cs" t="Include" />
+          <e p="ApplicationSettings.cs" t="Include" />
           <e p="ApplicationState.cs" t="Include" />
           <e p="CameraMove.cs" t="Include" />
           <e p="Debugger.cs" t="Include" />

@@ -28,6 +28,8 @@ namespace VoyagerController.Bluetooth
         private ClientState _state = ClientState.WaitingForInitialization;
         private double _initializedTime = 0.0;
         private double _lastScanStarted = 0.0;
+
+        public override Type EndpointType => typeof(BluetoothEndPoint);
         
         private readonly List<BluetoothConnection> _connections = new List<BluetoothConnection>();
         
@@ -174,7 +176,7 @@ namespace VoyagerController.Bluetooth
 
         private void CharacteristicsScanned(PeripheralAccess access, string service, string[] characteristics)
         {
-            var lamp = new VoyagerLamp(this) { Endpoint = new BluetoothEndPoint(access.Id) };
+            var lamp = new VoyagerLamp { Endpoint = new BluetoothEndPoint(access.Id) };
             var connection = new BluetoothConnection(access, lamp) { State = ValidateState.GettingSerial };
             access.SubscribeToCharacteristic(SERVICE_UID, UART_TX_CHARACTERISTIC_UUID, DataReceivedFromBluetooth);
             _connections.Add(connection);

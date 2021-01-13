@@ -17,7 +17,7 @@ namespace VoyagerController.Serial
 {
     public class VoyagerSerialClient : VoyagerClient
     {
-        private static byte[] CRC8_TABLE = {
+        private static readonly byte[] CRC8_TABLE = {
             0x00, 0x5e, 0xbc, 0xe2, 0x61, 0x3f, 0xdd, 0x83, 0xc2, 0x9c, 0x7e, 0x20, 0xa3, 0xfd, 0x1f, 0x41, 0x9d, 0xc3,
             0x21, 0x7f, 0xfc, 0xa2, 0x40, 0x1e, 0x5f, 0x01, 0xe3, 0xbd, 0x3e, 0x60, 0x82, 0xdc, 0x23, 0x7d, 0x9f, 0xc1,
             0x42, 0x1c, 0xfe, 0xa0, 0xe1, 0xbf, 0x5d, 0x03, 0x80, 0xde, 0x3c, 0x62, 0xbe, 0xe0, 0x02, 0x5c, 0xdf, 0x81,
@@ -36,6 +36,8 @@ namespace VoyagerController.Serial
         };
 
         public override double TimeOffset => 0.0f;
+        
+        public override Type EndpointType => typeof(SerialEndPoint);
 
         public VoyagerSerialClient()
         {
@@ -66,7 +68,7 @@ namespace VoyagerController.Serial
                     Debug.Log(ex);
                 }
 
-                var lamp = new VoyagerLamp(this)
+                var lamp = new VoyagerLamp
                 {
                     Endpoint = new SerialEndPoint { Stream = serialPort },
                     Serial = "DS" + portName,
@@ -216,6 +218,7 @@ namespace VoyagerController.Serial
                     serial.Stream.Close();
             }
         }
+
         #endregion
         
         #region Utilities

@@ -1,0 +1,325 @@
+Using pre-set license
+
+ COMMAND LINE ARGUMENTS:
+/Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/MacOS/Unity
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+/Users/taavetmaask/Projects/DS-Voyager-controller
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+62896
+Successfully changed project path to: /Users/taavetmaask/Projects/DS-Voyager-controller
+/Users/taavetmaask/Projects/DS-Voyager-controller
+Using Asset Import Pipeline V2.
+Refreshing native plugins compatible for Editor in 85.25 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2020.2.1f1 (270dd8c3da1c)
+[Subsystems] Discovering subsystems at path /Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path /Users/taavetmaask/Projects/DS-Voyager-controller/Assets
+GfxDevice: creating device client; threaded=0
+2021-01-13 11:06:01.337 Unity[11957:727557] Color LCD preferred device: AMD Radeon Pro 560X (high power)
+2021-01-13 11:06:01.337 Unity[11957:727557] Metal devices available: 2
+2021-01-13 11:06:01.337 Unity[11957:727557] 0: AMD Radeon Pro 560X (high power)
+2021-01-13 11:06:01.337 Unity[11957:727557] 1: Intel(R) UHD Graphics 630 (low power)
+2021-01-13 11:06:01.338 Unity[11957:727557] Using device AMD Radeon Pro 560X (high power)
+Initializing Metal device caps: AMD Radeon Pro 560X
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Initialize mono
+Mono path[0] = '/Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/Managed'
+Mono path[1] = '/Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/MonoBleedingEdge/lib/mono/unityjit'
+Mono config path = '/Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56957
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: /Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
+Registered in 0.000545 seconds.
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 61.84 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.650 seconds
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.002662 seconds.
+Begin MonoManager ReloadAssembly
+Unloading broken assembly Packages/com.digitalsputnik.voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll, this assembly can cause crashes in the runtime
+
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 57.19 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.694 seconds
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Launching external process: /Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/Tools/UnityShaderCompiler
+Launched and connected shader compiler UnityShaderCompiler after 0.02 seconds
+Refreshing native plugins compatible for Editor in 1.43 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2377 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 179.3 MB.
+System memory in use after: 179.5 MB.
+
+Unloading 161 unused Assets to reduce memory usage. Loaded Objects now: 2672.
+Total: 3.805707 ms (FindLiveObjects: 0.277842 ms CreateObjectMapping: 0.130734 ms MarkObjects: 3.241484 ms  DeleteObjects: 0.154196 ms)
+
+========================================================================
+Received Import Request.
+  path: Packages/com.digitalsputnik.voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll
+  artifactKey: Guid(9808e5ec54eb3423a9cdb9113e236c8c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Packages/com.digitalsputnik.voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll using Guid(9808e5ec54eb3423a9cdb9113e236c8c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1aa7ffe1dff0250e820ba49b69c9bcb6') in 0.280197 seconds
+  Import took 0.284270 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 6.314952 seconds.
+  path: Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs
+  artifactKey: Guid(aebc9770b3e664691b5abcbce1493498) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs using Guid(aebc9770b3e664691b5abcbce1493498) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2578a5e3b9b3c424307f736b5a85a4ac') in 0.271202 seconds
+  Import took 0.275022 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 12.598338 seconds.
+  path: Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs
+  artifactKey: Guid(aebc9770b3e664691b5abcbce1493498) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs using Guid(aebc9770b3e664691b5abcbce1493498) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5de5a16ad116e59e4f81a3cabb961b77') in 0.004393 seconds
+  Import took 0.008501 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 119.595429 seconds.
+  path: Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs
+  artifactKey: Guid(aebc9770b3e664691b5abcbce1493498) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs using Guid(aebc9770b3e664691b5abcbce1493498) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6bdce7cf3f48b96516d05dbf1253a01a') in 0.004212 seconds
+  Import took 0.008670 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003476 seconds.
+Begin MonoManager ReloadAssembly
+Unloading broken assembly Packages/com.digitalsputnik.voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll, this assembly can cause crashes in the runtime
+
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.19 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.295 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.43 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2263 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 182.8 MB.
+System memory in use after: 183.0 MB.
+
+Unloading 156 unused Assets to reduce memory usage. Loaded Objects now: 2674.
+Total: 2.562833 ms (FindLiveObjects: 0.232241 ms CreateObjectMapping: 0.100156 ms MarkObjects: 2.169277 ms  DeleteObjects: 0.060331 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 39.286092 seconds.
+  path: Assets/Scripts/_Serial/VoyagerSerialClient.cs
+  artifactKey: Guid(35455fdbfa9f0489ab37337b2fb737ee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/_Serial/VoyagerSerialClient.cs using Guid(35455fdbfa9f0489ab37337b2fb737ee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6910cae5c32099263daf31e5a91794cc') in 0.008556 seconds
+  Import took 0.012333 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 4.775954 seconds.
+  path: Assets/Scripts/_Serial/VoyagerSerialClient.cs
+  artifactKey: Guid(35455fdbfa9f0489ab37337b2fb737ee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/_Serial/VoyagerSerialClient.cs using Guid(35455fdbfa9f0489ab37337b2fb737ee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '152e05c7462ea5e138e8886f0571e2ac') in 0.004047 seconds
+  Import took 0.008621 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 5.054765 seconds.
+  path: Assets/Scripts/_Serial/VoyagerSerialClient.cs
+  artifactKey: Guid(35455fdbfa9f0489ab37337b2fb737ee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/_Serial/VoyagerSerialClient.cs using Guid(35455fdbfa9f0489ab37337b2fb737ee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f9f8e4cfbf15592a021af7b8abd9bba6') in 0.004254 seconds
+  Import took 0.008120 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002873 seconds.
+Begin MonoManager ReloadAssembly
+Unloading broken assembly Packages/com.digitalsputnik.voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll, this assembly can cause crashes in the runtime
+
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.42 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.276 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.28 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2263 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 183.2 MB.
+System memory in use after: 183.5 MB.
+
+Unloading 156 unused Assets to reduce memory usage. Loaded Objects now: 2676.
+Total: 2.861470 ms (FindLiveObjects: 0.304117 ms CreateObjectMapping: 0.131684 ms MarkObjects: 2.373524 ms  DeleteObjects: 0.050713 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 8.114044 seconds.
+  path: Assets/Scripts/_Serial/VoyagerSerialClient.cs
+  artifactKey: Guid(35455fdbfa9f0489ab37337b2fb737ee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/_Serial/VoyagerSerialClient.cs using Guid(35455fdbfa9f0489ab37337b2fb737ee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '641bc92978a8759eca818c8a2be856ee') in 0.008436 seconds
+  Import took 0.012996 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002540 seconds.
+Begin MonoManager ReloadAssembly
+Unloading broken assembly Packages/com.digitalsputnik.voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll, this assembly can cause crashes in the runtime
+
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.19 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.348 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.57 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2263 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 183.6 MB.
+System memory in use after: 183.8 MB.
+
+Unloading 156 unused Assets to reduce memory usage. Loaded Objects now: 2678.
+Total: 2.802564 ms (FindLiveObjects: 0.280595 ms CreateObjectMapping: 0.119126 ms MarkObjects: 2.354106 ms  DeleteObjects: 0.046636 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 42.048985 seconds.
+  path: Packages/com.digitalsputnik.voyager
+  artifactKey: Guid(e8e81ed2fad9eb89f9e767fb983dac4b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Packages/com.digitalsputnik.voyager using Guid(e8e81ed2fad9eb89f9e767fb983dac4b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e8c5c97c286b883d1486c71bc45a481d') in 0.004240 seconds
+  Import took 0.007967 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.011620 seconds.
+  path: Packages/com.digitalsputnik.voyager
+  artifactKey: Guid(e8e81ed2fad9eb89f9e767fb983dac4b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Packages/com.digitalsputnik.voyager using Guid(e8e81ed2fad9eb89f9e767fb983dac4b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e8c5c97c286b883d1486c71bc45a481d') in 0.000841 seconds
+  Import took 0.004651 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 5.050968 seconds.
+  path: Packages/com.digitalsputnik.voyager/package.json
+  artifactKey: Guid(6dc79aa7ac0a648cf826165878f95843) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Packages/com.digitalsputnik.voyager/package.json using Guid(6dc79aa7ac0a648cf826165878f95843) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '99435ec89ea6538e1eca0bb5007f2b1e') in 1.736916 seconds
+  Import took 1.740867 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 9.325594 seconds.
+  path: Packages/com.digitalsputnik.voyager/Runtime/DigitalSputnik.Voyager.Runtime.asmdef
+  artifactKey: Guid(37fbe9ed26e2c411f8a8268e69ca549a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Packages/com.digitalsputnik.voyager/Runtime/DigitalSputnik.Voyager.Runtime.asmdef using Guid(37fbe9ed26e2c411f8a8268e69ca549a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cc943bd627ba409b3c1da0aac1f792b6') in 0.356526 seconds
+  Import took 0.360413 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003983 seconds.
+Begin MonoManager ReloadAssembly
+Unloading broken assembly Packages/com.digitalsputnik.voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll, this assembly can cause crashes in the runtime
+
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.69 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.189 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.21 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2263 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 192.4 MB.
+System memory in use after: 192.7 MB.
+
+Unloading 156 unused Assets to reduce memory usage. Loaded Objects now: 2680.
+Total: 2.720486 ms (FindLiveObjects: 0.285323 ms CreateObjectMapping: 0.151931 ms MarkObjects: 2.227251 ms  DeleteObjects: 0.054645 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002611 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.17 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.224 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.27 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2263 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 192.7 MB.
+System memory in use after: 192.9 MB.
+
+Unloading 156 unused Assets to reduce memory usage. Loaded Objects now: 2682.
+Total: 2.586261 ms (FindLiveObjects: 0.261226 ms CreateObjectMapping: 0.119975 ms MarkObjects: 2.160138 ms  DeleteObjects: 0.043527 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002599 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.20 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.277 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.22 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2263 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 193.1 MB.
+System memory in use after: 193.3 MB.
+
+Unloading 156 unused Assets to reduce memory usage. Loaded Objects now: 2684.
+Total: 2.658763 ms (FindLiveObjects: 0.363315 ms CreateObjectMapping: 0.131550 ms MarkObjects: 2.116687 ms  DeleteObjects: 0.045864 ms)
+
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file

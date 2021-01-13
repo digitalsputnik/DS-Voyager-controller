@@ -43,8 +43,11 @@ namespace VoyagerController.UI
                 _ssidList.transform.parent.gameObject.SetActive(false);
                 _ssidField.transform.parent.gameObject.SetActive(true);
 
+                // TODO: Implement!
+                /*
                 if (WorkspaceSelection.GetSelected<VoyagerItem>().Any() && string.IsNullOrEmpty(_ssidField.text))
-                    _ssidField.text = WorkspaceSelection.GetSelected<VoyagerItem>().First().LampHandle.ActiveSsid;
+                    _ssidField.text = WorkspaceSelection.GetSelected<VoyagerItem>().First().LampHandle.;
+                */
             }
         }
 
