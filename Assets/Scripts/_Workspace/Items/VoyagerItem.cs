@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DigitalSputnik;
 using DigitalSputnik.Colors;
 using DigitalSputnik.Voyager;
@@ -32,6 +33,8 @@ namespace VoyagerController.Workspace
         private static readonly int _baseMap = Shader.PropertyToID("_BaseMap");
         private LampConnectionType _connectionType;
         private Transform _transform;
+        private string _suffix;
+        private string _prefix;
 
         public override bool Setup(object data, string uid = "")
         {
@@ -41,6 +44,26 @@ namespace VoyagerController.Workspace
             
             _meta = Metadata.Get(LampHandle.Serial);
             return base.Setup(data, uid);
+        }
+
+        public string Suffix
+        {
+            get => _suffix;
+            set
+            {
+                _suffix = value;
+                UpdateText();
+            }
+        }
+
+        public string Prefix
+        {
+            get => _prefix;
+            set
+            {
+                _prefix = value;
+                UpdateText();
+            }
         }
 
         public Vector2[] GetPixelWorldPositions()
@@ -257,10 +280,17 @@ namespace VoyagerController.Workspace
 
         private void UpdateText()
         {
-            _nameText.text = LampHandle.Serial;
+            var info = new List<string>();
+            
+            info.Add(LampHandle.Serial);
             if (LampHandle.Endpoint is BluetoothEndPoint)
-                _nameText.text = "Bluetooth " + _nameText.text;
-            _nameText.text += LampHandle.Connected ? " Connected" : " Disconnected";
+                info.Add("Bluetooth " + _nameText.text);
+            info.Add(LampHandle.Connected ? " Connected" : " Disconnected");
+            
+            if (Suffix != "") info.Add(Suffix);
+            
+            _nameText.text = string.Join(", ", info);
+            _orderText.text = Prefix;
         }
 
         public override Vector3[] SelectPositions

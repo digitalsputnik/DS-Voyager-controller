@@ -96,6 +96,7 @@
             <e p="_Menus" t="Include">
               <e p="AboutMenu.cs" t="Include" />
               <e p="AddLampsMenu.cs" t="Include" />
+              <e p="AlignmentMenu.cs" t="Include" />
               <e p="AppSettingsMenu.cs" t="Include" />
               <e p="ClientModeMenu.cs" t="Include" />
               <e p="EffectMappingMenu.cs" t="Include" />
@@ -110,6 +111,7 @@
             </e>
             <e p="AddLampItem.cs" t="Include" />
             <e p="DialogBox.cs" t="Include" />
+            <e p="IdentifyLamps.cs" t="Include" />
             <e p="InspectorMenuContainer.cs" t="Include" />
             <e p="IntField.cs" t="Include" />
             <e p="ListPicker.cs" t="Include" />
@@ -119,7 +121,9 @@
             <e p="MoveIcon.cs" t="Include" />
             <e p="RemoveBin.cs" t="Include" />
             <e p="RenderLoadingBar.cs" t="Include" />
+            <e p="SelectionBoxMode.cs" t="Include" />
             <e p="ShowHideMenu.cs" t="Include" />
+            <e p="ShowInfo.cs" t="Include" />
             <e p="SliderMenu.cs" t="Include" />
             <e p="TextButton.cs" t="Include" />
             <e p="UIScaleDeviceBased.cs" t="Include" />

@@ -2,37 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ApplicationSettings.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ApplicationSettings.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AppSettingsMenu.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AppSettingsMenu.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/ItshePicker.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/ItshePicker.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/SelectionBoxMode.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/SelectionBoxMode.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/indexLayout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Graphics/ForwardRenderer.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Graphics/ForwardRenderer.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Graphics/Materials/background.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Graphics/Materials/background.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Graphics/Materials/lamp dmx.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Graphics/Materials/lamp dmx.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Graphics/Materials/lamp pixels.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Graphics/Materials/lamp pixels.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Graphics/Materials/picture.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Graphics/Materials/picture.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI/Components/Itsh.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI/Components/Itsh.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Project/VoyagerLampConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Project/VoyagerLampConverter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Serial/VoyagerSerialClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Serial/VoyagerSerialClient.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/ClientModeMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/ClientModeMenu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/LunarConsole/Scripts/Utils/FileUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/LunarConsole/Scripts/Utils/FileUtils.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/Packages-Update.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/Packages-Update.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Core/Runtime/Plugins/DigitalSputnik.Core.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Core/Runtime/Plugins/DigitalSputnik.Core.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/GraphicsSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/GraphicsSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/PackageManagerSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/PackageManagerSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/URPProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/URPProjectSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logs/AssetImportWorker0-prev.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/AssetImportWorker0-prev.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,12 +24,19 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/Documents/Backup/UI/ApplicationSettings.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Documents/Backup/Workspace/SetBoxSelectionMode.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Documents/Backup/UI/Menus/Controls/AppSettingsMenu.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Documents/Backup/Workspace/Views/LampItemView.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/C3B4F98D-A0E5-41E9-8966-54B2EC95534E/34/774529c9/LampClient.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/SerialTest.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Documents/Backup/Workspace/Views/VoyagerItemView.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/C3B4F98D-A0E5-41E9-8966-54B2EC95534E/69/308ab3b2/LampManager.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/Documents/Backup/UI/ApplicationSettings.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Documents/Backup/Workspace/IdentifySelectedLamps.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Documents/Backup/Workspace/ShowSelectedLampsInfo.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Documents/Backup/Utilities/WorkspaceUtils.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Documents/Backup/UI/Menus/Controls/AlignmentMenu.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/C3B4F98D-A0E5-41E9-8966-54B2EC95534E/ea/923010fd/Itshe.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/Documents/Backup/UI/Menus/Controls/AppSettingsMenu.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/UI/Menus/Items/ItshPickView.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
@@ -59,7 +47,6 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/WorkspaceMenu.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationSettingds.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationSettings.cs" />
       <option value="$PROJECT_DIR$/Assets/Vendor/LunarConsole/Scripts/Utils/FileUtils.cs" />
@@ -69,6 +56,12 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/VoyagerLampConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Serial/VoyagerSerialClient.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/IdentifyLamps.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/SelectionBoxMode.cs" />
+      <option value="$USER_HOME$/Documents/Backup/Utilities/WorkspaceUtils.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -131,7 +124,9 @@
       <workItem from="1604572046775" duration="7987000" />
       <workItem from="1604651482882" duration="5717000" />
       <workItem from="1608549391657" duration="3823000" />
-      <workItem from="1610526744321" duration="2280000" />
+      <workItem from="1610526744321" duration="2499000" />
+      <workItem from="1610609193140" duration="1047000" />
+      <workItem from="1610694854776" duration="4195000" />
     </task>
     <servers />
   </component>

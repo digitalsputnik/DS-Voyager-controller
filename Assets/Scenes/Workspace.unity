@@ -3261,13 +3261,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VoyagerController.UI.MenuContainer, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 5599218588477752497}
+      objectReference: {fileID: 8212560217215780640}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: VoyagerApp.UI.Menu, Assembly-CSharp
+      value: VoyagerController.UI.Menu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -17000,8 +17005,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1413912474}
   - component: {fileID: 1413912477}
-  - component: {fileID: 1413912475}
   - component: {fileID: 1625124102537029438}
+  - component: {fileID: 1413912475}
   m_Layer: 5
   m_Name: Box Selection Mode
   m_TagString: Untagged
@@ -17037,9 +17042,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1413912473}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bd68c2ac910e4b93a8f0594e01c5e1b, type: 3}
+  m_Script: {fileID: 11500000, guid: 06637ed877f3462d8de486f4dab1ff7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _pressedColor: {r: 1, g: 1, b: 1, a: 1}
+  _releasedColor: {r: 1, g: 1, b: 1, a: 0.39215687}
+  _modeImage: {fileID: 1625124102537029438}
+  _modeSprites:
+  - {fileID: 21300000, guid: 11c59d64d8e0e4c9c91c36d4851a7b0b, type: 3}
+  - {fileID: 21300000, guid: 925a8627aeb4d449aab35318bcea8b03, type: 3}
+  - {fileID: 21300000, guid: ef000ec970d9a41c8af9c908fa3dd91c, type: 3}
 --- !u!222 &1413912477
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -27948,7 +27960,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
   m_Value: 1.0000005
-  m_Size: 0.8365564
+  m_Size: 0.83878237
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -28373,10 +28385,10 @@ RectTransform:
   m_Father: {fileID: 1564532169031688529}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 528, y: -160}
-  m_SizeDelta: {x: 160, y: 160}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 160, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!1 &134346464165564612
 GameObject:
@@ -28568,8 +28580,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 9057808806699374645, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
+      objectReference: {fileID: 8212560217215780640}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -28583,7 +28594,12 @@ PrefabInstance:
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: AliignScale
+      value: AlignScale
+      objectReference: {fileID: 0}
+    - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VoyagerController.UI.AlignmentMenu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -28712,6 +28728,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
+--- !u!1 &341175979654827280 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 341175979654827279}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &390179485922482132
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28738,8 +28760,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 9057808806699374645, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
+      objectReference: {fileID: 8212560217215780640}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -28753,7 +28774,12 @@ PrefabInstance:
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: AlignFlip
+      value: FlipSelectedLamps
+      objectReference: {fileID: 0}
+    - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VoyagerController.UI.AlignmentMenu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -28882,6 +28908,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
+--- !u!1 &390179485922482133 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 390179485922482132}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &419188094310585578
 RectTransform:
   m_ObjectHideFlags: 0
@@ -29306,8 +29338,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 9057808806699374645, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
+      objectReference: {fileID: 8212560217215780640}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -29322,6 +29353,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SelectDeselect
+      objectReference: {fileID: 0}
+    - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VoyagerController.UI.AlignmentMenu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -29455,6 +29491,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
+--- !u!1 &989210087963805204 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 989210087963805203}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &991573512635583783
 RectTransform:
   m_ObjectHideFlags: 0
@@ -29994,18 +30036,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1394456351366401860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4379766510520174475}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8edabc1fae58430ba16aac1d0db2803, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1424827822691139615
 GameObject:
   m_ObjectHideFlags: 0
@@ -30736,7 +30766,7 @@ PrefabInstance:
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -30746,12 +30776,12 @@ PrefabInstance:
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 375
       objectReference: {fileID: 0}
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -30796,12 +30826,12 @@ PrefabInstance:
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 191.5
       objectReference: {fileID: 0}
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -292
       objectReference: {fileID: 0}
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -30826,7 +30856,7 @@ PrefabInstance:
     - target: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8269508053611200199, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -30835,6 +30865,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
+--- !u!1 &2191644777239507012 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 2191644777239507011}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2194885821986685682
 GameObject:
   m_ObjectHideFlags: 0
@@ -30879,8 +30915,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 9057808806699374645, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
+      objectReference: {fileID: 8212560217215780640}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -30895,6 +30930,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: AlignHorizontally
+      objectReference: {fileID: 0}
+    - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VoyagerController.UI.AlignmentMenu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -31023,6 +31063,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
+--- !u!1 &2201078940439401681 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 2201078940439401680}
+  m_PrefabAsset: {fileID: 0}
 --- !u!222 &2237374943307179758
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -31165,6 +31211,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c2615ce77e7f493a9998d23cd0e9155, type: 3}
+--- !u!1 &2307986747599037849 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 802620914053610862, guid: 0c2615ce77e7f493a9998d23cd0e9155,
+    type: 3}
+  m_PrefabInstance: {fileID: 2307986747599037848}
+  m_PrefabAsset: {fileID: 0}
 --- !u!222 &2308036695650498857
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -31238,8 +31290,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 9057808806699374645, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
+      objectReference: {fileID: 8212560217215780640}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -31253,7 +31304,12 @@ PrefabInstance:
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: DestributeVertically
+      value: AlignVertically
+      objectReference: {fileID: 0}
+    - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VoyagerController.UI.AlignmentMenu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -31382,6 +31438,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
+--- !u!1 &2425886365993799391 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 2425886365993799390}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &2439972461658143495
 RectTransform:
   m_ObjectHideFlags: 0
@@ -31434,14 +31496,30 @@ GameObject:
   - component: {fileID: 131286295835395146}
   - component: {fileID: 5495118476058990514}
   - component: {fileID: 8427525494068657928}
-  - component: {fileID: 3731959843016749177}
+  - component: {fileID: 2476666319266444429}
   m_Layer: 5
   m_Name: Show Selected
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
+--- !u!114 &2476666319266444429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2476666319266444428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 523e2bcd18c474039a59a054cf67e70e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pressedColor: {r: 1, g: 1, b: 1, a: 1}
+  _releasedColor: {r: 1, g: 1, b: 1, a: 0.39215687}
+  _image: {fileID: 8427525494068657928}
+  _duration: 0.3
 --- !u!224 &2528337453117817305
 RectTransform:
   m_ObjectHideFlags: 0
@@ -32014,6 +32092,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c2615ce77e7f493a9998d23cd0e9155, type: 3}
+--- !u!1 &3023705970700469454 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 802620914053610862, guid: 0c2615ce77e7f493a9998d23cd0e9155,
+    type: 3}
+  m_PrefabInstance: {fileID: 3023705970700469453}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3121479040826629774
 GameObject:
   m_ObjectHideFlags: 0
@@ -32537,10 +32621,10 @@ RectTransform:
   m_Father: {fileID: 1564532169031688529}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 528, y: -160}
-  m_SizeDelta: {x: 160, y: 160}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 160, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &3543137708938396694
 CanvasRenderer:
@@ -32704,18 +32788,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
---- !u!114 &3731959843016749177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2476666319266444428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0d2f34cbe3dc46c1afb1aa71b9790e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3752205448520579977
 GameObject:
   m_ObjectHideFlags: 0
@@ -33091,14 +33163,29 @@ GameObject:
   - component: {fileID: 3511245962854658461}
   - component: {fileID: 2937868101834675124}
   - component: {fileID: 2841849901751212038}
-  - component: {fileID: 1394456351366401860}
+  - component: {fileID: 4379766510520174476}
   m_Layer: 5
   m_Name: Show Selected Lamps Info
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
+--- !u!114 &4379766510520174476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4379766510520174475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0e0abb8b7144389a79370d616ad9ff7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pressedColor: {r: 1, g: 1, b: 1, a: 1}
+  _releasedColor: {r: 1, g: 1, b: 1, a: 0.39215687}
+  _image: {fileID: 2841849901751212038}
 --- !u!224 &4395080162361868062
 RectTransform:
   m_ObjectHideFlags: 0
@@ -33278,6 +33365,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c2615ce77e7f493a9998d23cd0e9155, type: 3}
+--- !u!1 &4496700521996177194 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 802620914053610862, guid: 0c2615ce77e7f493a9998d23cd0e9155,
+    type: 3}
+  m_PrefabInstance: {fileID: 4496700521996177193}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4590642996864573066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33629,13 +33722,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VoyagerController.UI.MenuContainer, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 771160296}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: VoyagerApp.UI.Menu, Assembly-CSharp
+      value: VoyagerController.UI.Menu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -33809,18 +33907,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5599218588477752497
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8212560217215780639}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2be8083136d914f1f991bb8bb7f8e40d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &5609968957884472705
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35275,8 +35361,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 9057808806699374645, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
+      objectReference: {fileID: 8212560217215780640}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -35291,6 +35376,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: AlignVertically
+      objectReference: {fileID: 0}
+    - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VoyagerController.UI.AlignmentMenu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -35419,6 +35509,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
+--- !u!1 &6618546610040307817 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 6618546610040307816}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6681053613681239274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36951,7 +37047,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7345979260515833387}
   - component: {fileID: 1322795148668573511}
-  - component: {fileID: 5599218588477752497}
+  - component: {fileID: 8212560217215780640}
   m_Layer: 5
   m_Name: Alignment
   m_TagString: Untagged
@@ -36959,6 +37055,29 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8212560217215780640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8212560217215780639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ccde02c43364448b322c90d907ee4a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _selectText: {fileID: 3023705970700469454}
+  _selectDeselectBtn: {fileID: 989210087963805204}
+  _undoBtn: {fileID: 2191644777239507012}
+  _alignTitle: {fileID: 4496700521996177194}
+  _alignHorizontal: {fileID: 2201078940439401681}
+  _alignVertical: {fileID: 6618546610040307817}
+  _alignFlip: {fileID: 390179485922482133}
+  _alignScale: {fileID: 341175979654827280}
+  _distTitle: {fileID: 2307986747599037849}
+  _distHorizontal: {fileID: 8829651811041118303}
+  _distVertical: {fileID: 2425886365993799391}
 --- !u!1 &8218684897658794235
 GameObject:
   m_ObjectHideFlags: 0
@@ -37612,8 +37731,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 9057808806699374645, guid: 696c43ec365ed4a45a6c16df774dc048,
-        type: 3}
+      objectReference: {fileID: 8212560217215780640}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -37627,7 +37745,12 @@ PrefabInstance:
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: DestributeHorizontally
+      value: DistributeSelectedLampsHorizontally
+      objectReference: {fileID: 0}
+    - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VoyagerController.UI.AlignmentMenu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -37756,6 +37879,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
+--- !u!1 &8829651811041118303 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6451203135732782658, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 8829651811041118302}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8837033653319916205
 MonoBehaviour:
   m_ObjectHideFlags: 0
