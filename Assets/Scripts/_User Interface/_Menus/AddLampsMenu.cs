@@ -62,8 +62,8 @@ namespace VoyagerController.UI
         {
             if (lamp is VoyagerLamp voyager)
             {
-                var voyagerItem = WorkspaceManager.InstantiateItem<VoyagerItem>(voyager);
-                FindObjectOfType<CameraMove>().SnapCameraToLamp(voyager);
+                var voyagerItem = WorkspaceManager.InstantiateItem<VoyagerItem>(voyager, WorkspaceUtils.PositionOfLastSelectedOrAddedLamp + new Vector3(0, -1.0f, 0));
+                CameraMove.SetCameraPosition(voyagerItem.transform.localPosition);
                 WorkspaceSelection.Clear();
                 WorkspaceSelection.SelectItem(voyagerItem);
 

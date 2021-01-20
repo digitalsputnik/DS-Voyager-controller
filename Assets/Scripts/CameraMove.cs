@@ -2,6 +2,7 @@
 using DigitalSputnik.Voyager;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using VoyagerController.Workspace;
 
 namespace VoyagerController
 {
@@ -262,12 +263,8 @@ namespace VoyagerController
             transform.position = transform.position - (after - before);
         }
 
-        public void SnapCameraToLamp(VoyagerLamp lamp)
-        {
-            var pos = Metadata.Get(lamp.Serial).WorkspaceMapping.Position;
-            ZoomDistance = zoomDistanceStart;
-            transform.localPosition = new Vector3(pos[0], pos[1], transform.localPosition.z);
-        }
+        public static void SetCameraPosition(Vector3 pos) =>
+            Camera.main.transform.localPosition = new Vector3(pos.x, pos.y, Camera.main.transform.localPosition.z);
 
         private float GetStep()
         {

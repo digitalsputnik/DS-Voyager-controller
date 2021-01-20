@@ -81,10 +81,13 @@ namespace VoyagerController.Workspace
             {
                 var view = hit.transform.GetComponentInParent<WorkspaceItem>();
                 
-                if (view.Selectable)
-                    ApplySelectionToItems(new List<WorkspaceItem> { view });
-                else
-                    WorkspaceSelection.Clear();
+                if (view != null)
+                {
+                    if (view.Selectable)
+                        ApplySelectionToItems(new List<WorkspaceItem> { view });
+                    else
+                        WorkspaceSelection.Clear();
+                }
             }
             else
                 WorkspaceSelection.Clear();

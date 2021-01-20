@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -53,7 +54,21 @@ namespace VoyagerController.UI
 
         public void AddPicture()
         {
-            // FileUtils.LoadPictureFromDevice(PicturePicked);
+            if (NativeFilePicker.IsFilePickerBusy())
+                return;
+
+#if UNITY_ANDROID
+            // Use MIMEs on Android
+            string[] fileTypes = new string[] { "image/*", "video/*" };
+#else
+			// Use UTIs on iOS
+			string[] fileTypes = new string[] { "public.image", "public.movie" };
+#endif
+
+            // Pick image(s) and/or video(s)
+            NativeFilePicker.Permission permission = NativeFilePicker.PickFile(PicturePicked, fileTypes);
+
+            Debug.Log("Permission result: " + permission);
         }
 
         public void SelectDeselect()
@@ -69,7 +84,7 @@ namespace VoyagerController.UI
             var serial = WorkspaceSelection.GetSelected<VoyagerItem>().First().LampHandle.Serial;
             var effect = Metadata.Get(serial).Effect;
 
-            foreach (var item in WorkspaceUtils.GetItemsWithSameEffect(effect))
+            foreach (var item in WorkspaceUtils.GetItemsWithSameEffect(effect).ToList())
                 WorkspaceSelection.SelectItem(item);
         }
 
@@ -114,7 +129,7 @@ namespace VoyagerController.UI
 
         private static bool SelectedLampsShareSameEffect()
         {
-            if (!WorkspaceSelection.GetSelected().Any()) return false;
+            if (!WorkspaceSelection.GetSelected<VoyagerItem>().Any()) return false;
             
             var serial = WorkspaceSelection.GetSelected<VoyagerItem>().First().LampHandle.Serial;
             var effect = Metadata.Get(serial).Effect;
@@ -125,9 +140,11 @@ namespace VoyagerController.UI
             });
         }
 
-        /* 
+        
         private void PicturePicked(string path)
         {
+            Debug.Log(path);
+
             if (path == null || path == "Null" || path == "") return;
 
             byte[] data = File.ReadAllBytes(path);
@@ -144,10 +161,7 @@ namespace VoyagerController.UI
 
             texture.Apply();
 
-            WorkspaceManager.instance
-                .InstantiateItem<PictureItemView>(texture)
-                .PositionBasedCamera();
+            WorkspaceManager.InstantiateItem<PictureItem>(texture);
         }
-        */
     }
 }

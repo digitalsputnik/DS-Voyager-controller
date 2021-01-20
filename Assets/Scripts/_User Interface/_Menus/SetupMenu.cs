@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Linq;
+using UnityEngine;
+using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
 {
@@ -19,18 +22,35 @@ namespace VoyagerController.UI
         }
 
         public void OpenHelp()
-        { 
-            // TODO: Implement!
-            /*
+        {
             DialogBox.Show(
                 "Help",
-                "Would you like to do the tutorial again or get to the support page?",
-                new string[] { "TUTORIAL", "SUPPORT PAGE", "EXIT"},
+                "Would you like to go through the tutorial on connecting lamps or go to the support page?",
+                new string[] { "TUTORIAL", "SUPPORT PAGE", "CANCEL" },
                 new Action[] {
                     () =>
                     {
-                        DialogBox.PauseDialogues();
-                        _inspectorMenuContainer.ShowMenu(_tutorial);
+                        if (WorkspaceManager.GetItems<VoyagerItem>().Count() > 0)
+                        {
+                            DialogBox.Show(
+                                "ATTENTION",
+                                "Starting the tutorial will clear out the workspace, would you like to continue?",
+                                new[] {"CANCEL", "YES"},
+                                new Action[]
+                                {
+                                    null,
+                                    () =>
+                                    {
+                                        DialogBox.Paused = true;
+                                        _inspectorMenuContainer.ShowMenu(_tutorial);
+                                    }
+                                });
+                        }
+                        else
+                        {
+                            DialogBox.Paused = true;
+                            _inspectorMenuContainer.ShowMenu(_tutorial);
+                        }
                     }
                     ,
                     () => { Application.OpenURL(ApplicationSettings.HELP_URL); }
@@ -38,7 +58,6 @@ namespace VoyagerController.UI
                     () => {}
                 }
             );
-            */
         }
     }
 }

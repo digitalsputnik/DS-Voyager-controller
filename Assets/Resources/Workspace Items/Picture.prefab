@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2071389813385008850}
-  - component: {fileID: 2071389813385008852}
+  - component: {fileID: 56121354629412992}
   m_Layer: 0
   m_Name: Picture
   m_TagString: Untagged
@@ -34,7 +34,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2071389813385008852
+--- !u!114 &56121354629412992
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,21 +43,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2071389813385008851}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b142558f7aa334a98bdf709ab83c4ce5, type: 3}
+  m_Script: {fileID: 11500000, guid: 17759286b6e3abf4d9b319ac2a3649a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  childContainer: {fileID: 8548003280346960569}
-  guid: 
-  children: []
-  outline: {fileID: 4975270063776606200}
-  childEnterColor: {r: 0.43244928, g: 0.66740847, b: 0.8113208, a: 1}
-  normalColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
-  outlineThickness: 0.1
-  renderer: {fileID: 2071389814058521448}
-  pixelsPerUnit: 50
-  selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  deselectedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  picture: {fileID: 0}
+  _childContainer: {fileID: 8548003280346960569}
+  Children: []
+  Picture: {fileID: 0}
+  _renderer: {fileID: 2071389814058521448}
+  pixelsPerUnit: 20
+  _outline: {fileID: 4575942053016492809}
+  _outlineThickness: 0.2
 --- !u!1 &2071389814058521455
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,6 +109,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -138,6 +134,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!61 &6249327507769855652
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -219,6 +216,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -243,6 +241,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &8548003280346960568
 GameObject:
   m_ObjectHideFlags: 0

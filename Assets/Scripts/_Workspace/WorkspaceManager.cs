@@ -44,20 +44,20 @@ namespace VoyagerController.Workspace
             item.Setup(data);
 
             if (item is VoyagerItem voyager)
-            {
-                voyager.transform.localPosition = new Vector2(
-                    _instance._items.Count() != 0 ? _instance._items.Last().transform.localPosition.x : 0f,
-                    _instance._items.Count() != 0 ? _instance._items.Last().transform.localPosition.y + step : 0f
-                );
-
-                var lampMetaData = Metadata.Get(voyager.LampHandle.Serial);
-                lampMetaData.WorkspaceMapping.Position = new[] { voyager.transform.localPosition.x, voyager.transform.localPosition.y };
-                lampMetaData.InWorkspace = true;
-            }
+                Metadata.Get(voyager.LampHandle.Serial).InWorkspace = true;
 
             _instance._items.Add(item);
 
             ItemAdded?.Invoke(item);
+            return item;
+        }
+
+        public static T InstantiateItem<T>(object data, Vector3 position) where T : WorkspaceItem
+        {
+            var item = InstantiateItem<T>(data);
+            Vector3 pos = position;
+            pos.z = item.transform.position.z;
+            item.transform.position = pos;
             return item;
         }
 
