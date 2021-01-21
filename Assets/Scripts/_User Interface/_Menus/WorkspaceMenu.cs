@@ -1,5 +1,5 @@
+using System.IO;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerController.Mapping;
@@ -91,7 +91,7 @@ namespace VoyagerController.UI
         {
             var item = WorkspaceSelection.GetSelected<VoyagerItem>().First();
             var meta = Metadata.Get(item.LampHandle.Serial);
-            EffectMapper.EnterEffectMapping(meta.Effect);
+            EffectMapper.EnterEffectMapping(meta.Effect, true);
         }
 
         private void UpdateUserInterface()
@@ -102,7 +102,6 @@ namespace VoyagerController.UI
             var has = lampsInWorkspace.Any();
             var one = selectedLamps.Any();
             var all = WorkspaceUtils.AllLampsSelected;
-            // TODO: Check if effects are shared
             // TODO: Check if any lamp is in DMX mode
             var share = SelectedLampsShareSameEffect();
             var dmx = false;
