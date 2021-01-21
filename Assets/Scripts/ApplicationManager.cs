@@ -3,7 +3,6 @@ using DigitalSputnik;
 using DigitalSputnik.Voyager;
 using UnityEngine;
 using VoyagerController.Bluetooth;
-using VoyagerController.Serial;
 
 namespace VoyagerController
 {
@@ -50,8 +49,6 @@ namespace VoyagerController
             LampManager.Instance.OnLampBroadcasted += LampBroadcasted;
             
             LampManager.Instance.AddClient(new VoyagerNetworkClient());
-            LampManager.Instance.AddClient(new VoyagerSerialClient());
-            
             if (Application.isMobilePlatform && !Application.isEditor) 
                 LampManager.Instance.AddClient(new VoyagerBluetoothClient());
         }
@@ -88,7 +85,8 @@ namespace VoyagerController
                     Metadata.Add(voyager);
                     return true;
                 }
-                else return false;
+                
+                return false;
             }
             catch (Exception ex)
             {

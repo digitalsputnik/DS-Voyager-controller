@@ -74,7 +74,7 @@ namespace VoyagerController.UI
             StopAllCoroutines();
             ApplicationState.ColorWheelActive.Value = false;
             _showHide.GetComponent<Button>().onClick.RemoveListener(Approve);
-            // DialogBox.ResumeDialogues(); TODO: Implement!
+            DialogBox.Paused = false;
         }
 
         private void UpdateLoop()

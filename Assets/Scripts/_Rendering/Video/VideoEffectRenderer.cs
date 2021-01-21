@@ -19,16 +19,31 @@ namespace VoyagerController.Rendering
 
         public static VideoPlayer VideoPlayer => _instance._videoPlayer;
         public static RenderTexture RenderTexture => _instance._renderTexture;
+
+        [SerializeField] private Material _material;
         
         private VideoRenderState _state = new IdleState();
         private VideoPlayer _videoPlayer = null;
         private RenderTexture _renderTexture = null;
         
-        private Dictionary<VoyagerLamp, Effect> _prevEffects = new Dictionary<VoyagerLamp, Effect>(); 
+        private Dictionary<VoyagerLamp, Effect> _prevEffects = new Dictionary<VoyagerLamp, Effect>();
+        private bool _effectModified = false;
 
         private void Start()
         {
             _videoPlayer = GetComponent<VideoPlayer>();
+            EffectManager.OnEffectModified += OnEffectModified;
+        }
+
+        private void OnDestroy()
+        {
+            EffectManager.OnEffectModified -= OnEffectModified;
+        }
+
+        private void OnEffectModified(Effect effect)
+        {
+            if (_prevEffects.ContainsValue(effect))
+                _effectModified = true;
         }
 
         private void Update()
@@ -41,6 +56,18 @@ namespace VoyagerController.Rendering
             _state = _state.Update();
             
             if (_state != current) Debugger.LogInfo($"Render state changed to {_state}");
+        }
+        
+        public static Texture2D GetFrameTexture2D(Effect effect)
+        {
+            var render = new RenderTexture(RenderTexture.descriptor);
+            ShaderUtils.ApplyEffectToMaterial(_instance._material, effect);
+            var prevActive = RenderTexture.active;
+            Graphics.Blit(RenderTexture, render, _instance._material);
+            var texture = render.ToTexture2D();
+            RenderTexture.active = prevActive;
+            Destroy(render);
+            return texture;
         }
 
         public static void PrepareVideoPlayer(Video video, Action prepared)
@@ -93,6 +120,12 @@ namespace VoyagerController.Rendering
                 .Where(v => Metadata.Get(v.Serial).Effect is VideoEffect)
                 .ToArray();
 
+            if (_effectModified)
+            {
+                result = true;
+                _effectModified = false;
+            }
+            
             if (!lamps.All(l => _prevEffects.ContainsKey(l)))
                 result = true;
 

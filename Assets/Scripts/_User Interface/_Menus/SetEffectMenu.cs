@@ -51,7 +51,7 @@ namespace VoyagerController.UI
                     else
                         ApplyEffectToAllLamps(effect);
                     
-                    EffectMapper.EnterEffectMapping(effect);
+                    EffectMapper.EnterEffectMapping(effect, _applyToSelected);
                 });
                 _items.Add(item);
             }
@@ -89,9 +89,12 @@ namespace VoyagerController.UI
             return EffectManager.GetEffects()
                 .OrderByDescending(e => e.Meta.Timestamp)
                 .ThenByDescending(e => e.Name == "white.mp4")
-                .ThenByDescending(e => Metadata.Get(l => l.Effect == e).Count());
-            // TODO: Here should be streams
+                .ThenByDescending(e => Metadata.Get(l => l.Effect == e).Count())
+                // .ThenByDescending(e => Metadata.Get(l => l.Effect is SyphonEffect || l.Effect is SpoutEffect))
+                .ToList();
         }
+
+        public void SetApplyToSelected(bool value) => _applyToSelected = value;
 
         public void AddEffect()
         {

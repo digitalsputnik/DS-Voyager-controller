@@ -43,6 +43,12 @@ namespace VoyagerController.Mapping
             _player.frame = index;
         }
 
+        public void SetFps(float fps)
+        {
+            _player.playbackSpeed = 1.0f / _player.frameRate * fps;
+            CorrectFrame();
+        }
+
         public override void Clean()
         {
             StopAllCoroutines();

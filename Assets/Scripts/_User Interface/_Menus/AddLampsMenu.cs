@@ -91,8 +91,7 @@ namespace VoyagerController.UI
         
         private static bool LampConnected(Lamp lamp)
         {
-            // TODO: Implement!
-            return true;
+            return lamp.Connected;
         }
         
         private void SubscribeEvents()

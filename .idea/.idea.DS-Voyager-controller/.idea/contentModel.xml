@@ -21,6 +21,24 @@
           </e>
         </e>
         <e p="link.xml" t="Include" />
+        <e p="Plugins" t="Include">
+          <e p="NativeFilePicker" t="Include">
+            <e p="Android" t="Include">
+              <e p="FPCallbackHelper.cs" t="Include" />
+              <e p="FPPermissionCallbackAndroid.cs" t="Include" />
+              <e p="FPResultCallbackAndroid.cs" t="Include" />
+            </e>
+            <e p="Editor" t="Include">
+              <e p="NativeFilePickerCustomTypes.cs" t="Include" />
+              <e p="NativeFilePickerPostProcessBuild.cs" t="Include" />
+            </e>
+            <e p="iOS" t="Include">
+              <e p="FPResultCallbackiOS.cs" t="Include" />
+            </e>
+            <e p="NativeFilePicker.cs" t="Include" />
+            <e p="README.txt" t="Include" />
+          </e>
+        </e>
         <e p="Scripts" t="Include">
           <e p="_Bluetooth" t="Include">
             <e p="BluetoothEndPoint.cs" t="Include" />
@@ -32,6 +50,7 @@
           </e>
           <e p="_Effect Mapping" t="Include">
             <e p="EffectDisplay.cs" t="Include" />
+            <e p="EffectDisplaySettings.cs" t="Include" />
             <e p="EffectMapper.cs" t="Include" />
             <e p="ImageEffectDisplay.cs" t="Include" />
             <e p="SpoutEffectDisplay.cs" t="Include" />
@@ -86,6 +105,14 @@
             <e p="SerialEndPoint.cs" t="Include" />
             <e p="VoyagerSerialClient.cs" t="Include" />
           </e>
+          <e p="_Tutorial" t="Include">
+            <e p="Tutorial.cs" t="Include" />
+            <e p="TutorialCustomButton.cs" t="Include" />
+            <e p="TutorialLampsAdded.cs" t="Include" />
+            <e p="TutorialManager.cs" t="Include" />
+            <e p="TutorialMobileCheck.cs" t="Include" />
+            <e p="TutorialPrompt.cs" t="Include" />
+          </e>
           <e p="_User Interface" t="Include">
             <e p="_Color Wheel" t="Include">
               <e p="ColorWheelButton.cs" t="Include" />
@@ -100,6 +127,7 @@
               <e p="AppSettingsMenu.cs" t="Include" />
               <e p="ClientModeMenu.cs" t="Include" />
               <e p="EffectMappingMenu.cs" t="Include" />
+              <e p="EffectSettingsMenu.cs" t="Include" />
               <e p="ItshePicker.cs" t="Include" />
               <e p="LampSettingsMenu.cs" t="Include" />
               <e p="MasterModeMenu.cs" t="Include" />
@@ -131,6 +159,7 @@
           <e p="_Workspace" t="Include">
             <e p="Items" t="Include">
               <e p="ItemsContainerItem.cs" t="Include" />
+              <e p="PictureItem.cs" t="Include" />
               <e p="VoyagerItem.cs" t="Include" />
             </e>
             <e p="SelectionController.cs" t="Include" />
@@ -153,6 +182,7 @@
           <e p="MainThread.cs" t="Include" />
           <e p="MathUtils.cs" t="Include" />
           <e p="SerialTest.cs" t="Include" />
+          <e p="ShaderUtils.cs" t="Include" />
           <e p="Temperature.cs" t="Include" />
           <e p="TextureExtensions.cs" t="Include" />
           <e p="VoyagerUpdater.cs" t="Include" />
@@ -487,6 +517,8 @@
       <e p="Klak.Spout.Editor.csproj" t="IncludeRecursive" />
       <e p="LunarConsole.csproj" t="IncludeRecursive" />
       <e p="LunarConsoleEditor.csproj" t="IncludeRecursive" />
+      <e p="NativeFilePicker.Editor.csproj" t="IncludeRecursive" />
+      <e p="NativeFilePicker.Runtime.csproj" t="IncludeRecursive" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="Packages" t="ExcludeRecursive">
         <e p="DigitalSputnik.Bluetooth" t="Include">

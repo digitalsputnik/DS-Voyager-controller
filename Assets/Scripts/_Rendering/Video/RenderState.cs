@@ -53,8 +53,8 @@ namespace VoyagerController.Rendering
                 return;
 
             if (_texture != null) Object.Destroy(_texture);
-            
-            _texture = VideoEffectRenderer.RenderTexture.ToTexture2D();
+
+            _texture = VideoEffectRenderer.GetFrameTexture2D(_effect);
 
             foreach (var voyager in _lamps)
             {

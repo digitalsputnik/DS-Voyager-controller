@@ -21,9 +21,11 @@ namespace VoyagerController.Mapping
         [SerializeField] private Transform _displayTransform = null;
         [SerializeField] private MenuContainer _menuContainer = null;
         [SerializeField] private EffectMappingMenu _mappingMenu = null;
+        [SerializeField] private EffectSettingsMenu _settingsMenu = null;
+        [SerializeField] private EffectDisplaySettings _displaySettings = null;
         [SerializeField] private Menu _exitMenu = null;
         [SerializeField] private CameraMove _camera = null;
-        
+
         private EffectDisplay[] _displays;
         private EffectDisplay _activeDisplay;
         private Vector3 _previousCamPosition;
@@ -34,42 +36,32 @@ namespace VoyagerController.Mapping
             gameObject.SetActive(false);
         }
 
-        public static void EnterEffectMapping(Effect effect)
+        public static void EnterEffectMapping(Effect effect, bool onlySelected)
         {
             _instance.CleanPreviousDisplay();
             _instance.gameObject.SetActive(true);
             _instance._menuContainer.ShowMenu(_instance._mappingMenu);
+            _instance._settingsMenu.SetEffect(effect);
+            _instance._displaySettings.UpdateSettings(effect);
 
             var selected = WorkspaceSelection.GetSelected<VoyagerItem>().ToArray();
 
             foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>().ToArray())
             {
-                if (selected.Contains(voyager))
+                if (onlySelected)
                 {
-                    var meta = Metadata.Get(voyager.LampHandle.Serial);
-                    var point1 = new Vector3(meta.EffectMapping.X1 - 0.5f, meta.EffectMapping.Y1 - 0.5f);
-                    var point2 = new Vector3(meta.EffectMapping.X2 - 0.5f, meta.EffectMapping.Y2 - 0.5f);
-                    var transform = voyager.transform;
-
-                    point1 = _instance._displayTransform.TransformPoint(point1);
-                    point2 = _instance._displayTransform.TransformPoint(point2);
-                    
-                    var center = (point1 + point2) / 2.0f;
-                    var angle = AngleFromTo(point1, point2);
-
-                    var position = new Vector3(center.x, center.y, 0.0f);
-                    var rotation = new Vector3(0.0f, 0.0f, angle);
-
-                    var distance = Vector3.Distance(point1, point2);
-                    var scale = Vector3.one * distance / ((voyager.LampHandle.PixelCount - 1) * voyager.GetPixelSize().x);
-
-                    LeanTween.move(transform.gameObject, position, ANIMATION_TIME);
-                    LeanTween.rotate(transform.gameObject, rotation, ANIMATION_TIME);
-                    LeanTween.scale(transform.gameObject, scale, ANIMATION_TIME);
+                    if (selected.Contains(voyager))
+                    {
+                        CalculateVoyagerMapping(voyager);
+                    }
+                    else
+                    {
+                        voyager.gameObject.SetActive(false);
+                    }   
                 }
                 else
                 {
-                    voyager.gameObject.SetActive(false);
+                    CalculateVoyagerMapping(voyager);
                 }
             }
 
@@ -91,6 +83,32 @@ namespace VoyagerController.Mapping
 
             SelectionMove.SelectionMoveEnded += SelectedItemsMoved;
             EffectMappingIsActive = true;
+        }
+
+        private static void CalculateVoyagerMapping(VoyagerItem voyager)
+        {
+            var meta = Metadata.Get(voyager.LampHandle.Serial);
+            var point1 = new Vector3(meta.EffectMapping.X1 - 0.5f, meta.EffectMapping.Y1 - 0.5f);
+            var point2 = new Vector3(meta.EffectMapping.X2 - 0.5f, meta.EffectMapping.Y2 - 0.5f);
+            var transform = voyager.transform;
+
+            point1 = _instance._displayTransform.TransformPoint(point1);
+            point2 = _instance._displayTransform.TransformPoint(point2);
+                    
+            var center = (point1 + point2) / 2.0f;
+            var angle = AngleFromTo(point1, point2);
+
+            var position = new Vector3(center.x, center.y, 0.0f);
+            var rotation = new Vector3(0.0f, 0.0f, angle);
+
+            var distance = Vector3.Distance(point1, point2);
+            var scale = Vector3.one * distance / ((voyager.LampHandle.PixelCount - 1) * voyager.GetPixelSize().x);
+
+            LeanTween.move(transform.gameObject, position, ANIMATION_TIME);
+            LeanTween.rotate(transform.gameObject, rotation, ANIMATION_TIME);
+            LeanTween.scale(transform.gameObject, scale, ANIMATION_TIME);
+                    
+            voyager.gameObject.SetActive(true);
         }
 
         private static void SelectedItemsMoved()

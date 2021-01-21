@@ -155,7 +155,8 @@ namespace VoyagerController
             if (client != null)
             {
                 time = client.StartVideo(voyager, (long) video.Video.FrameCount, start);
-                client.SetItshe(voyager, meta.Itshe);   
+                client.SetItshe(voyager, meta.Itshe);
+                client.SetFps(voyager, video.Video.Fps);
             }
 
             for (var i = 0; i < framebuffer.Length; i++) framebuffer[i] = null;
