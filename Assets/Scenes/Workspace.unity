@@ -4438,6 +4438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12b638b42b2740c7bd6362393be208bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _material: {fileID: 2100000, guid: 71813adf9851a4964865f74192eea9a3, type: 2}
 --- !u!4 &290299174
 Transform:
   m_ObjectHideFlags: 0
@@ -16895,6 +16896,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e195886daf04c848b2375a06672409b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _material: {fileID: 2100000, guid: 1df1e0d0532864e6d975f9979227ae36, type: 2}
 --- !u!4 &1081058358
 Transform:
   m_ObjectHideFlags: 0
@@ -29732,6 +29734,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80ba6e2f9384f29a36851a08fdbbd7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _material: {fileID: 2100000, guid: 71813adf9851a4964865f74192eea9a3, type: 2}
 --- !u!1001 &1917587850
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33142,8 +33145,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 70750426}
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.90627724
+  m_Value: 1.0000006
+  m_Size: 0.87584126
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

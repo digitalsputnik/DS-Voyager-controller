@@ -10,6 +10,8 @@ namespace VoyagerController.Rendering
     public class SyphonRenderer : MonoBehaviour
     {
         public static RenderTexture SyphonRenderTexture { get; private set; }
+
+        [SerializeField] private Material _material;
         
         private RenderTexture _render;
         private SyphonClient _client;
@@ -76,7 +78,7 @@ namespace VoyagerController.Rendering
 
         private void RenderStream()
         {
-            var frame = _render.ToTexture2D();
+            var frame = GetFrameTexture(_effect);
             var delay = _effect.Delay;
             
             foreach (var item in WorkspaceManager.GetItems<VoyagerItem>())
@@ -88,6 +90,18 @@ namespace VoyagerController.Rendering
             }
             
             Destroy(frame);
+        }
+
+        private Texture2D GetFrameTexture(Effect effect)
+        {
+            var render = new RenderTexture(_render);
+            ShaderUtils.ApplyEffectToMaterial(_material, effect);
+            var prevActive = RenderTexture.active;
+            Graphics.Blit(_render, render, _material);
+            var texture = render.ToTexture2D();
+            RenderTexture.active = prevActive;
+            Destroy(render);
+            return texture;
         }
 
         private static bool AnyLampIsStreaming => WorkspaceManager
