@@ -58,10 +58,10 @@ namespace VoyagerController.UI
 
 #if UNITY_ANDROID
             // Use MIMEs on Android
-            string[] fileTypes = new string[] { "image/*", "video/*" };
+            string[] fileTypes = new string[] { "image/*" };
 #else
 			// Use UTIs on iOS
-			string[] fileTypes = new string[] { "public.image", "public.movie" };
+			string[] fileTypes = new string[] { "public.image" };
 #endif
 
             // Pick image(s) and/or video(s)

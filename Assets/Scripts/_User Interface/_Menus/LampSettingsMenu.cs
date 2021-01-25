@@ -76,7 +76,7 @@ namespace VoyagerController.UI
             var has = WorkspaceSelection.GetSelected<VoyagerItem>().Any();
 
             _infoTextObj.SetActive(!one);
-            _networkSettingsBtn.SetActive(one);
+            _networkSettingsBtn.SetActive(has);
             _updateBtn.SetActive(one);
             _selectDeselectBtn.SetActive(has);
 

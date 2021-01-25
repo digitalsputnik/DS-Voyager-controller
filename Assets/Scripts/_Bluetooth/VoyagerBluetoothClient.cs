@@ -221,6 +221,7 @@ namespace VoyagerController.Bluetooth
                     connection.Lamp.PixelCount = length;
                     connection.State = ValidateState.Ready;
                     connection.LastMessage = 0.0;
+                    connection.Lamp.Connected = true;
                     AddLampToManager(connection.Lamp);
                     break;
             }
@@ -251,6 +252,12 @@ namespace VoyagerController.Bluetooth
         public override double TimeOffset => 0.0;
 
         public override void SendSettingsPacket(VoyagerLamp voyager, Packet packet, double time)
+        {
+            packet.Timestamp = time;
+            SendMessage(voyager, ObjectToBytes(packet));
+        }
+
+        public override void SendDiscoveryPacket(VoyagerLamp voyager, Packet packet, double time)
         {
             packet.Timestamp = time;
             SendMessage(voyager, ObjectToBytes(packet));
@@ -305,7 +312,12 @@ namespace VoyagerController.Bluetooth
 
         public override void SetNetworkMode(VoyagerLamp voyager, NetworkMode mode, string ssid = "", string password = "")
         {
-            
+            if (mode == NetworkMode.ClientPSK)
+                password = SecurityUtils.WPA_PSK(ssid, password);
+
+            var packet = new NetworkModeRequestPacket(voyager.Serial, mode, ssid, password);
+            var time = TimeUtils.Epoch + TimeOffset;
+            SendDiscoveryPacket(voyager, packet, time);
         }
 
         public override void SetGlobalIntensity(VoyagerLamp voyager, double value)
@@ -320,10 +332,16 @@ namespace VoyagerController.Bluetooth
 
         private static byte[] ObjectToBytes(object obj)
         {
-            var json = JsonConvert.SerializeObject(obj, new ItsheConverter());
+            var converters = new JsonConverter[]
+            {
+                new ItsheConverter(),
+                new NetworkModeConverter()
+            };
+
+            var json = JsonConvert.SerializeObject(obj, converters);
             return Encoding.UTF8.GetBytes(json);
         }
-        
+
         #endregion
 
         private enum ValidateState

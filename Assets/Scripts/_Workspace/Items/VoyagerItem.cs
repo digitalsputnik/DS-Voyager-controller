@@ -284,7 +284,7 @@ namespace VoyagerController.Workspace
             
             info.Add(LampHandle.Serial);
             if (LampHandle.Endpoint is BluetoothEndPoint)
-                info.Add("Bluetooth " + _nameText.text);
+                //info.Add("Bluetooth " + _nameText.text);
             info.Add(LampHandle.Connected ? " Connected" : " Disconnected");
             
             if (Suffix != "") info.Add(Suffix);

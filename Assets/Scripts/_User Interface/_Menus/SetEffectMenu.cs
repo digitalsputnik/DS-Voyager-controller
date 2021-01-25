@@ -16,10 +16,13 @@ namespace VoyagerController.UI
         [SerializeField] private Transform _container = null;
         [SerializeField] private bool _applyToSelected = true;
 
+        public static SetEffectMenu _instance;
+
         private readonly List<SetEffectItem> _items = new List<SetEffectItem>();
 
         internal override void OnShow()
         {
+            _instance = this;
             EffectManager.OnEffectAdded += OnEffectEvent;
             EffectManager.OnEffectModified += OnEffectEvent;
             EffectManager.OnEffectRemoved += OnEffectEvent;
@@ -133,7 +136,13 @@ namespace VoyagerController.UI
                 }
             });
         }
-        
+
+        private void Update()
+        {
+            /*if (AndroidVideoResizer.IsCompressing)
+                Debug.Log(AndroidVideoResizer.Progress);*/
+        }
+
         public static void LoadVideoFromDevice(Action<string> loaded)
         {
             if (Application.isMobilePlatform)

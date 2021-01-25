@@ -41,6 +41,7 @@ namespace VoyagerController.UI
             if (!_loading)
             {
                 _ssidList.transform.parent.gameObject.SetActive(false);
+                _ssidList.transform.gameObject.SetActive(false);
                 _ssidField.transform.parent.gameObject.SetActive(true);
 
                 // TODO: Implement!
@@ -54,6 +55,7 @@ namespace VoyagerController.UI
         public void ScanSsidMode()
         {
             _ssidList.transform.parent.gameObject.SetActive(true);
+            _ssidList.transform.gameObject.SetActive(true);
             _ssidField.transform.parent.gameObject.SetActive(false);
             StartPolling();
         }
@@ -68,7 +70,7 @@ namespace VoyagerController.UI
             if (password.Length >= 8 && ssid.Length != 0 || password.Length == 0 && ssid.Length != 0)
             {
                 foreach (var voyager in WorkspaceSelection.GetSelected<VoyagerItem>().Select(i => i.LampHandle))
-                    voyager.SetNetworkMode(NetworkMode.Client, ssid, password);
+                    voyager.SetNetworkMode(NetworkMode.ClientPSK, ssid, password);
 
                 GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
             }

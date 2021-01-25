@@ -206,6 +206,11 @@ namespace VoyagerController.Serial
             SendMessage(voyager, json);
         }
 
+        public override void SendDiscoveryPacket(VoyagerLamp voyager, Packet packet, double time)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void PollAvailableSsidList(VoyagerLamp voyager, SsidListHandler callback)
         {
             
