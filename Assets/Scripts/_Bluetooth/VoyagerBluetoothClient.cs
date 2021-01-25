@@ -5,6 +5,7 @@ using System.Text;
 using DigitalSputnik;
 using DigitalSputnik.Ble;
 using DigitalSputnik.Colors;
+using DigitalSputnik.Dmx;
 using DigitalSputnik.Voyager;
 using DigitalSputnik.Voyager.Communication;
 using DigitalSputnik.Voyager.Json;
@@ -293,7 +294,7 @@ namespace VoyagerController.Bluetooth
 
         public override void OverridePixels(VoyagerLamp voyager, Itshe itshe, double duration)
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void SetFps(VoyagerLamp voyager, double fps)
@@ -304,12 +305,17 @@ namespace VoyagerController.Bluetooth
 
         public override void SetNetworkMode(VoyagerLamp voyager, NetworkMode mode, string ssid = "", string password = "")
         {
-            throw new System.NotImplementedException();
+            
         }
 
         public override void SetGlobalIntensity(VoyagerLamp voyager, double value)
         {
-            throw new System.NotImplementedException();
+            
+        }
+        
+        public override void SetDmxMode(VoyagerLamp voyager, DmxSettings settings)
+        {
+            
         }
 
         private static byte[] ObjectToBytes(object obj)

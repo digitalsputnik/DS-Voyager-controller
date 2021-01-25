@@ -102,9 +102,8 @@ namespace VoyagerController.UI
             var has = lampsInWorkspace.Any();
             var one = selectedLamps.Any();
             var all = WorkspaceUtils.AllLampsSelected;
-            // TODO: Check if any lamp is in DMX mode
             var share = SelectedLampsShareSameEffect();
-            var dmx = false;
+            var dmx = selectedLamps.Any(l => l.LampHandle.DmxModeEnabled);
             var anySerial = selectedLamps.Any(l => l.LampHandle.Endpoint is SerialEndPoint);
             
             _infoText.SetActive(!one);

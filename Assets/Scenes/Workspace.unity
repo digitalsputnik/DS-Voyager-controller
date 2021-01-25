@@ -5085,6 +5085,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b53f6402f71643cf8de86b447b449ae, type: 3}
+--- !u!114 &347360779 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1166860731073187651, guid: 2b53f6402f71643cf8de86b447b449ae,
+    type: 3}
+  m_PrefabInstance: {fileID: 347360778}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d0b652f32a2cc243917e4028fa0f046, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &354509918
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10686,6 +10698,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25fac6f589d484d1fba3a2264c3f4e64, type: 3}
+--- !u!114 &686286286 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+    type: 3}
+  m_PrefabInstance: {fileID: 686286285}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 813a7ab42d1404e65bfef66c265264dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &704066274 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 802620914053610848, guid: 0c2615ce77e7f493a9998d23cd0e9155,
@@ -17815,6 +17839,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VoyagerController.UI.DmxModeMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
@@ -17941,6 +17970,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1196887077}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1196887079 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1196887077}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1210435121
 GameObject:
   m_ObjectHideFlags: 0
@@ -17989,7 +18030,7 @@ GameObject:
   - component: {fileID: 1225778225}
   - component: {fileID: 1225778224}
   m_Layer: 5
-  m_Name: Dmx Mode
+  m_Name: Dmx Mode Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18026,9 +18067,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1225778222}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b51f351aea2424239bb1e6bafcaae8fe, type: 3}
+  m_Script: {fileID: 11500000, guid: 258dc82e623d48129f4560b810039209, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _startUniverse: {fileID: 686286286}
+  _startChannel: {fileID: 1453616234}
+  _divisionDropdown: {fileID: 1917587851}
+  _protocolDropdown: {fileID: 2038180775}
+  _formatDropdown: {fileID: 347360779}
+  _setButton: {fileID: 1196887079}
+  _stackIncreasement: 4
 --- !u!225 &1225778225
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -21676,6 +21724,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25fac6f589d484d1fba3a2264c3f4e64, type: 3}
+--- !u!114 &1453616234 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+    type: 3}
+  m_PrefabInstance: {fileID: 1453616233}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 813a7ab42d1404e65bfef66c265264dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1454822630
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21901,7 +21961,7 @@ PrefabInstance:
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_Interactable
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -21930,13 +21990,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VoyagerController.UI.InspectorMenuContainer, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 1225778224}
     - target: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: VoyagerApp.UI.Menu, Assembly-CSharp
+      value: VoyagerController.UI.Menu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
         type: 3}
@@ -29889,6 +29954,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b53f6402f71643cf8de86b447b449ae, type: 3}
+--- !u!114 &1917587851 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1166860731073187651, guid: 2b53f6402f71643cf8de86b447b449ae,
+    type: 3}
+  m_PrefabInstance: {fileID: 1917587850}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d0b652f32a2cc243917e4028fa0f046, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1926018973 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
@@ -31529,6 +31606,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b53f6402f71643cf8de86b447b449ae, type: 3}
+--- !u!114 &2038180775 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1166860731073187651, guid: 2b53f6402f71643cf8de86b447b449ae,
+    type: 3}
+  m_PrefabInstance: {fileID: 2038180774}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d0b652f32a2cc243917e4028fa0f046, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2045009750
 GameObject:
   m_ObjectHideFlags: 0

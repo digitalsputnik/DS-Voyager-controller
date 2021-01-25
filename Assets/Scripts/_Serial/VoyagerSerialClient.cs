@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DigitalSputnik;
 using DigitalSputnik.Colors;
+using DigitalSputnik.Dmx;
 using DigitalSputnik.Voyager;
 using DigitalSputnik.Voyager.Communication;
 using DigitalSputnik.Voyager.Json;
@@ -206,6 +207,11 @@ namespace VoyagerController.Serial
         }
 
         public override void PollAvailableSsidList(VoyagerLamp voyager, SsidListHandler callback)
+        {
+            
+        }
+        
+        public override void SetDmxMode(VoyagerLamp voyager, DmxSettings settings)
         {
             
         }
