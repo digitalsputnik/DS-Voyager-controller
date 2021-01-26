@@ -71,14 +71,14 @@ namespace VoyagerController.UI
 
         private void EnableDisableObjects()
         {
-            var one = WorkspaceSelection.GetSelected<VoyagerItem>().Any();
-            var all = WorkspaceUtils.AllLampsSelected;
-            var has = WorkspaceSelection.GetSelected<VoyagerItem>().Any();
+            var anyWorkspace = WorkspaceManager.GetItems<VoyagerItem>().Any();
+            var allSelected = WorkspaceUtils.AllLampsSelected;
+            var hasSelected = WorkspaceSelection.GetSelected<VoyagerItem>().Any();
             
-            _infoTextObj.SetActive(!one);
-            _networkSettingsBtn.SetActive(has);
-            _updateBtn.SetActive(has);
-            _selectDeselectBtnText.text = all ? DESELECT_ALL_TEXT : SELECT_ALL_TEXT;
+            _infoTextObj.SetActive(!hasSelected);
+            _networkSettingsBtn.SetActive(anyWorkspace);
+            _updateBtn.SetActive(hasSelected);
+            _selectDeselectBtnText.text = allSelected ? DESELECT_ALL_TEXT : SELECT_ALL_TEXT;
         }
 
         public void UpdateSelected()
