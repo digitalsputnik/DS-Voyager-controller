@@ -71,15 +71,13 @@ namespace VoyagerController.UI
 
         private void EnableDisableObjects()
         {
-            var one = WorkspaceSelection.GetSelected<VoyagerItem>().Count() > 0;
+            var one = WorkspaceSelection.GetSelected<VoyagerItem>().Any();
             var all = WorkspaceUtils.AllLampsSelected;
-            var has = WorkspaceManager.GetItems<VoyagerItem>().Any();
-
+            var has = WorkspaceSelection.GetSelected<VoyagerItem>().Any();
+            
             _infoTextObj.SetActive(!one);
-            _networkSettingsBtn.SetActive(one);
-            _updateBtn.SetActive(one);
-            _selectDeselectBtn.SetActive(has);
-
+            _networkSettingsBtn.SetActive(has);
+            _updateBtn.SetActive(has);
             _selectDeselectBtnText.text = all ? DESELECT_ALL_TEXT : SELECT_ALL_TEXT;
         }
 
@@ -100,7 +98,7 @@ namespace VoyagerController.UI
             /*
             _lampsUpdating = null;
             var lampsNotUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery < 30.0 && !l.charging).ToList();
-            var lampsUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery >= 30.0 || l.charging).ToList();
+            var lampsUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery >= 30.0 || l.charging).ToList();
 
             utility = new VoyagerUpdateUtility();
 

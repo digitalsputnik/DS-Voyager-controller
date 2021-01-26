@@ -5,6 +5,7 @@
     <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.3/resharper-host/local/Transient/Rider/v203/SolutionCaches/_DS-Voyager-controller.119960233.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Editor" t="Include">
@@ -22,6 +23,9 @@
         </e>
         <e p="link.xml" t="Include" />
         <e p="Plugins" t="Include">
+          <e p="Android" t="Include">
+            <e p="AndroidVideoResizer.cs" t="Include" />
+          </e>
           <e p="NativeFilePicker" t="Include">
             <e p="Android" t="Include">
               <e p="FPCallbackHelper.cs" t="Include" />
@@ -133,6 +137,7 @@
               <e p="LampSettingsMenu.cs" t="Include" />
               <e p="MasterModeMenu.cs" t="Include" />
               <e p="NetworkSettingsMenu.cs" t="Include" />
+              <e p="RouterModeMenu.cs" t="Include" />
               <e p="SetEffectItem.cs" t="Include" />
               <e p="SetEffectMenu.cs" t="Include" />
               <e p="SetupMenu.cs" t="Include" />
@@ -182,6 +187,7 @@
           <e p="LampEffectsWorker.cs" t="Include" />
           <e p="MainThread.cs" t="Include" />
           <e p="MathUtils.cs" t="Include" />
+          <e p="SecurityUtils.cs" t="Include" />
           <e p="SerialTest.cs" t="Include" />
           <e p="ShaderUtils.cs" t="Include" />
           <e p="Temperature.cs" t="Include" />

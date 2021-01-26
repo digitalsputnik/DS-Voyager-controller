@@ -72,6 +72,8 @@ namespace VoyagerController.UI
                     var effect = EffectManager.GetEffectWithName("white.mp4");
                     LampEffectsWorker.ApplyEffectToLamp(voyager, effect);
                 }
+                
+                CloseMenuIfAllLampsAdded();
             }
         }
 
@@ -132,6 +134,14 @@ namespace VoyagerController.UI
 
             foreach (var lamp in WorkspaceManager.GetItems<VoyagerItem>().ToList())
                 WorkspaceSelection.SelectItem(lamp);
+            
+            CloseMenuIfAllLampsAdded();
+        }
+
+        private void CloseMenuIfAllLampsAdded()
+        {
+            if (!LampManager.Instance.GetLampsOfType<VoyagerLamp>().Any(LampValidToAdd))
+                GetComponentInParent<MenuContainer>().ShowMenu(null);
         }
     }
 }
