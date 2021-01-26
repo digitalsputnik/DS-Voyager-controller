@@ -308,9 +308,6 @@ namespace VoyagerController.Workspace
                 info.Add(Order.ToString());
             
             info.Add(LampHandle.Serial);
-            
-            if (LampHandle.Endpoint is BluetoothEndPoint)
-                info.Add("Bluetooth " + _nameText.text);
                 
             info.Add(LampHandle.Connected ? " Connected" : " Disconnected");
             
@@ -318,6 +315,10 @@ namespace VoyagerController.Workspace
                 info.Add(Suffix);
             
             _nameText.text = string.Join(", ", info);
+
+            if (LampHandle.Endpoint is BluetoothEndPoint)
+                _nameText.text = "Bluetooth " + _nameText.text;
+
             _orderText.text = Prefix;
         }
 

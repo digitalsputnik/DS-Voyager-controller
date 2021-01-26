@@ -304,10 +304,10 @@ namespace DigitalSputnik.Ble
                         device.connecting = false;
                         _onConnect[mac]?.Invoke(mac);
 
-                        foreach (var scanDevice in _scannedDevices)
+                        foreach (var scanDevice in _scannedDevices.ToList())
                             Debug.Log("PluginLog: all scanned - " + scanDevice.name);
 
-                        foreach (var conDevice in _connectedDevices)
+                        foreach (var conDevice in _connectedDevices.ToList())
                             Debug.Log("PluginLog: all connected devices - " + conDevice.name);
                     }
                     else
@@ -324,10 +324,10 @@ namespace DigitalSputnik.Ble
 
                         _connectedDevices.Remove(device);
 
-                        foreach (var scanDevice in _scannedDevices)
+                        foreach (var scanDevice in _scannedDevices.ToList())
                             Debug.Log("PluginLog: all scanned - " + scanDevice.name);
 
-                        foreach (var conDevice in _connectedDevices)
+                        foreach (var conDevice in _connectedDevices.ToList())
                             Debug.Log("PluginLog: all connected devices - " + conDevice.name);
                     }
                     else
