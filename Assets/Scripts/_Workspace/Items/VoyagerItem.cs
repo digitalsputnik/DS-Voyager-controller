@@ -11,8 +11,10 @@ namespace VoyagerController.Workspace
 {
     public class VoyagerItem : WorkspaceItem
     {
+        public static bool ShowOrderNumber = false;
+
         public VoyagerLamp LampHandle { get; private set; }
-        public int Order { get; set; } = 0;
+        public int Order { get; set; }
 
         [Header("Pixels")]
         [SerializeField] private Transform _pixels = null;
@@ -28,6 +30,9 @@ namespace VoyagerController.Workspace
         [SerializeField] private TextMesh _nameText = null;
         [SerializeField] private TextMesh _orderText = null;
 
+        [Header("DMX")]
+        [SerializeField] private Material _dmxMaterial = null;
+
         private LampMetadata _meta;
         private Texture2D _pixelsTexture;
         private static readonly int _baseMap = Shader.PropertyToID("_BaseMap");
@@ -35,6 +40,7 @@ namespace VoyagerController.Workspace
         private Transform _transform;
         private string _suffix;
         private string _prefix;
+        private bool _dmxPrev = false;
 
         public override bool Setup(object data, string uid = "")
         {
@@ -128,17 +134,47 @@ namespace VoyagerController.Workspace
         private void Update()
         {
             UpdateConnectionType();
-            UpdatePixels();
+            if (CheckToUpdatePixels())
+                UpdatePixels();
             UpdateText();
         }
-        
+
+        private bool CheckToUpdatePixels()
+        {
+            if (LampHandle.DmxModeEnabled)
+            {
+                if (!_dmxPrev)
+                {
+                    SetupDmxMaterial();
+                    _dmxPrev = true;
+                }
+            }
+            else
+            {
+                if (_dmxPrev)
+                {
+                    SetupPixelsMaterial();
+                    _dmxPrev = false;
+                }
+            }
+
+            return !LampHandle.DmxModeEnabled;
+        }
+
         protected override void Generate()
         {
             SetupSizeAndPositions();
-            SetupTextureAndMaterial();
+            
+            if (LampHandle.DmxModeEnabled)
+                SetupDmxMaterial();
+            else
+                SetupPixelsMaterial();
+            
             UpdateText();
             PositionLampBasedOnWorkspaceMapping();
         }
+        
+        private void OrderNumberChanged(bool _) => UpdateText();
 
         private void SelectionMoved()
         {
@@ -170,10 +206,10 @@ namespace VoyagerController.Workspace
             _nameText.transform.position = new Vector2(0, _pixelSize.y * 0.75f);
             _orderText.transform.position = new Vector2(-_pixelSize.x * ((float)(LampHandle.PixelCount + 3) / 2), 0.0f);
         }
-
-        private void SetupTextureAndMaterial()
+        
+        private void SetupPixelsMaterial()
         {
-            if (_pixelsTexture == null)
+            if (_pixelsTexture != null)
             {
                 Destroy(_pixelsTexture);
                 _pixelsTexture = null;
@@ -185,25 +221,11 @@ namespace VoyagerController.Workspace
 
             _renderer.material = _pixelsMaterial;
             _renderer.material.SetTexture(_baseMap, _pixelsTexture);
-            
-            // TODO: Implement DMX texture
+        }
 
-            /*
-            OLD DMX CODE
-            if (!_lamp.dmxEnabled)
-            {
-                pixelsTexture = new Texture2D(lamp.length, 1);
-                pixelsTexture.filterMode = FilterMode.Point;
-                pixelsTexture.Apply();
-
-                renderer.material = normMaterial;
-                renderer.material.SetTexture("_BaseMap", pixelsTexture);
-            }
-            else
-            {
-                renderer.material = dmxMaterial;
-            }
-            */
+        private void SetupDmxMaterial()
+        {
+            _renderer.material = _dmxMaterial;
         }
 
         private void UpdatePixels()
@@ -281,13 +303,19 @@ namespace VoyagerController.Workspace
         private void UpdateText()
         {
             var info = new List<string>();
+
+            if (ShowOrderNumber && Order > 0)
+                info.Add(Order.ToString());
             
             info.Add(LampHandle.Serial);
+            
             if (LampHandle.Endpoint is BluetoothEndPoint)
-                //info.Add("Bluetooth " + _nameText.text);
+                info.Add("Bluetooth " + _nameText.text);
+                
             info.Add(LampHandle.Connected ? " Connected" : " Disconnected");
             
-            if (Suffix != "") info.Add(Suffix);
+            if (Suffix != "")
+                info.Add(Suffix);
             
             _nameText.text = string.Join(", ", info);
             _orderText.text = Prefix;

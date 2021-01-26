@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using DigitalSputnik;
 using DigitalSputnik.Dmx;
 using DigitalSputnik.Voyager;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerController.Workspace;
@@ -20,7 +21,7 @@ namespace VoyagerController.UI
         [Space(5)]
         [SerializeField] private int _stackIncreasement = 4;
 
-        private Dictionary<VoyagerLamp, DmxSettings> _lampToSettings = new Dictionary<VoyagerLamp, DmxSettings>();
+        private readonly Dictionary<VoyagerLamp, DmxSettings> _lampToSettings = new Dictionary<VoyagerLamp, DmxSettings>();
 
         private int _prevSelectedCount = 0;
         
@@ -38,21 +39,30 @@ namespace VoyagerController.UI
             base.Start();
             SubscribeToEvents();
         }
-        
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                foreach (var item in WorkspaceManager.GetItems<VoyagerItem>())
+                    Debug.Log(JsonConvert.SerializeObject(item.LampHandle.DmxSettings, Formatting.Indented));
+            }
+        }
+
         internal override void OnShow()
         {
             WorkspaceSelection.Clear();
             WorkspaceSelection.SelectionChanged += SelectionChanged;
-            
+            VoyagerItem.ShowOrderNumber = true;
+
             // NetUtils.VoyagerClient.onReceived += OnReceived;
-            // LampItemView.ShowOrder = true;
         }
 
         internal override void OnHide()
         {
             // NetUtils.VoyagerClient.onReceived -= OnReceived;
-            // LampItemView.ShowOrder = false;
 
+            VoyagerItem.ShowOrderNumber = false;
             WorkspaceSelection.SelectionChanged -= SelectionChanged;
             WorkspaceSelection.GetSelected<VoyagerItem>().ToList().ForEach(view => view.Prefix = "");
             WorkspaceSelection.GetSelected<VoyagerItem>().ToList().ForEach(view => view.Suffix = "");
