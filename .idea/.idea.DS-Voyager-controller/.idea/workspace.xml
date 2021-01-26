@@ -3,13 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Workspace Items/Voyager Lamp.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Workspace Items/Voyager Lamp.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/DmxModeMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/DmxModeMenu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Core/Runtime/Plugins/DigitalSputnik.Core.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Core/Runtime/Plugins/DigitalSputnik.Core.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
