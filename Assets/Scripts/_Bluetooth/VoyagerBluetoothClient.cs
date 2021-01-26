@@ -31,7 +31,8 @@ namespace VoyagerController.Bluetooth
         private double _lastScanStarted = 0.0;
 
         public override Type EndpointType => typeof(BluetoothEndPoint);
-        
+
+        private readonly List<PeripheralInfo> _scannedPeripherals = new List<PeripheralInfo>();
         private readonly List<BluetoothConnection> _connections = new List<BluetoothConnection>();
         
         public VoyagerBluetoothClient()
@@ -67,7 +68,7 @@ namespace VoyagerController.Bluetooth
                     break;
             }
 
-            foreach (var connection in _connections)
+            foreach (var connection in _connections.ToList())
             {
                 if (!(TimeUtils.Epoch > connection.LastMessage + 0.5)) continue;
 
@@ -130,6 +131,13 @@ namespace VoyagerController.Bluetooth
         {
             Debugger.LogWarning($"Scanned peripheral {peripheral.Name}");
 
+            if (_scannedPeripherals.Any(p => p.Id == peripheral.Id))
+                return;
+
+            Debugger.LogWarning($"Peripheral {peripheral.Name} is new ");
+
+            _scannedPeripherals.Add(peripheral);
+
             if (_connections.Count < MAX_CONNECTIONS)
                 ValidateScannedDeviceAndConnect(peripheral);
             else if (RemoveOldestConnectedDevice())
@@ -155,9 +163,14 @@ namespace VoyagerController.Bluetooth
 
             BluetoothAccess.Connect(peripheral.Id,
                 SetupValidatedDevice,
-                (info, error) => { },
+                (info, error) => 
+                { 
+                    Debugger.LogInfo("Connection failed " + peripheral.Name);
+                    _scannedPeripherals.Remove(_scannedPeripherals.FirstOrDefault(p => p.Id == peripheral.Id));
+                },
                 (info, error) =>
                 {
+                    _scannedPeripherals.Remove(_scannedPeripherals.FirstOrDefault(p => p.Id == peripheral.Id));
                     var connection = GetConnectionWithId(info.Id);
                     if (connection == null) return;
                     _connections.Remove(connection);
@@ -232,7 +245,7 @@ namespace VoyagerController.Bluetooth
             var remove = _connections.FirstOrDefault(c => c.LastMessage > LEFT_OUT_TIME);
 
             if (remove == null) return false;
-            
+
             BluetoothAccess.Disconnect(remove.Id);
             return true;
         }

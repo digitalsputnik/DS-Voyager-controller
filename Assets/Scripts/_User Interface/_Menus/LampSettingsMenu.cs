@@ -30,10 +30,10 @@ namespace VoyagerController.UI
         public void SelectDeselect()
         {
             if (!WorkspaceSelection.GetSelected<VoyagerItem>().Any())
-                foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>())
+                foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>().ToList())
                     WorkspaceSelection.SelectItem(voyager);
             else
-                foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>())
+                foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>().ToList())
                     WorkspaceSelection.DeselectItem(voyager);
         }
 
@@ -71,12 +71,12 @@ namespace VoyagerController.UI
 
         private void EnableDisableObjects()
         {
-            var one = WorkspaceSelection.GetSelected<VoyagerItem>().Count() == 1;
+            var one = WorkspaceSelection.GetSelected<VoyagerItem>().Count() > 0;
             var all = WorkspaceUtils.AllLampsSelected;
-            var has = WorkspaceSelection.GetSelected<VoyagerItem>().Any();
+            var has = WorkspaceManager.GetItems<VoyagerItem>().Any();
 
             _infoTextObj.SetActive(!one);
-            _networkSettingsBtn.SetActive(has);
+            _networkSettingsBtn.SetActive(one);
             _updateBtn.SetActive(one);
             _selectDeselectBtn.SetActive(has);
 
