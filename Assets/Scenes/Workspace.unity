@@ -31262,6 +31262,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LunarConsole
       objectReference: {fileID: 0}
+    - target: {fileID: 183544, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 406632, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -33254,8 +33258,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 70750426}
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
-  m_Value: 1.0000005
-  m_Size: 0.8572008
+  m_Value: 1.0000006
+  m_Size: 0.87584126
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
