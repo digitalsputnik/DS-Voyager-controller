@@ -83,7 +83,7 @@ namespace VoyagerController.UI
             if (lamp.Endpoint is LampNetworkEndPoint)
                 return !WorkspaceContainsLamp(lamp) && LampConnected(lamp);
             else
-                return !WorkspaceContainsLamp(lamp);
+                return !WorkspaceContainsLamp(lamp) && UnderFiveBluetoothLampsOnWorkspace();
         }
         
         private static bool WorkspaceContainsLamp(Lamp lamp)
@@ -99,7 +99,12 @@ namespace VoyagerController.UI
         {
             return lamp.Connected;
         }
-        
+
+        private static bool UnderFiveBluetoothLampsOnWorkspace()
+        {
+            return WorkspaceManager.GetItems<VoyagerItem>().Where(l => l.LampHandle.Endpoint is BluetoothEndPoint).Count() < 5;
+        }
+
         private void SubscribeEvents()
         {
             ApplicationManager.OnLampDiscovered += LampDiscovered;
