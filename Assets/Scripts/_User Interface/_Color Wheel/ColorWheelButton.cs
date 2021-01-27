@@ -61,7 +61,7 @@ namespace VoyagerController.UI
         {
             _currentItshe = itshe;
             _previewColor.color = itshe.ToColor();
-            foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>())
+            foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>().ToList())
                 LampEffectsWorker.ApplyItsheToVoyager(item.LampHandle, itshe);
         }
     }

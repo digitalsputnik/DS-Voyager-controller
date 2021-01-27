@@ -166,6 +166,16 @@ namespace DigitalSputnik.Ble
             }
         }
 
+        public void Reconnect(string mac)
+        {
+            var device = _connectedDevices.FirstOrDefault(d => d.mac == mac);
+
+            if (device != null)
+            {
+                _pluginObject.Call("reconnect", device.gatt);
+            }
+        }
+
         public void Disconnect(string mac)
         {
             var device = _connectedDevices.FirstOrDefault(d => d.mac == mac);
@@ -173,6 +183,16 @@ namespace DigitalSputnik.Ble
             if (device != null)
             {
                 _pluginObject.Call("disconnect", device.gatt);
+            }
+        }
+
+        public void Close(string mac)
+        {
+            var device = _connectedDevices.FirstOrDefault(d => d.mac == mac);
+
+            if (device != null)
+            {
+                _pluginObject.Call("close", device.gatt);
             }
         }
 
@@ -304,11 +324,11 @@ namespace DigitalSputnik.Ble
                         device.connecting = false;
                         _onConnect[mac]?.Invoke(mac);
 
-                        foreach (var scanDevice in _scannedDevices.ToList())
+                        /*foreach (var scanDevice in _scannedDevices.ToList())
                             Debug.Log("PluginLog: all scanned - " + scanDevice.name);
 
                         foreach (var conDevice in _connectedDevices.ToList())
-                            Debug.Log("PluginLog: all connected devices - " + conDevice.name);
+                            Debug.Log("PluginLog: all connected devices - " + conDevice.name);*/
                     }
                     else
                         _onConnectFail[mac]?.Invoke(mac, "Unknown device connected");
@@ -322,13 +342,11 @@ namespace DigitalSputnik.Ble
                         else
                             _onDisconnect[mac]?.Invoke(mac, "");
 
-                        _connectedDevices.Remove(device);
-
-                        foreach (var scanDevice in _scannedDevices.ToList())
+                        /*foreach (var scanDevice in _scannedDevices.ToList())
                             Debug.Log("PluginLog: all scanned - " + scanDevice.name);
 
                         foreach (var conDevice in _connectedDevices.ToList())
-                            Debug.Log("PluginLog: all connected devices - " + conDevice.name);
+                            Debug.Log("PluginLog: all connected devices - " + conDevice.name);*/
                     }
                     else
                         _onConnectFail[mac]?.Invoke(mac, "Unknown device disconnected");         

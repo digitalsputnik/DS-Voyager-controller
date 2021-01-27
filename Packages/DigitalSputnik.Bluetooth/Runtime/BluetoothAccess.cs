@@ -56,10 +56,22 @@ namespace DigitalSputnik.Ble
                _instance.InternalConnect(id, connect, fail, disconnect);
         }
 
+        public static void Reconnect(string id)
+        {
+            if (IsInitialized)
+                InternalReconnect(id);
+        }
+
         public static void Disconnect(string id)
         {
             if (IsInitialized)
                 InternalDisconnect(id);
+        }
+
+        public static void Close(string id)
+        {
+            if (IsInitialized)
+                InternalClose(id);
         }
         #endregion
 
@@ -87,14 +99,16 @@ namespace DigitalSputnik.Ble
 
             if (peripheral == null)
             {
-                peripheral = new PeripheralInfo(id);
+                peripheral = new PeripheralInfo(id, name, rssi, Time.realtimeSinceStartup);
                 _scannedPeripherals.Add(peripheral);
+                _onPeripheralScanned?.Invoke(peripheral);
             }
-
-            peripheral.Name = name;
-            peripheral.Rssi = rssi;
-
-            _onPeripheralScanned?.Invoke(peripheral);
+            else
+            {
+                peripheral.Name = name;
+                peripheral.Rssi = rssi;
+                peripheral.LastScan = Time.realtimeSinceStartup;
+            }
         }
 
         private static void InternalStopScanning() => _interface.StopScanning();
@@ -125,7 +139,11 @@ namespace DigitalSputnik.Ble
             _onPeripheralDisconnected?.Invoke(peripheral, error);
         }
 
+        private static void InternalReconnect(string id) => _interface.Reconnect(id);
+
         private static void InternalDisconnect(string id) => _interface.Disconnect(id);
+
+        private static void InternalClose(string id) => _interface.Close(id);
         #endregion
     }
 
@@ -134,8 +152,9 @@ namespace DigitalSputnik.Ble
         public readonly string Id;
         public string Name;
         public int Rssi;
+        public float LastScan;
 
-        public PeripheralInfo(string id) { Id = id; }
+        public PeripheralInfo(string id, string name, int rssi, float lastScan) { Id = id; Name = name; Rssi = rssi; LastScan = lastScan; }
     }
 
     public delegate void PeripheralHandler(PeripheralInfo peripheral);

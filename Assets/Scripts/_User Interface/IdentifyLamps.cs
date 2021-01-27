@@ -1,7 +1,9 @@
+using DigitalSputnik;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using VoyagerController.Bluetooth;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
@@ -11,7 +13,8 @@ namespace VoyagerController.UI
         [SerializeField] private Color _pressedColor = Color.white;
         [SerializeField] private Color _releasedColor = Color.white;
         [SerializeField] private Image _image = null;
-        [SerializeField] private float _duration = 0.3f;
+        [SerializeField] private float _networkDuration = 0.3f;
+        [SerializeField] private float _bleDuration = 0.3f;
 
         private bool _send;
         private float _timestamp;
@@ -28,7 +31,12 @@ namespace VoyagerController.UI
             if (_send && Time.time - _timestamp > 0.16f)
             {
                 foreach (var lamp in WorkspaceSelection.GetSelected<VoyagerItem>())
-                    lamp.LampHandle.OverridePixels(ApplicationSettings.IdentificationColor, _duration);
+                {
+                    if (lamp.LampHandle.Endpoint is LampNetworkEndPoint)
+                        lamp.LampHandle.OverridePixels(ApplicationSettings.IdentificationColor, _networkDuration);
+                    else
+                        lamp.LampHandle.OverridePixels(ApplicationSettings.IdentificationColor, _bleDuration);
+                }
                 _timestamp = Time.time;
             }
         }

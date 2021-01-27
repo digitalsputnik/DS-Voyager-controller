@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik;
+using DigitalSputnik.Ble;
 using DigitalSputnik.Voyager;
 using UnityEngine;
 using UnityEngine.UI;
@@ -79,7 +80,10 @@ namespace VoyagerController.UI
 
         private static bool LampValidToAdd(Lamp lamp)
         {
-            return !WorkspaceContainsLamp(lamp) && LampConnected(lamp);
+            if (lamp.Endpoint is LampNetworkEndPoint)
+                return !WorkspaceContainsLamp(lamp) && LampConnected(lamp);
+            else
+                return !WorkspaceContainsLamp(lamp);
         }
         
         private static bool WorkspaceContainsLamp(Lamp lamp)
@@ -125,7 +129,7 @@ namespace VoyagerController.UI
         public void AddAllLamps()
         {
             UnsubscribeEvents();
-            foreach (var lampItem in _lampItems)
+            foreach (var lampItem in _lampItems.ToList())
                 lampItem.Click();
             UpdateLampsList();
             SubscribeEvents();

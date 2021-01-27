@@ -36818,7 +36818,8 @@ MonoBehaviour:
   _pressedColor: {r: 1, g: 1, b: 1, a: 1}
   _releasedColor: {r: 1, g: 1, b: 1, a: 0.39215687}
   _image: {fileID: 8427525494068657928}
-  _duration: 0.3
+  _networkDuration: 0.3
+  _bleDuration: 0.5
 --- !u!224 &2528337453117817305
 RectTransform:
   m_ObjectHideFlags: 0

@@ -124,9 +124,19 @@ namespace DigitalSputnik.Ble
 
         }
 
+        public void Reconnect(string id)
+        {
+            
+        }
+
         public void Disconnect(string id)
         {
             _iOSCancelConnection(id.ToUpper());
+        }
+
+        public void Close(string id)
+        {
+            
         }
 
         public void GetServices(string id, InternalServicesHandler callback)

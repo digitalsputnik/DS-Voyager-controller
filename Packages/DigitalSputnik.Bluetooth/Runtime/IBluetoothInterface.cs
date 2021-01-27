@@ -9,7 +9,9 @@
         void StartScanning(string[] services, InternalPeripheralScanHandler callback);
         void StopScanning();
         void Connect(string id, InternalPeripheralConnectHandler connect, InternalPeripheralConnectFailHandler fail, InternalPeripheralDisconnectHandler disconnect);
+        void Reconnect(string id);
         void Disconnect(string id);
+        void Close(string id);
         void GetConnectedRssi(string id);
         void GetServices(string id, InternalServicesHandler callback);
         void GetCharacteristics(string id, string service, InternalCharacteristicHandler callback);

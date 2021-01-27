@@ -11,6 +11,7 @@ using DigitalSputnik.Voyager.Communication;
 using DigitalSputnik.Voyager.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using VoyagerController.Workspace;
 
 namespace VoyagerController.Bluetooth
 {
@@ -24,7 +25,6 @@ namespace VoyagerController.Bluetooth
         private const string UART_RX_CHARACTERISTIC_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
         private const string UART_TX_CHARACTERISTIC_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
         private const int MAX_CONNECTIONS = 4;
-        private const double LEFT_OUT_TIME = 60.0;
 
         private ClientState _state = ClientState.WaitingForInitialization;
         private double _initializedTime = 0.0;
@@ -32,13 +32,50 @@ namespace VoyagerController.Bluetooth
 
         public override Type EndpointType => typeof(BluetoothEndPoint);
 
-        private readonly List<PeripheralInfo> _scannedPeripherals = new List<PeripheralInfo>();
+        private readonly Queue<PeripheralInfo> _connectionsQueue = new Queue<PeripheralInfo>();
+        private readonly List<PeripheralInfo> _connectingDevices = new List<PeripheralInfo>();
         private readonly List<BluetoothConnection> _connections = new List<BluetoothConnection>();
         
+        private bool CanConnectMoreLamps
+        {
+            get
+            {
+                var connectedCount = _connections.Where(c => c.ConnectionState == ConnectionState.Connected).Count();
+                var connectingCount = _connectingDevices.Count;
+                return connectedCount + connectingCount < MAX_CONNECTIONS;
+            }
+        }
+
         public VoyagerBluetoothClient()
         {
             BluetoothAccess.Initialize();
-            _instance = this; 
+            _instance = this;
+
+            SubscribeToWorkspaceEvents();
+        }
+
+        private void SubscribeToWorkspaceEvents()
+        {
+            WorkspaceManager.ItemAdded += ItemAdded;
+            WorkspaceManager.ItemRemoved += ItemRemoved;
+        }
+
+        private void ItemAdded(WorkspaceItem item)
+        {
+            if (item is VoyagerItem voyagerItem)
+            {
+                if (voyagerItem.LampHandle.Endpoint is BluetoothEndPoint endPoint)
+                    BluetoothAccess.Reconnect(endPoint.Id);
+            }
+        }
+
+        private void ItemRemoved(WorkspaceItem item)
+        {
+            if (item is VoyagerItem voyagerItem)
+            {
+                if (voyagerItem.LampHandle.Endpoint is BluetoothEndPoint endPoint)
+                    BluetoothAccess.Disconnect(endPoint.Id);
+            }
         }
 
         private static void SendMessage(Lamp lamp, byte[] message)
@@ -65,6 +102,7 @@ namespace VoyagerController.Bluetooth
                     break;
                 case ClientState.Ready:
                     CheckToRestartScanning();
+                    SetupLamps();
                     break;
             }
 
@@ -72,7 +110,7 @@ namespace VoyagerController.Bluetooth
             {
                 if (!(TimeUtils.Epoch > connection.LastMessage + 0.5)) continue;
 
-                switch (connection.State)
+                switch (connection.ValidationState)
                 {
                     case ValidateState.GettingSerial:
                         RequestInfo(connection.Lamp, "get_serial");
@@ -131,17 +169,20 @@ namespace VoyagerController.Bluetooth
         {
             Debugger.LogWarning($"Scanned peripheral {peripheral.Name}");
 
-            if (_scannedPeripherals.Any(p => p.Id == peripheral.Id))
+            _connectionsQueue.Enqueue(peripheral);
+        }
+
+        private void SetupLamps()
+        {
+            if (!CanConnectMoreLamps)
                 return;
 
-            Debugger.LogWarning($"Peripheral {peripheral.Name} is new ");
+            if (_connectionsQueue.Count == 0)
+                return;
 
-            _scannedPeripherals.Add(peripheral);
-
-            if (_connections.Count < MAX_CONNECTIONS)
-                ValidateScannedDeviceAndConnect(peripheral);
-            else if (RemoveOldestConnectedDevice())
-                ValidateScannedDeviceAndConnect(peripheral);
+            var scannedLamp = _connectionsQueue.Dequeue();
+            _connectingDevices.Add(scannedLamp);
+            MainThread.Dispatch(() => ValidateScannedDeviceAndConnect(scannedLamp));
         }
 
         private enum ClientState
@@ -159,28 +200,74 @@ namespace VoyagerController.Bluetooth
             if (updLamp != null && updLamp.Connected)
                 return;
             
-            Debugger.LogInfo($"Peripheral found - {peripheral.Name}");
+            Debugger.LogInfo($"Connecting - {peripheral.Name}");
 
             BluetoothAccess.Connect(peripheral.Id,
                 SetupValidatedDevice,
-                (info, error) => 
-                { 
-                    Debugger.LogInfo("Connection failed " + peripheral.Name);
-                    _scannedPeripherals.Remove(_scannedPeripherals.FirstOrDefault(p => p.Id == peripheral.Id));
-                },
-                (info, error) =>
-                {
-                    _scannedPeripherals.Remove(_scannedPeripherals.FirstOrDefault(p => p.Id == peripheral.Id));
-                    var connection = GetConnectionWithId(info.Id);
-                    if (connection == null) return;
-                    _connections.Remove(connection);
-                    // _inActiveConnections.Add(connection.Id);
-                });
+                HandleFailedConnection,
+                HandleDisconnection);
         }
 
         private void SetupValidatedDevice(PeripheralAccess access)
         {
-            access.ScanServices(ServicesScanned);
+            Debugger.LogInfo("Connected - " + access.Id);
+
+            var peripheral = _connectingDevices.FirstOrDefault(l => l.Id == access.Id);
+
+            if (peripheral != null)
+                _connectingDevices.Remove(peripheral);
+
+            var connection = GetConnectionWithId(access.Id);
+
+            if (connection == null)
+                access.ScanServices(ServicesScanned);
+            else
+            {
+                connection.Lamp.Connected = true;
+                connection.ConnectionState = ConnectionState.Connected;
+            }
+        }
+
+        private void HandleFailedConnection(PeripheralInfo info, string error)
+        {
+            Debugger.LogInfo("Failed Connection - " + info.Name + ", error - " + error);
+
+            var peripheral = _connectingDevices.FirstOrDefault(l => l.Id == info.Id);
+
+            if (peripheral != null)
+                _connectingDevices.Remove(peripheral);
+
+            var connection = GetConnectionWithId(info.Id);
+
+            if (connection == null)
+            {
+                _connectionsQueue.Enqueue(info);
+                return;
+            }
+
+            connection.Lamp.Connected = false;
+            connection.ConnectionState = ConnectionState.Disconnected;
+        }
+
+        private void HandleDisconnection(PeripheralInfo info, string error)
+        {
+            Debugger.LogInfo("Disconnected - " + info.Name + ", error - " + error);
+
+            var peripheral = _connectingDevices.FirstOrDefault(l => l.Id == info.Id);
+
+            if (peripheral != null)
+                _connectingDevices.Remove(peripheral);
+
+            var connection = GetConnectionWithId(info.Id);
+
+            if (connection == null)
+            {
+                _connectionsQueue.Enqueue(info);
+                return;
+            }
+
+            connection.Lamp.Connected = false;
+            connection.ConnectionState = ConnectionState.Disconnected;
         }
 
         private void ServicesScanned(PeripheralAccess access, string[] services)
@@ -191,7 +278,7 @@ namespace VoyagerController.Bluetooth
         private void CharacteristicsScanned(PeripheralAccess access, string service, string[] characteristics)
         {
             var lamp = new VoyagerLamp { Endpoint = new BluetoothEndPoint(access.Id) };
-            var connection = new BluetoothConnection(access, lamp) { State = ValidateState.GettingSerial };
+            var connection = new BluetoothConnection(access, lamp) { ValidationState = ValidateState.GettingSerial, ConnectionState = ConnectionState.Connected };
             access.SubscribeToCharacteristic(SERVICE_UID, UART_TX_CHARACTERISTIC_UUID, DataReceivedFromBluetooth);
             _connections.Add(connection);
         }
@@ -222,32 +309,23 @@ namespace VoyagerController.Bluetooth
             switch (op)
             {
                 case "get_serial":
-                    if (connection.State != ValidateState.GettingSerial) break;
+                    if (connection.ValidationState != ValidateState.GettingSerial) break;
                     var serial = json.GetValue("serial")?.ToString();
                     connection.Lamp.Serial = serial;
-                    connection.State = ValidateState.GettingLength;
+                    connection.ValidationState = ValidateState.GettingLength;
                     connection.LastMessage = 0.0;
                     break;
                 case "get_length":
-                    if (connection.State != ValidateState.GettingLength) break;
+                    if (connection.ValidationState != ValidateState.GettingLength) break;
                     var length = int.Parse(json.GetValue("length")?.ToString() ?? "0");
                     connection.Lamp.PixelCount = length;
-                    connection.State = ValidateState.Ready;
+                    connection.ValidationState = ValidateState.Ready;
                     connection.LastMessage = 0.0;
-                    connection.Lamp.Connected = true;
+                    connection.Lamp.Connected = false;
+                    BluetoothAccess.Disconnect(connection.Id);
                     AddLampToManager(connection.Lamp);
                     break;
             }
-        }
-
-        private bool RemoveOldestConnectedDevice()
-        {
-            var remove = _connections.FirstOrDefault(c => c.LastMessage > LEFT_OUT_TIME);
-
-            if (remove == null) return false;
-
-            BluetoothAccess.Disconnect(remove.Id);
-            return true;
         }
 
         private BluetoothConnection GetConnectionWithId(string id)
@@ -314,7 +392,9 @@ namespace VoyagerController.Bluetooth
 
         public override void OverridePixels(VoyagerLamp voyager, Itshe itshe, double duration)
         {
-            
+            var packet = new PixelOverridePacket(itshe, duration);
+            var time = TimeUtils.Epoch + TimeOffset;
+            SendSettingsPacket(voyager, packet, time);
         }
 
         public override void SetFps(VoyagerLamp voyager, double fps)
@@ -364,15 +444,23 @@ namespace VoyagerController.Bluetooth
             GettingLength,
             Ready
         }
-        
+
+        private enum ConnectionState
+        {
+            Connected,
+            Disconnected,
+            Closed
+        }
+
         private class BluetoothConnection
         {
             public string Id => Access.Id;
             public PeripheralAccess Access { get; }
             public double LastMessage { get; set; }
             public VoyagerLamp Lamp { get; }
-            public ValidateState State { get; set; }
-            
+            public ValidateState ValidationState { get; set; }
+            public ConnectionState ConnectionState { get; set; }
+
             public BluetoothConnection(PeripheralAccess access, VoyagerLamp lamp)
             {
                 Access = access;
