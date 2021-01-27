@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik;
 using DigitalSputnik.Ble;
@@ -63,6 +64,17 @@ namespace VoyagerController.UI
         {
             if (lamp is VoyagerLamp voyager)
             {
+                if (lamp.Endpoint is BluetoothEndPoint && !UnderFiveBluetoothLampsOnWorkspace())
+                {
+                    DialogBox.Show(
+                    "REMOVE BLE LAMPS",
+                    "You can have a maximum on 5 bluetooth lamps in workspace at any time. " +
+                    "Please remove a bluetooth lamp to add a new bluetooth lamp.",
+                    new string[] { "OK" },
+                    new Action[] { null });
+                    return;
+                }
+
                 var voyagerItem = WorkspaceManager.InstantiateItem<VoyagerItem>(voyager, WorkspaceUtils.PositionOfLastSelectedOrAddedLamp + new Vector3(0, -1.0f, 0));
                 CameraMove.SetCameraPosition(voyagerItem.transform.localPosition);
                 WorkspaceSelection.Clear();
@@ -83,7 +95,7 @@ namespace VoyagerController.UI
             if (lamp.Endpoint is LampNetworkEndPoint)
                 return !WorkspaceContainsLamp(lamp) && LampConnected(lamp);
             else
-                return !WorkspaceContainsLamp(lamp) && UnderFiveBluetoothLampsOnWorkspace();
+                return !WorkspaceContainsLamp(lamp);
         }
         
         private static bool WorkspaceContainsLamp(Lamp lamp)
