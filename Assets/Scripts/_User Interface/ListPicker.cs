@@ -23,14 +23,9 @@ namespace VoyagerController.UI
         public UnityEvent Changed => _changed;
         public string Selected => _values.Length == 0 ? string.Empty : _values[_index];
 
-        private Button _button;
-        private Text _titleText;
-
         private void Start()
         {
-            _button = GetComponent<Button>();
-            _titleText = GetComponentInChildren<Text>();
-            _button.onClick.AddListener(ChooseItem);
+            GetComponent<Button>().onClick.AddListener(ChooseItem);
         }
 
         public void SetItems(params string[] values)
@@ -41,20 +36,20 @@ namespace VoyagerController.UI
 
         public bool Interactable
         {
-            get => _button.interactable;
-            set => _button.interactable = value;
+            get => GetComponent<Button>().interactable;
+            set => GetComponent<Button>().interactable = value;
         }
 
         private void ChooseItem()
         {
             _opened?.Invoke();
-            ListPickerMenu.PickValue(_title, _index, _values, OnIndexChanged);
+            ListPickerMenu.instance.PickValue(_title, _index, _values, OnIndexChanged);
         }
 
         private void OnIndexChanged(int index)
         {
             _index = index;
-            _titleText.text = Selected;
+            GetComponentInChildren<Text>().text = Selected;
             _changed?.Invoke();
         }
     }

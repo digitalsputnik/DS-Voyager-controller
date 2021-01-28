@@ -11,7 +11,7 @@ namespace VoyagerController.UI
 {
     public class ClientModeMenu : Menu
     {
-        private const float SSID_POLL_TIMEOUT = 15.0f;
+        private const float SSID_POLL_TIMEOUT = 30.0f;
         private const float LOADING_ANIMATION_SPEED = 0.6f;
         private static readonly string[] LOADING_ANIMATION_VALUES = 
         {

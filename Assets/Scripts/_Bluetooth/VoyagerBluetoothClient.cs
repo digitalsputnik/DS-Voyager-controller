@@ -10,7 +10,6 @@ using DigitalSputnik.Voyager;
 using DigitalSputnik.Voyager.Communication;
 using DigitalSputnik.Voyager.Json;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.Bluetooth
@@ -30,12 +29,17 @@ namespace VoyagerController.Bluetooth
         private double _initializedTime = 0.0;
         private double _lastScanStarted = 0.0;
 
+        private BleMessageHandler OnBleMessageWithoutOp;
         public override Type EndpointType => typeof(BluetoothEndPoint);
 
+        private readonly PacketParser _packetParser = new PacketParser();
+        private readonly CallbackSystem<VoyagerLamp, OpCode> _callbacks = new CallbackSystem<VoyagerLamp, OpCode>();
         private readonly Queue<PeripheralInfo> _connectionsQueue = new Queue<PeripheralInfo>();
         private readonly List<PeripheralInfo> _connectingDevices = new List<PeripheralInfo>();
         private readonly List<BluetoothConnection> _connections = new List<BluetoothConnection>();
-        
+        private readonly Dictionary<VoyagerLamp, SsidListHandler> _ssidCallbacks = new Dictionary<VoyagerLamp, SsidListHandler>();
+        private readonly Dictionary<BluetoothConnection, List<string>> _ssidLists = new Dictionary<BluetoothConnection, List<string>>();
+
         private bool CanConnectMoreLamps
         {
             get
@@ -52,6 +56,9 @@ namespace VoyagerController.Bluetooth
             _instance = this;
 
             SubscribeToWorkspaceEvents();
+
+            OnBleMessageWithoutOp += SsidListResponseReceived;
+            AddOpListener<PollReplyShortPacket>(OpCode.PollReplyS, PollReceived);
         }
 
         private void SubscribeToWorkspaceEvents()
@@ -110,15 +117,8 @@ namespace VoyagerController.Bluetooth
             {
                 if (!(TimeUtils.Epoch > connection.LastMessage + 0.5)) continue;
 
-                switch (connection.ValidationState)
-                {
-                    case ValidateState.GettingSerial:
-                        RequestInfo(connection.Lamp, "get_serial");
-                        break;
-                    case ValidateState.GettingLength:
-                        RequestInfo(connection.Lamp, "get_length");
-                        break;
-                }
+                if (connection.ValidationState == ValidateState.GettingInfo)
+                    RequestInfo(connection.Lamp);
                 
                 connection.LastMessage = TimeUtils.Epoch;
             }
@@ -168,7 +168,6 @@ namespace VoyagerController.Bluetooth
         private void PeripheralScanned(PeripheralInfo peripheral)
         {
             Debugger.LogWarning($"Scanned peripheral {peripheral.Name}");
-
             _connectionsQueue.Enqueue(peripheral);
         }
 
@@ -225,12 +224,14 @@ namespace VoyagerController.Bluetooth
             {
                 connection.Lamp.Connected = true;
                 connection.ConnectionState = ConnectionState.Connected;
+                connection.Access = access;
+                connection.Access.SubscribeToCharacteristic(SERVICE_UID, UART_TX_CHARACTERISTIC_UUID, DataReceivedFromBluetooth);
             }
         }
 
         private void HandleFailedConnection(PeripheralInfo info, string error)
         {
-            Debugger.LogInfo("Failed Connection - " + info.Name + ", error - " + error);
+            Debugger.LogInfo("Failed Connection - " + info.Name);
 
             var peripheral = _connectingDevices.FirstOrDefault(l => l.Id == info.Id);
 
@@ -251,7 +252,7 @@ namespace VoyagerController.Bluetooth
 
         private void HandleDisconnection(PeripheralInfo info, string error)
         {
-            Debugger.LogInfo("Disconnected - " + info.Name + ", error - " + error);
+            Debugger.LogInfo("Disconnected - " + info.Name);
 
             var peripheral = _connectingDevices.FirstOrDefault(l => l.Id == info.Id);
 
@@ -278,54 +279,51 @@ namespace VoyagerController.Bluetooth
         private void CharacteristicsScanned(PeripheralAccess access, string service, string[] characteristics)
         {
             var lamp = new VoyagerLamp { Endpoint = new BluetoothEndPoint(access.Id) };
-            var connection = new BluetoothConnection(access, lamp) { ValidationState = ValidateState.GettingSerial, ConnectionState = ConnectionState.Connected };
+            var connection = new BluetoothConnection(access, lamp) { ValidationState = ValidateState.GettingInfo, ConnectionState = ConnectionState.Connected };
             access.SubscribeToCharacteristic(SERVICE_UID, UART_TX_CHARACTERISTIC_UUID, DataReceivedFromBluetooth);
             _connections.Add(connection);
         }
 
-        private static void RequestInfo(Lamp lamp, string request)
+        private static void RequestInfo(Lamp lamp)
         {
-            var package = new RequestPackage(request);
+            var package = new PollRequestShortPacket();
             SendMessage(lamp, ObjectToBytes(package));
+        }
+
+        private void PollReceived(VoyagerLamp sender, PollReplyShortPacket data)
+        {
+            var connection = _connections.FirstOrDefault(c => c.Lamp == sender);
+
+            connection.Lamp.Serial = data.Serial;
+            connection.Lamp.PixelCount = data.Length;
+            connection.Lamp.Version = data.ChipVersion[0] + "." + data.ChipVersion[1];
+            connection.ValidationState = ValidateState.Ready;
+            connection.Lamp.Connected = false;
+            connection.LastMessage = 0.0;
+
+            BluetoothAccess.Disconnect(connection.Id);
+            AddLampToManager(connection.Lamp);
         }
 
         private void DataReceivedFromBluetooth(PeripheralAccess access, string service, string characteristic, byte[] data)
         {
-            var str = Encoding.UTF8.GetString(data);
             var connection = _connections.FirstOrDefault(c => c.Access == access);
 
             if (connection == null) return;
-            
-            Debugger.LogInfo("Bluetooth received: " + str);
 
-            if (!str.StartsWith("{") || !str.EndsWith("}")) return;
-            
-            var json = JObject.Parse(str);
-                
-            if (!json.ContainsKey("op_code")) return;
-                
-            var op = json.GetValue("op_code")?.ToString();
+            var json = Encoding.UTF8.GetString(data);
+            var op = Packet.GetOpCode(json);
 
-            switch (op)
-            {
-                case "get_serial":
-                    if (connection.ValidationState != ValidateState.GettingSerial) break;
-                    var serial = json.GetValue("serial")?.ToString();
-                    connection.Lamp.Serial = serial;
-                    connection.ValidationState = ValidateState.GettingLength;
-                    connection.LastMessage = 0.0;
-                    break;
-                case "get_length":
-                    if (connection.ValidationState != ValidateState.GettingLength) break;
-                    var length = int.Parse(json.GetValue("length")?.ToString() ?? "0");
-                    connection.Lamp.PixelCount = length;
-                    connection.ValidationState = ValidateState.Ready;
-                    connection.LastMessage = 0.0;
-                    connection.Lamp.Connected = false;
-                    BluetoothAccess.Disconnect(connection.Id);
-                    AddLampToManager(connection.Lamp);
-                    break;
-            }
+            OnBleMessageWithoutOp?.Invoke(connection, json);
+
+            if (op == OpCode.None || !_callbacks.Contains(op)) return;
+
+            var packet = _packetParser.Deserialize(_callbacks.GetKeyType(op), json);
+            var lamp = connection.Lamp;
+
+            if (connection != null) connection.LastMessage = TimeUtils.Epoch;
+
+            _callbacks.Invoke(op, lamp, packet);
         }
 
         private BluetoothConnection GetConnectionWithId(string id)
@@ -337,7 +335,63 @@ namespace VoyagerController.Bluetooth
 
         public override void PollAvailableSsidList(VoyagerLamp voyager, SsidListHandler callback)
         {
-            callback?.Invoke(voyager, new string[0]);
+            //TODO check if lamp is supported, based on firmware version 
+
+            AddLampToSsidReplyList(voyager, callback);
+
+            var packet = new SsidListRequestPacket();
+            var time = TimeUtils.Epoch + TimeOffset;
+
+            SendSettingsPacket(voyager, packet, time);
+        }
+
+        private void AddLampToSsidReplyList(VoyagerLamp voyager, SsidListHandler callback)
+        {
+            if (!_ssidCallbacks.ContainsKey(voyager))
+                _ssidCallbacks.Add(voyager, callback);
+            else
+            {
+                _ssidCallbacks[voyager]?.Invoke(voyager, new string[0]);
+                _ssidCallbacks[voyager] = callback;
+            }
+        }
+
+        private void SsidListResponseReceived(BluetoothConnection connection, string json)
+        {
+            const string BEGIN_JSON = "{\"op_code\": \"ack_ssid_list_request\"}";
+            const string END_JSON = "{\"op_code\": \"ack_ssid_list_complete\"}";
+
+            if (json == BEGIN_JSON && !_ssidLists.ContainsKey(connection))
+                _ssidLists.Add(connection, new List<string>());
+
+            if (json != BEGIN_JSON && json != END_JSON && _ssidLists.ContainsKey(connection))
+            {
+                foreach (var ssid in json.Split(','))
+                {
+                    if (!_ssidLists[connection].Contains(ssid))
+                        _ssidLists[connection].Add(ssid);
+                }
+            }
+
+            if (json == END_JSON)
+            {
+                if (_ssidCallbacks.ContainsKey(connection.Lamp) && _ssidLists.ContainsKey(connection))
+                {
+                    _ssidCallbacks[connection.Lamp]?.Invoke(connection.Lamp, _ssidLists[connection].ToArray());
+                    _ssidCallbacks.Remove(connection.Lamp);
+                    _ssidLists.Remove(connection);
+                }
+            }
+        }
+
+        public void AddOpListener<T>(OpCode op, CallbackHandler<VoyagerLamp, T> callback) where T : Packet
+        {
+            _callbacks.AddListener(op, callback);
+        }
+
+        public void RemoveOpListener<T>(OpCode op, CallbackHandler<VoyagerLamp, T> callback) where T : Packet
+        {
+            _callbacks.RemoveListener(op, callback);
         }
 
         public override double TimeOffset => 0.0;
@@ -405,6 +459,8 @@ namespace VoyagerController.Bluetooth
 
         public override void SetNetworkMode(VoyagerLamp voyager, NetworkMode mode, string ssid = "", string password = "")
         {
+            //TODO check if psk encryption is supported on lamp, based on firmware version 
+
             if (mode == NetworkMode.ClientPSK)
                 password = SecurityUtils.WPA_PSK(ssid, password);
 
@@ -440,8 +496,7 @@ namespace VoyagerController.Bluetooth
         private enum ValidateState
         {
             Connected,
-            GettingSerial,
-            GettingLength,
+            GettingInfo,
             Ready
         }
 
@@ -455,7 +510,7 @@ namespace VoyagerController.Bluetooth
         private class BluetoothConnection
         {
             public string Id => Access.Id;
-            public PeripheralAccess Access { get; }
+            public PeripheralAccess Access { get; set; }
             public double LastMessage { get; set; }
             public VoyagerLamp Lamp { get; }
             public ValidateState ValidationState { get; set; }
@@ -468,5 +523,7 @@ namespace VoyagerController.Bluetooth
                 Lamp = lamp;
             }
         }
+
+        private delegate void BleMessageHandler(BluetoothConnection connection, string data);
     }
 }
