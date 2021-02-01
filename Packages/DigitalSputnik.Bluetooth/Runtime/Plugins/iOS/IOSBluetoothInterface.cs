@@ -45,7 +45,7 @@ namespace DigitalSputnik.Ble
         private static extern void _iOSSubscribeToCharacteristic(string uid, string characteristic);
 
         [DllImport("__Internal")]
-        private static extern void _iOSWriteToCharacteristic(string uid, string characteristic, IntPtr data, int length);
+        private static extern void _iOSWriteToCharacteristic(string uid, string characteristic, IntPtr data, int length);
 #endregion
 
 #region Interface Implementation
@@ -121,12 +121,12 @@ namespace DigitalSputnik.Ble
 
         public void GetConnectedRssi(string mac)
         {
-
+            // TODO: Implement!
         }
 
         public void Reconnect(string id)
         {
-            
+            _iOSConnect(id.ToUpper());
         }
 
         public void Disconnect(string id)
@@ -136,7 +136,7 @@ namespace DigitalSputnik.Ble
 
         public void Close(string id)
         {
-            
+            _iOSCancelConnection(id.ToUpper());
         }
 
         public void GetServices(string id, InternalServicesHandler callback)

@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothInterface.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,6 +90,7 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/LampSettingsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/DmxModeMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" />
+      <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothInterface.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -162,6 +164,7 @@
       <workItem from="1611302338469" duration="1272000" />
       <workItem from="1611561082762" duration="3596000" />
       <workItem from="1611644847928" duration="719000" />
+      <workItem from="1612167625139" duration="271000" />
     </task>
     <servers />
   </component>
