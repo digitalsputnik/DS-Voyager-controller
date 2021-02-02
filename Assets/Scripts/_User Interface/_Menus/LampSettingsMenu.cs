@@ -21,7 +21,7 @@ namespace VoyagerController.UI
         [Space(3)]
         [SerializeField] private Text _overallUpdateInfoText = null;
         [SerializeField] private Text _updateText = null;
-        // [SerializeField] private UpdateDialog updateDialog = null;
+        [SerializeField] private UpdateDialog updateDialog = null;
 
         private int _updateLampCount;
         private bool _updatesFinished = true;
@@ -83,7 +83,7 @@ namespace VoyagerController.UI
 
         public void UpdateSelected()
         {
-            foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>())
+            /*foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>())
             {
                 var lampHandle = item.LampHandle;
 
@@ -93,37 +93,37 @@ namespace VoyagerController.UI
                 VoyagerUpdater.UpdateLamp(lampHandle, OnUpdateFinished, OnUpdateMessage);
             }
             
-            UpdateUpdateUI();
+            UpdateUpdateUI();*/
 
-            /*
-            _lampsUpdating = null;
-            var lampsNotUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery < 30.0 && !l.charging).ToList();
-            var lampsUpdateable = WorkspaceUtils.SelectedVoyagerLamps.Where(l => l.battery >= 30.0 || l.charging).ToList();
+            var lampsNotUpdateable = WorkspaceSelection.GetSelected<VoyagerItem>().Where(l => l.LampHandle.BatteryLevel < 30.0 && !l.LampHandle.Charging).ToList();
+            var lampsUpdateable = WorkspaceSelection.GetSelected<VoyagerItem>().Where(l => l.LampHandle.BatteryLevel >= 30.0 || l.LampHandle.Charging).ToList();
 
-            utility = new VoyagerUpdateUtility();
+            _lampsUpdating.Clear();
 
             if (lampsUpdateable.Count > 0)
             {
-                lampsUpdateable.ForEach(lamp => utility.UpdateLamp(lamp,
-                                                         OnUpdateFinished,
-                                                         OnUpdateMessage));
-                _lampsUpdating = lampsUpdateable;
+                lampsUpdateable.ForEach(lamp => 
+                {
+                    VoyagerUpdater.UpdateLamp(lamp.LampHandle, OnUpdateFinished, OnUpdateMessage);
+                    _lampsUpdating.Add(lamp.LampHandle);
+                });
+
                 UpdateUpdateUI();
             }
 
             if (lampsNotUpdateable.Count > 0)
             {
-                if (lampsUpdateable.Count == 0)
-                    _lampsUpdating = new List<VoyagerLamp>();
+                var lampHandles = new List<VoyagerLamp>();
 
-                updateDialog.Show(lampsNotUpdateable,(lamp) =>
+                lampsNotUpdateable.ForEach(lamp => lampHandles.Add(lamp.LampHandle));
+
+                updateDialog.Show(lampHandles,(lamp) =>
                 {
-                    utility.UpdateLamp(lamp, OnUpdateFinished, OnUpdateMessage);
+                    VoyagerUpdater.UpdateLamp(lamp, OnUpdateFinished, OnUpdateMessage);
                     _lampsUpdating.Add(lamp);
                     UpdateUpdateUI();
                 });
             }
-            */
         }
 
         private void UpdateUpdateUI()

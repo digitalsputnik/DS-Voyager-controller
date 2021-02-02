@@ -98,13 +98,13 @@ namespace VoyagerController.UI
         private void SetupSnappingPoints()
         {
             var radius = _rect.rect.width / 2.0f;
-            var step = 1.0f / 6.0f;
+            var step = 1.0f / 12.0f;
             var counter = 1;
             
-            _snappingPoints = new Vector2[6 * 5 + 1];
+            _snappingPoints = new Vector2[12 * 5 + 1];
             _snappingPoints[0] = new Vector2(0.0f, 0.0f);
 
-            for (var a = 0; a < 6; a++)
+            for (var a = 0; a < 12; a++)
             {
                 for (var m = 0; m < 5; m++)
                 {

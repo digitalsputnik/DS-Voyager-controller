@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Crosstales.FB;
 using DigitalSputnik;
 using UnityEngine;
 using VoyagerController.Effects;
@@ -110,7 +109,7 @@ namespace VoyagerController.UI
 
         public void AddVideoEffect()
         {
-            LoadVideoFromDevice(path =>
+            FileUtils.LoadVideoFromDevice(path =>
             {
                 if (path != "" && path != "Null" && path != null)
                 {
@@ -125,7 +124,7 @@ namespace VoyagerController.UI
 
         public void AddImageEffect()
         {
-            LoadImageFromDevice(path =>
+            FileUtils.LoadPictureFromDevice(path =>
             {
                 if (path != "" && path != "Null" && path != null)
                 {
@@ -134,85 +133,7 @@ namespace VoyagerController.UI
                     EffectManager.AddEffect(image);
                     UpdateEffectsList();
                 }
-            });
-        }
-
-        private void Update()
-        {
-            /*if (AndroidVideoResizer.IsCompressing)
-                Debug.Log(AndroidVideoResizer.Progress);*/
-        }
-
-        public static void LoadVideoFromDevice(Action<string> loaded)
-        {
-            if (Application.isMobilePlatform)
-            {
-                NativeGallery.GetVideoFromGallery(path =>
-                {
-                    if (string.IsNullOrEmpty(path))
-                    {
-                        loaded?.Invoke(null);
-                        return;
-                    }
-
-                    if (Application.platform == RuntimePlatform.IPhonePlayer)
-                    {
-                        // TODO: Implement - the name should be asked from user.
-                    }
-                    else
-                    {
-                        loaded.Invoke(path);
-                    }
-                });
-            }
-            else
-            {
-                var documents = DocumentsPath;
-                var extensions = new[] { new ExtensionFilter("Video", "mp4") };
-                var path = FileBrowser.OpenSingleFile("Open Video", documents, extensions);
-                loaded.Invoke(path == "" ? null : path);
-            }
-        }
-        
-        public static void LoadImageFromDevice(Action<string> loaded)
-        {
-            if (Application.isMobilePlatform)
-            {
-                if (Application.platform == RuntimePlatform.IPhonePlayer)
-                {
-                    // TODO: Implement - the name should be asked from user.
-                }
-                else
-                {
-                    NativeGallery.GetImageFromGallery((string path) =>
-                    {
-                        loaded.Invoke(path == "" ? null : path);
-                    }, "", "image/*");
-                }
-            }
-            else
-            {
-                var documents = DocumentsPath;
-                var extensions = new[]
-                {
-                    new ExtensionFilter("PNG Picture", "png"),
-                    new ExtensionFilter("JPEG Picture", "jpeg"),
-                    new ExtensionFilter("JPG Picture", "jpg")
-                };
-                var path = FileBrowser.OpenSingleFile("Open Picture", documents, extensions);
-                loaded.Invoke(path == "" ? null : path);
-            }
-        }
-
-        private static string DocumentsPath
-        {
-            get
-            {
-                if (Application.platform == RuntimePlatform.WindowsPlayer ||
-                    Application.platform == RuntimePlatform.WindowsEditor)
-                    return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            }
+            }, true);
         }
     }
 }

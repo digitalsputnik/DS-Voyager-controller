@@ -56,5 +56,49 @@ namespace VoyagerController.Workspace
             _renderer.material.SetTexture("_BaseMap", Picture);
             //renderer.material.mainTexture = picture;
         }
+
+        public void PositionBasedCamera()
+        {
+            SetupMeshSize();
+            SetupOutlineSize();
+
+            Vector3 pos = transform.position;
+            pos.x = Camera.main.transform.position.x;
+            pos.y = Camera.main.transform.position.y;
+            transform.position = pos;
+        }
+
+        void SetupMeshSize()
+        {
+            Vector2 maxScale = CalculateMeshMaxScale();
+
+            float maxScaleAspect = maxScale.x / maxScale.y;
+            float videoAspect = (float)Picture.width / Picture.height;
+
+            Vector2 s = maxScale;
+
+            if (videoAspect > maxScaleAspect)
+                s.y = maxScale.y / videoAspect * maxScaleAspect;
+            else if (videoAspect < maxScaleAspect)
+                s.x = maxScale.x / maxScaleAspect * videoAspect;
+
+            float diff = _renderer.transform.localScale.x / s.x;
+            transform.localScale = transform.localScale / diff;
+        }
+
+        Vector2 CalculateMeshMaxScale()
+        {
+            Vector2 screenWorldSize = VectorUtils.ScreenSizeWorldSpace;
+            float width = screenWorldSize.x * 0.8f;
+            float height = screenWorldSize.y - screenWorldSize.x * 0.2f;
+            return new Vector2(width, height);
+        }
+
+        void SetupOutlineSize()
+        {
+            Vector2 outlineSize = Vector2.one * _outlineThickness;
+            Vector2 pictureSize = _renderer.transform.localScale;
+            _outline.transform.localScale = pictureSize + outlineSize;
+        }
     }
 }

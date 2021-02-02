@@ -53,21 +53,7 @@ namespace VoyagerController.UI
 
         public void AddPicture()
         {
-            if (NativeFilePicker.IsFilePickerBusy())
-                return;
-
-#if UNITY_ANDROID
-            // Use MIMEs on Android
-            string[] fileTypes = new string[] { "image/*" };
-#else
-			// Use UTIs on iOS
-			string[] fileTypes = new string[] { "public.image" };
-#endif
-
-            // Pick image(s) and/or video(s)
-            NativeFilePicker.Permission permission = NativeFilePicker.PickFile(PicturePicked, fileTypes);
-
-            Debug.Log("Permission result: " + permission);
+            FileUtils.LoadPictureFromDevice(PicturePicked, false);
         }
 
         public void SelectDeselect()
@@ -140,8 +126,6 @@ namespace VoyagerController.UI
         
         private void PicturePicked(string path)
         {
-            Debug.Log(path);
-
             if (path == null || path == "Null" || path == "") return;
 
             byte[] data = File.ReadAllBytes(path);
@@ -158,7 +142,7 @@ namespace VoyagerController.UI
 
             texture.Apply();
 
-            WorkspaceManager.InstantiateItem<PictureItem>(texture);
+            WorkspaceManager.InstantiateItem<PictureItem>(texture).PositionBasedCamera();
         }
     }
 }
