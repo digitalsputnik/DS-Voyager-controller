@@ -55,9 +55,10 @@ namespace VoyagerController.Workspace
         public static T InstantiateItem<T>(object data, Vector3 position) where T : WorkspaceItem
         {
             var item = InstantiateItem<T>(data);
-            Vector3 pos = position;
-            pos.z = item.transform.position.z;
-            item.transform.position = pos;
+            var pos = position;
+            var transform = item.transform;
+            pos.z = transform.position.z;
+            transform.position = pos;
             return item;
         }
 

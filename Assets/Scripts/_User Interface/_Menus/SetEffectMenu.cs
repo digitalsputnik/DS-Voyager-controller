@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik;
+using DigitalSputnik.Voyager;
 using UnityEngine;
 using VoyagerController.Effects;
 using VoyagerController.Mapping;
@@ -15,7 +16,7 @@ namespace VoyagerController.UI
         [SerializeField] private Transform _container = null;
         [SerializeField] private bool _applyToSelected = true;
 
-        public static SetEffectMenu _instance;
+        private static SetEffectMenu _instance;
 
         private readonly List<SetEffectItem> _items = new List<SetEffectItem>();
 
@@ -52,8 +53,6 @@ namespace VoyagerController.UI
                         ApplyEffectToSelectedLamps(effect);
                     else
                         ApplyEffectToAllLamps(effect);
-                    
-                    EffectMapper.EnterEffectMapping(effect, _applyToSelected);
                 });
                 _items.Add(item);
             }
@@ -74,9 +73,59 @@ namespace VoyagerController.UI
 
         private void ApplyEffectToSelectedLamps(Effect effect)
         {
-            foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>())
-                LampEffectsWorker.ApplyEffectToLamp(item.LampHandle, effect);
+            var voyagers = WorkspaceSelection.GetSelected<VoyagerItem>().ToList();
+            
+            DialogBox.Show(
+                "COPY LAMP POSITIONS?", 
+                "Do you want to copy lamp lamp positions from workspace to FX mapping?",
+                new [] { "YES", "NO", "CANCEL" },
+                new Action[] {
+                    () =>
+                    {
+                        UpdateLampsMappingPositionBasedOnSelection(voyagers);
+                        // EnterEffectMapping(effect, voyagers.Select(v => v.LampHandle));
+                    },
+                    () =>
+                    {
+                        // EnterEffectMapping(effect, voyagers.Select(v => v.LampHandle));
+                    },
+                    null
+                });
+        }
+
+        private static void UpdateLampsMappingPositionBasedOnSelection(IEnumerable<VoyagerItem> voyagers)
+        {
+            var selection = WorkspaceManager.GetItems<SelectionControllerItem>().FirstOrDefault();
+
+            if (selection == null) return;
+            
+            var trans = selection.GetComponentInChildren<MeshRenderer>().transform;
+            var add = Vector3.one / 2.0f;
+                
+            foreach (var item in voyagers)
+            {
+                var p1 = item.GetPixelWorldPositions().First();
+                var p2 = item.GetPixelWorldPositions().Last();
+
+                p1 = trans.InverseTransformPoint(p1) + add;
+                p2 = trans.InverseTransformPoint(p2) + add;
+
+                var mapping = new EffectMapping
+                {
+                    X1 = p1.x, Y1 = p1.y,
+                    X2 = p2.x, Y2 = p2.y
+                };
+
+                Metadata.Get(item.LampHandle.Serial).EffectMapping = mapping;
+            }
+        }
+
+        private void EnterEffectMapping(Effect effect, IEnumerable<VoyagerLamp> voyagers)
+        {
+            foreach (var voyager in voyagers)
+                LampEffectsWorker.ApplyEffectToLamp(voyager, effect);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+            EffectMapper.EnterEffectMapping(effect, _applyToSelected);
         }
 
         private void ApplyEffectToAllLamps(Effect effect)
@@ -84,6 +133,7 @@ namespace VoyagerController.UI
             foreach (var item in WorkspaceManager.GetItems<VoyagerItem>())
                 LampEffectsWorker.ApplyEffectToLamp(item.LampHandle, effect);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+            EffectMapper.EnterEffectMapping(effect, _applyToSelected);
         }
 
         private static IEnumerable<Effect> GetEffectsInOrder()

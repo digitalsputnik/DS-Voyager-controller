@@ -51,8 +51,8 @@ MonoBehaviour:
   _childContainer: {fileID: 2339282543346795475}
   Children: []
   _render: {fileID: 4088414455252954293}
-  moveHandle: {fileID: 4723818291482947736}
-  resizeHandle: {fileID: 7205823899354139871}
+  _moveHandle: {fileID: 4723818291482947736}
+  _resizeHandle: {fileID: 7205823899354139871}
   _handleSize: 0.02
 --- !u!114 &6636499166291852136
 MonoBehaviour:
@@ -146,6 +146,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -264,6 +265,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -288,6 +290,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7964904639196810528
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,6 +339,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

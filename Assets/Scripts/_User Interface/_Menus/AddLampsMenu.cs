@@ -109,12 +109,15 @@ namespace VoyagerController.UI
         
         private static bool LampConnected(Lamp lamp)
         {
+            if (lamp is VoyagerLamp voyager)
+                return voyager.Connected && !voyager.Passive;
+            
             return lamp.Connected;
         }
 
         private static bool UnderFiveBluetoothLampsOnWorkspace()
         {
-            return WorkspaceManager.GetItems<VoyagerItem>().Where(l => l.LampHandle.Endpoint is BluetoothEndPoint).Count() < 5;
+            return WorkspaceManager.GetItems<VoyagerItem>().Count(l => l.LampHandle.Endpoint is BluetoothEndPoint) < 5;
         }
 
         private void SubscribeEvents()

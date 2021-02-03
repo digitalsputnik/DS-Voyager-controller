@@ -38,6 +38,8 @@ namespace VoyagerController.Mapping
 
         public static void EnterEffectMapping(Effect effect, bool onlySelected)
         {
+            EffectMappingIsActive = true;
+            
             _instance.CleanPreviousDisplay();
             _instance.gameObject.SetActive(true);
             _instance._menuContainer.ShowMenu(_instance._mappingMenu);
@@ -82,7 +84,6 @@ namespace VoyagerController.Mapping
             LeanTween.move(camTransform.gameObject, camPosition, ANIMATION_TIME);
 
             SelectionMove.SelectionMoveEnded += SelectedItemsMoved;
-            EffectMappingIsActive = true;
         }
 
         private static void CalculateVoyagerMapping(VoyagerItem voyager)

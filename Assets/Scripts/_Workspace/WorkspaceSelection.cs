@@ -71,24 +71,24 @@ namespace VoyagerController.Workspace
 
         private static void ItemRemovedFromWorkspace(WorkspaceItem item) => DeselectItem(item);
 
-        private void OnLampBroadcasted(Lamp lamp)
+        private static void OnLampBroadcasted(Lamp lamp)
         {
-            if (!WorkspaceManager.GetItems<VoyagerItem>().ToList().Any(l => l.LampHandle == lamp))
+            if (WorkspaceManager.GetItems<VoyagerItem>().ToList().All(l => l.LampHandle != lamp))
                 return;
 
-            var vlamp = WorkspaceManager.GetItems<VoyagerItem>().ToList().FirstOrDefault(l => l.LampHandle == lamp);
+            var voyager = WorkspaceManager.GetItems<VoyagerItem>().ToList().FirstOrDefault(l => l.LampHandle == lamp);
 
-            if (vlamp == null)
+            if (voyager == null)
                 return;
 
-            if (Selected.Count() == 1 && Selected.Contains(vlamp))
+            if (Selected.Count() == 1 && Selected.Contains(voyager))
                 return;
 
             MainThread.Dispatch(() =>
             {
                 Clear();
-                CameraMove.SetCameraPosition(vlamp.transform.localPosition);
-                SelectItem(vlamp);
+                CameraMove.SetCameraPosition(voyager.transform.localPosition);
+                SelectItem(voyager);
             });
         }
     }

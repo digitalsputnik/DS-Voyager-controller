@@ -111,40 +111,6 @@ namespace VoyagerController.UI
             return bounds;
         }
 
-        private static Vector2[] SelectedHorizontalAlignment()
-        {
-            var selectedLamps = WorkspaceSelection.GetSelected<VoyagerItem>().ToList();
-            var bounds = SelectedLampsBounds();
-            var count = selectedLamps.Count;
-            var points = new List<Vector2>();
-
-            var start = selectedLamps.Min(l => l.GetWorkspacePosition().x);
-            var max = selectedLamps.Max(l => l.GetWorkspacePosition().x);
-            var step = count > 1 ? (max - start) / (count - 1) : 0;
-            var y = bounds.center.y;
-
-            for (var i = 0; i < count; i++) points.Add(new float2(start + step * i, y));
-
-            return points.ToArray();
-        }
-
-        private static Vector2[] SelectedVerticalAlignment()
-        {
-            var selectedLamps = WorkspaceSelection.GetSelected<VoyagerItem>().ToList();
-            var bounds = SelectedLampsBounds();
-            var count = selectedLamps.Count;
-            var points = new List<Vector2>();
-
-            var start = selectedLamps.Min(l => l.GetWorkspacePosition().y);
-            var max = selectedLamps.Max(l => l.GetWorkspacePosition().y);
-            var step = count > 1 ? (max - start) / (count - 1) : 0;
-            var x = bounds.center.x;
-
-            for (var i = 0; i < count; i++) points.Add(new float2(x, start + step * i));
-
-            return points.ToArray();
-        }
-
         private static void AlignSelectedLampsHorizontally()
         {
             var rotations = new List<float> { 0.0f, 180.0f, 360.0f };
@@ -215,8 +181,8 @@ namespace VoyagerController.UI
             {
                 var scale = longest.GetWorkspaceScale().x / longest.LampHandle.PixelCount;
 
-                var shortScale = scale;
-                var longScale = scale;
+                float shortScale;
+                float longScale;
 
                 if (longest.LampHandle.PixelCount > 50)
                 {
@@ -281,7 +247,7 @@ namespace VoyagerController.UI
             {
                 var item = lamps[i];
                 var position = positions[i];
-                var rotation = item.GetWorkspaceRotation().z + 180.0f;
+                var rotation = item.GetWorkspaceRotation().z;
                 var scale = item.GetWorkspaceScale().x;
              
                 var mapping = new WorkspaceMapping
@@ -299,6 +265,24 @@ namespace VoyagerController.UI
             SelectionMove.RaiseMovedEvent();
         }
 
+        private static Vector2[] SelectedHorizontalAlignment()
+        {
+            var selectedLamps = WorkspaceSelection.GetSelected<VoyagerItem>().ToList();
+            var bounds = SelectedLampsBounds();
+            var count = selectedLamps.Count;
+            var points = new List<Vector2>();
+
+            var start = selectedLamps.Min(l => l.GetWorkspacePosition().x);
+            var max = selectedLamps.Max(l => l.GetWorkspacePosition().x);
+            var step = count > 1 ? (max - start) / (count - 1) : 0;
+            var y = bounds.center.y;
+
+            for (var i = 0; i < count; i++)
+                points.Add(new float2(start + step * i, y));
+
+            return points.ToArray();
+        }
+
         public static void DistributeSelectedLampsVertically()
         {
             var lamps = WorkspaceSelection.GetSelected<VoyagerItem>()
@@ -313,7 +297,7 @@ namespace VoyagerController.UI
             {
                 var item = lamps[i];
                 var position = positions[i];
-                var rotation = item.GetWorkspaceRotation().z + 180.0f;
+                var rotation = item.GetWorkspaceRotation().z;
                 var scale = item.GetWorkspaceScale().x;
              
                 var mapping = new WorkspaceMapping
@@ -329,6 +313,24 @@ namespace VoyagerController.UI
             }
 
             SelectionMove.RaiseMovedEvent();
+        }
+
+        private static Vector2[] SelectedVerticalAlignment()
+        {
+            var selected = WorkspaceSelection.GetSelected<VoyagerItem>().ToList();
+            var bounds = SelectedLampsBounds();
+            var count = selected.Count;
+            var points = new List<Vector2>();
+
+            var start = selected.Min(l => l.GetWorkspacePosition().y);
+            var max = selected.Max(l => l.GetWorkspacePosition().y);
+            var step = count > 1 ? (max - start) / (count - 1) : 0;
+            var x = bounds.center.x;
+
+            for (var i = 0; i < count; i++)
+                points.Add(new float2(x, start + step * i));
+
+            return points.ToArray();
         }
     }
 }

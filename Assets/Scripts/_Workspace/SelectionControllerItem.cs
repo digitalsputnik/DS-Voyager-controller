@@ -5,9 +5,8 @@ namespace VoyagerController.Workspace
     public class SelectionControllerItem : WorkspaceItem
     {
         [SerializeField] private Transform _render = null;
-
-        [SerializeField] private SelectionHandle moveHandle = null;
-        [SerializeField] private SelectionHandle resizeHandle = null;
+        [SerializeField] private SelectionHandle _moveHandle = null;
+        [SerializeField] private SelectionHandle _resizeHandle = null;
         [SerializeField] private float _handleSize = 40.0f;
 
         public override bool Selectable => false;
@@ -24,9 +23,9 @@ namespace VoyagerController.Workspace
 
         private void Update()
         {
-            var newscale = Vector3.one * _cam.orthographicSize * _handleSize;
-            Rescale(moveHandle.transform, newscale);
-            Rescale(resizeHandle.transform, newscale);
+            var scale = Vector3.one * (_cam.orthographicSize * _handleSize);
+            Rescale(_moveHandle.transform, scale);
+            Rescale(_resizeHandle.transform, scale);
         }
 
         public void SetBounds(Bounds bounds)
@@ -36,18 +35,20 @@ namespace VoyagerController.Workspace
 
             if (bounds.size.x > bounds.size.y)
             {
-                resizeHandle.transform.position = new Vector3(
-                    transform.position.x + bounds.size.x / 2.0f,
-                    transform.position.y,
-                    transform.position.z - 0.1f
+                var position = transform.position;
+                _resizeHandle.transform.position = new Vector3(
+                    position.x + bounds.size.x / 2.0f, 
+                    position.y, 
+                    position.z - 0.1f
                 );
             }
             else
             {
-                resizeHandle.transform.position = new Vector3(
-                    transform.position.x,
-                    transform.position.y - bounds.size.y / 2.0f,
-                    transform.position.z - 0.1f 
+                var position = transform.position;
+                _resizeHandle.transform.position = new Vector3(
+                    position.x,
+                    position.y - bounds.size.y / 2.0f,
+                    position.z - 0.1f 
                 );
             }
         }

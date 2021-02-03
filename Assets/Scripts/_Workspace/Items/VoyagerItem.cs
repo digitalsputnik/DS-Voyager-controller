@@ -123,6 +123,7 @@ namespace VoyagerController.Workspace
 
         private void Start()
         {
+            SaveWorkspaceMapping();
             SelectionMove.SelectionMoveEnded += SelectionMoved;
         }
 
@@ -182,17 +183,22 @@ namespace VoyagerController.Workspace
             {
                 if (!EffectMapper.EffectMappingIsActive)
                 {
-                    var mapping = Metadata.Get(LampHandle.Serial).WorkspaceMapping;
-                    var pos = _transform.position;
-                    mapping.Position = new[] { pos.x, pos.y };
-                    mapping.Rotation = _transform.eulerAngles.z;
-                    mapping.Scale = _transform.lossyScale.x;
+                    SaveWorkspaceMapping();
                 }
                 else
                 {
                     _meta.EffectMapping = EffectMapper.CalculateLampEffectMapping(this);
                 }
             }
+        }
+
+        private void SaveWorkspaceMapping()
+        {
+            var mapping = Metadata.Get(LampHandle.Serial).WorkspaceMapping;
+            var pos = _transform.position;
+            mapping.Position = new[] { pos.x, pos.y };
+            mapping.Rotation = _transform.eulerAngles.z;
+            mapping.Scale = _transform.lossyScale.x;
         }
 
         private void SetupSizeAndPositions()

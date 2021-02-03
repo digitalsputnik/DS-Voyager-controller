@@ -133,8 +133,10 @@
               <e p="DmxModeMenu.cs" t="Include" />
               <e p="EffectMappingMenu.cs" t="Include" />
               <e p="EffectSettingsMenu.cs" t="Include" />
+              <e p="InputFieldMenu.cs" t="Include" />
               <e p="ItshePicker.cs" t="Include" />
               <e p="LampSettingsMenu.cs" t="Include" />
+              <e p="ListPickerMenu.cs" t="Include" />
               <e p="MasterModeMenu.cs" t="Include" />
               <e p="NetworkSettingsMenu.cs" t="Include" />
               <e p="RouterModeMenu.cs" t="Include" />
@@ -149,7 +151,6 @@
             <e p="InspectorMenuContainer.cs" t="Include" />
             <e p="IntField.cs" t="Include" />
             <e p="ListPicker.cs" t="Include" />
-            <e p="ListPickerMenu.cs" t="Include" />
             <e p="Menu.cs" t="Include" />
             <e p="MenuContainer.cs" t="Include" />
             <e p="MoveIcon.cs" t="Include" />
@@ -161,6 +162,8 @@
             <e p="SliderMenu.cs" t="Include" />
             <e p="TextButton.cs" t="Include" />
             <e p="UIScaleDeviceBased.cs" t="Include" />
+            <e p="UpdateDialog.cs" t="Include" />
+            <e p="UpdatePrompt.cs" t="Include" />
           </e>
           <e p="_Workspace" t="Include">
             <e p="Items" t="Include">
@@ -184,6 +187,7 @@
           <e p="CameraMove.cs" t="Include" />
           <e p="Debugger.cs" t="Include" />
           <e p="EventValue.cs" t="Include" />
+          <e p="FileUtils.cs" t="Include" />
           <e p="LampEffectsWorker.cs" t="Include" />
           <e p="MainThread.cs" t="Include" />
           <e p="MathUtils.cs" t="Include" />
@@ -192,6 +196,7 @@
           <e p="ShaderUtils.cs" t="Include" />
           <e p="Temperature.cs" t="Include" />
           <e p="TextureExtensions.cs" t="Include" />
+          <e p="VectorUtils.cs" t="Include" />
           <e p="VoyagerUpdater.cs" t="Include" />
         </e>
         <e p="Vendor" t="Include">
