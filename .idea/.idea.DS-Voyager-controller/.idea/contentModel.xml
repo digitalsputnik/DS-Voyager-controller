@@ -9,6 +9,7 @@
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Editor" t="Include">
+          <e p="IOS142Workaround.cs" t="Include" />
           <e p="iOSPostBuildProcess.cs" t="Include" />
           <e p="MenuItems.cs" t="Include" />
           <e p="PostBuildProcess.cs" t="Include" />

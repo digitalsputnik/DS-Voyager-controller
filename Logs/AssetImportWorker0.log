@@ -1,0 +1,383 @@
+Using pre-set license
+
+ COMMAND LINE ARGUMENTS:
+/Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/MacOS/Unity
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+/Users/taavetmaask/Projects/DS-Voyager-controller
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+49689
+Successfully changed project path to: /Users/taavetmaask/Projects/DS-Voyager-controller
+/Users/taavetmaask/Projects/DS-Voyager-controller
+Using Asset Import Pipeline V2.
+Refreshing native plugins compatible for Editor in 86.83 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2020.2.1f1 (270dd8c3da1c)
+[Subsystems] Discovering subsystems at path /Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path /Users/taavetmaask/Projects/DS-Voyager-controller/Assets
+GfxDevice: creating device client; threaded=0
+2021-02-04 13:52:34.915 Unity[3250:52043] Color LCD preferred device: Intel(R) UHD Graphics 630 (low power)
+2021-02-04 13:52:34.915 Unity[3250:52043] Metal devices available: 2
+2021-02-04 13:52:34.915 Unity[3250:52043] 0: AMD Radeon Pro 560X (high power)
+2021-02-04 13:52:34.916 Unity[3250:52043] 1: Intel(R) UHD Graphics 630 (low power)
+2021-02-04 13:52:34.916 Unity[3250:52043] Using device AMD Radeon Pro 560X (high power)
+Initializing Metal device caps: AMD Radeon Pro 560X
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Initialize mono
+Mono path[0] = '/Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/Managed'
+Mono path[1] = '/Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/MonoBleedingEdge/lib/mono/unityjit'
+Mono config path = '/Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56250
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: /Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
+Registered in 0.000466 seconds.
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 46.68 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.977 seconds
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.003358 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 47.78 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.384 seconds
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Launching external process: /Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/Tools/UnityShaderCompiler
+Launched and connected shader compiler UnityShaderCompiler after 0.02 seconds
+Refreshing native plugins compatible for Editor in 1.12 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2413 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 177.1 MB.
+System memory in use after: 177.3 MB.
+
+Unloading 165 unused Assets to reduce memory usage. Loaded Objects now: 2706.
+Total: 2.892581 ms (FindLiveObjects: 0.263136 ms CreateObjectMapping: 0.140021 ms MarkObjects: 2.383621 ms  DeleteObjects: 0.104332 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002589 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.53 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.254 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.59 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2300 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 177.0 MB.
+System memory in use after: 177.2 MB.
+
+Unloading 160 unused Assets to reduce memory usage. Loaded Objects now: 2708.
+Total: 2.463590 ms (FindLiveObjects: 0.273460 ms CreateObjectMapping: 0.115156 ms MarkObjects: 2.023548 ms  DeleteObjects: 0.049809 ms)
+
+========================================================================
+Received Import Request.
+  path: Assets/Editor/iOS_14_2_Workaround.cs
+  artifactKey: Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Editor/iOS_14_2_Workaround.cs using Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0a27dd8faaa6cd394392037f5c4d7281') in 0.414353 seconds
+  Import took 0.419052 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003345 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.26 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.289 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.31 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2302 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 182.8 MB.
+System memory in use after: 183.0 MB.
+
+Unloading 160 unused Assets to reduce memory usage. Loaded Objects now: 2711.
+Total: 3.636071 ms (FindLiveObjects: 0.356026 ms CreateObjectMapping: 0.214468 ms MarkObjects: 2.991675 ms  DeleteObjects: 0.072471 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 57.100434 seconds.
+  path: Assets/Editor/iOS_14_2_Workaround.cs
+  artifactKey: Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Editor/iOS_14_2_Workaround.cs using Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5a2e979783b4eab23a11ddc9a3afa384') in 0.067334 seconds
+  Import took 0.109065 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.114177 seconds.
+  path: Assets/Editor/iOS_14_2_Workaround.cs
+  artifactKey: Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Editor/iOS_14_2_Workaround.cs using Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5a2e979783b4eab23a11ddc9a3afa384') in 0.002085 seconds
+  Import took 0.007919 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003898 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.57 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.731 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.67 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2302 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 183.3 MB.
+System memory in use after: 183.5 MB.
+
+Unloading 160 unused Assets to reduce memory usage. Loaded Objects now: 2713.
+Total: 3.434106 ms (FindLiveObjects: 0.387895 ms CreateObjectMapping: 0.207632 ms MarkObjects: 2.766755 ms  DeleteObjects: 0.070281 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 13.165195 seconds.
+  path: Assets/Editor/iOS_14_2_Workaround.cs
+  artifactKey: Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Editor/iOS_14_2_Workaround.cs using Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9c3a1a00500a9d5fe426fae334463407') in 0.008272 seconds
+  Import took 0.020832 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002700 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.94 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.470 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 2.21 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2302 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 183.7 MB.
+System memory in use after: 184.0 MB.
+
+Unloading 160 unused Assets to reduce memory usage. Loaded Objects now: 2715.
+Total: 2.975597 ms (FindLiveObjects: 0.316812 ms CreateObjectMapping: 0.144391 ms MarkObjects: 2.451877 ms  DeleteObjects: 0.061100 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 9.892592 seconds.
+  path: Assets/Editor/iOS_14_2_Workaround.cs
+  artifactKey: Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Editor/iOS_14_2_Workaround.cs using Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'edf39b8856e619d3ae237325a3b262f2') in 0.014364 seconds
+  Import took 0.024357 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002649 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.55 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.384 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.21 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2302 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 184.1 MB.
+System memory in use after: 184.3 MB.
+
+Unloading 160 unused Assets to reduce memory usage. Loaded Objects now: 2717.
+Total: 2.563162 ms (FindLiveObjects: 0.274811 ms CreateObjectMapping: 0.115907 ms MarkObjects: 2.128736 ms  DeleteObjects: 0.042213 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 8.800393 seconds.
+  path: Assets/Editor/IOS142Workaround.cs
+  artifactKey: Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Editor/IOS142Workaround.cs using Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b394d9c780fc0e4bde58d4149b08c41d') in 0.006113 seconds
+  Import took 0.012373 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003174 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.65 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.806 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.85 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2302 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 184.7 MB.
+System memory in use after: 184.9 MB.
+
+Unloading 160 unused Assets to reduce memory usage. Loaded Objects now: 2719.
+Total: 7.730362 ms (FindLiveObjects: 1.231089 ms CreateObjectMapping: 0.881715 ms MarkObjects: 5.349579 ms  DeleteObjects: 0.190315 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 5.599202 seconds.
+  path: Assets/Editor/iOSPostBuildProcess.cs
+  artifactKey: Guid(5de307dd2c6d749c9b975b37c99fc2ee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Editor/iOSPostBuildProcess.cs using Guid(5de307dd2c6d749c9b975b37c99fc2ee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd4836bef9f97daede860c1c9fd854f09') in 0.006120 seconds
+  Import took 0.012655 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 25.454717 seconds.
+  path: Assets/Editor/IOS142Workaround.cs
+  artifactKey: Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Editor/IOS142Workaround.cs using Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '45445f3197009e429704cce5b504737f') in 0.001882 seconds
+  Import took 0.007840 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002081 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.21 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.428 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.21 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2302 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 185.1 MB.
+System memory in use after: 185.4 MB.
+
+Unloading 160 unused Assets to reduce memory usage. Loaded Objects now: 2721.
+Total: 2.499145 ms (FindLiveObjects: 0.274343 ms CreateObjectMapping: 0.114033 ms MarkObjects: 2.042135 ms  DeleteObjects: 0.067094 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 52.686485 seconds.
+  path: Assets/Editor/IOS142Workaround.cs
+  artifactKey: Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Editor/IOS142Workaround.cs using Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a315061dbc27956cc7cac1980c979fbc') in 0.008876 seconds
+  Import took 0.016341 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002908 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.53 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.731 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.55 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2302 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 185.6 MB.
+System memory in use after: 185.8 MB.
+
+Unloading 160 unused Assets to reduce memory usage. Loaded Objects now: 2723.
+Total: 2.943795 ms (FindLiveObjects: 0.460940 ms CreateObjectMapping: 0.131766 ms MarkObjects: 2.300218 ms  DeleteObjects: 0.046537 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 15.721531 seconds.
+  path: Assets/Editor/IOS142Workaround.cs
+  artifactKey: Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Editor/IOS142Workaround.cs using Guid(5d141cded688949f5bc2686460feb7ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9f15f1b0b465767055a6ce3da9ee46ee') in 0.008046 seconds
+  Import took 0.014248 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002102 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.25 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.271 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.56 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2302 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 186.0 MB.
+System memory in use after: 186.3 MB.
+
+Unloading 160 unused Assets to reduce memory usage. Loaded Objects now: 2725.
+Total: 4.430584 ms (FindLiveObjects: 0.384378 ms CreateObjectMapping: 0.155166 ms MarkObjects: 3.833400 ms  DeleteObjects: 0.055427 ms)
+
+========================================================================
+Received Prepare
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 21.51 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 162 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 138.6 MB.
+System memory in use after: 138.9 MB.
+
+Unloading 158 unused Assets to reduce memory usage. Loaded Objects now: 2725.
+Total: 3.653376 ms (FindLiveObjects: 0.372858 ms CreateObjectMapping: 0.175775 ms MarkObjects: 3.048405 ms  DeleteObjects: 0.054297 ms)
+
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file
