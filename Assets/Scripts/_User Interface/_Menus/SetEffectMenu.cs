@@ -83,11 +83,11 @@ namespace VoyagerController.UI
                     () =>
                     {
                         UpdateLampsMappingPositionBasedOnSelection(voyagers);
-                        // EnterEffectMapping(effect, voyagers.Select(v => v.LampHandle));
+                        EnterEffectMapping(effect, voyagers.Select(v => v.LampHandle));
                     },
                     () =>
                     {
-                        // EnterEffectMapping(effect, voyagers.Select(v => v.LampHandle));
+                        EnterEffectMapping(effect, voyagers.Select(v => v.LampHandle));
                     },
                     null
                 });
@@ -140,9 +140,9 @@ namespace VoyagerController.UI
         {
             return EffectManager.GetEffects()
                 .OrderByDescending(e => e.Meta.Timestamp)
-                .ThenByDescending(e => e.Name == "white.mp4")
+                .ThenByDescending(e => e.Name == "white")
+                //.ThenByDescending(e => e is SyphonEffect || e is SpoutEffect)
                 .ThenByDescending(e => Metadata.Get(l => l.Effect == e).Count())
-                // .ThenByDescending(e => Metadata.Get(l => l.Effect is SyphonEffect || l.Effect is SpoutEffect))
                 .ToList();
         }
 

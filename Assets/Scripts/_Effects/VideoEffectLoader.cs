@@ -83,18 +83,46 @@ namespace VoyagerController.Effects
             }
             else
             {
-                if (!PlayerPrefs.HasKey("prefabs_loaded"))
+                var newPresets = GetNewPresets();
+
+                if (newPresets.Count > 0)
                 {
-                    PlayerPrefs.SetInt("prefabs_loaded", 1);
-                    _instance.StartCoroutine(EnumSetupAndroidPresets(EffectManager.Presets));
+                    _instance.StartCoroutine(
+                        EnumSetupAndroidPresets(newPresets.ToArray()));
                 }
                 else
                 {
-                    var path = Path.Combine(Application.persistentDataPath, "video_presets");
+                    string path = Path.Combine(Application.persistentDataPath, "video_presets");
                     LoadPresetsFrom(path);
                 }
             }
         }
+
+        static List<string> GetNewPresets()
+        {
+            var path = Path.Combine(Application.persistentDataPath, "video_presets");
+            var allPresets = EffectManager.Presets;
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            var loadedPresetPaths = Directory.GetFiles(path, "*.mp4");
+
+            List<string> loadedPresetFileNames = new List<string>();
+            List<string> newPresets = new List<string>();
+
+            foreach (var presetPath in loadedPresetPaths)
+                loadedPresetFileNames.Add(Path.GetFileName(presetPath));
+
+            foreach (var preset in allPresets)
+            {
+                if (!loadedPresetFileNames.Contains(preset + ".mp4"))
+                    newPresets.Add(preset);
+            }
+
+            return newPresets;
+        }
+
 
         private static IEnumerator EnumSetupAndroidPresets(IEnumerable<string> presets)
         {
@@ -112,7 +140,7 @@ namespace VoyagerController.Effects
 
                 yield return load.SendWebRequest();
 
-                if (load.isNetworkError) Debug.Log(load.error);
+                if (load.result == UnityWebRequest.Result.ConnectionError) Debug.Log(load.error);
                 
                 File.WriteAllBytes(dest, load.downloadHandler.data);
             }

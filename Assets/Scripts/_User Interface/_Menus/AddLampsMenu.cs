@@ -64,7 +64,7 @@ namespace VoyagerController.UI
         {
             if (lamp is VoyagerLamp voyager)
             {
-                if (lamp.Endpoint is BluetoothEndPoint && !UnderFiveBluetoothLampsOnWorkspace())
+                if (lamp.Endpoint is BluetoothEndPoint && !LessThanFiveBluetoothLampsOnWorkspace())
                 {
                     DialogBox.Show(
                     "REMOVE BLE LAMPS",
@@ -115,7 +115,7 @@ namespace VoyagerController.UI
             return lamp.Connected;
         }
 
-        private static bool UnderFiveBluetoothLampsOnWorkspace()
+        private static bool LessThanFiveBluetoothLampsOnWorkspace()
         {
             return WorkspaceManager.GetItems<VoyagerItem>().Count(l => l.LampHandle.Endpoint is BluetoothEndPoint) < 5;
         }

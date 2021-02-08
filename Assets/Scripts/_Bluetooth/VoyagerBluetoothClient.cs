@@ -23,7 +23,7 @@ namespace VoyagerController.Bluetooth
         private const string SERVICE_UID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
         private const string UART_RX_CHARACTERISTIC_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
         private const string UART_TX_CHARACTERISTIC_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
-        private const int MAX_CONNECTIONS = 4;
+        private const int MAX_CONNECTING = 2;
 
         private ClientState _state = ClientState.WaitingForInitialization;
         private double _initializedTime = 0.0;
@@ -44,9 +44,7 @@ namespace VoyagerController.Bluetooth
         {
             get
             {
-                var connectedCount = _connections.Where(c => c.ConnectionState == ConnectionState.Connected).Count();
-                var connectingCount = _connectingDevices.Count;
-                return connectedCount + connectingCount < MAX_CONNECTIONS;
+                return _connectingDevices.Count <= MAX_CONNECTING;
             }
         }
 
@@ -211,11 +209,6 @@ namespace VoyagerController.Bluetooth
         {
             Debugger.LogInfo("Connected - " + access.Id);
 
-            var peripheral = _connectingDevices.FirstOrDefault(l => l.Id == access.Id);
-
-            if (peripheral != null)
-                _connectingDevices.Remove(peripheral);
-
             var connection = GetConnectionWithId(access.Id);
 
             if (connection == null)
@@ -300,6 +293,11 @@ namespace VoyagerController.Bluetooth
             connection.ValidationState = ValidateState.Ready;
             connection.Lamp.Connected = false;
             connection.LastMessage = 0.0;
+
+            var peripheral = _connectingDevices.FirstOrDefault(l => l.Id == connection.Id);
+
+            if (peripheral != null)
+                _connectingDevices.Remove(peripheral);
 
             BluetoothAccess.Disconnect(connection.Id);
             AddLampToManager(connection.Lamp);

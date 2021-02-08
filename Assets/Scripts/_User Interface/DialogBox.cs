@@ -91,8 +91,10 @@ namespace VoyagerController.UI
 
         private void ClearButtons()
         {
-            foreach (var button in _buttons)
+            foreach (var button in _buttons.ToArray())
                 Destroy(button.gameObject);
+
+            _buttons.Clear();
         }
 
         private void Show()
