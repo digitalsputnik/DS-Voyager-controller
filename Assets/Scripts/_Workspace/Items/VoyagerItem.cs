@@ -314,8 +314,9 @@ namespace VoyagerController.Workspace
                 info.Add(Order.ToString());
             
             info.Add(LampHandle.Serial);
-                
-            info.Add(LampHandle.Connected ? " Connected" : " Disconnected");
+            
+            if (!LampHandle.Connected)
+                info.Add(" Disconnected");
             
             if (Suffix != "")
                 info.Add(Suffix);

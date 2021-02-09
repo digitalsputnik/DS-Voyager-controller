@@ -91,8 +91,22 @@ namespace VoyagerController.UI
         private void ProtocolChanged(int value)
         {
             _startUniverse.Min = value;
-            if (value == 1 && _startUniverse.Value == 0)
-                _startUniverse.SetValue(1);
+
+            switch (value)
+            {
+                case 0:
+                    _startUniverse.Max = 32767;
+                    if (_startUniverse.Value > 32767)
+                        _startUniverse.SetValue(32767);
+                    break;
+
+                default:
+                    _startUniverse.Max = 63999;
+                    if (_startUniverse.Value == 0)
+                        _startUniverse.SetValue(1);
+                    break;
+            }
+
             FieldValueChanged(value);
         }
 
@@ -101,7 +115,7 @@ namespace VoyagerController.UI
         private void RecalculateChannelsAndUniverses(bool updateViewInfo = true)
         {
             if (updateViewInfo)
-                WorkspaceSelection.GetSelected<VoyagerItem>().ToList().ForEach(i => i.Suffix = "");
+                WorkspaceManager.GetItems<VoyagerItem>().ToList().ForEach(l => l.Suffix = "");
 
             _lampToSettings.Clear();
 

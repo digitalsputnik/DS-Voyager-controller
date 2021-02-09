@@ -68,7 +68,7 @@ namespace VoyagerController.UI
         private static void OnWifiModeToggleChanged(bool value) => ApplicationSettings.ShowInfoWifiMode = value;
         private static void OnLenghtToggleChanged(bool value) => ApplicationSettings.ShowInfoLenght = value;
         private static void OnDmxUniverseToggleChanged(bool value) => ApplicationSettings.ShowInfoDmxUniverse = value;
-        private static void OnDmxChannelToggleChanged(bool value) => ApplicationSettings.ShowInfoChargingStatus = value;
+        private static void OnDmxChannelToggleChanged(bool value) => ApplicationSettings.ShowInfoDmxChannel = value;
         private static void OnIpAddressToggleChanged(bool value) => ApplicationSettings.ShowInfoIpAddress = value;
         private static void OnFirmwareVersionChanged(bool value) => ApplicationSettings.ShowInfoFirmwareVersion = value;
     }

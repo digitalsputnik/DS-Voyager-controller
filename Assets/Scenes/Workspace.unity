@@ -4942,8 +4942,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 505608980}
+        m_TargetAssemblyTypeName: VoyagerController.UI.AboutMenu, Assembly-CSharp
         m_MethodName: OpenHelp
         m_Mode: 1
         m_Arguments:
@@ -8048,6 +8048,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _versionText: {fileID: 340219473}
+  _copyrightText: {fileID: 1782313497}
 --- !u!114 &505608981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10742,6 +10743,26 @@ PrefabInstance:
     - target: {fileID: 2402640394965750235, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
       propertyPath: startValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: Max
+      value: 32767
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: _startValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: PresetSuffix
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: Presets.Array.size
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -21875,6 +21896,36 @@ PrefabInstance:
       propertyPath: startValue
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: Max
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: Min
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: _startValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: PresetSuffix
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: Presets.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8193805998669535715, guid: 25fac6f589d484d1fba3a2264c3f4e64,
+        type: 3}
+      propertyPath: m_Text
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25fac6f589d484d1fba3a2264c3f4e64, type: 3}
 --- !u!114 &1453616234 stripped
@@ -27246,6 +27297,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1779915508}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1782313497 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 802620914053610848, guid: 0c2615ce77e7f493a9998d23cd0e9155,
+    type: 3}
+  m_PrefabInstance: {fileID: 1087274526}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1784493825
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31736,7 +31799,7 @@ PrefabInstance:
     - target: {fileID: 1166860731073187651, guid: 2b53f6402f71643cf8de86b447b449ae,
         type: 3}
       propertyPath: m_Options.m_Options.Array.data[0].m_Text
-      value: Art Net
+      value: Art-Net
       objectReference: {fileID: 0}
     - target: {fileID: 1166860731073187651, guid: 2b53f6402f71643cf8de86b447b449ae,
         type: 3}

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik;
@@ -81,13 +82,18 @@ namespace VoyagerController.UI
                 WorkspaceSelection.SelectItem(voyagerItem);
 
                 if (Metadata.Get(voyager.Serial).Effect == null)
-                {
-                    var effect = EffectManager.GetEffectWithName("white.mp4");
-                    LampEffectsWorker.ApplyEffectToLamp(voyager, effect);
-                }
+                    StartCoroutine(ApplyDefaultEffectAndColor(voyager));
                 
                 CloseMenuIfAllLampsAdded();
             }
+        }
+
+        private IEnumerator ApplyDefaultEffectAndColor(VoyagerLamp voyager)
+        {
+            LampEffectsWorker.ApplyItsheToVoyager(voyager, ApplicationSettings.AddedLampsDefaultColor);
+            yield return new WaitForSeconds(0.5f);
+            var effect = EffectManager.GetEffectWithName("white");
+            LampEffectsWorker.ApplyEffectToLamp(voyager, effect);
         }
 
         private static bool LampValidToAdd(Lamp lamp)

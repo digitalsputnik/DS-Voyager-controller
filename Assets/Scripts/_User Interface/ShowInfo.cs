@@ -68,28 +68,23 @@ namespace VoyagerController.UI
         private static string InfoOfLamp(VoyagerLamp lamp)
         {
             var info = new List<string>();
-            
             if (ApplicationSettings.ShowInfoLenght)
                 info.Add(lamp.PixelCount > 50 ? "4ft" : "2ft");
-            
-            // TODO: Finish!
-            
-            /*
             if (ApplicationSettings.ShowInfoBatteryLevel)
-                info.Add($"{lamp.battery}%");
-            if (ApplicationSettings.ShowInfoChargingStatus && lamp.charging)
-                info.Add("charging");
-            if (ApplicationSettings.ShowInfoWifiMode)
-                info.Add(ModeFromString(lamp.mode));
+                info.Add($"{lamp.BatteryLevel}%");
+            if (ApplicationSettings.ShowInfoChargingStatus)
+                info.Add(lamp.Charging ? "charging" : "not charging");
+
+            /*if (ApplicationSettings.ShowInfoWifiMode)
+                info.Add(ModeFromString(lamp.mode));*/
             
-            if (lamp.dmxEnabled)
+            if (lamp.DmxModeEnabled)
             {
                 if (ApplicationSettings.ShowInfoDmxUniverse)
-                    info.Add($"universe {lamp.dmxUniverse}");
+                    info.Add($"universe {lamp.DmxSettings.Universe}");
                 if (ApplicationSettings.ShowInfoDmxChannel)
-                    info.Add($"channel {lamp.dmxChannel + 1}");
+                    info.Add($"channel {lamp.DmxSettings.Channel + 1}");
             }
-            */
 
             if (lamp.Endpoint is LampNetworkEndPoint endpoint)
             {
