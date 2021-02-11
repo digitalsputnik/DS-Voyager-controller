@@ -30897,22 +30897,22 @@ PrefabInstance:
     - target: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
       propertyPath: Presets.Array.size
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
       propertyPath: Presets.Array.data[1]
-      value: 0.25
+      value: 0.41667
       objectReference: {fileID: 0}
     - target: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
       propertyPath: Presets.Array.data[2]
-      value: 0.5
+      value: 0.8334
       objectReference: {fileID: 0}
     - target: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}
       propertyPath: Presets.Array.data[3]
-      value: 0.75
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2579495732612108117, guid: 25fac6f589d484d1fba3a2264c3f4e64,
         type: 3}

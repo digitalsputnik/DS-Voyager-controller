@@ -198,7 +198,7 @@ namespace VoyagerController
         public static void ApplyItsheToVoyager(VoyagerLamp voyager, Itshe itshe)
         {
             var meta = Metadata.Get(voyager.Serial);
-            GetLampClient(voyager)?.SetItshe(voyager, meta.Itshe);
+            GetLampClient(voyager)?.SetItshe(voyager, itshe);
             meta.Itshe = itshe;
         }
 
