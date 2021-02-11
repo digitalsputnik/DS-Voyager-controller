@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -11,14 +12,38 @@ namespace DigitalSputnik.Videos
     {
         private const float VIDEO_LOAD_TIMEOUT = 10.0f;
 
+        static Queue<VideoLoaderQueueItem> loadVideoQueue = new Queue<VideoLoaderQueueItem>();
+        static bool queueHandlerRunning = false;
+
         public void LoadVideo(string path, VideoHandler loaded)
         {
-            MainThreadRunner.Instance.EnqueueAction(() =>
+            //Older android devices can crash if videos are loaded too quickly, that is why we load then from a queue.
+            loadVideoQueue.Enqueue(new VideoLoaderQueueItem(path, loaded));
+            
+            if (!queueHandlerRunning)
             {
                 var obj = LoaderObject();
+                obj.StartCoroutine(LoadVideoQueueHandler());
+            }
+
+        }
+
+        private IEnumerator LoadVideoQueueHandler()
+        {
+            queueHandlerRunning = true;
+
+            while (loadVideoQueue.Count > 0)
+            {
+                var video = loadVideoQueue.Dequeue();
+
+                var obj = LoaderObject();
                 var player = obj.gameObject.AddComponent<VideoPlayer>();
-                obj.StartCoroutine(LoadVideoIEnumerator(player, path, loaded)); 
-            });
+                obj.StartCoroutine(LoadVideoIEnumerator(player, video.Path, video.Handler));
+
+                yield return new WaitForSeconds(0.5f);
+            }
+
+            queueHandlerRunning = false;
         }
 
         public bool Rename(ref Video video, string name)
@@ -94,4 +119,11 @@ namespace DigitalSputnik.Videos
     }
     
     public class UnityVideoLoaderBehaviour : MonoBehaviour { }
+
+    internal class VideoLoaderQueueItem
+    {
+        public string Path;
+        public VideoHandler Handler;
+        public VideoLoaderQueueItem(string path, VideoHandler handler) { Path = path; Handler = handler; }
+    }
 }
