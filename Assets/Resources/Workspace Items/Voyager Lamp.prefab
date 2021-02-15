@@ -163,9 +163,12 @@ MonoBehaviour:
   _renderer: {fileID: 3730633101815870762}
   _pixelsMaterial: {fileID: 2100000, guid: af93b89e504e548c59b028dc8e3323ac, type: 2}
   _outline: {fileID: 834895026173934442}
+  _outlineRenderer: {fileID: 1002766385308740938}
   _outlineThickness: 0.1
   _nameText: {fileID: 8222461828947152306}
   _orderText: {fileID: 6528511759580912719}
+  _normalTextColor: {r: 1, g: 1, b: 1, a: 1}
+  _selectedTextColor: {r: 1, g: 0.67058825, b: 0.07058824, a: 1}
   _dmxMaterial: {fileID: 2100000, guid: 6fa713961e6514bb8bf6bbfe23a1dbdc, type: 2}
 --- !u!1 &5384046695329273923
 GameObject:

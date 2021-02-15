@@ -24,17 +24,21 @@ namespace VoyagerController.Workspace
         
         [Header("Outline")]
         [SerializeField] private Transform _outline = null;
+        [SerializeField] private MeshRenderer _outlineRenderer = null;
         [SerializeField] private float _outlineThickness = 0.2f;
 
         [Header("Info")]
         [SerializeField] private TextMesh _nameText = null;
         [SerializeField] private TextMesh _orderText = null;
+        [SerializeField] private Color _normalTextColor = Color.black;
+        [SerializeField] private Color _selectedTextColor = Color.black;
 
         [Header("DMX")]
         [SerializeField] private Material _dmxMaterial = null;
 
         private LampMetadata _meta;
         private Texture2D _pixelsTexture;
+        private Color _outlineColor;
         private static readonly int _baseMap = Shader.PropertyToID("_BaseMap");
         private LampConnectionType _connectionType;
         private Transform _transform;
@@ -49,6 +53,9 @@ namespace VoyagerController.Workspace
             if (LampHandle == null) return false;
             
             _meta = Metadata.Get(LampHandle.Serial);
+
+            _outlineColor = _outlineRenderer.material.color;
+
             return base.Setup(data, uid);
         }
 
@@ -71,6 +78,9 @@ namespace VoyagerController.Workspace
                 UpdateText();
             }
         }
+
+
+        public bool Selected => WorkspaceSelection.Contains(this);
 
         public Vector2[] GetPixelWorldPositions()
         {
@@ -125,11 +135,13 @@ namespace VoyagerController.Workspace
         {
             SaveWorkspaceMapping();
             SelectionMove.SelectionMoveEnded += SelectionMoved;
+            WorkspaceSelection.SelectionChanged += SelectionChanged;
         }
 
         private void OnDestroy()
         {
             SelectionMove.SelectionMoveEnded -= SelectionMoved;
+            WorkspaceSelection.SelectionChanged -= SelectionChanged;
         }
 
         private void Update()
@@ -189,6 +201,20 @@ namespace VoyagerController.Workspace
                 {
                     _meta.EffectMapping = EffectMapper.CalculateLampEffectMapping(this);
                 }
+            }
+        }
+
+        private void SelectionChanged()
+        {
+            if (Selected)
+            {
+                _nameText.color = _selectedTextColor;
+                _outlineRenderer.material.color = _selectedTextColor;
+            }
+            else
+            {
+                _nameText.color = _normalTextColor;
+                _outlineRenderer.material.color = _outlineColor;
             }
         }
 
