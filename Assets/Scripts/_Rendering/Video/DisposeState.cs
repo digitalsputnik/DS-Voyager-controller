@@ -8,12 +8,4 @@ namespace VoyagerController.Rendering
             return new IdleState();
         }
     }
-
-    internal class IdleState : VideoRenderState
-    {
-        internal override VideoRenderState Update()
-        {
-            return this;
-        }
-    }
 }

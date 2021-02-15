@@ -12,14 +12,15 @@ namespace VoyagerController.Rendering
     {
         private const long FRAMES_TO_ADD_AT_START = 5;
         
-        private RenderQueue _queue;
+        private readonly RenderQueue _queue;
         private VideoEffect _effect;
         private List<VoyagerLamp> _lamps;
         private long _prevVideoIndex;
-
         private bool _playerPrepared = false;
         private Texture2D _texture;
-        
+        private ulong _framesToRender = 1;
+        private ulong _framesRendered = 0;
+
         public RenderState(RenderQueue queue)
         {
             _queue = queue;
@@ -28,12 +29,21 @@ namespace VoyagerController.Rendering
         
         internal override VideoRenderState Update()
         {
-            if (CurrentEffectRendered())
+            if (VideoRenderedOnce())
             {
-                if (!QueueEmpty())
-                    DequeueNextEffect();
+                if (CurrentEffectRendered())
+                {
+                    Debug.Log("Full render done and all good.");
+                    if (!_queue.Empty)
+                        DequeueNextEffect();
+                    else
+                        return new DisposeState();
+                }
                 else
-                    return new DisposeState();
+                {
+                    Debug.Log("Full render done but all frames not observed.");
+                    return new FastRenderState(_queue, _effect);
+                }
             }
 
             RenderFrames();
@@ -63,6 +73,7 @@ namespace VoyagerController.Rendering
             }
 
             _prevVideoIndex = index;
+            _framesRendered++;
         }
 
         private static Color32[] RenderLampColors(VoyagerLamp lamp, Texture2D frame)
@@ -93,11 +104,16 @@ namespace VoyagerController.Rendering
                 VideoEffectRenderer.VideoPlayer.seekCompleted += source =>
                 {
                     _playerPrepared = true;
+                    _framesToRender = _effect.Video.FrameCount;
+                    _framesRendered = 0;
                 };
             });
         }
 
-        private bool QueueEmpty() => _queue.Count == 0;
+        private bool VideoRenderedOnce()
+        {
+            return _framesRendered >= _framesToRender;
+        }
 
         private bool CurrentEffectRendered()
         {

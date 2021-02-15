@@ -99,6 +99,8 @@
             <e p="SyphonRenderer.cs" t="Include" />
             <e p="Video" t="Include">
               <e p="DisposeState.cs" t="Include" />
+              <e p="FastRenderState.cs" t="Include" />
+              <e p="IdleState.cs" t="Include" />
               <e p="PrepareState.cs" t="Include" />
               <e p="RenderQueue.cs" t="Include" />
               <e p="RenderState.cs" t="Include" />

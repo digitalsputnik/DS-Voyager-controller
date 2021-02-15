@@ -33,6 +33,7 @@ namespace VoyagerController.Rendering
         {
             _videoPlayer = GetComponent<VideoPlayer>();
             EffectManager.OnEffectModified += OnEffectModified;
+            SelectionMove.SelectionMoveEnded += SelectionMoveEnded;
         }
 
         private void OnDestroy()
@@ -44,6 +45,17 @@ namespace VoyagerController.Rendering
         {
             if (_prevEffects.ContainsValue(effect))
                 _effectModified = true;
+        }
+        
+        private void SelectionMoveEnded()
+        {
+            if (WorkspaceSelection
+                .GetSelected<VoyagerItem>()
+                .Select(v => v.LampHandle)
+                .Any(l => _prevEffects.ContainsKey(l)))
+            {
+                _effectModified = true;
+            }
         }
 
         private void Update()

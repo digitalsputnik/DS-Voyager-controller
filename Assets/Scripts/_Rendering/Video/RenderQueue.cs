@@ -7,6 +7,8 @@ namespace VoyagerController.Rendering
 {
     internal class RenderQueue : Queue<KeyValuePair<VideoEffect, List<VoyagerLamp>>>
     {
+        public bool Empty => Count == 0;
+        
         public static RenderQueue Create(IEnumerable<VoyagerLamp> lamps)
         {
             var dictionary = new Dictionary<VideoEffect, List<VoyagerLamp>>();
