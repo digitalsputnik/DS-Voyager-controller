@@ -149,6 +149,7 @@
               <e p="WorkspaceMenu.cs" t="Include" />
             </e>
             <e p="AddLampItem.cs" t="Include" />
+            <e p="CheckingForOtherControllers.cs" t="Include" />
             <e p="DialogBox.cs" t="Include" />
             <e p="IdentifyLamps.cs" t="Include" />
             <e p="InspectorMenuContainer.cs" t="Include" />

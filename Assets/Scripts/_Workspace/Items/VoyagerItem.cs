@@ -39,7 +39,7 @@ namespace VoyagerController.Workspace
         private LampMetadata _meta;
         private Texture2D _pixelsTexture;
         private Color _outlineColor;
-        private static readonly int _baseMap = Shader.PropertyToID("_BaseMap");
+        private static readonly int _baseMap = Shader.PropertyToID("_MainTex");
         private LampConnectionType _connectionType;
         private Transform _transform;
         private string _suffix;

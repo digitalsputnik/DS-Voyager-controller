@@ -149,6 +149,7 @@ namespace VoyagerController
             var start = video.Meta.StartTime + offset;
             var framebuffer = new Rgb[video.Video.FrameCount][];
             var confirmed = new bool[video.Video.FrameCount];
+            var total = (long) video.Video.FrameCount;
             var time = TimeUtils.Epoch;
             var client = GetLampClient(voyager);
 
@@ -167,6 +168,7 @@ namespace VoyagerController
             meta.FrameBuffer = framebuffer;
             meta.Effect = video;
             meta.ConfirmedFrames = confirmed;
+            meta.TotalMissingFrames = total;
         }
         
         private static void ApplyImageToVoyager(VoyagerLamp voyager, ImageEffect image)
@@ -193,6 +195,7 @@ namespace VoyagerController
             meta.FrameBuffer = framebuffer;
             meta.Effect = image;
             meta.ConfirmedFrames = confirmed;
+            meta.TotalMissingFrames = 1;
         }
 
         public static void ApplyItsheToVoyager(VoyagerLamp voyager, Itshe itshe)
@@ -233,6 +236,8 @@ namespace VoyagerController
             var meta = Metadata.Get(voyager.Serial);
 
             if (Math.Abs(meta.TimeEffectApplied - response.VideoId) > 0.0001) return;
+
+            meta.TotalMissingFrames = response.TotalMissing;
             
             for (var i = 0; i < meta.ConfirmedFrames.Length; i++)
                 meta.ConfirmedFrames[i] = true;

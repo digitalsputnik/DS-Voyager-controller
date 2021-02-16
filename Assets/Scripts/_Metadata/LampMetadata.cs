@@ -14,6 +14,7 @@ namespace VoyagerController
         public WorkspaceMapping WorkspaceMapping { get; set; } = new WorkspaceMapping();
         public Itshe Itshe { get; set; } = new Itshe();
         public bool[] ConfirmedFrames { get; set; } = new bool[0];
+        public long TotalMissingFrames { get; set; } = 0;
         public Rgb[] PreviousStreamFrame { get; set; }
         public double TimeEffectApplied { get; set; }
         public double VideoStartTime { get; set; }

@@ -36,7 +36,7 @@ namespace VoyagerController.UI
             if (!rendering.Any()) return;
 
             var sum = rendering.Sum(m => m.ConfirmedFrames.Length);
-            var done = rendering.Sum(m => m.ConfirmedFrames.Count(r => r));
+            var done = rendering.Sum(m => m.ConfirmedFrames.Length -  m.TotalMissingFrames);
             var process = (float) done / sum;
             
             _fillImage.fillAmount = process;
