@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik;
@@ -41,9 +40,7 @@ namespace VoyagerController.Rendering
         internal override VideoRenderState Update()
         {
             if (_renderLoopFinished && _loopTime >= RETRY_FAST_RENDER)
-            {
-                return new DisposeState(); // Start interpolation state here.
-            }
+                return new InterpolationState(_queue, _effect);
 
             switch (_state)
             {
