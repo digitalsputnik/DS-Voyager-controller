@@ -7,7 +7,7 @@ namespace VoyagerController.Mapping
     public class SpoutEffectDisplay : EffectDisplay
     {
         private MeshRenderer _meshRenderer;
-        private readonly int _baseMap = Shader.PropertyToID("_BaseMap");
+        private readonly int _baseMap = Shader.PropertyToID("_MainTex");
         
         public override void Setup(Effect effect)
         {

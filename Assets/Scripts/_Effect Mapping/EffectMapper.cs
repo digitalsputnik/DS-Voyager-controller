@@ -43,6 +43,7 @@ namespace VoyagerController.Mapping
             _instance.CleanPreviousDisplay();
             _instance.gameObject.SetActive(true);
             _instance._menuContainer.ShowMenu(_instance._mappingMenu);
+            _instance._mappingMenu.SetEffect(effect);
             _instance._settingsMenu.SetEffect(effect);
             _instance._displaySettings.UpdateSettings(effect);
 

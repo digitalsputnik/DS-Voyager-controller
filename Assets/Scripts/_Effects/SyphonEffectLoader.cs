@@ -19,6 +19,8 @@ namespace VoyagerController.Effects
             }
 
             var effect = new SyphonEffect();
+
+            effect.Meta.Thumbnail = new Texture2D(640, 480);
             
             EffectManager.AddEffect(effect);
             
