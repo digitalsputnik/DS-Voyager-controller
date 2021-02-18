@@ -344,9 +344,9 @@ namespace VoyagerController.Workspace
             if (!LampHandle.Connected)
                 info.Add(" Disconnected");
             
-            if (Suffix != "")
+            if (!string.IsNullOrEmpty(Suffix))
                 info.Add(Suffix);
-            
+
             _nameText.text = string.Join(", ", info);
 
             if (LampHandle.Endpoint is BluetoothEndPoint)
