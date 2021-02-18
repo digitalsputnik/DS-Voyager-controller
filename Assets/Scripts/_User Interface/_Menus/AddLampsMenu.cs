@@ -98,7 +98,7 @@ namespace VoyagerController.UI
         private IEnumerator ApplyDefaultEffectAndColor(VoyagerLamp voyager)
         {
             LampEffectsWorker.ApplyItsheToVoyager(voyager, ApplicationSettings.AddedLampsDefaultColor);
-            yield return new WaitUntil(() => EffectManager.GetEffectWithName("white") != null);
+            yield return new WaitForSeconds(0.5f);
             var effect = EffectManager.GetEffectWithName("white");
             LampEffectsWorker.ApplyEffectToLamp(voyager, effect);
         }
