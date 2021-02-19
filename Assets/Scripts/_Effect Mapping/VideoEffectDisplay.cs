@@ -27,12 +27,14 @@ namespace VoyagerController.Mapping
                 _player.url = _video.Path;
                 _player.prepareCompleted += PlayerPrepared;
                 _player.Prepare();
+                
+                ApplicationState.Playmode.OnChanged += PlaymodeChanged;
             }
         }
 
         private void PlayerPrepared(VideoPlayer source)
         {
-            _player.Play();
+            PlaymodeChanged(ApplicationState.Playmode.Value);
             InvokeRepeating(nameof(CorrectFrame), 0.0f, CORRECT_FRAME_RATE);
         }
 
@@ -48,12 +50,29 @@ namespace VoyagerController.Mapping
             _player.playbackSpeed = 1.0f / _player.frameRate * fps;
             CorrectFrame();
         }
+        
+        private void PlaymodeChanged(GlobalPlaymode value)
+        {
+            CorrectFrame();
+            switch (value)
+            {
+                case GlobalPlaymode.Play:
+                    _player.Play();
+                    break;
+                case GlobalPlaymode.Pause:
+                case GlobalPlaymode.Stop:
+                    _player.Pause();
+                    break;
+            }
+        }
 
         public override void Clean()
         {
             StopAllCoroutines();
             _player.prepareCompleted -= PlayerPrepared;
             _player.enabled = false;
+            
+            ApplicationState.Playmode.OnChanged -= PlaymodeChanged;
         }
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO.Ports;
 using System.Linq;
 using DigitalSputnik;
 using DigitalSputnik.Colors;
@@ -11,6 +10,8 @@ using UnityEngine;
 using VoyagerController.Bluetooth;
 using VoyagerController.Effects;
 using VoyagerController.Serial;
+using VoyagerController.Workspace;
+using PlayMode = DigitalSputnik.Voyager.PlayMode;
 
 namespace VoyagerController
 {
@@ -29,6 +30,9 @@ namespace VoyagerController
             LampManager.Instance
                 .GetClient<VoyagerNetworkClient>()
                 .AddOpListener<MissingFramesResponse>(OpCode.MissingFramesResponse, OnMissingFramesResponse);
+            ApplicationState.Playmode.OnChanged += GlobalPlaymodeChanged;
+            ApplicationState.GlobalDimmer.OnChanged += DimmerChanged;
+            WorkspaceManager.ItemAdded += WorkspaceItemAdded;
         }
 
         private void OnDestroy()
@@ -36,6 +40,9 @@ namespace VoyagerController
             LampManager.Instance
                 .GetClient<VoyagerNetworkClient>()?
                 .RemoveOpListener<MissingFramesResponse>(OpCode.MissingFramesResponse, OnMissingFramesResponse);
+            ApplicationState.Playmode.OnChanged -= GlobalPlaymodeChanged;
+            ApplicationState.GlobalDimmer.OnChanged -= DimmerChanged;
+            WorkspaceManager.ItemAdded -= WorkspaceItemAdded;
         }
 
         private void Update()
@@ -43,6 +50,11 @@ namespace VoyagerController
             ConfirmLampFrames();
             ClearConfirmingLamps();
             RequestMissingFrames();
+        }
+        
+        private void GlobalPlaymodeChanged(GlobalPlaymode value)
+        {
+            LampPlaymodeChanged((PlayMode) (int) value);
         }
 
         private void ConfirmLampFrames()
@@ -248,14 +260,33 @@ namespace VoyagerController
         public static long GetCurrentFrameOfVideo(VoyagerLamp voyager, Video video, long add = 0)
         {
             var meta = Metadata.Get(voyager.Serial);
-            var since = TimeUtils.Epoch - meta.VideoStartTime + TimeOffset(voyager);
-
-            if (video == null) return 0;
+            var since = 0.0;
+            long frames = 0;
             
-            var frames = (long)(since * video.Fps) + add;
-            while (frames < 0) frames += (long)video.FrameCount;
-            return frames % (long)video.FrameCount;
+            switch (ApplicationState.Playmode.Value)
+            {
+                case GlobalPlaymode.Play:
+                    since = TimeUtils.Epoch - meta.VideoStartTime + TimeOffset(voyager);
 
+                    if (video == null) return -1;
+            
+                    frames = (long)(since * video.Fps) + add;
+                    while (frames < 0) frames += (long)video.FrameCount;
+                    return frames % (long)video.FrameCount;
+                case GlobalPlaymode.Pause:
+                    since = ApplicationState.PlaymodePausedSince.Value - meta.VideoStartTime + TimeOffset(voyager);
+
+                    if (video == null) return -1;
+            
+                    frames = (long)(since * video.Fps) + add;
+                    while (frames < 0) frames += (long)video.FrameCount;
+                    return frames % (long)video.FrameCount;
+                    
+                case GlobalPlaymode.Stop:
+                    return 0;
+                default:
+                    return -1;
+            }
         }
 
         private static VoyagerClient GetLampClient(Lamp lamp)
@@ -270,6 +301,49 @@ namespace VoyagerController
                     return LampManager.Instance.GetClient<VoyagerSerialClient>();
             }
             return null;
+        }
+
+        public static void ModifyVideoStartTime()
+        {
+            if (ApplicationState.PlaymodePausedSince.Value > 0.0)
+            {
+                var pauseTime = TimeUtils.Epoch - ApplicationState.PlaymodePausedSince.Value;
+                foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>().Select(v => v.LampHandle))
+                    Metadata.Get(voyager.Serial).VideoStartTime += pauseTime;
+            }
+            else
+            {
+                foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>().Select(v => v.LampHandle))
+                    Metadata.Get(voyager.Serial).VideoStartTime = TimeUtils.Epoch;
+            }
+        }
+
+        private static void LampPlaymodeChanged(PlayMode mode)
+        {
+            foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>().Select(v => v.LampHandle))
+            {
+                var effect = Metadata.Get(voyager.Serial).Effect;
+                
+                if (effect is VideoEffect video)
+                {
+                    var startTime = Metadata.Get(voyager.Serial).VideoStartTime;
+                    var handleAt = TimeUtils.Epoch + TimeOffset(voyager) + ApplicationSettings.PLAYBACK_OFFSET;
+                    
+                    voyager.SetPlayMode(mode, startTime, handleAt); 
+                }
+            }
+        }
+
+        private static void DimmerChanged(float value)
+        {
+            foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>().Select(v => v.LampHandle))
+                voyager.SetGlobalIntensity(value);
+        }
+
+        private static void WorkspaceItemAdded(WorkspaceItem item)
+        {
+            if (item is VoyagerItem voyager)
+                voyager.LampHandle.SetGlobalIntensity(ApplicationState.GlobalDimmer.Value);
         }
     }
 }

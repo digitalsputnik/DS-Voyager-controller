@@ -267,7 +267,7 @@ namespace VoyagerController.Workspace
                 case VideoEffect video:
                 {
                     var index = LampEffectsWorker.GetCurrentFrameOfVideo(LampHandle, video.Video);
-
+                        
                     if (_meta.FrameBuffer[index] != null)
                     {
                         var colors = _meta.FrameBuffer[index].ToColorArray();
@@ -279,7 +279,6 @@ namespace VoyagerController.Workspace
                         _pixelsTexture.SetPixels32(colors);
                         _pixelsTexture.Apply();
                     }
-
                     break;
                 }
                 case SyphonEffect _:

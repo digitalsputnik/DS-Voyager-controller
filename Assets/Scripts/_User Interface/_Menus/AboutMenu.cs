@@ -12,7 +12,7 @@ namespace VoyagerController.UI
         internal override void OnShow()
         {
             _versionText.text = "VERSION " + Application.version + "\nLAMP VERSION " + VoyagerUpdater.Version;
-            _copyrightText.text = $"© {DateTime.Now.Year} - Digital Sputnik";
+            _copyrightText.text = $"ï¿½ {DateTime.Now.Year} - Digital Sputnik";
         }
 
         public void OpenHelp()
@@ -20,4 +20,6 @@ namespace VoyagerController.UI
             Application.OpenURL(ApplicationSettings.HELP_URL);
         }
     }
+    
+    
 }

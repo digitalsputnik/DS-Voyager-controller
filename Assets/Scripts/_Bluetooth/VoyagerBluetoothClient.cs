@@ -467,6 +467,11 @@ namespace VoyagerController.Bluetooth
             SendDiscoveryPacket(voyager, packet, time);
         }
 
+        public override void SetPlaymode(VoyagerLamp voyager, PlayMode mode, double startTime, double handle)
+        {
+            
+        }
+
         public override void SetGlobalIntensity(VoyagerLamp voyager, double value)
         {
             

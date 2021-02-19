@@ -104,7 +104,6 @@ namespace VoyagerController.UI
 
         private void OnPresetClicked(int index)
         {
-            Debugger.LogInfo(index);
             var value = _presetValues[index];
             _slider.normalizedValue = value;
         }

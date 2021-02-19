@@ -13,6 +13,7 @@ using DigitalSputnik.Voyager.Communication;
 using DigitalSputnik.Voyager.Json;
 using Newtonsoft.Json;
 using UnityEngine;
+using PlayMode = DigitalSputnik.Voyager.PlayMode;
 
 namespace VoyagerController.Serial
 {
@@ -195,6 +196,11 @@ namespace VoyagerController.Serial
         }
 
         public override void SetGlobalIntensity(VoyagerLamp voyager, double value)
+        {
+            
+        }
+
+        public override void SetPlaymode(VoyagerLamp voyager, PlayMode mode, double startTime, double handle)
         {
             
         }
