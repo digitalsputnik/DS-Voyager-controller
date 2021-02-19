@@ -198,7 +198,7 @@ namespace VoyagerController.UI
                 foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>().ToList())
                 {
                     var position = item.GetWorkspacePosition();
-                    var rotation = item.GetWorkspaceRotation().x;
+                    var rotation = item.GetWorkspaceRotation().z;
                     
                     WorkspaceSelection.DeselectItem(item);
 

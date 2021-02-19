@@ -62,6 +62,22 @@ namespace VoyagerController.Workspace
             return item;
         }
 
+        public static T InstantiateItem<T>(object data, Vector2 position, float scale)
+            where T : WorkspaceItem
+        {
+            T item = InstantiateItem<T>(data, position);
+            item.transform.localScale = Vector3.one * scale;
+            return item;
+        }
+
+        public static T InstantiateItem<T>(object data, Vector2 position, float scale, float rotation)
+            where T : WorkspaceItem
+        {
+            T item = InstantiateItem<T>(data, position, scale);
+            item.transform.eulerAngles = new Vector3(0.0f, 0.0f, rotation);
+            return item;
+        }
+
         public static void RemoveItem<T>(T item) where T : WorkspaceItem
         {
             if (_instance._items.Contains(item))

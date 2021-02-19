@@ -76,7 +76,7 @@ namespace VoyagerController.UI
                     return;
                 }
 
-                var voyagerItem = WorkspaceManager.InstantiateItem<VoyagerItem>(voyager, WorkspaceUtils.PositionOfLastSelectedOrAddedLamp + new Vector3(0, -1.0f, 0));
+                var voyagerItem = WorkspaceManager.InstantiateItem<VoyagerItem>(voyager, WorkspaceUtils.PositionOfLastSelectedOrAddedLamp + new Vector3(0, -1.0f, 0), 1f, 0);
 
                 StartCoroutine(SelectAndSnapToLamp(voyagerItem));
 
@@ -161,17 +161,31 @@ namespace VoyagerController.UI
         
         public void AddAllLamps()
         {
+            StartCoroutine(AddAllLampsCoroutine());
+        }
+
+        private IEnumerator AddAllLampsCoroutine()
+        {
+            List<string> addedLamps = new List<string>();
+
             UnsubscribeEvents();
             foreach (var lampItem in _lampItems.ToList())
+            {
+                yield return new WaitForFixedUpdate();
                 lampItem.Click();
+                addedLamps.Add(lampItem.Serial);
+            }
             UpdateLampsList();
             SubscribeEvents();
 
             WorkspaceSelection.Clear();
 
-            foreach (var lamp in WorkspaceManager.GetItems<VoyagerItem>().ToList())
+            foreach (var lamp in WorkspaceManager.GetItems<VoyagerItem>().Where(l => addedLamps.Contains(l.LampHandle.Serial)).ToList())
+            {
+                yield return new WaitForFixedUpdate();
                 WorkspaceSelection.SelectItem(lamp);
-            
+            }
+
             CloseMenuIfAllLampsAdded();
         }
 

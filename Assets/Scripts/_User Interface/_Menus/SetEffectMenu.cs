@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik;
@@ -74,7 +75,9 @@ namespace VoyagerController.UI
         private void ApplyEffectToSelectedLamps(Effect effect)
         {
             var voyagers = WorkspaceSelection.GetSelected<VoyagerItem>().ToList();
-            
+
+            StartCoroutine(ReselectLamps(voyagers));
+
             DialogBox.Show(
                 "COPY LAMP POSITIONS?", 
                 "Do you want to copy lamp lamp positions from workspace to FX mapping?",
@@ -93,12 +96,23 @@ namespace VoyagerController.UI
                 });
         }
 
+        private IEnumerator ReselectLamps(List<VoyagerItem> voyagers)
+        {
+            WorkspaceSelection.Clear();
+
+            foreach (var lamp in voyagers)
+            {
+                yield return new WaitForFixedUpdate();
+                WorkspaceSelection.SelectItem(lamp);
+            }
+        }
+
         private static void UpdateLampsMappingPositionBasedOnSelection(IEnumerable<VoyagerItem> voyagers)
         {
             var selection = WorkspaceManager.GetItems<SelectionControllerItem>().FirstOrDefault();
 
             if (selection == null) return;
-            
+
             var trans = selection.GetComponentInChildren<MeshRenderer>().transform;
             var add = Vector3.one / 2.0f;
                 
