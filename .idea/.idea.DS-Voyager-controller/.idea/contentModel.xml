@@ -85,13 +85,15 @@
             <e p="WorkspaceMapping.cs" t="Include" />
           </e>
           <e p="_Project" t="Include">
-            <e p="EffectConverter.cs" t="Include" />
-            <e p="EffectMappingConverter.cs" t="Include" />
-            <e p="ItsheConverter.cs" t="Include" />
-            <e p="LampMetadataConverter.cs" t="Include" />
+            <e p="Converters" t="Include">
+              <e p="EffectConverter.cs" t="Include" />
+              <e p="EffectMappingConverter.cs" t="Include" />
+              <e p="ItsheConverter.cs" t="Include" />
+              <e p="LampMetadataConverter.cs" t="Include" />
+              <e p="RgbConverter.cs" t="Include" />
+              <e p="VoyagerLampConverter.cs" t="Include" />
+            </e>
             <e p="Project.cs" t="Include" />
-            <e p="RgbConverter.cs" t="Include" />
-            <e p="VoyagerLampConverter.cs" t="Include" />
           </e>
           <e p="_Rendering" t="Include">
             <e p="ImageRenderer.cs" t="Include" />

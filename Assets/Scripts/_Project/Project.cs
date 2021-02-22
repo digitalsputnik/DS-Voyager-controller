@@ -28,8 +28,17 @@ namespace VoyagerController.ProjectManagement
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                Save("test", true); 
+                Debugger.LogInfo("Project saved");
+            }
+
             if (Input.GetKeyDown(KeyCode.L))
-                Load("test");
+            {
+                Load("test");  
+                Debugger.LogInfo("Project laoded");
+            }
         }
 
         #region Save
