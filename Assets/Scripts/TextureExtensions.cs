@@ -32,7 +32,7 @@ namespace VoyagerController
 
         public static IEnumerable<Vector2Int> MapLampToVideoCoords(VoyagerLamp voyager, Texture frame)
         {
-            var mapping = Metadata.Get(voyager.Serial).EffectMapping;
+            var mapping = Metadata.GetLamp(voyager.Serial).EffectMapping;
             var coords = new Vector2Int[voyager.PixelCount];
 
             var p1 = new Vector2(mapping.X1, mapping.Y1);

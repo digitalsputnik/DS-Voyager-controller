@@ -67,7 +67,7 @@ namespace VoyagerController.UI
         public void SelectWithSameEffect()
         {
             var serial = WorkspaceSelection.GetSelected<VoyagerItem>().First().LampHandle.Serial;
-            var effect = Metadata.Get(serial).Effect;
+            var effect = Metadata.GetLamp(serial).Effect;
 
             foreach (var item in WorkspaceUtils.GetItemsWithSameEffect(effect).ToList())
                 WorkspaceSelection.SelectItem(item);
@@ -76,7 +76,7 @@ namespace VoyagerController.UI
         public void EditEffectClick()
         {
             var item = WorkspaceSelection.GetSelected<VoyagerItem>().First();
-            var meta = Metadata.Get(item.LampHandle.Serial);
+            var meta = Metadata.GetLamp(item.LampHandle.Serial);
             EffectMapper.EnterEffectMapping(meta.Effect, true);
         }
 
@@ -115,11 +115,11 @@ namespace VoyagerController.UI
             if (!WorkspaceSelection.GetSelected<VoyagerItem>().Any()) return false;
             
             var serial = WorkspaceSelection.GetSelected<VoyagerItem>().First().LampHandle.Serial;
-            var effect = Metadata.Get(serial).Effect;
+            var effect = Metadata.GetLamp(serial).Effect;
             return WorkspaceSelection.GetSelected<VoyagerItem>().All(v =>
             {
                 var ser = v.LampHandle.Serial;
-                return Metadata.Get(ser).Effect == effect;
+                return Metadata.GetLamp(ser).Effect == effect;
             });
         }
 

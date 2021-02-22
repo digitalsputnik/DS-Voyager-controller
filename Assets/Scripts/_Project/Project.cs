@@ -95,9 +95,11 @@ namespace VoyagerController.ProjectManagement
                 Hide = hide,
                 Version = _instance._version,
                 AppVersion = Application.version,
+                Time = DateTime.Now,
                 Lamps = LampManager.Instance.GetLampsOfType<VoyagerLamp>().ToArray(),
                 Effects = EffectManager.GetEffects().ToArray(),
-                LampMetadata = Metadata.GetAll()
+                LampMetadata = Metadata.GetAllLamps(),
+                PictureMetadata = Metadata.GetAllPictures()
             };
         }
         #endregion
@@ -150,13 +152,25 @@ namespace VoyagerController.ProjectManagement
             {
                 var serial = dataPair.Key;
                 var metadata = dataPair.Value;
-                Metadata.SetMetadata(serial, metadata);
+                
+                Metadata.SetLampMetadata(serial, metadata);
 
                 if (metadata.InWorkspace)
                 {
                     var voyager = LampManager.Instance.GetLampWithSerial<VoyagerLamp>(serial);
                     WorkspaceManager.InstantiateItem<VoyagerItem>(voyager);
                 }
+            }
+
+            foreach (var dataPair in data.PictureMetadata)
+            {
+                var id = dataPair.Key;
+                var metadata = dataPair.Value;
+                
+                Metadata.SetPictureMetadata(id, metadata);
+
+                var texture = Metadata.GetPicture(id).Texture;
+                WorkspaceManager.InstantiateItem<PictureItem>(texture, id);
             }
         }
         #endregion
@@ -192,8 +206,10 @@ namespace VoyagerController.ProjectManagement
         public bool Hide { get; set; }
         public string Version { get; set; }
         public string AppVersion { get; set; }
+        public DateTime Time { get; set; }
         public VoyagerLamp[] Lamps { get; set; }
         public Effect[] Effects { get; set; }
         public Dictionary<string, LampMetadata> LampMetadata { get; set; }
+        public Dictionary<string, PictureMetadata> PictureMetadata { get; set; }
     }
 }

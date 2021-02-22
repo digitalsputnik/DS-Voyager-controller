@@ -52,7 +52,7 @@ namespace VoyagerController.Workspace
 
             if (LampHandle == null) return false;
             
-            _meta = Metadata.Get(LampHandle.Serial);
+            _meta = Metadata.GetLamp(LampHandle.Serial);
 
             _outlineColor = _outlineRenderer.material.color;
 
@@ -220,7 +220,7 @@ namespace VoyagerController.Workspace
 
         private void SaveWorkspaceMapping()
         {
-            var mapping = Metadata.Get(LampHandle.Serial).WorkspaceMapping;
+            var mapping = Metadata.GetLamp(LampHandle.Serial).WorkspaceMapping;
             var pos = _transform.position;
             mapping.Position = new[] { pos.x, pos.y };
             mapping.Rotation = _transform.eulerAngles.z;

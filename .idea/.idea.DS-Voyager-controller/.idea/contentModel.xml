@@ -82,6 +82,7 @@
             <e p="EffectMapping.cs" t="Include" />
             <e p="LampMetadata.cs" t="Include" />
             <e p="Metadata.cs" t="Include" />
+            <e p="PictureMetadata.cs" t="Include" />
             <e p="WorkspaceMapping.cs" t="Include" />
           </e>
           <e p="_Project" t="Include">

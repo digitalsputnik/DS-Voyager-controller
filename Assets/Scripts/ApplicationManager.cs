@@ -67,7 +67,7 @@ namespace VoyagerController
         {
             if (AddLampToDatabase(lamp))
             {
-                Debugger.LogInfo($"Lamp {lamp.Serial} discovered at {Metadata.Get(lamp.Serial).Discovered}");
+                Debugger.LogInfo($"Lamp {lamp.Serial} discovered at {Metadata.GetLamp(lamp.Serial).Discovered}");
                 MainThread.Dispatch(() => OnLampDiscovered?.Invoke(lamp));
             }
         }
@@ -84,7 +84,7 @@ namespace VoyagerController
             {
                 if (lamp is VoyagerLamp voyager)
                 {
-                    Metadata.Add(voyager);
+                    Metadata.AddLamp(voyager);
                     return true;
                 }
                 

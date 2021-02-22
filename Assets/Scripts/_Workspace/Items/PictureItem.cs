@@ -1,29 +1,29 @@
-using System.Collections.Generic;
-using DigitalSputnik;
-using DigitalSputnik.Colors;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace VoyagerController.Workspace
 {
     public class PictureItem : WorkspaceItem
     {
-        public Texture2D Picture;
         public int Order { get; set; } = 0;
 
         [Header("Renderer")]
-        [SerializeField] MeshRenderer _renderer = null;
-        [SerializeField] float pixelsPerUnit = 20;
+        [SerializeField] private MeshRenderer _renderer = null;
+        [SerializeField] private float _pixelsPerUnit = 20;
 
         [Header("Outline")]
         [SerializeField] private Transform _outline = null;
         [SerializeField] private float _outlineThickness = 0.2f;
 
+        private Transform _transform;
+        private Texture2D _picture;
+        
+        private static readonly int _baseMap = Shader.PropertyToID("_BaseMap");
+
         public override Vector3[] SelectPositions
         {
             get
             {
-                Vector3[] positions = new Vector3[5];
+                var positions = new Vector3[5];
                 positions[0] = transform.position;
                 positions[1] = _renderer.transform.TransformPoint(new Vector3(-0.5f, 0.5f, 0.0f));
                 positions[2] = _renderer.transform.TransformPoint(new Vector3(0.5f, 0.5f, 0.0f));
@@ -37,24 +37,46 @@ namespace VoyagerController.Workspace
 
         public override bool Setup(object data, string uid = "")
         {
-            Picture = data as Texture2D;
+            _picture = data as Texture2D;
+            _transform = transform;
 
-            if (Picture == null) return false;
+            return _picture != null && base.Setup(data, uid);
+        }
 
-            return base.Setup(data, uid);
+        private void Start()
+        {
+            Metadata.AddPicture(Uid);
+            SelectionMove.SelectionMoveEnded += SelectionMoveEnded;
+        }
+
+        private void OnDestroy()
+        {
+            Metadata.RemovePicture(Uid);
+            SelectionMove.SelectionMoveEnded -= SelectionMoveEnded;
+        }
+
+        private void SelectionMoveEnded()
+        {
+            if (!WorkspaceSelection.Contains(this)) return;
+            
+            var mapping = Metadata.GetPicture(Uid).WorkspaceMapping;
+            var pos = _transform.position;
+            mapping.Position = new[] { pos.x, pos.y };
+            mapping.Rotation = _transform.eulerAngles.z;
+            mapping.Scale = _transform.lossyScale.x;
         }
 
         protected override void Generate()
         {
-            Vector2 size = new Vector2(Picture.width, Picture.height) / pixelsPerUnit;
-            size *= _renderer.transform.localScale;
-            _renderer.transform.localScale = size;
+            var size = new Vector2(_picture.width, _picture.height) / _pixelsPerUnit;
+            var trans = _renderer.transform;
+            var outlineSize = Vector2.one * _outlineThickness;
+            
+            size *= trans.localScale;
+            trans.localScale = size;
 
-            Vector2 outlineSize = Vector2.one * _outlineThickness;
             _outline.transform.localScale = size + outlineSize;
-
-            _renderer.material.SetTexture("_BaseMap", Picture);
-            //renderer.material.mainTexture = picture;
+            _renderer.material.SetTexture(_baseMap, _picture);
         }
 
         public void PositionBasedCamera()
@@ -62,41 +84,46 @@ namespace VoyagerController.Workspace
             SetupMeshSize();
             SetupOutlineSize();
 
-            Vector3 pos = transform.position;
-            pos.x = Camera.main.transform.position.x;
-            pos.y = Camera.main.transform.position.y;
-            transform.position = pos;
+            if (Camera.main != null)
+            {
+                var camPosition = Camera.main.transform.position;
+                var pos = transform.position;
+                
+                pos.x = camPosition.x;
+                pos.y = camPosition.y;
+                
+                _transform.position = pos;
+            }
         }
 
-        void SetupMeshSize()
+        private void SetupMeshSize()
         {
-            Vector2 maxScale = CalculateMeshMaxScale();
+            var maxScale = CalculateMeshMaxScale();
+            var maxScaleAspect = maxScale.x / maxScale.y;
+            var videoAspect = (float)_picture.width / _picture.height;
 
-            float maxScaleAspect = maxScale.x / maxScale.y;
-            float videoAspect = (float)Picture.width / Picture.height;
-
-            Vector2 s = maxScale;
+            var s = maxScale;
 
             if (videoAspect > maxScaleAspect)
                 s.y = maxScale.y / videoAspect * maxScaleAspect;
             else if (videoAspect < maxScaleAspect)
                 s.x = maxScale.x / maxScaleAspect * videoAspect;
 
-            float diff = _renderer.transform.localScale.x / s.x;
-            transform.localScale = transform.localScale / diff;
+            var diff = _renderer.transform.localScale.x / s.x;
+            _transform.localScale = transform.localScale / diff;
         }
 
-        Vector2 CalculateMeshMaxScale()
+        private static Vector2 CalculateMeshMaxScale()
         {
-            Vector2 screenWorldSize = VectorUtils.ScreenSizeWorldSpace;
-            float width = screenWorldSize.x * 0.8f;
-            float height = screenWorldSize.y - screenWorldSize.x * 0.2f;
+            var screenWorldSize = VectorUtils.ScreenSizeWorldSpace;
+            var width = screenWorldSize.x * 0.8f;
+            var height = screenWorldSize.y - screenWorldSize.x * 0.2f;
             return new Vector2(width, height);
         }
 
-        void SetupOutlineSize()
+        private void SetupOutlineSize()
         {
-            Vector2 outlineSize = Vector2.one * _outlineThickness;
+            var outlineSize = Vector2.one * _outlineThickness;
             Vector2 pictureSize = _renderer.transform.localScale;
             _outline.transform.localScale = pictureSize + outlineSize;
         }

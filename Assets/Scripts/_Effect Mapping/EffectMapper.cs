@@ -85,11 +85,14 @@ namespace VoyagerController.Mapping
             LeanTween.move(camTransform.gameObject, camPosition, ANIMATION_TIME);
 
             SelectionMove.SelectionMoveEnded += SelectedItemsMoved;
+
+            foreach (var picture in WorkspaceManager.GetItems<PictureItem>())
+                picture.gameObject.SetActive(false);
         }
 
         private static void CalculateVoyagerMapping(VoyagerItem voyager)
         {
-            var meta = Metadata.Get(voyager.LampHandle.Serial);
+            var meta = Metadata.GetLamp(voyager.LampHandle.Serial);
             var point1 = new Vector3(meta.EffectMapping.X1 - 0.5f, meta.EffectMapping.Y1 - 0.5f);
             var point2 = new Vector3(meta.EffectMapping.X2 - 0.5f, meta.EffectMapping.Y2 - 0.5f);
             var transform = voyager.transform;
@@ -120,7 +123,7 @@ namespace VoyagerController.Mapping
             foreach (var voyager in WorkspaceSelection.GetSelected<VoyagerItem>())
             {
                 var mapping = CalculateLampEffectMapping(voyager);
-                var meta = Metadata.Get(voyager.LampHandle.Serial);
+                var meta = Metadata.GetLamp(voyager.LampHandle.Serial);
                 meta.EffectMapping = mapping;
                 LampEffectsWorker.ApplyEffectToLamp(voyager.LampHandle, meta.Effect);
             }
@@ -150,6 +153,9 @@ namespace VoyagerController.Mapping
             LeanTween.move(_instance._camera.gameObject, _instance._previousCamPosition, ANIMATION_TIME);
             
             EffectMappingIsActive = false;
+            
+            foreach (var picture in WorkspaceManager.GetItems<PictureItem>())
+                picture.gameObject.SetActive(true);
         }
         
         public static EffectMapping CalculateLampEffectMapping(VoyagerItem voyager)

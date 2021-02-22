@@ -22,7 +22,7 @@ namespace VoyagerController.Rendering
         
         private static void RenderImage(VoyagerLamp voyager)
         {
-            if (Metadata.Get(voyager.Serial).Effect is ImageEffect effect)
+            if (Metadata.GetLamp(voyager.Serial).Effect is ImageEffect effect)
             {
                 var image = GetImageWithSettings(effect);
                 var coords = TextureExtensions.MapLampToVideoCoords(voyager, image);
@@ -49,7 +49,7 @@ namespace VoyagerController.Rendering
             .GetItems<VoyagerItem>()
             .Where(v =>
             {
-                var meta = Metadata.Get(v.LampHandle.Serial);
+                var meta = Metadata.GetLamp(v.LampHandle.Serial);
                 return meta.Effect is ImageEffect && !meta.ConfirmedFrames[0];
             })
             .Select(i => i.LampHandle);

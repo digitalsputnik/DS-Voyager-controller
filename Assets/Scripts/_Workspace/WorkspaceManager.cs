@@ -44,7 +44,26 @@ namespace VoyagerController.Workspace
             item.Setup(data);
 
             if (item is VoyagerItem voyager)
-                Metadata.Get(voyager.LampHandle.Serial).InWorkspace = true;
+                Metadata.GetLamp(voyager.LampHandle.Serial).InWorkspace = true;
+
+            _instance._items.Add(item);
+
+            ItemAdded?.Invoke(item);
+            return item;
+        }
+        
+        public static T InstantiateItem<T>(object data, string id) where T : WorkspaceItem
+        {
+            if (!_instance._itemPrefabs.Any(i => i is T))
+                return null;
+            
+            var prefab = _instance._itemPrefabs.FirstOrDefault(i => i is T) as T;
+            var item = Instantiate(prefab, _instance.transform);
+
+            item.Setup(data, id);
+
+            if (item is VoyagerItem voyager)
+                Metadata.GetLamp(voyager.LampHandle.Serial).InWorkspace = true;
 
             _instance._items.Add(item);
 
@@ -61,19 +80,17 @@ namespace VoyagerController.Workspace
             transform.position = pos;
             return item;
         }
-
-        public static T InstantiateItem<T>(object data, Vector2 position, float scale)
-            where T : WorkspaceItem
+        
+        public static T InstantiateItem<T>(object data, Vector2 position, float scale) where T : WorkspaceItem
         {
-            T item = InstantiateItem<T>(data, position);
+            var item = InstantiateItem<T>(data, position);
             item.transform.localScale = Vector3.one * scale;
             return item;
         }
 
-        public static T InstantiateItem<T>(object data, Vector2 position, float scale, float rotation)
-            where T : WorkspaceItem
+        public static T InstantiateItem<T>(object data, Vector2 position, float scale, float rotation) where T : WorkspaceItem
         {
-            T item = InstantiateItem<T>(data, position, scale);
+            var item = InstantiateItem<T>(data, position, scale);
             item.transform.eulerAngles = new Vector3(0.0f, 0.0f, rotation);
             return item;
         }
@@ -86,7 +103,7 @@ namespace VoyagerController.Workspace
                 _instance._items.Remove(item);
 
                 if (item is VoyagerItem voyager)
-                    Metadata.Get(voyager.LampHandle.Serial).InWorkspace = false;
+                    Metadata.GetLamp(voyager.LampHandle.Serial).InWorkspace = false;
                 
                 ItemRemoved?.Invoke(item);
             }

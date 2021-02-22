@@ -61,7 +61,7 @@ namespace VoyagerController
         {
             var unconfirmed = LampManager.Instance.GetLampsOfType<VoyagerLamp>().Where(l =>
             {
-                var meta = Metadata.Get(l.Serial);
+                var meta = Metadata.GetLamp(l.Serial);
                 
                 if (_confirmingLamps.Contains(l)) return false;
                 if (!(meta.Effect is VideoEffect || meta.Effect is ImageEffect)) return false;
@@ -85,7 +85,7 @@ namespace VoyagerController
         {
             var confirmed =  _confirmingLamps.Where(l =>
             {
-                var meta = Metadata.Get(l.Serial);
+                var meta = Metadata.GetLamp(l.Serial);
                 if (!(meta.Effect is VideoEffect || meta.Effect is ImageEffect)) return true;
                 return meta.Rendered && meta.ConfirmedFrames.All(c => c);
             });
@@ -110,7 +110,7 @@ namespace VoyagerController
 
         private void RequestMissingFrames(VoyagerLamp voyager)
         {
-            var videoTime = Metadata.Get(voyager.Serial).TimeEffectApplied;
+            var videoTime = Metadata.GetLamp(voyager.Serial).TimeEffectApplied;
             var packet = new MissingFramesRequest(videoTime);
             var time = TimeUtils.Epoch + TimeOffset(voyager);
             GetLampClient(voyager)?.SendSettingsPacket(voyager, packet, time);
@@ -140,7 +140,7 @@ namespace VoyagerController
 
         private static void ApplyStreamToVoyager(VoyagerLamp voyager, Effect effect)
         {
-            var meta = Metadata.Get(voyager.Serial);
+            var meta = Metadata.GetLamp(voyager.Serial);
             var time = TimeUtils.Epoch;
             var client = GetLampClient(voyager);
 
@@ -156,7 +156,7 @@ namespace VoyagerController
         
         private static void ApplyVideoToVoyager(VoyagerLamp voyager, VideoEffect video)
         {
-            var meta = Metadata.Get(voyager.Serial);
+            var meta = Metadata.GetLamp(voyager.Serial);
             var offset = TimeOffset(voyager);
             var start = video.Meta.StartTime + offset;
             var framebuffer = new Rgb[video.Video.FrameCount][];
@@ -185,7 +185,7 @@ namespace VoyagerController
         
         private static void ApplyImageToVoyager(VoyagerLamp voyager, ImageEffect image)
         {
-            var meta = Metadata.Get(voyager.Serial);
+            var meta = Metadata.GetLamp(voyager.Serial);
             var offset = TimeOffset(voyager);
             var start = image.Meta.StartTime + offset;
             var framebuffer = new Rgb[1][];
@@ -212,14 +212,14 @@ namespace VoyagerController
 
         public static void ApplyItsheToVoyager(VoyagerLamp voyager, Itshe itshe)
         {
-            var meta = Metadata.Get(voyager.Serial);
+            var meta = Metadata.GetLamp(voyager.Serial);
             GetLampClient(voyager)?.SetItshe(voyager, itshe);
             meta.Itshe = itshe;
         }
 
         public static void ApplyVideoFrameToVoyager(VoyagerLamp voyager, long index, Rgb[] rgb)
         {
-            var meta = Metadata.Get(voyager.Serial);
+            var meta = Metadata.GetLamp(voyager.Serial);
             var time = meta.TimeEffectApplied;
             
             GetLampClient(voyager)?.SendVideoFrame(voyager, index, time, rgb);
@@ -234,7 +234,7 @@ namespace VoyagerController
 
         public static void ApplyStreamFrameToVoyager(VoyagerLamp voyager, Rgb[] rgb, double delay)
         {
-            var meta = Metadata.Get(voyager.Serial);
+            var meta = Metadata.GetLamp(voyager.Serial);
             var start = meta.TimeEffectApplied;
             var time = TimeUtils.Epoch + TimeOffset(voyager) + delay;
             GetLampClient(voyager)?.SendStreamFrame(voyager, start, time, rgb);
@@ -245,7 +245,7 @@ namespace VoyagerController
 
         private static void OnMissingFramesResponse(VoyagerLamp voyager, MissingFramesResponse response)
         {
-            var meta = Metadata.Get(voyager.Serial);
+            var meta = Metadata.GetLamp(voyager.Serial);
 
             if (Math.Abs(meta.TimeEffectApplied - response.VideoId) > 0.0001) return;
 
@@ -259,7 +259,7 @@ namespace VoyagerController
 
         public static long GetCurrentFrameOfVideo(VoyagerLamp voyager, Video video, long add = 0)
         {
-            var meta = Metadata.Get(voyager.Serial);
+            var meta = Metadata.GetLamp(voyager.Serial);
             var since = 0.0;
             long frames = 0;
             
@@ -309,12 +309,12 @@ namespace VoyagerController
             {
                 var pauseTime = TimeUtils.Epoch - ApplicationState.PlaymodePausedSince.Value;
                 foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>().Select(v => v.LampHandle))
-                    Metadata.Get(voyager.Serial).VideoStartTime += pauseTime;
+                    Metadata.GetLamp(voyager.Serial).VideoStartTime += pauseTime;
             }
             else
             {
                 foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>().Select(v => v.LampHandle))
-                    Metadata.Get(voyager.Serial).VideoStartTime = TimeUtils.Epoch;
+                    Metadata.GetLamp(voyager.Serial).VideoStartTime = TimeUtils.Epoch;
             }
         }
 
@@ -322,11 +322,11 @@ namespace VoyagerController
         {
             foreach (var voyager in WorkspaceManager.GetItems<VoyagerItem>().Select(v => v.LampHandle))
             {
-                var effect = Metadata.Get(voyager.Serial).Effect;
+                var effect = Metadata.GetLamp(voyager.Serial).Effect;
                 
                 if (effect is VideoEffect video)
                 {
-                    var startTime = Metadata.Get(voyager.Serial).VideoStartTime;
+                    var startTime = Metadata.GetLamp(voyager.Serial).VideoStartTime;
                     var handleAt = TimeUtils.Epoch + TimeOffset(voyager) + ApplicationSettings.PLAYBACK_OFFSET;
                     
                     voyager.SetPlayMode(mode, startTime, handleAt); 
