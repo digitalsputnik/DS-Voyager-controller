@@ -45,13 +45,23 @@ namespace VoyagerController.Workspace
 
         private void Start()
         {
-            Metadata.AddPicture(Uid);
+            if (!Metadata.ContainsPicture(Uid))
+            {
+                Metadata.AddPicture(Uid);
+                Metadata.GetPicture(Uid).Texture = _picture;   
+            }
+            
             SelectionMove.SelectionMoveEnded += SelectionMoveEnded;
         }
 
         private void OnDestroy()
         {
-            Metadata.RemovePicture(Uid);
+            if (Metadata.ContainsPicture(Uid))
+            {
+                Destroy(Metadata.GetPicture(Uid).Texture);
+                Metadata.RemovePicture(Uid);   
+            }
+            
             SelectionMove.SelectionMoveEnded -= SelectionMoveEnded;
         }
 

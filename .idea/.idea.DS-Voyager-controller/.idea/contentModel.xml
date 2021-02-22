@@ -92,6 +92,7 @@
               <e p="ItsheConverter.cs" t="Include" />
               <e p="LampMetadataConverter.cs" t="Include" />
               <e p="RgbConverter.cs" t="Include" />
+              <e p="Texture2DConverter.cs" t="Include" />
               <e p="VoyagerLampConverter.cs" t="Include" />
             </e>
             <e p="Project.cs" t="Include" />

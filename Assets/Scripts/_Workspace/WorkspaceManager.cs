@@ -41,7 +41,11 @@ namespace VoyagerController.Workspace
             var prefab = _instance._itemPrefabs.FirstOrDefault(i => i is T) as T;
             var item = Instantiate(prefab, _instance.transform);
 
-            item.Setup(data);
+            if (!item.Setup(data))
+            {
+                Destroy(item.gameObject);
+                return null;
+            }
 
             if (item is VoyagerItem voyager)
                 Metadata.GetLamp(voyager.LampHandle.Serial).InWorkspace = true;
@@ -60,7 +64,11 @@ namespace VoyagerController.Workspace
             var prefab = _instance._itemPrefabs.FirstOrDefault(i => i is T) as T;
             var item = Instantiate(prefab, _instance.transform);
 
-            item.Setup(data, id);
+            if (!item.Setup(data, id))
+            {
+                Destroy(item.gameObject);
+                return null;
+            }
 
             if (item is VoyagerItem voyager)
                 Metadata.GetLamp(voyager.LampHandle.Serial).InWorkspace = true;

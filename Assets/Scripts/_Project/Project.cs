@@ -189,6 +189,7 @@ namespace VoyagerController.ProjectManagement
             settings.Converters.Add(new RgbConverter());
             settings.Converters.Add(new LampMetadataConverter());
             settings.Converters.Add(new VoyagerLampConverter());
+            settings.Converters.Add(new Texture2DConverter());
             settings.NullValueHandling = NullValueHandling.Ignore;
             settings.Formatting = Formatting.Indented;
             return settings;

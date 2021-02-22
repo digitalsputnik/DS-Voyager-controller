@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DigitalSputnik;
 using DigitalSputnik.Voyager;
 using UnityEngine;
 
@@ -35,7 +34,7 @@ namespace VoyagerController
         #region Lamps
         public static bool ContainsLamp(string serial)
         {
-            return _instance._lampMetadata.ContainsKey(serial);
+            return !string.IsNullOrEmpty(serial) &&  _instance._lampMetadata.ContainsKey(serial);
         }
 
         public static void AddLamp(VoyagerLamp lamp)
@@ -68,7 +67,7 @@ namespace VoyagerController
         #region Picture
         public static bool ContainsPicture(string id)
         {
-            return _instance._pictureMetadata.ContainsKey(id);
+            return !string.IsNullOrEmpty(id) && _instance._pictureMetadata.ContainsKey(id);
         }
 
         public static void AddPicture(string id)

@@ -2,36 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_Metadata/PictureMetadata.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_Metadata/PictureMetadata.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/Texture2DConverter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/Texture2DConverter.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TextureExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TextureExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Metadata/Metadata.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Metadata/Metadata.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Rendering/ImageRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Rendering/ImageRenderer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Rendering/SpoutRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Rendering/SpoutRenderer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Rendering/SyphonRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Rendering/SyphonRenderer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/FastRenderState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/FastRenderState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/InterpolationState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/InterpolationState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/PrepareState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/PrepareState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/RenderQueue.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/RenderQueue.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/RenderState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/RenderState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/VideoEffectRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/VideoEffectRenderer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/RenderLoadingBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/RenderLoadingBar.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Color Wheel/ColorWheelButton.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Color Wheel/ColorWheelButton.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/WorkspaceMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/WorkspaceMenu.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/PictureItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/PictureItem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Workspace/WorkspaceManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Workspace/WorkspaceManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Workspace/WorkspaceUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Workspace/WorkspaceUtils.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" afterDir="false" />
     </list>
@@ -64,6 +42,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/C3B4F98D-A0E5-41E9-8966-54B2EC95534E/34/774529c9/LampClient.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7C881E71-2F79-461D-96F9-95658A2D07FF/27/255861db/Vector3.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/Utilities/ShaderUtils.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Documents/Backup/Utilities/Texture2DConverter.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/UI/PlayPauseStop.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/Workspace/Views/VoyagerItemView.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/C3B4F98D-A0E5-41E9-8966-54B2EC95534E/69/308ab3b2/LampManager.cs" root0="SKIP_HIGHLIGHTING" />
@@ -81,8 +60,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/SpoutEffectDisplay.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/SyphonEffectDisplay.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectDisplay.cs" />
       <option value="$PROJECT_DIR$/Assets/Graphics/Materials/LiftContrastSaturationBlur.shader" />
       <option value="$PROJECT_DIR$/Assets/Scripts/MathUtils.cs" />
@@ -127,11 +104,13 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/LampMetadata.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/Metadata.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/PictureItem.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/PictureMetadata.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/WorkspaceManager.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/Metadata.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/RgbConverter.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/PictureItem.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/Texture2DConverter.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -214,7 +193,7 @@
       <workItem from="1613387123814" duration="8439000" />
       <workItem from="1613472158155" duration="3377000" />
       <workItem from="1613728617106" duration="7267000" />
-      <workItem from="1613985003481" duration="5888000" />
+      <workItem from="1613985003481" duration="10392000" />
     </task>
     <servers />
   </component>
