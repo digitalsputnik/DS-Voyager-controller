@@ -139,7 +139,7 @@ namespace VoyagerController.UI
                 };
 
                 WorkspaceSelection.DeselectItem(item);
-                Metadata.GetLamp(item.LampHandle.Serial).WorkspaceMapping = mapping;
+                Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
                 item.PositionLampBasedOnWorkspaceMapping();
                 WorkspaceSelection.SelectItem(item);
             }
@@ -163,7 +163,7 @@ namespace VoyagerController.UI
                 };
 
                 WorkspaceSelection.DeselectItem(item);
-                Metadata.GetLamp(item.LampHandle.Serial).WorkspaceMapping = mapping;
+                Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
                 item.PositionLampBasedOnWorkspaceMapping();
                 WorkspaceSelection.SelectItem(item);
             }
@@ -211,7 +211,7 @@ namespace VoyagerController.UI
                             Scale = longScale
                         };
                         
-                        Metadata.GetLamp(item.LampHandle.Serial).WorkspaceMapping = mapping;
+                        Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
                     }
                     else
                     {
@@ -222,7 +222,7 @@ namespace VoyagerController.UI
                             Scale = shortScale
                         };
                         
-                        Metadata.GetLamp(item.LampHandle.Serial).WorkspaceMapping = mapping;
+                        Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
                     }
                     
                     item.PositionLampBasedOnWorkspaceMapping();
@@ -257,7 +257,7 @@ namespace VoyagerController.UI
                     Scale = scale
                 };
 
-                Metadata.GetLamp(item.LampHandle.Serial).WorkspaceMapping = mapping;
+                Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
                 item.PositionLampBasedOnWorkspaceMapping();
                 WorkspaceSelection.SelectItem(item);
             }
@@ -307,7 +307,7 @@ namespace VoyagerController.UI
                     Scale = scale
                 };
 
-                Metadata.GetLamp(item.LampHandle.Serial).WorkspaceMapping = mapping;
+                Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
                 item.PositionLampBasedOnWorkspaceMapping();
                 WorkspaceSelection.SelectItem(item);
             }

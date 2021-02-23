@@ -48,7 +48,7 @@ namespace VoyagerController.Workspace
             }
 
             if (item is VoyagerItem voyager)
-                Metadata.GetLamp(voyager.LampHandle.Serial).InWorkspace = true;
+                Metadata.Get<LampData>(voyager.LampHandle.Serial).InWorkspace = true;
 
             _instance._items.Add(item);
 
@@ -71,7 +71,7 @@ namespace VoyagerController.Workspace
             }
 
             if (item is VoyagerItem voyager)
-                Metadata.GetLamp(voyager.LampHandle.Serial).InWorkspace = true;
+                Metadata.Get<LampData>(voyager.LampHandle.Serial).InWorkspace = true;
 
             _instance._items.Add(item);
 
@@ -111,7 +111,7 @@ namespace VoyagerController.Workspace
                 _instance._items.Remove(item);
 
                 if (item is VoyagerItem voyager)
-                    Metadata.GetLamp(voyager.LampHandle.Serial).InWorkspace = false;
+                    Metadata.Get<LampData>(voyager.LampHandle.Serial).InWorkspace = false;
                 
                 ItemRemoved?.Invoke(item);
             }

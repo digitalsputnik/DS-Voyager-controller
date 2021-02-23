@@ -92,7 +92,7 @@ namespace VoyagerController.Mapping
 
         private static void CalculateVoyagerMapping(VoyagerItem voyager)
         {
-            var meta = Metadata.GetLamp(voyager.LampHandle.Serial);
+            var meta = Metadata.Get<LampData>(voyager.LampHandle.Serial);
             var point1 = new Vector3(meta.EffectMapping.X1 - 0.5f, meta.EffectMapping.Y1 - 0.5f);
             var point2 = new Vector3(meta.EffectMapping.X2 - 0.5f, meta.EffectMapping.Y2 - 0.5f);
             var transform = voyager.transform;
@@ -123,7 +123,7 @@ namespace VoyagerController.Mapping
             foreach (var voyager in WorkspaceSelection.GetSelected<VoyagerItem>())
             {
                 var mapping = CalculateLampEffectMapping(voyager);
-                var meta = Metadata.GetLamp(voyager.LampHandle.Serial);
+                var meta = Metadata.Get<LampData>(voyager.LampHandle.Serial);
                 meta.EffectMapping = mapping;
                 LampEffectsWorker.ApplyEffectToLamp(voyager.LampHandle, meta.Effect);
             }

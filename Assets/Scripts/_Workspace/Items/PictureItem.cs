@@ -16,7 +16,7 @@ namespace VoyagerController.Workspace
 
         private Transform _transform;
         private Texture2D _picture;
-        
+
         private static readonly int _baseMap = Shader.PropertyToID("_BaseMap");
 
         public override Vector3[] SelectPositions
@@ -45,10 +45,15 @@ namespace VoyagerController.Workspace
 
         private void Start()
         {
-            if (!Metadata.ContainsPicture(Uid))
+            if (!Metadata.Contains(Uid))
             {
-                Metadata.AddPicture(Uid);
-                Metadata.GetPicture(Uid).Texture = _picture;   
+                Metadata.Add<PictureData>(Uid);
+                Metadata.Get<PictureData>(Uid).Texture = _picture;  
+                PositionBasedOnCamera();
+            }
+            else
+            {
+                PositionBasedOnWorkspaceMapping();
             }
             
             SelectionMove.SelectionMoveEnded += SelectionMoveEnded;
@@ -56,10 +61,10 @@ namespace VoyagerController.Workspace
 
         private void OnDestroy()
         {
-            if (Metadata.ContainsPicture(Uid))
+            if (Metadata.Contains(Uid))
             {
-                Destroy(Metadata.GetPicture(Uid).Texture);
-                Metadata.RemovePicture(Uid);   
+                Destroy(Metadata.Get<PictureData>(Uid).Texture);
+                Metadata.Remove(Uid);   
             }
             
             SelectionMove.SelectionMoveEnded -= SelectionMoveEnded;
@@ -69,7 +74,7 @@ namespace VoyagerController.Workspace
         {
             if (!WorkspaceSelection.Contains(this)) return;
             
-            var mapping = Metadata.GetPicture(Uid).WorkspaceMapping;
+            var mapping = Metadata.Get<PictureData>(Uid).WorkspaceMapping;
             var pos = _transform.position;
             mapping.Position = new[] { pos.x, pos.y };
             mapping.Rotation = _transform.eulerAngles.z;
@@ -88,8 +93,21 @@ namespace VoyagerController.Workspace
             _outline.transform.localScale = size + outlineSize;
             _renderer.material.SetTexture(_baseMap, _picture);
         }
+        
+        public void PositionBasedOnWorkspaceMapping()
+        {
+            var mapping = Metadata.Get<PictureData>(Uid).WorkspaceMapping;
+            var position = new Vector3(mapping.Position[0], mapping.Position[1], 0.0f);
+            var rotation = new Vector3(0.0f, 0.0f, mapping.Rotation);
+            var scale = Vector3.one * mapping.Scale;
 
-        public void PositionBasedCamera()
+            _transform = transform;
+            _transform.localScale = scale;
+            _transform.eulerAngles = rotation;
+            _transform.position = position;
+        }
+
+        public void PositionBasedOnCamera()
         {
             SetupMeshSize();
             SetupOutlineSize();

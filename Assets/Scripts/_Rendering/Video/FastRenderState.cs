@@ -136,7 +136,7 @@ namespace VoyagerController.Rendering
 
             foreach (var voyager in GetLampsWithEffect(_effect))
             {
-                var buffer = Metadata.GetLamp(voyager.Serial).FrameBuffer;
+                var buffer = Metadata.Get<LampData>(voyager.Serial).FrameBuffer;
                 var pixels = voyager.PixelCount;
                 
                 for (ulong i = 0; i < _effect.Video.FrameCount; i++)
@@ -207,7 +207,7 @@ namespace VoyagerController.Rendering
         {
             return LampManager.Instance
                 .GetLampsOfType<VoyagerLamp>()
-                .Where(l => Metadata.GetLamp(l.Serial).Effect == effect);
+                .Where(l => Metadata.Get<LampData>(l.Serial).Effect == effect);
         }
 
         private enum FastRendererState

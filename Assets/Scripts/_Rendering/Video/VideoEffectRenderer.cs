@@ -129,7 +129,7 @@ namespace VoyagerController.Rendering
             var result = false;
             var lamps = WorkspaceManager.GetItems<VoyagerItem>()
                 .Select(i => i.LampHandle)
-                .Where(v => Metadata.GetLamp(v.Serial).Effect is VideoEffect)
+                .Where(v => Metadata.Get<LampData>(v.Serial).Effect is VideoEffect)
                 .ToArray();
 
             if (_effectModified)
@@ -141,12 +141,12 @@ namespace VoyagerController.Rendering
             if (!lamps.All(l => _prevEffects.ContainsKey(l)))
                 result = true;
 
-            if (!result && lamps.Any(l => Metadata.GetLamp(l.Serial).Effect != _prevEffects[l]))
+            if (!result && lamps.Any(l => Metadata.Get<LampData>(l.Serial).Effect != _prevEffects[l]))
                 result = true;
             
             _prevEffects.Clear();
             foreach (var lamp in lamps)
-                _prevEffects.Add(lamp, Metadata.GetLamp(lamp.Serial).Effect);
+                _prevEffects.Add(lamp, Metadata.Get<LampData>(lamp.Serial).Effect);
 
             return result;
         }

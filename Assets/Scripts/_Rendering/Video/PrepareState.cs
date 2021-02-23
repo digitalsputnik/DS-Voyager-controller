@@ -12,7 +12,7 @@ namespace VoyagerController.Rendering
             var unRendered = LampManager.Instance.GetLampsOfType<VoyagerLamp>()
                 .Where(l =>
                 {
-                    var meta = Metadata.GetLamp(l.Serial);
+                    var meta = Metadata.Get<LampData>(l.Serial);
                     return meta.Effect is VideoEffect && !meta.Rendered;
                 })
                 .ToArray();

@@ -33,7 +33,7 @@ namespace VoyagerController.Workspace
         {
             return WorkspaceManager
                 .GetItems<VoyagerItem>()
-                .Where(v => Metadata.GetLamp(v.LampHandle.Serial).Effect == effect);
+                .Where(v => Metadata.Get<LampData>(v.LampHandle.Serial).Effect == effect);
         }
 
         public static Vector3 PositionOfLastSelectedOrAddedLamp

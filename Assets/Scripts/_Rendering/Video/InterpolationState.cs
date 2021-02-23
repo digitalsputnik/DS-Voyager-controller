@@ -27,7 +27,7 @@ namespace VoyagerController.Rendering
         {
             foreach (var voyager in _lamps)
             {
-                var meta = Metadata.GetLamp(voyager.Serial);
+                var meta = Metadata.Get<LampData>(voyager.Serial);
                 
                 foreach (var frame in _missingFrames)
                 {
@@ -52,14 +52,14 @@ namespace VoyagerController.Rendering
             return new DisposeState();
         }
 
-        private ulong PreviousFrameFromIndex(LampMetadata meta, ulong frame)
+        private ulong PreviousFrameFromIndex(LampData meta, ulong frame)
         {
             var prev = (long) frame - 1;
             while (meta.FrameBuffer[NormalizeFrame(prev)] == null) prev--;
             return NormalizeFrame(prev);
         }
 
-        private ulong NextFrameFromIndex(LampMetadata meta, ulong frame)
+        private ulong NextFrameFromIndex(LampData meta, ulong frame)
         {
             var next = (long) frame + 1;
             while (meta.FrameBuffer[NormalizeFrame(next)] == null) next++;
@@ -76,7 +76,7 @@ namespace VoyagerController.Rendering
             return (ulong) frame;
         }
 
-        private float FrameInterpolationTime(LampMetadata meta, ulong frame)
+        private float FrameInterpolationTime(LampData meta, ulong frame)
         {
             var prev = (long) frame - 1;
             while (meta.FrameBuffer[NormalizeFrame(prev)] == null) prev--;
@@ -93,7 +93,7 @@ namespace VoyagerController.Rendering
 
             foreach (var voyager in GetLampsWithEffect(_effect))
             {
-                var buffer = Metadata.GetLamp(voyager.Serial).FrameBuffer;
+                var buffer = Metadata.Get<LampData>(voyager.Serial).FrameBuffer;
                 var pixels = voyager.PixelCount;
                 
                 for (ulong i = 0; i < _effect.Video.FrameCount; i++)
@@ -110,7 +110,7 @@ namespace VoyagerController.Rendering
         {
             return LampManager.Instance
                 .GetLampsOfType<VoyagerLamp>()
-                .Where(l => Metadata.GetLamp(l.Serial).Effect == effect);
+                .Where(l => Metadata.Get<LampData>(l.Serial).Effect == effect);
         }
 
         private static Rgb[] InterpolateRgb(IReadOnlyList<Rgb> a, IReadOnlyList<Rgb> b, float t)

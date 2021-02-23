@@ -33,7 +33,7 @@ namespace VoyagerController.UI
             
             if (lamp != null)
             {
-                var meta = Metadata.GetLamp(lamp.LampHandle.Serial);
+                var meta = Metadata.Get<LampData>(lamp.LampHandle.Serial);
 
                 _currentItshe = meta.Itshe;
                 _previewColor.color = _currentItshe.ToColor();

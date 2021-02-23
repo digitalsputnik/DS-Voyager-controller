@@ -98,8 +98,8 @@ namespace VoyagerController.ProjectManagement
                 Time = DateTime.Now,
                 Lamps = LampManager.Instance.GetLampsOfType<VoyagerLamp>().ToArray(),
                 Effects = EffectManager.GetEffects().ToArray(),
-                LampMetadata = Metadata.GetAllLamps(),
-                PictureMetadata = Metadata.GetAllPictures()
+                LampMetadata = Metadata.GetPairs<LampData>(),
+                PictureMetadata = Metadata.GetPairs<PictureData>()
             };
         }
         #endregion
@@ -153,7 +153,7 @@ namespace VoyagerController.ProjectManagement
                 var serial = dataPair.Key;
                 var metadata = dataPair.Value;
                 
-                Metadata.SetLampMetadata(serial, metadata);
+                Metadata.Set(serial, metadata);
 
                 if (metadata.InWorkspace)
                 {
@@ -167,9 +167,9 @@ namespace VoyagerController.ProjectManagement
                 var id = dataPair.Key;
                 var metadata = dataPair.Value;
                 
-                Metadata.SetPictureMetadata(id, metadata);
+                Metadata.Set(id, metadata);
 
-                var texture = Metadata.GetPicture(id).Texture;
+                var texture = Metadata.Get<PictureData>(id).Texture;
                 WorkspaceManager.InstantiateItem<PictureItem>(texture, id);
             }
         }
@@ -210,7 +210,7 @@ namespace VoyagerController.ProjectManagement
         public DateTime Time { get; set; }
         public VoyagerLamp[] Lamps { get; set; }
         public Effect[] Effects { get; set; }
-        public Dictionary<string, LampMetadata> LampMetadata { get; set; }
-        public Dictionary<string, PictureMetadata> PictureMetadata { get; set; }
+        public Dictionary<string, LampData> LampMetadata { get; set; }
+        public Dictionary<string, PictureData> PictureMetadata { get; set; }
     }
 }

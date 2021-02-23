@@ -130,7 +130,7 @@ namespace VoyagerController.UI
                     X2 = p2.x, Y2 = p2.y
                 };
 
-                Metadata.GetLamp(item.LampHandle.Serial).EffectMapping = mapping;
+                Metadata.Get<LampData>(item.LampHandle.Serial).EffectMapping = mapping;
             }
         }
 
@@ -156,7 +156,7 @@ namespace VoyagerController.UI
                 .OrderByDescending(e => e.Meta.Timestamp)
                 .ThenByDescending(e => e.Name == "white")
                 //.ThenByDescending(e => e is SyphonEffect || e is SpoutEffect)
-                .ThenByDescending(e => Metadata.GetLamp(l => l.Effect == e).Count())
+                .ThenByDescending(e => Metadata.Get<LampData>().Count(l => l.Effect == e))
                 .ToList();
         }
 

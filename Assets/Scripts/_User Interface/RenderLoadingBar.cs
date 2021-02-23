@@ -23,7 +23,7 @@ namespace VoyagerController.UI
         private void Update()
         {
             var rendering = WorkspaceManager.GetItems<VoyagerItem>()
-                .Select(i => Metadata.GetLamp(i.LampHandle.Serial))
+                .Select(i => Metadata.Get<LampData>(i.LampHandle.Serial))
                 .Where(meta =>
                 {
                     if (!(meta.Effect is VideoEffect))

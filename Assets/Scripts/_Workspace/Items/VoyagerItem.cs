@@ -36,7 +36,7 @@ namespace VoyagerController.Workspace
         [Header("DMX")]
         [SerializeField] private Material _dmxMaterial = null;
 
-        private LampMetadata _meta;
+        private LampData _meta;
         private Texture2D _pixelsTexture;
         private Color _outlineColor;
         private static readonly int _baseMap = Shader.PropertyToID("_MainTex");
@@ -52,7 +52,7 @@ namespace VoyagerController.Workspace
 
             if (LampHandle == null) return false;
             
-            _meta = Metadata.GetLamp(LampHandle.Serial);
+            _meta = Metadata.Get<LampData>(LampHandle.Serial);
 
             _outlineColor = _outlineRenderer.material.color;
 
@@ -220,7 +220,7 @@ namespace VoyagerController.Workspace
 
         private void SaveWorkspaceMapping()
         {
-            var mapping = Metadata.GetLamp(LampHandle.Serial).WorkspaceMapping;
+            var mapping = Metadata.Get<LampData>(LampHandle.Serial).WorkspaceMapping;
             var pos = _transform.position;
             mapping.Position = new[] { pos.x, pos.y };
             mapping.Rotation = _transform.eulerAngles.z;

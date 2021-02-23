@@ -7,7 +7,7 @@ using VoyagerController.Effects;
 
 namespace VoyagerController.ProjectManagement
 {
-    public class LampMetadataConverter : JsonConverter<LampMetadata>
+    public class LampMetadataConverter : JsonConverter<LampData>
     {
         private readonly JsonSerializerSettings _settings;
 
@@ -21,9 +21,9 @@ namespace VoyagerController.ProjectManagement
             _settings.Formatting = Formatting.Indented;
         }
 
-        public override void WriteJson(JsonWriter writer, LampMetadata value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, LampData value, JsonSerializer serializer)
         {
-            var data = new LampData
+            var data = new LampSaveData
             {
                 Discovered = value.Discovered,
                 Effect = value.Effect?.Name,
@@ -47,10 +47,10 @@ namespace VoyagerController.ProjectManagement
             return current + (confirmedFrame ? "1" : "0");
         }
 
-        public override LampMetadata ReadJson(JsonReader reader, Type objectType, LampMetadata existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override LampData ReadJson(JsonReader reader, Type objectType, LampData existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             var json = JObject.Load(reader).ToString();
-            var data = JsonConvert.DeserializeObject<LampData>(json, _settings);
+            var data = JsonConvert.DeserializeObject<LampSaveData>(json, _settings);
 
             if (data == null) return null;
             
@@ -58,7 +58,7 @@ namespace VoyagerController.ProjectManagement
             for (var i = 0; i < confirmed.Length; i++)
                 confirmed[i] = data.ConfirmedFrames[i] == '1';
 
-            var meta = new LampMetadata
+            var meta = new LampData
             {
                 Discovered = data.Discovered,
                 Effect = EffectManager.GetEffectWithName(data.Effect),
@@ -78,7 +78,7 @@ namespace VoyagerController.ProjectManagement
     }
 
     [Serializable]
-    public class LampData
+    public class LampSaveData
     {
         public double Discovered { get; set; }
         public string Effect { get; set; }

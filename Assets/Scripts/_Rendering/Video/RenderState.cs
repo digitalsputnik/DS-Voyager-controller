@@ -117,7 +117,7 @@ namespace VoyagerController.Rendering
 
         private bool CurrentEffectRendered()
         {
-            return _lamps.All(l => Metadata.GetLamp(l.Serial).Effect is VideoEffect && Metadata.GetLamp(l.Serial).Rendered);
+            return _lamps.All(l => Metadata.Get<LampData>(l.Serial).Effect is VideoEffect && Metadata.Get<LampData>(l.Serial).Rendered);
         }
         
         public void Dispose()

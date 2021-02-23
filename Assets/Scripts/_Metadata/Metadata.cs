@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DigitalSputnik.Voyager;
 using UnityEngine;
 
 namespace VoyagerController
@@ -10,92 +9,70 @@ namespace VoyagerController
     {
         private static Metadata _instance;
         private void Awake() => _instance = this;
-
-        private const string ALREADY_CONTAINS_LAMP_EXCEPTION = "Already contains lamp with the same serial";
-        private const string UNKNOWN_LAMP_EXCEPTION = "No lamp with the serial found";
         
-        private const string ALREADY_CONTAINS_PICTURE_EXCEPTION = "Already contains picture with the same serial";
-        private const string UNKNOWN_PICTURE_EXCEPTION = "No picture with the serial found";
+        private const string ALREADY_CONTAINS_EXCEPTION = "Already contains data with the key.";
+        private const string UNKNOWN_KEY_EXCEPTION = "No data with the key found.";
+        private const string WRONG_TYPE_EXCEPTION = "Data with the key found has different type.";
         
-        private readonly Dictionary<string, LampMetadata> _lampMetadata;
-        private readonly Dictionary<string, PictureMetadata> _pictureMetadata;
-
-        public Metadata()
+        private readonly Dictionary<string, Data> _metadata = new Dictionary<string, Data>();
+        
+        public static bool Contains(string key)
         {
-            _lampMetadata = new Dictionary<string, LampMetadata>();
-            _pictureMetadata = new Dictionary<string, PictureMetadata>();
+            return !string.IsNullOrEmpty(key) && _instance._metadata.ContainsKey(key);
         }
-        
+
         public static void Clear()
         {
-            _instance._lampMetadata.Clear();
-        }
-        
-        #region Lamps
-        public static bool ContainsLamp(string serial)
-        {
-            return !string.IsNullOrEmpty(serial) &&  _instance._lampMetadata.ContainsKey(serial);
+            _instance._metadata.Clear();
         }
 
-        public static void AddLamp(VoyagerLamp lamp)
+        public static void Add<T>(string key) where T : Data
         {
-            if (ContainsLamp(lamp.Serial))
-                throw new Exception(ALREADY_CONTAINS_LAMP_EXCEPTION);
-            _instance._lampMetadata[lamp.Serial] = new LampMetadata();
+            if (Contains(key))
+                throw new Exception(ALREADY_CONTAINS_EXCEPTION);
+            _instance._metadata.Add(key, (T)Activator.CreateInstance(typeof(T)));
         }
 
-        public static LampMetadata GetLamp(string serial)
+        public static void Remove(string key)
         {
-            if (!ContainsLamp(serial))
-                throw new Exception(UNKNOWN_LAMP_EXCEPTION);
-            return _instance._lampMetadata[serial];
+            if (!Contains(key))
+                throw new Exception(UNKNOWN_KEY_EXCEPTION);
+            _instance._metadata.Remove(key);
         }
 
-        public static IEnumerable<LampMetadata> GetLamp(Func<LampMetadata, bool> predicate)
+        public static T Get<T>(string key) where T : Data
         {
-            return _instance._lampMetadata.Values.Where(predicate);
+            if (!Contains(key))
+                throw new Exception(UNKNOWN_KEY_EXCEPTION);
+
+            if (_instance._metadata[key] is T data) return data;
+
+            throw new Exception(WRONG_TYPE_EXCEPTION);
         }
 
-        public static Dictionary<string, LampMetadata> GetAllLamps() => _instance._lampMetadata;
-
-        public static void SetLampMetadata(string serial, LampMetadata metadata)
+        public static void Set<T>(string key, T value) where T : Data
         {
-            _instance._lampMetadata[serial] = metadata;
-        }
-        #endregion
-        
-        #region Picture
-        public static bool ContainsPicture(string id)
-        {
-            return !string.IsNullOrEmpty(id) && _instance._pictureMetadata.ContainsKey(id);
+            if (!Contains(key))
+                throw new Exception(UNKNOWN_KEY_EXCEPTION);
+            _instance._metadata[key] = value;
         }
 
-        public static void AddPicture(string id)
+        public static IEnumerable<T> Get<T>() where T : Data
         {
-            if (ContainsPicture(id))
-                throw new Exception(ALREADY_CONTAINS_PICTURE_EXCEPTION);
-            _instance._pictureMetadata[id] = new PictureMetadata();
+            return _instance._metadata.Values.OfType<T>();
         }
 
-        public static void RemovePicture(string id)
+        public static Dictionary<string, T> GetPairs<T>() where T : Data
         {
-            if (ContainsPicture(id))
-                _instance._pictureMetadata.Remove(id);
-        }
+            var pairs = new Dictionary<string, T>();
 
-        public static PictureMetadata GetPicture(string id)
-        {
-            if (!ContainsPicture(id))
-                throw new Exception(UNKNOWN_PICTURE_EXCEPTION);
-            return _instance._pictureMetadata[id];
-        }
+            foreach (var pair in _instance._metadata)
+            {
+                if (pair.Value is T value)
+                    pairs.Add(pair.Key, value);
+            }
 
-        public static Dictionary<string, PictureMetadata> GetAllPictures() => _instance._pictureMetadata;
-
-        public static void SetPictureMetadata(string serial, PictureMetadata metadata)
-        {
-            _instance._pictureMetadata[serial] = metadata;
+            return pairs;
         }
-        #endregion
     }
 }

@@ -67,7 +67,7 @@ namespace VoyagerController.UI
         public void SelectWithSameEffect()
         {
             var serial = WorkspaceSelection.GetSelected<VoyagerItem>().First().LampHandle.Serial;
-            var effect = Metadata.GetLamp(serial).Effect;
+            var effect = Metadata.Get<LampData>(serial).Effect;
 
             foreach (var item in WorkspaceUtils.GetItemsWithSameEffect(effect).ToList())
                 WorkspaceSelection.SelectItem(item);
@@ -76,7 +76,7 @@ namespace VoyagerController.UI
         public void EditEffectClick()
         {
             var item = WorkspaceSelection.GetSelected<VoyagerItem>().First();
-            var meta = Metadata.GetLamp(item.LampHandle.Serial);
+            var meta = Metadata.Get<LampData>(item.LampHandle.Serial);
             EffectMapper.EnterEffectMapping(meta.Effect, true);
         }
 
@@ -115,11 +115,11 @@ namespace VoyagerController.UI
             if (!WorkspaceSelection.GetSelected<VoyagerItem>().Any()) return false;
             
             var serial = WorkspaceSelection.GetSelected<VoyagerItem>().First().LampHandle.Serial;
-            var effect = Metadata.GetLamp(serial).Effect;
+            var effect = Metadata.Get<LampData>(serial).Effect;
             return WorkspaceSelection.GetSelected<VoyagerItem>().All(v =>
             {
                 var ser = v.LampHandle.Serial;
-                return Metadata.GetLamp(ser).Effect == effect;
+                return Metadata.Get<LampData>(ser).Effect == effect;
             });
         }
 
@@ -142,7 +142,7 @@ namespace VoyagerController.UI
 
             texture.Apply();
 
-            WorkspaceManager.InstantiateItem<PictureItem>(texture).PositionBasedCamera();
+            WorkspaceManager.InstantiateItem<PictureItem>(texture);
         }
     }
 }
