@@ -14,6 +14,7 @@ namespace DigitalSputnik.Videos
 
         static Queue<VideoLoaderQueueItem> loadVideoQueue = new Queue<VideoLoaderQueueItem>();
         static bool queueHandlerRunning = false;
+        static bool videoLoaderRunning = false;
 
         public void LoadVideo(string path, VideoHandler loaded)
         {
@@ -36,11 +37,13 @@ namespace DigitalSputnik.Videos
             {
                 var video = loadVideoQueue.Dequeue();
 
+                videoLoaderRunning = true;
+
                 var obj = LoaderObject();
                 var player = obj.gameObject.AddComponent<VideoPlayer>();
                 obj.StartCoroutine(LoadVideoIEnumerator(player, video.Path, video.Handler));
 
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitUntil(() => !videoLoaderRunning);
             }
 
             queueHandlerRunning = false;
@@ -110,6 +113,8 @@ namespace DigitalSputnik.Videos
                 loaded?.Invoke(null);
 
             UnityEngine.Object.Destroy(player.gameObject);
+
+            videoLoaderRunning = false;
         }
 
         private static bool LoadingTimeout(float startTime)

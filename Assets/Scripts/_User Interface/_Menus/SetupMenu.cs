@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using UnityEngine;
+using VoyagerController.ProjectManagement;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
@@ -18,7 +19,8 @@ namespace VoyagerController.UI
 
         public void NewProject()
         {
-            // TODO: Implement!
+            Project.New();
+            ApplicationState.RaiseNewProject();
         }
 
         public void OpenHelp()

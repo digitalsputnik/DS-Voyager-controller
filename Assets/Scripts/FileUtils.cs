@@ -1,6 +1,9 @@
 using Crosstales.FB;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 using VoyagerController.UI;
 
@@ -168,6 +171,41 @@ namespace VoyagerController
                         writeStream.Write(bytes, 0, bytesRead);
                 }
             }
+        }
+
+        public static async Task<string> ReadAllTextAsync(string path)
+        {
+            string result = null;
+            try
+            {
+                using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (var reader = new StreamReader(stream, Encoding.UTF8))
+                    result = await reader.ReadToEndAsync();
+            }
+            finally
+            {
+                if (result == null)
+                    result = "";
+            }
+            return result;
+        }
+
+        public static bool IsJsonValid(string strInput)
+        {
+            var comp = StringComparison.Ordinal;
+            strInput = strInput.Trim();
+            if ((strInput.StartsWith("{", comp) && strInput.EndsWith("}", comp)) ||
+                (strInput.StartsWith("[", comp) && strInput.EndsWith("]", comp)))
+            {
+                try
+                {
+                    var obj = JToken.Parse(strInput);
+                    return true;
+                }
+                catch { return false; }
+            }
+
+            return false;
         }
     }
 

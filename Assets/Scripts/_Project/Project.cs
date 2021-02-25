@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using VoyagerController.Effects;
 using VoyagerController.Rendering;
+using VoyagerController.UI;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.ProjectManagement
@@ -18,7 +19,7 @@ namespace VoyagerController.ProjectManagement
     {
         public const string VIDEOS_DIRECTORY = "videos";
         private const string PROJECTS_DIRECTORY = "projects";
-        private const string PROJECT_FILE = "project.dsprj";
+        public const string PROJECT_FILE = "project.dsprj";
 
         private static Project _instance;
         
@@ -26,46 +27,67 @@ namespace VoyagerController.ProjectManagement
 
         private void Awake() => _instance = this;
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                Save("test", true); 
-                Debugger.LogInfo("Project saved");
-            }
+        #region New
 
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                Load("test");  
-                Debugger.LogInfo("Project laoded");
-            }
+        public static void New()
+        {
+            ClearWorkspace();
+            ClearEffects();
+            WorkspaceManager.Clear();
+            VideoEffectRenderer.Stop();
         }
 
+        #endregion
+
         #region Save
-        public static void Save(string name, bool hide = false)
+        public static ProjectData Save(string name, bool hide = false)
         {
             var path = SetupFolderStructure(name);
-            var project = ConstructProjectDataClass(hide);
-            var videos = Path.Combine(path, VIDEOS_DIRECTORY);
-            var settings = ConstructJsonSettings(videos);
-            
-            CopyVideosToProject(path);
 
-            var json = JsonConvert.SerializeObject(project, settings);
-            var file = Path.Combine(path, PROJECT_FILE);
-            
-            json = JToken.Parse(json).ToString(); // To make json pretty! :)
+            try
+            {
+                var project = ConstructProjectDataClass(hide);
+                var videos = Path.Combine(path, VIDEOS_DIRECTORY);
+                var settings = ConstructJsonSettings(videos);
 
-            File.WriteAllText(file, json, Encoding.UTF8);
+                CopyVideosToProject(path);
+
+                var json = JsonConvert.SerializeObject(project, settings);
+                var file = Path.Combine(path, PROJECT_FILE);
+
+                json = JToken.Parse(json).ToString(); // To make json pretty! :)
+
+                File.WriteAllText(file, json, Encoding.UTF8);
+
+                return project;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(ex);
+
+                if (Directory.Exists(path))
+                    Directory.Delete(path, true);
+
+                DialogBox.Show(
+                    "ERROR",
+                    $"Unable to save project. " +
+                    $"Following error occurred:\n{ex.Message}",
+                    new string[] { "CANCEL", "OK" },
+                    new Action[] { null, null });
+
+                return null;
+            }
         }
 
         private static string SetupFolderStructure(string name)
         {
-            var project = GetProjectPath(name);
+            var project = Path.Combine(ProjectsDirectory, name);
             var videos = Path.Combine(project, VIDEOS_DIRECTORY);
 
-            Directory.CreateDirectory(project);
-            Directory.CreateDirectory(videos);
+            if (!Directory.Exists(project))
+                Directory.CreateDirectory(project);
+            if (!Directory.Exists(videos))
+                Directory.CreateDirectory(videos);
             
             return project;
         }
@@ -105,9 +127,16 @@ namespace VoyagerController.ProjectManagement
         #endregion
 
         #region Load
-        public static void Load(string name)
+        public static ProjectData Load(string name)
         {
-            var path = GetProjectPath(name);
+            var path = Path.Combine(ProjectsDirectory, name);
+
+            if (!Directory.Exists(path)) 
+            {
+                Debug.Log("Directory doesn't exist" + path);
+                return null;
+            }
+
             var file = Path.Combine(path, PROJECT_FILE);
             var videos = Path.Combine(path, VIDEOS_DIRECTORY);
             var json = File.ReadAllText(file);
@@ -118,6 +147,8 @@ namespace VoyagerController.ProjectManagement
             ClearEffects();
             
             LoadProjectData(project);
+
+            return project;
         }
 
         private static void ClearWorkspace()
@@ -174,13 +205,6 @@ namespace VoyagerController.ProjectManagement
             }
         }
         #endregion
-
-        private static string GetProjectPath(string name)
-        {
-            var persistent = Application.persistentDataPath;
-            var projects = Path.Combine(persistent, PROJECTS_DIRECTORY);
-            return Path.Combine(projects, name);
-        }
         
         private static JsonSerializerSettings ConstructJsonSettings(string videosPath)
         {
@@ -199,10 +223,24 @@ namespace VoyagerController.ProjectManagement
         {
             return EffectManager.Presets.Any(p => Path.GetFileNameWithoutExtension(video.Name) == p);
         }
+
+        public static string ProjectsDirectory
+        {
+            get
+            {
+                var persistent = Application.persistentDataPath;
+                var projects = Path.Combine(persistent, PROJECTS_DIRECTORY);
+
+                if (!Directory.Exists(projects))
+                    Directory.CreateDirectory(projects);
+
+                return projects;
+            }
+        }
     }
 
     [Serializable]
-    public struct ProjectData
+    public class ProjectData
     {
         public bool Hide { get; set; }
         public string Version { get; set; }

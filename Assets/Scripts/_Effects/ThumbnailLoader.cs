@@ -16,6 +16,7 @@ namespace VoyagerController.Effects
 
         static Queue<ThumbnailLoaderQueueItem> loadVideoQueue = new Queue<ThumbnailLoaderQueueItem>();
         static bool queueHandlerRunning = false;
+        static bool thumbnailLoaderRunning = true;
 
         public void LoadThumbnail(Effect effect, EffectHandler loaded)
         {
@@ -36,9 +37,11 @@ namespace VoyagerController.Effects
             {
                 var video = loadVideoQueue.Dequeue();
 
+                thumbnailLoaderRunning = true;
+
                 StartCoroutine(LoadVideoThumbnail(video.Video, video.Handler));
 
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitUntil(() => !thumbnailLoaderRunning);
             }
 
             queueHandlerRunning = false;
@@ -66,6 +69,8 @@ namespace VoyagerController.Effects
 
             Destroy(player);
             Destroy(render);
+
+            thumbnailLoaderRunning = false;
         }
 
         private VideoPlayer SetupVideoPlayer(RenderTexture render, string source)
