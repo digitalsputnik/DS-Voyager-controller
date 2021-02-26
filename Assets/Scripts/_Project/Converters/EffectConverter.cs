@@ -1,21 +1,32 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 using VoyagerController.Effects;
 
 namespace VoyagerController.ProjectManagement
 {
-    public class EffectConverter : JsonConverter<Effect>
+    public class EffectConverter : JsonConverter<Effect>, IDisposable
     {
         private readonly string _videosPath;
+        private readonly Dictionary<string, EffectSettings> _waitingList = new Dictionary<string, EffectSettings>();
         
         public EffectConverter(string videosPath)
         {
             _videosPath = videosPath;
+            EffectManager.OnEffectAdded += OnEffectAdded;
         }
-        
+
+        private void OnEffectAdded(Effect effect)
+        {
+            if (!_waitingList.ContainsKey(effect.Name)) return;
+            
+            effect.Settings = _waitingList[effect.Name];
+            _waitingList.Remove(effect.Name);
+        }
+
         public override void WriteJson(JsonWriter writer, Effect value, JsonSerializer serializer)
         {
             switch (value)
@@ -39,24 +50,37 @@ namespace VoyagerController.ProjectManagement
             {
                 case EffectType.Video:
                     var video = EffectManager.GetEffectWithName<VideoEffect>(raw.Name);
-
+                        
                     if (video == null)
                     {
-                        var path = Path.Combine(_videosPath, raw.Name + ".mp4");
-                        VideoEffectLoader.LoadVideoEffect(path, effect =>
+                        if (EffectManager.Presets.Contains(raw.Name))
                         {
-                            effect.Settings = raw.Settings;
-                        });
+                            _waitingList.Add(raw.Name, raw.Settings);
+                        }
+                        else
+                        {
+                            var path = Path.Combine(_videosPath, raw.Name + ".mp4");
+                            VideoEffectLoader.LoadVideoEffect(path, effect =>
+                            {
+                                effect.Settings = raw.Settings;
+                            });
+                        }
                     }
                     else
                     {
                         video.Settings = raw.Settings;
-                    }
+                    } 
                     
+
                     break;
             }
             
             return null;
+        }
+        
+        public void Dispose()
+        {
+            EffectManager.OnEffectAdded -= OnEffectAdded;
         }
     }
     

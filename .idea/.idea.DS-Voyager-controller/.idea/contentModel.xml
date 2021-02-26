@@ -146,15 +146,18 @@
               <e p="ItshePicker.cs" t="Include" />
               <e p="LampSettingsMenu.cs" t="Include" />
               <e p="ListPickerMenu.cs" t="Include" />
+              <e p="LoadMenu.cs" t="Include" />
               <e p="MasterModeMenu.cs" t="Include" />
               <e p="NetworkSettingsMenu.cs" t="Include" />
               <e p="RouterModeMenu.cs" t="Include" />
+              <e p="SaveMenu.cs" t="Include" />
               <e p="SetEffectItem.cs" t="Include" />
               <e p="SetEffectMenu.cs" t="Include" />
               <e p="SetupMenu.cs" t="Include" />
               <e p="WorkspaceMenu.cs" t="Include" />
             </e>
             <e p="AddLampItem.cs" t="Include" />
+            <e p="Background.cs" t="Include" />
             <e p="CheckingForOtherControllers.cs" t="Include" />
             <e p="DialogBox.cs" t="Include" />
             <e p="GlobalSettings.cs" t="Include" />
@@ -162,6 +165,7 @@
             <e p="InspectorMenuContainer.cs" t="Include" />
             <e p="IntField.cs" t="Include" />
             <e p="ListPicker.cs" t="Include" />
+            <e p="LoadMenuItem.cs" t="Include" />
             <e p="Menu.cs" t="Include" />
             <e p="MenuContainer.cs" t="Include" />
             <e p="MoveIcon.cs" t="Include" />

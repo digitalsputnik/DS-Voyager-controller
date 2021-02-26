@@ -197,7 +197,9 @@ namespace VoyagerController.ProjectManagement
             {
                 var id = dataPair.Key;
                 var metadata = dataPair.Value;
-                
+
+                if (!Metadata.Contains(id))
+                    Metadata.Add<PictureData>(id);
                 Metadata.Set(id, metadata);
 
                 var texture = Metadata.Get<PictureData>(id).Texture;
