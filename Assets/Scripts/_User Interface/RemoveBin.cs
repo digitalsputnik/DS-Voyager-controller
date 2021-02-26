@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerController.Mapping;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
@@ -24,7 +25,7 @@ namespace VoyagerController.UI
             SelectionMove.SelectionMoveEnded -= SelectionMoveEnded;
         }
 
-        private void SelectionMoveStarted() => gameObject.SetActive(true);
+        private void SelectionMoveStarted() => gameObject.SetActive(!EffectMapper.EffectMappingIsActive);
 
         private void SelectionMoveEnded()
         {

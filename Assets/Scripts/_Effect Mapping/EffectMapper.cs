@@ -1,6 +1,7 @@
 using System.Linq;
 using DigitalSputnik.Colors;
 using UnityEngine;
+using VoyagerApp;
 using VoyagerController.Effects;
 using VoyagerController.UI;
 using VoyagerController.Workspace;
@@ -39,13 +40,16 @@ namespace VoyagerController.Mapping
         public static void EnterEffectMapping(Effect effect, bool onlySelected)
         {
             EffectMappingIsActive = true;
-            
+
             _instance.CleanPreviousDisplay();
             _instance.gameObject.SetActive(true);
             _instance._menuContainer.ShowMenu(_instance._mappingMenu);
             _instance._mappingMenu.SetEffect(effect);
             _instance._settingsMenu.SetEffect(effect);
             _instance._displaySettings.UpdateSettings(effect);
+
+            if (Background.IsEnabled)
+                Background.Disable();
 
             var selected = WorkspaceSelection.GetSelected<VoyagerItem>().ToArray();
 
@@ -151,7 +155,10 @@ namespace VoyagerController.Mapping
             }
 
             LeanTween.move(_instance._camera.gameObject, _instance._previousCamPosition, ANIMATION_TIME);
-            
+
+            if (!Background.IsEnabled)
+                Background.Enable();
+
             EffectMappingIsActive = false;
             
             foreach (var picture in WorkspaceManager.GetItems<PictureItem>())

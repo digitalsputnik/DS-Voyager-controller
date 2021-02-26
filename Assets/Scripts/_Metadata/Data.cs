@@ -5,6 +5,6 @@ namespace VoyagerController
     [Serializable]
     public class Data
     {
-        public WorkspaceMapping WorkspaceMapping { get; set; }
+        public WorkspaceMapping WorkspaceMapping { get; set; } = new WorkspaceMapping();
     }
 }
