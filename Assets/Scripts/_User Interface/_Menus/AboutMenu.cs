@@ -20,6 +20,4 @@ namespace VoyagerController.UI
             Application.OpenURL(ApplicationSettings.HELP_URL);
         }
     }
-    
-    
 }

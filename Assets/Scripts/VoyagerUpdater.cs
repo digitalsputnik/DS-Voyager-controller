@@ -28,7 +28,7 @@ namespace VoyagerController
         
         [SerializeField] private string _version = "";
 
-        private readonly Dictionary<string, byte[]> assets = new Dictionary<string, byte[]>();
+        private readonly Dictionary<string, byte[]> _assets = new Dictionary<string, byte[]>();
         private int _finishedCount = 0;
 
         private void Start()
@@ -51,15 +51,21 @@ namespace VoyagerController
             }
 
             var data = asset.bytes;
-            assets.Add(BUNDLE_FILE, data);
+            _assets.Add(BUNDLE_FILE, data);
+        }
+        
+        public static void UpdateLamp(VoyagerLamp lamp, byte[] update, VoyagerUpdateHandler onDone, VoyagerUpdateMessageHandler onMessage)
+        {
+            _instance._assets["custom_update"] = update;
+            new Thread(() => _instance.UpdateLampThread(lamp, "custom_update", onDone, onMessage)).Start();
         }
 
         public static void UpdateLamp(VoyagerLamp lamp, VoyagerUpdateHandler onDone, VoyagerUpdateMessageHandler onMessage)
         {
-            new Thread(() => _instance.UpdateLampThread(lamp, onDone, onMessage)).Start();
+            new Thread(() => _instance.UpdateLampThread(lamp, BUNDLE_FILE, onDone, onMessage)).Start();
         }
 
-        private void UpdateLampThread(VoyagerLamp lamp, VoyagerUpdateHandler onDone, VoyagerUpdateMessageHandler onMessage)
+        private void UpdateLampThread(VoyagerLamp lamp, string update, VoyagerUpdateHandler onDone, VoyagerUpdateMessageHandler onMessage)
         {
 //#if !UNITY_IOS
             var ssh = CreateSshClient(lamp);
@@ -71,9 +77,9 @@ namespace VoyagerController
             try
             {
 				onMessage?.Invoke(new VoyagerUpdateMessage(lamp, "Starting update. Uploading update to lamp."));
-				UploadUpdateToLamp(sftp);
+				UploadUpdateToLamp(sftp, update);
 				onMessage?.Invoke(new VoyagerUpdateMessage(lamp, "Installing update."));
-				InstallUpdateOnLamp(ssh);
+				InstallUpdateOnLamp(ssh, update);
                 onMessage?.Invoke(new VoyagerUpdateMessage(lamp, "Successfully installed new software on lamp."));
                 success = true;
             }
@@ -108,17 +114,17 @@ namespace VoyagerController
             return address != null ? new SftpClient(address.ToString(), LAMP_USERNAME, LAMP_PASSWORD) : null;
         }
 
-        private void UploadUpdateToLamp(SftpClient sftp)
+        private void UploadUpdateToLamp(SftpClient sftp, string update)
         {
             sftp.Connect();
 
             SetDestination(sftp, BUNDLE_DEST);
-            UploadByteAsset(sftp, BUNDLE_FILE);
+            UploadByteAsset(sftp, update);
 
             sftp.Disconnect();
         }
 
-        private static void InstallUpdateOnLamp(SshClient ssh)
+        private static void InstallUpdateOnLamp(SshClient ssh, string update)
         {
             ssh.Connect();
 
@@ -130,7 +136,7 @@ namespace VoyagerController
             
             ssh.RunCommand(DOS2_UNIX_CMD);
 
-            ssh.RunCommand($"tar -xf {BUNDLE_DEST}/{BUNDLE_FILE} -C /mnt/data/");
+            ssh.RunCommand($"tar -xf {BUNDLE_DEST}/{update} -C /mnt/data/");
 
             var installationCmd = $"setsid python3 {BUNDLE_DEST}/update3.py &";
             var installation = ssh.CreateCommand(installationCmd);
@@ -168,7 +174,7 @@ namespace VoyagerController
 
         private void UploadByteAsset(SftpClient sftp, string asset)
         {
-            var data = assets[asset];
+            var data = _assets[asset];
             var destination = Path.GetFileName(asset);
 
             using (Stream stream = new MemoryStream(data))

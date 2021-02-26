@@ -139,6 +139,7 @@
               <e p="AlignmentMenu.cs" t="Include" />
               <e p="AppSettingsMenu.cs" t="Include" />
               <e p="ClientModeMenu.cs" t="Include" />
+              <e p="DeveloperMenu.cs" t="Include" />
               <e p="DmxModeMenu.cs" t="Include" />
               <e p="EffectMappingMenu.cs" t="Include" />
               <e p="EffectSettingsMenu.cs" t="Include" />

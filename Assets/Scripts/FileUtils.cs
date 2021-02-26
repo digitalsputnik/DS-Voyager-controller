@@ -207,6 +207,21 @@ namespace VoyagerController
 
             return false;
         }
+        
+        public static void PickFile(Action<string> onPick)
+        {
+            if (Application.isMobilePlatform)
+            {
+                // TODO: Implement!
+            }
+            else
+            {
+                var documents = DocumentsPath;
+                ExtensionFilter[] extensions = { new ExtensionFilter("File") };
+                var path = FileBrowser.OpenSingleFile("Open File", documents, extensions);
+                onPick?.Invoke(path == "" ? null : path);
+            }
+        }
     }
 
     public delegate void PathHandler(string path);
