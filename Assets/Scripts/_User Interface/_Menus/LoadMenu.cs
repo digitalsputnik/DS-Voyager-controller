@@ -5,20 +5,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using UnityEngine;
 using VoyagerController.Effects;
 using VoyagerController.ProjectManagement;
+using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
 {
     public class LoadMenu : Menu
     {
-        [SerializeField] LoadMenuItem itemPrefab = null;
-        [SerializeField] Transform container = null;
+        [SerializeField] private LoadMenuItem _itemPrefab = null;
+        [SerializeField] private Transform _container = null;
 
-        List<LoadMenuItem> items = new List<LoadMenuItem>();
-        ProjectData data;
+        private readonly List<LoadMenuItem> _items = new List<LoadMenuItem>();
+        private ProjectData _data;
 
         internal override void OnShow()
         {
@@ -26,14 +26,14 @@ namespace VoyagerController.UI
             DisplayAllItems();
         }
 
-        void ClearOldItems()
+        private void ClearOldItems()
         {
-            new List<LoadMenuItem>(items).ForEach(RemoveItem);
+            new List<LoadMenuItem>(_items).ForEach(RemoveItem);
         }
 
         public void RemoveItem(LoadMenuItem item)
         {
-            items.Remove(item);
+            _items.Remove(item);
             if (item.gameObject != null)
                 Destroy(item.gameObject);
         }
@@ -89,13 +89,13 @@ namespace VoyagerController.UI
         {
             try
             {
-                LoadMenuItem item = Instantiate(itemPrefab, container);
-                items.Add(item);
+                var item = Instantiate(_itemPrefab, _container);
+                _items.Add(item);
                 item.SetPath(project);
             }
-            catch
+            catch (Exception ex)
             {
-                // ignored
+                Debugger.LogError(ex);
             }
         }
 
@@ -111,20 +111,16 @@ namespace VoyagerController.UI
                     () =>
                     {
                         ItemsInteractable = false;
-                        data = Project.Load(project);
-
-                        Debug.Log(data.Version);
-                        //OnSendBuffer();
-                        //VideoRenderer.SetState(new ConfirmPixelsState());
+                        _data = Project.Load(project);
+                        Debug.Log(_data.Version);
+                        OnSendBuffer(_data);
                     },
                     () =>
                     {
                         ItemsInteractable = false;
-                        data = Project.Load(project);
-
-                        Debug.Log(data.Version);
-                        //OnSendBufferCancel();
-                        //VideoRenderer.SetState(new ConfirmPixelsState());
+                        _data = Project.Load(project);
+                        Debug.Log(_data.Version);
+                        OnSendBufferCancel();
                     },
                     null
                 }
@@ -133,34 +129,22 @@ namespace VoyagerController.UI
 
         private void OnSendBufferCancel() => ItemsInteractable = true;
 
-        private void OnSendBuffer()
+        private void OnSendBuffer(ProjectData data)
         {
-            /*VideoRenderer.SetState(new DoneState());
-            foreach (var lampData in data.lamps)
+            foreach (var lamp in WorkspaceManager.GetItems<VoyagerItem>().Select(i => i.LampHandle))
             {
-                var lamp = LampManager.instance.GetLampWithSerial(lampData.serial) as VoyagerLamp;
-                if (lamp == null) continue;
-
-                var video = EffectManager.GetEffectWithId<Effects.Video>(lampData.effect);
-                if (video != null)
-                {
-                    lamp.effect = null;
-                    lamp.SetEffect(video);
-                    NetUtils.VoyagerClient.SendPacket(
-                        lamp,
-                        new SetPlayModePacket(PlaybackMode.Play, video.startTime, 0.0),
-                        VoyagerClient.PORT_SETTINGS
-                    );
-                }
-
-                var effect = EffectManager.GetEffectWithId(lampData.effect);
-                if (effect == null) continue;
-
-                lamp.effect = null;
-                lamp.SetEffect(effect);
-
-                StartCoroutine(LoadStream(effect, lampData, lamp));
-            }*/
+                if (!lamp.Connected) continue;
+                if (!data.LampMetadata.ContainsKey(lamp.Serial)) continue;
+                
+                var meta = data.LampMetadata[lamp.Serial];
+                var effect = meta.Effect;
+                var buffer = meta.FrameBuffer;
+                
+                LampEffectsWorker.ApplyEffectToLamp(lamp, effect);
+                Metadata.Get<LampData>(lamp.Serial).FrameBuffer = buffer;
+            }
+            
+            ItemsInteractable = true;
         }
 
         private static IEnumerator LoadStream(Effect effect, Lamp data, VoyagerLamp lamp)
@@ -187,7 +171,7 @@ namespace VoyagerController.UI
         {
             set
             {
-                foreach (var item in items)
+                foreach (var item in _items)
                     item.button.interactable = value;
             }
         }

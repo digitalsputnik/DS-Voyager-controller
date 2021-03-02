@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DigitalSputnik;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 using VoyagerController.Effects;
 
 namespace VoyagerController.ProjectManagement
@@ -29,16 +31,24 @@ namespace VoyagerController.ProjectManagement
 
         public override void WriteJson(JsonWriter writer, Effect value, JsonSerializer serializer)
         {
+            var data = new EffectData { Name = value.Name, Settings = value.Settings };
+
             switch (value)
             {
-                case VideoEffect video:
-                    var data = new EffectData();
-                    data.Name = video.Name;
-                    data.Settings = video.Settings;
+                case VideoEffect _:
                     data.Type = EffectType.Video;
-                    writer.WriteRawValue(JsonConvert.SerializeObject(data, Formatting.Indented));
+                    break;
+                case ImageEffect imageEffect:
+                    data.Type = EffectType.Picture;
+
+                    var pictureBytes = imageEffect.ImageTexture.EncodeToJPG();
+                    var picturePath = Path.Combine(_videosPath, imageEffect.Name + ".jpg");
+                    File.WriteAllBytes(picturePath, pictureBytes);
+                    
                     break;
             }
+            
+            writer.WriteRawValue(JsonConvert.SerializeObject(data, Formatting.Indented));
         }
 
         public override Effect ReadJson(JsonReader reader, Type objectType, Effect existingValue, bool hasExistingValue, JsonSerializer serializer)
@@ -73,6 +83,21 @@ namespace VoyagerController.ProjectManagement
                     
 
                     break;
+                case EffectType.Picture:
+                    var picture = EffectManager.GetEffectWithName<ImageEffect>(raw.Name);
+
+                    if (picture == null)
+                    {
+                        var path = Path.Combine(_videosPath, raw.Name + ".jpg");
+                        var image = new ImageEffect(path) { Meta = { Timestamp = TimeUtils.Epoch }};
+                        EffectManager.AddEffect(image);
+                    }
+                    else
+                    {
+                        picture.Settings = raw.Settings;
+                    }
+
+                    break;
             }
             
             return null;
@@ -95,6 +120,7 @@ namespace VoyagerController.ProjectManagement
     public enum EffectType
     {
         None,
-        Video
+        Video,
+        Picture
     }
 }

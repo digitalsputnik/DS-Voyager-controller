@@ -10255,9 +10255,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d2d2c058cd847543b917d3b14e5c9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemPrefab: {fileID: 9167158465275830652, guid: 6d0d4286b838f4668b84a332641c4f73,
+  _itemPrefab: {fileID: 9167158465275830652, guid: 6d0d4286b838f4668b84a332641c4f73,
     type: 3}
-  container: {fileID: 8440753727200755005}
+  _container: {fileID: 8440753727200755005}
 --- !u!222 &653929827
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -34403,8 +34403,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 70750426}
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
-  m_Value: 1.0000004
-  m_Size: 0.7796028
+  m_Value: 1.0000015
+  m_Size: 0.90393615
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

@@ -192,8 +192,7 @@ namespace VoyagerController.UI
             {
                 if (path != "" && path != "Null" && path != null)
                 {
-                    var image = new ImageEffect(path);
-                    image.Meta.Timestamp = TimeUtils.Epoch;
+                    var image = new ImageEffect(path) { Meta = { Timestamp = TimeUtils.Epoch }};
                     EffectManager.AddEffect(image);
                     UpdateEffectsList();
                 }
