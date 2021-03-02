@@ -40,15 +40,14 @@ namespace VoyagerController.UI
 
         public void Import()
         {
-            //TODO
-            //FileUtils.LoadProject(OnImportFile);
+            FileUtils.LoadProject(OnImportFile);
         }
 
         private void OnImportFile(string file)
         {
-            /*string name = Path.GetFileNameWithoutExtension(file);
+            string name = Path.GetFileNameWithoutExtension(file);
 
-            if (items.Any(i => i.fileName == name))
+            if (_items.Any(i => i.fileName == name))
             {
                 DialogBox.Show(
                     "ALERT",
@@ -57,20 +56,21 @@ namespace VoyagerController.UI
                     new Action[] {
                     () =>
                     {
-                        items.FirstOrDefault(i => i.fileName == name)?.Delete(() =>
-                        {
-                            var path = Project.Import(file);
-                            DisplayItem(path);
-                        });
+                        _items.FirstOrDefault(i => i.fileName == name)?.Delete(() => Project.Import(file, OnImportReady));
                     },
                         null
                     });
             }
             else
             {
-                var path = Project.Import(file);
+                Project.Import(file, OnImportReady);
+            }
+        }
+
+        private void OnImportReady(bool success, string path)
+        {
+            if (success)
                 DisplayItem(path);
-            }*/
         }
 
         private void DisplayAllItems()

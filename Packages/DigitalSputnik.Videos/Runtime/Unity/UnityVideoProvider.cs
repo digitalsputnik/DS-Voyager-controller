@@ -18,15 +18,23 @@ namespace DigitalSputnik.Videos
 
         public void LoadVideo(string path, VideoHandler loaded)
         {
-            //Older android devices can crash if videos are loaded too quickly, that is why we load then from a queue.
-            loadVideoQueue.Enqueue(new VideoLoaderQueueItem(path, loaded));
-            
-            if (!queueHandlerRunning)
+            if (Application.platform == RuntimePlatform.Android)
+            { 
+                //Older android devices can crash if videos are loaded too quickly, that is why we load then from a queue.
+                loadVideoQueue.Enqueue(new VideoLoaderQueueItem(path, loaded));
+
+                if (!queueHandlerRunning)
+                {
+                    var obj = LoaderObject();
+                    obj.StartCoroutine(LoadVideoQueueHandler());
+                }
+            }
+            else
             {
                 var obj = LoaderObject();
-                obj.StartCoroutine(LoadVideoQueueHandler());
+                var player = obj.gameObject.AddComponent<VideoPlayer>();
+                obj.StartCoroutine(LoadVideoIEnumerator(player, path, loaded));
             }
-
         }
 
         private IEnumerator LoadVideoQueueHandler()

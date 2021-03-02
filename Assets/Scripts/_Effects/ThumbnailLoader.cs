@@ -23,8 +23,14 @@ namespace VoyagerController.Effects
             switch (effect)
             {
                 case VideoEffect video:
-                    loadVideoQueue.Enqueue(new ThumbnailLoaderQueueItem(video, loaded));
-                    if (!queueHandlerRunning) StartCoroutine(LoadVideoQueueHandler());
+
+                    if (Application.platform == RuntimePlatform.Android)
+                    {
+                        loadVideoQueue.Enqueue(new ThumbnailLoaderQueueItem(video, loaded));
+                        if (!queueHandlerRunning) StartCoroutine(LoadVideoQueueHandler());
+                    }
+                    else
+                        StartCoroutine(LoadVideoThumbnail(video, loaded));
                     break;
             }
         }

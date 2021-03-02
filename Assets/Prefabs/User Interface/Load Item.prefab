@@ -316,8 +316,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 9167158465275830652}
+        m_TargetAssemblyTypeName: VoyagerController.UI.LoadMenuItem, Assembly-CSharp
         m_MethodName: Delete
         m_Mode: 1
         m_Arguments:

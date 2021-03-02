@@ -212,7 +212,7 @@ namespace VoyagerController
         {
             if (Application.isMobilePlatform)
             {
-                // TODO: Implement!
+                // TODO: Implement Native Filepicker!
             }
             else
             {
@@ -220,6 +220,70 @@ namespace VoyagerController
                 ExtensionFilter[] extensions = { new ExtensionFilter("File") };
                 var path = FileBrowser.OpenSingleFile("Open File", documents, extensions);
                 onPick?.Invoke(path == "" ? null : path);
+            }
+        }
+
+        public static bool SaveProject(string path, string name)
+        {
+            if (Application.isMobilePlatform)
+            {
+                bool success = false;
+
+                if (NativeFilePicker.IsFilePickerBusy())
+                    return false;
+
+                NativeFilePicker.Permission permission = NativeFilePicker.ExportFile(path, (exportSuccessful) => 
+                {
+                    success = exportSuccessful;
+
+                    // TODO: currently bool callback is always false, that should not be tha case
+
+                    if (File.Exists(path))
+                        File.Delete(path);
+                });
+
+                return success;
+            }
+            else
+            {
+                string documents = DocumentsPath;
+                ExtensionFilter[] extensions = { new ExtensionFilter("Compressed Zip", "zip") };
+                string to = FileBrowser.SaveFile("Save Project", documents, $"{name}", extensions);
+                if (to == string.Empty) return false;
+                File.Move(path, to);
+                return true;
+            }
+        }
+
+        public static void LoadProject(PathHandler onLoaded)
+        {
+            if (Application.isMobilePlatform)
+            {
+                if (NativeFilePicker.IsFilePickerBusy())
+                    return;
+
+#if UNITY_ANDROID
+                // Use MIMEs on Android
+                string[] fileTypes = new string[] { "application/zip" };
+#else
+                // Use UTIs on iOS
+                string[] fileTypes = new string[] { "public.archive" };
+#endif
+
+                NativeFilePicker.Permission permission = NativeFilePicker.PickFile(path =>
+                {
+                    if (string.IsNullOrEmpty(path))
+                        onLoaded?.Invoke(null);
+                    else
+                        onLoaded?.Invoke(path);
+                }, fileTypes);
+            }
+            else
+            {
+                string documents = DocumentsPath;
+                ExtensionFilter[] extensions = { new ExtensionFilter("Compressed Zip", "zip") };
+                string path = FileBrowser.OpenSingleFile("Open Project", documents, extensions);
+                onLoaded.Invoke(path == "" ? null : path);
             }
         }
     }

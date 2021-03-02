@@ -58,13 +58,12 @@ namespace VoyagerController.UI
 
         public void Export()
         {
-            //TODO
-            //Project.Export(filenameField.text, OnExportReady);
+            Project.Export(filenameField.text, OnExportReady);
         }
 
         void OnExportReady(bool success, string path)
         {
-            /*if (success)
+            if (success)
             {
                 FileUtils.SaveProject(path, filenameField.text);
                 GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
@@ -76,7 +75,7 @@ namespace VoyagerController.UI
                     "Error packing the project to export it.",
                     new string[] { "TRY AGAIN", "CANCEL" },
                     new Action[] { Export, null });
-            }*/
+            }
         }
     }
 }

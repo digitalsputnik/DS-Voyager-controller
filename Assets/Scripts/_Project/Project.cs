@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using DigitalSputnik;
 using DigitalSputnik.Voyager;
 using Newtonsoft.Json;
@@ -207,7 +210,83 @@ namespace VoyagerController.ProjectManagement
             }
         }
         #endregion
-        
+
+        #region Export
+
+        public static void Export(string save, Action<bool, string> onPacked)
+        {
+            string tempPath = Path.Combine(ProjectsDirectory, save);
+            string projPath = Path.Combine(tempPath, PROJECT_FILE);
+
+            try
+            {
+                var data = Save(save, true);
+
+                if (data == null)
+                    throw new Exception("Something went wrong while saving the project");
+
+                CompressProjectDirectory(tempPath, ProjectsDirectory, save, onPacked);
+            }
+            catch(Exception ex)
+            {
+                Debug.LogError(ex);
+            }
+        }
+
+        private static async void CompressProjectDirectory(string sourcePath, string path, string name, Action<bool, string> onPacked)
+        {
+            string finalPath = path + "/" + name + ".zip";
+
+            int[] dirProgress = new int[1];
+            var fileCount = Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories).Count();
+
+            await Task.Run(() => lzip.compressDir(sourcePath, 0, finalPath, false, dirProgress));
+
+            //(fileCount != dirProgress[0]) - Filecount is the number of files in source folder and dirProgress should the number of files currently compressed
+
+            if (Directory.Exists(sourcePath))
+                Directory.Delete(sourcePath, true);
+
+            onPacked?.Invoke(true, finalPath);
+        }
+
+        #endregion
+
+        #region Import
+
+        public static async void Import(string file, Action<bool, string> onUnpacked)
+        {
+            string name = Path.GetFileNameWithoutExtension(file);
+            string importPath = ProjectsDirectory + "/" + name;
+
+            if (!Directory.Exists(importPath))
+                Directory.CreateDirectory(importPath);
+
+            bool failed = true;
+
+            int[] progress = new int[1];
+            ulong[] progress2 = new ulong[1];
+
+            try
+            {
+                var fileInfo = lzip.getFileInfo(file);
+                await Task.Run(() => lzip.decompress_File(file, importPath, progress, null, progress2));
+                var progressPercentage = (float)(fileInfo / progress2[0]) * 100; //This should be the progress percentage
+                failed = false;
+            }
+            catch(Exception ex)
+            {
+                Debug.LogError(ex);
+            }
+
+            if (failed)
+                onUnpacked?.Invoke(false, null);
+            else
+                onUnpacked?.Invoke(true, importPath);
+        }
+
+        #endregion
+
         private static JsonSerializerSettings ConstructJsonSettings(string videosPath)
         {
             var settings = new JsonSerializerSettings();

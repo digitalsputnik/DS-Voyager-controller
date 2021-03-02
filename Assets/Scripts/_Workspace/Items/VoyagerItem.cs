@@ -275,7 +275,7 @@ namespace VoyagerController.Workspace
                     
                         for (var i = 0; i < colors.Length; i++)
                             colors[i] = colors[i] * color;
-                    
+
                         _pixelsTexture.SetPixels32(colors);
                         _pixelsTexture.Apply();
                     }
