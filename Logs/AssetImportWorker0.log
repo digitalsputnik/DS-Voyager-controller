@@ -288,3 +288,19 @@ System memory in use after: 190.0 MB.
 Unloading 171 unused Assets to reduce memory usage. Loaded Objects now: 2733.
 Total: 2.615129 ms (FindLiveObjects: 0.274849 ms CreateObjectMapping: 0.108818 ms MarkObjects: 2.185102 ms  DeleteObjects: 0.044918 ms)
 
+========================================================================
+Received Import Request.
+  Time since last request: 147.643798 seconds.
+  path: Assets/Graphics/Sprites/splash.png
+  artifactKey: Guid(8692eb6da5b984474829b9a5fdf553e2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Graphics/Sprites/splash.png using Guid(8692eb6da5b984474829b9a5fdf553e2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '166caf14e124c95c7691d94828ae7c5f') in 1.819092 seconds
+  Import took 1.823925 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.010888 seconds.
+  path: Assets/Graphics/Sprites/splash.png
+  artifactKey: Guid(8692eb6da5b984474829b9a5fdf553e2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Graphics/Sprites/splash.png using Guid(8692eb6da5b984474829b9a5fdf553e2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '166caf14e124c95c7691d94828ae7c5f') in 0.016741 seconds
+  Import took 0.021377 seconds .
+
