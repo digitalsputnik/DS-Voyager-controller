@@ -1,5 +1,6 @@
 ﻿using System;
 using DigitalSputnik;
+using DigitalSputnik.Networking;
 using DigitalSputnik.Voyager;
 using UnityEngine;
 using VoyagerController.Bluetooth;
@@ -52,6 +53,8 @@ namespace VoyagerController
             
             if (Application.isMobilePlatform && !Application.isEditor) 
                 LampManager.Instance.AddClient(new VoyagerBluetoothClient());
+
+            NetUtils.UseInterfaceForAddress = Application.isMobilePlatform && !Application.isEditor;
         }
         
         private void Dispose()
