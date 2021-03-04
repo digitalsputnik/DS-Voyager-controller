@@ -13,7 +13,7 @@ namespace VoyagerController.ProjectManagement
     public class EffectConverter : JsonConverter<Effect>, IDisposable
     {
         private readonly string _videosPath;
-        private readonly Dictionary<string, EffectSettings> _waitingList = new Dictionary<string, EffectSettings>();
+        private readonly Dictionary<string, EffectData> _waitingList = new Dictionary<string, EffectData>();
         
         public EffectConverter(string videosPath)
         {
@@ -25,7 +25,11 @@ namespace VoyagerController.ProjectManagement
         {
             if (!_waitingList.ContainsKey(effect.Name)) return;
             
-            effect.Settings = _waitingList[effect.Name];
+            effect.Settings = _waitingList[effect.Name].Settings;
+
+            if (effect is VideoEffect video)
+                video.Video.Fps = _waitingList[effect.Name].Fps;
+            
             _waitingList.Remove(effect.Name);
         }
 
@@ -35,8 +39,9 @@ namespace VoyagerController.ProjectManagement
 
             switch (value)
             {
-                case VideoEffect _:
+                case VideoEffect video:
                     data.Type = EffectType.Video;
+                    data.Fps = video.Video.Fps;
                     break;
                 case ImageEffect imageEffect:
                     data.Type = EffectType.Picture;
@@ -68,20 +73,22 @@ namespace VoyagerController.ProjectManagement
                     {
                         if (EffectManager.Presets.Contains(raw.Name))
                         {
-                            _waitingList.Add(raw.Name, raw.Settings);
+                            _waitingList.Add(raw.Name, raw);
                         }
                         else
                         {
                             var path = Path.Combine(_videosPath, raw.Name + ".mp4");
-                            VideoEffectLoader.LoadVideoEffect(path, effect =>
+                            VideoEffectLoader.LoadVideoEffect(path, e =>
                             {
-                                effect.Settings = raw.Settings;
+                                e.Settings = raw.Settings;
+                                ((VideoEffect) e).Video.Fps = raw.Fps;
                             });
                         }
                     }
                     else
                     {
                         video.Settings = raw.Settings;
+                        video.Video.Fps = raw.Fps;
                     } 
                     
 
@@ -127,6 +134,7 @@ namespace VoyagerController.ProjectManagement
         public string Name { get; set; }
         public EffectSettings Settings { get; set; }
         public EffectType Type { get; set; }
+        public double Fps { get; set; }
     }
 
     public enum EffectType
