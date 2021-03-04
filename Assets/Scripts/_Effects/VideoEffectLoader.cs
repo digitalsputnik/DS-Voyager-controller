@@ -54,11 +54,11 @@ namespace VoyagerController.Effects
         
         public static void LoadVideoEffect(string path, EffectHandler loaded)
         {
-            Tools.LoadVideo(path, video =>
+            Tools.LoadVideo(path, (video, thumbnail) =>
             {
                 var effect = new VideoEffect(video);
                 effect.Meta.StartTime = TimeUtils.Epoch;
-                _instance._thumbnailLoader.LoadThumbnail(effect, loaded);
+                effect.Meta.Thumbnail = thumbnail;
                 EffectManager.AddEffect(effect);
             });
         }

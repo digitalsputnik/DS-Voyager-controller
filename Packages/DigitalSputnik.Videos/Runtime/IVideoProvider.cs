@@ -1,6 +1,8 @@
+using UnityEngine;
+
 namespace DigitalSputnik.Videos
 {
-    public delegate void VideoHandler(Video video);
+    public delegate void VideoHandler(Video video, Texture2D thumbnail);
     public interface IVideoProvider
     {
         void LoadVideo(string path, VideoHandler loaded);
