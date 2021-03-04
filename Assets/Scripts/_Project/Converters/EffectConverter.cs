@@ -46,6 +46,9 @@ namespace VoyagerController.ProjectManagement
                     File.WriteAllBytes(picturePath, pictureBytes);
                     
                     break;
+                default:
+                    data.Type = EffectType.Other;
+                    break;
             }
             
             writer.WriteRawValue(JsonConvert.SerializeObject(data, Formatting.Indented));
@@ -98,6 +101,15 @@ namespace VoyagerController.ProjectManagement
                     }
 
                     break;
+                default:
+                    var effect = EffectManager.GetEffectWithName(raw.Name);
+
+                    if (effect != null)
+                    {
+                        effect.Settings = raw.Settings;
+                    }
+
+                    break;
             }
             
             return null;
@@ -119,8 +131,8 @@ namespace VoyagerController.ProjectManagement
 
     public enum EffectType
     {
-        None,
+        Other,
         Video,
-        Picture
+        Picture,
     }
 }
