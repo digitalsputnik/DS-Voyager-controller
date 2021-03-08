@@ -165,13 +165,13 @@ namespace VoyagerController.UI
         public void AddEffect()
         {
             DialogBox.Show(
-                "WHAT EFFECT?",
-                "Pick which effect you would like to add.",
-                new string[] { "VIDEO", "IMAGE" },
-                new Action[] { AddVideoEffect, AddImageEffect });
+                "ADD EFFECT",
+                "Pick which effect you want to add.",
+                new [] { "IMAGE", "VIDEO", "CANCEL" },
+                new Action[] { AddImageEffect, AddVideoEffect, null });
         }
 
-        public void AddVideoEffect()
+        private void AddVideoEffect()
         {
             FileUtils.LoadVideoFromDevice(path =>
             {
@@ -186,7 +186,7 @@ namespace VoyagerController.UI
             });
         }
 
-        public void AddImageEffect()
+        private void AddImageEffect()
         {
             FileUtils.LoadPictureFromDevice(path =>
             {

@@ -67,7 +67,7 @@ Material:
     - _AlphaClip: 0
     - _Blend: 0
     - _Blur: 0.28
-    - _BlurSize: 0.056
+    - _BlurSize: 0.232
     - _BumpAmt: 10
     - _BumpScale: 1
     - _Contrast: 1
