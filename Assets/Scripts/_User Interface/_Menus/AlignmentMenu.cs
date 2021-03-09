@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace VoyagerController.UI
 {
     public class AlignmentMenu : Menu
     {
+        [Space(5)]
         [SerializeField] private GameObject _selectText = null;
         [SerializeField] private GameObject _selectDeselectBtn = null;
         [SerializeField] private GameObject _undoBtn = null;
@@ -24,6 +26,8 @@ namespace VoyagerController.UI
         [SerializeField] private GameObject _distTitle = null;
         [SerializeField] private GameObject _distHorizontal = null;
         [SerializeField] private GameObject _distVertical = null;
+
+        private List<List<(VoyagerItem, WorkspaceMapping)>> _states = new List<List<(VoyagerItem, WorkspaceMapping)>>();
         
         internal override void OnShow()
         {
@@ -34,6 +38,7 @@ namespace VoyagerController.UI
         internal override void OnHide()
         {
             WorkspaceSelection.SelectionChanged -= DisableEnableItems;
+            _states.Clear();
         }
 
         private void DisableEnableItems()
@@ -48,7 +53,7 @@ namespace VoyagerController.UI
             _selectDeselectBtn.SetActive(has);
             _selectDeselectBtn.GetComponentInChildren<Text>().text = all ? "DESELECT ALL" : "SELECT ALL";
             
-            // _undoBtn.SetActive(_states.Count > 0);
+            _undoBtn.SetActive(_states.Count > 0);
 
             _selectText.SetActive(!one);
 
@@ -66,31 +71,37 @@ namespace VoyagerController.UI
 
         public void AlignHorizontally()
         {
+            SaveWorkspaceState();
             AlignSelectedLampsHorizontally();
         }
 
         public void AlignVertically()
         {
+            SaveWorkspaceState();
             AlignSelectedLampsVertically();
         }
 
         public void AlignFlip()
         {
+            SaveWorkspaceState();
             FlipSelectedLamps();
         }
 
         public void AlignScale()
         {
+            SaveWorkspaceState();
             ScaleSelectedLampsBasedOnBiggest();
         }
 
         public void DistributeHorizontally()
         {
+            SaveWorkspaceState();
             DistributeSelectedLampsHorizontally();
         }
 
         public void DistributeVertically()
         {
+            SaveWorkspaceState();
             DistributeSelectedLampsVertically();
         }
 
@@ -100,6 +111,27 @@ namespace VoyagerController.UI
                 WorkspaceUtils.SelectAllLamps();
             else
                 WorkspaceUtils.DeselectAllLamps();
+        }
+
+        public void Undo()
+        {
+            WorkspaceSelection.Clear();
+            
+            var workspace = WorkspaceManager.GetItems<VoyagerItem>().ToList();
+            
+            foreach (var (item, mapping) in _states[0])
+            {
+                if (workspace.All(i => i.LampHandle != item.LampHandle)) continue;
+                
+                Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
+                item.PositionLampBasedOnWorkspaceMapping();
+            }
+
+            foreach (var voyager in workspace)
+                WorkspaceSelection.SelectItem(voyager);
+
+            _states.RemoveAt(0);
+            DisableEnableItems();
         }
         
         public static Bounds SelectedLampsBounds()
@@ -331,6 +363,22 @@ namespace VoyagerController.UI
                 points.Add(new float2(x, start + step * i));
 
             return points.ToArray();
+        }
+
+        private void SaveWorkspaceState()
+        {
+            var items = new List<(VoyagerItem, WorkspaceMapping)>();
+
+            foreach (var item in WorkspaceManager.GetItems<VoyagerItem>())
+            {
+                var mapping = Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping;
+                items.Add((item, mapping));
+            }
+
+            if (_states.Count == 10)
+                _states.RemoveAt(9);
+            
+            _states.Insert(0, items);
         }
     }
 }

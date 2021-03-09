@@ -87,7 +87,7 @@ namespace VoyagerController.UI
             }
         }
 
-        private IEnumerator SelectAndSnapToLamp(VoyagerItem voyager)
+        private static IEnumerator SelectAndSnapToLamp(VoyagerItem voyager)
         {
             CameraMove.SetCameraPosition(voyager.transform.localPosition);
             yield return new WaitForFixedUpdate();
@@ -95,12 +95,25 @@ namespace VoyagerController.UI
             WorkspaceSelection.SelectItem(voyager);
         }
 
-        private IEnumerator ApplyDefaultEffectAndColor(VoyagerLamp voyager)
+        private static IEnumerator ApplyDefaultEffectAndColor(VoyagerLamp voyager)
         {
             LampEffectsWorker.ApplyItsheToVoyager(voyager, ApplicationSettings.AddedLampsDefaultColor);
+            
             yield return new WaitForSeconds(0.5f);
-            var effect = EffectManager.GetEffectWithName("white");
-            LampEffectsWorker.ApplyEffectToLamp(voyager, effect);
+            
+            while (true)
+            {
+                var effect = EffectManager.GetEffectWithName("white");
+
+                if (effect == null)
+                {
+                    yield return new WaitForSeconds(0.2f);
+                    continue;
+                }
+                
+                LampEffectsWorker.ApplyEffectToLamp(voyager, effect);
+                break;
+            }
         }
 
         private static bool LampValidToAdd(Lamp lamp)
@@ -166,7 +179,7 @@ namespace VoyagerController.UI
 
         private IEnumerator AddAllLampsCoroutine()
         {
-            List<string> addedLamps = new List<string>();
+            var addedLamps = new List<string>();
 
             UnsubscribeEvents();
             foreach (var lampItem in _lampItems.ToList())
