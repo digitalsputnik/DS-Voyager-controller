@@ -35,53 +35,75 @@ namespace VoyagerController
 
         public static void LoadVideoFromDevice(PathHandler onLoaded)
         {
-            if (Application.isMobilePlatform)
+            if (Application.isMobilePlatform && !Application.isEditor)
             {
-                if (NativeFilePicker.IsFilePickerBusy())
-                    return;
-
-#if UNITY_ANDROID
-                // Use MIMEs on Android
-                string[] fileTypes = new string[] { "video/*" };
-#else
-			    // Use UTIs on iOS
-			    string[] fileTypes = new string[] { "public.video" };
-#endif
-
-                // Pick an image or video
-                NativeFilePicker.Permission permission = NativeFilePicker.PickFile(path =>
+                if (Application.platform == RuntimePlatform.Android)
                 {
-                    if (string.IsNullOrEmpty(path))
-                    {
-                        onLoaded?.Invoke(null);
+                    if (NativeFilePicker.IsFilePickerBusy())
                         return;
-                    }
 
-                    var name = "video_" + Guid.NewGuid().ToString().Substring(0, 4);
+                    var fileTypes = new[] { "video/*" };
 
-                    InputFieldMenu.Show("PICK NAME FOR VIDEO", name,
-                        text =>
+                    NativeFilePicker.PickFile(path =>
+                    {
+                        if (string.IsNullOrEmpty(path))
                         {
-                            name = text;
+                            onLoaded?.Invoke(null);
+                            return;
+                        }
 
-                            var extension = ".MOV";
+                        var name = "video_" + Guid.NewGuid().ToString().Substring(0, 4);
 
-                            if (Application.platform == RuntimePlatform.Android)
-                                extension = ".mp4";
-
-                            var newPath = Path.Combine(TempPath, name + extension);
-
-                            try
+                        InputFieldMenu.Show("PICK NAME FOR VIDEO", name,
+                            text =>
                             {
-                                Copy(path, newPath);
-                                onLoaded?.Invoke(newPath);
-                            }
-                            catch (Exception ex)
+                                name = text;
+                                var extension = ".mp4";
+                                var newPath = Path.Combine(TempPath, name + extension);
+
+                                try
+                                {
+                                    Copy(path, newPath);
+                                    onLoaded?.Invoke(newPath);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.LogError(ex);
+                                }
+                            }, 3, false);
+                    }, fileTypes);   
+                }
+                else if (Application.platform == RuntimePlatform.IPhonePlayer)
+                {
+                    NativeGallery.GetVideoFromGallery(path =>
+                    {
+                        if (string.IsNullOrEmpty(path))
+                        {
+                            onLoaded?.Invoke(null);
+                            return;
+                        }
+
+                        var name = "video_" + Guid.NewGuid().ToString().Substring(0, 4);
+
+                        InputFieldMenu.Show("PICK NAME FOR VIDEO", name,
+                            text =>
                             {
-                                Debug.LogError(ex);
-                            }
-                        }, 3, false);
-                }, fileTypes);
+                                name = text;
+                                var extension = ".MOV";
+                                var newPath = Path.Combine(TempPath, name + extension);
+
+                                try
+                                {
+                                    Copy(path, newPath);
+                                    onLoaded?.Invoke(newPath);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.LogError(ex);
+                                }
+                            }, 3, false);
+                    });
+                }
             }
             else
             {
@@ -94,63 +116,94 @@ namespace VoyagerController
 
         public static void LoadPictureFromDevice(PathHandler loaded, bool rename)
         {
-            if (Application.isMobilePlatform)
+            if (Application.isMobilePlatform && !Application.isEditor)
             {
-                if (NativeFilePicker.IsFilePickerBusy())
-                    return;
-
-#if UNITY_ANDROID
-                // Use MIMEs on Android
-                string[] fileTypes = new string[] { "image/*" };
-#else
-			    // Use UTIs on iOS
-			    string[] fileTypes = new string[] { "public.image" };
-#endif
-
-                // Pick an image or video
-                NativeFilePicker.Permission permission = NativeFilePicker.PickFile(path =>
+                if (Application.platform == RuntimePlatform.Android)
                 {
-                    if (string.IsNullOrEmpty(path))
-                    {
-                        loaded?.Invoke(null);
+                    if (NativeFilePicker.IsFilePickerBusy())
                         return;
-                    }
 
-                    var name = "image_" + Guid.NewGuid().ToString().Substring(0, 4);
+                    var fileTypes = new[] { "image/*" };
 
-                    if (rename)
+                    NativeFilePicker.PickFile(path =>
                     {
-                        InputFieldMenu.Show("PICK NAME FOR IMAGE", name, text =>
+                        if (string.IsNullOrEmpty(path))
                         {
-                            name = text;
-                            var newPath = Path.Combine(TempPath, name);
-                            try
+                            loaded?.Invoke(null);
+                            return;
+                        }
+
+                        var name = "image_" + Guid.NewGuid().ToString().Substring(0, 4);
+
+                        if (rename)
+                        {
+                            InputFieldMenu.Show("PICK NAME FOR IMAGE", name, text =>
                             {
-                                Copy(path, newPath);
-                                loaded?.Invoke(newPath);
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.LogError(ex);
-                            }
-                        }, 3, false);
-                    }
-                    else
+                                name = text;
+                                var newPath = Path.Combine(TempPath, name);
+                                try
+                                {
+                                    Copy(path, newPath);
+                                    loaded?.Invoke(newPath);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.LogError(ex);
+                                }
+                            }, 3, false);
+                        }
+                        else
+                        {
+                            loaded?.Invoke(path);
+                        }
+                    }, fileTypes);   
+                }
+                else if (Application.platform == RuntimePlatform.IPhonePlayer)
+                {
+                    NativeGallery.GetImageFromGallery(path =>
                     {
-                        loaded?.Invoke(path);
-                    }
-                }, fileTypes);
+                        if (string.IsNullOrEmpty(path))
+                        {
+                            loaded?.Invoke(null);
+                            return;
+                        }
+                                        
+                        var name = "image_" + Guid.NewGuid().ToString().Substring(0, 4);
+
+                        if (rename)
+                        {
+                            InputFieldMenu.Show("PICK NAME FOR IMAGE", name, text =>
+                            {
+                                name = text;
+                                var newPath = Path.Combine(TempPath, name);
+                                try
+                                {
+                                    Copy(path, newPath);
+                                    loaded?.Invoke(newPath);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.LogError(ex);
+                                }
+                            }, 3, false);   
+                        }
+                        else
+                        {
+                            loaded?.Invoke(path);
+                        }
+                    });
+                }
             }
             else
             {
-                string documents = DocumentsPath;
+                var documents = DocumentsPath;
                 ExtensionFilter[] extensions =
                 {
                     new ExtensionFilter("PNG Picture", "png"),
                     new ExtensionFilter("JPG Picture", "jpg"),
                     new ExtensionFilter("JPEG Picture", "jpeg")
                 };
-                string path = FileBrowser.OpenSingleFile("Open Picture", documents, extensions);
+                var path = FileBrowser.OpenSingleFile("Open Picture", documents, extensions);
                 loaded.Invoke(path == "" ? null : path);
             }
         }

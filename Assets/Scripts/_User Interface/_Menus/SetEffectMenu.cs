@@ -16,6 +16,7 @@ namespace VoyagerController.UI
         [SerializeField] private SetEffectItem _itemPrefab = null;
         [SerializeField] private Transform _container = null;
         [SerializeField] private bool _applyToSelected = true;
+        [SerializeField] private Vector2Int _maxVideoSize;
 
         private static SetEffectMenu _instance;
 
@@ -50,10 +51,7 @@ namespace VoyagerController.UI
                 var item = Instantiate(_itemPrefab, _container);
                 item.Setup(effect, () =>
                 {
-                    if (_applyToSelected)
-                        ApplyEffectToSelectedLamps(effect);
-                    else
-                        ApplyEffectToAllLamps(effect);
+                    ValidateVideoResolution(effect, ApplyEffect, _ => ResizeAndApplyEffect(effect, item));
                 });
                 _items.Add(item);
             }
@@ -70,6 +68,40 @@ namespace VoyagerController.UI
         {
             if (!WorkspaceSelection.GetSelected<VoyagerItem>().Any())
                 GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+        }
+
+        private void ApplyEffect(Effect effect)
+        {
+            if (_applyToSelected)
+                ApplyEffectToSelectedLamps(effect);
+            else
+                ApplyEffectToAllLamps(effect);
+        }
+
+        private void ResizeAndApplyEffect(Effect effect, SetEffectItem item)
+        {
+            if (effect is VideoEffect video)
+            {
+                item.SetOverlay("Resizing...");
+                
+                VideoEffectLoader.ResizeVideo(video, _maxVideoSize.x, _maxVideoSize.y, done =>
+                {
+                    if (done == null)
+                    {
+                        DialogBox.Show(
+                            "FAIL",
+                            "Failed to change video resolution",
+                            new [] { "OK" },
+                            new Action[] { null });
+                    }
+                    else
+                    {
+                        ApplyEffect(effect);
+                    }
+
+                    item.SetOverlay(null);
+                });
+            }
         }
 
         private void ApplyEffectToSelectedLamps(Effect effect)
@@ -96,7 +128,35 @@ namespace VoyagerController.UI
                 });
         }
 
-        private IEnumerator ReselectLamps(List<VoyagerItem> voyagers)
+        private void ValidateVideoResolution(Effect effect, Action<Effect> fine, Action<Effect> resize)
+        {
+            if (effect is VideoEffect video)
+            {
+                if (video.Video.Width > _maxVideoSize.x || video.Video.Height > _maxVideoSize.y)
+                {
+                    if (Application.platform == RuntimePlatform.IPhonePlayer)
+                    {
+                        DialogBox.Show(
+                            "WARNING",
+                            "The video resolution is not supported and the application might suffer.",
+                            new string[] { "CONTINUE", "RESIZE", "CANCEL" },
+                            new Action[] { () => fine?.Invoke(effect), () => resize?.Invoke(video), null });
+                    }
+                    else
+                    {
+                        DialogBox.Show(
+                            "WARNING",
+                            "The video resolution is not supported and the application might suffer.",
+                            new string[] { "CONTINUE", "CANCEL" },
+                            new Action[] { () => fine?.Invoke(effect), null });
+                    }
+                }
+                else fine?.Invoke(effect);
+            }
+            else fine?.Invoke(effect);
+        }
+
+        private static IEnumerator ReselectLamps(List<VoyagerItem> voyagers)
         {
             WorkspaceSelection.Clear();
 

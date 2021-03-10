@@ -32914,6 +32914,7 @@ MonoBehaviour:
     type: 3}
   _container: {fileID: 1314744108}
   _applyToSelected: 1
+  _maxVideoSize: {x: 1280, y: 720}
 --- !u!225 &2050392028
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -34418,7 +34419,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.79429704
+  m_Size: 0.7942501
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

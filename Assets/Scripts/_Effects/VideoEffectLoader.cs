@@ -56,18 +56,29 @@ namespace VoyagerController.Effects
         {
             Tools.LoadVideo(path, (video, thumbnail) =>
             {
-                var effect = new VideoEffect(video);
-                effect.Meta.StartTime = TimeUtils.Epoch;
-                effect.Meta.Thumbnail = thumbnail;
+                var effect = new VideoEffect(video)
+                {
+                    Meta =
+                    {
+                        StartTime = TimeUtils.Epoch,
+                        Thumbnail = thumbnail
+                    }
+                };
+                
                 EffectManager.AddEffect(effect);
             });
         }
-
+        
         public static void ResizeVideo(VideoEffect video, int width, int height, EffectHandler done)
         {
             Tools.Resize(video.Video, width, height, (success, error) =>
             {
-                if (!success) Debugger.LogError(error);
+                if (!success)
+                {
+                    Debugger.LogError(error);
+                    done?.Invoke(null);
+                }
+                
                 EffectManager.InvokeEffectModified(video);
                 done?.Invoke(video);
             });

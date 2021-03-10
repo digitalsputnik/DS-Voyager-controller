@@ -14,6 +14,7 @@ namespace VoyagerController.UI
         [SerializeField] private Text _nameText = null;
         [SerializeField] private Text _infoText = null;
 
+        private string _overlay;
         private Effect _effect;
         private Action _action;
 
@@ -28,25 +29,38 @@ namespace VoyagerController.UI
 
         public void Select() => _action?.Invoke();
 
+        public void SetOverlay(string overlay)
+        {
+            _overlay = overlay;
+            UpdateInterface();
+        }
+        
         private void UpdateInterface()
         {
             _thumbnailImage.enabled = false;
             _nameText.text = _effect.Name;
 
-            switch (_effect)
+            if (string.IsNullOrEmpty(_overlay))
             {
-                case VideoEffect video:
-                    _infoText.text =
-                        "duration \n" +
-                        VideoTimeCode(video.Video) + "\n" +
-                        "resolution \n" +
-                        video.Video.Width + "x" + video.Video.Height;
-                    break;
-                case ImageEffect image:
-                    _infoText.text =
-                        "resolution \n" +
-                        image.ImageTexture.width + "x" + image.ImageTexture.height;
-                    break;
+                switch (_effect)
+                {
+                    case VideoEffect video:
+                        _infoText.text =
+                            "duration \n" +
+                            VideoTimeCode(video.Video) + "\n" +
+                            "resolution \n" +
+                            video.Video.Width + "x" + video.Video.Height;
+                        break;
+                    case ImageEffect image:
+                        _infoText.text =
+                            "resolution \n" +
+                            image.ImageTexture.width + "x" + image.ImageTexture.height;
+                        break;
+                }   
+            }
+            else
+            {
+                _infoText.text = _overlay;
             }
 
             if (EffectManager.IsEffectPreset(_effect))

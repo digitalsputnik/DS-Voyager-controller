@@ -3,12 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/FileUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/FileUtils.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Effects/VideoEffectLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Effects/VideoEffectLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logs/AssetImportWorker0-prev.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/AssetImportWorker0-prev.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +29,7 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/Documents/Backup/UI/Menus/Inspector/SetEffectMenu.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/Lamps/Lamp.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/UI/ApplicationSettings.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/Workspace/SetBoxSelectionMode.cs" root0="SKIP_HIGHLIGHTING" />
@@ -55,12 +58,11 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/D69ED357-80E9-4FBF-B8AA-CFCA21291ACF/57/710c6695/MissingFramesResponse.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/Effect/Rendering/RenderStates/FullRenderState.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/Workspace/IdentifySelectedLamps.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Documents/Backup/UI/Menus/Inspector/SetEffectItem.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/UI/Menus/Inspector/DmxSettingsMenu.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Assets/Editor/IOS142Workaround.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/DisposeState.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/EventValue.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/GlobalSettings.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/IdentifyLamps.cs" />
@@ -99,17 +101,19 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Color Wheel/ColorWheelButton.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" />
       <option value="$USER_HOME$/Documents/Backup/Utilities/FileUtils.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/FileUtils.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/VoyagerUpdater.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/DeveloperMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/LoadMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AboutMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/InterpolationState.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/FileUtils.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectItem.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/VideoEffectLoader.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -200,7 +204,8 @@
       <workItem from="1614755927782" duration="1124000" />
       <workItem from="1614848698065" duration="1968000" />
       <workItem from="1615188714439" duration="1227000" />
-      <workItem from="1615271457627" duration="2835000" />
+      <workItem from="1615271457627" duration="2970000" />
+      <workItem from="1615363404607" duration="3724000" />
     </task>
     <servers />
   </component>
