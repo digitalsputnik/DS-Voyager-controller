@@ -80,8 +80,7 @@ namespace VoyagerController.UI
 
                 StartCoroutine(SelectAndSnapToLamp(voyagerItem));
 
-                if (Metadata.Get<LampData>(voyager.Serial).Effect == null)
-                    StartCoroutine(ApplyDefaultEffectAndColor(voyager));
+                StartCoroutine(ApplyDefaultEffectAndColor(voyager));
                 
                 CloseMenuIfAllLampsAdded();
             }
