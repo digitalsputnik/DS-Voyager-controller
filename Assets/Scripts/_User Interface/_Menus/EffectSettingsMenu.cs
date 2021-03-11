@@ -99,10 +99,14 @@ namespace VoyagerController.UI
         {
             EffectManager.InvokeEffectModified(_effect);
             _displaySettings.UpdateSettings(_effect);
-            foreach (var item in WorkspaceManager.GetItems<VoyagerItem>())
+
+            if (_effect is VideoEffect || _effect is ImageEffect)
             {
-                var voyager = item.LampHandle;
-                LampEffectsWorker.ApplyEffectToLamp(voyager, _effect);
+                foreach (var item in WorkspaceManager.GetItems<VoyagerItem>())
+                {
+                    var voyager = item.LampHandle;
+                    LampEffectsWorker.ApplyEffectToLamp(voyager, _effect);
+                }
             }
         }
     }
