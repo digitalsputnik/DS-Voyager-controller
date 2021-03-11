@@ -134,7 +134,7 @@ namespace VoyagerController.UI
             {
                 if (video.Video.Width > _maxVideoSize.x || video.Video.Height > _maxVideoSize.y)
                 {
-                    if (Application.platform == RuntimePlatform.IPhonePlayer)
+                    if (Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.Android)
                     {
                         DialogBox.Show(
                             "WARNING",

@@ -47,6 +47,8 @@ namespace VoyagerController.Effects
         {
             #if UNITY_IOS && !UNITY_EDITOR
             return new IosVideoResizer();
+            #elif UNITY_ANDROID && !UNITY_EDITOR
+            return new AndroidVideoResizer();
             #else
             return new NotImplementedVideoResizer();
             #endif
@@ -73,14 +75,17 @@ namespace VoyagerController.Effects
         {
             Tools.Resize(video.Video, width, height, (success, error) =>
             {
-                if (!success)
+                MainThread.Dispatch(() =>
                 {
-                    Debugger.LogError(error);
-                    done?.Invoke(null);
-                }
-                
-                EffectManager.InvokeEffectModified(video);
-                done?.Invoke(video);
+                    if (!success)
+                    {
+                        Debugger.LogError(error);
+                        done?.Invoke(null);
+                    }
+
+                    EffectManager.InvokeEffectModified(video);
+                    done?.Invoke(video);
+                });
             });
         }
         

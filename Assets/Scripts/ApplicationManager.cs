@@ -3,6 +3,7 @@ using DigitalSputnik;
 using DigitalSputnik.Networking;
 using DigitalSputnik.Voyager;
 using UnityEngine;
+using UnityEngine.Networking;
 using VoyagerController.Bluetooth;
 
 namespace VoyagerController
@@ -46,6 +47,10 @@ namespace VoyagerController
 
         private void Setup()
         {
+            NetworkTransport.SetMulticastLock(true);
+
+            NetUtils.UseInterfaceForAddress = !Application.isMobilePlatform;
+
             LampManager.Instance.OnLampDiscovered += LampDiscovered;
             LampManager.Instance.OnLampBroadcasted += LampBroadcasted;
             
@@ -53,8 +58,6 @@ namespace VoyagerController
             
             if (Application.isMobilePlatform && !Application.isEditor) 
                 LampManager.Instance.AddClient(new VoyagerBluetoothClient());
-
-            NetUtils.UseInterfaceForAddress = Application.isMobilePlatform && !Application.isEditor;
         }
         
         private void Dispose()

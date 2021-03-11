@@ -1,38 +1,30 @@
-﻿#if UNITY_ANDROID //&& !UNITY_EDITOR
+﻿#if UNITY_ANDROID && !UNITY_EDITOR
+using DigitalSputnik;
+using DigitalSputnik.Videos;
 using System;
-using System.Collections;
 using System.IO;
+using System.Threading;
 using UnityEngine;
 
-public static class AndroidVideoResizer
+public class AndroidVideoResizer : IVideoResizer
 {
     const string PLUGIN_CLASS_NAME = "com.example.videoresizer.VideoResizer";
 
-    static AndroidJavaObject _pluginInstance;
-    static CompressedVideo compressedVideo;
-    static Action<bool, string> _compressionFinishedCallback;
+    private static AndroidJavaObject _pluginInstance;
 
-    static bool initialized = false;
-    static bool callbacksSet = false;
+    private static bool initialized = false;
+    private static bool callbacksSet = false;
 
-    public static string Progress
+    private static VideoResizeHandler _callback;
+    private static Video _resizingVideo;
+
+    public static string Progress = "";
+    public static bool IsBusy 
     {
         get
         {
-            if (compressedVideo != null)
-                return compressedVideo.CompressionProgress;
-
-            else return "Nothing is compressing";
-        }
-    }
-
-    public static bool IsCompressing
-    {
-        get
-        {
-            if (compressedVideo == null)
+            if (_resizingVideo == null)
                 return false;
-
             else return true;
         }
     }
@@ -78,73 +70,105 @@ public static class AndroidVideoResizer
         callbacksSet = true;
     }
 
-    public static void PickVideo(MonoBehaviour source, string pickedVideoPath, Action<bool, string> _callback)
+    public void Resize(Video video, int width, int height, VideoResizeHandler resized)
     {
-        if (compressedVideo == null)
+        if (IsBusy == false)
         {
-            _compressionFinishedCallback = _callback;
+            _callback = resized;
+            _resizingVideo = video;
 
-            source.StartCoroutine(SetupAndPickVideo(pickedVideoPath));
+            ResizeThread(video.Path);
         }
         else
-            _callback?.Invoke(false, "Compression in progress");
+            _callback?.Invoke(false, "VideoResizer is busy");
     }
 
-    public static void UpdateCallback(Action<bool, string> _callback) => _compressionFinishedCallback = _callback;
+    public static void UpdateCallback(VideoResizeHandler resized) => _callback = resized;
 
-    static IEnumerator SetupAndPickVideo(string pickedVideoPath)
+    private static void ResizeThread(string pickedVideoPath)
     {
         if (!initialized)
             Initialize();
 
-        yield return new WaitUntil(() => initialized);
+        while (!initialized) Thread.Sleep(10);
 
         if (!callbacksSet)
             SetCallbacks();
 
-        yield return new WaitUntil(() => callbacksSet);
+        while (!callbacksSet) Thread.Sleep(10);
 
-        var path = Application.temporaryCachePath + "/imported_videos";
+        var output = Path.GetDirectoryName(pickedVideoPath);
 
-        if (!Directory.Exists(path))
-            Directory.CreateDirectory(path);
+        object[] parameters = { pickedVideoPath, output };
 
-        object[] parameters = { pickedVideoPath, path }; 
-
-        PluginInstance.CallStatic("pickVideo", parameters);
+        PluginInstance.CallStatic("resizeVideo", parameters);
     }
 
     public static void ResizingStarted(long _startTime, string _startSize)
     {
-        compressedVideo = new CompressedVideo(_startSize, _startTime);
+        Debug.Log("Resizing Started");
     }
 
     public static void ResizingProgress(string _progress)
     {
-        compressedVideo.ProgressUpdate(_progress);
+        if (_progress != Progress) 
+        {
+            Progress = _progress;
+
+            Debug.Log("Resizing Progress: " + _progress);
+        }
     }
 
     public static void ResizingSuccess(long _resizingEnded, string _resizingDuration, string _newSize, string _path)
     {
-        compressedVideo.CompressionFinished(_resizingEnded, _resizingDuration, _newSize, _path);
+        File.Delete(_resizingVideo.Path);
+        File.Move(_path, _resizingVideo.Path);
 
-        _compressionFinishedCallback?.Invoke(true, _path);
+        var originalHeight = _resizingVideo.Height;
+        var originalWidth = _resizingVideo.Width;
 
-        compressedVideo = null;
+        int newHeight;
+        int newWidth;
+
+        if (originalWidth > originalHeight)
+        {
+            newWidth = 512;
+            double ratio = (double)newWidth / (double)originalWidth;
+            newHeight = Convert.ToInt32(Math.Round(Convert.ToDecimal(originalHeight * ratio / 16))) * 16;
+        }
+        else
+        {
+            newHeight = 512;
+            double ratio = (double)newHeight / (double)originalHeight;
+            newWidth = Convert.ToInt32(Math.Round(Convert.ToDecimal(originalWidth * ratio / 16))) * 16;
+        }
+
+        _resizingVideo.Width = newWidth;
+        _resizingVideo.Height = newHeight;
+
+        _callback?.Invoke(true, "");
+
+        _resizingVideo = null;
+        _callback = null;
+        Progress = "";
     }
 
     public static void ResizingFailed(string _error)
     {
-        _compressionFinishedCallback?.Invoke(false, _error);
+        _callback?.Invoke(false, _error);
 
-        compressedVideo = null;
+        _resizingVideo = null;
+        _callback = null;
+        Progress = "";
     }
 
     public static void ResizingCancelled(string _error)
     {
-        _compressionFinishedCallback?.Invoke(false, _error);
+        _callback?.Invoke(false, _error);
 
-        compressedVideo = null;
+        _resizingVideo = null;
+        _callback = null;
+        Progress = "";
     }
 
     class AndroidVideoResizingCallback : AndroidJavaProxy
@@ -194,33 +218,6 @@ public static class AndroidVideoResizer
         {
             _cancelCallback?.Invoke(error);
         }
-    }
-}
-
-public class CompressedVideo
-{
-    public string StartSize;
-    public long CompressionStarted;
-    public string CompressionProgress;
-    public long CompressionEnded;
-    public string CompressionDuration;
-    public string NewVideoSize;
-    public string NewVideoPath;
-
-    public CompressedVideo(string _startSize, long _startTime)
-    {
-        StartSize = _startSize;
-        CompressionStarted = _startTime;
-    }
-
-    public void ProgressUpdate(string _progress) => CompressionProgress = _progress;
-
-    public void CompressionFinished(long _resizingEnded, string _resizingDuration, string _newSize, string _path)
-    {
-        CompressionEnded = _resizingEnded;
-        CompressionDuration = _resizingDuration;
-        NewVideoSize = _newSize;
-        NewVideoPath = _path;
     }
 }
 #endif
