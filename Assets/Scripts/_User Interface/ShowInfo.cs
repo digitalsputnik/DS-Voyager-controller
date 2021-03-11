@@ -74,10 +74,8 @@ namespace VoyagerController.UI
                 info.Add($"{lamp.BatteryLevel}%");
             if (ApplicationSettings.ShowInfoChargingStatus)
                 info.Add(lamp.Charging ? "charging" : "not charging");
-
-            /*if (ApplicationSettings.ShowInfoWifiMode)
-                info.Add(ModeFromString(lamp.mode));*/
-            
+            if (ApplicationSettings.ShowInfoWifiMode)
+                info.Add(ModeFromString(lamp.ActiveMode));
             if (lamp.DmxModeEnabled)
             {
                 if (ApplicationSettings.ShowInfoDmxUniverse)
@@ -96,6 +94,20 @@ namespace VoyagerController.UI
                 info.Add($"{lamp.Version}");
             
             return string.Join(", ", info);
+        }
+
+        static string ModeFromString(string mode)
+        {
+            switch (mode)
+            {
+                case "ap_mode":
+                    return "MASTER";
+                case "client_mode":
+                    return "CLIENT";
+                case "router_mode":
+                    return "ROUTER";
+            }
+            return "";
         }
     }
 }
