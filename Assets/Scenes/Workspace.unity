@@ -10650,7 +10650,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000015258789
+      value: 0.0000076293945
       objectReference: {fileID: 0}
     - target: {fileID: 8440753726352283367, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -16709,6 +16709,9 @@ MonoBehaviour:
   - fireworks
   - noise
   - lightning
+  - flicker
+  - strobe
+  - aurora
 --- !u!114 &1006171121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34418,8 +34421,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 70750426}
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.7942501
+  m_Value: 1.0000005
+  m_Size: 0.7028428
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
