@@ -178,8 +178,15 @@ namespace VoyagerController.ProjectManagement
 
             foreach (var voyagerLamp in data.Lamps)
             {
-               if (LampManager.Instance.GetLampWithSerial<VoyagerLamp>(voyagerLamp.Serial) == null)
-                   LampManager.Instance.AddLamp(voyagerLamp);
+                var existing = LampManager.Instance.GetLampWithSerial<VoyagerLamp>(voyagerLamp.Serial);
+                
+                if (existing == null)
+                    LampManager.Instance.AddLamp(voyagerLamp);
+                else
+                {
+                    existing.DmxModeEnabled = voyagerLamp.DmxModeEnabled;
+                    existing.DmxSettings = voyagerLamp.DmxSettings;
+                }
             }
 
             foreach (var dataPair in data.LampMetadata)

@@ -102,49 +102,43 @@ namespace VoyagerController.UI
         public void LoadProject(string project)
         {
             DialogBox.Show(
-                "Send loaded video buffer to lamps?",
-                "Clicking \"YES\" will send loaded video to lamps, otherwise " +
-                "only lamp positions will be loaded, but lamps will still play " +
-                "the video, they have at the moment.",
-                new[] { "YES", "NO", "CANCEL" },
+                "Are you sure?",
+                "Loading a project will overwrite current settings on lamps. Would you like to load the project?",
+                new[] { "YES", "CANCEL" },
                 new Action[] {
                     () =>
                     {
                         ItemsInteractable = false;
                         _data = Project.Load(project);
-                        Debug.Log(_data.Version);
-                        OnSendBuffer(_data);
-                    },
-                    () =>
-                    {
-                        ItemsInteractable = false;
-                        _data = Project.Load(project);
-                        Debug.Log(_data.Version);
-                        OnSendBufferCancel();
+                        ResendLampSettings(_data);
+                        ItemsInteractable = true;
                     },
                     null
                 }
             );
         }
 
-        private void OnSendBufferCancel() => ItemsInteractable = true;
-
-        private void OnSendBuffer(ProjectData data)
+        private static void ResendLampSettings(ProjectData data)
         {
             foreach (var lamp in WorkspaceManager.GetItems<VoyagerItem>().Select(i => i.LampHandle))
             {
                 if (!lamp.Connected) continue;
                 if (!data.LampMetadata.ContainsKey(lamp.Serial)) continue;
+
+                if (lamp.DmxModeEnabled)
+                {
+                    lamp.ActivateDmxMode(lamp.DmxSettings);
+                }
+                else
+                {
+                    var meta = data.LampMetadata[lamp.Serial];
+                    var effect = meta.Effect;
+                    var buffer = meta.FrameBuffer;
                 
-                var meta = data.LampMetadata[lamp.Serial];
-                var effect = meta.Effect;
-                var buffer = meta.FrameBuffer;
-                
-                LampEffectsWorker.ApplyEffectToLamp(lamp, effect);
-                Metadata.Get<LampData>(lamp.Serial).FrameBuffer = buffer;
+                    LampEffectsWorker.ApplyEffectToLamp(lamp, effect);
+                    Metadata.Get<LampData>(lamp.Serial).FrameBuffer = buffer;   
+                }
             }
-            
-            ItemsInteractable = true;
         }
 
         private static IEnumerator LoadStream(Effect effect, Lamp data, VoyagerLamp lamp)

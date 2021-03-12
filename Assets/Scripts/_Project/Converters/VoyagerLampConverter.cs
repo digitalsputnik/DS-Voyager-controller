@@ -1,4 +1,5 @@
 using System;
+using DigitalSputnik.Dmx;
 using DigitalSputnik.Voyager;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -13,6 +14,8 @@ namespace VoyagerController.ProjectManagement
             {
                 Serial = value.Serial,
                 PixelCount = value.PixelCount,
+                DmxEnabled = value.DmxModeEnabled,
+                DmxSettings = value.DmxSettings,
                 Type = value.Type
             };
             
@@ -28,6 +31,8 @@ namespace VoyagerController.ProjectManagement
             {
                 Serial = data.Serial,
                 PixelCount = data.PixelCount, 
+                DmxModeEnabled = data.DmxEnabled,
+                DmxSettings = data.DmxSettings,
                 Type = data.Type
             };
 
@@ -38,6 +43,8 @@ namespace VoyagerController.ProjectManagement
         {
             public string Serial { get; set; }
             public int PixelCount { get; set; }
+            public bool DmxEnabled { get; set; }
+            public DmxSettings DmxSettings { get; set; }
             public VoyagerType Type { get; set; }
         }
     }

@@ -67,7 +67,7 @@ Material:
     - _AlphaClip: 0
     - _Blend: 0
     - _Blur: 0.28
-    - _BlurSize: 0.232
+    - _BlurSize: 0.024
     - _BumpAmt: 10
     - _BumpScale: 1
     - _Contrast: 1
@@ -79,7 +79,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Lift: 0
+    - _Lift: 0.09000003
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -94,7 +94,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StandardDeviation: 0
+    - _StandardDeviation: 0.1
     - _Surface: 0
     - _UVSec: 0
     - _ZWrite: 1
