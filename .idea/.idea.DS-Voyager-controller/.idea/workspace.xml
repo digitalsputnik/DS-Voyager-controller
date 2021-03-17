@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/FastRenderState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/FastRenderState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/AssetImportWorker0-prev.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/AssetImportWorker0-prev.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +93,6 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/InterpolationState.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/FileUtils.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectItem.cs" />
@@ -110,6 +105,7 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/LoadMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/FastRenderState.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -207,7 +203,7 @@
       <workItem from="1615552344167" duration="393000" />
       <workItem from="1615818371491" duration="977000" />
       <workItem from="1615890372608" duration="2688000" />
-      <workItem from="1615972924114" duration="596000" />
+      <workItem from="1615972924114" duration="874000" />
     </task>
     <servers />
   </component>

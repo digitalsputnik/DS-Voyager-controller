@@ -79,9 +79,7 @@ namespace VoyagerController.UI
                 var voyagerItem = WorkspaceManager.InstantiateItem<VoyagerItem>(voyager, WorkspaceUtils.PositionOfLastSelectedOrAddedLamp + new Vector3(0, -1.0f, 0), 1f, 0);
 
                 StartCoroutine(SelectAndSnapToLamp(voyagerItem));
-
                 StartCoroutine(ApplyDefaultEffectAndColor(voyager));
-                
                 CloseMenuIfAllLampsAdded();
             }
         }
@@ -96,22 +94,25 @@ namespace VoyagerController.UI
 
         private static IEnumerator ApplyDefaultEffectAndColor(VoyagerLamp voyager)
         {
-            LampEffectsWorker.ApplyItsheToVoyager(voyager, ApplicationSettings.AddedLampsDefaultColor);
-            
-            yield return new WaitForSeconds(0.5f);
-            
-            while (true)
+            if (!voyager.DmxModeEnabled)
             {
-                var effect = EffectManager.GetEffectWithName("white");
-
-                if (effect == null)
+                LampEffectsWorker.ApplyItsheToVoyager(voyager, ApplicationSettings.AddedLampsDefaultColor);
+            
+                yield return new WaitForSeconds(0.5f);
+            
+                while (true)
                 {
-                    yield return new WaitForSeconds(0.2f);
-                    continue;
-                }
+                    var effect = EffectManager.GetEffectWithName("white");
+
+                    if (effect == null)
+                    {
+                        yield return new WaitForSeconds(0.2f);
+                        continue;
+                    }
                 
-                LampEffectsWorker.ApplyEffectToLamp(voyager, effect);
-                break;
+                    LampEffectsWorker.ApplyEffectToLamp(voyager, effect);
+                    break;
+                }   
             }
         }
 
@@ -119,8 +120,8 @@ namespace VoyagerController.UI
         {
             if (lamp.Endpoint is LampNetworkEndPoint)
                 return !WorkspaceContainsLamp(lamp) && LampConnected(lamp);
-            else
-                return !WorkspaceContainsLamp(lamp);
+            
+            return !WorkspaceContainsLamp(lamp);
         }
         
         private static bool WorkspaceContainsLamp(Lamp lamp)
