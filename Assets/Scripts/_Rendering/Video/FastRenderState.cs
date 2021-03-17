@@ -4,7 +4,6 @@ using DigitalSputnik;
 using DigitalSputnik.Voyager;
 using UnityEngine;
 using VoyagerController.Effects;
-using Object = UnityEngine.Object;
 
 namespace VoyagerController.Rendering
 {
@@ -16,18 +15,17 @@ namespace VoyagerController.Rendering
         private readonly RenderQueue _queue;
         private readonly VideoEffect _effect;
         private readonly VoyagerLamp[] _lamps;
-        private List<ulong> _missingFrames;
 
         private FastRendererState _state = FastRendererState.Prepare;
-        private bool _renderLoopFinished;
-        private int _loopTime = 0;
-        private List<ulong> _framesInFocus = new List<ulong>();
         
         private ulong _prevIndex = ulong.MaxValue;
         private Texture2D _texture;
-        private ulong _framesToRender;
-        private ulong _framesRendered;
-        
+
+        private List<MissingFrame> _missingFrames;
+        private int _currentFrame = -1;
+        private MissingFrame CurrentFrame => _missingFrames[_currentFrame];
+        private int _framesRendererd;
+
         public FastRenderState(RenderQueue queue, VideoEffect current)
         {
             _queue = queue;
@@ -39,44 +37,48 @@ namespace VoyagerController.Rendering
 
         internal override VideoRenderState Update()
         {
-            if (_renderLoopFinished && _loopTime >= RETRY_FAST_RENDER)
-                return new InterpolationState(_queue, _effect);
+            if (Finished) return new InterpolationState(_queue, _effect);
 
             switch (_state)
             {
                 case FastRendererState.Prepare:
                     StartFastRenderLoop();
-                    _state = FastRendererState.Done;
-                    break;
-                case FastRendererState.Render:
-                    Render();
-                    break;
-                case FastRendererState.Done:
-                    Done();
+                    SeekToNextMissingFrame();
                     break;
                 case FastRendererState.Seeked:
                     Seeked();
+                    break;
+                case FastRendererState.Render:
+                    Render();
                     break;
             }
 
             return this;
         }
 
+        private bool Finished => _missingFrames.All(f => f.Requested >= RETRY_FAST_RENDER || f.Received);
+
         private void StartFastRenderLoop()
         {
             _missingFrames = GenerateMissingFramesList();
-            _renderLoopFinished = false;
         }
 
-        private void Done()
+        private void SeekToNextMissingFrame()
         {
-            if (LoopFinished())
-                FinishLoop();
-            else
-            {
-                _framesInFocus = GetFramesToFocus();
-                SeekToFrame(_framesInFocus.First());
-            }
+            IncreaseFrameToNextMissing();
+            SeekToFrame(CurrentFrame.Frame);
+        }
+
+        private void IncreaseFrameToNextMissing()
+        {
+            do { IncreaseFrameIndex(); } while (CurrentFrame.Received);
+        }
+
+        private void IncreaseFrameIndex()
+        {
+            _currentFrame++;
+            if (_currentFrame >= _missingFrames.Count)
+                _currentFrame = 0;
         }
 
         private void Render()
@@ -87,8 +89,8 @@ namespace VoyagerController.Rendering
             if (index == _prevIndex) return;
             
             _prevIndex = index;
-            
-            if (_missingFrames.Contains(index))
+
+            if (index == CurrentFrame.Frame)
             {
                 if (index >= _effect.Video.FrameCount) return;
 
@@ -102,19 +104,21 @@ namespace VoyagerController.Rendering
                     SendColorsToLamp(voyager, colors, (long)index);
                 }
 
-                _missingFrames.Remove(index);
+                CurrentFrame.Received = true;
             }
 
-            _framesRendered++;
-
-            if (_framesRendered >= _framesToRender)
-                _state = FastRendererState.Done;
+            _framesRendererd++;
+            
+            if (_framesRendererd >= START_BEFORE)
+            {
+                CurrentFrame.Requested++;
+                SeekToNextMissingFrame();
+            }
         }
 
         private void Seeked()
         {
-            _framesToRender = _framesInFocus.Last() - _framesInFocus.First() + START_BEFORE * 2;
-            _framesRendered = 0;
+            _framesRendererd = 0;
             _state = FastRendererState.Render;
         }
         
@@ -130,9 +134,9 @@ namespace VoyagerController.Rendering
             LampEffectsWorker.ApplyVideoFrameToVoyager(voyager, index, data);
         }
 
-        private List<ulong> GenerateMissingFramesList()
+        private List<MissingFrame> GenerateMissingFramesList()
         {
-            var missing = new List<ulong>();
+            var missing = new List<MissingFrame>();
 
             foreach (var voyager in GetLampsWithEffect(_effect))
             {
@@ -142,44 +146,12 @@ namespace VoyagerController.Rendering
                 for (ulong i = 0; i < _effect.Video.FrameCount; i++)
                 {
                     if (buffer[i] != null && buffer[i].Length == pixels) continue;
-                    if (!missing.Contains(i)) missing.Add(i);
+                    if (missing.All(f => f.Frame != i))
+                        missing.Add(new MissingFrame(i));
                 }
             }
             
             return missing;
-        }
-
-        private bool LoopFinished()
-        {
-            return _missingFrames.Count == 0;
-        }
-        
-        private void FinishLoop()
-        {
-            _loopTime++;
-            _renderLoopFinished = true;
-            _framesInFocus.Clear();
-            _state = FastRendererState.Prepare;
-        }
-
-        private List<ulong> GetFramesToFocus()
-        {
-            var first = _missingFrames.FirstOrDefault();
-            var index = _missingFrames.IndexOf(first);
-            var frames = new List<ulong> { first };
-
-            while (true)
-            {
-                index++;
-             
-                if (index >= _missingFrames.Count) break;
-                if (_missingFrames[index] - first > START_BEFORE) break;
-                
-                frames.Add(_missingFrames[index]);
-                first = _missingFrames[index];
-            }
-
-            return frames;
         }
 
         private void SeekToFrame(ulong frame)
@@ -215,8 +187,21 @@ namespace VoyagerController.Rendering
             Prepare,
             Seeking,
             Seeked,
-            Render,
-            Done
+            Render
+        }
+
+        private class MissingFrame
+        {
+            public ulong Frame { get; }
+            public int Requested { get; set; }
+            public bool Received { get; set; }
+
+            public MissingFrame(ulong frame)
+            {
+                Frame = frame;
+                Requested = 0;
+                Received = false;
+            }
         }
     }
 }

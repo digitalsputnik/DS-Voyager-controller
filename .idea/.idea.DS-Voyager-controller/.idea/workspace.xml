@@ -3,6 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/FastRenderState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/FastRenderState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logs/AssetImportWorker0-prev.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/AssetImportWorker0-prev.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +59,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/IdentifyLamps.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/SliderMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationState.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Serial/VoyagerSerialClient.cs" />
@@ -84,7 +87,6 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/RenderQueue.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/SyphonRenderer.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/RenderState.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/FastRenderState.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/Metadata.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/RenderLoadingBar.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Color Wheel/ColorWheelButton.cs" />
@@ -106,6 +108,8 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/VoyagerLampConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/LoadMenu.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/FastRenderState.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -200,6 +204,10 @@
       <workItem from="1615363404607" duration="3932000" />
       <workItem from="1615466720091" duration="116000" />
       <workItem from="1615537685670" duration="4149000" />
+      <workItem from="1615552344167" duration="393000" />
+      <workItem from="1615818371491" duration="977000" />
+      <workItem from="1615890372608" duration="2688000" />
+      <workItem from="1615972924114" duration="596000" />
     </task>
     <servers />
   </component>
