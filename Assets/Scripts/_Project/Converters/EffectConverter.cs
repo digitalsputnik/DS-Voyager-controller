@@ -51,6 +51,14 @@ namespace VoyagerController.ProjectManagement
                     File.WriteAllBytes(picturePath, pictureBytes);
                     
                     break;
+                case SyphonEffect syphon:
+                    data.Delay = syphon.Delay;
+                    data.Type = EffectType.Stream;
+                    break;
+                case SpoutEffect spout:
+                    data.Delay = spout.Delay;
+                    data.Type = EffectType.Stream;
+                    break;
                 default:
                     data.Type = EffectType.Other;
                     break;
@@ -108,6 +116,21 @@ namespace VoyagerController.ProjectManagement
                     }
 
                     break;
+                case EffectType.Stream:
+                    var syphon = EffectManager.GetEffectWithName<SyphonEffect>(raw.Name);
+                    if (syphon != null)
+                    {
+                        syphon.Delay = raw.Delay;
+                        syphon.Settings = raw.Settings;
+                    }
+
+                    var spout = EffectManager.GetEffectWithName<SpoutEffect>(raw.Name);
+                    if (spout != null)
+                    {
+                        spout.Delay = raw.Delay;
+                        spout.Settings = raw.Settings;
+                    }
+                    break;
                 default:
                     var effect = EffectManager.GetEffectWithName(raw.Name);
 
@@ -135,6 +158,7 @@ namespace VoyagerController.ProjectManagement
         public EffectSettings Settings { get; set; }
         public EffectType Type { get; set; }
         public double Fps { get; set; }
+        public double Delay { get; set; }
     }
 
     public enum EffectType
@@ -142,5 +166,6 @@ namespace VoyagerController.ProjectManagement
         Other,
         Video,
         Picture,
+        Stream,
     }
 }

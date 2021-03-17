@@ -2,6 +2,7 @@ using System;
 using DigitalSputnik.Colors;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace VoyagerController.ProjectManagement
 {
@@ -17,6 +18,7 @@ namespace VoyagerController.ProjectManagement
         { 
             var json = JArray.Load(reader).ToString();
             var values = JsonConvert.DeserializeObject<float[]>(json);
+            Debug.Log(string.Join(", ", values));
             return new Itshe(values[0], values[1], values[2], values[3], values[4]);
         }
     }

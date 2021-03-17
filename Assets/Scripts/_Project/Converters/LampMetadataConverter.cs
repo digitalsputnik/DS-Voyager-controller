@@ -65,6 +65,7 @@ namespace VoyagerController.ProjectManagement
                 EffectMapping = data.EffectMapping,
                 InWorkspace = data.InWorkspace,
                 WorkspaceMapping = data.WorkspaceMapping,
+                Itshe = data.Itshe,
                 ConfirmedFrames = confirmed,
                 PreviousStreamFrame = data.PreviousStreamFrame,
                 TimeEffectApplied = data.TimeEffectApplied,

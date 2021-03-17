@@ -118,8 +118,11 @@ namespace VoyagerController.UI
         {
             if (_effect is SyphonEffect syphon)
             {
-                syphon.Server = SyphonEffectLoader.AvailableServers[_syphonSource.Index];
-                EffectManager.InvokeEffectModified(syphon);
+                if (_syphonSource.Index >= 0)
+                {
+                    syphon.Server = SyphonEffectLoader.AvailableServers[_syphonSource.Index];
+                    EffectManager.InvokeEffectModified(syphon);   
+                }
             }
         }
         #endregion
