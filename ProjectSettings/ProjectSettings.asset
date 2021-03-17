@@ -129,7 +129,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 2.6.54
+  bundleVersion: 2.6.55
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -154,11 +154,11 @@ PlayerSettings:
     iPhone: com.DigitalSputnik.DSVoyagercontroller
     tvOS: com.DS.LightGrade
   buildNumber:
-    Standalone: 552
-    iPhone: 2.6.54
+    Standalone: 553
+    iPhone: 2.6.55
     tvOS: 0
   overrideDefaultApplicationIdentifier: 0
-  AndroidBundleVersionCode: 552
+  AndroidBundleVersionCode: 553
   AndroidMinSdkVersion: 26
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -965,10 +965,10 @@ PlayerSettings:
       PointOfService: False
       RecordedCallsFolder: False
       Contacts: False
+      Proximity: False
       InternetClient: False
       CodeGeneration: False
       BackgroundMediaPlayback: False
-      Proximity: False
   metroTargetDeviceFamilies:
     Desktop: False
     Holographic: False
