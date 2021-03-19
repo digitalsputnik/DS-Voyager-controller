@@ -1,0 +1,134 @@
+Using pre-set license
+
+ COMMAND LINE ARGUMENTS:
+/Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/MacOS/Unity
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+/Users/taavetmaask/Projects/DS-Voyager-controller
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+53020
+Successfully changed project path to: /Users/taavetmaask/Projects/DS-Voyager-controller
+/Users/taavetmaask/Projects/DS-Voyager-controller
+Using Asset Import Pipeline V2.
+Refreshing native plugins compatible for Editor in 140.69 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2020.2.1f1 (270dd8c3da1c)
+[Subsystems] Discovering subsystems at path /Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path /Users/taavetmaask/Projects/DS-Voyager-controller/Assets
+GfxDevice: creating device client; threaded=0
+2021-03-19 15:55:27.487 Unity[8223:203777] Color LCD preferred device: AMD Radeon Pro 560X (high power)
+2021-03-19 15:55:27.487 Unity[8223:203777] Metal devices available: 2
+2021-03-19 15:55:27.487 Unity[8223:203777] 0: AMD Radeon Pro 560X (high power)
+2021-03-19 15:55:27.487 Unity[8223:203777] 1: Intel(R) UHD Graphics 630 (low power)
+2021-03-19 15:55:27.488 Unity[8223:203777] Using device AMD Radeon Pro 560X (high power)
+Initializing Metal device caps: AMD Radeon Pro 560X
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Initialize mono
+Mono path[0] = '/Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/Managed'
+Mono path[1] = '/Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/MonoBleedingEdge/lib/mono/unityjit'
+Mono config path = '/Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56223
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: /Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
+Registered in 0.003017 seconds.
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 46.81 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.961 seconds
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.010138 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 52.90 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.520 seconds
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Launching external process: /Applications/Unity/Hub/Editor/2020.2.1f1/Unity.app/Contents/Tools/UnityShaderCompiler
+Launched and connected shader compiler UnityShaderCompiler after 0.02 seconds
+Refreshing native plugins compatible for Editor in 1.31 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2440 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 178.5 MB.
+System memory in use after: 178.7 MB.
+
+Unloading 176 unused Assets to reduce memory usage. Loaded Objects now: 2721.
+Total: 3.065213 ms (FindLiveObjects: 0.358313 ms CreateObjectMapping: 0.135161 ms MarkObjects: 2.469633 ms  DeleteObjects: 0.100525 ms)
+
+========================================================================
+Received Import Request.
+  path: Assets/Scripts/_User Interface/_Menus/ClientModeMenu.cs
+  artifactKey: Guid(0891d04677334d01b892f177dad5de5b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/_User Interface/_Menus/ClientModeMenu.cs using Guid(0891d04677334d01b892f177dad5de5b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3393400f4e4883588081c1d01e2f4121') in 0.415315 seconds
+  Import took 0.419877 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 19.922025 seconds.
+  path: Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs
+  artifactKey: Guid(aebc9770b3e664691b5abcbce1493498) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs using Guid(aebc9770b3e664691b5abcbce1493498) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0b911a138dd6c7a62693a43bcc1d9414') in 0.005851 seconds
+  Import took 0.010366 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 128.108284 seconds.
+  path: Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs
+  artifactKey: Guid(aebc9770b3e664691b5abcbce1493498) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs using Guid(aebc9770b3e664691b5abcbce1493498) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2b0335d61126ed8d24cd2f84a15c040c') in 0.005952 seconds
+  Import took 0.010862 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003662 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.49 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.392 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.29 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2328 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 182.3 MB.
+System memory in use after: 182.5 MB.
+
+Unloading 171 unused Assets to reduce memory usage. Loaded Objects now: 2723.
+Total: 2.413249 ms (FindLiveObjects: 0.274061 ms CreateObjectMapping: 0.150917 ms MarkObjects: 1.934296 ms  DeleteObjects: 0.053029 ms)
+
+========================================================================
+Received Prepare
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 24.02 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 173 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.3 MB.
+System memory in use after: 136.5 MB.
+
+Unloading 169 unused Assets to reduce memory usage. Loaded Objects now: 2723.
+Total: 4.340413 ms (FindLiveObjects: 0.509506 ms CreateObjectMapping: 0.246671 ms MarkObjects: 3.526178 ms  DeleteObjects: 0.055327 ms)
+

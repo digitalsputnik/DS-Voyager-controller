@@ -464,7 +464,9 @@ namespace VoyagerController.Bluetooth
 
             var packet = new NetworkModeRequestPacket(voyager.Serial, mode, ssid, password);
             var time = TimeUtils.Epoch + TimeOffset;
-            SendDiscoveryPacket(voyager, packet, time);
+
+            for (var i = 0; i < 5; i++)
+                SendDiscoveryPacket(voyager, packet, time);
         }
 
         public override void SetPlaymode(VoyagerLamp voyager, PlayMode mode, double startTime, double handle)

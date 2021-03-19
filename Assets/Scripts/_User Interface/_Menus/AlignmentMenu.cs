@@ -14,6 +14,8 @@ namespace VoyagerController.UI
         [SerializeField] private GameObject _selectText = null;
         [SerializeField] private GameObject _selectDeselectBtn = null;
         [SerializeField] private GameObject _undoBtn = null;
+        [SerializeField] private bool _workspaceAlignment = false;
+        [SerializeField] private Transform _display = null;
 
         [Header("Alignment")]
         [SerializeField] private GameObject _alignTitle = null;
@@ -27,7 +29,8 @@ namespace VoyagerController.UI
         [SerializeField] private GameObject _distHorizontal = null;
         [SerializeField] private GameObject _distVertical = null;
 
-        private List<List<(VoyagerItem, WorkspaceMapping)>> _states = new List<List<(VoyagerItem, WorkspaceMapping)>>();
+        private readonly List<List<(VoyagerItem, WorkspaceMapping)>> _workspaceMappings = new List<List<(VoyagerItem, WorkspaceMapping)>>();
+        private readonly List<List<(VoyagerItem, EffectMapping)>> _effectMappings = new List<List<(VoyagerItem, EffectMapping)>>();
         
         internal override void OnShow()
         {
@@ -38,7 +41,7 @@ namespace VoyagerController.UI
         internal override void OnHide()
         {
             WorkspaceSelection.SelectionChanged -= DisableEnableItems;
-            _states.Clear();
+            _workspaceMappings.Clear();
         }
 
         private void DisableEnableItems()
@@ -53,7 +56,7 @@ namespace VoyagerController.UI
             _selectDeselectBtn.SetActive(has);
             _selectDeselectBtn.GetComponentInChildren<Text>().text = all ? "DESELECT ALL" : "SELECT ALL";
             
-            _undoBtn.SetActive(_states.Count > 0);
+            _undoBtn.SetActive(_workspaceMappings.Count > 0);
 
             _selectText.SetActive(!one);
 
@@ -71,37 +74,37 @@ namespace VoyagerController.UI
 
         public void AlignHorizontally()
         {
-            SaveWorkspaceState();
+            SaveMapping();
             AlignSelectedLampsHorizontally();
         }
 
         public void AlignVertically()
         {
-            SaveWorkspaceState();
+            SaveMapping();
             AlignSelectedLampsVertically();
         }
 
         public void AlignFlip()
         {
-            SaveWorkspaceState();
+            SaveMapping();
             FlipSelectedLamps();
         }
 
         public void AlignScale()
         {
-            SaveWorkspaceState();
+            SaveMapping();
             ScaleSelectedLampsBasedOnBiggest();
         }
 
         public void DistributeHorizontally()
         {
-            SaveWorkspaceState();
+            SaveMapping();
             DistributeSelectedLampsHorizontally();
         }
 
         public void DistributeVertically()
         {
-            SaveWorkspaceState();
+            SaveMapping();
             DistributeSelectedLampsVertically();
         }
 
@@ -115,23 +118,10 @@ namespace VoyagerController.UI
 
         public void Undo()
         {
-            WorkspaceSelection.Clear();
-            
-            var workspace = WorkspaceManager.GetItems<VoyagerItem>().ToList();
-            
-            foreach (var (item, mapping) in _states[0])
-            {
-                if (workspace.All(i => i.LampHandle != item.LampHandle)) continue;
-                
-                Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
-                item.PositionLampBasedOnWorkspaceMapping();
-            }
-
-            foreach (var voyager in workspace)
-                WorkspaceSelection.SelectItem(voyager);
-
-            _states.RemoveAt(0);
-            DisableEnableItems();
+            if (_workspaceAlignment)
+                RecoverWorkspaceState();
+            else
+                RecoverEffectMapping();
         }
         
         public static Bounds SelectedLampsBounds()
@@ -143,25 +133,29 @@ namespace VoyagerController.UI
             return bounds;
         }
 
-        private static void AlignSelectedLampsHorizontally()
+        private void AlignSelectedLampsHorizontally()
         {
             var rotations = new List<float> { 0.0f, 180.0f, 360.0f };
             AlignSelectedLampsToRotations(rotations);
         }
 
-        private static void AlignSelectedLampsVertically()
+        private void AlignSelectedLampsVertically()
         {
             var rotations = new List<float> { 90.0f, 270.0f };
             AlignSelectedLampsToRotations(rotations);
         }
 
-        private static void AlignSelectedLampsToRotations(IReadOnlyCollection<float> rotations)
+        private void AlignSelectedLampsToRotations(IReadOnlyCollection<float> rotations)
         {
             foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>().ToList())
             {
-                var position = item.GetWorkspacePosition();
-                var scale = item.GetWorkspaceScale().x;
-                var rotation = rotations.OrderBy(x => math.abs(item.GetWorkspaceRotation().z - x)).First();
+                WorkspaceSelection.DeselectItem(item);
+                
+                var position = GetPosition(item);
+                var scale = GetScale(item).x;
+                var rotation = rotations.OrderBy(x => math.abs(GetRotation(item).z - x)).First();
+
+                var meta = Metadata.Get<LampData>(item.LampHandle.Serial);
                 
                 var mapping = new WorkspaceMapping
                 {
@@ -170,23 +164,40 @@ namespace VoyagerController.UI
                     Scale = scale
                 };
 
-                WorkspaceSelection.DeselectItem(item);
-                Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
-                item.PositionLampBasedOnWorkspaceMapping();
+                if (_workspaceAlignment)
+                {
+
+                    meta.WorkspaceMapping = mapping;
+                    item.PositionBasedOnWorkspaceMapping();   
+                }
+                else
+                {
+                    var prev = meta.WorkspaceMapping;
+
+                    meta.WorkspaceMapping = mapping;
+                    item.PositionBasedOnWorkspaceMapping();
+                    meta.WorkspaceMapping = prev;
+                    meta.EffectMapping = CalculateLampEffectMapping(item, _display);
+                }
+
                 WorkspaceSelection.SelectItem(item);
             }
 
             SelectionMove.RaiseMovedEvent();
         }
 
-        public static void FlipSelectedLamps()
+        private void FlipSelectedLamps()
         {
             foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>().ToList())
             {
-                var position = item.GetWorkspacePosition();
-                var rotation = item.GetWorkspaceRotation().z + 180.0f;
-                var scale = item.GetWorkspaceScale().x;
-             
+                WorkspaceSelection.DeselectItem(item);
+                
+                var position = GetPosition(item);
+                var rotation = GetRotation(item).z + 180.0f;
+                var scale = GetScale(item).x;
+                
+                var meta = Metadata.Get<LampData>(item.LampHandle.Serial);
+                
                 var mapping = new WorkspaceMapping
                 {
                     Position = new[] { position.x, position.y },
@@ -194,16 +205,29 @@ namespace VoyagerController.UI
                     Scale = scale
                 };
 
-                WorkspaceSelection.DeselectItem(item);
-                Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
-                item.PositionLampBasedOnWorkspaceMapping();
+                if (_workspaceAlignment)
+                {
+
+                    meta.WorkspaceMapping = mapping;
+                    item.PositionBasedOnWorkspaceMapping();   
+                }
+                else
+                {
+                    var prev = meta.WorkspaceMapping;
+
+                    meta.WorkspaceMapping = mapping;
+                    item.PositionBasedOnWorkspaceMapping();
+                    meta.WorkspaceMapping = prev;
+                    meta.EffectMapping = CalculateLampEffectMapping(item, _display);
+                }
+
                 WorkspaceSelection.SelectItem(item);
             }
 
             SelectionMove.RaiseMovedEvent();
         }
 
-        public static void ScaleSelectedLampsBasedOnBiggest()
+        private void ScaleSelectedLampsBasedOnBiggest()
         {
             var longest = WorkspaceSelection.GetSelected<VoyagerItem>()
                 .OrderByDescending(l => l.GetComponentInChildren<MeshRenderer>().transform.lossyScale.x)
@@ -211,28 +235,28 @@ namespace VoyagerController.UI
 
             if (longest != null)
             {
-                var scale = longest.GetWorkspaceScale().x / longest.LampHandle.PixelCount;
-
                 float shortScale;
                 float longScale;
 
                 if (longest.LampHandle.PixelCount > 50)
                 {
-                    shortScale = longest.GetWorkspaceScale().x * (83.0f / 42.0f);
-                    longScale = longest.GetWorkspaceScale().x;
+                    shortScale = GetScale(longest).x * (83.0f / 42.0f);
+                    longScale = GetScale(longest).x;
                 }
                 else
                 {
-                    shortScale = longest.GetWorkspaceScale().x;
-                    longScale = longest.GetWorkspaceScale().x * (42.0f / 83.0f);
+                    shortScale = GetScale(longest).x;
+                    longScale = GetScale(longest).x * (42.0f / 83.0f);
                 }
 
                 foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>().ToList())
                 {
-                    var position = item.GetWorkspacePosition();
-                    var rotation = item.GetWorkspaceRotation().z;
+                    WorkspaceSelection.DeselectItem(item); 
                     
-                    WorkspaceSelection.DeselectItem(item);
+                    var meta = Metadata.Get<LampData>(item.LampHandle.Serial);
+                    var prev = meta.WorkspaceMapping;
+                    var position = GetPosition(item);
+                    var rotation = GetRotation(item).z;
 
                     if (item.LampHandle.PixelCount > 50)
                     {
@@ -243,7 +267,7 @@ namespace VoyagerController.UI
                             Scale = longScale
                         };
                         
-                        Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
+                        meta.WorkspaceMapping = mapping;
                     }
                     else
                     {
@@ -254,10 +278,17 @@ namespace VoyagerController.UI
                             Scale = shortScale
                         };
                         
-                        Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
+                        meta.WorkspaceMapping = mapping;
                     }
                     
-                    item.PositionLampBasedOnWorkspaceMapping();
+                    item.PositionBasedOnWorkspaceMapping();
+                    
+                    if (!_workspaceAlignment)
+                    {
+                        meta.WorkspaceMapping = prev;
+                        meta.EffectMapping = CalculateLampEffectMapping(item, _display);
+                    }
+                    
                     WorkspaceSelection.SelectItem(item);
                 }
             }
@@ -265,10 +296,10 @@ namespace VoyagerController.UI
             SelectionMove.RaiseMovedEvent();
         }
 
-        public static void DistributeSelectedLampsHorizontally()
+        private void DistributeSelectedLampsHorizontally()
         {
             var lamps = WorkspaceSelection.GetSelected<VoyagerItem>()
-                .OrderBy(l => l.GetWorkspacePosition().x)
+                .OrderBy(l => GetPosition(l).x)
                 .ToList();
 
             var positions = SelectedHorizontalAlignment();
@@ -281,7 +312,9 @@ namespace VoyagerController.UI
                 var position = positions[i];
                 var rotation = item.GetWorkspaceRotation().z;
                 var scale = item.GetWorkspaceScale().x;
-             
+
+                var meta = Metadata.Get<LampData>(item.LampHandle.Serial);
+                
                 var mapping = new WorkspaceMapping
                 {
                     Position = new[] { position.x, position.y },
@@ -289,23 +322,37 @@ namespace VoyagerController.UI
                     Scale = scale
                 };
 
-                Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
-                item.PositionLampBasedOnWorkspaceMapping();
+                if (_workspaceAlignment)
+                {
+
+                    meta.WorkspaceMapping = mapping;
+                    item.PositionBasedOnWorkspaceMapping();   
+                }
+                else
+                {
+                    var prev = meta.WorkspaceMapping;
+
+                    meta.WorkspaceMapping = mapping;
+                    item.PositionBasedOnWorkspaceMapping();
+                    meta.WorkspaceMapping = prev;
+                    meta.EffectMapping = CalculateLampEffectMapping(item, _display);
+                }
+                
                 WorkspaceSelection.SelectItem(item);
             }
 
             SelectionMove.RaiseMovedEvent();
         }
 
-        private static Vector2[] SelectedHorizontalAlignment()
+        private Vector2[] SelectedHorizontalAlignment()
         {
             var selectedLamps = WorkspaceSelection.GetSelected<VoyagerItem>().ToList();
             var bounds = SelectedLampsBounds();
             var count = selectedLamps.Count;
             var points = new List<Vector2>();
 
-            var start = selectedLamps.Min(l => l.GetWorkspacePosition().x);
-            var max = selectedLamps.Max(l => l.GetWorkspacePosition().x);
+            var start = selectedLamps.Min(l => GetPosition(l).x);
+            var max = selectedLamps.Max(l => GetPosition(l).x);
             var step = count > 1 ? (max - start) / (count - 1) : 0;
             var y = bounds.center.y;
 
@@ -315,10 +362,10 @@ namespace VoyagerController.UI
             return points.ToArray();
         }
 
-        public static void DistributeSelectedLampsVertically()
+        private void DistributeSelectedLampsVertically()
         {
             var lamps = WorkspaceSelection.GetSelected<VoyagerItem>()
-                .OrderBy(l => l.GetWorkspacePosition().y)
+                .OrderBy(l => GetPosition(l).y)
                 .ToList();
 
             var positions = SelectedVerticalAlignment();
@@ -329,9 +376,11 @@ namespace VoyagerController.UI
             {
                 var item = lamps[i];
                 var position = positions[i];
-                var rotation = item.GetWorkspaceRotation().z;
-                var scale = item.GetWorkspaceScale().x;
-             
+                var rotation = GetRotation(item).z;
+                var scale = GetScale(item).x;
+                
+                var meta = Metadata.Get<LampData>(item.LampHandle.Serial);
+                
                 var mapping = new WorkspaceMapping
                 {
                     Position = new[] { position.x, position.y },
@@ -339,23 +388,37 @@ namespace VoyagerController.UI
                     Scale = scale
                 };
 
-                Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
-                item.PositionLampBasedOnWorkspaceMapping();
+                if (_workspaceAlignment)
+                {
+
+                    meta.WorkspaceMapping = mapping;
+                    item.PositionBasedOnWorkspaceMapping();   
+                }
+                else
+                {
+                    var prev = meta.WorkspaceMapping;
+
+                    meta.WorkspaceMapping = mapping;
+                    item.PositionBasedOnWorkspaceMapping();
+                    meta.WorkspaceMapping = prev;
+                    meta.EffectMapping = CalculateLampEffectMapping(item, _display);
+                }
+                
                 WorkspaceSelection.SelectItem(item);
             }
 
             SelectionMove.RaiseMovedEvent();
         }
 
-        private static Vector2[] SelectedVerticalAlignment()
+        private Vector2[] SelectedVerticalAlignment()
         {
             var selected = WorkspaceSelection.GetSelected<VoyagerItem>().ToList();
             var bounds = SelectedLampsBounds();
             var count = selected.Count;
             var points = new List<Vector2>();
 
-            var start = selected.Min(l => l.GetWorkspacePosition().y);
-            var max = selected.Max(l => l.GetWorkspacePosition().y);
+            var start = selected.Min(l => GetPosition(l).y);
+            var max = selected.Max(l => GetPosition(l).y);
             var step = count > 1 ? (max - start) / (count - 1) : 0;
             var x = bounds.center.x;
 
@@ -365,7 +428,15 @@ namespace VoyagerController.UI
             return points.ToArray();
         }
 
-        private void SaveWorkspaceState()
+        private void SaveMapping()
+        {
+            if (_workspaceAlignment)
+                SaveWorkspaceMapping();
+            else
+                SaveEffectMapping();
+        }
+
+        private void SaveWorkspaceMapping()
         {
             var items = new List<(VoyagerItem, WorkspaceMapping)>();
 
@@ -375,10 +446,108 @@ namespace VoyagerController.UI
                 items.Add((item, mapping));
             }
 
-            if (_states.Count == 10)
-                _states.RemoveAt(9);
+            if (_workspaceMappings.Count == 10)
+                _workspaceMappings.RemoveAt(9);
             
-            _states.Insert(0, items);
+            _workspaceMappings.Insert(0, items);
+        }
+
+        private void RecoverWorkspaceState()
+        {
+            WorkspaceSelection.Clear();
+            
+            var workspace = WorkspaceManager.GetItems<VoyagerItem>().ToList();
+            
+            foreach (var (item, mapping) in _workspaceMappings[0])
+            {
+                if (workspace.All(i => i.LampHandle != item.LampHandle)) continue;
+                
+                Metadata.Get<LampData>(item.LampHandle.Serial).WorkspaceMapping = mapping;
+                item.PositionBasedOnWorkspaceMapping();
+            }
+
+            foreach (var voyager in workspace)
+                WorkspaceSelection.SelectItem(voyager);
+
+            _workspaceMappings.RemoveAt(0);
+            DisableEnableItems();
+        }
+
+        private void SaveEffectMapping()
+        {
+            var items = new List<(VoyagerItem, EffectMapping)>();
+            
+            foreach (var item in WorkspaceManager.GetItems<VoyagerItem>())
+            {
+                var mapping = Metadata.Get<LampData>(item.LampHandle.Serial).EffectMapping;
+                items.Add((item, mapping));
+            }
+            
+            if (_effectMappings.Count == 10)
+                _effectMappings.RemoveAt(9);
+            
+            _effectMappings.Insert(0, items);
+        }
+
+        private void RecoverEffectMapping()
+        {
+            WorkspaceSelection.Clear();
+            
+            var workspace = WorkspaceManager.GetItems<VoyagerItem>().ToList();
+            
+            foreach (var (item, mapping) in _effectMappings[0])
+            {
+                if (workspace.All(i => i.LampHandle != item.LampHandle)) continue;
+                
+                Metadata.Get<LampData>(item.LampHandle.Serial).EffectMapping = mapping;
+                item.PositionBasedOnEffectMapping(_display);
+            }
+
+            foreach (var voyager in workspace)
+                WorkspaceSelection.SelectItem(voyager);
+
+            _effectMappings.RemoveAt(0);
+            DisableEnableItems();
+        }
+
+        private Vector3 GetPosition(VoyagerItem voyager)
+        {
+            return _workspaceAlignment ? voyager.GetWorkspacePosition() : voyager.GetEffectMappingPosition(_display);
+        }
+        
+        private Vector3 GetRotation(VoyagerItem voyager)
+        {
+            return _workspaceAlignment ? voyager.GetWorkspaceRotation() : voyager.GetEffectMappingRotation(_display);
+        }
+        
+        private Vector3 GetScale(VoyagerItem voyager)
+        {
+            return _workspaceAlignment ? voyager.GetWorkspaceScale() : voyager.GetEffectMappingScale(_display);
+        }
+        
+        public static EffectMapping CalculateLampEffectMapping(VoyagerItem voyager, Transform display)
+        {
+            var pixelPositions = voyager.GetPixelWorldPositions();
+            var pixels = new [] { pixelPositions.First(), pixelPositions.Last() };
+
+            for (var i = 0; i < 2; i++)
+            {
+                var pixel = pixels[i];
+                var local = display.InverseTransformPoint(pixel);
+
+                var x = local.x + 0.5f;
+                var y = local.y + 0.5f;
+                
+                pixels[i] = new Vector2(x, y);
+            }
+
+            return new EffectMapping
+            {
+                X1 = pixels[0].x,
+                X2 = pixels[1].x,
+                Y1 = pixels[0].y,
+                Y2 = pixels[1].y
+            };
         }
     }
 }

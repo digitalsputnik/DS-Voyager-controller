@@ -7386,6 +7386,8 @@ MonoBehaviour:
   _selectText: {fileID: 384716985}
   _selectDeselectBtn: {fileID: 1405196449}
   _undoBtn: {fileID: 1015594766}
+  _workspaceAlignment: 0
+  _display: {fileID: 1437292607}
   _alignTitle: {fileID: 1368410554}
   _alignHorizontal: {fileID: 582982741}
   _alignVertical: {fileID: 1177989842}
@@ -34421,8 +34423,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 70750426}
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
-  m_Value: 1.0000002
-  m_Size: 0.6885868
+  m_Value: 1.0000004
+  m_Size: 0.7937603
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -43598,6 +43600,8 @@ MonoBehaviour:
   _selectText: {fileID: 3023705970700469454}
   _selectDeselectBtn: {fileID: 989210087963805204}
   _undoBtn: {fileID: 2191644777239507012}
+  _workspaceAlignment: 1
+  _display: {fileID: 1437292607}
   _alignTitle: {fileID: 4496700521996177194}
   _alignHorizontal: {fileID: 2201078940439401681}
   _alignVertical: {fileID: 6618546610040307817}

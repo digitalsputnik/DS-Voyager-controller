@@ -45,6 +45,27 @@ namespace VoyagerController.Workspace
         private string _suffix;
         private string _prefix;
         private bool _dmxPrev = false;
+        
+        private void Start()
+        {
+            SaveWorkspaceMapping();
+            SelectionMove.SelectionMoveEnded += SelectionMoved;
+            WorkspaceSelection.SelectionChanged += SelectionChanged;
+        }
+
+        private void Update()
+        {
+            UpdateConnectionType();
+            if (CheckToUpdatePixels())
+                UpdatePixels();
+            UpdateText();
+        }
+
+        private void OnDestroy()
+        {
+            SelectionMove.SelectionMoveEnded -= SelectionMoved;
+            WorkspaceSelection.SelectionChanged -= SelectionChanged;
+        }
 
         public override bool Setup(object data, string uid = "")
         {
@@ -81,6 +102,7 @@ namespace VoyagerController.Workspace
 
 
         public bool Selected => WorkspaceSelection.Contains(this);
+        
 
         public Vector2[] GetPixelWorldPositions()
         {
@@ -98,7 +120,7 @@ namespace VoyagerController.Workspace
             return positions;
         }
         
-        public void PositionLampBasedOnWorkspaceMapping()
+        public void PositionBasedOnWorkspaceMapping()
         {
             var mapping = _meta.WorkspaceMapping;
             var position = new Vector3(mapping.Position[0], mapping.Position[1], 0.0f);
@@ -109,6 +131,59 @@ namespace VoyagerController.Workspace
             _transform.localScale = scale;
             _transform.eulerAngles = rotation;
             _transform.position = position;
+        }
+
+        public void PositionBasedOnEffectMapping(Transform origin)
+        {
+            var point1 = new Vector3(_meta.EffectMapping.X1 - 0.5f, _meta.EffectMapping.Y1 - 0.5f);
+            var point2 = new Vector3(_meta.EffectMapping.X2 - 0.5f, _meta.EffectMapping.Y2 - 0.5f);
+
+            point1 = origin.TransformPoint(point1);
+            point2 = origin.TransformPoint(point2);
+                    
+            var center = (point1 + point2) / 2.0f;
+            var angle = MathUtils.AngleFromTo(point1, point2);
+
+            var position = new Vector3(center.x, center.y, 0.0f);
+            var rotation = new Vector3(0.0f, 0.0f, angle);
+
+            var distance = Vector3.Distance(point1, point2);
+            var scale = Vector3.one * distance / ((LampHandle.PixelCount - 1) * GetPixelSize().x);
+
+            _transform = transform;
+            _transform.localScale = scale;
+            _transform.eulerAngles = rotation;
+            _transform.position = position;
+        }
+
+        public Vector3 GetEffectMappingPosition(Transform origin)
+        {
+            var point1 = new Vector3(_meta.EffectMapping.X1 - 0.5f, _meta.EffectMapping.Y1 - 0.5f);
+            var point2 = new Vector3(_meta.EffectMapping.X2 - 0.5f, _meta.EffectMapping.Y2 - 0.5f);
+            point1 = origin.TransformPoint(point1);
+            point2 = origin.TransformPoint(point2);
+            var center = (point1 + point2) / 2.0f;
+            return new Vector3(center.x, center.y, 0.0f);
+        }
+
+        public Vector3 GetEffectMappingRotation(Transform origin)
+        {
+            var point1 = new Vector3(_meta.EffectMapping.X1 - 0.5f, _meta.EffectMapping.Y1 - 0.5f);
+            var point2 = new Vector3(_meta.EffectMapping.X2 - 0.5f, _meta.EffectMapping.Y2 - 0.5f);
+            point1 = origin.TransformPoint(point1);
+            point2 = origin.TransformPoint(point2);
+            var angle = MathUtils.AngleFromTo(point1, point2);
+            return new Vector3(0.0f, 0.0f, angle);
+        }
+
+        public Vector3 GetEffectMappingScale(Transform origin)
+        {
+            var point1 = new Vector3(_meta.EffectMapping.X1 - 0.5f, _meta.EffectMapping.Y1 - 0.5f);
+            var point2 = new Vector3(_meta.EffectMapping.X2 - 0.5f, _meta.EffectMapping.Y2 - 0.5f);
+            point1 = origin.TransformPoint(point1);
+            point2 = origin.TransformPoint(point2);
+            var distance = Vector3.Distance(point1, point2);
+            return Vector3.one * distance / ((LampHandle.PixelCount - 1) * GetPixelSize().x);
         }
 
         public Vector3 GetWorkspacePosition()
@@ -130,27 +205,6 @@ namespace VoyagerController.Workspace
         }
 
         public Vector2 GetPixelSize() => _pixelSize;
-
-        private void Start()
-        {
-            SaveWorkspaceMapping();
-            SelectionMove.SelectionMoveEnded += SelectionMoved;
-            WorkspaceSelection.SelectionChanged += SelectionChanged;
-        }
-
-        private void OnDestroy()
-        {
-            SelectionMove.SelectionMoveEnded -= SelectionMoved;
-            WorkspaceSelection.SelectionChanged -= SelectionChanged;
-        }
-
-        private void Update()
-        {
-            UpdateConnectionType();
-            if (CheckToUpdatePixels())
-                UpdatePixels();
-            UpdateText();
-        }
 
         private bool CheckToUpdatePixels()
         {
@@ -184,7 +238,7 @@ namespace VoyagerController.Workspace
                 SetupPixelsMaterial();
             
             UpdateText();
-            PositionLampBasedOnWorkspaceMapping();
+            PositionBasedOnWorkspaceMapping();
         }
         
         private void OrderNumberChanged(bool _) => UpdateText();

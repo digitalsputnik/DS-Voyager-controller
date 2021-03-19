@@ -24,20 +24,18 @@ namespace VoyagerController.Rendering
         private List<MissingFrame> _missingFrames;
         private int _currentFrame = -1;
         private MissingFrame CurrentFrame => _missingFrames[_currentFrame];
-        private int _framesRendererd;
+        private int _framesRendered;
 
         public FastRenderState(RenderQueue queue, VideoEffect current)
         {
             _queue = queue;
             _effect = current;
             _lamps = GetLampsWithEffect(_effect).ToArray();
-            
-            StartFastRenderLoop();
         }
 
         internal override VideoRenderState Update()
         {
-            if (Finished) return new InterpolationState(_queue, _effect);
+            if (_missingFrames != null && Finished) return new InterpolationState(_queue, _effect);
 
             switch (_state)
             {
@@ -71,7 +69,15 @@ namespace VoyagerController.Rendering
 
         private void IncreaseFrameToNextMissing()
         {
-            do { IncreaseFrameIndex(); } while (CurrentFrame.Received);
+            do
+            {
+                if (Finished)
+                {
+                    _state = FastRendererState.Prepare;
+                    break;
+                }
+                IncreaseFrameIndex();
+            } while (CurrentFrame.Received);
         }
 
         private void IncreaseFrameIndex()
@@ -87,6 +93,7 @@ namespace VoyagerController.Rendering
             var index = (ulong) player.frame;
 
             if (index == _prevIndex) return;
+            if (CurrentFrame == null) return;
             
             _prevIndex = index;
 
@@ -107,9 +114,9 @@ namespace VoyagerController.Rendering
                 CurrentFrame.Received = true;
             }
 
-            _framesRendererd++;
+            _framesRendered++;
             
-            if (_framesRendererd >= START_BEFORE)
+            if (_framesRendered >= START_BEFORE)
             {
                 CurrentFrame.Requested++;
                 SeekToNextMissingFrame();
@@ -118,7 +125,7 @@ namespace VoyagerController.Rendering
 
         private void Seeked()
         {
-            _framesRendererd = 0;
+            _framesRendered = 0;
             _state = FastRendererState.Render;
         }
         

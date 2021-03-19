@@ -260,8 +260,8 @@ namespace VoyagerController
         public static long GetCurrentFrameOfVideo(VoyagerLamp voyager, Video video, long add = 0)
         {
             var meta = Metadata.Get<LampData>(voyager.Serial);
-            var since = 0.0;
-            long frames = 0;
+            double since;
+            long frames;
             
             switch (ApplicationState.Playmode.Value)
             {
@@ -343,7 +343,7 @@ namespace VoyagerController
         private static void WorkspaceItemAdded(WorkspaceItem item)
         {
             if (item is VoyagerItem voyager)
-                voyager.LampHandle.SetGlobalIntensity(ApplicationState.GlobalDimmer.Value);
+                voyager.LampHandle?.SetGlobalIntensity(ApplicationState.GlobalDimmer.Value);
         }
     }
 }

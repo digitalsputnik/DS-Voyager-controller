@@ -5,7 +5,6 @@
     <e p="$USER_HOME$/Library/Caches/JetBrains/Rider2020.3/resharper-host/local/Transient/Rider/v203/SolutionCaches/_DS-Voyager-controller.119960233.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
-      <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Editor" t="Include">
@@ -23,45 +22,6 @@
           </e>
         </e>
         <e p="link.xml" t="Include" />
-        <e p="Plugins" t="Include">
-          <e p="ADL-Plugins" t="Include">
-            <e p="zip" t="Include">
-              <e p="changelog.txt" t="Include" />
-              <e p="Plugins" t="Include">
-                <e p="lzip.cs" t="Include" />
-              </e>
-              <e p="webGLtvOS-Test" t="Include">
-                <e p="Scripts" t="Include">
-                  <e p="testWebGLtvOS.cs" t="Include" />
-                </e>
-              </e>
-              <e p="zipTest" t="Include">
-                <e p="Scripts" t="Include">
-                  <e p="testZip.cs" t="Include" />
-                </e>
-              </e>
-            </e>
-          </e>
-          <e p="Android" t="Include">
-            <e p="AndroidVideoResizer.cs" t="Include" />
-          </e>
-          <e p="NativeFilePicker" t="Include">
-            <e p="Android" t="Include">
-              <e p="FPCallbackHelper.cs" t="Include" />
-              <e p="FPPermissionCallbackAndroid.cs" t="Include" />
-              <e p="FPResultCallbackAndroid.cs" t="Include" />
-            </e>
-            <e p="Editor" t="Include">
-              <e p="NativeFilePickerCustomTypes.cs" t="Include" />
-              <e p="NativeFilePickerPostProcessBuild.cs" t="Include" />
-            </e>
-            <e p="iOS" t="Include">
-              <e p="FPResultCallbackiOS.cs" t="Include" />
-            </e>
-            <e p="NativeFilePicker.cs" t="Include" />
-            <e p="README.txt" t="Include" />
-          </e>
-        </e>
         <e p="Scripts" t="Include">
           <e p="_Bluetooth" t="Include">
             <e p="BluetoothEndPoint.cs" t="Include" />
@@ -234,130 +194,6 @@
           <e p="VoyagerUpdater.cs" t="Include" />
         </e>
         <e p="Vendor" t="Include">
-          <e p="crosstales" t="Include">
-            <e p="Common" t="Include">
-              <e p="Editor" t="Include">
-                <e p="Task" t="Include">
-                  <e p="BaseCompileDefines.cs" t="Include" />
-                  <e p="BaseSetupResources.cs" t="Include" />
-                  <e p="NYCheck.cs" t="Include" />
-                  <e p="SetupResources.cs" t="Include" />
-                </e>
-                <e p="Util" t="Include">
-                  <e p="BaseEditorHelper.cs" t="Include" />
-                </e>
-              </e>
-              <e p="README.txt" t="Include" />
-              <e p="Scripts" t="Include">
-                <e p="ExtensionMethods.cs" t="Include" />
-                <e p="Model" t="Include">
-                  <e p="Enum" t="Include">
-                    <e p="Platform.cs" t="Include" />
-                    <e p="SampleRate.cs" t="Include" />
-                  </e>
-                </e>
-                <e p="Tool" t="Include">
-                  <e p="SurviveSceneSwitch.cs" t="Include" />
-                  <e p="TakeScreenshot.cs" t="Include" />
-                </e>
-                <e p="Util" t="Include">
-                  <e p="BackgroundController.cs" t="Include" />
-                  <e p="BaseConstants.cs" t="Include" />
-                  <e p="BaseHelper.cs" t="Include" />
-                  <e p="CTPlayerPrefs.cs" t="Include" />
-                  <e p="CTProcess.cs" t="Include" />
-                  <e p="CTWebClient.cs" t="Include" />
-                  <e p="FFTAnalyzer.cs" t="Include" />
-                  <e p="FreeCam.cs" t="Include" />
-                  <e p="PlatformController.cs" t="Include" />
-                  <e p="RandomColor.cs" t="Include" />
-                  <e p="RandomRotator.cs" t="Include" />
-                  <e p="RandomScaler.cs" t="Include" />
-                  <e p="SerializableDictionary.cs" t="Include" />
-                  <e p="SerializeDeSerialize.cs" t="Include" />
-                  <e p="SpectrumVisualizer.cs" t="Include" />
-                  <e p="XmlHelper.cs" t="Include" />
-                </e>
-              </e>
-              <e p="UI" t="Include">
-                <e p="Colors.txt" t="Include" />
-                <e p="Scripts" t="Include">
-                  <e p="Social.cs" t="Include" />
-                  <e p="StaticManager.cs" t="Include" />
-                  <e p="UIDrag.cs" t="Include" />
-                  <e p="UIFocus.cs" t="Include" />
-                  <e p="UIHint.cs" t="Include" />
-                  <e p="UIResize.cs" t="Include" />
-                  <e p="UIWindowManager.cs" t="Include" />
-                  <e p="Util" t="Include">
-                    <e p="AudioFilterController.cs" t="Include" />
-                    <e p="AudioSourceController.cs" t="Include" />
-                    <e p="FPSDisplay.cs" t="Include" />
-                    <e p="ScrollRectHandler.cs" t="Include" />
-                  </e>
-                  <e p="WindowManager.cs" t="Include" />
-                </e>
-              </e>
-            </e>
-            <e p="FileBrowser" t="Include">
-              <e p="3rd party" t="Include">
-                <e p="Assets.txt" t="Include" />
-              </e>
-              <e p="Demo" t="Include">
-                <e p="Scripts" t="Include">
-                  <e p="Examples.cs" t="Include" />
-                  <e p="GUIMain.cs" t="Include" />
-                  <e p="GUIScenes.cs" t="Include" />
-                </e>
-              </e>
-              <e p="Documentation" t="Include">
-                <e p="id" t="Include">
-                  <e p="f9c139be-4da6-4d0f-894a-0675635af15f.txt" t="Include" />
-                </e>
-                <e p="VERSIONS.txt" t="Include" />
-              </e>
-              <e p="Editor" t="Include">
-                <e p="Integration" t="Include">
-                  <e p="ConfigBase.cs" t="Include" />
-                  <e p="ConfigPreferences.cs" t="Include" />
-                  <e p="ConfigWindow.cs" t="Include" />
-                </e>
-                <e p="Task" t="Include">
-                  <e p="AAAConfigLoader.cs" t="Include" />
-                  <e p="CompileDefines.cs" t="Include" />
-                  <e p="Launch.cs" t="Include" />
-                  <e p="ReminderCheck.cs" t="Include" />
-                  <e p="SetupResources.cs" t="Include" />
-                  <e p="UpdateCheck.cs" t="Include" />
-                </e>
-                <e p="Util" t="Include">
-                  <e p="BuildPostprocessor.cs" t="Include" />
-                  <e p="EditorConfig.cs" t="Include" />
-                  <e p="EditorConstants.cs" t="Include" />
-                  <e p="EditorHelper.cs" t="Include" />
-                </e>
-              </e>
-              <e p="README.txt" t="Include" />
-              <e p="Scripts" t="Include">
-                <e p="FileBrowser.cs" t="Include" />
-                <e p="Util" t="Include">
-                  <e p="Config.cs" t="Include" />
-                  <e p="Constants.cs" t="Include" />
-                  <e p="Helper.cs" t="Include" />
-                </e>
-                <e p="Wrapper" t="Include">
-                  <e p="FileBrowserBase.cs" t="Include" />
-                  <e p="FileBrowserEditor.cs" t="Include" />
-                  <e p="FileBrowserGeneric.cs" t="Include" />
-                  <e p="FileBrowserLinux.cs" t="Include" />
-                  <e p="FileBrowserMac.cs" t="Include" />
-                  <e p="FileBrowserWindows.cs" t="Include" />
-                  <e p="FileBrowserWSA.cs" t="Include" />
-                  <e p="IFileBrowser.cs" t="Include" />
-                </e>
-              </e>
-            </e>
-          </e>
           <e p="Joystick Pack" t="Include">
             <e p="Examples" t="Include">
               <e p="JoystickPlayerExample.cs" t="Include" />
@@ -520,6 +356,167 @@
             </e>
           </e>
           <e p="Plugins" t="Include">
+            <e p="ADL-Plugins" t="Include">
+              <e p="zip" t="Include">
+                <e p="changelog.txt" t="Include" />
+                <e p="Plugins" t="Include">
+                  <e p="lzip.cs" t="Include" />
+                </e>
+                <e p="webGLtvOS-Test" t="Include">
+                  <e p="Scripts" t="Include">
+                    <e p="testWebGLtvOS.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="zipTest" t="Include">
+                  <e p="Scripts" t="Include">
+                    <e p="testZip.cs" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="Android" t="Include">
+              <e p="AndroidVideoResizer.cs" t="Include" />
+            </e>
+            <e p="crosstales" t="Include">
+              <e p="Common" t="Include">
+                <e p="Editor" t="Include">
+                  <e p="Task" t="Include">
+                    <e p="BaseCompileDefines.cs" t="Include" />
+                    <e p="BaseSetupResources.cs" t="Include" />
+                    <e p="NYCheck.cs" t="Include" />
+                    <e p="SetupResources.cs" t="Include" />
+                  </e>
+                  <e p="Util" t="Include">
+                    <e p="BaseEditorHelper.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="README.txt" t="Include" />
+                <e p="Scripts" t="Include">
+                  <e p="ExtensionMethods.cs" t="Include" />
+                  <e p="Model" t="Include">
+                    <e p="Enum" t="Include">
+                      <e p="Platform.cs" t="Include" />
+                      <e p="SampleRate.cs" t="Include" />
+                    </e>
+                  </e>
+                  <e p="Tool" t="Include">
+                    <e p="SurviveSceneSwitch.cs" t="Include" />
+                    <e p="TakeScreenshot.cs" t="Include" />
+                  </e>
+                  <e p="Util" t="Include">
+                    <e p="BackgroundController.cs" t="Include" />
+                    <e p="BaseConstants.cs" t="Include" />
+                    <e p="BaseHelper.cs" t="Include" />
+                    <e p="CTPlayerPrefs.cs" t="Include" />
+                    <e p="CTProcess.cs" t="Include" />
+                    <e p="CTWebClient.cs" t="Include" />
+                    <e p="FFTAnalyzer.cs" t="Include" />
+                    <e p="FreeCam.cs" t="Include" />
+                    <e p="PlatformController.cs" t="Include" />
+                    <e p="RandomColor.cs" t="Include" />
+                    <e p="RandomRotator.cs" t="Include" />
+                    <e p="RandomScaler.cs" t="Include" />
+                    <e p="SerializableDictionary.cs" t="Include" />
+                    <e p="SerializeDeSerialize.cs" t="Include" />
+                    <e p="SpectrumVisualizer.cs" t="Include" />
+                    <e p="XmlHelper.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="UI" t="Include">
+                  <e p="Colors.txt" t="Include" />
+                  <e p="Scripts" t="Include">
+                    <e p="Social.cs" t="Include" />
+                    <e p="StaticManager.cs" t="Include" />
+                    <e p="UIDrag.cs" t="Include" />
+                    <e p="UIFocus.cs" t="Include" />
+                    <e p="UIHint.cs" t="Include" />
+                    <e p="UIResize.cs" t="Include" />
+                    <e p="UIWindowManager.cs" t="Include" />
+                    <e p="Util" t="Include">
+                      <e p="AudioFilterController.cs" t="Include" />
+                      <e p="AudioSourceController.cs" t="Include" />
+                      <e p="FPSDisplay.cs" t="Include" />
+                      <e p="ScrollRectHandler.cs" t="Include" />
+                    </e>
+                    <e p="WindowManager.cs" t="Include" />
+                  </e>
+                </e>
+              </e>
+              <e p="FileBrowser" t="Include">
+                <e p="3rd party" t="Include">
+                  <e p="Assets.txt" t="Include" />
+                </e>
+                <e p="Demo" t="Include">
+                  <e p="Scripts" t="Include">
+                    <e p="Examples.cs" t="Include" />
+                    <e p="GUIMain.cs" t="Include" />
+                    <e p="GUIScenes.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="Documentation" t="Include">
+                  <e p="id" t="Include">
+                    <e p="f9c139be-4da6-4d0f-894a-0675635af15f.txt" t="Include" />
+                  </e>
+                  <e p="VERSIONS.txt" t="Include" />
+                </e>
+                <e p="Editor" t="Include">
+                  <e p="Integration" t="Include">
+                    <e p="ConfigBase.cs" t="Include" />
+                    <e p="ConfigPreferences.cs" t="Include" />
+                    <e p="ConfigWindow.cs" t="Include" />
+                  </e>
+                  <e p="Task" t="Include">
+                    <e p="AAAConfigLoader.cs" t="Include" />
+                    <e p="CompileDefines.cs" t="Include" />
+                    <e p="Launch.cs" t="Include" />
+                    <e p="ReminderCheck.cs" t="Include" />
+                    <e p="SetupResources.cs" t="Include" />
+                    <e p="UpdateCheck.cs" t="Include" />
+                  </e>
+                  <e p="Util" t="Include">
+                    <e p="BuildPostprocessor.cs" t="Include" />
+                    <e p="EditorConfig.cs" t="Include" />
+                    <e p="EditorConstants.cs" t="Include" />
+                    <e p="EditorHelper.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="README.txt" t="Include" />
+                <e p="Scripts" t="Include">
+                  <e p="FileBrowser.cs" t="Include" />
+                  <e p="Util" t="Include">
+                    <e p="Config.cs" t="Include" />
+                    <e p="Constants.cs" t="Include" />
+                    <e p="Helper.cs" t="Include" />
+                  </e>
+                  <e p="Wrapper" t="Include">
+                    <e p="FileBrowserBase.cs" t="Include" />
+                    <e p="FileBrowserEditor.cs" t="Include" />
+                    <e p="FileBrowserGeneric.cs" t="Include" />
+                    <e p="FileBrowserLinux.cs" t="Include" />
+                    <e p="FileBrowserMac.cs" t="Include" />
+                    <e p="FileBrowserWindows.cs" t="Include" />
+                    <e p="FileBrowserWSA.cs" t="Include" />
+                    <e p="IFileBrowser.cs" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="NativeFilePicker" t="Include">
+              <e p="Android" t="Include">
+                <e p="FPCallbackHelper.cs" t="Include" />
+                <e p="FPPermissionCallbackAndroid.cs" t="Include" />
+                <e p="FPResultCallbackAndroid.cs" t="Include" />
+              </e>
+              <e p="Editor" t="Include">
+                <e p="NativeFilePickerCustomTypes.cs" t="Include" />
+                <e p="NativeFilePickerPostProcessBuild.cs" t="Include" />
+              </e>
+              <e p="iOS" t="Include">
+                <e p="FPResultCallbackiOS.cs" t="Include" />
+              </e>
+              <e p="NativeFilePicker.cs" t="Include" />
+              <e p="README.txt" t="Include" />
+            </e>
             <e p="NativeGallery" t="Include">
               <e p="Android" t="Include">
                 <e p="NGCallbackHelper.cs" t="Include" />

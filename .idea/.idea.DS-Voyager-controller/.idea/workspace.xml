@@ -2,14 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Graphics/Materials/stream rendering.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Graphics/Materials/stream rendering.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/ItsheConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/ItsheConverter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/LampMetadataConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/LampMetadataConverter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/EffectMappingMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/EffectMappingMenu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/FastRenderState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/FastRenderState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,9 +31,11 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$USER_HOME$/Documents/Backup/UI/Menus/Inspector/SetEffectMenu.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Vendor/Plugins/crosstales/FileBrowser/Editor/Util/BuildPostprocessor.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/Lamps/Lamp.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/UI/ApplicationSettings.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/Workspace/SetBoxSelectionMode.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Documents/Backup/Utilities/TimeUtils.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/Utilities/FileUtils.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/UI/Menus/Controls/AppSettingsMenu.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/Backup/Videos/VideoBuffer.cs" root0="SKIP_HIGHLIGHTING" />
@@ -62,7 +66,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/GlobalSettings.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/RgbConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/Texture2DConverter.cs" />
@@ -73,11 +76,9 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/LampData.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/PictureData.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/WorkspaceManager.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/TextureExtensions.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/Data.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/ImageRenderer.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/VideoEffectRenderer.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/PrepareState.cs" />
@@ -96,7 +97,6 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AboutMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/InterpolationState.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/FileUtils.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectItem.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/VideoEffectLoader.cs" />
@@ -106,13 +106,17 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/VoyagerLampConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/LoadMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/FastRenderState.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/EffectMappingMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/ItsheConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/LampMetadataConverter.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/MathUtils.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/FastRenderState.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -211,6 +215,8 @@
       <workItem from="1615818371491" duration="977000" />
       <workItem from="1615890372608" duration="2688000" />
       <workItem from="1615972924114" duration="4483000" />
+      <workItem from="1616058338963" duration="2064000" />
+      <workItem from="1616140946646" duration="7496000" />
     </task>
     <servers />
   </component>
