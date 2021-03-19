@@ -79,7 +79,10 @@ namespace VoyagerController.UI
                 var voyagerItem = WorkspaceManager.InstantiateItem<VoyagerItem>(voyager, WorkspaceUtils.PositionOfLastSelectedOrAddedLamp + new Vector3(0, -1.0f, 0), 1f, 0);
 
                 StartCoroutine(SelectAndSnapToLamp(voyagerItem));
-                StartCoroutine(ApplyDefaultEffectAndColor(voyager));
+
+                if (voyager.Endpoint is LampNetworkEndPoint)
+                    StartCoroutine(ApplyDefaultEffectAndColor(voyager));
+
                 CloseMenuIfAllLampsAdded();
             }
         }
