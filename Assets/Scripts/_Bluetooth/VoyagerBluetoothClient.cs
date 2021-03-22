@@ -10,7 +10,9 @@ using DigitalSputnik.Voyager;
 using DigitalSputnik.Voyager.Communication;
 using DigitalSputnik.Voyager.Json;
 using Newtonsoft.Json;
+using UnityEngine;
 using VoyagerController.Workspace;
+using PlayMode = DigitalSputnik.Voyager.PlayMode;
 
 namespace VoyagerController.Bluetooth
 {
@@ -70,7 +72,15 @@ namespace VoyagerController.Bluetooth
             if (item is VoyagerItem voyagerItem)
             {
                 if (voyagerItem.LampHandle.Endpoint is BluetoothEndPoint endPoint)
-                    BluetoothAccess.Reconnect(endPoint.Id);
+                {
+                    if (Application.platform == RuntimePlatform.Android)
+                        BluetoothAccess.Reconnect(endPoint.Id);  
+                    else if (Application.platform == RuntimePlatform.IPhonePlayer)
+                        BluetoothAccess.Connect(endPoint.Id,
+                            SetupValidatedDevice,
+                            HandleFailedConnection,
+                            HandleDisconnection);
+                }
             }
         }
 
@@ -215,11 +225,32 @@ namespace VoyagerController.Bluetooth
                 access.ScanServices(ServicesScanned);
             else
             {
-                connection.Lamp.Connected = true;
-                connection.ConnectionState = ConnectionState.Connected;
-                connection.Access = access;
-                connection.Access.SubscribeToCharacteristic(SERVICE_UID, UART_TX_CHARACTERISTIC_UUID, DataReceivedFromBluetooth);
+                if (Application.platform == RuntimePlatform.Android)
+                {
+                    connection.Lamp.Connected = true;
+                    connection.ConnectionState = ConnectionState.Connected;
+                    connection.Access = access;
+                    connection.Access.SubscribeToCharacteristic(SERVICE_UID, UART_TX_CHARACTERISTIC_UUID, DataReceivedFromBluetooth);   
+                }
+                else
+                {
+                    access.ScanServices(ScannedServicesToApprovedConnection);
+                }
             }
+        }
+
+        private void ScannedServicesToApprovedConnection(PeripheralAccess access, string[] services)
+        {
+            access.ScanServiceCharacteristics(SERVICE_UID, ScannedCharacteristicsToApprovedConnection);
+        }
+
+        private void ScannedCharacteristicsToApprovedConnection(PeripheralAccess access, string service, string[] characteristics)
+        {
+            var connection = GetConnectionWithId(access.Id);
+            connection.Lamp.Connected = true;
+            connection.ConnectionState = ConnectionState.Connected;
+            connection.Access = access;
+            access.SubscribeToCharacteristic(SERVICE_UID, UART_TX_CHARACTERISTIC_UUID, DataReceivedFromBluetooth);
         }
 
         private void HandleFailedConnection(PeripheralInfo info, string error)
@@ -305,11 +336,14 @@ namespace VoyagerController.Bluetooth
 
         private void DataReceivedFromBluetooth(PeripheralAccess access, string service, string characteristic, byte[] data)
         {
+            var json = Encoding.UTF8.GetString(data);
+            
+            Debug.Log(json);
+            
             var connection = _connections.FirstOrDefault(c => c.Access == access);
 
             if (connection == null) return;
 
-            var json = Encoding.UTF8.GetString(data);
             var op = Packet.GetOpCode(json);
 
             OnBleMessageWithoutOp?.Invoke(connection, json);
@@ -461,10 +495,10 @@ namespace VoyagerController.Bluetooth
 
             if (mode == NetworkMode.ClientPSK)
                 password = SecurityUtils.WPA_PSK(ssid, password);
-
+            
             var packet = new NetworkModeRequestPacket(voyager.Serial, mode, ssid, password);
             var time = TimeUtils.Epoch + TimeOffset;
-
+            
             for (var i = 0; i < 5; i++)
                 SendDiscoveryPacket(voyager, packet, time);
         }
@@ -526,6 +560,43 @@ namespace VoyagerController.Bluetooth
                 Access = access;
                 LastMessage = TimeUtils.Epoch;
                 Lamp = lamp;
+            }
+        }
+
+        private class BleNetworkModeRequest
+        {
+            [JsonProperty("op_code", Order = -3)]
+            public OpCode OpCode = OpCode.NetworkModeRequest;
+            [JsonProperty("network_mode")]
+            public NetworkMode Mode;
+            [JsonProperty("set_pattern")]
+            public string Ssid;
+            [JsonProperty("set_pattern_ps")]
+            public string Password;
+
+            public BleNetworkModeRequest(NetworkMode mode, string ssid, string password)
+            {
+                Mode = mode;
+                Ssid = ssid;
+                Password = password;
+            }
+        }
+
+        private class BleNetworkModeRequestPsk
+        {
+            [JsonProperty("op_code", Order = -3)]
+            public string OpCode = "bl_nmr";
+            [JsonProperty("mode")]
+            public int Mode = 3;
+            [JsonProperty("u")]
+            public string Ssid;
+            [JsonProperty("p")]
+            public string Password;
+
+            public BleNetworkModeRequestPsk(string ssid, string password)
+            {
+                Ssid = ssid;
+                Password = password;
             }
         }
 

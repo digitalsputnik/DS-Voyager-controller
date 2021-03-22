@@ -310,8 +310,8 @@ namespace VoyagerController.UI
             {
                 var item = lamps[i];
                 var position = positions[i];
-                var rotation = item.GetWorkspaceRotation().z;
-                var scale = item.GetWorkspaceScale().x;
+                var rotation = GetRotation(item).z;
+                var scale = GetScale(item).x;
 
                 var meta = Metadata.Get<LampData>(item.LampHandle.Serial);
                 

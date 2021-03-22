@@ -126,6 +126,7 @@ namespace DigitalSputnik.Ble
 
         public void Reconnect(string id)
         {
+            _iOSCancelConnection(id.ToUpper());
             _iOSConnect(id.ToUpper());
         }
 
