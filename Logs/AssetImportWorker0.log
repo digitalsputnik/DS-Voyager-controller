@@ -97,3 +97,10 @@ System memory in use after: 178.0 MB.
 Unloading 171 unused Assets to reduce memory usage. Loaded Objects now: 2723.
 Total: 5.202709 ms (FindLiveObjects: 0.730717 ms CreateObjectMapping: 0.219746 ms MarkObjects: 4.109256 ms  DeleteObjects: 0.141087 ms)
 
+========================================================================
+Received Import Request.
+  path: Assets/Resources/Update/voyager_update.tar.bytes
+  artifactKey: Guid(cab65575884564904be5fc5c9b404b76) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Update/voyager_update.tar.bytes using Guid(cab65575884564904be5fc5c9b404b76) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fc2f85da60ab998b4557624cfc0bb9eb') in 1.432136 seconds
+  Import took 1.438741 seconds .
+
