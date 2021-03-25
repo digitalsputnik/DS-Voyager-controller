@@ -73,13 +73,18 @@ namespace VoyagerController.Bluetooth
             {
                 if (voyagerItem.LampHandle.Endpoint is BluetoothEndPoint endPoint)
                 {
-                    if (Application.platform == RuntimePlatform.Android)
-                        BluetoothAccess.Reconnect(endPoint.Id);  
-                    else if (Application.platform == RuntimePlatform.IPhonePlayer)
-                        BluetoothAccess.Connect(endPoint.Id,
-                            SetupValidatedDevice,
-                            HandleFailedConnection,
-                            HandleDisconnection);
+                    switch (Application.platform)
+                    {
+                        case RuntimePlatform.Android:
+                            BluetoothAccess.Reconnect(endPoint.Id);
+                            break;
+                        case RuntimePlatform.IPhonePlayer:
+                        {
+                            var peripheral = new PeripheralInfo(endPoint.Id, voyagerItem.LampHandle.Serial, 0, 0.0f);
+                            _connectionsQueue.Enqueue(peripheral);
+                            break;
+                        }
+                    }
                 }
             }
         }
