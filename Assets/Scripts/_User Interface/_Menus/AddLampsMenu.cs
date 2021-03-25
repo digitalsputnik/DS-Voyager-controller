@@ -97,12 +97,14 @@ namespace VoyagerController.UI
 
         private static IEnumerator ApplyDefaultEffectAndColor(VoyagerLamp voyager)
         {
+            yield return new WaitUntil(() => voyager.DmxPollRecieved);
+
             if (!voyager.DmxModeEnabled)
             {
                 LampEffectsWorker.ApplyItsheToVoyager(voyager, ApplicationSettings.AddedLampsDefaultColor);
-            
+
                 yield return new WaitForSeconds(0.5f);
-            
+
                 while (true)
                 {
                     var effect = EffectManager.GetEffectWithName("white");
@@ -112,10 +114,10 @@ namespace VoyagerController.UI
                         yield return new WaitForSeconds(0.2f);
                         continue;
                     }
-                
+
                     LampEffectsWorker.ApplyEffectToLamp(voyager, effect);
                     break;
-                }   
+                }
             }
         }
 

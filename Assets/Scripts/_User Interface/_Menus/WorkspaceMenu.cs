@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerController.Bluetooth;
 using VoyagerController.Mapping;
 using VoyagerController.Serial;
 using VoyagerController.Workspace;
@@ -91,7 +92,8 @@ namespace VoyagerController.UI
             var share = SelectedLampsShareSameEffect();
             var dmx = selectedLamps.Any(l => l.LampHandle.DmxModeEnabled);
             var anySerial = selectedLamps.Any(l => l.LampHandle.Endpoint is SerialEndPoint);
-            
+            var anyBluetooth = selectedLamps.Any(l => l.LampHandle.Endpoint is BluetoothEndPoint);
+
             _infoText.SetActive(!one);
             
             _splitter1.SetActive(one);
@@ -99,12 +101,12 @@ namespace VoyagerController.UI
             _selectDeselectText.text = all ? DESELECT_ALL_TEXT : SELECT_ALL_TEXT;
             _selectColorFxBtn.SetActive(one && share);
             
-            _splitter2.SetActive(one && !anySerial);
-            _setEffectBtn.SetActive(one && !anySerial);
-            _editEffectBtn.SetActive(one && share && !dmx && !anySerial);
+            _splitter2.SetActive(one && !anySerial && !anyBluetooth);
+            _setEffectBtn.SetActive(one && !anySerial && !anyBluetooth);
+            _editEffectBtn.SetActive(one && share && !dmx && !anySerial && !anyBluetooth);
 
-            _splitter3.SetActive(one);
-            _setDmxBtn.SetActive(one);
+            _splitter3.SetActive(one && !anyBluetooth);
+            _setDmxBtn.SetActive(one && !anyBluetooth);
             
             _splitter4.SetActive(one);
             _alignmentBtn.SetActive(one);

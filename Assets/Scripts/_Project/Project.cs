@@ -296,7 +296,7 @@ namespace VoyagerController.ProjectManagement
 
         #endregion
 
-        private static JsonSerializerSettings ConstructJsonSettings(string videosPath)
+        public static JsonSerializerSettings ConstructJsonSettings(string videosPath)
         {
             var settings = new JsonSerializerSettings();
             settings.Converters.Add(new EffectConverter(videosPath));

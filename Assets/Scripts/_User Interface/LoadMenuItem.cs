@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
@@ -42,20 +43,19 @@ namespace VoyagerController.UI
                 if (!FileUtils.IsJsonValid(json))
                     throw new Exception("Corrupt project");
 
-                /*var data = Project.LoadDataOnly(path, json);
-
-                if (data == null)
-                    throw new Exception("Error on loading");
-
-                var lamps = data.Lamps.Where(i => i != null).ToList();
-
-                if (lamps == null)
-                    Debug.Log("lamps are null " + path);*/
-
                 MainThread.Dispatch(() =>
                 {
+                    var videos = Path.Combine(path, Project.VIDEOS_DIRECTORY);
+                    var settings = Project.ConstructJsonSettings(videos);
+                    var project = JsonConvert.DeserializeObject<ProjectData>(json, settings);
+
+                    var lamps = project.Lamps.Where(i => i != null).ToList();
+
+                    if (lamps == null)
+                        Debug.Log("lamps are null " + path);
+
                     nameText.text = fileName;
-                    lampsText.text = $"LAMPS: {1}";
+                    lampsText.text = lamps != null ? $"LAMPS: {lamps.Count()}" : $"LAMPS: null";
                     GetComponent<Button>().interactable = true;
                 });
             }
