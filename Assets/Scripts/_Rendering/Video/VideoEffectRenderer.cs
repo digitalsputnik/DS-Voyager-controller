@@ -26,7 +26,8 @@ namespace VoyagerController.Rendering
         private VideoPlayer _videoPlayer = null;
         private RenderTexture _renderTexture = null;
         
-        private Dictionary<VoyagerLamp, Effect> _prevEffects = new Dictionary<VoyagerLamp, Effect>();
+        private readonly Dictionary<VoyagerLamp, Effect> _prevEffects = new Dictionary<VoyagerLamp, Effect>();
+        private readonly Dictionary<VoyagerLamp, double> _prevEffectTimes = new Dictionary<VoyagerLamp, double>();
         private bool _effectModified = false;
 
         private void Start()
@@ -144,9 +145,21 @@ namespace VoyagerController.Rendering
             if (!result && lamps.Any(l => Metadata.Get<LampData>(l.Serial).Effect != _prevEffects[l]))
                 result = true;
             
+            if (!lamps.All(l => _prevEffectTimes.ContainsKey(l)))
+                result = true;
+
+            if (!result && lamps.Any(l =>
+                Math.Abs(Metadata.Get<LampData>(l.Serial).TimeEffectApplied - _prevEffectTimes[l]) > 0.00001))
+                result = true;
+            
             _prevEffects.Clear();
+            _prevEffectTimes.Clear();
+
             foreach (var lamp in lamps)
+            {
                 _prevEffects.Add(lamp, Metadata.Get<LampData>(lamp.Serial).Effect);
+                _prevEffectTimes.Add(lamp,Metadata.Get<LampData>(lamp.Serial).TimeEffectApplied);
+            }
 
             return result;
         }
