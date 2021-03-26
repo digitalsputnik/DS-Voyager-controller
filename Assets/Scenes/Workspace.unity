@@ -34423,8 +34423,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 70750426}
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.6828242
+  m_Value: 1.0000004
+  m_Size: 0.7581011
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -42102,6 +42102,7 @@ MonoBehaviour:
   _infoText: {fileID: 7920886450267739966}
   _processText: {fileID: 8234287849631356877}
   _fillImage: {fileID: 2707476510008035499}
+  _fillSpeed: 10
 --- !u!225 &6749390516479751518
 CanvasGroup:
   m_ObjectHideFlags: 0

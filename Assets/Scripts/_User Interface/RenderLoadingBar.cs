@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +13,7 @@ namespace VoyagerController.UI
         [SerializeField] private Text _infoText = null;
         [SerializeField] private Text _processText = null;
         [SerializeField] private Image _fillImage = null;
+        [SerializeField] private float _fillSpeed = 5.0f;
 
         private CanvasGroup _canvasGroup;
         
@@ -35,11 +37,12 @@ namespace VoyagerController.UI
 
             if (!rendering.Any()) return;
 
-            var sum = rendering.Sum(m => m.ConfirmedFrames.Length);
-            var done = rendering.Sum(m => m.ConfirmedFrames.Length -  m.TotalMissingFrames);
+            var sum = rendering.Sum(m => m.ConfirmedFrames.Length * 2);
+            var done = rendering.Sum(m => m.ConfirmedFrames.Length -  m.TotalMissingFrames + m.FrameBuffer.Count(f => f != null));
             var process = (float) done / sum;
-            
-            _fillImage.fillAmount = process;
+
+            _fillImage.fillAmount = process > _fillImage.fillAmount ? Mathf.Lerp(_fillImage.fillAmount, process, _fillSpeed * Time.deltaTime) : process;
+
             _processText.text = $"{(int) (process * 100)}%";
             _infoText.text = "Rendering";
         }
