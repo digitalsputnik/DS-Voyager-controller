@@ -37,14 +37,14 @@ namespace VoyagerController.UI
 
             if (!rendering.Any()) return;
 
-            var sum = rendering.Sum(m => m.ConfirmedFrames.Length * 2);
-            var done = rendering.Sum(m => m.ConfirmedFrames.Length -  m.TotalMissingFrames + m.FrameBuffer.Count(f => f != null));
-            var process = (float) done / sum;
+            var renderedSum = rendering.Sum(m => m.FrameBuffer.Count(f => f != null));
+            var sum = rendering.Sum(m => m.ConfirmedFrames.Length);
+            var done = rendering.Sum(m => m.ConfirmedFrames.Length -  m.TotalMissingFrames) + renderedSum;
+            var process = (float) done / (sum * 2);
 
             _fillImage.fillAmount = process > _fillImage.fillAmount ? Mathf.Lerp(_fillImage.fillAmount, process, _fillSpeed * Time.deltaTime) : process;
-
             _processText.text = $"{(int) (process * 100)}%";
-            _infoText.text = "Rendering";
+            _infoText.text = renderedSum != sum ? "RENDERING" : "UPLOADING MISSING FRAMES";
         }
     }
 }
