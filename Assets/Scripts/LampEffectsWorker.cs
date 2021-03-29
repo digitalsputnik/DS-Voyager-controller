@@ -136,6 +136,8 @@ namespace VoyagerController
                     }
                     break;
             }
+
+            ApplicationState.Playmode.Value = GlobalPlaymode.Play;
         }
 
         private static void ApplyStreamToVoyager(VoyagerLamp voyager, Effect effect)
@@ -196,7 +198,7 @@ namespace VoyagerController
             if (client != null)
             {
                 time = client.StartVideo(voyager, 1, start);
-                client.SetItshe(voyager, meta.Itshe);   
+                client.SetItshe(voyager, meta.Itshe);  
             }
 
             framebuffer[0] = null;
@@ -266,15 +268,26 @@ namespace VoyagerController
             switch (ApplicationState.Playmode.Value)
             {
                 case GlobalPlaymode.Play:
-                    since = TimeUtils.Epoch - meta.VideoStartTime + TimeOffset(voyager);
+                    since = TimeUtils.Epoch - meta.VideoStartTime;
 
                     if (video == null) return -1;
             
                     frames = (long)(since * video.Fps) + add;
+                    
                     while (frames < 0) frames += (long)video.FrameCount;
                     return frames % (long)video.FrameCount;
+                
+                /*
+                    var since = Epoch - video.startTime + offset;
+                    var frames = (long)(since * video.fps);
+
+                    while (frames < 0)
+                        frames += video.frames;
+
+                    return frames % video.frames;
+                 */
                 case GlobalPlaymode.Pause:
-                    since = ApplicationState.PlaymodePausedSince.Value - meta.VideoStartTime + TimeOffset(voyager);
+                    since = ApplicationState.PlaymodePausedSince.Value - meta.VideoStartTime;
 
                     if (video == null) return -1;
             

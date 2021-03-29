@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace VoyagerController
 {
-    public class ApplicationSettings
+    public static class ApplicationSettings
     {
         public const string HELP_URL = @"https://www.digitalsputnik.com/pages/support";
         public const double PLAYBACK_OFFSET = 0.15;

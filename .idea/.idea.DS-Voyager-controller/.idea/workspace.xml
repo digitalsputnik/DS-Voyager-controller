@@ -3,8 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/RenderLoadingBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/RenderLoadingBar.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Core/Runtime/Plugins/DigitalSputnik.Core.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Core/Runtime/Plugins/DigitalSputnik.Core.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ApplicationSettings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ApplicationSettings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,8 +61,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/Texture2DConverter.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/VideoEffect.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/LampMetadata.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/PictureMetadata.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/WorkspaceUtils.cs" />
@@ -108,9 +107,11 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/WorkspaceMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/VideoEffectRenderer.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/RenderLoadingBar.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationSettings.cs" />
+      <option value="$USER_HOME$/Documents/Backup/Workspace/Views/VoyagerItemView.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -212,7 +213,7 @@
       <workItem from="1616058338963" duration="2064000" />
       <workItem from="1616140946646" duration="8607000" />
       <workItem from="1616405777019" duration="2756000" />
-      <workItem from="1617003168596" duration="1742000" />
+      <workItem from="1617003168596" duration="3771000" />
     </task>
     <servers />
   </component>
