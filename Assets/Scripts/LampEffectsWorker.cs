@@ -66,9 +66,7 @@ namespace VoyagerController
                 if (_confirmingLamps.Contains(l)) return false;
                 if (!(meta.Effect is VideoEffect || meta.Effect is ImageEffect)) return false;
 
-                return meta.ConfirmedFrames
-                    .Where((c, index) => meta.FrameBuffer[index] != null && c == false)
-                    .Any();
+                return meta.TotalMissingFrames > 0;
             });
 
             foreach (var voyager in unconfirmed)
@@ -87,7 +85,7 @@ namespace VoyagerController
             {
                 var meta = Metadata.Get<LampData>(l.Serial);
                 if (!(meta.Effect is VideoEffect || meta.Effect is ImageEffect)) return true;
-                return meta.Rendered && meta.ConfirmedFrames.All(c => c);
+                return meta.TotalMissingFrames == 0;
             });
 
             foreach (var voyager in confirmed.ToList())
@@ -108,12 +106,26 @@ namespace VoyagerController
             _previousMissingFramesRequest = TimeUtils.Epoch;
         }
 
-        private void RequestMissingFrames(VoyagerLamp voyager)
+        private static void RequestMissingFrames(VoyagerLamp voyager)
         {
             var videoTime = Metadata.Get<LampData>(voyager.Serial).TimeEffectApplied;
             var packet = new MissingFramesRequest(videoTime);
             var time = TimeUtils.Epoch + TimeOffset(voyager);
             GetLampClient(voyager)?.SendSettingsPacket(voyager, packet, time);
+        }
+        
+        private static void OnMissingFramesResponse(VoyagerLamp voyager, MissingFramesResponse response)
+        {
+            var meta = Metadata.Get<LampData>(voyager.Serial);
+
+            if (Math.Abs(meta.TimeEffectApplied - response.VideoId) > 0.0001) return;
+
+            meta.TotalMissingFrames = response.TotalMissing;
+            
+            for (var i = 0; i < meta.ConfirmedFrames.Length; i++)
+                meta.ConfirmedFrames[i] = true;
+            foreach (var index in response.Indices)
+                meta.ConfirmedFrames[index] = false;
         }
 
         public static void ApplyEffectToLamp(Lamp lamp, Effect effect)
@@ -244,20 +256,6 @@ namespace VoyagerController
         }
 
         public static double TimeOffset(Lamp lamp) => GetLampClient(lamp)?.TimeOffset ?? 0.0;
-
-        private static void OnMissingFramesResponse(VoyagerLamp voyager, MissingFramesResponse response)
-        {
-            var meta = Metadata.Get<LampData>(voyager.Serial);
-
-            if (Math.Abs(meta.TimeEffectApplied - response.VideoId) > 0.0001) return;
-
-            meta.TotalMissingFrames = response.TotalMissing;
-            
-            for (var i = 0; i < meta.ConfirmedFrames.Length; i++)
-                meta.ConfirmedFrames[i] = true;
-            foreach (var index in response.Indices)
-                meta.ConfirmedFrames[index] = false;
-        }
 
         public static long GetCurrentFrameOfVideo(VoyagerLamp voyager, Video video, long add = 0)
         {
