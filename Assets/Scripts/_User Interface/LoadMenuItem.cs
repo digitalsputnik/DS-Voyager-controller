@@ -55,7 +55,7 @@ namespace VoyagerController.UI
                         Debug.Log("lamps are null " + path);
 
                     nameText.text = fileName;
-                    lampsText.text = lamps != null ? $"LAMPS: {lamps.Count()}" : $"LAMPS: null";
+                    lampsText.text = ""; //lamps != null ? $"LAMPS: {lamps.Count()}" : $"LAMPS: null";
                     GetComponent<Button>().interactable = true;
                 });
             }
