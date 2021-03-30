@@ -22,6 +22,12 @@ namespace VoyagerController.UI
         
         public float Normalized => (float)(Value - Min) / (Max - Min);
 
+        public bool Interactable
+        {
+            get => _expandBtn.interactable;
+            set => _expandBtn.interactable = value;
+        }
+
         private void Start()
         {
             SetValue(_startValue);
