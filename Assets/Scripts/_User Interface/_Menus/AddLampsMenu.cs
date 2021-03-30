@@ -15,11 +15,15 @@ namespace VoyagerController.UI
 {
     public class AddLampsMenu : Menu
     {
+        private const double UPDATE_RATE = 0.5;
+        
         [SerializeField] private Transform _container = null;
         [SerializeField] private AddLampItem _addLampBtnPrefab = null;
         [SerializeField] private Button _addAllLampsBtn = null;
 
         private readonly List<AddLampItem> _lampItems = new List<AddLampItem>();
+        private readonly List<VoyagerLamp> _lampsInList = new List<VoyagerLamp>();
+        private double _prevUpdate = 0.0;
         
         internal override void OnShow()
         {
@@ -28,15 +32,28 @@ namespace VoyagerController.UI
             SubscribeEvents();
         }
 
+        private void Update()
+        {
+            if (TimeUtils.Epoch - _prevUpdate < UPDATE_RATE) return;
+            if (LampStateChanged()) UpdateLampsList();
+            _prevUpdate = TimeUtils.Epoch;
+        }
+
         internal override void OnHide()
         {
             UnsubscribeEvents();
+        }
+        
+        private bool LampStateChanged()
+        {
+            var lamps = LampManager.Instance.GetLampsOfType<VoyagerLamp>().Where(LampValidToAdd);
+            return !lamps.All(_lampsInList.Contains);
         }
 
         private void UpdateLampsList()
         {
             ClearLampsList();
-
+            
             foreach (var lamp in LampManager.Instance.GetLampsOfType<VoyagerLamp>())
             {
                 if (!LampValidToAdd(lamp)) continue;
@@ -44,6 +61,7 @@ namespace VoyagerController.UI
                 var item = Instantiate(_addLampBtnPrefab, _container);
                 item.Setup(lamp, () => AddLampToWorkspace(lamp));
                 _lampItems.Add(item);
+                _lampsInList.Add(lamp);
             }
             
             UpdateAddAllLampsBtn();
@@ -54,6 +72,7 @@ namespace VoyagerController.UI
             foreach (var lampItem in _lampItems)
                 Destroy(lampItem.gameObject);
             _lampItems.Clear();
+            _lampsInList.Clear();
         }
 
         private void UpdateAddAllLampsBtn()
@@ -77,17 +96,17 @@ namespace VoyagerController.UI
                 }
 
                 var voyagerItem = WorkspaceManager.InstantiateItem<VoyagerItem>(voyager, WorkspaceUtils.PositionOfLastSelectedOrAddedLamp + new Vector3(0, -1.0f, 0), 1f, 0);
-
-                StartCoroutine(SelectAndSnapToLamp(voyagerItem));
-
+                
                 if (voyager.Endpoint is LampNetworkEndPoint)
                     StartCoroutine(ApplyDefaultEffectAndColor(voyager));
 
+                StartCoroutine(SelectAndSnapToLamp(voyagerItem));
+                
                 CloseMenuIfAllLampsAdded();
             }
         }
 
-        private static IEnumerator SelectAndSnapToLamp(VoyagerItem voyager)
+        private static IEnumerator SelectAndSnapToLamp(WorkspaceItem voyager)
         {
             CameraMove.SetCameraPosition(voyager.transform.localPosition);
             yield return new WaitForFixedUpdate();
@@ -97,8 +116,6 @@ namespace VoyagerController.UI
 
         private static IEnumerator ApplyDefaultEffectAndColor(VoyagerLamp voyager)
         {
-            yield return new WaitUntil(() => voyager.DmxPollRecieved);
-
             if (!voyager.DmxModeEnabled)
             {
                 LampEffectsWorker.ApplyItsheToVoyager(voyager, ApplicationSettings.AddedLampsDefaultColor);
@@ -119,13 +136,17 @@ namespace VoyagerController.UI
                     break;
                 }
             }
+            
+            var selected = WorkspaceSelection.GetSelected().ToList();
+            WorkspaceSelection.Clear();
+            selected.ForEach(WorkspaceSelection.SelectItem);
         }
 
         private static bool LampValidToAdd(Lamp lamp)
         {
             if (lamp.Endpoint is LampNetworkEndPoint)
                 return !WorkspaceContainsLamp(lamp) && LampConnected(lamp);
-            
+
             return !WorkspaceContainsLamp(lamp);
         }
         
@@ -141,7 +162,7 @@ namespace VoyagerController.UI
         private static bool LampConnected(Lamp lamp)
         {
             if (lamp is VoyagerLamp voyager)
-                return voyager.Connected && !voyager.Passive;
+                return voyager.Connected && !voyager.Passive && voyager.DmxPollRecieved;
             
             return lamp.Connected;
         }
