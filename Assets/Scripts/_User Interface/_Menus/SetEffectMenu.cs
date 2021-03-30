@@ -204,7 +204,7 @@ namespace VoyagerController.UI
 
         private void ApplyEffectToAllLamps(Effect effect)
         {
-            foreach (var item in WorkspaceManager.GetItems<VoyagerItem>())
+            foreach (var item in WorkspaceManager.GetItems<VoyagerItem>().Where(v => v.gameObject.activeSelf))
                 LampEffectsWorker.ApplyEffectToLamp(item.LampHandle, effect);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
             EffectMapper.EnterEffectMapping(effect, _applyToSelected);

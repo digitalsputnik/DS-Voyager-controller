@@ -68,7 +68,8 @@ namespace VoyagerController.Mapping
                 }
                 else
                 {
-                    CalculateVoyagerMapping(voyager);
+                    if (voyager.gameObject.activeSelf)
+                        CalculateVoyagerMapping(voyager);
                 }
             }
 

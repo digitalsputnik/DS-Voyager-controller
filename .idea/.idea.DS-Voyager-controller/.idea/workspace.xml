@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/GlobalSettings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/GlobalSettings.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/IntField.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/IntField.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +63,6 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/PictureData.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/WorkspaceManager.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/TextureExtensions.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/Data.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/ImageRenderer.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/PrepareState.cs" />
@@ -115,6 +109,7 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/LoadMenuItem.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/IntField.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/GlobalSettings.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -217,7 +212,7 @@
       <workItem from="1616140946646" duration="8607000" />
       <workItem from="1616405777019" duration="2756000" />
       <workItem from="1617003168596" duration="4152000" />
-      <workItem from="1617123613919" duration="3221000" />
+      <workItem from="1617123613919" duration="3541000" />
     </task>
     <servers />
   </component>
