@@ -21,9 +21,12 @@ namespace VoyagerController
         private void Awake() => _instance = this;
 
         private const double MISSING_FRAMES_REQUEST_FREQUENCY = 2.0;
+        private const double MISSING_FRAMES_SENDING_FREQUENCY = 2.0;
 
         private readonly List<VoyagerLamp> _confirmingLamps = new List<VoyagerLamp>();
+        
         private double _previousMissingFramesRequest;
+        private double _previousMissingFramesSent;
 
         private void Start()
         {
@@ -50,8 +53,9 @@ namespace VoyagerController
             ConfirmLampFrames();
             ClearConfirmingLamps();
             RequestMissingFrames();
+            ResendMissingFrames();
         }
-        
+
         private void GlobalPlaymodeChanged(GlobalPlaymode value)
         {
             LampPlaymodeChanged((PlayMode) (int) value);
@@ -118,7 +122,9 @@ namespace VoyagerController
         {
             var meta = Metadata.Get<LampData>(voyager.Serial);
 
-            if (Math.Abs(meta.TimeEffectApplied - response.VideoId) > 0.0001) return;
+            if (Math.Abs(meta.TimeEffectApplied - response.VideoId) > 0.01) return;
+            
+            Debug.Log($"Missing : {response.TotalMissing}");
 
             meta.TotalMissingFrames = response.TotalMissing;
             
@@ -148,8 +154,6 @@ namespace VoyagerController
                     }
                     break;
             }
-
-            ApplicationState.Playmode.Value = GlobalPlaymode.Play;
         }
 
         private static void ApplyStreamToVoyager(VoyagerLamp voyager, Effect effect)
@@ -178,6 +182,13 @@ namespace VoyagerController
             var total = (long) video.Video.FrameCount;
             var time = TimeUtils.Epoch;
             var client = GetLampClient(voyager);
+
+            if (ApplicationState.Playmode.Value == GlobalPlaymode.Pause)
+            {
+                var cap = ApplicationState.PlaymodePausedSince.Value - meta.VideoStartTime;
+                start = time - cap;
+                ApplicationState.PlaymodePausedSince.Value = start + cap;
+            }
 
             if (client != null)
             {
@@ -275,15 +286,6 @@ namespace VoyagerController
                     while (frames < 0) frames += (long)video.FrameCount;
                     return frames % (long)video.FrameCount;
                 
-                /*
-                    var since = Epoch - video.startTime + offset;
-                    var frames = (long)(since * video.fps);
-
-                    while (frames < 0)
-                        frames += video.frames;
-
-                    return frames % video.frames;
-                 */
                 case GlobalPlaymode.Pause:
                     since = ApplicationState.PlaymodePausedSince.Value - meta.VideoStartTime;
 
@@ -355,6 +357,34 @@ namespace VoyagerController
         {
             if (item is VoyagerItem voyager)
                 voyager.LampHandle?.SetGlobalIntensity(ApplicationState.GlobalDimmer.Value);
+        }
+        
+        private void ResendMissingFrames()
+        {
+            if (TimeUtils.Epoch < _previousMissingFramesSent + MISSING_FRAMES_SENDING_FREQUENCY) return;
+            
+            foreach (var voyager in _confirmingLamps)
+            {
+                var meta = Metadata.Get<LampData>(voyager.Serial);
+                var time = meta.TimeEffectApplied;
+                var client = GetLampClient(voyager);
+                var indices = new List<int>();
+                
+                for (var i = 0; i < meta.ConfirmedFrames.Length; i++)
+                {
+                    if (!meta.ConfirmedFrames[i] && meta.FrameBuffer[i] != null)
+                        indices.Add(i);
+                }
+
+                foreach (var index in indices)
+                {
+                    Debug.Log($"Sending again {index}");
+                    var frame = meta.FrameBuffer[index];
+                    client?.SendVideoFrame(voyager, index, time, frame);
+                }
+            }
+
+            _previousMissingFramesSent = TimeUtils.Epoch;
         }
     }
 }

@@ -1,6 +1,8 @@
 using System.Linq;
+using DigitalSputnik;
 using DigitalSputnik.Colors;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using VoyagerApp;
 using VoyagerController.Effects;
 using VoyagerController.UI;
@@ -130,6 +132,7 @@ namespace VoyagerController.Mapping
                 var mapping = CalculateLampEffectMapping(voyager);
                 var meta = Metadata.Get<LampData>(voyager.LampHandle.Serial);
                 meta.EffectMapping = mapping;
+
                 LampEffectsWorker.ApplyEffectToLamp(voyager.LampHandle, meta.Effect);
             }
         }

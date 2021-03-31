@@ -132,6 +132,7 @@ namespace VoyagerController.UI
                         continue;
                     }
 
+                    ApplicationState.Playmode.Value = GlobalPlaymode.Play;
                     LampEffectsWorker.ApplyEffectToLamp(voyager, effect);
                     break;
                 }

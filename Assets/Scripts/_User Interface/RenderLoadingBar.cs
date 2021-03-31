@@ -30,7 +30,7 @@ namespace VoyagerController.UI
                 {
                     if (!(meta.Effect is VideoEffect))
                         return false;
-                    return !meta.Rendered;
+                    return !meta.Rendered || meta.TotalMissingFrames > 0;
                 }).ToArray();
             
             _canvasGroup.alpha = rendering.Any() ? 1.0f : 0.0f;
