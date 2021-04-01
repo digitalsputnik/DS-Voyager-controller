@@ -56,7 +56,7 @@ namespace VoyagerController.UI
             _selectDeselectBtn.SetActive(has);
             _selectDeselectBtn.GetComponentInChildren<Text>().text = all ? "DESELECT ALL" : "SELECT ALL";
             
-            _undoBtn.SetActive(_workspaceMappings.Count > 0);
+            _undoBtn.SetActive(_workspaceMappings.Count > 0 || _effectMappings.Count > 0);
 
             _selectText.SetActive(!one);
 
@@ -119,9 +119,10 @@ namespace VoyagerController.UI
         public void Undo()
         {
             if (_workspaceAlignment)
-                RecoverWorkspaceState();
+                RecoverWorkspaceMapping();
             else
                 RecoverEffectMapping();
+            SelectionMove.RaiseMovedEvent();
         }
         
         public static Bounds SelectedLampsBounds()
@@ -434,6 +435,7 @@ namespace VoyagerController.UI
                 SaveWorkspaceMapping();
             else
                 SaveEffectMapping();
+            DisableEnableItems();
         }
 
         private void SaveWorkspaceMapping()
@@ -452,7 +454,7 @@ namespace VoyagerController.UI
             _workspaceMappings.Insert(0, items);
         }
 
-        private void RecoverWorkspaceState()
+        private void RecoverWorkspaceMapping()
         {
             WorkspaceSelection.Clear();
             
