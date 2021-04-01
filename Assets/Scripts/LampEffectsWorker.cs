@@ -124,8 +124,6 @@ namespace VoyagerController
 
             if (Math.Abs(meta.TimeEffectApplied - response.VideoId) > 0.01) return;
             
-            Debug.Log($"Missing : {response.TotalMissing}");
-
             meta.TotalMissingFrames = response.TotalMissing;
             
             for (var i = 0; i < meta.ConfirmedFrames.Length; i++)
@@ -356,7 +354,10 @@ namespace VoyagerController
         private static void WorkspaceItemAdded(WorkspaceItem item)
         {
             if (item is VoyagerItem voyager)
-                voyager.LampHandle?.SetGlobalIntensity(ApplicationState.GlobalDimmer.Value);
+            {
+                if (voyager.LampHandle.Endpoint != null)
+                    voyager.LampHandle?.SetGlobalIntensity(ApplicationState.GlobalDimmer.Value);
+            }
         }
         
         private void ResendMissingFrames()
@@ -378,7 +379,6 @@ namespace VoyagerController
 
                 foreach (var index in indices)
                 {
-                    Debug.Log($"Sending again {index}");
                     var frame = meta.FrameBuffer[index];
                     client?.SendVideoFrame(voyager, index, time, frame);
                 }
