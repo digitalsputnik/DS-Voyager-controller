@@ -23,10 +23,10 @@ If the issue is in "for testing" column in the [project page](https://github.com
 ### Issue label categories
 **Platform**: OSX, Android, Windows, iOS, Embedded
 
-**Improvements** feature request, optimization
+**Improvements**: feature request, optimization
 
-**Problem** bug
+**Problem**: bug
 
-**Feedback** question, draft
+**Feedback**: question, draft
 
-**Other** wontfix, duplicate
+**Other**: wontfix, duplicate
