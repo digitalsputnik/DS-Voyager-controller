@@ -12,13 +12,14 @@
 Release candidates are published to the [releases page](https://github.com/digitalsputnik/DS-Voyager-controller/releases). Pre-release must include the following:
 1. links to all supported platform builds (iOS, Android, Windows, OSX), currently builds are buing made on [Unity Cloud build](https://developer.cloud.unity3d.com/);
 2. short release notes on what has changed from the previous version;
-3. branch it was build from (under Target);
-4. add link test sheet (on Google Drive) for the current release;
-5. checkbox for Pre-release until it is approved by Q&A.
+3. If any issues were pushed to the release, they should me moved to "In Testing" in the [project page](https://github.com/digitalsputnik/DS-Voyager-controller/projects/4).
+4. branch it was build from (under Target);
+5. add link test sheet (on Google Drive) for the current release;
+6. checkbox for Pre-release until it is approved by Q&A.
 
 ## Testing and Q&A
 Testing consists of three phases:
-1. Testing of new features - since new features;
+1. Testing of new features - should also be listed in [project page](https://github.com/digitalsputnik/DS-Voyager-controller/projects/4) under "In Testing" column;
 2. Filling out test sheet ([link to template](https://docs.google.com/spreadsheets/d/14ZKBtwgfpKyoVK-KiNli-We00_-AXu-2eqRtX73tk0I/edit?usp=sharing)), which consists mostly of current features that should work;
 3. Creative testing - trying to discover issues which do not fall under previous two categories.
 
