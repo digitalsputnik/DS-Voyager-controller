@@ -92,11 +92,20 @@ namespace VoyagerController.UI
                     new Action[] { null }
                 );
             }
+
+            ApplicationSettings.SetClientSsid = ssid;
+            ApplicationSettings.SetClientPassword = password;
         }
         
         internal override void OnShow()
         {
-            if (_ssidField.gameObject.activeSelf) TypeSsidMode();
+            if (_ssidField.gameObject.activeSelf)
+            {
+                _ssidField.text = ApplicationSettings.SetClientSsid;
+                TypeSsidMode();
+            }
+
+            _passwordField.text = ApplicationSettings.SetClientPassword;
         }
 
         internal override void OnHide()

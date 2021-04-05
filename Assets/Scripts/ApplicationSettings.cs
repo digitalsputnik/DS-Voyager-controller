@@ -22,6 +22,9 @@ namespace VoyagerController
         private const string INFO_FIRMWARE_VERSION = "info_firmware_version";
 
         private const string SETT_IOS_BLE_WIFI_SSID = "sett_ios_ble_wifissid";
+
+        private const string SET_CLIENT_SSID = "set_client_ssid";
+        private const string SET_CLIENT_PASSWORD = "set_client_password";
         
         public static Itshe IdentificationColor
         {
@@ -115,6 +118,18 @@ namespace VoyagerController
         {
             get => GetString(SETT_IOS_BLE_WIFI_SSID, "VoyagerRouter");
             set => SetString(SETT_IOS_BLE_WIFI_SSID, value);
+        }
+
+        public static string SetClientSsid
+        {
+            get => GetString(SET_CLIENT_SSID, "Voyager Router");
+            set => SetString(SET_CLIENT_SSID, value);
+        }
+
+        public static string SetClientPassword
+        {
+            get => GetString(SET_CLIENT_PASSWORD, "dsputnik");
+            set => SetString(SET_CLIENT_PASSWORD, value);
         }
 
         private static void SetBool(string key, bool value)
