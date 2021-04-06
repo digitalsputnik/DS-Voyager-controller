@@ -19,7 +19,7 @@ namespace DigitalSputnik.Ble
         private InternalCharacteristicHandler _onCharacteristics;
         private InternalCharacteristicUpdateHandler _onCharacteristicUpdate;
 
-#region Bindings
+        #region Bindings
         [DllImport("__Internal")]
         private static extern void _iOSInitialize();
 

@@ -6,22 +6,22 @@
       <Path>Library/PackageCache/com.unity.analytics@3.3.5</Path>
       <Path>Library/PackageCache/com.unity.analytics@3.5.3</Path>
       <Path>Library/PackageCache/com.unity.ext.nunit@1.0.0</Path>
-      <Path>Library/PackageCache/com.unity.ext.nunit@1.0.5</Path>
+      <Path>Library/PackageCache/com.unity.ext.nunit@1.0.6</Path>
       <Path>Library/PackageCache/com.unity.ide.rider@1.1.4</Path>
       <Path>Library/PackageCache/com.unity.ide.rider@2.0.7</Path>
-      <Path>Library/PackageCache/com.unity.ide.visualstudio@2.0.5</Path>
+      <Path>Library/PackageCache/com.unity.ide.visualstudio@2.0.7</Path>
       <Path>Library/PackageCache/com.unity.ide.vscode@1.2.2</Path>
       <Path>Library/PackageCache/com.unity.ide.vscode@1.2.3</Path>
       <Path>Library/PackageCache/com.unity.mathematics@1.2.1</Path>
-      <Path>Library/PackageCache/com.unity.render-pipelines.core@10.2.2</Path>
+      <Path>Library/PackageCache/com.unity.render-pipelines.core@10.4.0</Path>
       <Path>Library/PackageCache/com.unity.render-pipelines.core@7.3.1</Path>
-      <Path>Library/PackageCache/com.unity.render-pipelines.universal@10.2.2</Path>
+      <Path>Library/PackageCache/com.unity.render-pipelines.universal@10.4.0</Path>
       <Path>Library/PackageCache/com.unity.render-pipelines.universal@7.3.1</Path>
       <Path>Library/PackageCache/com.unity.searcher@4.3.1</Path>
-      <Path>Library/PackageCache/com.unity.shadergraph@10.2.2</Path>
+      <Path>Library/PackageCache/com.unity.shadergraph@10.4.0</Path>
       <Path>Library/PackageCache/com.unity.shadergraph@7.3.1</Path>
       <Path>Library/PackageCache/com.unity.test-framework@1.1.18</Path>
-      <Path>Library/PackageCache/com.unity.test-framework@1.1.19</Path>
+      <Path>Library/PackageCache/com.unity.test-framework@1.1.24</Path>
       <Path>ProjectSettings</Path>
     </explicitIncludes>
     <explicitExcludes>
@@ -31,7 +31,6 @@
       <Path>.vscode</Path>
       <Path>Library</Path>
       <Path>Logs</Path>
-      <Path>Temp</Path>
       <Path>UserSettings</Path>
       <Path>obj</Path>
     </explicitExcludes>

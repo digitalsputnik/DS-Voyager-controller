@@ -30,6 +30,7 @@ namespace VoyagerController.Bluetooth
         private ClientState _state = ClientState.WaitingForInitialization;
         private double _initializedTime = 0.0;
         private double _lastScanStarted = 0.0;
+        private bool _connecting = false;
 
         private BleMessageHandler OnBleMessageWithoutOp;
         public override Type EndpointType => typeof(BluetoothEndPoint);
@@ -192,9 +193,9 @@ namespace VoyagerController.Bluetooth
             if (_connectionsQueue.Count == 0)
                 return;
 
-            var scannedLamp = _connectionsQueue.Dequeue();
-            _connectingDevices.Add(scannedLamp);
-            MainThread.Dispatch(() => ValidateScannedDeviceAndConnect(scannedLamp));
+            if (Application.platform == RuntimePlatform.IPhonePlayer && _connecting) return;
+
+            MainThread.Dispatch(() => ValidateScannedDeviceAndConnect(_connectionsQueue.Dequeue()));
         }
 
         private enum ClientState
@@ -213,6 +214,9 @@ namespace VoyagerController.Bluetooth
                 return;
             
             Debugger.LogInfo($"Connecting - {peripheral.Name}");
+            
+            _connectingDevices.Add(peripheral);
+            _connecting = true;
 
             BluetoothAccess.Connect(peripheral.Id,
                 SetupValidatedDevice,
@@ -242,6 +246,8 @@ namespace VoyagerController.Bluetooth
                     access.ScanServices(ScannedServicesToApprovedConnection);
                 }
             }
+            
+            _connecting = false;
         }
 
         private void ScannedServicesToApprovedConnection(PeripheralAccess access, string[] services)
@@ -277,6 +283,8 @@ namespace VoyagerController.Bluetooth
 
             connection.Lamp.Connected = false;
             connection.ConnectionState = ConnectionState.Disconnected;
+            
+            _connecting = false;
         }
 
         private void HandleDisconnection(PeripheralInfo info, string error)
@@ -298,6 +306,8 @@ namespace VoyagerController.Bluetooth
 
             connection.Lamp.Connected = false;
             connection.ConnectionState = ConnectionState.Disconnected;
+            
+            _connecting = false;
         }
 
         private void ServicesScanned(PeripheralAccess access, string[] services)
