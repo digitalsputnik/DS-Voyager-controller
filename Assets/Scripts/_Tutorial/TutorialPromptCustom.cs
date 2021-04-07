@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace VoyagerController.UI
 {
-    public class TutorialPrompt : Tutorial
+    public class TutorialPromptCustom : Tutorial
     {
         [SerializeField] string leftButtonText = null;
         [SerializeField] string middleButtonText = null;
@@ -13,7 +13,9 @@ namespace VoyagerController.UI
         [SerializeField] int ifMiddle;
         [SerializeField] int ifRight;
 
-        [SerializeField] bool DisableClientOption;
+        [SerializeField] public TutorialManager.TutorialChoice ifLeftChoice = TutorialManager.TutorialChoice.None;
+        [SerializeField] public TutorialManager.TutorialChoice ifMiddleChoice = TutorialManager.TutorialChoice.None;
+        [SerializeField] public TutorialManager.TutorialChoice ifRightChoice = TutorialManager.TutorialChoice.None;
 
         private Text leftButtonTextObject = null;
         private Text middleButtonTextObject = null;
@@ -30,9 +32,6 @@ namespace VoyagerController.UI
 
         public void Setup()
         {
-            if (DisableClientOption)
-                TutorialManager.setClientPicked = false;
-
             TutorialManager.Instance.leftButton.onClick.RemoveAllListeners();
             TutorialManager.Instance.middleButton.onClick.RemoveAllListeners();
             TutorialManager.Instance.rightButton.onClick.RemoveAllListeners();
@@ -64,12 +63,15 @@ namespace VoyagerController.UI
                 TutorialManager.Instance.SetNextTutorial(ifRight);
                 ResetButtons();
             }
+
+            TutorialManager.Choice = ifRightChoice;
         }
 
         public void OnMiddleClick()
         {
             TutorialManager.Instance.SetNextTutorial(ifMiddle);
             ResetButtons();
+            TutorialManager.Choice = ifMiddleChoice;
         }
 
         public void OnLeftClick()
@@ -89,6 +91,8 @@ namespace VoyagerController.UI
                 TutorialManager.Instance.SetNextTutorial(ifLeft);
                 ResetButtons();
             }
+
+            TutorialManager.Choice = ifLeftChoice;
         }
 
         public void ResetButtons()

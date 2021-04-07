@@ -59,6 +59,7 @@ namespace VoyagerController.Bluetooth
             SubscribeToWorkspaceEvents();
 
             OnBleMessageWithoutOp += SsidListResponseReceived;
+            LampManager.Instance.OnLampUpdated += VoyagerLampUpdated;
             AddOpListener<PollReplyShortPacket>(OpCode.PollReplyS, PollReceived);
         }
 
@@ -97,6 +98,17 @@ namespace VoyagerController.Bluetooth
                 if (voyagerItem.LampHandle.Endpoint is BluetoothEndPoint endPoint)
                     BluetoothAccess.Disconnect(endPoint.Id);
             }
+        }
+
+        private void VoyagerLampUpdated(Lamp lamp)
+        {
+            /*if (lamp.Endpoint is LampNetworkEndPoint && lamp.Connected)
+            {
+                var connection = _connections.FirstOrDefault(c => c.Lamp == lamp);
+
+                if (connection != null)
+                    BluetoothAccess.Disconnect(connection.Id);
+            }*/
         }
 
         private static void SendMessage(Lamp lamp, byte[] message)
@@ -304,7 +316,9 @@ namespace VoyagerController.Bluetooth
                 return;
             }
 
-            connection.Lamp.Connected = false;
+            if (connection.Lamp.Endpoint is BluetoothEndPoint)
+                connection.Lamp.Connected = false;
+
             connection.ConnectionState = ConnectionState.Disconnected;
             
             _connecting = false;
