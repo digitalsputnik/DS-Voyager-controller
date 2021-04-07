@@ -3,6 +3,7 @@ using System.Linq;
 using DigitalSputnik.Voyager;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerController.Bluetooth;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
@@ -74,10 +75,11 @@ namespace VoyagerController.UI
             var anyWorkspace = WorkspaceManager.GetItems<VoyagerItem>().Any();
             var allSelected = WorkspaceUtils.AllLampsSelected;
             var hasSelected = WorkspaceSelection.GetSelected<VoyagerItem>().Any();
-            
+            var anyBluetooth = WorkspaceSelection.GetSelected<VoyagerItem>().Any(l => l.LampHandle.Endpoint is BluetoothEndPoint);
+
             _infoTextObj.SetActive(!hasSelected);
             _networkSettingsBtn.SetActive(anyWorkspace);
-            _updateBtn.SetActive(hasSelected);
+            _updateBtn.SetActive(hasSelected && !anyBluetooth);
             _selectDeselectBtnText.text = allSelected ? DESELECT_ALL_TEXT : SELECT_ALL_TEXT;
         }
 
