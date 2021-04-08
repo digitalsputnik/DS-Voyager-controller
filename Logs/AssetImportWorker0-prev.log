@@ -1,333 +1,331 @@
 Using pre-set license
-Built from '2020.3/release' branch; Version is '2020.3.2f1 (8fd9074bf66c) revision 9427207'; Using compiler version '192528614'; Build Type 'Release'
-OS: 'Windows 10 Home; OS build 18363.1440; Version 1909; 64bit' Language: 'en' Physical Memory: 32689 MB
-BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 0
 
  COMMAND LINE ARGUMENTS:
-C:\Program Files\Unity\Hub\Editor\2020.3.2f1\Editor\Unity.exe
+/Applications/Unity/Hub/Editor/2020.3.2f1/Unity.app/Contents/MacOS/Unity
 -adb2
 -batchMode
 -noUpm
 -name
 AssetImportWorker0
 -projectPath
-C:/Users/Joosep/Documents/GitHub/DS-Voyager-controller
+/Users/taavetmaask/Projects/DS-Voyager-controller
 -logFile
 Logs/AssetImportWorker0.log
 -srvPort
-63775
-Successfully changed project path to: C:/Users/Joosep/Documents/GitHub/DS-Voyager-controller
-C:/Users/Joosep/Documents/GitHub/DS-Voyager-controller
+62115
+Successfully changed project path to: /Users/taavetmaask/Projects/DS-Voyager-controller
+/Users/taavetmaask/Projects/DS-Voyager-controller
 Using Asset Import Pipeline V2.
-Refreshing native plugins compatible for Editor in 79.47 ms, found 2 plugins.
+Refreshing native plugins compatible for Editor in 123.01 ms, found 4 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 2020.3.2f1 (8fd9074bf66c)
-[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2020.3.2f1/Editor/Data/Resources/UnitySubsystems
-[Subsystems] Discovering subsystems at path C:/Users/Joosep/Documents/GitHub/DS-Voyager-controller/Assets
+[Subsystems] Discovering subsystems at path /Applications/Unity/Hub/Editor/2020.3.2f1/Unity.app/Contents/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path /Users/taavetmaask/Projects/DS-Voyager-controller/Assets
 GfxDevice: creating device client; threaded=0
-Direct3D:
-    Version:  Direct3D 11.0 [level 11.1]
-    Renderer: NVIDIA GeForce GTX 1660 SUPER (ID=0x21c4)
-    Vendor:   
-    VRAM:     5991 MB
-    Driver:   27.21.14.5671
+2021-04-08 14:53:16.556 Unity[13574:571485] Color LCD preferred device: Intel(R) UHD Graphics 630 (low power)
+2021-04-08 14:53:16.556 Unity[13574:571485] Metal devices available: 2
+2021-04-08 14:53:16.556 Unity[13574:571485] 0: AMD Radeon Pro 560X (high power)
+2021-04-08 14:53:16.557 Unity[13574:571485] 1: Intel(R) UHD Graphics 630 (low power)
+2021-04-08 14:53:16.557 Unity[13574:571485] Using device AMD Radeon Pro 560X (high power)
+Initializing Metal device caps: AMD Radeon Pro 560X
 Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
 Initialize mono
-Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2020.3.2f1/Editor/Data/Managed'
-Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2020.3.2f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
-Mono config path = 'C:/Program Files/Unity/Hub/Editor/2020.3.2f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56352
+Mono path[0] = '/Applications/Unity/Hub/Editor/2020.3.2f1/Unity.app/Contents/Managed'
+Mono path[1] = '/Applications/Unity/Hub/Editor/2020.3.2f1/Unity.app/Contents/MonoBleedingEdge/lib/mono/unityjit'
+Mono config path = '/Applications/Unity/Hub/Editor/2020.3.2f1/Unity.app/Contents/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56574
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
-Register platform support module: C:/Program Files/Unity/Hub/Editor/2020.3.2f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.001440 seconds.
-Native extension for WindowsStandalone target not found
-Refreshing native plugins compatible for Editor in 48.02 ms, found 2 plugins.
+Register platform support module: /Applications/Unity/Hub/Editor/2020.3.2f1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
+Registered in 0.002790 seconds.
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 60.02 ms, found 4 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Invoked RoslynAnalysisRunner static constructor.
 RoslynAnalysisRunner will not be running.
 RoslynAnalysisRunner has terminated.
 Mono: successfully reloaded assembly
-- Completed reload, in  1.404 seconds
+- Completed reload, in  1.530 seconds
 Platform modules already initialized, skipping
 Registering precompiled user dll's ...
-Registered in 0.005561 seconds.
+Registered in 0.011562 seconds.
 Begin MonoManager ReloadAssembly
-Native extension for WindowsStandalone target not found
-Refreshing native plugins compatible for Editor in 46.50 ms, found 2 plugins.
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 45.56 ms, found 4 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Invoked RoslynAnalysisRunner static constructor.
 RoslynAnalysisRunner will not be running.
 RoslynAnalysisRunner has terminated.
 Mono: successfully reloaded assembly
-- Completed reload, in  0.992 seconds
+- Completed reload, in  1.450 seconds
 Platform modules already initialized, skipping
 ========================================================================
 Worker process is ready to serve import requests
 Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.03 seconds
-Refreshing native plugins compatible for Editor in 1.36 ms, found 2 plugins.
+Launching external process: /Applications/Unity/Hub/Editor/2020.3.2f1/Unity.app/Contents/Tools/UnityShaderCompiler
+Launched and connected shader compiler UnityShaderCompiler after 0.02 seconds
+Refreshing native plugins compatible for Editor in 1.19 ms, found 4 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 2462 Unused Serialized files (Serialized files now loaded: 0)
-System memory in use before: 115.1 MB.
-System memory in use after: 115.2 MB.
+Unloading 2463 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 184.7 MB.
+System memory in use after: 184.9 MB.
 
-Unloading 176 unused Assets to reduce memory usage. Loaded Objects now: 2745.
-Total: 2.619700 ms (FindLiveObjects: 0.229500 ms CreateObjectMapping: 0.062700 ms MarkObjects: 2.192700 ms  DeleteObjects: 0.133800 ms)
+Unloading 176 unused Assets to reduce memory usage. Loaded Objects now: 2748.
+Total: 3.858433 ms (FindLiveObjects: 0.385883 ms CreateObjectMapping: 0.197800 ms MarkObjects: 3.143670 ms  DeleteObjects: 0.128944 ms)
 
 ========================================================================
 Received Import Request.
+  path: Assets/Scripts/_User Interface/_Color Wheel
+  artifactKey: Guid(9ae7528e465eb48ba89d1ffaeba8acb3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/_User Interface/_Color Wheel using Guid(9ae7528e465eb48ba89d1ffaeba8acb3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '59297bc6135f36284d31f568c4b368ff') in 0.005457 seconds
+  Import took 0.010142 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.006164 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.43 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.353 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.34 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2349 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 177.6 MB.
+System memory in use after: 177.8 MB.
+
+Unloading 171 unused Assets to reduce memory usage. Loaded Objects now: 2751.
+Total: 3.407649 ms (FindLiveObjects: 0.332117 ms CreateObjectMapping: 0.171919 ms MarkObjects: 2.852356 ms  DeleteObjects: 0.049657 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 446.196530 seconds.
   path: Assets/Vendor/Plugins/Android
   artifactKey: Guid(3011ee6eb3bc52c4b8110ae6dc162e86) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Vendor/Plugins/Android using Guid(3011ee6eb3bc52c4b8110ae6dc162e86) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '95c06877c390a12a3ff5b06716eeb981') in 0.008673 seconds
-  Import took 0.011984 seconds .
+Start importing Assets/Vendor/Plugins/Android using Guid(3011ee6eb3bc52c4b8110ae6dc162e86) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '52d8d94a29aa6970a299b8690a8709b5') in 0.007057 seconds
+  Import took 0.012546 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 15.213247 seconds.
-  path: Assets/Vendor/Plugins/Android/AndroidVideoResizer.cs
-  artifactKey: Guid(f894658d9b810fe4ea010cf80c421cdd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Vendor/Plugins/Android/AndroidVideoResizer.cs using Guid(f894658d9b810fe4ea010cf80c421cdd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a29a64af95f8ea104e8a9e3940ecd23a') in 0.023767 seconds
-  Import took 0.027148 seconds .
+  Time since last request: 4.054129 seconds.
+  path: Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins
+  artifactKey: Guid(a5843f69685b7b347b1a95eb8e9c03de) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins using Guid(a5843f69685b7b347b1a95eb8e9c03de) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '86fc25986c9d67f23a8054a4e52b3018') in 0.002330 seconds
+  Import took 0.006578 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000423 seconds.
-  path: Assets/Vendor/Plugins/Android/AndroidVideoResizer.cs
-  artifactKey: Guid(f894658d9b810fe4ea010cf80c421cdd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Vendor/Plugins/Android/AndroidVideoResizer.cs using Guid(f894658d9b810fe4ea010cf80c421cdd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a29a64af95f8ea104e8a9e3940ecd23a') in 0.002603 seconds
-  Import took 0.005571 seconds .
+  Time since last request: 6.006493 seconds.
+  path: Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/libzipw.bundle
+  artifactKey: Guid(7fc3a5313453ec442ba80acfeb1ac11b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/libzipw.bundle using Guid(7fc3a5313453ec442ba80acfeb1ac11b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2017056049bcfd533e05ea5b17d28128') in 0.632688 seconds
+  Import took 0.637109 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 14.566038 seconds.
-  path: Assets/Editor Default Resources/crosstales/Common/asset_PlayMaker.png
-  artifactKey: Guid(e72ec35aabacc1c4d8b52b1cfb98e83a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/Common/asset_PlayMaker.png using Guid(e72ec35aabacc1c4d8b52b1cfb98e83a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e9765ac0c09ec2421c97c7a3120d0cdf') in 0.055500 seconds
-  Import took 0.058873 seconds .
+  Time since last request: 10.015311 seconds.
+  path: Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/libzipw.bundle
+  artifactKey: Guid(7fc3a5313453ec442ba80acfeb1ac11b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/libzipw.bundle using Guid(7fc3a5313453ec442ba80acfeb1ac11b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ad3d9f2dad61f1b8b8df006f6eccfcb0') in 0.003467 seconds
+  Import took 0.007293 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000149 seconds.
-  path: Assets/Editor Default Resources/crosstales/Common/logo_asset_bwf.png
-  artifactKey: Guid(85d3a637cce8a674897572ddfeef3de7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/Common/logo_asset_bwf.png using Guid(85d3a637cce8a674897572ddfeef3de7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '88f0b5666b1b57be1f3a1890a1732294') in 0.009126 seconds
-  Import took 0.012137 seconds .
+  Time since last request: 10.222550 seconds.
+  path: Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/lzip.cs
+  artifactKey: Guid(fc37654099986b948b1124e11f534ef5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/lzip.cs using Guid(fc37654099986b948b1124e11f534ef5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3c9480a45c30eeb88fcf272d98d94c97') in 0.386206 seconds
+  Import took 0.391147 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000169 seconds.
-  path: Assets/Editor Default Resources/crosstales/Common/logo_asset_fb.png
-  artifactKey: Guid(d7edc4491ce09a745abc26f28e4672ad) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/Common/logo_asset_fb.png using Guid(d7edc4491ce09a745abc26f28e4672ad) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a15554f8696006f460f7b967a02cf797') in 0.009692 seconds
-  Import took 0.013010 seconds .
+  Time since last request: 12.025410 seconds.
+  path: Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/libzipw.bundle
+  artifactKey: Guid(7fc3a5313453ec442ba80acfeb1ac11b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/libzipw.bundle using Guid(7fc3a5313453ec442ba80acfeb1ac11b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a53bec68f551cfae799d1c3468308ea0') in 0.002475 seconds
+  Import took 0.006595 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000195 seconds.
-  path: Assets/Editor Default Resources/crosstales/Common/icon_3p_assets.png
-  artifactKey: Guid(b6824de43e0c65345afa065e1e0dd226) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/Common/icon_3p_assets.png using Guid(b6824de43e0c65345afa065e1e0dd226) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5c55747ec91fcff26694eb6cf266504a') in 0.012758 seconds
-  Import took 0.016827 seconds .
+  Time since last request: 2170.116677 seconds.
+  path: Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/libzipw.bundle/Contents
+  artifactKey: Guid(04d8ca552ec3a804a914dde3943cc148) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/libzipw.bundle/Contents using Guid(04d8ca552ec3a804a914dde3943cc148) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bb87e626413e0357d7dff40284dfaa3b') in 0.002072 seconds
+  Import took 0.006101 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000151 seconds.
-  path: Assets/Vendor/LunarConsole/Editor/iOS/Common/Images/lunar_console_icon_button_settings@3x.png
-  artifactKey: Guid(160c36d2872de5749b901b418735fb1a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Vendor/LunarConsole/Editor/iOS/Common/Images/lunar_console_icon_button_settings@3x.png using Guid(160c36d2872de5749b901b418735fb1a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '16502e8f54e6b0c1d633d5c4bb877362') in 0.030735 seconds
-  Import took 0.034636 seconds .
+  Time since last request: 0.961270 seconds.
+  path: Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/libzipw.bundle/Contents/MacOS
+  artifactKey: Guid(3e6bce653aafa1345864be29482ee3f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/libzipw.bundle/Contents/MacOS using Guid(3e6bce653aafa1345864be29482ee3f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fc3603d95484a7493b8d432b1c3cf1d7') in 0.002985 seconds
+  Import took 0.007392 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000151 seconds.
-  path: Assets/Editor Default Resources/crosstales/Common/logo_asset_rtv.png.png
-  artifactKey: Guid(90ffe59d5e3e9294a84883fe071877a3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/Common/logo_asset_rtv.png.png using Guid(90ffe59d5e3e9294a84883fe071877a3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '653c0d294324ef55dfbf01e40215bdde') in 0.015685 seconds
-  Import took 0.018863 seconds .
+  Time since last request: 5.538601 seconds.
+  path: Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/libzipw.bundle/Contents/Info.plist
+  artifactKey: Guid(1db28debc468a8f49ae409fbc0502504) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/libzipw.bundle/Contents/Info.plist using Guid(1db28debc468a8f49ae409fbc0502504) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'dbbbaca8a14089e878445260c01ec7b4') in 2.002925 seconds
+  Import took 2.007963 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000187 seconds.
-  path: Assets/Vendor/LunarConsole/Editor/iOS/Common/Images/lunar_console_icon_settings@3x.png
-  artifactKey: Guid(1f0e1a00720e75d489d1bcf5cb8ced8e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Vendor/LunarConsole/Editor/iOS/Common/Images/lunar_console_icon_settings@3x.png using Guid(1f0e1a00720e75d489d1bcf5cb8ced8e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3cb5b72aa8be04158250249254659c6d') in 0.018533 seconds
-  Import took 0.021594 seconds .
+  Time since last request: 0.000236 seconds.
+  path: Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/libzipw.bundle/Contents/MacOS/libzipw
+  artifactKey: Guid(2e01c6f58b916834eb78c6fb7d10aec1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Vendor/Plugins/ADL-Plugins/zip/Plugins/libzipw.bundle/Contents/MacOS/libzipw using Guid(2e01c6f58b916834eb78c6fb7d10aec1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '28be16e97e116cb9cff55e9579be9307') in 0.002241 seconds
+  Import took 0.008423 seconds .
 
 ========================================================================
-Received Import Request.
-  Time since last request: 0.000146 seconds.
-  path: Assets/Vendor/Plugins/crosstales/Common/UI/Prefabs/Static/ButtonWindowSettings.prefab
-  artifactKey: Guid(1062b2ca789c5654f97d28a784841704) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Vendor/Plugins/crosstales/Common/UI/Prefabs/Static/ButtonWindowSettings.prefab using Guid(1062b2ca789c5654f97d28a784841704) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a12446c0a6dc6ed54334e787b7da8944') in 0.026991 seconds
-  Import took 0.030044 seconds .
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.006199 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 2.13 ms, found 4 plugins.
+Preloading 1 native plugins for Editor in 10.07 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.662 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.47 ms, found 4 plugins.
+Preloading 1 native plugins for Editor in 2.13 ms.
+Unloading 2349 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 190.9 MB.
+System memory in use after: 191.1 MB.
+
+Unloading 171 unused Assets to reduce memory usage. Loaded Objects now: 2754.
+Total: 2.337367 ms (FindLiveObjects: 0.323003 ms CreateObjectMapping: 0.103959 ms MarkObjects: 1.875370 ms  DeleteObjects: 0.034274 ms)
 
 ========================================================================
-Received Import Request.
-  Time since last request: 0.000154 seconds.
-  path: Assets/Editor Default Resources/crosstales/Common/icon_reset.png
-  artifactKey: Guid(dea50a80dc1c8244a9f6608cb72b9633) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/Common/icon_reset.png using Guid(dea50a80dc1c8244a9f6608cb72b9633) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7efe6421acf464ff624eaa2a5dfcb054') in 0.011342 seconds
-  Import took 0.014240 seconds .
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.004682 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.27 ms, found 4 plugins.
+Preloading 1 native plugins for Editor in 2.04 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.442 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.60 ms, found 4 plugins.
+Preloading 1 native plugins for Editor in 2.46 ms.
+Unloading 2349 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 191.3 MB.
+System memory in use after: 191.5 MB.
+
+Unloading 171 unused Assets to reduce memory usage. Loaded Objects now: 2757.
+Total: 2.645104 ms (FindLiveObjects: 0.363731 ms CreateObjectMapping: 0.150061 ms MarkObjects: 2.082495 ms  DeleteObjects: 0.047791 ms)
 
 ========================================================================
-Received Import Request.
-  Time since last request: 0.000169 seconds.
-  path: Assets/Vendor/Plugins/crosstales/Common/UI/Prefabs/Static/ButtonUnityAssetStoreLarge.prefab
-  artifactKey: Guid(feb09e800ba06f742ae8d84999a5a41d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Vendor/Plugins/crosstales/Common/UI/Prefabs/Static/ButtonUnityAssetStoreLarge.prefab using Guid(feb09e800ba06f742ae8d84999a5a41d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2def8122fa8f86bfa03ff991e77c2952') in 0.008617 seconds
-  Import took 0.011905 seconds .
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.004767 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 5.58 ms, found 4 plugins.
+Preloading 1 native plugins for Editor in 4.23 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  2.635 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 2.69 ms, found 4 plugins.
+Preloading 1 native plugins for Editor in 1.98 ms.
+Unloading 2349 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 191.8 MB.
+System memory in use after: 192.0 MB.
+
+Unloading 171 unused Assets to reduce memory usage. Loaded Objects now: 2760.
+Total: 4.816149 ms (FindLiveObjects: 0.862919 ms CreateObjectMapping: 0.609731 ms MarkObjects: 3.274257 ms  DeleteObjects: 0.064865 ms)
 
 ========================================================================
-Received Import Request.
-  Time since last request: 0.000148 seconds.
-  path: Assets/Editor Default Resources/crosstales/Common/logo_asset_oc.png
-  artifactKey: Guid(2ba7d2e32e2444f44bc9480532d6d322) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/Common/logo_asset_oc.png using Guid(2ba7d2e32e2444f44bc9480532d6d322) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00050e8d2f7465c69ec2d1af18e6bdd0') in 0.018919 seconds
-  Import took 0.022076 seconds .
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002465 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.41 ms, found 4 plugins.
+Preloading 1 native plugins for Editor in 2.12 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.331 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.35 ms, found 4 plugins.
+Preloading 1 native plugins for Editor in 1.79 ms.
+Unloading 2349 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 192.1 MB.
+System memory in use after: 192.3 MB.
+
+Unloading 171 unused Assets to reduce memory usage. Loaded Objects now: 2763.
+Total: 2.684373 ms (FindLiveObjects: 0.268346 ms CreateObjectMapping: 0.121750 ms MarkObjects: 2.232992 ms  DeleteObjects: 0.060142 ms)
 
 ========================================================================
-Received Import Request.
-  Time since last request: 0.000179 seconds.
-  path: Assets/Editor Default Resources/crosstales/Common/logo_asset_tb.png
-  artifactKey: Guid(128a705bae53de2468ff5d5228d85bb9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/Common/logo_asset_tb.png using Guid(128a705bae53de2468ff5d5228d85bb9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '01bf9526024c6d79bfbdd4531d5f9f6e') in 0.011194 seconds
-  Import took 0.014380 seconds .
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002900 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.67 ms, found 4 plugins.
+Preloading 1 native plugins for Editor in 2.36 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.455 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.60 ms, found 4 plugins.
+Preloading 1 native plugins for Editor in 2.58 ms.
+Unloading 2349 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 192.6 MB.
+System memory in use after: 192.8 MB.
+
+Unloading 171 unused Assets to reduce memory usage. Loaded Objects now: 2766.
+Total: 3.322146 ms (FindLiveObjects: 0.289406 ms CreateObjectMapping: 0.127879 ms MarkObjects: 2.842321 ms  DeleteObjects: 0.061111 ms)
 
 ========================================================================
-Received Import Request.
-  Time since last request: 0.000150 seconds.
-  path: Assets/Vendor/LunarConsole/Editor/iOS/Common/Images/lunar_console_icon_settings.png
-  artifactKey: Guid(79a2afa282b08c44cbea4c1919486c06) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Vendor/LunarConsole/Editor/iOS/Common/Images/lunar_console_icon_settings.png using Guid(79a2afa282b08c44cbea4c1919486c06) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bc689fa1cc666a4a3bb1d98fa55abc8e') in 0.012022 seconds
-  Import took 0.015221 seconds .
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.005691 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for OSXStandalone target not found
+Refreshing native plugins compatible for Editor in 1.29 ms, found 4 plugins.
+Preloading 1 native plugins for Editor in 2.03 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.309 seconds
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 1.65 ms, found 4 plugins.
+Preloading 1 native plugins for Editor in 2.50 ms.
+Unloading 2349 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 193.0 MB.
+System memory in use after: 193.2 MB.
 
-========================================================================
-Received Import Request.
-  Time since last request: 0.000157 seconds.
-  path: Assets/Editor Default Resources/crosstales/Common/logo_asset_tpb.png
-  artifactKey: Guid(4452cb79590e8204dbfe978988ddd8fd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/Common/logo_asset_tpb.png using Guid(4452cb79590e8204dbfe978988ddd8fd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5c0eb600e12b2bb81a8efb302bef00c9') in 0.021879 seconds
-  Import took 0.024943 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000195 seconds.
-  path: Assets/Vendor/LunarConsole/Editor/iOS/Common/Images/lunar_console_icon_button_settings.png
-  artifactKey: Guid(048793967aa2d1d4f9c64a49f3563c7e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Vendor/LunarConsole/Editor/iOS/Common/Images/lunar_console_icon_button_settings.png using Guid(048793967aa2d1d4f9c64a49f3563c7e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd3cd32d7b1fca1578d3d48597b09c5d2') in 0.013816 seconds
-  Import took 0.017195 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000152 seconds.
-  path: Assets/Graphics/Sprites/selection_set.png
-  artifactKey: Guid(11c59d64d8e0e4c9c91c36d4851a7b0b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Graphics/Sprites/selection_set.png using Guid(11c59d64d8e0e4c9c91c36d4851a7b0b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '76994103a57e9ad272af3267d727e279') in 0.036538 seconds
-  Import took 0.039736 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000145 seconds.
-  path: Assets/Prefabs/User Interface/Set Effect Item.prefab
-  artifactKey: Guid(729909f9a9228442f850ee0f1c5f7ac9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/User Interface/Set Effect Item.prefab using Guid(729909f9a9228442f850ee0f1c5f7ac9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c2aacd2beb757e7073daa26ec23019eb') in 0.009974 seconds
-  Import took 0.013089 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000141 seconds.
-  path: Assets/Vendor/LunarConsole/Editor/iOS/Common/Images/lunar_console_icon_settings@2x.png
-  artifactKey: Guid(144fe7f481aa24b46a57b3e3d76e6198) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Vendor/LunarConsole/Editor/iOS/Common/Images/lunar_console_icon_settings@2x.png using Guid(144fe7f481aa24b46a57b3e3d76e6198) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '75179cf4a368451cef9852494d1d09a1') in 0.009084 seconds
-  Import took 0.012170 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000151 seconds.
-  path: Assets/Editor Default Resources/crosstales/Common/logo_asset_dj.png
-  artifactKey: Guid(dd8101261d7ef434291e378e8170cee3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/Common/logo_asset_dj.png using Guid(dd8101261d7ef434291e378e8170cee3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '22d4b362ce98226873fa174042b35207') in 0.009388 seconds
-  Import took 0.012726 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000165 seconds.
-  path: Assets/Editor Default Resources/crosstales/FileBrowser/logo_asset_pro.png
-  artifactKey: Guid(ec62dca804202ed4d8bedc57bbb75174) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/FileBrowser/logo_asset_pro.png using Guid(ec62dca804202ed4d8bedc57bbb75174) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '089322ebba0fb7093066d4cea54273e9') in 0.008550 seconds
-  Import took 0.011606 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000176 seconds.
-  path: Assets/Editor Default Resources/crosstales/Common/logo_asset_rtv.png
-  artifactKey: Guid(0ac96f680421ffe4a81ca21e73c06d38) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/Common/logo_asset_rtv.png using Guid(0ac96f680421ffe4a81ca21e73c06d38) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '677a1de9a2fa643b61d3d621e3da7cec') in 0.009418 seconds
-  Import took 0.013021 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000216 seconds.
-  path: Assets/Vendor/LunarConsole/Editor/iOS/Common/Images/lunar_console_icon_button_settings@2x.png
-  artifactKey: Guid(8102a08302d9b3549a6ef6a06286ef94) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Vendor/LunarConsole/Editor/iOS/Common/Images/lunar_console_icon_button_settings@2x.png using Guid(8102a08302d9b3549a6ef6a06286ef94) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '427824ba35d0dfd9e0d4fbf4c8e254c2') in 0.007828 seconds
-  Import took 0.010671 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000138 seconds.
-  path: Assets/Editor Default Resources/crosstales/Common/logo_asset_tr.png
-  artifactKey: Guid(cfdced975e63a134aa9c278ba1ceeda6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/Common/logo_asset_tr.png using Guid(cfdced975e63a134aa9c278ba1ceeda6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5f7f860768a2e8eed3e8fd019c0b1757') in 0.007968 seconds
-  Import took 0.010911 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000151 seconds.
-  path: Assets/Vendor/Plugins/crosstales/Common/UI/Prefabs/Static/ButtonUnityAssetStoreSmall.prefab
-  artifactKey: Guid(3ad9354a1a6f0b34c8f2920e395360cc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Vendor/Plugins/crosstales/Common/UI/Prefabs/Static/ButtonUnityAssetStoreSmall.prefab using Guid(3ad9354a1a6f0b34c8f2920e395360cc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '377e7035b0cf56475be7ffd6f7462e46') in 0.007315 seconds
-  Import took 0.010197 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000137 seconds.
-  path: Assets/Vendor/Plugins/crosstales/Common/UI/Prefabs/Static/WindowSettings.prefab
-  artifactKey: Guid(c424c2b892adb9a49a953c9b22c70550) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Vendor/Plugins/crosstales/Common/UI/Prefabs/Static/WindowSettings.prefab using Guid(c424c2b892adb9a49a953c9b22c70550) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e2e6ffd8ff179a6f231163ccd816db71') in 0.012369 seconds
-  Import took 0.015492 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000148 seconds.
-  path: Assets/Editor Default Resources/crosstales/Common/logo_asset_radio.png
-  artifactKey: Guid(1dcd604ab4e8b1d4f83396f07e0b2f31) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/Common/logo_asset_radio.png using Guid(1dcd604ab4e8b1d4f83396f07e0b2f31) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd75838a2ab60c098f4b07b8da055e050') in 0.011463 seconds
-  Import took 0.014665 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000131 seconds.
-  path: Assets/Editor Default Resources/crosstales/FileBrowser/logo_asset_small_pro.png
-  artifactKey: Guid(361847e72787aa94a93f29bc5b625446) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/FileBrowser/logo_asset_small_pro.png using Guid(361847e72787aa94a93f29bc5b625446) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '90787ad380b4179396f262a07792d4c0') in 0.009135 seconds
-  Import took 0.012117 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000211 seconds.
-  path: Assets/Editor Default Resources/crosstales/Common/logo_asset_tps.png
-  artifactKey: Guid(68dcd0b11ba81e445b2968810c620a23) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Editor Default Resources/crosstales/Common/logo_asset_tps.png using Guid(68dcd0b11ba81e445b2968810c620a23) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2e85c7684bd3559226ec52073ccd2199') in 0.009282 seconds
-  Import took 0.012088 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 2.515874 seconds.
-  path: Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs
-  artifactKey: Guid(ed3875a34dfab400b99ed0b8ba1b45b3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs using Guid(ed3875a34dfab400b99ed0b8ba1b45b3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '030561010737a46c09cc766ec4750fca') in 0.005637 seconds
-  Import took 0.008789 seconds .
+Unloading 171 unused Assets to reduce memory usage. Loaded Objects now: 2769.
+Total: 3.059812 ms (FindLiveObjects: 0.280616 ms CreateObjectMapping: 0.109429 ms MarkObjects: 2.615280 ms  DeleteObjects: 0.053083 ms)
 
 AssetImportWorkerClient::OnTransportError - code=2 error=End of file
