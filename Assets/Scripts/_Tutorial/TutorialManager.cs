@@ -40,8 +40,6 @@ namespace VoyagerController.UI
         #endregion
 
         public bool setup = false;
-        public static bool setClientPicked = false;
-        public static TutorialChoice Choice = TutorialChoice.None;
 
         List<int> customOrder = new List<int>();
 
@@ -76,12 +74,12 @@ namespace VoyagerController.UI
             Instance.menuContainer.ShowMenu(startMenu);
             Instance.inspectorMenuContainer.ShowMenu(null);
 
-            if (PlayerPrefs.HasKey("NewTutorialDone"))
+            if (PlayerPrefs.HasKey("TutorialDone"))
                 SetNextTutorial(1);
             else
                 SetNextTutorial(0);
 
-            PlayerPrefs.SetString("NewTutorialDone", "true");
+            PlayerPrefs.SetString("TutorialDone", "true");
         }
 
         internal override void OnHide()
@@ -220,17 +218,6 @@ namespace VoyagerController.UI
             }
 
             return null;
-        }
-
-        public enum TutorialChoice
-        {
-            BleOne,
-            BleFive,
-            BleMore,
-            WifiOne,
-            WifiTen,
-            WifiMore,
-            None
         }
     }
 }

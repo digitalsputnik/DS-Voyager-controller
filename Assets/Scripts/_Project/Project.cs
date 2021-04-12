@@ -196,6 +196,8 @@ namespace VoyagerController.ProjectManagement
                 var serial = dataPair.Key;
                 var metadata = dataPair.Value;
                 
+                Debug.Log($"Metadata {metadata.Itshe}");
+                
                 Metadata.Set(serial, metadata);
 
                 if (metadata.InWorkspace)

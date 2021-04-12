@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik.Dmx;
@@ -11,8 +12,6 @@ namespace VoyagerController.UI
 {
     public class DmxModeMenu : Menu
     {
-        private const float UPDATE_TEXT_RATE = 2.0f;
-
         [SerializeField] private IntField _startUniverse = null;
         [SerializeField] private IntField _startChannel = null;
         [SerializeField] private Dropdown _divisionDropdown = null;
@@ -25,7 +24,6 @@ namespace VoyagerController.UI
         private readonly Dictionary<VoyagerLamp, DmxSettings> _lampToSettings = new Dictionary<VoyagerLamp, DmxSettings>();
 
         private int _prevSelectedCount = 0;
-        private float _prevTextUpdate = 0.0f;
         
         public void Set()
         {
@@ -49,25 +47,6 @@ namespace VoyagerController.UI
                 foreach (var item in WorkspaceManager.GetItems<VoyagerItem>())
                     Debug.Log(JsonConvert.SerializeObject(item.LampHandle.DmxSettings, Formatting.Indented));
             }
-
-            UpdateLampsInfo();
-        }
-
-        private void UpdateLampsInfo()
-        {
-            if (Time.time - _prevTextUpdate >= UPDATE_TEXT_RATE)
-            {
-                foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>())
-                {
-                    var lamp = item.LampHandle;
-                    if (_lampToSettings.ContainsKey(lamp))
-                    {
-                        var settings = _lampToSettings[lamp];
-                        SetLampInfo(item, settings);
-                    }
-                }
-                _prevTextUpdate = Time.time;
-            }
         }
 
         internal override void OnShow()
@@ -75,10 +54,8 @@ namespace VoyagerController.UI
             WorkspaceSelection.Clear();
             WorkspaceSelection.SelectionChanged += SelectionChanged;
             VoyagerItem.ShowOrderNumber = true;
-            
-            // NetUtils.VoyagerClient.onReceived += OnReceived;
 
-            RecalculateChannelsAndUniverses();
+            // NetUtils.VoyagerClient.onReceived += OnReceived;
         }
 
         internal override void OnHide()

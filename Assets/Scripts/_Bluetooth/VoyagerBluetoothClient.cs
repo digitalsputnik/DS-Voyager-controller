@@ -30,7 +30,6 @@ namespace VoyagerController.Bluetooth
         private ClientState _state = ClientState.WaitingForInitialization;
         private double _initializedTime = 0.0;
         private double _lastScanStarted = 0.0;
-        private bool _connecting = false;
 
         private BleMessageHandler OnBleMessageWithoutOp;
         public override Type EndpointType => typeof(BluetoothEndPoint);
@@ -59,7 +58,6 @@ namespace VoyagerController.Bluetooth
             SubscribeToWorkspaceEvents();
 
             OnBleMessageWithoutOp += SsidListResponseReceived;
-            LampManager.Instance.OnLampUpdated += VoyagerLampUpdated;
             AddOpListener<PollReplyShortPacket>(OpCode.PollReplyS, PollReceived);
         }
 
@@ -98,17 +96,6 @@ namespace VoyagerController.Bluetooth
                 if (voyagerItem.LampHandle.Endpoint is BluetoothEndPoint endPoint)
                     BluetoothAccess.Disconnect(endPoint.Id);
             }
-        }
-
-        private void VoyagerLampUpdated(Lamp lamp)
-        {
-            /*if (lamp.Endpoint is LampNetworkEndPoint && lamp.Connected)
-            {
-                var connection = _connections.FirstOrDefault(c => c.Lamp == lamp);
-
-                if (connection != null)
-                    BluetoothAccess.Disconnect(connection.Id);
-            }*/
         }
 
         private static void SendMessage(Lamp lamp, byte[] message)
@@ -205,9 +192,9 @@ namespace VoyagerController.Bluetooth
             if (_connectionsQueue.Count == 0)
                 return;
 
-            if (Application.platform == RuntimePlatform.IPhonePlayer && _connecting) return;
-
-            MainThread.Dispatch(() => ValidateScannedDeviceAndConnect(_connectionsQueue.Dequeue()));
+            var scannedLamp = _connectionsQueue.Dequeue();
+            _connectingDevices.Add(scannedLamp);
+            MainThread.Dispatch(() => ValidateScannedDeviceAndConnect(scannedLamp));
         }
 
         private enum ClientState
@@ -226,9 +213,6 @@ namespace VoyagerController.Bluetooth
                 return;
             
             Debugger.LogInfo($"Connecting - {peripheral.Name}");
-            
-            _connectingDevices.Add(peripheral);
-            _connecting = true;
 
             BluetoothAccess.Connect(peripheral.Id,
                 SetupValidatedDevice,
@@ -258,8 +242,6 @@ namespace VoyagerController.Bluetooth
                     access.ScanServices(ScannedServicesToApprovedConnection);
                 }
             }
-            
-            _connecting = false;
         }
 
         private void ScannedServicesToApprovedConnection(PeripheralAccess access, string[] services)
@@ -295,8 +277,6 @@ namespace VoyagerController.Bluetooth
 
             connection.Lamp.Connected = false;
             connection.ConnectionState = ConnectionState.Disconnected;
-            
-            _connecting = false;
         }
 
         private void HandleDisconnection(PeripheralInfo info, string error)
@@ -316,12 +296,8 @@ namespace VoyagerController.Bluetooth
                 return;
             }
 
-            if (connection.Lamp.Endpoint is BluetoothEndPoint)
-                connection.Lamp.Connected = false;
-
+            connection.Lamp.Connected = false;
             connection.ConnectionState = ConnectionState.Disconnected;
-            
-            _connecting = false;
         }
 
         private void ServicesScanned(PeripheralAccess access, string[] services)

@@ -48,9 +48,8 @@ namespace VoyagerController.Workspace
             if (!Metadata.Contains(Uid))
             {
                 Metadata.Add<PictureData>(Uid);
-                Metadata.Get<PictureData>(Uid).Texture = _picture;
+                Metadata.Get<PictureData>(Uid).Texture = _picture;  
                 PositionBasedOnCamera();
-                SaveMapping();
             }
             else
             {
@@ -74,11 +73,7 @@ namespace VoyagerController.Workspace
         private void SelectionMoveEnded()
         {
             if (!WorkspaceSelection.Contains(this)) return;
-            SaveMapping();
-        }
-
-        private void SaveMapping()
-        {
+            
             var mapping = Metadata.Get<PictureData>(Uid).WorkspaceMapping;
             var pos = _transform.position;
             mapping.Position = new[] { pos.x, pos.y };

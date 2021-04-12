@@ -19,19 +19,8 @@ namespace VoyagerController.UI
 
         public void NewProject()
         {
-            DialogBox.Show(
-                "NEW PROJECT",
-                "All unsaved project changes will be discarded",
-                new string[] { "CANCEL", "OK" },
-                new Action[]
-                {
-                    null,
-                    () =>
-                    {
-                        Project.New();
-                        ApplicationState.RaiseNewProject();
-                    }
-                });
+            Project.New();
+            ApplicationState.RaiseNewProject();
         }
 
         public void OpenHelp()
