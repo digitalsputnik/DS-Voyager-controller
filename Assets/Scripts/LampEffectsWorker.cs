@@ -122,7 +122,7 @@ namespace VoyagerController
         {
             var meta = Metadata.Get<LampData>(voyager.Serial);
 
-            if (Math.Abs(meta.TimeEffectApplied - response.VideoId) > 0.01) return;
+            if (Math.Abs(meta.TimeEffectApplied - response.VideoId) > 0.0001) return;
             
             meta.TotalMissingFrames = response.TotalMissing;
             

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DigitalSputnik;
-using DigitalSputnik.Ble;
 using DigitalSputnik.Voyager;
 using UnityEngine;
 using UnityEngine.UI;
@@ -90,7 +89,7 @@ namespace VoyagerController.UI
                     "REMOVE BLE LAMPS",
                     "You can have a maximum on 5 bluetooth lamps in workspace at any time. " +
                     "Please remove a bluetooth lamp to add a new bluetooth lamp.",
-                    new string[] { "OK" },
+                    new [] { "OK" },
                     new Action[] { null });
                     return;
                 }
