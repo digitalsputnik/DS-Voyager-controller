@@ -99,7 +99,7 @@ namespace VoyagerController.UI
             _splitter1.SetActive(one);
             _selectDeselectAllBtn.SetActive(has);
             _selectDeselectText.text = all ? DESELECT_ALL_TEXT : SELECT_ALL_TEXT;
-            _selectColorFxBtn.SetActive(one && share);
+            _selectColorFxBtn.SetActive(one && share && !anyBluetooth);
             
             _splitter2.SetActive(one && !anySerial && !anyBluetooth);
             _setEffectBtn.SetActive(one && !anySerial && !anyBluetooth);
