@@ -879,7 +879,7 @@ public class lzip {
 			res = zipGetInfoA(null,tb.AddrOfPinnedObject(), fbuf.AddrOfPinnedObject(), FileBuffer.Length);
 			fbuf.Free();
 		} else {
-            #if (!UNITY_WEBGL && !UNITY_TVOS) || UNITY_EDITOR
+            #if (!UNITY_WEBGL && !UNITY_TVOS) || UNITY_EDITOR || UNITY_STANDALONE_OSX
             res = zipGetInfoA(@zipArchive, tb.AddrOfPinnedObject(),IntPtr.Zero, 0);
             #endif
 		}

@@ -13,6 +13,8 @@ namespace VoyagerController.UI
         [SerializeField] int ifMiddle;
         [SerializeField] int ifRight;
 
+        [SerializeField] bool DisableClientOption;
+
         private Text leftButtonTextObject = null;
         private Text middleButtonTextObject = null;
         private Text rightButtonTextObject = null;
@@ -28,6 +30,9 @@ namespace VoyagerController.UI
 
         public void Setup()
         {
+            if (DisableClientOption)
+                TutorialManager.setClientPicked = false;
+
             TutorialManager.Instance.leftButton.onClick.RemoveAllListeners();
             TutorialManager.Instance.middleButton.onClick.RemoveAllListeners();
             TutorialManager.Instance.rightButton.onClick.RemoveAllListeners();

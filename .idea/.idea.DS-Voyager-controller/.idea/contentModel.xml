@@ -97,12 +97,15 @@
             <e p="VoyagerSerialClient.cs" t="Include" />
           </e>
           <e p="_Tutorial" t="Include">
+            <e p="ChoiceDivider.cs" t="Include" />
             <e p="Tutorial.cs" t="Include" />
+            <e p="TutorialClientPicked.cs" t="Include" />
             <e p="TutorialCustomButton.cs" t="Include" />
             <e p="TutorialLampsAdded.cs" t="Include" />
             <e p="TutorialManager.cs" t="Include" />
             <e p="TutorialMobileCheck.cs" t="Include" />
             <e p="TutorialPrompt.cs" t="Include" />
+            <e p="TutorialPromptCustom.cs" t="Include" />
           </e>
           <e p="_User Interface" t="Include">
             <e p="_Color Wheel" t="Include">

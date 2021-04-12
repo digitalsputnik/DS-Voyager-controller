@@ -74,7 +74,6 @@ namespace VoyagerController.Workspace
             if (LampHandle == null) return false;
             
             _meta = Metadata.Get<LampData>(LampHandle.Serial);
-
             _outlineColor = _outlineRenderer.material.color;
 
             return base.Setup(data, uid);
@@ -102,7 +101,9 @@ namespace VoyagerController.Workspace
 
 
         public bool Selected => WorkspaceSelection.Contains(this);
-        
+
+        public override bool Selectable => gameObject.activeSelf;
+
 
         public Vector2[] GetPixelWorldPositions()
         {
