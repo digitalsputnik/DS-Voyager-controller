@@ -14,6 +14,7 @@ namespace VoyagerController.Effects
             var texture = new Texture2D(4, 4);
 
             texture.LoadImage(file);
+            texture.wrapMode = TextureWrapMode.Mirror;
             texture.Apply();
 
             Name = Path.GetFileNameWithoutExtension(path);
