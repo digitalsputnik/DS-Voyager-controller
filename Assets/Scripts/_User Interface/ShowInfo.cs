@@ -11,6 +11,8 @@ namespace VoyagerController.UI
 {
     public class ShowInfo : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
+        public static bool Active = false;
+        
         [SerializeField] private Color _pressedColor = Color.white;
         [SerializeField] private Color _releasedColor = Color.white;
         [SerializeField] private Image _image = null;
@@ -51,6 +53,8 @@ namespace VoyagerController.UI
                     _prevInfo.Add(lamp, item.Suffix);
                 item.Suffix = InfoOfLamp(lamp);
             }
+
+            Active = true;
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -63,6 +67,7 @@ namespace VoyagerController.UI
                 item.Suffix = info;
             }
             _prevInfo.Clear();
+            Active = false;
         }
 
         private static string InfoOfLamp(VoyagerLamp lamp)

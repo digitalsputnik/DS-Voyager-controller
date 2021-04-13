@@ -55,7 +55,7 @@ namespace VoyagerController.UI
 
         private void UpdateLampsInfo()
         {
-            if (Time.time - _prevTextUpdate >= UPDATE_TEXT_RATE)
+            if (Time.time - _prevTextUpdate >= UPDATE_TEXT_RATE && VoyagerItem.ShowOrderNumber && !ShowInfo.Active)
             {
                 foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>())
                 {
@@ -87,8 +87,8 @@ namespace VoyagerController.UI
 
             VoyagerItem.ShowOrderNumber = false;
             WorkspaceSelection.SelectionChanged -= SelectionChanged;
-            WorkspaceSelection.GetSelected<VoyagerItem>().ToList().ForEach(view => view.Prefix = "");
-            WorkspaceSelection.GetSelected<VoyagerItem>().ToList().ForEach(view => view.Suffix = "");
+            WorkspaceManager.GetItems<VoyagerItem>().ToList().ForEach(view => view.Prefix = "");
+            WorkspaceManager.GetItems<VoyagerItem>().ToList().ForEach(view => view.Suffix = "");
         }
 
         private void SubscribeToEvents()
