@@ -51,6 +51,8 @@ namespace VoyagerController.Workspace
             SaveWorkspaceMapping();
             SelectionMove.SelectionMoveEnded += SelectionMoved;
             WorkspaceSelection.SelectionChanged += SelectionChanged;
+            _nameText.transform.localPosition += Vector3.forward * -0.07f;
+            _orderText.transform.localPosition += Vector3.forward * -0.07f;
         }
 
         private void Update()
