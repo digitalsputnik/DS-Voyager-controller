@@ -222,8 +222,7 @@ namespace VoyagerController.Bluetooth
             // The lamp is already found from network and doesn't need to be added through bluetooth.
 
             var updLamp = LampManager.Instance.GetLampWithSerial<VoyagerLamp>(peripheral.Name);
-            if (updLamp != null && updLamp.Connected)
-                return;
+            if (updLamp != null && updLamp.Connected) return;
             
             Debugger.LogInfo($"Connecting - {peripheral.Name}");
             
@@ -238,6 +237,8 @@ namespace VoyagerController.Bluetooth
 
         private void SetupValidatedDevice(PeripheralAccess access)
         {
+            _connecting = false;
+
             Debugger.LogInfo("Connected - " + access.Id);
 
             var connection = GetConnectionWithId(access.Id);
@@ -258,8 +259,6 @@ namespace VoyagerController.Bluetooth
                     access.ScanServices(ScannedServicesToApprovedConnection);
                 }
             }
-            
-            _connecting = false;
         }
 
         private void ScannedServicesToApprovedConnection(PeripheralAccess access, string[] services)
@@ -278,6 +277,8 @@ namespace VoyagerController.Bluetooth
 
         private void HandleFailedConnection(PeripheralInfo info, string error)
         {
+            _connecting = false;
+            
             Debugger.LogInfo("Failed Connection - " + info.Name);
 
             var peripheral = _connectingDevices.FirstOrDefault(l => l.Id == info.Id);
@@ -295,12 +296,12 @@ namespace VoyagerController.Bluetooth
 
             connection.Lamp.Connected = false;
             connection.ConnectionState = ConnectionState.Disconnected;
-            
-            _connecting = false;
         }
 
         private void HandleDisconnection(PeripheralInfo info, string error)
         {
+            _connecting = false;
+            
             Debugger.LogInfo("Disconnected - " + info.Name);
 
             var peripheral = _connectingDevices.FirstOrDefault(l => l.Id == info.Id);
@@ -320,8 +321,6 @@ namespace VoyagerController.Bluetooth
                 connection.Lamp.Connected = false;
 
             connection.ConnectionState = ConnectionState.Disconnected;
-            
-            _connecting = false;
         }
 
         private void ServicesScanned(PeripheralAccess access, string[] services)
