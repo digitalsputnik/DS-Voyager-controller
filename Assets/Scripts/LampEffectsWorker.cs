@@ -367,20 +367,24 @@ namespace VoyagerController
             foreach (var voyager in _confirmingLamps)
             {
                 var meta = Metadata.Get<LampData>(voyager.Serial);
-                var time = meta.TimeEffectApplied;
-                var client = GetLampClient(voyager);
-                var indices = new List<int>();
-                
-                for (var i = 0; i < meta.ConfirmedFrames.Length; i++)
-                {
-                    if (!meta.ConfirmedFrames[i] && meta.FrameBuffer[i] != null)
-                        indices.Add(i);
-                }
 
-                foreach (var index in indices)
+                if (meta.Effect is VideoEffect)
                 {
-                    var frame = meta.FrameBuffer[index];
-                    client?.SendVideoFrame(voyager, index, time, frame);
+                    var time = meta.TimeEffectApplied;
+                    var client = GetLampClient(voyager);
+                    var indices = new List<int>();
+                
+                    for (var i = 0; i < meta.ConfirmedFrames.Length; i++)
+                    {
+                        if (!meta.ConfirmedFrames[i] && meta.FrameBuffer[i] != null)
+                            indices.Add(i);
+                    }
+
+                    foreach (var index in indices)
+                    {
+                        var frame = meta.FrameBuffer[index];
+                        client?.SendVideoFrame(voyager, index, time, frame);
+                    }
                 }
             }
 
