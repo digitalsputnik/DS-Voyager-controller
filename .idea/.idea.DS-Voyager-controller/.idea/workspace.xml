@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/RenderState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/RenderState.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,14 +69,14 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" />
       <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothInterface.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/RenderState.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/VoyagerItem.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/ImageEffect.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/DmxModeMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/RenderState.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -183,7 +184,8 @@
       <workItem from="1617705495739" duration="3886000" />
       <workItem from="1618217506065" duration="4770000" />
       <workItem from="1618315726797" duration="3474000" />
-      <workItem from="1618386162727" duration="1727000" />
+      <workItem from="1618386162727" duration="2732000" />
+      <workItem from="1618474349766" duration="377000" />
     </task>
     <servers />
   </component>

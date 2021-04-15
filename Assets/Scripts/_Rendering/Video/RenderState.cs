@@ -101,8 +101,14 @@ namespace VoyagerController.Rendering
                 VideoEffectRenderer.VideoPlayer.Play();
 
                 if (ApplicationState.Playmode.Value == GlobalPlaymode.Play)
-                    VideoEffectRenderer.VideoPlayer.frame = 
-                        LampEffectsWorker.GetCurrentFrameOfVideo(_lamps[0], _effect.Video) + FRAMES_TO_ADD_AT_START;
+                {
+                    var frame = LampEffectsWorker.GetCurrentFrameOfVideo(_lamps[0], _effect.Video) + FRAMES_TO_ADD_AT_START;
+
+                    if (frame >= (long) _effect.Video.FrameCount)
+                        frame = LampEffectsWorker.GetCurrentFrameOfVideo(_lamps[0], _effect.Video, FRAMES_TO_ADD_AT_START);
+
+                    VideoEffectRenderer.VideoPlayer.frame = frame;
+                }
                 else
                     VideoEffectRenderer.VideoPlayer.frame = 
                         LampEffectsWorker.GetCurrentFrameOfVideo(_lamps[0], _effect.Video, -1);
