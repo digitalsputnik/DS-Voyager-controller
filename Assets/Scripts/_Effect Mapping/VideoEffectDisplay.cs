@@ -26,6 +26,7 @@ namespace VoyagerController.Mapping
                 _player.enabled = true;
                 _player.url = _video.Path;
                 _player.prepareCompleted += PlayerPrepared;
+                _player.loopPointReached += LoopPointReached;
                 _player.Prepare();
                 
                 ApplicationState.Playmode.OnChanged += PlaymodeChanged;
@@ -36,6 +37,11 @@ namespace VoyagerController.Mapping
         {
             PlaymodeChanged(ApplicationState.Playmode.Value);
             InvokeRepeating(nameof(CorrectFrame), 0.0f, CORRECT_FRAME_RATE);
+        }
+        
+        private void LoopPointReached(VideoPlayer source)
+        {
+            CorrectFrame();
         }
 
         private void CorrectFrame()
@@ -70,6 +76,7 @@ namespace VoyagerController.Mapping
         {
             StopAllCoroutines();
             _player.prepareCompleted -= PlayerPrepared;
+            _player.loopPointReached -= LoopPointReached;
             _player.enabled = false;
             
             ApplicationState.Playmode.OnChanged -= PlaymodeChanged;

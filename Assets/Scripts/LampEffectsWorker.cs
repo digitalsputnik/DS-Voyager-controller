@@ -54,6 +54,8 @@ namespace VoyagerController
             ClearConfirmingLamps();
             RequestMissingFrames();
             ResendMissingFrames();
+
+            Debug.Log(LampManager.Instance.GetClient<VoyagerNetworkClient>().TimeOffset);
         }
 
         private void GlobalPlaymodeChanged(GlobalPlaymode value)
@@ -276,9 +278,9 @@ namespace VoyagerController
             {
                 case GlobalPlaymode.Play:
                     since = TimeUtils.Epoch - meta.VideoStartTime;
-
+                    
                     if (video == null) return -1;
-            
+
                     frames = (long)(since * video.Fps) + add;
                     
                     while (frames < 0) frames += (long)video.FrameCount;
@@ -339,8 +341,9 @@ namespace VoyagerController
                 {
                     var startTime = Metadata.Get<LampData>(voyager.Serial).VideoStartTime;
                     var handleAt = TimeUtils.Epoch + TimeOffset(voyager) + ApplicationSettings.PLAYBACK_OFFSET;
-                    
                     voyager.SetPlayMode(mode, startTime, handleAt); 
+                    
+                    Debug.Log($"Time offset: {TimeOffset(voyager)}");
                 }
             }
         }
