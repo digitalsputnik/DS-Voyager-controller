@@ -53,13 +53,9 @@ namespace VoyagerController.Rendering
         private void RenderFrames()
         {
             var player = VideoEffectRenderer.VideoPlayer;
-            
-            if (!_playerPrepared || !player.isPlaying || player.frame == _prevVideoIndex)
-                return;
-            
             var index = player.frame;
-
-            if (index >= (long) _effect.Video.FrameCount)
+            
+            if (!_playerPrepared || index == _prevVideoIndex || index >= (long) _effect.Video.FrameCount)
                 return;
 
             if (_texture != null) Object.Destroy(_texture);
@@ -93,24 +89,24 @@ namespace VoyagerController.Rendering
             var pair = _queue.Dequeue();
             _effect = pair.Key;
             _lamps = pair.Value;
-            _prevVideoIndex = -1;
             _playerPrepared = false;
             
             VideoEffectRenderer.PrepareVideoPlayer(_effect.Video, () =>
             {
                 VideoEffectRenderer.VideoPlayer.Play();
-
+                
                 if (ApplicationState.Playmode.Value == GlobalPlaymode.Play)
                 {
                     VideoEffectRenderer.VideoPlayer.frame = 
-                        LampEffectsWorker.GetCurrentFrameOfVideo(_lamps[0], _effect.Video, FRAMES_TO_ADD_AT_START);
+                        LampEffectsWorker.GetCurrentFrameOfVideo(_lamps[0], _effect.Video, 0.3f);
                 }
                 else
                     VideoEffectRenderer.VideoPlayer.frame = 
-                        LampEffectsWorker.GetCurrentFrameOfVideo(_lamps[0], _effect.Video, -1);
+                        LampEffectsWorker.GetCurrentFrameOfVideo(_lamps[0], _effect.Video);
 
                 VideoEffectRenderer.VideoPlayer.seekCompleted += source =>
                 {
+                    _prevVideoIndex = -1;
                     _framesToRender = _effect.Video.FrameCount;
                     _framesRendered = 0;
                     _playerPrepared = true;
