@@ -25,6 +25,7 @@ namespace VoyagerController.Rendering
         private int _currentFrame = -1;
         private MissingFrame CurrentFrame => _missingFrames[_currentFrame];
         private int _framesRendered;
+        private bool _first;
 
         public FastRenderState(RenderQueue queue, VideoEffect current)
         {
@@ -37,14 +38,17 @@ namespace VoyagerController.Rendering
         {
             if (_missingFrames != null && Finished) return new InterpolationState(_queue, _effect);
 
+            if (_first)
+            {
+                _first = false;
+                return this;
+            }
+
             switch (_state)
             {
                 case FastRendererState.Prepare:
                     StartFastRenderLoop();
                     SeekToNextMissingFrame();
-                    break;
-                case FastRendererState.Seeked:
-                    Seeked();
                     break;
                 case FastRendererState.Render:
                     Render();
@@ -123,12 +127,6 @@ namespace VoyagerController.Rendering
             }
         }
 
-        private void Seeked()
-        {
-            _framesRendered = 0;
-            _state = FastRendererState.Render;
-        }
-        
         private static Color32[] RenderLampColors(VoyagerLamp lamp, Texture2D frame)
         {
             var coords = TextureExtensions.MapLampToVideoCoords(lamp, frame);
@@ -167,7 +165,9 @@ namespace VoyagerController.Rendering
             VideoEffectRenderer.VideoPlayer.frame = GetRoundedFrame(frame);
             VideoEffectRenderer.VideoPlayer.seekCompleted += source =>
             {
-                _state = FastRendererState.Seeked;
+                _first = true;
+                _framesRendered = 0;
+                _state = FastRendererState.Render;
             };
         }
 

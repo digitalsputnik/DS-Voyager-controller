@@ -259,7 +259,7 @@ namespace VoyagerController
 
         public static double TimeOffset(Lamp lamp) => GetLampClient(lamp)?.TimeOffset ?? 0.0;
 
-        public static long GetCurrentFrameOfVideo(VoyagerLamp voyager, Video video, double add = 0)
+        public static long GetCurrentFrameOfVideo(VoyagerLamp voyager, Video video, double addSeconds = 0)
         {
             var meta = Metadata.Get<LampData>(voyager.Serial);
             double since;
@@ -268,7 +268,7 @@ namespace VoyagerController
             switch (ApplicationState.Playmode.Value)
             {
                 case GlobalPlaymode.Play:
-                    since = TimeUtils.Epoch - meta.VideoStartTime + add;
+                    since = TimeUtils.Epoch - meta.VideoStartTime + addSeconds;
                     
                     if (video == null) return -1;
 
@@ -278,7 +278,7 @@ namespace VoyagerController
                     return frames % (long)video.FrameCount;
                 
                 case GlobalPlaymode.Pause:
-                    since = ApplicationState.PlaymodePausedSince.Value - meta.VideoStartTime + add;
+                    since = ApplicationState.PlaymodePausedSince.Value - meta.VideoStartTime + addSeconds;
 
                     if (video == null) return -1;
             

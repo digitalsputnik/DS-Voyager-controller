@@ -98,7 +98,7 @@ namespace VoyagerController.Rendering
                 if (ApplicationState.Playmode.Value == GlobalPlaymode.Play)
                 {
                     VideoEffectRenderer.VideoPlayer.frame = 
-                        LampEffectsWorker.GetCurrentFrameOfVideo(_lamps[0], _effect.Video, 0.3f);
+                        LampEffectsWorker.GetCurrentFrameOfVideo(_lamps[0], _effect.Video, 0.35f);
                 }
                 else
                     VideoEffectRenderer.VideoPlayer.frame = 
