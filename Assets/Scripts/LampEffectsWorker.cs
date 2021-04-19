@@ -54,8 +54,6 @@ namespace VoyagerController
             ClearConfirmingLamps();
             RequestMissingFrames();
             ResendMissingFrames();
-
-            Debug.Log(LampManager.Instance.GetClient<VoyagerNetworkClient>().TimeOffset);
         }
 
         private void GlobalPlaymodeChanged(GlobalPlaymode value)

@@ -50,8 +50,11 @@ namespace VoyagerController
             DebugConsole.Console = new UnityDebugConsole();
             
             NetworkTransport.SetMulticastLock(true);
-            
-            NetUtils.UseInterfaceForAddress = !Application.isMobilePlatform;
+
+            NetUtils.UseInterfaceForAddress = Application.platform == RuntimePlatform.WindowsPlayer ||
+                                              Application.platform == RuntimePlatform.WindowsEditor ||
+                                              Application.platform == RuntimePlatform.OSXPlayer ||
+                                              Application.platform == RuntimePlatform.OSXEditor;
 
             LampManager.Instance.OnLampDiscovered += LampDiscovered;
             LampManager.Instance.OnLampBroadcasted += LampBroadcasted;

@@ -4,11 +4,7 @@
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Debugger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Debugger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/shadercompiler-UnityShaderCompiler.exe0.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/shadercompiler-UnityShaderCompiler.exe0.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Core/Runtime/Plugins/DigitalSputnik.Core.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Core/Runtime/Plugins/DigitalSputnik.Core.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -41,23 +37,19 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/SyphonRenderer.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/Metadata.cs" />
       <option value="$USER_HOME$/Documents/Backup/Utilities/FileUtils.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/VoyagerUpdater.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/DeveloperMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AboutMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/InterpolationState.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/FileUtils.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectItem.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/VideoEffectLoader.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/EffectSettingsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/VoyagerLampConverter.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/LoadMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/EffectMappingMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/LampMetadataConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/MathUtils.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/FastRenderState.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/WorkspaceMenu.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/VideoEffectRenderer.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationSettings.cs" />
       <option value="$USER_HOME$/Documents/Backup/Workspace/Views/VoyagerItemView.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Color Wheel/ColorWheelButton.cs" />
@@ -76,13 +68,17 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/ImageEffect.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/DmxModeMenu.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/RenderState.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/VideoEffectDisplay.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Debugger.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/VoyagerUpdater.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/VideoEffectLoader.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/VideoEffectRenderer.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/LoadMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -194,7 +190,7 @@
       <workItem from="1618474349766" duration="980000" />
       <workItem from="1618560667274" duration="6822000" />
       <workItem from="1618821266331" duration="673000" />
-      <workItem from="1618823452254" duration="770000" />
+      <workItem from="1618823452254" duration="3600000" />
     </task>
     <servers />
   </component>
