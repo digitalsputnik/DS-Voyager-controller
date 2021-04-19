@@ -201,6 +201,8 @@ namespace VoyagerController.UI
                 LampEffectsWorker.ApplyEffectToLamp(voyager, effect);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
             EffectMapper.EnterEffectMapping(effect, _applyToSelected);
+            
+            ApplicationState.Playmode.Value = GlobalPlaymode.Play;
         }
 
         private void ApplyEffectToAllLamps(Effect effect)
@@ -210,6 +212,8 @@ namespace VoyagerController.UI
                 LampEffectsWorker.ApplyEffectToLamp(item.LampHandle, effect);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
             EffectMapper.EnterEffectMapping(effect, _applyToSelected);
+            
+            ApplicationState.Playmode.Value = GlobalPlaymode.Play;
         }
 
         private static IEnumerable<Effect> GetEffectsInOrder()

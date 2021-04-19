@@ -6,6 +6,7 @@ using DigitalSputnik.Colors;
 using DigitalSputnik.Videos;
 using DigitalSputnik.Voyager;
 using DigitalSputnik.Voyager.Communication;
+using Unity.Mathematics;
 using UnityEngine;
 using VoyagerController.Bluetooth;
 using VoyagerController.Effects;
@@ -173,20 +174,12 @@ namespace VoyagerController
         private static void ApplyVideoToVoyager(VoyagerLamp voyager, VideoEffect video)
         {
             var meta = Metadata.Get<LampData>(voyager.Serial);
-            var offset = TimeOffset(voyager);
-            var start = video.Meta.StartTime + offset;
+            var time = TimeUtils.Epoch;
+            var start = time;
             var framebuffer = new Rgb[video.Video.FrameCount][];
             var confirmed = new bool[video.Video.FrameCount];
             var total = (long) video.Video.FrameCount;
-            var time = TimeUtils.Epoch;
             var client = GetLampClient(voyager);
-
-            if (ApplicationState.Playmode.Value == GlobalPlaymode.Pause)
-            {
-                var cap = ApplicationState.PlaymodePausedSince.Value - meta.VideoStartTime;
-                start = time - cap;
-                ApplicationState.PlaymodePausedSince.Value = start + cap;
-            }
 
             if (client != null)
             {
@@ -209,11 +202,11 @@ namespace VoyagerController
         private static void ApplyImageToVoyager(VoyagerLamp voyager, ImageEffect image)
         {
             var meta = Metadata.Get<LampData>(voyager.Serial);
+            var time = TimeUtils.Epoch;
             var offset = TimeOffset(voyager);
-            var start = image.Meta.StartTime + offset;
+            var start = time + offset;
             var framebuffer = new Rgb[1][];
             var confirmed = new bool[1];
-            var time = TimeUtils.Epoch;
             var client = GetLampClient(voyager);
 
             if (client != null)
@@ -279,9 +272,9 @@ namespace VoyagerController
                     
                     if (video == null) return -1;
 
-                    frames = (long)(since * video.Fps) + add;
+                    frames = (long) math.ceil(since * video.Fps) + add;
                     
-                    while (frames < 0) frames += (long)video.FrameCount;
+                    while (frames < 0) frames += (long) video.FrameCount;
                     return frames % (long)video.FrameCount;
                 
                 case GlobalPlaymode.Pause:
@@ -289,7 +282,7 @@ namespace VoyagerController
 
                     if (video == null) return -1;
             
-                    frames = (long)(since * video.Fps) + add;
+                    frames = (long) math.ceil(since * video.Fps) + add;
                     while (frames < 0) frames += (long)video.FrameCount;
                     return frames % (long)video.FrameCount;
                     
@@ -335,13 +328,11 @@ namespace VoyagerController
             {
                 var effect = Metadata.Get<LampData>(voyager.Serial).Effect;
                 
-                if (effect is VideoEffect video)
+                if (effect is VideoEffect)
                 {
                     var startTime = Metadata.Get<LampData>(voyager.Serial).VideoStartTime;
                     var handleAt = TimeUtils.Epoch + TimeOffset(voyager) + ApplicationSettings.PLAYBACK_OFFSET;
-                    voyager.SetPlayMode(mode, startTime, handleAt); 
-                    
-                    Debug.Log($"Time offset: {TimeOffset(voyager)}");
+                    voyager.SetPlayMode(mode, startTime, handleAt);
                 }
             }
         }

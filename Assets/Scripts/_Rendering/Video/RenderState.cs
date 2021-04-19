@@ -10,7 +10,7 @@ namespace VoyagerController.Rendering
 {
     internal class RenderState : VideoRenderState, IDisposable
     {
-        private const long FRAMES_TO_ADD_AT_START = 5;
+        private const long FRAMES_TO_ADD_AT_START = 10;
         
         private readonly RenderQueue _queue;
         private VideoEffect _effect;
@@ -102,12 +102,8 @@ namespace VoyagerController.Rendering
 
                 if (ApplicationState.Playmode.Value == GlobalPlaymode.Play)
                 {
-                    var frame = LampEffectsWorker.GetCurrentFrameOfVideo(_lamps[0], _effect.Video) + FRAMES_TO_ADD_AT_START;
-
-                    if (frame >= (long) _effect.Video.FrameCount)
-                        frame = LampEffectsWorker.GetCurrentFrameOfVideo(_lamps[0], _effect.Video, FRAMES_TO_ADD_AT_START);
-
-                    VideoEffectRenderer.VideoPlayer.frame = frame;
+                    VideoEffectRenderer.VideoPlayer.frame = 
+                        LampEffectsWorker.GetCurrentFrameOfVideo(_lamps[0], _effect.Video, FRAMES_TO_ADD_AT_START);
                 }
                 else
                     VideoEffectRenderer.VideoPlayer.frame = 
@@ -115,9 +111,9 @@ namespace VoyagerController.Rendering
 
                 VideoEffectRenderer.VideoPlayer.seekCompleted += source =>
                 {
-                    _playerPrepared = true;
                     _framesToRender = _effect.Video.FrameCount;
                     _framesRendered = 0;
+                    _playerPrepared = true;
                 };
             });
         }
