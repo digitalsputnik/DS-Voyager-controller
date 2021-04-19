@@ -95,7 +95,7 @@ namespace VoyagerController.UI
             }
             catch (Exception ex)
             {
-                Debugger.LogError(ex);
+                DebugConsole.LogError(ex);
             }
         }
 

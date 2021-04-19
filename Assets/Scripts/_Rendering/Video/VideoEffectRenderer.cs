@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DigitalSputnik;
 using DigitalSputnik.Videos;
 using DigitalSputnik.Voyager;
 using UnityEngine;
@@ -68,7 +69,7 @@ namespace VoyagerController.Rendering
             
             _state = _state.Update();
             
-            if (_state != current) Debugger.LogInfo($"Render state changed to {_state}");
+            if (_state != current) DebugConsole.LogInfo($"Render state changed to {_state}");
         }
         
         public static Texture2D GetFrameTexture2D(Effect effect)

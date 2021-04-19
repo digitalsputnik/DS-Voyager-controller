@@ -46,7 +46,7 @@ namespace VoyagerController
 
             if (asset == null)
             {
-                Debugger.LogError($"[VOYAGER UPDATE UTILITY] " + $"Could not preload file {BUNDLE_FILE}");
+                DebugConsole.LogError($"[VOYAGER UPDATE UTILITY] " + $"Could not preload file {BUNDLE_FILE}");
                 return;
             }
 
@@ -85,7 +85,7 @@ namespace VoyagerController
             }
             catch (Exception ex)
 			{
-                Debugger.LogError(ex.Message);
+                DebugConsole.LogError(ex.Message);
 				onMessage?.Invoke(new VoyagerUpdateMessage(lamp, "Failed lamp update."));
 				error = ex.Message;
 			}

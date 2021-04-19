@@ -47,8 +47,10 @@ namespace VoyagerController
 
         private void Setup()
         {
+            DebugConsole.Console = new UnityDebugConsole();
+            
             NetworkTransport.SetMulticastLock(true);
-
+            
             NetUtils.UseInterfaceForAddress = !Application.isMobilePlatform;
 
             LampManager.Instance.OnLampDiscovered += LampDiscovered;
@@ -73,14 +75,14 @@ namespace VoyagerController
         {
             if (AddLampToDatabase(lamp))
             {
-                Debugger.LogInfo($"Lamp {lamp.Serial} discovered at {Metadata.Get<LampData>(lamp.Serial).Discovered}");
+                DebugConsole.LogInfo($"Lamp {lamp.Serial} discovered at {Metadata.Get<LampData>(lamp.Serial).Discovered}");
                 MainThread.Dispatch(() => OnLampDiscovered?.Invoke(lamp));
             }
         }
 
         private void LampBroadcasted(Lamp lamp)
         {
-            Debugger.LogInfo($"Lamp {lamp.Serial} broadcasted");
+            DebugConsole.LogInfo($"Lamp {lamp.Serial} broadcasted");
             MainThread.Dispatch(() => OnLampBroadcasted?.Invoke(lamp));
         }
 
@@ -98,7 +100,7 @@ namespace VoyagerController
             }
             catch (Exception ex)
             {
-                Debugger.LogError(ex.Message);
+                DebugConsole.LogError(ex.Message);
                 return false;
             }
         }

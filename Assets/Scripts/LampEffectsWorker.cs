@@ -82,7 +82,7 @@ namespace VoyagerController
         private void StartConfirmingLamp(VoyagerLamp voyager)
         {
             _confirmingLamps.Add(voyager);
-            Debugger.LogInfo($"Started confirming lamp {voyager.Serial}");
+            DebugConsole.LogInfo($"Started confirming lamp {voyager.Serial}");
         }
 
         private void ClearConfirmingLamps()
@@ -101,7 +101,7 @@ namespace VoyagerController
         private void EndConfirmingLamp(VoyagerLamp voyager)
         {
             _confirmingLamps.Remove(voyager);
-            Debugger.LogInfo($"Ended confirming lamp {voyager.Serial}");
+            DebugConsole.LogInfo($"Ended confirming lamp {voyager.Serial}");
         }
 
         private void RequestMissingFrames()

@@ -79,7 +79,7 @@ namespace VoyagerController.Effects
                 {
                     if (!success)
                     {
-                        Debugger.LogError(error);
+                        DebugConsole.LogError(error);
                         done?.Invoke(null);
                     }
 

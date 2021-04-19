@@ -119,7 +119,7 @@ namespace VoyagerController.Bluetooth
                 connection?.Access.WriteToCharacteristic(UART_RX_CHARACTERISTIC_UUID, message);
 
                 if (connection != null)
-                    Debugger.LogInfo($"Send message to {lamp.Serial}: {Encoding.UTF8.GetString(message)}");
+                    DebugConsole.LogInfo($"Send message to {lamp.Serial}: {Encoding.UTF8.GetString(message)}");
             });
         }
 
@@ -156,13 +156,13 @@ namespace VoyagerController.Bluetooth
         {
             _state = ClientState.Initialized;
             _initializedTime = TimeUtils.Epoch;
-            Debugger.LogInfo("Bluetooth is initialized by device");
+            DebugConsole.LogInfo("Bluetooth is initialized by device");
         }
 
         private void OnBluetoothWaitedByController()
         {
             _state = ClientState.Ready;
-            Debugger.LogInfo("Bluetooth is now ready and starts scanning");
+            DebugConsole.LogInfo("Bluetooth is now ready and starts scanning");
             MainThread.Dispatch(StartScanning);
         }
 
@@ -181,7 +181,7 @@ namespace VoyagerController.Bluetooth
 
         private void StartScanning()
         {
-            Debugger.LogInfo("Bluetooth scanning started");
+            DebugConsole.LogInfo("Bluetooth scanning started");
             _lastScanStarted = TimeUtils.Epoch;
             BluetoothAccess.StartScanning(PeripheralScanned, new[] { SERVICE_UID });
         }
@@ -193,7 +193,7 @@ namespace VoyagerController.Bluetooth
         
         private void PeripheralScanned(PeripheralInfo peripheral)
         {
-            Debugger.LogWarning($"Scanned peripheral {peripheral.Name}");
+            DebugConsole.LogWarning($"Scanned peripheral {peripheral.Name}");
             _connectionsQueue.Enqueue(peripheral);
         }
 
@@ -224,7 +224,7 @@ namespace VoyagerController.Bluetooth
             var updLamp = LampManager.Instance.GetLampWithSerial<VoyagerLamp>(peripheral.Name);
             if (updLamp != null && updLamp.Connected) return;
             
-            Debugger.LogInfo($"Connecting - {peripheral.Name}");
+            DebugConsole.LogInfo($"Connecting - {peripheral.Name}");
             
             _connectingDevices.Add(peripheral);
             _connecting = true;
@@ -239,7 +239,7 @@ namespace VoyagerController.Bluetooth
         {
             _connecting = false;
 
-            Debugger.LogInfo("Connected - " + access.Id);
+            DebugConsole.LogInfo("Connected - " + access.Id);
 
             var connection = GetConnectionWithId(access.Id);
 
@@ -279,7 +279,7 @@ namespace VoyagerController.Bluetooth
         {
             _connecting = false;
             
-            Debugger.LogInfo("Failed Connection - " + info.Name);
+            DebugConsole.LogInfo("Failed Connection - " + info.Name);
 
             var peripheral = _connectingDevices.FirstOrDefault(l => l.Id == info.Id);
 
@@ -302,7 +302,7 @@ namespace VoyagerController.Bluetooth
         {
             _connecting = false;
             
-            Debugger.LogInfo("Disconnected - " + info.Name);
+            DebugConsole.LogInfo("Disconnected - " + info.Name);
 
             var peripheral = _connectingDevices.FirstOrDefault(l => l.Id == info.Id);
 
