@@ -272,7 +272,7 @@ namespace VoyagerController
                     
                     if (video == null) return -1;
 
-                    frames = (long) math.ceil(since * video.Fps);
+                    frames = (long) (since * video.Fps);
                     
                     while (frames < 0) frames += (long) video.FrameCount;
                     return frames % (long)video.FrameCount;
@@ -282,7 +282,7 @@ namespace VoyagerController
 
                     if (video == null) return -1;
             
-                    frames = (long) math.ceil(since * video.Fps);
+                    frames = (long) (since * video.Fps);
                     while (frames < 0) frames += (long)video.FrameCount;
                     return frames % (long)video.FrameCount;
                     
