@@ -230,7 +230,7 @@ namespace VoyagerController
         {
             var meta = Metadata.Get<LampData>(voyager.Serial);
             GetLampClient(voyager)?.SetItshe(voyager, itshe);
-            meta.Itshe = itshe;
+            meta.Itshe = itshe.Clone();
         }
 
         public static void ApplyVideoFrameToVoyager(VoyagerLamp voyager, long index, Rgb[] rgb)

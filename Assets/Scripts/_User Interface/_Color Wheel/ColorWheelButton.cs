@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DigitalSputnik;
 using DigitalSputnik.Colors;
 using UnityEngine;
 using UnityEngine.UI;
@@ -61,8 +62,11 @@ namespace VoyagerController.UI
         {
             _currentItshe = itshe;
             _previewColor.color = itshe.ToColor();
-            foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>().ToList())
-                LampEffectsWorker.ApplyItsheToVoyager(item.LampHandle, itshe);
+            foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>())
+            {
+                DebugConsole.LogInfo($"Changing color on lamp {item.LampHandle.Serial}");
+                LampEffectsWorker.ApplyItsheToVoyager(item.LampHandle, itshe);   
+            }
         }
     }
 }

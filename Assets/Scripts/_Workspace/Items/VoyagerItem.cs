@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DigitalSputnik;
 using DigitalSputnik.Colors;
 using DigitalSputnik.Voyager;
+using Newtonsoft.Json;
 using UnityEngine;
 using VoyagerController.Bluetooth;
 using VoyagerController.Effects;
@@ -61,6 +62,9 @@ namespace VoyagerController.Workspace
             if (CheckToUpdatePixels())
                 UpdatePixels();
             UpdateText();
+
+            if (Input.GetKeyDown(KeyCode.D))
+                Debug.Log(JsonConvert.SerializeObject(_meta.Itshe));
         }
 
         private void OnDestroy()
