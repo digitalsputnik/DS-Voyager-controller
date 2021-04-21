@@ -2250,6 +2250,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1141765336}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &125790012 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 361743514}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &150817123
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3473,6 +3485,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 187750384}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &187750386 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 187750384}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 187750385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &187987131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4148,6 +4172,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 254903080}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &254903082 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 254903080}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 254903081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &260895935
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4706,6 +4742,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &318043686 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1608536331}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &325601786 stripped
@@ -6807,6 +6855,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 424965758}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &429927967 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 664178729}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &433346360
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12105,6 +12165,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 735024834}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &735024836 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 735024834}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735024835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &742651454
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12325,6 +12397,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 771160296}
     - target: {fileID: 742651519, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: title
+      value: Setting Lamp(s) To Client Mode
+      objectReference: {fileID: 0}
+    - target: {fileID: 742651519, guid: c374f735bee8e024296d8f197db4a217, type: 3}
       propertyPath: Button
       value: 
       objectReference: {fileID: 110154190}
@@ -12336,6 +12412,26 @@ PrefabInstance:
       propertyPath: rightMenuToOpen
       value: 
       objectReference: {fileID: 57028725}
+    - target: {fileID: 742651519, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 742651519, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[0]
+      value: 
+      objectReference: {fileID: 1984657731}
+    - target: {fileID: 742651519, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[1]
+      value: 
+      objectReference: {fileID: 402482844}
+    - target: {fileID: 742651519, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[2]
+      value: 
+      objectReference: {fileID: 840441668}
+    - target: {fileID: 742651520, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: title
+      value: Setting Lamp(s) To Client Mode
+      objectReference: {fileID: 0}
     - target: {fileID: 742651520, guid: c374f735bee8e024296d8f197db4a217, type: 3}
       propertyPath: Button
       value: 
@@ -12344,6 +12440,42 @@ PrefabInstance:
       propertyPath: rightMenuToOpen
       value: 
       objectReference: {fileID: 1269254566}
+    - target: {fileID: 742651520, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 742651520, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[0]
+      value: 
+      objectReference: {fileID: 1515357541}
+    - target: {fileID: 742651520, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[1]
+      value: 
+      objectReference: {fileID: 318043686}
+    - target: {fileID: 742651520, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[2]
+      value: 
+      objectReference: {fileID: 1194130890}
+    - target: {fileID: 742651520, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[3]
+      value: 
+      objectReference: {fileID: 429927967}
+    - target: {fileID: 742651520, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[4]
+      value: 
+      objectReference: {fileID: 1309035320}
+    - target: {fileID: 742651520, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[5]
+      value: 
+      objectReference: {fileID: 125790012}
+    - target: {fileID: 742651520, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[6]
+      value: 
+      objectReference: {fileID: 187750386}
+    - target: {fileID: 742651520, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[7]
+      value: 
+      objectReference: {fileID: 1896374074}
     - target: {fileID: 742651531, guid: c374f735bee8e024296d8f197db4a217, type: 3}
       propertyPath: Button
       value: 
@@ -12360,6 +12492,42 @@ PrefabInstance:
       propertyPath: rightMenuToOpen
       value: 
       objectReference: {fileID: 771160296}
+    - target: {fileID: 742651532, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 742651532, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[0]
+      value: 
+      objectReference: {fileID: 2133972280}
+    - target: {fileID: 742651532, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[1]
+      value: 
+      objectReference: {fileID: 735024836}
+    - target: {fileID: 742651532, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[2]
+      value: 
+      objectReference: {fileID: 1942367098}
+    - target: {fileID: 742651532, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[3]
+      value: 
+      objectReference: {fileID: 1126419568}
+    - target: {fileID: 742651532, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[4]
+      value: 
+      objectReference: {fileID: 1745287527}
+    - target: {fileID: 742651532, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[5]
+      value: 
+      objectReference: {fileID: 1473954334}
+    - target: {fileID: 742651532, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[6]
+      value: 
+      objectReference: {fileID: 254903082}
+    - target: {fileID: 742651532, guid: c374f735bee8e024296d8f197db4a217, type: 3}
+      propertyPath: buttonsToDisable.Array.data[7]
+      value: 
+      objectReference: {fileID: 202283032}
     - target: {fileID: 742651533, guid: c374f735bee8e024296d8f197db4a217, type: 3}
       propertyPath: Button
       value: 
@@ -12413,8 +12581,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 30450322945490121, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
+      propertyPath: moreInfo
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 30450322945490121, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
       propertyPath: rightMenu
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 30450322945490121, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: centerOverlay
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 60713771675072837, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
@@ -12485,6 +12663,51 @@ PrefabInstance:
       propertyPath: rightMenuToOpen
       value: 
       objectReference: {fileID: 771160296}
+    - target: {fileID: 129175553904902689, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 129175553904902689, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[0]
+      value: 
+      objectReference: {fileID: 2133972280}
+    - target: {fileID: 129175553904902689, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[1]
+      value: 
+      objectReference: {fileID: 735024836}
+    - target: {fileID: 129175553904902689, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[2]
+      value: 
+      objectReference: {fileID: 1942367098}
+    - target: {fileID: 129175553904902689, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[3]
+      value: 
+      objectReference: {fileID: 1126419568}
+    - target: {fileID: 129175553904902689, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[4]
+      value: 
+      objectReference: {fileID: 1745287527}
+    - target: {fileID: 129175553904902689, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[5]
+      value: 
+      objectReference: {fileID: 1473954334}
+    - target: {fileID: 129175553904902689, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[6]
+      value: 
+      objectReference: {fileID: 254903082}
+    - target: {fileID: 129175553904902689, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[7]
+      value: 
+      objectReference: {fileID: 202283032}
     - target: {fileID: 290562958926773123, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: rightButtonText
@@ -12503,7 +12726,12 @@ PrefabInstance:
     - target: {fileID: 395557784941069593, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: backJump
-      value: 2
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 395557784941069593, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: disableLeftButton
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 953575188921071335, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
@@ -12679,6 +12907,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1776631717163191391, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
+      propertyPath: title
+      value: Setting Lamp(s) To Client Mode
+      objectReference: {fileID: 0}
+    - target: {fileID: 1776631717163191391, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
       propertyPath: Button
       value: 
       objectReference: {fileID: 785774387}
@@ -12696,6 +12929,29 @@ PrefabInstance:
         type: 3}
       propertyPath: ifRight
       value: 52
+      objectReference: {fileID: 0}
+    - target: {fileID: 1833521465723330822, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: moreInfo
+      value: "YELLOW: \rMaster (default) mode. Voyager is creating its own WiFi\r\nnetwork
+        and can be connected to a remote device. \r\nThe SSID (serial number) of
+        the Voyager is also\r\n its network\u2019s name (DS026XXXXXXXXXX).\r\nThe
+        password is \"dsputnik\".\r\n\r\nGREEN:\r Client mode. Voyager can be connected
+        to an external WiFi or to another Voyager's network. When it is searching
+        for a connection you will see a blinking green light.\r\n\r\nRED:\r Client
+        mode. Voyager cannot automatically find a network to connect with or has
+        other (temporary) connection problems\r (bad conditions, wrong password etc.).\r\n\r\nBLUE:\r
+        Router mode. Voyager is creating its own WiFi network and other Voyagers
+        (up to 9) that are set to Client mode (by the Program button) will automatically
+        connect to this network.\r\n The SSID (serial number) of the Voyager\r\nhas
+        been given an _M at the end and its network\u2019s name is DS0262XXXXXXXX_M.
+        \r\nThe password is \"dsputnik\"\r\n\r\nMAGENTA:\r Voyager is changing its
+        WiFi mode."
+      objectReference: {fileID: 0}
+    - target: {fileID: 1833521465723330822, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: centerOverlay
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1833521465723330822, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
@@ -12726,6 +12982,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: '[44]Connect to external prompt'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3049249332530535686, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: info
+      value: What do you want to do with your lamps?
+      objectReference: {fileID: 0}
+    - target: {fileID: 3049249332530535686, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: title
+      value: Tutorial on connecting lamps
       objectReference: {fileID: 0}
     - target: {fileID: 3049249332530535686, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
@@ -12797,6 +13063,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3649211687144607640, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
+      propertyPath: info
+      value: Start adding lamps to Workspace by clicking the ADD LAMPS button on
+        the right menu.
+      objectReference: {fileID: 0}
+    - target: {fileID: 3649211687144607640, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
       propertyPath: Button
       value: 
       objectReference: {fileID: 98634557}
@@ -12815,6 +13087,51 @@ PrefabInstance:
       propertyPath: disableRightButton
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3649211687144607640, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3649211687144607640, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[0]
+      value: 
+      objectReference: {fileID: 2133972280}
+    - target: {fileID: 3649211687144607640, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[1]
+      value: 
+      objectReference: {fileID: 735024836}
+    - target: {fileID: 3649211687144607640, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[2]
+      value: 
+      objectReference: {fileID: 1942367098}
+    - target: {fileID: 3649211687144607640, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[3]
+      value: 
+      objectReference: {fileID: 1126419568}
+    - target: {fileID: 3649211687144607640, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[4]
+      value: 
+      objectReference: {fileID: 1745287527}
+    - target: {fileID: 3649211687144607640, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[5]
+      value: 
+      objectReference: {fileID: 1473954334}
+    - target: {fileID: 3649211687144607640, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[6]
+      value: 
+      objectReference: {fileID: 254903082}
+    - target: {fileID: 3649211687144607640, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[7]
+      value: 
+      objectReference: {fileID: 202283032}
     - target: {fileID: 3864915094307230890, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: IfMobile
@@ -12958,6 +13275,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5180502552782372095, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
+      propertyPath: info
+      value: 'Your first Voyager(s) (up to 5) are now added to Workspace by BLE and
+        you can play with the intensity and color.
+
+        Would you like to start
+        discovering now or continue connecting your lamp(s) with an external WiFi
+        router for more features?'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5180502552782372095, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: title
+      value: Connecting with lamp(s)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5180502552782372095, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
       propertyPath: leftMenu
       value: 1
       objectReference: {fileID: 0}
@@ -12995,6 +13327,20 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5560306906003165316, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: info
+      value: "To connect other Voyagers (up to 9) to your Router lamp\xB4s network,
+        set each of them to Client mode.\r\nHold down the Program button (on the
+        side of the lamp) until the 3rd LED turns GREEN and then release it."
+      objectReference: {fileID: 0}
+    - target: {fileID: 5647317705100411833, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: info
+      value: "Would you like to connect your Voyagers together to one Router lamp\xB4s
+        network \ror \rto connect your Voyagers to an external (router) WiFi network
+        as Clients?"
       objectReference: {fileID: 0}
     - target: {fileID: 5647317705100411833, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
@@ -13036,6 +13382,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5647317705100411833, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
+      propertyPath: centerOverlay
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5647317705100411833, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
       propertyPath: leftButtonText
       value: ROUTER
       objectReference: {fileID: 0}
@@ -13043,6 +13394,11 @@ PrefabInstance:
         type: 3}
       propertyPath: rightButtonText
       value: CLIENT
+      objectReference: {fileID: 0}
+    - target: {fileID: 5647317705100411833, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: disableLeftButton
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5647317705100411833, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
@@ -13081,6 +13437,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5932100120695247818, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
+      propertyPath: title
+      value: Setting Lamp(s) To Client Mode
+      objectReference: {fileID: 0}
+    - target: {fileID: 5932100120695247818, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
       propertyPath: Button
       value: 
       objectReference: {fileID: 84513415}
@@ -13089,6 +13450,26 @@ PrefabInstance:
       propertyPath: rightMenuToOpen
       value: 
       objectReference: {fileID: 282970256}
+    - target: {fileID: 5932100120695247818, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5932100120695247818, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[0]
+      value: 
+      objectReference: {fileID: 1014174403}
+    - target: {fileID: 5932100120695247818, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[1]
+      value: 
+      objectReference: {fileID: 1334720904}
+    - target: {fileID: 5932100120695247818, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[2]
+      value: 
+      objectReference: {fileID: 1093084251}
     - target: {fileID: 6106995239283551355, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: IfDesktop
@@ -13097,7 +13478,30 @@ PrefabInstance:
     - target: {fileID: 6126405125251999659, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: disableLeftButton
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6694056360396728720, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: info
+      value: 'Now the device is looking for your Voyager(s) using BLE. If any are
+        found, their serial number (SSID) will appear (with BLE icon) into the list
+        on the left menu.
+
+        Click on the serial numbers separately or if
+        more than one is found click on ADD ALL LAMPS to continue.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 6694056360396728720, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: title
+      value: Add Lamp(s)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6694056360396728720, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: moreInfo
+      value: 'This might take a moment.
+
+        Make sure your Voyager(s) are turned
+        on and Bluetooth and Location are enabled on your device.'
       objectReference: {fileID: 0}
     - target: {fileID: 6694056360396728720, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
@@ -13178,13 +13582,63 @@ PrefabInstance:
     - target: {fileID: 7401021848028209282, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: backJump
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7401021848028209282, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: rightMenuToOpen
       value: 
       objectReference: {fileID: 771160296}
+    - target: {fileID: 7401021848028209282, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7401021848028209282, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[0]
+      value: 
+      objectReference: {fileID: 2133972280}
+    - target: {fileID: 7401021848028209282, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[1]
+      value: 
+      objectReference: {fileID: 735024836}
+    - target: {fileID: 7401021848028209282, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[2]
+      value: 
+      objectReference: {fileID: 1942367098}
+    - target: {fileID: 7401021848028209282, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[3]
+      value: 
+      objectReference: {fileID: 1126419568}
+    - target: {fileID: 7401021848028209282, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[4]
+      value: 
+      objectReference: {fileID: 1745287527}
+    - target: {fileID: 7401021848028209282, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[5]
+      value: 
+      objectReference: {fileID: 1473954334}
+    - target: {fileID: 7401021848028209282, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[6]
+      value: 
+      objectReference: {fileID: 254903082}
+    - target: {fileID: 7401021848028209282, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[7]
+      value: 
+      objectReference: {fileID: 202283032}
+    - target: {fileID: 7443537155303525515, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: title
+      value: Setting Lamp(s) To Client Mode
+      objectReference: {fileID: 0}
     - target: {fileID: 7443537155303525515, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: Button
@@ -13200,10 +13654,78 @@ PrefabInstance:
       propertyPath: disableLeftButton
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7443537155303525515, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7443537155303525515, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[0]
+      value: 
+      objectReference: {fileID: 98634557}
+    - target: {fileID: 7443537155303525515, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[1]
+      value: 
+      objectReference: {fileID: 2133972280}
+    - target: {fileID: 7443537155303525515, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[2]
+      value: 
+      objectReference: {fileID: 735024836}
+    - target: {fileID: 7443537155303525515, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[3]
+      value: 
+      objectReference: {fileID: 1942367098}
+    - target: {fileID: 7443537155303525515, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[4]
+      value: 
+      objectReference: {fileID: 1126419568}
+    - target: {fileID: 7443537155303525515, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[5]
+      value: 
+      objectReference: {fileID: 1745287527}
+    - target: {fileID: 7443537155303525515, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[6]
+      value: 
+      objectReference: {fileID: 1473954334}
+    - target: {fileID: 7443537155303525515, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[7]
+      value: 
+      objectReference: {fileID: 254903082}
+    - target: {fileID: 7533754233907958182, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: info
+      value: "Your first Voyager(s) (up to 5) are now added to Workspace by BLE and
+        you can play with the intensity and color.\r You should wait until the connection
+        status of your lamp(s) appears connected. \rThen make sure the lamp(s) are
+        selected and continue discovering."
+      objectReference: {fileID: 0}
     - target: {fileID: 7533754233907958182, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: disableLeftButton
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7596721086336987160, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: info
+      value: 'The serial numbers (SSID) of your Voyagers will appear in the list
+        on the left menu.
+
+        Click on ADD ALL LAMPS or add your lamps separately
+        in your preferred order by clicking on the serial numbers or by pushing the
+        Program button on the side of your Voyager.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7596721086336987160, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: title
+      value: Add Lamps
       objectReference: {fileID: 0}
     - target: {fileID: 7596721086336987160, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
@@ -13335,6 +13857,51 @@ PrefabInstance:
       propertyPath: disableRightButton
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8470825504644470746, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8470825504644470746, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[0]
+      value: 
+      objectReference: {fileID: 2133972280}
+    - target: {fileID: 8470825504644470746, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[1]
+      value: 
+      objectReference: {fileID: 735024836}
+    - target: {fileID: 8470825504644470746, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[2]
+      value: 
+      objectReference: {fileID: 1942367098}
+    - target: {fileID: 8470825504644470746, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[3]
+      value: 
+      objectReference: {fileID: 1126419568}
+    - target: {fileID: 8470825504644470746, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[4]
+      value: 
+      objectReference: {fileID: 1745287527}
+    - target: {fileID: 8470825504644470746, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[5]
+      value: 
+      objectReference: {fileID: 1473954334}
+    - target: {fileID: 8470825504644470746, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[6]
+      value: 
+      objectReference: {fileID: 254903082}
+    - target: {fileID: 8470825504644470746, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[7]
+      value: 
+      objectReference: {fileID: 202283032}
     - target: {fileID: 8547523953694217357, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -13384,6 +13951,22 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: '[11]Master Start'
+      objectReference: {fileID: 0}
+    - target: {fileID: 9210892542020606826, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: info
+      value: Now the device is looking for your Voyager(s) using BLE. If any are
+        found, their serial numbers (SSID) will appear (with BLE icon) into the list
+        on the left menu. Click on the serial numbers separately or if more than
+        one is found click on ADD ALL LAMPS to continue.
+      objectReference: {fileID: 0}
+    - target: {fileID: 9210892542020606826, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: moreInfo
+      value: 'This might take a moment.
+
+        Make sure your Voyager(s) are turned
+        on and Bluetooth and Location are enabled on your device.'
       objectReference: {fileID: 0}
     - target: {fileID: 9210892542020606826, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
@@ -15027,6 +15610,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 832931263}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &840441668 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1622674790}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &848564113 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 290562958926773123, guid: c374f735bee8e024296d8f197db4a217,
@@ -17787,6 +18382,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd447c58ffe949d6be3bb44826098a02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1014174403 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 41769381}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1015594765
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18695,6 +19302,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1087274526}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1093084251 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 435296520}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1105675583
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19051,6 +19670,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1126419566}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1126419568 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1126419566}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126419567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1141765336
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19586,6 +20217,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 813a7ab42d1404e65bfef66c265264dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1194130890 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1993325399}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1196887077
@@ -20662,6 +21305,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 6789172022113922597}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1309035320 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1883185072}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1310698361
 GameObject:
   m_ObjectHideFlags: 0
@@ -20861,6 +21516,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c2615ce77e7f493a9998d23cd0e9155, type: 3}
+--- !u!114 &1334720904 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 708083173}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1335493426
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24059,6 +24726,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
+--- !u!114 &1473954334 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1473954333}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 199756646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1479074263
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24761,6 +25440,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2778712415723263241}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1515357541 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 2054278500}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1518135619
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27275,7 +27966,7 @@ MonoBehaviour:
   centerOverlay: 2
   ifBleOne: 46
   ifBleFive: 47
-  ifBleMore: 48
+  ifBleMore: 47
   ifWifiOne: 46
   ifWifiTen: 47
   ifWifiMore: 49
@@ -28456,6 +29147,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1745287525}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1745287527 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1745287525}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745287526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1750756084
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31584,6 +32287,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1896130324}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1896374074 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1914047690}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1896429731
 GameObject:
   m_ObjectHideFlags: 0
@@ -32834,6 +33549,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1942367096}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1942367098 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1942367096}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1942367097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1947805696 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5509444412158098342, guid: bf068c17209504374b431e0e74e9f8fc,
@@ -35347,6 +36074,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf068c17209504374b431e0e74e9f8fc, type: 3}
+--- !u!114 &2133972280 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1444010324920971242, guid: bf068c17209504374b431e0e74e9f8fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 2133972279}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2137144019
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35768,8 +36507,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 70750426}
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
-  m_Value: 1.0000004
-  m_Size: 0.8189484
+  m_Value: 1.0000002
+  m_Size: 0.64346576
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
