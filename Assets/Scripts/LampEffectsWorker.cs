@@ -269,20 +269,15 @@ namespace VoyagerController
             {
                 case GlobalPlaymode.Play:
                     since = TimeUtils.Epoch - meta.VideoStartTime + addSeconds;
-                    
                     if (video == null) return -1;
-
-                    frames = (long) (since * video.Fps);
-                    
+                    frames = (long) math.ceil(since * video.Fps);
                     while (frames < 0) frames += (long) video.FrameCount;
                     return frames % (long)video.FrameCount;
                 
                 case GlobalPlaymode.Pause:
                     since = ApplicationState.PlaymodePausedSince.Value - meta.VideoStartTime + addSeconds;
-
                     if (video == null) return -1;
-            
-                    frames = (long) (since * video.Fps);
+                    frames = (long) math.ceil(since * video.Fps);
                     while (frames < 0) frames += (long)video.FrameCount;
                     return frames % (long)video.FrameCount;
                     

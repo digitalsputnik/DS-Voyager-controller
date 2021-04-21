@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using DigitalSputnik;
 using DigitalSputnik.Colors;
@@ -121,6 +122,15 @@ namespace VoyagerController.Mapping
             LeanTween.scale(transform.gameObject, scale, ANIMATION_TIME);
                     
             voyager.gameObject.SetActive(true);
+
+            _instance.StartCoroutine(SelectAgain(voyager));
+        }
+
+        private static IEnumerator SelectAgain(WorkspaceItem voyager)
+        {
+            yield return new WaitForSeconds(ANIMATION_TIME);
+            yield return new WaitForEndOfFrame();
+            WorkspaceSelection.SelectItem(voyager);
         }
 
         private static void SelectedItemsMoved()

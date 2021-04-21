@@ -197,6 +197,7 @@ namespace VoyagerController.UI
         private void EnterEffectMapping(Effect effect, IEnumerable<VoyagerLamp> voyagers)
         {
             ApplicationState.Playmode.Value = GlobalPlaymode.Play;
+            
             foreach (var voyager in voyagers)
                 LampEffectsWorker.ApplyEffectToLamp(voyager, effect);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
@@ -208,6 +209,7 @@ namespace VoyagerController.UI
         private void ApplyEffectToAllLamps(Effect effect)
         {
             ApplicationState.Playmode.Value = GlobalPlaymode.Play;
+            
             foreach (var item in WorkspaceManager.GetItems<VoyagerItem>().Where(v => v.gameObject.activeSelf))
                 LampEffectsWorker.ApplyEffectToLamp(item.LampHandle, effect);
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
