@@ -79,6 +79,8 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/VoyagerUpdater.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -192,7 +194,7 @@
       <workItem from="1618821266331" duration="673000" />
       <workItem from="1618823452254" duration="10156000" />
       <workItem from="1618841326391" duration="1528000" />
-      <workItem from="1618910122707" duration="5476000" />
+      <workItem from="1618910122707" duration="6953000" />
     </task>
     <servers />
   </component>

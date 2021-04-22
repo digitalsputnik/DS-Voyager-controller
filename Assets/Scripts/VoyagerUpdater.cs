@@ -104,13 +104,13 @@ namespace VoyagerController
 
         private static SshClient CreateSshClient(Lamp lamp)
         {
-            var address = (lamp.Endpoint as LampNetworkEndPoint)?.address;
+            var address = (lamp.Endpoint as LampNetworkEndPoint)?.Address;
             return address != null ? new SshClient(address.ToString(), LAMP_USERNAME, LAMP_PASSWORD) : null;
         }
 
         private static SftpClient CreateSftpClient(Lamp lamp)
         {
-            var address = (lamp.Endpoint as LampNetworkEndPoint)?.address;
+            var address = (lamp.Endpoint as LampNetworkEndPoint)?.Address;
             return address != null ? new SftpClient(address.ToString(), LAMP_USERNAME, LAMP_PASSWORD) : null;
         }
 

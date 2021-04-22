@@ -92,7 +92,7 @@ namespace VoyagerController.UI
             if (lamp.Endpoint is LampNetworkEndPoint endpoint)
             {
                 if (ApplicationSettings.ShowInfoIpAddress)
-                    info.Add($"{endpoint.address}");   
+                    info.Add($"{endpoint.Address}");   
             }
 
             if (ApplicationSettings.ShowInfoFirmwareVersion)
