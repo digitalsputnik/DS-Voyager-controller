@@ -3,9 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/VoyagerUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/VoyagerUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Core/Runtime/Plugins/DigitalSputnik.Core.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Core/Runtime/Plugins/DigitalSputnik.Core.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,12 +61,10 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" />
       <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothInterface.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/ImageEffect.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/DmxModeMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/VideoEffectDisplay.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Debugger.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/VoyagerUpdater.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/VideoEffectLoader.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/VideoEffectRenderer.cs" />
