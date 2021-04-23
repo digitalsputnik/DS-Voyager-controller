@@ -13487,8 +13487,8 @@ PrefabInstance:
         found, their serial number (SSID) will appear (with BLE icon) into the list
         on the left menu.
 
-        Click on the serial numbers separately or if
-        more than one is found click on ADD ALL LAMPS to continue.'
+        Click on the serial numbers separately or if more
+        than one is found click on ADD ALL LAMPS to continue.'
       objectReference: {fileID: 0}
     - target: {fileID: 6694056360396728720, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
@@ -18277,6 +18277,7 @@ GameObject:
   - component: {fileID: 1006171119}
   - component: {fileID: 1006171120}
   - component: {fileID: 1006171122}
+  - component: {fileID: 1006171125}
   - component: {fileID: 1006171123}
   - component: {fileID: 1006171124}
   - component: {fileID: 1006171121}
@@ -18313,27 +18314,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca82a738d37d4b9c8fd2162fdcce879e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _presets:
-  - white
+  _videoPresets:
+  - aurora
   - fire
-  - gradient
-  - police
-  - water
+  - fireworks
+  - flicker
   - h_chase
   - h_chase_background
   - h_chase_soft
   - h_chase_soft_background
+  - lightning
+  - noise
+  - police
+  - softgrad
+  - strobe
   - v_chase
   - v_chase_background
   - v_chase_soft
   - v_chase_soft_background
-  - softgrad
-  - fireworks
-  - noise
-  - lightning
-  - flicker
-  - strobe
-  - aurora
+  - water
+  _imagePresets:
+  - gradient
+  - white
 --- !u!114 &1006171121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18380,6 +18382,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd447c58ffe949d6be3bb44826098a02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1006171125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006171118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7a87892e0871074894510925be2bc7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1014174403 stripped

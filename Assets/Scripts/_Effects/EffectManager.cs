@@ -30,12 +30,14 @@ namespace VoyagerController.Effects
         public static EffectHandler OnEffectRemoved;
         public static EffectHandler OnEffectModified;
 
-        [SerializeField] private string[] _presets = null;
-        
+        [SerializeField] private string[] _videoPresets = null;
+        [SerializeField] private string[] _imagePresets = null;
+
         private readonly List<Effect> _effects = new List<Effect>();
         
-        public static string[] Presets => _instance._presets;
-        
+        public static string[] VideoPresets => _instance._videoPresets;
+        public static string[] ImagePresets => _instance._imagePresets;
+
         public static void AddEffect(Effect effect)
         {
             if (_instance._effects.Any(p => p.Name == effect.Name)) return;
@@ -81,7 +83,7 @@ namespace VoyagerController.Effects
 
         public static bool IsEffectPreset(Effect effect)
         {
-            return _instance._presets.Any(e => e != effect.Name);
+            return _instance._videoPresets.Any(e => e != effect.Name) && _instance._imagePresets.Any(e => e != effect.Name);
         }
         
         public static void Clear()
@@ -94,9 +96,15 @@ namespace VoyagerController.Effects
         [ContextMenu("Update Presets List")]
         private void UpdatePresetsList()
         {
-            var path = Path.Combine(Application.streamingAssetsPath, "video_presets");
-            _presets = Directory
-                .GetFiles(path, "*.mp4")
+            var videosPath = Path.Combine(Application.streamingAssetsPath, "video_presets");
+            _videoPresets = Directory
+                .GetFiles(videosPath, "*.mp4")
+                .Select(Path.GetFileNameWithoutExtension).
+                ToArray();
+
+            var imagesPath = Path.Combine(Application.streamingAssetsPath, "image_presets");
+            _imagePresets = Directory
+                .GetFiles(videosPath, "*.png")
                 .Select(Path.GetFileNameWithoutExtension).
                 ToArray();
         }

@@ -311,7 +311,7 @@ namespace VoyagerController.ProjectManagement
 
         private static bool IsEffectPreset(Effect video)
         {
-            return EffectManager.Presets.Any(p => Path.GetFileNameWithoutExtension(video.Name) == p);
+            return EffectManager.VideoPresets.Any(p => Path.GetFileNameWithoutExtension(video.Name) == p) && EffectManager.ImagePresets.Any(p => Path.GetFileNameWithoutExtension(video.Name) == p);
         }
 
         public static string ProjectsDirectory

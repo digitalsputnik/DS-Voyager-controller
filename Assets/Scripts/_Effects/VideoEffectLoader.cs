@@ -117,7 +117,7 @@ namespace VoyagerController.Effects
         static List<string> GetNewPresets()
         {
             var path = Path.Combine(Application.persistentDataPath, "video_presets");
-            var allPresets = EffectManager.Presets;
+            var allPresets = EffectManager.VideoPresets;
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);

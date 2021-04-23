@@ -79,7 +79,7 @@ namespace VoyagerController.ProjectManagement
                         
                     if (video == null)
                     {
-                        if (EffectManager.Presets.Contains(raw.Name))
+                        if (EffectManager.VideoPresets.Contains(raw.Name))
                         {
                             _waitingList.Add(raw.Name, raw);
                         }
@@ -106,9 +106,16 @@ namespace VoyagerController.ProjectManagement
 
                     if (picture == null)
                     {
-                        var path = Path.Combine(_videosPath, raw.Name + ".jpg");
-                        var image = new ImageEffect(path) { Meta = { Timestamp = TimeUtils.Epoch }};
-                        EffectManager.AddEffect(image);
+                        if (EffectManager.ImagePresets.Contains(raw.Name))
+                        {
+                            _waitingList.Add(raw.Name, raw);
+                        }
+                        else
+                        {
+                            var path = Path.Combine(_videosPath, raw.Name + ".jpg");
+                            var image = new ImageEffect(path) { Meta = { Timestamp = TimeUtils.Epoch } };
+                            EffectManager.AddEffect(image);
+                        }
                     }
                     else
                     {
