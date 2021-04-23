@@ -43,13 +43,7 @@ namespace VoyagerController.Bluetooth
         private readonly Dictionary<VoyagerLamp, SsidListHandler> _ssidCallbacks = new Dictionary<VoyagerLamp, SsidListHandler>();
         private readonly Dictionary<BluetoothConnection, List<string>> _ssidLists = new Dictionary<BluetoothConnection, List<string>>();
 
-        private bool CanConnectMoreLamps
-        {
-            get
-            {
-                return _connectingDevices.Count <= MAX_CONNECTING;
-            }
-        }
+        private bool CanConnectMoreLamps => _connectingDevices.Count <= MAX_CONNECTING;
 
         public VoyagerBluetoothClient()
         {
