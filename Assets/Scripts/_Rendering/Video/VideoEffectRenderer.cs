@@ -131,7 +131,7 @@ namespace VoyagerController.Rendering
             var result = false;
             var lamps = WorkspaceManager.GetItems<VoyagerItem>()
                 .Select(i => i.LampHandle)
-                .Where(v => Metadata.Get<LampData>(v.Serial).Effect is VideoEffect)
+                .Where(v => Metadata.Get<LampData>(v.Serial).Effect is VideoEffect || Metadata.Get<LampData>(v.Serial).Effect is ImageEffect)
                 .ToArray();
 
             if (_effectModified)
