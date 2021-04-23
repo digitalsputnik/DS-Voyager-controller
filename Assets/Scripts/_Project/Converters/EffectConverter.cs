@@ -85,7 +85,12 @@ namespace VoyagerController.ProjectManagement
                         }
                         else
                         {
-                            var path = Path.Combine(_videosPath, raw.Name + ".mp4");
+                            var path = "";
+                            if (Application.platform == RuntimePlatform.IPhonePlayer)
+                                path = Path.Combine(_videosPath, raw.Name + ".MOV");
+                            else
+                                path = Path.Combine(_videosPath, raw.Name + ".mp4");
+
                             VideoEffectLoader.LoadVideoEffect(path, e =>
                             {
                                 e.Settings = raw.Settings;

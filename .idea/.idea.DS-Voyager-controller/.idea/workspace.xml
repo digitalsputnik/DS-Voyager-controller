@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/VoyagerUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/VoyagerUpdater.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Core/Runtime/Plugins/DigitalSputnik.Core.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Core/Runtime/Plugins/DigitalSputnik.Core.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +42,6 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/EffectSettingsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/VoyagerLampConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/EffectMappingMenu.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/LampMetadataConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/MathUtils.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/WorkspaceMenu.cs" />
@@ -80,6 +76,7 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/VoyagerUpdater.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/ShowInfo.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -193,7 +190,8 @@
       <workItem from="1618821266331" duration="673000" />
       <workItem from="1618823452254" duration="10156000" />
       <workItem from="1618841326391" duration="1528000" />
-      <workItem from="1618910122707" duration="6953000" />
+      <workItem from="1618910122707" duration="7551000" />
+      <workItem from="1619171960553" duration="1356000" />
     </task>
     <servers />
   </component>
