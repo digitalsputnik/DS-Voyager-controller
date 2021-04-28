@@ -109,7 +109,7 @@ namespace VoyagerController.ProjectManagement
                 
                 File.Copy(videoEffect.Video.Path, destination);
 
-                videoEffect.Video.Path = destination;
+                // videoEffect.Video.Path = destination;
             }
         }
 

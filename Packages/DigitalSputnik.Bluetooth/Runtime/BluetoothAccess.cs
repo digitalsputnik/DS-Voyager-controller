@@ -89,6 +89,7 @@ namespace DigitalSputnik.Ble
 
         void InternalStartScanning(PeripheralHandler scanned, string[]services)
         {
+            _scannedPeripherals.Clear();
             _onPeripheralScanned = scanned;
             _interface.StartScanning(services, PeripheralScanned);
         }

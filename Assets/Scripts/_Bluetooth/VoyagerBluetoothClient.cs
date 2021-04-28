@@ -200,6 +200,8 @@ namespace VoyagerController.Bluetooth
                 return;
 
             if (Application.platform == RuntimePlatform.IPhonePlayer && _connecting) return;
+            
+            _connecting = true;
 
             MainThread.Dispatch(() => ValidateScannedDeviceAndConnect(_connectionsQueue.Dequeue()));
         }
@@ -216,12 +218,15 @@ namespace VoyagerController.Bluetooth
             // The lamp is already found from network and doesn't need to be added through bluetooth.
 
             var updLamp = LampManager.Instance.GetLampWithSerial<VoyagerLamp>(peripheral.Name);
-            if (updLamp != null && updLamp.Connected) return;
+            if (updLamp != null && updLamp.Connected)
+            {
+                _connecting = false;
+                return;
+            }
             
             DebugConsole.LogInfo($"Connecting - {peripheral.Name}");
             
             _connectingDevices.Add(peripheral);
-            _connecting = true;
 
             BluetoothAccess.Connect(peripheral.Id,
                 SetupValidatedDevice,
@@ -231,8 +236,6 @@ namespace VoyagerController.Bluetooth
 
         private void SetupValidatedDevice(PeripheralAccess access)
         {
-            _connecting = false;
-
             DebugConsole.LogInfo("Connected - " + access.Id);
 
             var connection = GetConnectionWithId(access.Id);
@@ -262,6 +265,8 @@ namespace VoyagerController.Bluetooth
 
         private void ScannedCharacteristicsToApprovedConnection(PeripheralAccess access, string service, string[] characteristics)
         {
+            _connecting = false;
+            
             var connection = GetConnectionWithId(access.Id);
             connection.Lamp.Connected = true;
             connection.ConnectionState = ConnectionState.Connected;
