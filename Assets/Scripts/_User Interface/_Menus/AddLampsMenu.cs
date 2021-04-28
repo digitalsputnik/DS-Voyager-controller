@@ -23,7 +23,9 @@ namespace VoyagerController.UI
         private readonly List<AddLampItem> _lampItems = new List<AddLampItem>();
         private readonly List<VoyagerLamp> _lampsInList = new List<VoyagerLamp>();
         private double _prevUpdate = 0.0;
-        
+        private bool addAllLampsClicked = false;
+        private bool addAllLampsBleMaxed = false;
+
         internal override void OnShow()
         {
             _addAllLampsBtn.gameObject.SetActive(false);
@@ -83,13 +85,24 @@ namespace VoyagerController.UI
         {
             if (lamp is VoyagerLamp voyager)
             {
-                if (lamp.Endpoint is BluetoothEndPoint && !LessThanFiveBluetoothLampsOnWorkspace())
+                if (lamp.Endpoint is BluetoothEndPoint && !LessThanFiveBluetoothLampsOnWorkspace() && !addAllLampsClicked)
                 {
                     DialogBox.Show(
                     "REMOVE BLE LAMPS",
                     "You can have a maximum on 5 bluetooth lamps in workspace at any time. " +
                     "Please remove a bluetooth lamp to add a new bluetooth lamp.",
                     new [] { "OK" },
+                    new Action[] { null });
+                    return;
+                }
+                else if(lamp.Endpoint is BluetoothEndPoint && !LessThanFiveBluetoothLampsOnWorkspace() && !addAllLampsBleMaxed)
+                {
+                    addAllLampsBleMaxed = true;
+                    DialogBox.Show(
+                    "REMOVE BLE LAMPS",
+                    "You can have a maximum on 5 bluetooth lamps in workspace at any time. " +
+                    "Please remove a bluetooth lamp to add a new bluetooth lamp.",
+                    new[] { "OK" },
                     new Action[] { null });
                     return;
                 }
@@ -207,6 +220,8 @@ namespace VoyagerController.UI
 
         private IEnumerator AddAllLampsCoroutine()
         {
+            addAllLampsClicked = true;
+
             var addedLamps = new List<string>();
 
             UnsubscribeEvents();
@@ -226,6 +241,9 @@ namespace VoyagerController.UI
                 yield return new WaitForFixedUpdate();
                 WorkspaceSelection.SelectItem(lamp);
             }
+
+            addAllLampsClicked = false;
+            addAllLampsBleMaxed = false;
 
             CloseMenuIfAllLampsAdded();
         }
