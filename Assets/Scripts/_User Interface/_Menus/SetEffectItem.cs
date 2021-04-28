@@ -78,6 +78,8 @@ namespace VoyagerController.UI
 
         private static string VideoTimeCode(Video video)
         {
+            if (video == null) return "error";
+            
             var time = TimeSpan.FromSeconds(video.Duration);
             var frames = (int)Mathf.Round((float) ((float)time.Milliseconds / 1000 * video.Fps));
             return time.ToString(@"hh\:mm\:ss\:") + frames;
