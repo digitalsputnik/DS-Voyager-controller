@@ -12758,6 +12758,11 @@ PrefabInstance:
       propertyPath: backJump
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 953789830277834693, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: disableLeftButton
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1042969921198489719, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: m_Name
@@ -12967,6 +12972,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: '[42]BLE More Start'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2170572301728702495, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: disableLeftButton
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2204337831947348617, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
@@ -13591,6 +13601,11 @@ PrefabInstance:
       objectReference: {fileID: 771160296}
     - target: {fileID: 7401021848028209282, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
+      propertyPath: disableLeftButton
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7401021848028209282, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
       propertyPath: buttonsToDisable.Array.size
       value: 8
       objectReference: {fileID: 0}
@@ -13812,6 +13827,11 @@ PrefabInstance:
       propertyPath: nextTutorial
       value: 33
       objectReference: {fileID: 0}
+    - target: {fileID: 8290386391264222744, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: disableLeftButton
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8433838351822343772, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -13933,6 +13953,11 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8574113898481398432, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: disableLeftButton
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8626094465554949695, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: disableLeftButton
       value: 1
