@@ -13488,7 +13488,7 @@ PrefabInstance:
     - target: {fileID: 6126405125251999659, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: disableLeftButton
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6694056360396728720, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
