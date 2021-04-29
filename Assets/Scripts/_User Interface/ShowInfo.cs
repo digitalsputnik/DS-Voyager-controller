@@ -75,12 +75,17 @@ namespace VoyagerController.UI
             var info = new List<string>();
             if (ApplicationSettings.ShowInfoLenght)
                 info.Add(lamp.PixelCount > 50 ? "4ft" : "2ft");
-            if (ApplicationSettings.ShowInfoBatteryLevel)
-                info.Add($"{lamp.BatteryLevel}%");
-            if (ApplicationSettings.ShowInfoChargingStatus)
-                info.Add(lamp.Charging ? "charging" : "not charging");
-            if (ApplicationSettings.ShowInfoWifiMode)
-                info.Add(ModeFromString(lamp.ActiveMode));
+
+            if (lamp.Endpoint is LampNetworkEndPoint)
+            {
+                if (ApplicationSettings.ShowInfoBatteryLevel)
+                    info.Add($"{lamp.BatteryLevel}%");
+                if (ApplicationSettings.ShowInfoChargingStatus)
+                    info.Add(lamp.Charging ? "charging" : "not charging");
+                if (ApplicationSettings.ShowInfoWifiMode)
+                    info.Add(ModeFromString(lamp.ActiveMode));
+            }
+
             if (lamp.DmxModeEnabled)
             {
                 if (ApplicationSettings.ShowInfoDmxUniverse)
