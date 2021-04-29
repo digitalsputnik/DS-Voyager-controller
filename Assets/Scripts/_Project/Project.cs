@@ -309,9 +309,21 @@ namespace VoyagerController.ProjectManagement
             return settings;
         }
 
-        private static bool IsEffectPreset(Effect video)
+        private static bool IsEffectPreset(Effect effect)
         {
-            return EffectManager.VideoPresets.Any(p => Path.GetFileNameWithoutExtension(video.Name) == p) && EffectManager.ImagePresets.Any(p => Path.GetFileNameWithoutExtension(video.Name) == p);
+            if (!IsEffectVideoPreset(effect) && !IsEffectImagePreset(effect))
+                return false;
+            else return true;
+        }
+
+        private static bool IsEffectVideoPreset(Effect video)
+        {
+            return EffectManager.VideoPresets.Any(p => Path.GetFileNameWithoutExtension(video.Name) == p);
+        }
+
+        public static bool IsEffectImagePreset(Effect image)
+        {
+            return EffectManager.ImagePresets.Any(p => Path.GetFileNameWithoutExtension(image.Name) == p);
         }
 
         public static string ProjectsDirectory

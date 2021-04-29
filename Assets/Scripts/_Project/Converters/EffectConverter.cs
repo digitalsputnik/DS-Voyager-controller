@@ -45,11 +45,12 @@ namespace VoyagerController.ProjectManagement
                     break;
                 case ImageEffect imageEffect:
                     data.Type = EffectType.Picture;
-
-                    var pictureBytes = imageEffect.ImageTexture.EncodeToJPG();
-                    var picturePath = Path.Combine(_videosPath, imageEffect.Name + ".jpg");
-                    File.WriteAllBytes(picturePath, pictureBytes);
-                    
+                    if (!Project.IsEffectImagePreset(imageEffect))
+                    {
+                        var pictureBytes = imageEffect.ImageTexture.EncodeToJPG();
+                        var picturePath = Path.Combine(_videosPath, imageEffect.Name + ".jpg");
+                        File.WriteAllBytes(picturePath, pictureBytes);
+                    }
                     break;
                 case SyphonEffect syphon:
                     data.Delay = syphon.Delay;
@@ -88,6 +89,8 @@ namespace VoyagerController.ProjectManagement
                             var path = Path.Combine(_videosPath, raw.Name + ".mp4");
                             if (!File.Exists(path))
                                 path = Path.Combine(_videosPath, raw.Name + ".MOV");
+                            else
+                                break;
 
                             VideoEffectLoader.LoadVideoEffect(path, e =>
                             {
