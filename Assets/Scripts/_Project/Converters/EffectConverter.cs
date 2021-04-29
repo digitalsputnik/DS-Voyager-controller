@@ -89,7 +89,7 @@ namespace VoyagerController.ProjectManagement
                             var path = Path.Combine(_videosPath, raw.Name + ".mp4");
                             if (!File.Exists(path))
                                 path = Path.Combine(_videosPath, raw.Name + ".MOV");
-                            else
+                            if (!File.Exists(path))
                                 break;
 
                             VideoEffectLoader.LoadVideoEffect(path, e =>
