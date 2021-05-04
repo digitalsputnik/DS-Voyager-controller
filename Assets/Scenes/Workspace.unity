@@ -10821,7 +10821,7 @@ PrefabInstance:
     - target: {fileID: 8440753726352283366, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0000076293945
+      value: -0.000015258789
       objectReference: {fileID: 0}
     - target: {fileID: 8440753726352283367, guid: 27c6d4ff906354940894d5b935f328be,
         type: 3}
@@ -12930,6 +12930,31 @@ PrefabInstance:
       propertyPath: leftMenuToOpen
       value: 
       objectReference: {fileID: 1348052981}
+    - target: {fileID: 1776631717163191391, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1776631717163191391, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[0]
+      value: 
+      objectReference: {fileID: 1014174403}
+    - target: {fileID: 1776631717163191391, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[1]
+      value: 
+      objectReference: {fileID: 84513415}
+    - target: {fileID: 1776631717163191391, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[2]
+      value: 
+      objectReference: {fileID: 1334720904}
+    - target: {fileID: 1776631717163191391, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
+      propertyPath: buttonsToDisable.Array.data[3]
+      value: 
+      objectReference: {fileID: 1093084251}
     - target: {fileID: 1833521465723330822, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
       propertyPath: ifRight
