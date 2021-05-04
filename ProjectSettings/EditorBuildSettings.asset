@@ -8,7 +8,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Workspace.unity
     guid: b06b7df7c60d84aa7a299720cd03faf7
-  - enabled: 1
-    path: Assets/Scenes/Effect Mapping.unity
-    guid: 3fd2170665add4630a8b4245e15b0d1d
   m_configObjects: {}

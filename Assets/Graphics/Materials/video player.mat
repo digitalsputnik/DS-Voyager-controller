@@ -67,7 +67,7 @@ Material:
     - _AlphaClip: 0
     - _Blend: 0
     - _Blur: 0.28
-    - _BlurSize: 0
+    - _BlurSize: 0.024
     - _BumpAmt: 10
     - _BumpScale: 1
     - _Contrast: 1
@@ -86,6 +86,7 @@ Material:
     - _Parallax: 0.02
     - _QueueOffset: 0
     - _Radius: 1
+    - _Resolution: 1
     - _SampleGI: 0
     - _Samples: 0
     - _Saturation: 1
@@ -101,6 +102,7 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+  m_BuildTextureStacks: []
 --- !u!114 &1308729459147579316
 MonoBehaviour:
   m_ObjectHideFlags: 11

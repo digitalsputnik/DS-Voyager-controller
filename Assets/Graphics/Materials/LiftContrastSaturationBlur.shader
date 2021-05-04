@@ -12,7 +12,7 @@
     SubShader
     {
 		Cull Off
-		ZWrite Off 
+		// ZWrite Off 
 		ZTest Always
 
         Pass
@@ -57,7 +57,7 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 float4 col = 0;
-
+            	
 				if (_StandardDeviation <= 0.0001)
                 {
                     col = tex2D(_MainTex, i.uv);
@@ -76,7 +76,7 @@
                             float offsetY = (y/(SAMPLES-1) - 0.5) * _BlurSize;
 
 					        float2 uv = i.uv + float2(offsetX, offsetY);
-					        float gauss = (1 / sqrt(2 * PI * stDevSquared)) * pow(E, -((offsetY*offsetY)/(2 * stDevSquared)));
+					        float gauss = 1 / sqrt(2 * PI * stDevSquared) * pow(E, -(offsetY*offsetY/(2 * stDevSquared)));
 					        sum += gauss;
 					        col += tex2D(_MainTex, uv) * gauss;
 				        }
@@ -85,8 +85,8 @@
 				    col = col / sum;
                 }
 
-                col = (col - 0.5) * (_Contrast) + 0.5;
-                col = ((1.0 - col) * _Lift) + col;
+                col = (col - 0.5) * _Contrast + 0.5;
+                col = (1.0 - col) * _Lift + col;
                 float greyscale = dot(col.rgb, fixed3(.222, .707, .071));
                 col.rgb = lerp(float3(greyscale, greyscale, greyscale), col.rgb, _Saturation);
 

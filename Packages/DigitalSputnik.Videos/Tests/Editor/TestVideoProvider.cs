@@ -15,9 +15,9 @@ namespace DigitalSputnik.Videos.Tests
                     Fps = 30,
                     FrameCount = 150
                 };
-                loaded?.Invoke(video);
+                loaded?.Invoke(video, null);
             }
-            else loaded?.Invoke(null);
+            else loaded?.Invoke(null, null);
         }
 
         public bool Rename(ref Video video, string name)

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace DigitalSputnik.Videos.Tests
 {
@@ -17,43 +18,49 @@ namespace DigitalSputnik.Videos.Tests
         [Test]
         public void VideoLoads()
         {
-            Assert.IsNotNull(A.VideoTools.GetTestVideo());
+            Assert.IsNotNull(A.VideoTools.GetTestVideo().Video);
         }
-        
+
+        [Test]
+        public void ThumbnailLoads()
+        {
+            Assert.IsNotNull(A.VideoTools.GetTestVideo().Thumbnail);
+        }
+
         [Test]
         public void VideoNameMatches()
         {
-            Assert.AreEqual(A.VideoTools.GetTestVideo()?.Name, A.TEST_VIDEO_NAME);
+            Assert.AreEqual(A.VideoTools.GetTestVideo()?.Video?.Name, A.TEST_VIDEO_NAME);
         }
         
         [Test]
         public void VideoWidthMatches()
         {
-            Assert.AreEqual(A.VideoTools.GetTestVideo()?.Width, A.TEST_VIDEO_WIDTH);
+            Assert.AreEqual(A.VideoTools.GetTestVideo()?.Video?.Width, A.TEST_VIDEO_WIDTH);
         }
         
         [Test]
         public void VideoHeightMatches()
         {
-            Assert.AreEqual(A.VideoTools.GetTestVideo()?.Height, A.TEST_VIDEO_HEIGHT);
+            Assert.AreEqual(A.VideoTools.GetTestVideo()?.Video?.Height, A.TEST_VIDEO_HEIGHT);
         }
 
         [Test]
         public void VideoFpsMatches()
         {
-            Assert.AreEqual(A.VideoTools.GetTestVideo()?.Fps, A.TEST_VIDEO_FPS);
+            Assert.AreEqual(A.VideoTools.GetTestVideo()?.Video?.Fps, A.TEST_VIDEO_FPS);
         }
         
         [Test]
         public void VideoFrameCountMatches()
         {
-            Assert.AreEqual(A.VideoTools.GetTestVideo()?.FrameCount, A.TEST_VIDEO_FRAME_COUNT);
+            Assert.AreEqual(A.VideoTools.GetTestVideo()?.Video?.FrameCount, A.TEST_VIDEO_FRAME_COUNT);
         }
         
         [Test]
         public void VideoDurationMatches()
         {
-            Assert.AreEqual(A.VideoTools.GetTestVideo()?.Duration, A.TEST_VIDEO_DURATION);
+            Assert.AreEqual(A.VideoTools.GetTestVideo()?.Video?.Duration, A.TEST_VIDEO_DURATION);
         }
 
         [Test]
@@ -62,7 +69,7 @@ namespace DigitalSputnik.Videos.Tests
             const string NEW_NAME = "New Name";
             
             var tools = A.VideoTools;
-            var video = tools.GetTestVideo();
+            var video = tools.GetTestVideo().Video;
 
             tools.Rename(ref video, NEW_NAME);
             Assert.AreEqual(video.Name, NEW_NAME);
@@ -75,7 +82,7 @@ namespace DigitalSputnik.Videos.Tests
             
             var newPath = A.TestVideoPath.Replace(A.TEST_VIDEO_NAME, NEW_NAME);
             var tools = A.VideoTools;
-            var video = tools.GetTestVideo();
+            var video = tools.GetTestVideo().Video;
 
             tools.Rename(ref video, NEW_NAME);
             Assert.AreEqual(video.Path, newPath);
@@ -88,7 +95,7 @@ namespace DigitalSputnik.Videos.Tests
             const int TARGET_HEIGHT = 180;
             
             var tools = A.VideoTools;
-            var video = tools.GetTestVideo();
+            var video = tools.GetTestVideo().Video;
 
             tools.Resize(video, TARGET_WIDTH, TARGET_HEIGHT);
             Assert.AreEqual(video.Width, TARGET_WIDTH);
@@ -101,7 +108,7 @@ namespace DigitalSputnik.Videos.Tests
             const int TARGET_HEIGHT = 180;
             
             var tools = A.VideoTools;
-            var video = tools.GetTestVideo();
+            var video = tools.GetTestVideo().Video;
 
             tools.Resize(video, TARGET_WIDTH, TARGET_HEIGHT);
             Assert.AreEqual(video.Height, TARGET_HEIGHT);
@@ -117,23 +124,24 @@ namespace DigitalSputnik.Videos.Tests
         public const int TEST_VIDEO_FRAME_COUNT = 150;
         public const int TEST_VIDEO_DURATION = 5;
 
-        private static IVideoProvider VideoProvider => new TestVideoProvider();
+        private static IVideoProvider VideoProvider => new UnityVideoProvider();
         private static IVideoResizer VideoResizer => new TestVideoResizer();
         private static ITimeProvider TimeProvider => new SystemTimeProvider();
         public static VideoTools VideoTools => new VideoTools(VideoProvider, VideoResizer);
 
-        public static Video GetTestVideo(this VideoTools tools)
+        public static UnityVideo GetTestVideo(this VideoTools tools)
         {
             Video video = null;
+            Texture2D thumbnail = null;
             var time = TimeProvider;
             var timeout = time.Epoch + 5.0f;
-            
-            tools.LoadVideo(TestVideoPath, vid => video = vid);
 
-            while (video == null && time.Epoch < timeout)
+            tools.LoadVideo(TestVideoPath, (vid, thumb) => { video = vid; thumbnail = thumb; });
+
+            while (video == null && thumbnail == null && time.Epoch < timeout)
                 Thread.Sleep(10);
 
-            return video;
+            return new UnityVideo(video, thumbnail);
         }
 
         public static string TestVideoPath
@@ -163,6 +171,13 @@ namespace DigitalSputnik.Videos.Tests
                 Thread.Sleep(10);
             
             return result;
+        }
+
+        public class UnityVideo
+        {
+            public Video Video { get; set; }
+            public Texture2D Thumbnail { get; set; }
+            public UnityVideo(Video video, Texture2D thumbnail) { Video = video; Thumbnail = thumbnail; }
         }
     }
 }
