@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerController.Workspace;
@@ -66,7 +67,20 @@ namespace VoyagerController.UI
         {
             Instance.leftButton.onClick.AddListener(Instance.PreviousTutorial);
             Instance.rightButton.onClick.AddListener(Instance.NextTutorial);
+
+            StartCoroutine(CheckIfFirstRun());
         }
+
+        IEnumerator CheckIfFirstRun()
+        {
+            yield return new WaitForFixedUpdate();
+
+            if (!PlayerPrefs.HasKey("UpdatedTutorialDone"))
+            {
+                inspectorMenuContainer.ShowMenu(Instance);
+            }
+        }
+
         internal override void OnShow()
         {
             canvas.alpha = 1.0f;
@@ -76,12 +90,12 @@ namespace VoyagerController.UI
             Instance.menuContainer.ShowMenu(startMenu);
             Instance.inspectorMenuContainer.ShowMenu(null);
 
-            if (PlayerPrefs.HasKey("NewTutorialDone"))
+            if (PlayerPrefs.HasKey("UpdatedTutorialDone"))
                 SetNextTutorial(1);
             else
                 SetNextTutorial(0);
 
-            PlayerPrefs.SetString("NewTutorialDone", "true");
+            PlayerPrefs.SetString("UpdatedTutorialDone", "true");
         }
 
         internal override void OnHide()
@@ -90,6 +104,14 @@ namespace VoyagerController.UI
             canvas.interactable = false;
             canvas.blocksRaycasts = false;
 
+            StartCoroutine(ResetMenus());
+        }
+
+        IEnumerator ResetMenus()
+        {
+            Instance.menuContainer.Current.Open = false;
+            Instance.menuContainer.Current.Open = true;
+            yield return new WaitForFixedUpdate();
             Instance.menuContainer.ShowMenu(startMenu);
             Instance.inspectorMenuContainer.ShowMenu(null);
         }
@@ -207,6 +229,12 @@ namespace VoyagerController.UI
 
         public void CompletedAllTutorials()
         {
+            if (currentTutorial is TutorialCustomButton tutorial)
+            {
+                foreach (var button in tutorial.buttonsToDisable)
+                    button.interactable = true;
+            }
+
             OnHide();
             DialogBox.Paused = false;
         }

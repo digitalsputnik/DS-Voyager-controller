@@ -13520,6 +13520,13 @@ PrefabInstance:
       objectReference: {fileID: 2072530006}
     - target: {fileID: 6760071708227358830, guid: c374f735bee8e024296d8f197db4a217,
         type: 3}
+      propertyPath: info
+      value: "Your Voyager\xB4s serial number (SSID) will appear in the list on the
+        left menu. Click on the serial number or add your lamp by pushing the Program
+        button on the side of your Voyager."
+      objectReference: {fileID: 0}
+    - target: {fileID: 6760071708227358830, guid: c374f735bee8e024296d8f197db4a217,
+        type: 3}
       propertyPath: leftMenuToOpen
       value: 
       objectReference: {fileID: 2072530006}

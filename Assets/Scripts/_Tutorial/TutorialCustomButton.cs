@@ -7,7 +7,7 @@ namespace VoyagerController.UI
     public class TutorialCustomButton : Tutorial
     {
         [SerializeField] private Button Button = null;
-        [SerializeField] private List<Button> buttonsToDisable = new List<Button>();
+        [SerializeField] public List<Button> buttonsToDisable = new List<Button>();
 
         public override void CheckForAction()
         {
