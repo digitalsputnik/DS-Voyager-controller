@@ -558,6 +558,7 @@
       <e p="crosstales.csproj" t="IncludeRecursive" />
       <e p="DigitalSputnik.Bluetooth.Runtime.csproj" t="IncludeRecursive" />
       <e p="DigitalSputnik.Core.Runtime.csproj" t="IncludeRecursive" />
+      <e p="DigitalSputnik.Images.Runtime.csproj" t="IncludeRecursive" />
       <e p="DigitalSputnik.Videos.EditorTests.csproj" t="IncludeRecursive" />
       <e p="DigitalSputnik.Videos.Runtime.csproj" t="IncludeRecursive" />
       <e p="DS-Voyager-controller.sln" t="IncludeFlat" />
@@ -567,6 +568,8 @@
       <e p="LunarConsoleEditor.csproj" t="IncludeRecursive" />
       <e p="NativeFilePicker.Editor.csproj" t="IncludeRecursive" />
       <e p="NativeFilePicker.Runtime.csproj" t="IncludeRecursive" />
+      <e p="NativeGallery.Editor.csproj" t="IncludeRecursive" />
+      <e p="NativeGallery.Runtime.csproj" t="IncludeRecursive" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="Packages" t="ExcludeRecursive">
         <e p="DigitalSputnik.Bluetooth" t="Include">
@@ -596,6 +599,21 @@
             <e p="ITimeProvider.cs" t="Include" />
             <e p="MainThreadRunner.cs" t="Include" />
             <e p="SystemTimeProvider.cs" t="Include" />
+          </e>
+        </e>
+        <e p="DigitalSputnik.Images" t="Include">
+          <e p="Runtime" t="Include">
+            <e p="IImageProvider.cs" t="Include" />
+            <e p="IImageRenamer.cs" t="Include" />
+            <e p="IImageResizer.cs" t="Include" />
+            <e p="Image.cs" t="Include" />
+            <e p="ImageTools.cs" t="Include" />
+            <e p="Plugins" t="Include">
+              <e p="iOS" t="Include">
+                <e p="IosImageResizer.cs" t="Include" />
+                <e p="IosImageResizerListener.cs" t="Include" />
+              </e>
+            </e>
           </e>
         </e>
         <e p="DigitalSputnik.Videos" t="Include">

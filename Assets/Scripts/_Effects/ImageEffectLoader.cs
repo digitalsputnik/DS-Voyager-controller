@@ -5,9 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
-using VoyagerController.Effects;
 
-namespace VoyagerApp
+namespace VoyagerController.Effects
 {
     public class ImageEffectLoader : MonoBehaviour
     {

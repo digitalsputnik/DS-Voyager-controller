@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace VoyagerApp
+namespace VoyagerController.UI
 {
     public class Background : MonoBehaviour
     {

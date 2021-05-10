@@ -8,9 +8,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using UnityEngine;
-using VoyagerController.UI;
 
-namespace VoyagerApp.UI
+namespace VoyagerController.UI
 {
     public class CheckingForOtherControllers : MonoBehaviour
     {
