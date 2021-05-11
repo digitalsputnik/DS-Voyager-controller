@@ -31,26 +31,26 @@ namespace DigitalSputnik.Ble
 
         public void PeripheralNotFound(string raw)
         {
-            OnPeripheralNotFound?.Invoke(raw);
+            OnPeripheralNotFound?.Invoke(raw.ToLower());
         }
 
         public void ConnectionSuccessful(string raw)
         {
-            OnConnectingSuccessful?.Invoke(raw);
+            OnConnectingSuccessful?.Invoke(raw.ToLower());
         }
 
         public void ConnectionFailed(string raw)
         {
             var fields = raw.Split('|');
             var error = fields[1] == "(null)" ? "" : fields[1];
-            OnConnectingFailed?.Invoke(fields[0], error);
+            OnConnectingFailed?.Invoke(fields[0].ToLower(), error);
         }
 
         public void Disconnect(string raw)
         {
             var fields = raw.Split('|');
             var error = fields[1] == "(null)" ? "" : fields[1];
-            OnDisconnect?.Invoke(fields[0], error);
+            OnDisconnect?.Invoke(fields[0].ToLower(), error);
         }
 
         public void GetServices(string raw)
@@ -58,7 +58,7 @@ namespace DigitalSputnik.Ble
             var fields = raw.Split('|');
             var services = fields[1].Split('#');
             var error = fields[2] == "(null)" ? "" : fields[2];
-            OnServices?.Invoke(fields[0], services, error);
+            OnServices?.Invoke(fields[0].ToLower(), services, error);
         }
 
         public void GetCharacteristics(string raw)
@@ -66,13 +66,13 @@ namespace DigitalSputnik.Ble
             var fields = raw.Split('|');
             var characteristics = fields[2].Split('#');
             var error = fields[3] == "(null)" ? "" : fields[3];
-            OnCharacteristics?.Invoke(fields[0], fields[1], characteristics, error);
+            OnCharacteristics?.Invoke(fields[0].ToLower(), fields[1], characteristics, error);
         }
 
         public void UpdateCharacteristic(string raw)
         {
             var fields = raw.Split('|');
-            var id = fields[0];
+            var id = fields[0].ToLower();
             var service = fields[1];
             var characteristic = fields[2];
             var error = fields[3] == "(null)" ? "" : fields[3];
