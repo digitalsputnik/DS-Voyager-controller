@@ -15,6 +15,8 @@
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Workspace/WorkspaceSelection.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Effects/ImageEffectLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Effects/ImageEffectLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/Background.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/Background.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/CheckingForOtherControllers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/CheckingForOtherControllers.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Vendor/LeanTween/Editor.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/LeanTween/Editor.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Logs/Packages-Update.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/Packages-Update.log" afterDir="false" />
@@ -48,8 +50,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/SyphonRenderer.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/Metadata.cs" />
       <option value="$USER_HOME$/Documents/Backup/Utilities/FileUtils.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/DeveloperMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AboutMenu.cs" />
@@ -99,6 +99,8 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/CameraMove.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effect Mapping/EffectMapper.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/ImageEffectLoader.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/Background.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/CheckingForOtherControllers.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -216,7 +218,7 @@
       <workItem from="1619171960553" duration="1356000" />
       <workItem from="1619184674408" duration="977000" />
       <workItem from="1619522709512" duration="1902000" />
-      <workItem from="1620641795811" duration="745000" />
+      <workItem from="1620641795811" duration="1396000" />
     </task>
     <servers />
   </component>
