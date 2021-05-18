@@ -95,7 +95,7 @@ namespace VoyagerController.UI
                     new Action[] { null });
                     return;
                 }
-                else if(lamp.Endpoint is BluetoothEndPoint && !LessThanFiveBluetoothLampsOnWorkspace() && !addAllLampsBleMaxed)
+                else if(lamp.Endpoint is BluetoothEndPoint && !LessThanFiveBluetoothLampsOnWorkspace() && addAllLampsClicked && !addAllLampsBleMaxed)
                 {
                     addAllLampsBleMaxed = true;
                     DialogBox.Show(
@@ -106,6 +106,8 @@ namespace VoyagerController.UI
                     new Action[] { null });
                     return;
                 }
+                else if(lamp.Endpoint is BluetoothEndPoint && !LessThanFiveBluetoothLampsOnWorkspace() && addAllLampsClicked && addAllLampsBleMaxed)
+                    return;
 
                 var voyagerItem = WorkspaceManager.InstantiateItem<VoyagerItem>(voyager, WorkspaceUtils.PositionOfLastSelectedOrAddedLamp + new Vector3(0, -1.0f, 0), 1f, 0);
                 
@@ -177,7 +179,7 @@ namespace VoyagerController.UI
         private static bool LampConnected(Lamp lamp)
         {
             if (lamp is VoyagerLamp voyager)
-                return voyager.Connected && !voyager.Passive && voyager.DmxPollReceived;
+                return voyager.Connected && !voyager.Passive && voyager.DmxPollRecieved;
             
             return lamp.Connected;
         }
