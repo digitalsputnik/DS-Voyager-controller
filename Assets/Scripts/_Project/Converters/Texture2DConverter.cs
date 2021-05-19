@@ -8,7 +8,7 @@ namespace VoyagerController.ProjectManagement
     {
         public override void WriteJson(JsonWriter writer, Texture2D value, JsonSerializer serializer)
         {
-            var data = value.EncodeToJPG();
+            var data = value.EncodeToPNG();
             var json = Convert.ToBase64String(data);
             
             writer.WriteValue(json);
