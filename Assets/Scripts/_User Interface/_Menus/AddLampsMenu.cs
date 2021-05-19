@@ -177,7 +177,7 @@ namespace VoyagerController.UI
         private static bool LampConnected(Lamp lamp)
         {
             if (lamp is VoyagerLamp voyager)
-                return voyager.Connected && !voyager.Passive && voyager.DmxPollRecieved;
+                return voyager.Connected && !voyager.Passive && voyager.DmxPollReceived;
             
             return lamp.Connected;
         }

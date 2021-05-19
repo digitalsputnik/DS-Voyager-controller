@@ -48,9 +48,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _childContainer: {fileID: 8548003280346960569}
   Children: []
-  Picture: {fileID: 0}
   _renderer: {fileID: 2071389814058521448}
-  pixelsPerUnit: 20
+  _pixelsPerUnit: 20
   _outline: {fileID: 4575942053016492809}
   _outlineThickness: 0.2
 --- !u!1 &2071389814058521455
@@ -208,7 +207,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2537678090142676463}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
