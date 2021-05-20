@@ -9,14 +9,14 @@ namespace VoyagerController.UI
 
         internal override void Start()
         {
-            base.Start();
-
             if (Screen.cutouts.Length > 0)
             {
                 var pos = _showHide.OpenPosition;
                 pos.x += Screen.cutouts[0].width;
                 _showHide.OpenPosition = pos;
             }
+
+            base.Start();
         }
 
         public override void ShowMenu(Menu menu)
