@@ -2,16 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/indexLayout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Graphics/Materials/picture.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Graphics/Materials/picture.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Graphics/Materials/video player.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Graphics/Materials/video player.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Workspace Items/Picture.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Workspace Items/Picture.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/Texture2DConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/Texture2DConverter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Project/AutoLoad.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Project/AutoLoad.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Tutorial/TutorialManager.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Tutorial/TutorialManager.cs.meta" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +28,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Metadata/Metadata.cs" />
       <option value="$USER_HOME$/Documents/Backup/Utilities/FileUtils.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/DeveloperMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AboutMenu.cs" />
@@ -85,6 +78,7 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/InspectorMenuContainer.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -209,6 +203,8 @@
       <workItem from="1620903776472" duration="25000" />
       <workItem from="1620982502923" duration="901000" />
       <workItem from="1621409720088" duration="1437000" />
+      <workItem from="1621507104112" duration="1537000" />
+      <workItem from="1621850903063" duration="219000" />
     </task>
     <servers />
   </component>

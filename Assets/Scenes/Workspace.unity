@@ -8755,7 +8755,7 @@ PrefabInstance:
     - target: {fileID: 8378656964428912492, guid: a912677ceb2f27e4e8c3457befe0bf12,
         type: 3}
       propertyPath: _startValue
-      value: 150
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8378656964428912492, guid: a912677ceb2f27e4e8c3457befe0bf12,
         type: 3}
@@ -33246,7 +33246,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1927760495}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0365eabdc5654156a0b465f6971e9e90, type: 3}
   m_Name: 
@@ -36592,7 +36592,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
   m_Value: 1.0000004
-  m_Size: 0.7668066
+  m_Size: 0.78339237
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
