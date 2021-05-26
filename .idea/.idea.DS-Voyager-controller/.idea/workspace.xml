@@ -4,8 +4,10 @@
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Project/AutoLoad.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Project/AutoLoad.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Tutorial/TutorialManager.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Tutorial/TutorialManager.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ApplicationSettings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ApplicationSettings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Project/AutoLoad.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Project/AutoLoad.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AppSettingsMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AppSettingsMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,9 +30,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$USER_HOME$/Documents/Backup/Utilities/FileUtils.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/DeveloperMenu.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AboutMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/Video/InterpolationState.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/FileUtils.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/EffectSettingsMenu.cs" />
@@ -39,7 +38,6 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/LampMetadataConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/MathUtils.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/WorkspaceMenu.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationSettings.cs" />
       <option value="$USER_HOME$/Documents/Backup/Workspace/Views/VoyagerItemView.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/LoadMenuItem.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/IntField.cs" />
@@ -73,12 +71,16 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs" />
       <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothListener.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Project/AutoLoad.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/Texture2DConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/InspectorMenuContainer.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/SyphonEffect.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/SpoutEffect.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationSettings.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AppSettingsMenu.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Project/AutoLoad.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -204,7 +206,8 @@
       <workItem from="1620982502923" duration="901000" />
       <workItem from="1621409720088" duration="1437000" />
       <workItem from="1621507104112" duration="1537000" />
-      <workItem from="1621850903063" duration="219000" />
+      <workItem from="1621850903063" duration="506000" />
+      <workItem from="1622031548398" duration="1003000" />
     </task>
     <servers />
   </component>

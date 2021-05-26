@@ -11,14 +11,34 @@ namespace VoyagerController.ProjectManagement
     {
         private void Start()
         {
+            if (HasAsked)
+            {
+                if (ApplicationSettings.AutoLoad)
+                    LoadPreviousProject();
+                return;
+            }
+            
             if (HasAnySavedProjects())
             {
                 DialogBox.Show(
-                    "LOAD PREVIOUS?",
-                    "Do you want to load your previous project?",
-                    new[] {"YES", "CANCEL"},
-                    new Action[] {LoadPreviousProject, null});
+                    "LOAD PREVIOUS PROJECT?",
+                    "This will be set as a default action. You can always change it under the settings.",
+                    new[] {"YES", "NO"},
+                    new Action[] {YesClicked, NoClicked});
             }
+        }
+
+        private static void YesClicked()
+        {
+            LoadPreviousProject();
+            ApplicationSettings.AutoLoad = true;
+            SetLoadAsked();
+        }
+
+        private static void NoClicked()
+        {
+            ApplicationSettings.AutoLoad = false;
+            SetLoadAsked();
         }
 
         private static void LoadPreviousProject()
@@ -52,5 +72,9 @@ namespace VoyagerController.ProjectManagement
                 .First()
                 .Name;
         }
+
+        private static bool HasAsked => PlayerPrefs.HasKey("auto_load_asked");
+
+        private static void SetLoadAsked() => PlayerPrefs.SetInt("auto_load_asked", 1);
     }
 }

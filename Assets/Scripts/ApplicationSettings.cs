@@ -25,6 +25,8 @@ namespace VoyagerController
 
         private const string SET_CLIENT_SSID = "set_client_ssid";
         private const string SET_CLIENT_PASSWORD = "set_client_password";
+
+        private const string AUTO_LOAD = "auto_load";
         
         public static Itshe IdentificationColor
         {
@@ -130,6 +132,12 @@ namespace VoyagerController
         {
             get => GetString(SET_CLIENT_PASSWORD, "dsputnik");
             set => SetString(SET_CLIENT_PASSWORD, value);
+        }
+
+        public static bool AutoLoad
+        {
+            get => GetBool(AUTO_LOAD, true);
+            set => SetBool(AUTO_LOAD, value);
         }
 
         private static void SetBool(string key, bool value)

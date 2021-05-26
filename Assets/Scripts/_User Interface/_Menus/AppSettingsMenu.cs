@@ -6,17 +6,21 @@ namespace VoyagerController.UI
 {
     public class AppSettingsMenu : Menu
     {
-        [SerializeField] private ItshePicker _identifyItsh      = null;
-        [SerializeField] private ItshePicker _startColorItsh    = null;
+        [SerializeField] private ItshePicker _identifyItsh = null;
+        [SerializeField] private ItshePicker _startColorItsh = null;
+
         [Header("Info Settings")]
-        [SerializeField] private Toggle _batteryLevelToggle   = null;
+        [SerializeField] private Toggle _batteryLevelToggle = null;
         [SerializeField] private Toggle _chargingStatusToggle = null;
-        [SerializeField] private Toggle _wifiModeToggle       = null;
-        [SerializeField] private Toggle _lenghtToggle         = null;
-        [SerializeField] private Toggle _dmxUniverseToggle    = null;
-        [SerializeField] private Toggle _dmxChannelToggle     = null;
-        [SerializeField] private Toggle _ipAddressToggle      = null;
-        [SerializeField] private Toggle _firmwareVersion      = null;
+        [SerializeField] private Toggle _wifiModeToggle = null;
+        [SerializeField] private Toggle _lenghtToggle = null;
+        [SerializeField] private Toggle _dmxUniverseToggle = null;
+        [SerializeField] private Toggle _dmxChannelToggle = null;
+        [SerializeField] private Toggle _ipAddressToggle = null;
+        [SerializeField] private Toggle _firmwareVersion = null;
+        
+        [Header("Other")]
+        [SerializeField] private Toggle _autoLoad = null;
         
         internal override void OnShow()
         {
@@ -31,6 +35,8 @@ namespace VoyagerController.UI
             _dmxChannelToggle.isOn = ApplicationSettings.ShowInfoDmxChannel;
             _ipAddressToggle.isOn = ApplicationSettings.ShowInfoIpAddress;
             _firmwareVersion.isOn = ApplicationSettings.ShowInfoFirmwareVersion;
+
+            _autoLoad.isOn = ApplicationSettings.AutoLoad;
             
             
             _identifyItsh.OnValueChanged.AddListener(OnIdentifyColorPicked);
@@ -44,6 +50,8 @@ namespace VoyagerController.UI
             _dmxChannelToggle.onValueChanged.AddListener(OnDmxChannelToggleChanged);
             _ipAddressToggle.onValueChanged.AddListener(OnIpAddressToggleChanged);
             _firmwareVersion.onValueChanged.AddListener(OnFirmwareVersionChanged);
+            
+            _autoLoad.onValueChanged.AddListener(OnAutoLoadChanged);
         }
 
         internal override void OnHide()
@@ -59,6 +67,8 @@ namespace VoyagerController.UI
             _dmxChannelToggle.onValueChanged.RemoveListener(OnDmxChannelToggleChanged);
             _ipAddressToggle.onValueChanged.RemoveListener(OnIpAddressToggleChanged);
             _firmwareVersion.onValueChanged.RemoveListener(OnFirmwareVersionChanged);
+            
+            _autoLoad.onValueChanged.RemoveListener(OnAutoLoadChanged);
         }
 
         private static void OnIdentifyColorPicked(Itshe itshe) => ApplicationSettings.IdentificationColor = itshe;
@@ -71,5 +81,6 @@ namespace VoyagerController.UI
         private static void OnDmxChannelToggleChanged(bool value) => ApplicationSettings.ShowInfoDmxChannel = value;
         private static void OnIpAddressToggleChanged(bool value) => ApplicationSettings.ShowInfoIpAddress = value;
         private static void OnFirmwareVersionChanged(bool value) => ApplicationSettings.ShowInfoFirmwareVersion = value;
+        private static void OnAutoLoadChanged(bool value) => ApplicationSettings.AutoLoad = value;
     }
 }
