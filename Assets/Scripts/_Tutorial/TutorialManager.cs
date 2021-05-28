@@ -40,6 +40,8 @@ namespace VoyagerController.UI
 
         #endregion
 
+        public bool IsRunning = false;
+
         public bool setup = false;
         public static bool setClientPicked = false;
         public static TutorialChoice Choice = TutorialChoice.None;
@@ -77,6 +79,7 @@ namespace VoyagerController.UI
 
             if (!PlayerPrefs.HasKey("UpdatedTutorialDone"))
             {
+                IsRunning = true;
                 inspectorMenuContainer.ShowMenu(Instance);
             }
         }
@@ -236,6 +239,7 @@ namespace VoyagerController.UI
             }
 
             OnHide();
+            IsRunning = false;
             DialogBox.Paused = false;
         }
 

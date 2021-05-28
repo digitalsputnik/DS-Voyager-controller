@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using DigitalSputnik;
@@ -20,12 +21,21 @@ namespace VoyagerController.ProjectManagement
             
             if (HasAnySavedProjects())
             {
-                DialogBox.Show(
+                StartCoroutine(AskLoad());
+            }
+        }
+
+        IEnumerator AskLoad()
+        {
+            yield return new WaitForSeconds(1f);
+
+            yield return new WaitUntil(() => !TutorialManager.Instance.IsRunning);
+
+            DialogBox.Show(
                     "LOAD PREVIOUS PROJECT?",
                     "This will be set as a default action. You can always change it under the settings.",
-                    new[] {"YES", "NO"},
-                    new Action[] {YesClicked, NoClicked});
-            }
+                    new[] { "YES", "NO" },
+                    new Action[] { YesClicked, NoClicked });
         }
 
         private static void YesClicked()
