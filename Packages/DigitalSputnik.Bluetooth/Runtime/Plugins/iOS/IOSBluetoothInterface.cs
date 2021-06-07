@@ -1,8 +1,11 @@
 ﻿#if UNITY_IOS
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace DigitalSputnik.Ble
 {
@@ -12,12 +15,8 @@ namespace DigitalSputnik.Ble
         private bool _scanning;
 
         private InternalPeripheralScanHandler _onPeripheralScanned;
-        private InternalPeripheralConnectHandler _onConnected;
-        private InternalPeripheralConnectFailHandler _onConnectFailed;
-        private InternalPeripheralDisconnectHandler _onDisconnect;
-        private InternalServicesHandler _onServices;
-        private InternalCharacteristicHandler _onCharacteristics;
-        private InternalCharacteristicUpdateHandler _onCharacteristicUpdate;
+
+        private readonly Dictionary<string, IosConnectionSession> _sessions = new Dictionary<string, IosConnectionSession>();
 
         #region Bindings
         [DllImport("__Internal")]
@@ -113,9 +112,15 @@ namespace DigitalSputnik.Ble
 
         public void Connect(string id, InternalPeripheralConnectHandler connect, InternalPeripheralConnectFailHandler fail, InternalPeripheralDisconnectHandler disconnect)
         {
-            _onConnected = connect;
-            _onConnectFailed = fail;
-            _onDisconnect = disconnect;
+            if (_sessions.ContainsKey(id))
+            {
+                if (_sessions[id].Connected || _sessions[id].Connecting) return;
+                
+                _sessions[id].OnConnectFailed?.Invoke(id, "New connection attempt with same id");
+                _sessions.Remove(id);
+            }
+
+            _sessions.Add(id, new IosConnectionSession(connect, fail, disconnect));
             _iOSConnect(id.ToUpper());
         }
 
@@ -142,19 +147,26 @@ namespace DigitalSputnik.Ble
 
         public void GetServices(string id, InternalServicesHandler callback)
         {
-            _onServices = callback;
-            _iOSGetServices(id.ToUpper());
+            if (_sessions.ContainsKey(id))
+            {
+                _sessions[id].OnServices = callback;
+                _iOSGetServices(id.ToUpper());
+            }
         }
 
         public void GetCharacteristics(string id, string service, InternalCharacteristicHandler callback)
         {
-            _onCharacteristics = callback;
-            _iOSGetCharacteristics(id.ToUpper(), service.ToUpper());
+            if (_sessions.ContainsKey(id))
+            {
+                _sessions[id].OnCharacteristics = callback;
+                _iOSGetCharacteristics(id.ToUpper(), service.ToUpper());
+            }
         }
 
         public void SetCharacteristicsUpdateCallback(string id, InternalCharacteristicUpdateHandler callback)
         {
-            _onCharacteristicUpdate = callback;
+            if (_sessions.ContainsKey(id))
+                _sessions[id].OnCharacteristicUpdate = callback;
         }
 
         public void SubscribeToCharacteristicUpdate(string id, string characteristic)
@@ -164,10 +176,11 @@ namespace DigitalSputnik.Ble
 
         public void WriteToCharacteristic(string id, string characteristic, byte[] data)
         {
-            string encoded = Convert.ToBase64String(data);
+            var encoded = Convert.ToBase64String(data);
+            var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+            
             data = Encoding.UTF8.GetBytes(encoded);
-
-            GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+            DebugConsole.LogInfo($"Writing to characteristics: {Encoding.UTF8.GetString(data)}");
             _iOSWriteToCharacteristic(id.ToUpper(), characteristic.ToUpper(), handle.AddrOfPinnedObject(), data.Length);
             handle.Free();
         }
@@ -188,80 +201,112 @@ namespace DigitalSputnik.Ble
 
         private void OnPeripheralNotFound(string id)
         {
-            id = id.ToLower();
             OnConnectingFailed(id, $"Peripheral {id} not found");
         }
 
         private void OnConnectingFailed(string id, string error)
         {
-            if (_onConnectFailed == null) return;
-            
-            _onConnectFailed.Invoke(id.ToLower(), error);
-            _onConnectFailed = null;
-            _onConnected = null;
+            if (_sessions.ContainsKey(id))
+            {
+                var session = _sessions[id];
+
+                if (session.Connecting)
+                {
+                    session.OnConnectFailed?.Invoke(id, error);
+                    session.Connecting = false;
+                } 
+                
+                _sessions.Remove(id);
+            }
         }
 
         private void OnConnectingSuccessful(string id)
         {
-            if (_onConnected == null) return;
-            
-            _onConnected.Invoke(id.ToLower());
-            _onConnected = null;
-            _onConnectFailed = null;
+            if (_sessions.ContainsKey(id))
+            {
+                var session = _sessions[id];
+                session.Connected = true;
+                session.Connecting = false;
+                session.OnConnected?.Invoke(id);
+            }
         }
 
         private void OnDisconnect(string id, string error)
         {
-            if (_onDisconnect == null) return;
-            
-            _onDisconnect?.Invoke(id.ToLower(), error);
-            _onDisconnect = null;
+            if (_sessions.ContainsKey(id))
+            {
+                var session = _sessions[id];
+
+                if (session.Connecting || session.Connected)
+                {
+                    session.Connected = false;
+                    session.Connecting = false;
+                    session.OnDisconnect?.Invoke(id, error);   
+                }
+
+                _sessions.Remove(id);
+            }
         }
 
         private void OnServices(string id, string[] services, string error)
         {
-            if (_onServices == null) return;
-            
-            if (string.IsNullOrEmpty(error))
+            if (_sessions.ContainsKey(id))
             {
-                for (var i = 0; i < services.Length; i++)
-                    services[i] = services[i].ToLower();
-                _onServices.Invoke(id.ToLower(), services);
-            }
-            else
-                Debug.LogError($"[IOS Bluetooth error] {error}");
+                var session = _sessions[id];
+                
+                if (session.OnServices == null) return;
+                
+                if (string.IsNullOrEmpty(error))
+                {
+                    for (var i = 0; i < services.Length; i++)
+                        services[i] = services[i].ToLower();
+                    session.OnServices?.Invoke(id.ToLower(), services);
+                }
+                else
+                    Debug.LogError($"[IOS Bluetooth error] {error}");
 
-            _onServices = null;
+                session.OnServices = null;
+            }
         }
 
         private void OnCharacteristics(string id, string service, string[] characteristics, string error)
         {
-            if (_onCharacteristics == null) return;
-            
-            if (string.IsNullOrEmpty(error))
+            if (_sessions.ContainsKey(id))
             {
-                for (var i = 0; i < characteristics.Length; i++)
-                    characteristics[i] = characteristics[i].ToLower();
-                _onCharacteristics.Invoke(id.ToLower(), service.ToLower(), characteristics);
-            }
-            else
-                Debug.LogError($"[IOS Bluetooth error] {error}");
+                var session = _sessions[id];
+                
+                if (session.OnCharacteristics == null) return;
+                
+                if (string.IsNullOrEmpty(error))
+                {
+                    for (var i = 0; i < characteristics.Length; i++)
+                        characteristics[i] = characteristics[i].ToLower();
+                    session.OnCharacteristics?.Invoke(id.ToLower(), service.ToLower(), characteristics);
+                }
+                else
+                    Debug.LogError($"[IOS Bluetooth error] {error}");
 
-            _onCharacteristics = null;
+                session.OnCharacteristics = null;
+            }
         }
 
         private void OnCharacteristicUpdate(string id, string service, string characteristic, string error, byte[] data)
         {
-            if (_onCharacteristicUpdate == null) return;
-            
-            if (string.IsNullOrEmpty(error))
+            if (_sessions.ContainsKey(id))
             {
-                var base64 = Encoding.UTF8.GetString(data);
-                var decoded = Convert.FromBase64String(base64);
-                _onCharacteristicUpdate.Invoke(id.ToLower(), service.ToLower(), characteristic.ToLower(), decoded);
+                var session = _sessions[id];
+                
+                if (session.OnCharacteristicUpdate == null) return;
+                
+                if (string.IsNullOrEmpty(error))
+                {
+                    var base64 = Encoding.UTF8.GetString(data);
+                    var decoded = Convert.FromBase64String(base64);
+                    session.OnCharacteristicUpdate?.Invoke(id.ToLower(), service.ToLower(), characteristic.ToLower(), decoded);
+                }
+                else
+                    Debug.LogError($"[IOS Bluetooth error] {error}");
             }
-            else
-                Debug.LogError($"[IOS Bluetooth error] {error}");
         }
 #endregion
     }
