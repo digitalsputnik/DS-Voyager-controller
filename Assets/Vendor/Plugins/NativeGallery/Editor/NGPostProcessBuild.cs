@@ -14,33 +14,37 @@ public class NGPostProcessBuild
 	[PostProcessBuild]
 	public static void OnPostprocessBuild( BuildTarget target, string buildPath )
 	{
-		if (target == BuildTarget.iOS)
-		{
-			string pbxProjectPath = PBXProject.GetPBXProjectPath(buildPath);
-			string plistPath = Path.Combine(buildPath, "Info.plist");
+		if (target != BuildTarget.iOS) return;
+		
+		var pbxProjectPath = PBXProject.GetPBXProjectPath(buildPath);
+		var plistPath = Path.Combine(buildPath, "Info.plist");
 
-			PBXProject pbxProject = new PBXProject();
-			pbxProject.ReadFromFile(pbxProjectPath);
+		var pbxProject = new PBXProject();
+		pbxProject.ReadFromFile(pbxProjectPath);
 
-			string targetGUID = pbxProject.GetUnityFrameworkTargetGuid();
+		var targetGuid = pbxProject.GetUnityFrameworkTargetGuid();
 
-			pbxProject.AddBuildProperty(targetGUID, "OTHER_LDFLAGS", "-framework Photos");
-			pbxProject.AddBuildProperty(targetGUID, "OTHER_LDFLAGS", "-framework MobileCoreServices");
-			pbxProject.AddBuildProperty(targetGUID, "OTHER_LDFLAGS", "-framework ImageIO");
+		pbxProject.AddBuildProperty(targetGuid, "OTHER_LDFLAGS", "-weak_framework Photos" );
+		pbxProject.AddBuildProperty(targetGuid, "OTHER_LDFLAGS", "-weak_framework PhotosUI" );
+		pbxProject.AddBuildProperty(targetGuid, "OTHER_LDFLAGS", "-framework Photos");
+		pbxProject.AddBuildProperty(targetGuid, "OTHER_LDFLAGS", "-framework MobileCoreServices");
+		pbxProject.AddBuildProperty(targetGuid, "OTHER_LDFLAGS", "-framework ImageIO");
+			
+		// pbxProject.SetBuildProperty(targetGuid, "ENABLE_BITCODE", "NO");
 
-			pbxProject.RemoveFrameworkFromProject(targetGUID, "Photos.framework");
+		pbxProject.RemoveFrameworkFromProject(targetGuid, "Photos.framework");
 
-			File.WriteAllText(pbxProjectPath, pbxProject.WriteToString());
+		File.WriteAllText(pbxProjectPath, pbxProject.WriteToString());
 
-			PlistDocument plist = new PlistDocument();
-			plist.ReadFromString(File.ReadAllText(plistPath));
+		var plist = new PlistDocument();
+		plist.ReadFromString(File.ReadAllText(plistPath));
 
-			PlistElementDict rootDict = plist.root;
-			rootDict.SetString("NSPhotoLibraryUsageDescription", PHOTO_LIBRARY_USAGE_DESCRIPTION);
-			rootDict.SetString("NSPhotoLibraryAddUsageDescription", PHOTO_LIBRARY_USAGE_DESCRIPTION);
+		var rootDict = plist.root;
+		rootDict.SetString("NSPhotoLibraryUsageDescription", PHOTO_LIBRARY_USAGE_DESCRIPTION);
+		rootDict.SetString("NSPhotoLibraryAddUsageDescription", PHOTO_LIBRARY_USAGE_DESCRIPTION);
+		rootDict.SetBoolean( "PHPhotoLibraryPreventAutomaticLimitedAccessAlert", true );
 
-			File.WriteAllText(plistPath, plist.WriteToString());
-		}
+		File.WriteAllText(plistPath, plist.WriteToString());
 	}
 #pragma warning restore 0162
 #endif

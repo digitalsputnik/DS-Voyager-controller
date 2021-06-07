@@ -1,9 +1,11 @@
 ﻿#if UNITY_IOS
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace DigitalSputnik.Ble
 {
@@ -174,10 +176,11 @@ namespace DigitalSputnik.Ble
 
         public void WriteToCharacteristic(string id, string characteristic, byte[] data)
         {
-            string encoded = Convert.ToBase64String(data);
+            var encoded = Convert.ToBase64String(data);
+            var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+            
             data = Encoding.UTF8.GetBytes(encoded);
-
-            GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+            DebugConsole.LogInfo($"Writing to characteristics: {Encoding.UTF8.GetString(data)}");
             _iOSWriteToCharacteristic(id.ToUpper(), characteristic.ToUpper(), handle.AddrOfPinnedObject(), data.Length);
             handle.Free();
         }

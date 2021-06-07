@@ -570,6 +570,8 @@
       <e p="LunarConsoleEditor.csproj" t="IncludeRecursive" />
       <e p="NativeFilePicker.Editor.csproj" t="IncludeRecursive" />
       <e p="NativeFilePicker.Runtime.csproj" t="IncludeRecursive" />
+      <e p="NativeGallery.Editor.csproj" t="IncludeRecursive" />
+      <e p="NativeGallery.Runtime.csproj" t="IncludeRecursive" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="Packages" t="ExcludeRecursive">
         <e p="DigitalSputnik.Bluetooth" t="Include">
