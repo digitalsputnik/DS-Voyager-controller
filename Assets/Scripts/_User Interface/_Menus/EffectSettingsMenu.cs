@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using VoyagerController.Effects;
 using VoyagerController.Mapping;
@@ -41,7 +42,7 @@ namespace VoyagerController.UI
 
             SubscribeFields();
         }
-        
+
         private void SubscribeFields()
         {
             _fpsField.OnChanged += FpsChanged;
@@ -67,7 +68,13 @@ namespace VoyagerController.UI
                 video.Video.Fps = value;
                 _displaySettings.GetComponent<VideoEffectDisplay>().SetFps(value);
                 foreach (var item in WorkspaceManager.GetItems<VoyagerItem>())
-                    item.LampHandle.SetFps(value);
+                {
+                    var voyager = item.LampHandle;
+                    var meta = Metadata.Get<LampData>(voyager.Serial);
+
+                    if (meta.Effect.Name == _effect.Name)
+                        item.LampHandle.SetFps(value);
+                }
             }
         }
 
@@ -105,7 +112,10 @@ namespace VoyagerController.UI
                 foreach (var item in WorkspaceManager.GetItems<VoyagerItem>())
                 {
                     var voyager = item.LampHandle;
-                    LampEffectsWorker.ApplyEffectToLamp(voyager, _effect);
+                    var meta = Metadata.Get<LampData>(voyager.Serial);
+
+                    if (meta.Effect.Name == _effect.Name)
+                        LampEffectsWorker.ApplyEffectToLamp(voyager, _effect);
                 }
             }
         }
