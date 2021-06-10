@@ -21,10 +21,13 @@ namespace VoyagerController.ProjectManagement
     public class Project : MonoBehaviour
     {
         public const string VIDEOS_DIRECTORY = "videos";
-        private const string PROJECTS_DIRECTORY = "projects";
         public const string PROJECT_FILE = "project.dsprj";
+        private const string PROJECTS_DIRECTORY = "projects";
+        private const float AUTOSAVE_DELAY = 60.0f;
 
         private static Project _instance;
+
+        private static bool AutoSaveInitiated = false;
         
         [SerializeField] private string _version;
 
@@ -38,6 +41,34 @@ namespace VoyagerController.ProjectManagement
             ClearEffects();
             WorkspaceManager.Clear();
             VideoEffectRenderer.Stop();
+        }
+
+        #endregion
+
+        #region AutoSave
+
+        public static void AutoSave()
+        {
+            if (!ApplicationSettings.AutoSave || AutoSaveInitiated)
+            {
+                Debug.Log("Autosave already initiated");
+                return;
+            }
+
+            AutoSaveInitiated = true;
+
+            _instance.StartCoroutine(AutoSaveCoroutine());
+        }
+
+        public static IEnumerator AutoSaveCoroutine()
+        {
+            yield return new WaitForSeconds(AUTOSAVE_DELAY);
+
+            Save("Autosave", false);
+
+            Debug.Log("Saving.. ");
+
+            AutoSaveInitiated = false;
         }
 
         #endregion
@@ -61,6 +92,8 @@ namespace VoyagerController.ProjectManagement
                 json = JToken.Parse(json).ToString(); // To make json pretty! :)
 
                 File.WriteAllText(file, json, Encoding.UTF8);
+
+                Directory.SetLastWriteTime(path, DateTime.Now);
 
                 return project;
             }

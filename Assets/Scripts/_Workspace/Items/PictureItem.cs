@@ -1,4 +1,5 @@
 using UnityEngine;
+using VoyagerController.ProjectManagement;
 
 namespace VoyagerController.Workspace
 {
@@ -75,6 +76,7 @@ namespace VoyagerController.Workspace
         {
             if (!WorkspaceSelection.Contains(this)) return;
             SaveMapping();
+            Project.AutoSave();
         }
 
         private void SaveMapping()

@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 using VoyagerController.Effects;
 using VoyagerController.Mapping;
+using VoyagerController.ProjectManagement;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
@@ -75,6 +76,7 @@ namespace VoyagerController.UI
                     if (meta.Effect.Name == _effect.Name)
                         item.LampHandle.SetFps(value);
                 }
+                Project.AutoSave();
             }
         }
 
@@ -117,6 +119,7 @@ namespace VoyagerController.UI
                     if (meta.Effect.Name == _effect.Name)
                         LampEffectsWorker.ApplyEffectToLamp(voyager, _effect);
                 }
+                Project.AutoSave();
             }
         }
     }

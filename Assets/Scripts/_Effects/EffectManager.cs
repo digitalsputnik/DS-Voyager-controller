@@ -38,6 +38,17 @@ namespace VoyagerController.Effects
         public static string[] VideoPresets => _instance._videoPresets;
         public static string[] ImagePresets => _instance._imagePresets;
 
+        public static bool PresetsLoaded
+        {
+            get
+            {
+                if (_instance._effects.Count() - 1 == VideoPresets.Length + ImagePresets.Length)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
         public static void AddEffect(Effect effect)
         {
             if (_instance._effects.Any(p => p.Name == effect.Name)) return;

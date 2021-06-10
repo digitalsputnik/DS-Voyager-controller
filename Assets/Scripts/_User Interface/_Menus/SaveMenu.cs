@@ -52,7 +52,7 @@ namespace VoyagerController.UI
 
         private void ForceSave(string filename)
         {
-            if (Project.Save(filename) != null)
+            if (Project.Save(filename, false) != null)
                 GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
         }
 

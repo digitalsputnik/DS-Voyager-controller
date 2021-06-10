@@ -7,6 +7,7 @@ using DigitalSputnik.Voyager;
 using UnityEngine;
 using VoyagerController.Effects;
 using VoyagerController.Mapping;
+using VoyagerController.ProjectManagement;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
@@ -55,6 +56,8 @@ namespace VoyagerController.UI
                 });
                 _items.Add(item);
             }
+
+            Project.AutoSave();
         }
         
         private void ClearItems()
@@ -204,6 +207,8 @@ namespace VoyagerController.UI
             EffectMapper.EnterEffectMapping(effect, _applyToSelected);
             
             ApplicationState.Playmode.Value = GlobalPlaymode.Play;
+
+            Project.AutoSave();
         }
 
         private void ApplyEffectToAllLamps(Effect effect)
@@ -216,6 +221,8 @@ namespace VoyagerController.UI
             EffectMapper.EnterEffectMapping(effect, _applyToSelected);
             
             ApplicationState.Playmode.Value = GlobalPlaymode.Play;
+
+            Project.AutoSave();
         }
 
         private static IEnumerable<Effect> GetEffectsInOrder()

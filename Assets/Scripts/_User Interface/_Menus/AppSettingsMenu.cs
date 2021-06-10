@@ -21,7 +21,8 @@ namespace VoyagerController.UI
         
         [Header("Other")]
         [SerializeField] private Toggle _autoLoad = null;
-        
+        [SerializeField] private Toggle _autoSave = null;
+
         internal override void OnShow()
         {
             _identifyItsh.Value = ApplicationSettings.IdentificationColor;
@@ -37,8 +38,9 @@ namespace VoyagerController.UI
             _firmwareVersion.isOn = ApplicationSettings.ShowInfoFirmwareVersion;
 
             _autoLoad.isOn = ApplicationSettings.AutoLoad;
-            
-            
+            _autoSave.isOn = ApplicationSettings.AutoSave;
+
+
             _identifyItsh.OnValueChanged.AddListener(OnIdentifyColorPicked);
             _startColorItsh.OnValueChanged.AddListener(OnLampAddedToWorkspaceFirstTime);
             
@@ -52,6 +54,7 @@ namespace VoyagerController.UI
             _firmwareVersion.onValueChanged.AddListener(OnFirmwareVersionChanged);
             
             _autoLoad.onValueChanged.AddListener(OnAutoLoadChanged);
+            _autoSave.onValueChanged.AddListener(OnAutoSaveChanged);
         }
 
         internal override void OnHide()
@@ -69,6 +72,7 @@ namespace VoyagerController.UI
             _firmwareVersion.onValueChanged.RemoveListener(OnFirmwareVersionChanged);
             
             _autoLoad.onValueChanged.RemoveListener(OnAutoLoadChanged);
+            _autoSave.onValueChanged.RemoveListener(OnAutoSaveChanged);
         }
 
         private static void OnIdentifyColorPicked(Itshe itshe) => ApplicationSettings.IdentificationColor = itshe;
@@ -82,5 +86,6 @@ namespace VoyagerController.UI
         private static void OnIpAddressToggleChanged(bool value) => ApplicationSettings.ShowInfoIpAddress = value;
         private static void OnFirmwareVersionChanged(bool value) => ApplicationSettings.ShowInfoFirmwareVersion = value;
         private static void OnAutoLoadChanged(bool value) => ApplicationSettings.AutoLoad = value;
+        private static void OnAutoSaveChanged(bool value) => ApplicationSettings.AutoSave = value;
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerController.Effects;
+using VoyagerController.ProjectManagement;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
@@ -35,7 +36,8 @@ namespace VoyagerController.UI
             
             _canvasGroup.alpha = rendering.Any() ? 1.0f : 0.0f;
 
-            if (!rendering.Any()) return;
+            if (!rendering.Any()) 
+                return;
 
             var renderedSum = rendering.Sum(m => m.FrameBuffer.Count(f => f != null));
             var sum = rendering.Sum(m => m.ConfirmedFrames.Length);

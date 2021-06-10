@@ -7,6 +7,7 @@ using UnityEngine;
 using VoyagerController.Bluetooth;
 using VoyagerController.Effects;
 using VoyagerController.Mapping;
+using VoyagerController.ProjectManagement;
 
 namespace VoyagerController.Workspace
 {
@@ -262,6 +263,8 @@ namespace VoyagerController.Workspace
                 {
                     _meta.EffectMapping = EffectMapper.CalculateLampEffectMapping(this);
                 }
+
+                Project.AutoSave();
             }
         }
 

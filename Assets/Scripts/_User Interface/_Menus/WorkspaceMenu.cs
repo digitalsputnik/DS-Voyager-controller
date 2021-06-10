@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using VoyagerController.Bluetooth;
 using VoyagerController.Mapping;
+using VoyagerController.ProjectManagement;
 using VoyagerController.Serial;
 using VoyagerController.Workspace;
 
@@ -145,6 +146,8 @@ namespace VoyagerController.UI
             texture.Apply();
 
             WorkspaceManager.InstantiateItem<PictureItem>(texture);
+
+            Project.AutoSave();
         }
     }
 }

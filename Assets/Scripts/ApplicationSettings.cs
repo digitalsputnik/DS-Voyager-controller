@@ -27,7 +27,8 @@ namespace VoyagerController
         private const string SET_CLIENT_PASSWORD = "set_client_password";
 
         private const string AUTO_LOAD = "auto_load";
-        
+        private const string AUTO_SAVE = "auto_save";
+
         public static Itshe IdentificationColor
         {
             get
@@ -138,6 +139,12 @@ namespace VoyagerController
         {
             get => GetBool(AUTO_LOAD, true);
             set => SetBool(AUTO_LOAD, value);
+        }
+
+        public static bool AutoSave
+        {
+            get => GetBool(AUTO_SAVE, true);
+            set => SetBool(AUTO_SAVE, value);
         }
 
         private static void SetBool(string key, bool value)

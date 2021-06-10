@@ -89,7 +89,7 @@ Material:
     - _Resolution: 1
     - _SampleGI: 0
     - _Samples: 0
-    - _Saturation: 1
+    - _Saturation: 1.62
     - _Size: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

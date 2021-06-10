@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DigitalSputnik;
 using UnityEngine;
+using VoyagerController.Effects;
 using VoyagerController.UI;
 
 namespace VoyagerController.ProjectManagement
@@ -15,7 +16,7 @@ namespace VoyagerController.ProjectManagement
             if (HasAsked)
             {
                 if (ApplicationSettings.AutoLoad)
-                    LoadPreviousProject();
+                    StartCoroutine(LoadPreviousProject());
                 return;
             }
             
@@ -38,21 +39,23 @@ namespace VoyagerController.ProjectManagement
                     new Action[] { YesClicked, NoClicked });
         }
 
-        private static void YesClicked()
+        private void YesClicked()
         {
-            LoadPreviousProject();
+            StartCoroutine(LoadPreviousProject());
             ApplicationSettings.AutoLoad = true;
             SetLoadAsked();
         }
 
-        private static void NoClicked()
+        private void NoClicked()
         {
             ApplicationSettings.AutoLoad = false;
             SetLoadAsked();
         }
 
-        private static void LoadPreviousProject()
+        private static IEnumerator LoadPreviousProject()
         {
+            yield return new WaitUntil(() => EffectManager.PresetsLoaded);
+
             try
             {
                 Project.Load(GetPreviousProject());
