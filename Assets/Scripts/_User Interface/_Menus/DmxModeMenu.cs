@@ -5,6 +5,7 @@ using DigitalSputnik.Voyager;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerController.ProjectManagement;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
@@ -34,6 +35,8 @@ namespace VoyagerController.UI
                 var settings = _lampToSettings[lamp];
                 lamp.ActivateDmxMode(settings);
             }
+
+            Project.AutoSave();
         }
         
         public override void Start()
@@ -173,6 +176,8 @@ namespace VoyagerController.UI
 
                 channel += stack;
             }
+
+            Project.AutoSave();
         }
 
         private void SetLampInfo(VoyagerItem item, DmxSettings settings)

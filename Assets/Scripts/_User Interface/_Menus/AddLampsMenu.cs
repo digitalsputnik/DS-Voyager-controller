@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using VoyagerController.Bluetooth;
 using VoyagerController.Effects;
+using VoyagerController.ProjectManagement;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
@@ -117,6 +118,8 @@ namespace VoyagerController.UI
                 StartCoroutine(SelectAndSnapToLamp(voyagerItem));
                 
                 CloseMenuIfAllLampsAdded();
+
+                Project.AutoSave();
             }
         }
 

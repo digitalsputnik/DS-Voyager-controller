@@ -129,7 +129,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 2.6.118
+  bundleVersion: 2.7.1
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -154,11 +154,11 @@ PlayerSettings:
     iPhone: com.DigitalSputnik.DSVoyagercontroller
     tvOS: com.DS.LightGrade
   buildNumber:
-    Standalone: 616
-    iPhone: 2.6.118
+    Standalone: 701
+    iPhone: 2.6.119
     tvOS: 0
   overrideDefaultApplicationIdentifier: 0
-  AndroidBundleVersionCode: 616
+  AndroidBundleVersionCode: 701
   AndroidMinSdkVersion: 26
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

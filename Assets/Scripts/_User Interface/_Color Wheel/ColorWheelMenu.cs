@@ -1,6 +1,7 @@
 ﻿using DigitalSputnik.Colors;
 using UnityEngine;
 using UnityEngine.UI;
+using VoyagerController.ProjectManagement;
 
 namespace VoyagerController.UI
 {
@@ -41,6 +42,8 @@ namespace VoyagerController.UI
         {
             _approved = true;
             GetComponentInParent<InspectorMenuContainer>().ShowMenu(null);
+
+            Project.AutoSave();
         }
 
         public override void Start()

@@ -23,7 +23,7 @@ namespace VoyagerController.ProjectManagement
         public const string VIDEOS_DIRECTORY = "videos";
         public const string PROJECT_FILE = "project.dsprj";
         private const string PROJECTS_DIRECTORY = "projects";
-        private const float AUTOSAVE_DELAY = 60.0f;
+        private const float AUTOSAVE_DELAY = 15.0f;
 
         private static Project _instance;
 
@@ -51,7 +51,7 @@ namespace VoyagerController.ProjectManagement
         {
             if (!ApplicationSettings.AutoSave || AutoSaveInitiated)
             {
-                Debug.Log("Autosave already initiated");
+                Debug.Log("Autosave already initiated or disabled");
                 return;
             }
 
@@ -65,8 +65,6 @@ namespace VoyagerController.ProjectManagement
             yield return new WaitForSeconds(AUTOSAVE_DELAY);
 
             Save("Autosave", false);
-
-            Debug.Log("Saving.. ");
 
             AutoSaveInitiated = false;
         }
@@ -165,6 +163,9 @@ namespace VoyagerController.ProjectManagement
         #region Load
         public static ProjectData Load(string name)
         {
+            ClearWorkspace();
+            ClearEffects();
+
             var path = Path.Combine(ProjectsDirectory, name);
 
             if (!Directory.Exists(path)) 
@@ -179,10 +180,7 @@ namespace VoyagerController.ProjectManagement
             var settings = ConstructJsonSettings(videos);
             var project = JsonConvert.DeserializeObject<ProjectData>(json, settings);
             
-            ClearWorkspace();
-            ClearEffects();
-            
-            LoadProjectData(project);
+            _instance.StartCoroutine(LoadProjectData(project));
 
             return project;
         }
@@ -204,10 +202,12 @@ namespace VoyagerController.ProjectManagement
             }
         }
 
-        private static void LoadProjectData(ProjectData data)
+        private static IEnumerator LoadProjectData(ProjectData data)
         {
             WorkspaceManager.Clear();
             VideoEffectRenderer.Stop();
+
+            yield return new WaitForFixedUpdate();
 
             foreach (var voyagerLamp in data.Lamps)
             {
