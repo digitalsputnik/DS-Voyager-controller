@@ -42,20 +42,10 @@ namespace VoyagerController.Effects
         {
             get
             {
-                if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
-                {
-                    if (_instance._effects.Count() == VideoPresets.Length + ImagePresets.Length)
-                        return true;
-                    else
-                        return false;
-                }
+                if (_instance._effects.Where(e => e is ImageEffect || e is VideoEffect).Count() == VideoPresets.Length + ImagePresets.Length)
+                    return true;
                 else
-                {
-                    if (_instance._effects.Count() - 1 == VideoPresets.Length + ImagePresets.Length)
-                        return true;
-                    else
-                        return false;
-                }
+                    return false;
             }
         }
 
