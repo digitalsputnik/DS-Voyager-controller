@@ -42,7 +42,7 @@ namespace VoyagerController.Effects
         {
             get
             {
-                if (Application.platform == RuntimePlatform.Android)
+                if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
                 {
                     if (_instance._effects.Count() == VideoPresets.Length + ImagePresets.Length)
                         return true;
