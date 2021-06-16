@@ -150,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   button: {fileID: 2580529056073327560}
   nameText: {fileID: 2948902252359830008}
-  lampsText: {fileID: 2948902251852088932}
+  dateText: {fileID: 2948902251852088932}
 --- !u!1 &2580529057131261421
 GameObject:
   m_ObjectHideFlags: 0
@@ -353,7 +353,7 @@ PrefabInstance:
     - target: {fileID: 802620914053610862, guid: 0c2615ce77e7f493a9998d23cd0e9155,
         type: 3}
       propertyPath: m_Name
-      value: Lamps
+      value: Date
       objectReference: {fileID: 0}
     - target: {fileID: 802620914053610863, guid: 0c2615ce77e7f493a9998d23cd0e9155,
         type: 3}

@@ -23,7 +23,6 @@ namespace VoyagerController.ProjectManagement
         public const string VIDEOS_DIRECTORY = "videos";
         public const string PROJECT_FILE = "project.dsprj";
         private const string PROJECTS_DIRECTORY = "projects";
-        private const float AUTOSAVE_DELAY = 15.0f;
 
         private static Project _instance;
 
@@ -62,7 +61,7 @@ namespace VoyagerController.ProjectManagement
 
         public static IEnumerator AutoSaveCoroutine()
         {
-            yield return new WaitForSeconds(AUTOSAVE_DELAY);
+            yield return new WaitForSeconds(ApplicationSettings.AutoSaveDelay);
 
             Save("Autosave", false);
 

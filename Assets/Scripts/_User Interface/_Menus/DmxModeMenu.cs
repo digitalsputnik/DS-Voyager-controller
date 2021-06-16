@@ -176,8 +176,6 @@ namespace VoyagerController.UI
 
                 channel += stack;
             }
-
-            Project.AutoSave();
         }
 
         private void SetLampInfo(VoyagerItem item, DmxSettings settings)

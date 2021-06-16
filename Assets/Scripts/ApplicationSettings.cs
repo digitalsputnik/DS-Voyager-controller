@@ -29,6 +29,8 @@ namespace VoyagerController
         private const string AUTO_LOAD = "auto_load";
         private const string AUTO_SAVE = "auto_save";
 
+        private const string AUTO_SAVE_DELAY = "auto_save_delay";
+
         public static Itshe IdentificationColor
         {
             get
@@ -147,6 +149,12 @@ namespace VoyagerController
             set => SetBool(AUTO_SAVE, value);
         }
 
+        public static int AutoSaveDelay
+        {
+            get => GetInt(AUTO_SAVE_DELAY, 15);
+            set => SetInt(AUTO_SAVE_DELAY, value);
+        }
+
         private static void SetBool(string key, bool value)
         {
             PlayerPrefs.SetInt(key, value ? 1 : 0);
@@ -167,6 +175,15 @@ namespace VoyagerController
         private static string GetString(string key, string defaultValue)
         {
             return !PlayerPrefs.HasKey(key) ? defaultValue : PlayerPrefs.GetString(key);
+        }
+        private static void SetInt(string key, int value)
+        {
+            PlayerPrefs.SetInt(key, value);
+        }
+
+        private static int GetInt(string key, int defaultValue)
+        {
+            return !PlayerPrefs.HasKey(key) ? defaultValue : PlayerPrefs.GetInt(key);
         }
     }
 }

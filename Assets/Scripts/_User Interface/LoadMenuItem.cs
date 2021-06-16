@@ -15,7 +15,7 @@ namespace VoyagerController.UI
         public string fileName => Path.GetFileName(path);
 
         [SerializeField] Text nameText = null;
-        [SerializeField] Text lampsText = null;
+        [SerializeField] Text dateText = null;
 
         string path;
 
@@ -55,7 +55,7 @@ namespace VoyagerController.UI
                         Debug.Log("lamps are null " + path);
 
                     nameText.text = fileName;
-                    lampsText.text = ""; //lamps != null ? $"LAMPS: {lamps.Count()}" : $"LAMPS: null";
+                    dateText.text = Directory.GetLastWriteTimeUtc(path).ToString(); //lamps != null ? $"LAMPS: {lamps.Count()}" : $"LAMPS: null";
                     GetComponent<Button>().interactable = true;
                 });
             }
@@ -65,7 +65,7 @@ namespace VoyagerController.UI
                 {
                     Debug.LogError(path + " - " + ex, this);
                     nameText.text = Path.GetFileName(path);
-                    lampsText.text = ex.Message.ToUpper();
+                    dateText.text = ex.Message.ToUpper();
                 });
             }
         }
