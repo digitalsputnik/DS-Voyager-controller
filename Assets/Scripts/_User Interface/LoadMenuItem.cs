@@ -55,7 +55,7 @@ namespace VoyagerController.UI
                         Debug.Log("lamps are null " + path);
 
                     nameText.text = fileName;
-                    dateText.text = Directory.GetLastWriteTimeUtc(path).ToString(); //lamps != null ? $"LAMPS: {lamps.Count()}" : $"LAMPS: null";
+                    dateText.text = Directory.GetLastWriteTime(path).ToString(); //lamps != null ? $"LAMPS: {lamps.Count()}" : $"LAMPS: null";
                     GetComponent<Button>().interactable = true;
                 });
             }

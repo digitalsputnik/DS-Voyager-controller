@@ -59,6 +59,7 @@ namespace VoyagerController.UI
         public void Export()
         {
             Project.Export(filenameField.text, OnExportReady);
+            Project.AutoSave();
         }
 
         void OnExportReady(bool success, string path)

@@ -40,6 +40,7 @@ namespace VoyagerController.ProjectManagement
             ClearEffects();
             WorkspaceManager.Clear();
             VideoEffectRenderer.Stop();
+            AutoSave();
         }
 
         #endregion
