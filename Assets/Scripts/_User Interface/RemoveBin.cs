@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using VoyagerController.Mapping;
+using VoyagerController.ProjectManagement;
 using VoyagerController.Workspace;
 
 namespace VoyagerController.UI
@@ -37,7 +38,8 @@ namespace VoyagerController.UI
                     WorkspaceSelection.Clear();
                 }
             }
-            
+
+            Project.AutoSave();
             gameObject.SetActive(false);
         }
 
