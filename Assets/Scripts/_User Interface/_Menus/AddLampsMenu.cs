@@ -181,10 +181,12 @@ namespace VoyagerController.UI
         
         private static bool LampConnected(Lamp lamp)
         {
-            if (lamp is VoyagerLamp voyager)
+            /*if (lamp is VoyagerLamp voyager)
                 return voyager.Connected && !voyager.Passive && voyager.DmxPollReceived;
             
-            return lamp.Connected;
+            return lamp.Connected;*/
+
+            return true;
         }
 
         private static bool LessThanFiveBluetoothLampsOnWorkspace()
