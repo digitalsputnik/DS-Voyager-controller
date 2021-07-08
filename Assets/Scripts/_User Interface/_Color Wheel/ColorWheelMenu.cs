@@ -26,7 +26,7 @@ namespace VoyagerController.UI
 
         public void SetItsh(Itshe itshe)
         {
-            _beginning = itshe;
+            _beginning = new Itshe(itshe.I, itshe.T, itshe.S, itshe.H, itshe.E);
             _itshe = itshe;
 
             _intensitySlider.SetValue(itshe.I);
@@ -83,7 +83,7 @@ namespace VoyagerController.UI
         private void UpdateLoop()
         {
             if (!_changed) return;
-            
+
             ColorWheelManager.ValuePicked(_itshe);
             _changed = false;
         }

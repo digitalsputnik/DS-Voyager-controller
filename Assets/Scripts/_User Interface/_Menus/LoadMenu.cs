@@ -71,6 +71,8 @@ namespace VoyagerController.UI
         {
             if (success)
                 DisplayItem(path);
+
+            Project.Load(Path.GetFileName(path));
         }
 
         private void DisplayAllItems()

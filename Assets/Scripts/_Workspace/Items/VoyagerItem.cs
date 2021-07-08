@@ -398,9 +398,10 @@ namespace VoyagerController.Workspace
         private void UpdateText()
         {
             var info = new List<string>();
+            var order = "";
 
             if (ShowOrderNumber && Order > 0)
-                info.Add(Order.ToString());
+                order = Order.ToString() + ". ";
             
             info.Add(LampHandle.Serial);
             
@@ -410,7 +411,7 @@ namespace VoyagerController.Workspace
             if (!string.IsNullOrEmpty(Suffix))
                 info.Add(Suffix);
 
-            _nameText.text = string.Join(", ", info);
+            _nameText.text = order + string.Join(", ", info);
 
             if (LampHandle.Endpoint is BluetoothEndPoint)
                 _nameText.text = "Bluetooth " + _nameText.text;
