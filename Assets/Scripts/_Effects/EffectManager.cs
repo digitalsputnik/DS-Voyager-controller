@@ -94,7 +94,7 @@ namespace VoyagerController.Effects
 
         public static bool IsEffectPreset(Effect effect)
         {
-            return _instance._videoPresets.Any(e => e != effect.Name) && _instance._imagePresets.Any(e => e != effect.Name);
+            return _instance._videoPresets.Any(e => e == effect.Name) || _instance._imagePresets.Any(e => e == effect.Name) || effect.Name == "Spout" || effect.Name == "Syphon";
         }
         
         public static void Clear()

@@ -5358,7 +5358,7 @@ PrefabInstance:
     - target: {fileID: 1950901822537843670, guid: 2b53f6402f71643cf8de86b447b449ae,
         type: 3}
       propertyPath: m_Text
-      value: PER LAMP
+      value: RGBT
       objectReference: {fileID: 0}
     - target: {fileID: 1950901823962006842, guid: 2b53f6402f71643cf8de86b447b449ae,
         type: 3}
@@ -28716,7 +28716,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -33735,6 +33735,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 400
       objectReference: {fileID: 0}
+    - target: {fileID: 1950901822537843670, guid: 2b53f6402f71643cf8de86b447b449ae,
+        type: 3}
+      propertyPath: m_Text
+      value: PER LAMP
+      objectReference: {fileID: 0}
     - target: {fileID: 1950901823962006842, guid: 2b53f6402f71643cf8de86b447b449ae,
         type: 3}
       propertyPath: m_Text
@@ -35545,7 +35550,7 @@ PrefabInstance:
     - target: {fileID: 1950901822537843670, guid: 2b53f6402f71643cf8de86b447b449ae,
         type: 3}
       propertyPath: m_Text
-      value: PER LAMP
+      value: Art-Net
       objectReference: {fileID: 0}
     - target: {fileID: 1950901823962006842, guid: 2b53f6402f71643cf8de86b447b449ae,
         type: 3}
@@ -37241,8 +37246,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 70750426}
   m_HandleRect: {fileID: 70750425}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.64548415
+  m_Value: 1.0000005
+  m_Size: 0.8430839
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -39070,7 +39075,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
