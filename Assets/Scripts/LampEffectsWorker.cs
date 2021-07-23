@@ -70,6 +70,7 @@ namespace VoyagerController
                 
                 if (_confirmingLamps.Contains(l)) return false;
                 if (!(meta.Effect is VideoEffect || meta.Effect is ImageEffect)) return false;
+                if (!l.Connected) return false;
 
                 return meta.TotalMissingFrames > 0;
             });
