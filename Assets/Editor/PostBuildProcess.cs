@@ -8,6 +8,7 @@ using UnityEditor.iOS.Xcode;
 public static class PostBuildProcess
 {
 	private const string BLUETOOTH_DESCRIPTION = "This application uses bluetooth to find nearby lamps.";
+	private const string LOCAL_NETWORK_DESCRIPTION = "This application uses local network to find lamps.";
 	
 #if UNITY_IOS
 	[PostProcessBuild]
@@ -18,6 +19,7 @@ public static class PostBuildProcess
 		propertyList.ReadFromFile(plistPath);
 		propertyList.root.SetString("NSBluetoothAlwaysUsageDescription", BLUETOOTH_DESCRIPTION);
 		propertyList.root.SetString("NSBluetoothPeripheralUsageDescription", BLUETOOTH_DESCRIPTION);
+		propertyList.root.SetString("NSLocalNetworkUsageDescription", LOCAL_NETWORK_DESCRIPTION);
 		propertyList.WriteToFile(plistPath);
 	}
 #endif
