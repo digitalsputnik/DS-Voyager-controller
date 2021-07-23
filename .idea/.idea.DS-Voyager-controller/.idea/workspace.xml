@@ -1,33 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" afterDir="false" />
+    <list default="true" id="e3599f6d-0f63-4fc5-b571-4bb1234f244f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android/NGCallbackHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android/NGCallbackHelper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android/NGCallbackHelper.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android/NGCallbackHelper.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android/NGMediaReceiveCallbackAndroid.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android/NGMediaReceiveCallbackAndroid.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android/NGMediaReceiveCallbackAndroid.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android/NGMediaReceiveCallbackAndroid.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android/NGPermissionCallbackAndroid.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android/NGPermissionCallbackAndroid.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android/NGPermissionCallbackAndroid.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android/NGPermissionCallbackAndroid.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android/NativeGallery.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Android/NativeGallery.jar.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Editor/NGPostProcessBuild.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Editor/NGPostProcessBuild.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/NativeGallery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/NativeGallery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/NativeGallery.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/NativeGallery.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/README.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/README.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/README.txt.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/README.txt.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/iOS.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/iOS.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/iOS/NGMediaReceiveCallbackiOS.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/iOS/NGMediaReceiveCallbackiOS.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/iOS/NGMediaReceiveCallbackiOS.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/iOS/NGMediaReceiveCallbackiOS.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/iOS/NGMediaSaveCallbackiOS.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/iOS/NGMediaSaveCallbackiOS.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/iOS/NGMediaSaveCallbackiOS.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/iOS/NGMediaSaveCallbackiOS.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/iOS/NativeGallery.mm" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/iOS/NativeGallery.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/iOS/NativeGallery.mm.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/iOS/NativeGallery.mm.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothInterface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Workspace.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Voyager/Runtime/Plugins/DigitalSputnik.Voyager.dll" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +25,8 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/Vendor/Plugins/crosstales/FileBrowser/Editor/Util/BuildPostprocessor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSConnectionSession.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -61,7 +41,6 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/LoadMenuItem.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/IntField.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/GlobalSettings.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/RenderLoadingBar.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/ItsheConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/PictureItem.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" />
@@ -85,12 +64,8 @@
       <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/BluetoothAccess.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectItem.cs" />
       <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IosConnectionSession.cs" />
-      <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSConnectionSession.cs" />
-      <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothListener.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Project.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/Texture2DConverter.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/EffectConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/InspectorMenuContainer.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/SyphonEffect.cs" />
@@ -101,6 +76,11 @@
       <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothInterface.cs" />
       <option value="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Editor/NGPostProcessBuild.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs" />
+      <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothListener.cs" />
+      <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSConnectionSession.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/RenderLoadingBar.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
