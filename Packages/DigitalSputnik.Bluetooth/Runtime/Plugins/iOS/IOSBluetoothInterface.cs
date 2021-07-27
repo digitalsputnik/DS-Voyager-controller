@@ -177,9 +177,8 @@ namespace DigitalSputnik.Ble
         public void WriteToCharacteristic(string id, string characteristic, byte[] data)
         {
             var encoded = Convert.ToBase64String(data);
-            var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
-            
             data = Encoding.UTF8.GetBytes(encoded);
+            var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
             DebugConsole.LogInfo($"Writing to characteristics: {Encoding.UTF8.GetString(data)}");
             _iOSWriteToCharacteristic(id.ToUpper(), characteristic.ToUpper(), handle.AddrOfPinnedObject(), data.Length);
             handle.Free();

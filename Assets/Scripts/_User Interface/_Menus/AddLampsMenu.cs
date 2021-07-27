@@ -164,10 +164,10 @@ namespace VoyagerController.UI
 
         private static bool LampValidToAdd(Lamp lamp)
         {
-            if (lamp.Endpoint is LampNetworkEndPoint)
-                return !WorkspaceContainsLamp(lamp) && LampConnected(lamp);
+            if (lamp.Endpoint is BluetoothEndPoint)
+                return !WorkspaceContainsLamp(lamp);
 
-            return !WorkspaceContainsLamp(lamp);
+            return !WorkspaceContainsLamp(lamp) && LampConnected(lamp);
         }
         
         private static bool WorkspaceContainsLamp(Lamp lamp)
@@ -182,7 +182,7 @@ namespace VoyagerController.UI
         private static bool LampConnected(Lamp lamp)
         {
             if (lamp is VoyagerLamp voyager)
-                return voyager.Connected && !voyager.Passive && voyager.DmxPollRecieved;
+                return voyager.Connected && !voyager.Passive && voyager.DmxPollReceived;
             
             return lamp.Connected;
         }
