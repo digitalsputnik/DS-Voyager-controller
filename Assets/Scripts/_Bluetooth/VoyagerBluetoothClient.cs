@@ -30,8 +30,7 @@ namespace VoyagerController.Bluetooth
         private ClientState _state = ClientState.WaitingForInitialization;
         private double _initializedTime = 0.0;
         private double _lastScanStarted = 0.0;
-        private bool _connecting = false;
-
+        
         private BleMessageHandler OnBleMessageWithoutOp;
         public override Type EndpointType => typeof(BluetoothEndPoint);
 
@@ -76,8 +75,10 @@ namespace VoyagerController.Bluetooth
                             break;
                         case RuntimePlatform.IPhonePlayer:
                         {
-                            var peripheral = new PeripheralInfo(endPoint.Id, voyagerItem.LampHandle.Serial, 0, 0.0f);
-                            _connectionsQueue.Enqueue(peripheral);
+                            BluetoothAccess.Connect(endPoint.Id,
+                                SetupValidatedDevice,
+                                HandleFailedConnection,
+                                HandleDisconnection);
                             break;
                         }
                     }
@@ -99,7 +100,6 @@ namespace VoyagerController.Bluetooth
             /*if (lamp.Endpoint is LampNetworkEndPoint && lamp.Connected)
             {
                 var connection = _connections.FirstOrDefault(c => c.Lamp == lamp);
-
                 if (connection != null)
                     BluetoothAccess.Disconnect(connection.Id);
             }*/
@@ -199,11 +199,9 @@ namespace VoyagerController.Bluetooth
             if (_connectionsQueue.Count == 0)
                 return;
 
-            if (Application.platform == RuntimePlatform.IPhonePlayer && _connecting) return;
-            
-            _connecting = true;
+            var peripheral = _connectionsQueue.Dequeue();
 
-            MainThread.Dispatch(() => ValidateScannedDeviceAndConnect(_connectionsQueue.Dequeue()));
+            MainThread.Dispatch(() => ValidateScannedDeviceAndConnect(peripheral));
         }
 
         private enum ClientState
@@ -218,12 +216,8 @@ namespace VoyagerController.Bluetooth
             // The lamp is already found from network and doesn't need to be added through bluetooth.
 
             var updLamp = LampManager.Instance.GetLampWithSerial<VoyagerLamp>(peripheral.Name);
-            if (updLamp != null && updLamp.Connected)
-            {
-                _connecting = false;
-                return;
-            }
-            
+            if (updLamp != null && updLamp.Connected) return;
+
             DebugConsole.LogInfo($"Connecting - {peripheral.Name}");
             
             _connectingDevices.Add(peripheral);
@@ -265,8 +259,6 @@ namespace VoyagerController.Bluetooth
 
         private void ScannedCharacteristicsToApprovedConnection(PeripheralAccess access, string service, string[] characteristics)
         {
-            _connecting = false;
-            
             var connection = GetConnectionWithId(access.Id);
             connection.Lamp.Connected = true;
             connection.ConnectionState = ConnectionState.Connected;
@@ -276,8 +268,6 @@ namespace VoyagerController.Bluetooth
 
         private void HandleFailedConnection(PeripheralInfo info, string error)
         {
-            _connecting = false;
-            
             DebugConsole.LogInfo("Failed Connection - " + info.Name);
 
             var peripheral = _connectingDevices.FirstOrDefault(l => l.Id == info.Id);
@@ -299,8 +289,6 @@ namespace VoyagerController.Bluetooth
 
         private void HandleDisconnection(PeripheralInfo info, string error)
         {
-            _connecting = false;
-            
             DebugConsole.LogInfo("Disconnected - " + info.Name);
 
             var peripheral = _connectingDevices.FirstOrDefault(l => l.Id == info.Id);
