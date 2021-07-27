@@ -508,7 +508,7 @@ namespace VoyagerController.Bluetooth
         {
             //TODO check if psk encryption is supported on lamp, based on firmware version 
 
-            if (mode == NetworkMode.ClientPSK)
+            if (mode == NetworkMode.ClientPSK && password.Length != 0)
                 password = SecurityUtils.WPA_PSK(ssid, password);
             
             var packet = new NetworkModeRequestPacket(voyager.Serial, mode, ssid, password);
