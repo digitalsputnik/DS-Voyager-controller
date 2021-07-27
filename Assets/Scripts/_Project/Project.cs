@@ -137,8 +137,11 @@ namespace VoyagerController.ProjectManagement
 
                 var name = Path.GetFileName(videoEffect.Video.Path);
                 var destination = Path.Combine(videosPath, name);
-                
-                File.Copy(videoEffect.Video.Path, destination);
+
+                if (!File.Exists(destination))
+                    File.Copy(videoEffect.Video.Path, destination);
+                else
+                    Debug.Log("Video: " + name + " already exists in project");
 
                 // videoEffect.Video.Path = destination;
             }

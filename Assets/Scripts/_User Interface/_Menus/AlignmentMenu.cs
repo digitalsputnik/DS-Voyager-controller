@@ -151,17 +151,19 @@ namespace VoyagerController.UI
             foreach (var item in WorkspaceSelection.GetSelected<VoyagerItem>().ToList())
             {
                 WorkspaceSelection.DeselectItem(item);
-                
+
                 var position = GetPosition(item);
                 var scale = GetScale(item).x;
-                var rotation = rotations.OrderBy(x => math.abs(GetRotation(item).z - x)).First();
+
+                var currentRotation = (int) GetRotation(item).z;
+                var newRotation = rotations.OrderBy(x => math.abs(currentRotation - x)).First();
 
                 var meta = Metadata.Get<LampData>(item.LampHandle.Serial);
                 
                 var mapping = new WorkspaceMapping
                 {
                     Position = new[] { position.x, position.y },
-                    Rotation = rotation,
+                    Rotation = newRotation,
                     Scale = scale
                 };
 
