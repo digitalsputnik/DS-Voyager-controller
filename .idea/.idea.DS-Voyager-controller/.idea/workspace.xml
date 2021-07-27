@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e3599f6d-0f63-4fc5-b571-4bb1234f244f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/riderModule.iml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/riderModule.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/indexLayout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/shadercompiler-UnityShaderCompiler.exe0.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/shadercompiler-UnityShaderCompiler.exe0.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logs/shadercompiler-UnityShaderCompiler.exe0.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothInterface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothListener.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothListener.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,9 +26,9 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/Vendor/Plugins/crosstales/FileBrowser/Editor/Util/BuildPostprocessor.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSConnectionSession.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Vendor/Plugins/crosstales/FileBrowser/Editor/Util/BuildPostprocessor.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -72,15 +74,15 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationSettings.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AppSettingsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/AutoLoad.cs" />
-      <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothInterface.cs" />
       <option value="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Editor/NGPostProcessBuild.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs" />
-      <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothListener.cs" />
       <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSConnectionSession.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/ApplicationManager.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/RenderLoadingBar.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/LampEffectsWorker.cs" />
+      <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothListener.cs" />
+      <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothInterface.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -119,7 +121,6 @@
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
-      <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
       </option>
@@ -129,7 +130,6 @@
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
-      <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
       </option>
@@ -215,6 +215,7 @@
       <workItem from="1623051340230" duration="1962000" />
       <workItem from="1627029813112" duration="421000" />
       <workItem from="1627048910198" duration="59000" />
+      <workItem from="1627378190790" duration="1052000" />
     </task>
     <servers />
   </component>
