@@ -28,7 +28,7 @@ namespace VoyagerController.UI
 
         private void Update()
         {
-            if (_send && Time.time - _timestamp > 0.16f)
+            if (_send && Time.time - _timestamp > 0.5f)
             {
                 foreach (var lamp in WorkspaceSelection.GetSelected<VoyagerItem>())
                 {
