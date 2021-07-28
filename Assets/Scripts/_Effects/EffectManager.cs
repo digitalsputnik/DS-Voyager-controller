@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,12 @@ namespace VoyagerController.Effects
     {
         #region Singleton
         private static EffectManager _instance;
+
+        public static EffectManager Instance
+        {
+            get => _instance;
+        }
+
         private void Awake()
         {
             if (_instance == null)
@@ -64,6 +71,13 @@ namespace VoyagerController.Effects
             Destroy(effect.Meta.Thumbnail);
             _instance._effects.Remove(effect);
             OnEffectRemoved?.Invoke(effect);
+        }
+
+        public IEnumerator WaitForEffect(string effectName, LampData meta)
+        {
+            yield return new WaitUntil(() => GetEffectWithName(effectName) != null);
+
+            meta.Effect = GetEffectWithName(effectName);
         }
 
         internal static void InvokeEffectModified(Effect effect) => OnEffectModified?.Invoke(effect);

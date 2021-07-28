@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using DigitalSputnik.Colors;
 using Newtonsoft.Json;
@@ -58,10 +59,12 @@ namespace VoyagerController.ProjectManagement
             for (var i = 0; i < confirmed.Length; i++)
                 confirmed[i] = data.ConfirmedFrames[i] == '1';
 
+            var effect = EffectManager.GetEffectWithName(data.Effect);
+
             var meta = new LampData
             {
                 Discovered = data.Discovered,
-                Effect = EffectManager.GetEffectWithName(data.Effect),
+                Effect = effect,
                 EffectMapping = data.EffectMapping,
                 InWorkspace = data.InWorkspace,
                 WorkspaceMapping = data.WorkspaceMapping,
@@ -73,7 +76,10 @@ namespace VoyagerController.ProjectManagement
                 Rendered = data.Rendered,
                 FrameBuffer = data.FrameBuffer
             };
-            
+
+            if (effect == null)
+                EffectManager.Instance.StartCoroutine(EffectManager.Instance.WaitForEffect(data.Effect, meta));
+
             return meta;
         }
     }
