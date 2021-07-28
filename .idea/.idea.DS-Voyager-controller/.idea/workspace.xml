@@ -23,7 +23,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/EffectSettingsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/VoyagerLampConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/EffectMappingMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/LampMetadataConverter.cs" />
@@ -33,7 +32,6 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/LoadMenuItem.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/IntField.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/GlobalSettings.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/RenderLoadingBar.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/ItsheConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Workspace/Items/PictureItem.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AlignmentMenu.cs" />
@@ -74,6 +72,8 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/EffectManager.cs" />
       <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothInterface.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/RenderLoadingBar.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/IdentifyLamps.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -207,6 +207,7 @@
       <workItem from="1623051340230" duration="1962000" />
       <workItem from="1626778388298" duration="951000" />
       <workItem from="1627393825994" duration="1316000" />
+      <workItem from="1627462200117" duration="715000" />
     </task>
     <servers />
   </component>

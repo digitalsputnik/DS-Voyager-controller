@@ -77,14 +77,21 @@ namespace VoyagerController.UI
 
         private void DisplayAllItems()
         {
-            var projPath = Project.ProjectsDirectory;
-            var projects = Directory.GetDirectories(projPath);
-
-            foreach (var project in projects)
+            foreach (var project in GetProjectsInOrder())
             {
                 if (Directory.Exists(project))
                     DisplayItem(project);
             }
+        }
+        
+        private static IEnumerable<string> GetProjectsInOrder()
+        {
+            var projPath = Project.ProjectsDirectory;
+            var projects = Directory.GetDirectories(projPath);
+
+            return projects
+                .OrderByDescending(p => p.ToUpper() == "AUTOLOAD")
+                .ToList();
         }
 
         private void DisplayItem(string project)
