@@ -25,7 +25,14 @@ namespace VoyagerController.UI
             UpdateInterface();
         }
 
-        public void Remove() => EffectManager.RemoveEffect(_effect);
+        public void Remove()
+        {
+            DialogBox.Show(
+                "Are you sure?",
+                "Are you sure you want to delete the effect?",
+                new[] {"YES", "CANCEL"},
+                new Action[] {() => EffectManager.RemoveEffect(_effect), null});
+        }
 
         public void Select() => _action?.Invoke();
 

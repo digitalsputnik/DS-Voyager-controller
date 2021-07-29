@@ -25,6 +25,9 @@ namespace VoyagerController.Rendering
             if (Metadata.Get<LampData>(voyager.Serial).Effect is ImageEffect effect)
             {
                 var image = GetImageWithSettings(effect);
+
+                if (image == null) return;
+                
                 var coords = TextureExtensions.MapLampToVideoCoords(voyager, image);
                 var rgb =  TextureExtensions.CoordsToColors(coords.ToArray(), image).ToRgbArray();
                 LampEffectsWorker.ApplyVideoFrameToVoyager(voyager, 0, rgb);
@@ -35,6 +38,9 @@ namespace VoyagerController.Rendering
         private static Texture2D GetImageWithSettings(ImageEffect effect)
         {
             var image = effect.ImageTexture;
+
+            if (image == null) return null;
+            
             var render = new RenderTexture(image.width, image.height, 32);
             ShaderUtils.ApplyEffectToMaterial(_instance._material, effect);
             var prevActive = RenderTexture.active;
