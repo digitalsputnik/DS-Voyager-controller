@@ -17,7 +17,8 @@ namespace VoyagerController.UI
         [SerializeField] private float _bleDuration = 0.3f;
 
         private bool _send;
-        private float _timestamp;
+        private float _timestampBle;
+        private float _timestampNet;
 
         private void Start()
         {
@@ -28,16 +29,23 @@ namespace VoyagerController.UI
 
         private void Update()
         {
-            if (_send && Time.time - _timestamp > 0.5f)
+            foreach (var lamp in WorkspaceSelection.GetSelected<VoyagerItem>())
             {
-                foreach (var lamp in WorkspaceSelection.GetSelected<VoyagerItem>())
+                if (_send && Time.time - _timestampBle > _bleDuration / 2.0f - 0.005)
+                {
+                    if (lamp.LampHandle.Endpoint is BluetoothEndPoint)
+                        lamp.LampHandle.OverridePixels(ApplicationSettings.IdentificationColor, _bleDuration);
+
+                    _timestampBle = Time.deltaTime;
+                }
+
+                if (_send && Time.time - _timestampNet > _networkDuration / 2.0f - 0.005)
                 {
                     if (lamp.LampHandle.Endpoint is LampNetworkEndPoint)
                         lamp.LampHandle.OverridePixels(ApplicationSettings.IdentificationColor, _networkDuration);
-                    else
-                        lamp.LampHandle.OverridePixels(ApplicationSettings.IdentificationColor, _bleDuration);
+
+                    _timestampNet = Time.deltaTime;
                 }
-                _timestamp = Time.time;
             }
         }
 
