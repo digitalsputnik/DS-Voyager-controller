@@ -72,6 +72,7 @@
             <e p="WorkspaceMapping.cs" t="Include" />
           </e>
           <e p="_Project" t="Include">
+            <e p="AutoLoad.cs" t="Include" />
             <e p="Converters" t="Include">
               <e p="EffectConverter.cs" t="Include" />
               <e p="EffectMappingConverter.cs" t="Include" />
@@ -144,6 +145,9 @@
               <e p="SetEffectMenu.cs" t="Include" />
               <e p="SetupMenu.cs" t="Include" />
               <e p="WorkspaceMenu.cs" t="Include" />
+            </e>
+            <e p="_New" t="Include">
+              <e p="EffectMenu.cs" t="Include" />
             </e>
             <e p="AddLampItem.cs" t="Include" />
             <e p="Background.cs" t="Include" />
@@ -314,6 +318,56 @@
             </e>
             <e p="License.txt" t="Include" />
             <e p="ReadMe.txt" t="Include" />
+          </e>
+          <e p="LunarConsole" t="Include">
+            <e p="Editor" t="Include">
+              <e p="AndroidPlugin.cs" t="Include" />
+              <e p="Autorun.cs" t="Include" />
+              <e p="BuildPostprocessor.cs" t="Include" />
+              <e p="Compatibility.cs" t="Include" />
+              <e p="EditorConstants.cs" t="Include" />
+              <e p="EditorHelper.cs" t="Include" />
+              <e p="Installer.cs" t="Include" />
+              <e p="Legacy" t="Include">
+                <e p="LunarConsoleLegacyActionsEditor.cs" t="Include" />
+              </e>
+              <e p="Log.cs" t="Include" />
+              <e p="LunarConsoleActionEditor.cs" t="Include" />
+              <e p="LunarConsoleEditor.cs" t="Include" />
+              <e p="LunarConsoleEditorAnalytics.cs" t="Include" />
+              <e p="LunarConsoleHttpClient.cs" t="Include" />
+              <e p="MenuItems.cs" t="Include" />
+              <e p="SimpleJSON.cs" t="Include" />
+              <e p="UI" t="Include">
+                <e p="ActionsAndVariablesWindow.cs" t="Include" />
+              </e>
+              <e p="Updater.cs" t="Include" />
+              <e p="Utils.cs" t="Include" />
+            </e>
+            <e p="ReadMe.txt" t="Include" />
+            <e p="Scripts" t="Include">
+              <e p="Actions" t="Include">
+                <e p="CAction.cs" t="Include" />
+                <e p="CRegistry.cs" t="Include" />
+                <e p="CVar.cs" t="Include" />
+              </e>
+              <e p="Constants.cs" t="Include" />
+              <e p="Legacy" t="Include">
+                <e p="LunarConsoleLegacyActions.cs" t="Include" />
+              </e>
+              <e p="LunarConsole.cs" t="Include" />
+              <e p="LunarConsoleAction.cs" t="Include" />
+              <e p="Utils" t="Include">
+                <e p="BaseList.cs" t="Include" />
+                <e p="ClassUtils.cs" t="Include" />
+                <e p="ColorUtils.cs" t="Include" />
+                <e p="FileUtils.cs" t="Include" />
+                <e p="Iterator.cs" t="Include" />
+                <e p="Log.cs" t="Include" />
+                <e p="ReflectionUtils.cs" t="Include" />
+                <e p="StringUtils.cs" t="Include" />
+              </e>
+            </e>
           </e>
           <e p="Plugins" t="Include">
             <e p="ADL-Plugins" t="Include">
@@ -510,12 +564,13 @@
       <e p="crosstales.csproj" t="IncludeRecursive" />
       <e p="DigitalSputnik.Bluetooth.Runtime.csproj" t="IncludeRecursive" />
       <e p="DigitalSputnik.Core.Runtime.csproj" t="IncludeRecursive" />
-      <e p="DigitalSputnik.Images.Runtime.csproj" t="IncludeRecursive" />
       <e p="DigitalSputnik.Videos.EditorTests.csproj" t="IncludeRecursive" />
       <e p="DigitalSputnik.Videos.Runtime.csproj" t="IncludeRecursive" />
       <e p="DS-Voyager-controller.sln" t="IncludeFlat" />
       <e p="Klak.Spout.csproj" t="IncludeRecursive" />
       <e p="Klak.Spout.Editor.csproj" t="IncludeRecursive" />
+      <e p="LunarConsole.csproj" t="IncludeRecursive" />
+      <e p="LunarConsoleEditor.csproj" t="IncludeRecursive" />
       <e p="NativeFilePicker.Editor.csproj" t="IncludeRecursive" />
       <e p="NativeFilePicker.Runtime.csproj" t="IncludeRecursive" />
       <e p="NativeGallery.Editor.csproj" t="IncludeRecursive" />
@@ -550,21 +605,6 @@
             <e p="ITimeProvider.cs" t="Include" />
             <e p="MainThreadRunner.cs" t="Include" />
             <e p="SystemTimeProvider.cs" t="Include" />
-          </e>
-        </e>
-        <e p="DigitalSputnik.Images" t="Include">
-          <e p="Runtime" t="Include">
-            <e p="IImageProvider.cs" t="Include" />
-            <e p="IImageRenamer.cs" t="Include" />
-            <e p="IImageResizer.cs" t="Include" />
-            <e p="Image.cs" t="Include" />
-            <e p="ImageTools.cs" t="Include" />
-            <e p="Plugins" t="Include">
-              <e p="iOS" t="Include">
-                <e p="IosImageResizer.cs" t="Include" />
-                <e p="IosImageResizerListener.cs" t="Include" />
-              </e>
-            </e>
           </e>
         </e>
         <e p="DigitalSputnik.Videos" t="Include">
