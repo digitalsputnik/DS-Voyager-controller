@@ -2,9 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0b2f585-f1d7-4c3f-bc0c-bfef395e548f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_New/EffectMenuItem.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_New/EffectMenuItem.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/indexLayout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DS-Voyager-controller/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/IdentifyLamps.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/IdentifyLamps.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/User Interface New/Effects.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/User Interface New/Effects.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Workspace New UI.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Workspace New UI.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_Effects/EffectManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_Effects/EffectManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_New/EffectMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/_User Interface/_New/EffectMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/GraphicsSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/GraphicsSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,8 +37,6 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/EffectMappingMenu.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Project/Converters/LampMetadataConverter.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/MathUtils.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/WorkspaceMenu.cs" />
       <option value="$USER_HOME$/Documents/Backup/Workspace/Views/VoyagerItemView.cs" />
@@ -70,7 +78,6 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_Project/AutoLoad.cs" />
       <option value="$PROJECT_DIR$/Assets/Vendor/Plugins/NativeGallery/Editor/NGPostProcessBuild.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Bluetooth/VoyagerBluetoothClient.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/EffectManager.cs" />
       <option value="$PROJECT_DIR$/Packages/DigitalSputnik.Bluetooth/Runtime/Plugins/iOS/IOSBluetoothInterface.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/AddLampsMenu.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/RenderLoadingBar.cs" />
@@ -78,6 +85,9 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_Menus/SetEffectItem.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_Rendering/ImageRenderer.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/IdentifyLamps.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_New/EffectMenuItem.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_User Interface/_New/EffectMenu.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/_Effects/EffectManager.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1jrpOlUuALdrHH9NsqicGi8Uxyo" />
@@ -212,6 +222,8 @@
       <workItem from="1627462200117" duration="1525000" />
       <workItem from="1627543450837" duration="537000" />
       <workItem from="1627547458140" duration="332000" />
+      <workItem from="1628082881574" duration="3750000" />
+      <workItem from="1628152616823" duration="2354000" />
     </task>
     <servers />
   </component>

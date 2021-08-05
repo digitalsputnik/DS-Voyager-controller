@@ -148,6 +148,7 @@
             </e>
             <e p="_New" t="Include">
               <e p="EffectMenu.cs" t="Include" />
+              <e p="EffectMenuItem.cs" t="Include" />
             </e>
             <e p="AddLampItem.cs" t="Include" />
             <e p="Background.cs" t="Include" />

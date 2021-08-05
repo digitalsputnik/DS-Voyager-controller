@@ -129,7 +129,7 @@ namespace VoyagerController.Effects
 
             var imagesPath = Path.Combine(Application.streamingAssetsPath, "image_presets");
             _imagePresets = Directory
-                .GetFiles(videosPath, "*.png")
+                .GetFiles(imagesPath, "*.png")
                 .Select(Path.GetFileNameWithoutExtension).
                 ToArray();
         }
