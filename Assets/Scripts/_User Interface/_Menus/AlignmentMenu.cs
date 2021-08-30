@@ -29,9 +29,13 @@ namespace VoyagerController.UI
         [SerializeField] private GameObject _distHorizontal = null;
         [SerializeField] private GameObject _distVertical = null;
 
+        [SerializeField] private Sprite _selectedAllIcon = null;
+        [SerializeField] private Sprite _deselectAllIcon = null;
+
         private readonly List<List<(VoyagerItem, WorkspaceMapping)>> _workspaceMappings = new List<List<(VoyagerItem, WorkspaceMapping)>>();
         private readonly List<List<(VoyagerItem, EffectMapping)>> _effectMappings = new List<List<(VoyagerItem, EffectMapping)>>();
-        
+
+
         internal override void OnShow()
         {
             DisableEnableItems();
@@ -55,7 +59,9 @@ namespace VoyagerController.UI
 
             _selectDeselectBtn.SetActive(has);
             _selectDeselectBtn.GetComponentInChildren<Text>().text = all ? "DESELECT ALL" : "SELECT ALL";
-            
+            _selectDeselectBtn.GetComponentsInChildren<Image>().FirstOrDefault(x => x.gameObject.name == "Icon").sprite 
+                = all ? _deselectAllIcon : _selectedAllIcon;
+
             _undoBtn.SetActive(_workspaceMappings.Count > 0 || _effectMappings.Count > 0);
 
             _selectText.SetActive(!one);

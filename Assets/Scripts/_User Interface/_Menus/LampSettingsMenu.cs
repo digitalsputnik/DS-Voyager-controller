@@ -15,6 +15,7 @@ namespace VoyagerController.UI
         
         [Space(3)]
         [SerializeField] private Text _selectDeselectBtnText = null;
+        [SerializeField] private Image _selectDeselectBtnIcon = null;
         [SerializeField] private GameObject _selectDeselectBtn = null;
         [SerializeField] private GameObject _infoTextObj = null;
         [SerializeField] private GameObject _networkSettingsBtn = null;
@@ -23,6 +24,9 @@ namespace VoyagerController.UI
         [SerializeField] private Text _overallUpdateInfoText = null;
         [SerializeField] private Text _updateText = null;
         [SerializeField] private UpdateDialog updateDialog = null;
+
+        [SerializeField] private Sprite _selectedAllIcon = null;
+        [SerializeField] private Sprite _deselectAllIcon = null;
 
         private int _updateLampCount;
         private bool _updatesFinished = true;
@@ -81,6 +85,7 @@ namespace VoyagerController.UI
             _networkSettingsBtn.SetActive(anyWorkspace);
             _updateBtn.SetActive(hasSelected && !anyBluetooth);
             _selectDeselectBtnText.text = allSelected ? DESELECT_ALL_TEXT : SELECT_ALL_TEXT;
+            _selectDeselectBtnIcon.sprite = allSelected ? _deselectAllIcon : _selectedAllIcon;
         }
 
         public void UpdateSelected()

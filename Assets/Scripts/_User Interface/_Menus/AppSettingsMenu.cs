@@ -1,4 +1,5 @@
 using DigitalSputnik.Colors;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,8 +24,19 @@ namespace VoyagerController.UI
         [SerializeField] private Toggle _autoLoad = null;
         [SerializeField] private Toggle _autoSave = null;
 
+        [SerializeField] private ShowHideMenu _showHideMenu = null;
+
+        private bool menuOpened = false;
+
         internal override void OnShow()
         {
+            if (_showHideMenu.Open == false)
+                _showHideMenu.Toggle();
+            else
+                menuOpened = true;
+
+            _showHideMenu.GetComponentsInChildren<Image>().FirstOrDefault(i => i.name == "Icon").gameObject.SetActive(false);
+
             _identifyItsh.Value = ApplicationSettings.IdentificationColor;
             _startColorItsh.Value = ApplicationSettings.AddedLampsDefaultColor;
 
@@ -59,6 +71,13 @@ namespace VoyagerController.UI
 
         internal override void OnHide()
         {
+            if (!menuOpened)
+                _showHideMenu.Toggle();
+
+            menuOpened = false;
+
+            _showHideMenu.GetComponentsInChildren<Image>(true).FirstOrDefault(i => i.name == "Icon").gameObject.SetActive(true);
+
             _identifyItsh.OnValueChanged.RemoveListener(OnIdentifyColorPicked);
             _startColorItsh.OnValueChanged.RemoveListener(OnLampAddedToWorkspaceFirstTime);
 
