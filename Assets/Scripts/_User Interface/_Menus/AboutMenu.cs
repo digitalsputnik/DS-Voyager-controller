@@ -1,6 +1,7 @@
 using DigitalSputnik;
 using DigitalSputnik.Voyager;
 using System;
+using System.IO;
 using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,29 +27,38 @@ namespace VoyagerController.UI
 
         public void ForceSelectUpdate()
         {
-            try
-            {
-                var lamp = new VoyagerLamp();
-                lamp.Serial = "Master Lamp";
-                var endpoint = new LampNetworkEndPoint(IPAddress.Parse("172.20.0.1"));
-                lamp.Endpoint = endpoint;
-                VoyagerUpdater.UpdateLamp(lamp, OnUpdateFinished, OnUpdateMessage);
-                _updateText.gameObject.SetActive(true);
-            }
-            catch (Exception ex)
-            {
-                DialogBox.Show(
-                    "ERROR UPLOADING UPDATE",
-                    ex.Message,
-                    new string[] { "OK" },
-                    new Action[] { null }
-                );
+            FileUtils.PickFile(ForceSelectUpdatePicked);
+        }
 
-                MainThread.Dispatch(() =>
+        public void ForceSelectUpdatePicked(string path)
+        {
+            if (path != null)
+            {
+                try
                 {
-                    if (_updateText != null)
-                        _updateText.text = "Lamp update failed";
-                });
+                    var lamp = new VoyagerLamp();
+                    lamp.Serial = "Master Lamp";
+                    var endpoint = new LampNetworkEndPoint(IPAddress.Parse("172.20.0.1"));
+                    lamp.Endpoint = endpoint;
+                    var update = File.ReadAllBytes(path);
+                    VoyagerUpdater.UpdateLamp(lamp, update, OnUpdateFinished, OnUpdateMessage);
+                    _updateText.gameObject.SetActive(true);
+                }
+                catch (Exception ex)
+                {
+                    DialogBox.Show(
+                        "ERROR UPLOADING UPDATE",
+                        ex.Message,
+                        new string[] { "OK" },
+                        new Action[] { null }
+                    );
+
+                    MainThread.Dispatch(() =>
+                    {
+                        if (_updateText != null)
+                            _updateText.text = "Lamp update failed";
+                    });
+                }
             }
         }
 
@@ -57,7 +67,7 @@ namespace VoyagerController.UI
             MainThread.Dispatch(() =>
             {
                 if (_updateText != null)
-                    _updateText.text = "Lamp successfully updated";
+                    _updateText.text = "Update finished \n" + response.Error;
             });
         }
 
