@@ -1,6 +1,11 @@
-﻿using System;
+﻿using DigitalSputnik;
+using DigitalSputnik.Voyager;
+using System;
+using System.IO;
 using System.Linq;
+using System.Net;
 using UnityEngine;
+using UnityEngine.UI;
 using VoyagerController.ProjectManagement;
 using VoyagerController.Workspace;
 
@@ -11,6 +16,7 @@ namespace VoyagerController.UI
         [SerializeField] private InspectorMenuContainer _inspectorMenuContainer = null;
         [SerializeField] private GameObject _developmentBtn = null;
         [SerializeField] private Menu _tutorial = null;
+        [SerializeField] private Text _updateText = null;
 
         internal override void OnShow()
         {
@@ -71,6 +77,53 @@ namespace VoyagerController.UI
                     () => {}
                 }
             );
+        }
+
+        public void ForceSelectUpdate()
+        {
+            try
+            {
+                var lamp = new VoyagerLamp();
+                lamp.Serial = "Master Lamp";
+                var endpoint = new LampNetworkEndPoint(IPAddress.Parse("172.20.0.1"));
+                lamp.Endpoint = endpoint;
+                VoyagerUpdater.UpdateLamp(lamp, OnUpdateFinished, OnUpdateMessage);
+                _updateText.gameObject.SetActive(true);
+            }
+            catch (Exception ex)
+            {
+                DialogBox.Show(
+                    "ERROR UPLOADING UPDATE",
+                    ex.Message,
+                    new string[] { "OK" },
+                    new Action[] { null }
+                );
+
+                MainThread.Dispatch(() =>
+                {
+                    if (_updateText != null)
+                        _updateText.text = "Lamp update failed";
+                });
+            }
+        }
+
+        private void OnUpdateFinished(VoyagerUpdateResponse response)
+        {
+            MainThread.Dispatch(() =>
+            {
+                if (_updateText != null)
+                    _updateText.text = "Lamp successfully updated";
+            });
+        }
+
+        private void OnUpdateMessage(VoyagerUpdateMessage message)
+        {
+            MainThread.Dispatch(() =>
+            {
+                if (_updateText != null)
+                    _updateText.text = $"{message.Lamp.Serial}\n" +
+                                       $"{message.Message.ToUpper()}";
+            });
         }
     }
 }
